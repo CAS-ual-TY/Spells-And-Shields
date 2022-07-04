@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -218,18 +217,18 @@ public class SpellsUtil
         if(badP != null && badIngredient != null)
         {
             addPotionRecipe(badIngredient, p, badP);
-    
+            
             if(badStrongP != null)
             {
                 addPotionRecipe(Items.GLOWSTONE_DUST, badP, badStrongP);
             }
-    
+            
             if(badLongP != null)
             {
                 addPotionRecipe(Items.REDSTONE, badP, badLongP);
             }
         }
-    
+        
         if(strongP != null)
         {
             addPotionRecipe(Items.GLOWSTONE_DUST, p, strongP);
@@ -243,7 +242,7 @@ public class SpellsUtil
         if(longP != null)
         {
             addPotionRecipe(Items.REDSTONE, p, longP);
-    
+            
             if(badLongP != null && badIngredient != null)
             {
                 addPotionRecipe(badIngredient, longP, badLongP);
