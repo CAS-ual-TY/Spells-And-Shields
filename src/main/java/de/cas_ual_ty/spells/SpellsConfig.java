@@ -14,11 +14,11 @@ public class SpellsConfig
         ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
         
         LOAD_SPELL_TREES = configBuilder
-                .comment("")
+                .comment("Load spell trees from configuration files in the configuration folder (true) or not (false).")
                 .define("loadSpellTrees", true);
         
         CREATE_DEFAULT_SPELL_TREES = configBuilder
-                .comment("")
+                .comment("Create default spell tree configuration files in the configuration folder if said folder does not exist (true) or no (false).")
                 .define("createDefaultSpellTrees", true);
         
         GENERAL_SPEC = configBuilder.build();
