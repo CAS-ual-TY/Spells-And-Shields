@@ -40,6 +40,7 @@ public class SpellTrees
         
         if(!folder.isDirectory() || folder.listFiles() == null)
         {
+            SpellsAndShields.LOGGER.error("Can not read or write spell tree files in {} (is it a folder?).", p);
             return;
         }
         
@@ -56,17 +57,15 @@ public class SpellTrees
             {
                 File f = p.resolve("tree_" + i++ + ".json").toFile();
                 
-                SpellsAndShields.LOGGER.info("Writing default spell tree to file {}...", f.toPath());
-                
                 try
                 {
                     SpellsFileUtil.writeJsonToFile(f, SpellTreeSerializer.treeToJson(t));
-                    SpellsAndShields.LOGGER.info("Success!");
+                    SpellsAndShields.LOGGER.info("Wrote default spell tree {} to file {}.", t.getId(), f.toPath());
                 }
                 catch(Exception e)
                 {
                     e.printStackTrace();
-                    SpellsAndShields.LOGGER.info("Failure...");
+                    SpellsAndShields.LOGGER.error("Failed writing default spell tree {} to file {}.", t.getId().toString(), f.toPath(), e);
                 }
             }
         }
@@ -81,8 +80,7 @@ public class SpellTrees
             {
                 if(f.getName().toLowerCase().endsWith(".json"))
                 {
-                    SpellsAndShields.LOGGER.info("Reading spell tree from file {}...", f.toPath());
-                    
+                    boolean failed = false;
                     JsonElement json = null;
                     
                     try
@@ -91,21 +89,23 @@ public class SpellTrees
                     }
                     catch(Exception e)
                     {
+                        failed = true;
+                        SpellsAndShields.LOGGER.error("Failed reading spell tree from file {}.", f.toPath(), e);
                         e.printStackTrace();
                     }
                     
                     if(json != null && json.isJsonObject())
                     {
-                        SpellsAndShields.LOGGER.info("Success!");
-                        
                         SpellTree t = null;
                         
                         try
                         {
                             t = SpellTreeSerializer.treeFromJson(json.getAsJsonObject());
+                            SpellsAndShields.LOGGER.info("Successfully read spell tree from file {}.", f.toPath());
                         }
                         catch(IllegalStateException e)
                         {
+                            SpellsAndShields.LOGGER.error("Failed reading spell tree from file {}.", f.toPath(), e);
                             e.printStackTrace();
                         }
                         
@@ -114,9 +114,9 @@ public class SpellTrees
                             LOADED_SPELL_TREES.add(t);
                         }
                     }
-                    else
+                    else if(!failed)
                     {
-                        SpellsAndShields.LOGGER.info("Failure...");
+                        SpellsAndShields.LOGGER.error("Failed reading spell tree from file {}.", f.toPath());
                     }
                 }
             }

@@ -128,6 +128,8 @@ public class SpellsRegistries
         
         if(!folder.isDirectory() || folder.listFiles() == null)
         {
+            SpellsAndShields.LOGGER.error("Can not read or write spell config files in {} (is it a folder?).", p);
+            SPELLS_REGISTRY.get().getValues().stream().filter(s -> s instanceof IConfigurableSpell).map(s -> (IConfigurableSpell) s).forEach(IConfigurableSpell::applyDefaultConfig);
             return;
         }
         
@@ -137,25 +139,22 @@ public class SpellsRegistries
             
             if(!f.exists())
             {
-                SpellsAndShields.LOGGER.info("Writing default config of spell {} to file {}...", spell.getRegistryName().toString(), f.toPath());
-                
                 try
                 {
                     SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
-                    SpellsAndShields.LOGGER.info("Success!");
+                    SpellsAndShields.LOGGER.info("Successfully wrote default config of spell {} to file {}.", spell.getRegistryName().toString(), f.toPath());
                 }
                 catch(Exception e)
                 {
+                    SpellsAndShields.LOGGER.error("Failed writing default config of spell {} to file {}.", spell.getRegistryName().toString(), f.toPath(), e);
                     e.printStackTrace();
-                    SpellsAndShields.LOGGER.info("Failure...");
                 }
                 
                 spell.applyDefaultConfig();
             }
             else
             {
-                SpellsAndShields.LOGGER.info("Reading config of spell {} from file {}...", spell.getRegistryName().toString(), f.toPath());
-                
+                boolean failed = false;
                 JsonElement json = null;
                 
                 try
@@ -164,6 +163,8 @@ public class SpellsRegistries
                 }
                 catch(Exception e)
                 {
+                    failed = true;
+                    SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath(), e);
                     e.printStackTrace();
                 }
                 
@@ -172,19 +173,18 @@ public class SpellsRegistries
                     try
                     {
                         spell.readFromConfig(json.getAsJsonObject());
-                        SpellsAndShields.LOGGER.info("Success!");
+                        SpellsAndShields.LOGGER.info("Successfully read config of spell {} from file {}.", spell.getRegistryName().toString(), f.toPath());
                     }
                     catch(IllegalStateException e)
                     {
+                        SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath(), e);
                         e.printStackTrace();
-                        SpellsAndShields.LOGGER.info("Failure...");
                         spell.applyDefaultConfig();
                     }
                 }
-                else
+                else if(!failed)
                 {
-                    SpellsAndShields.LOGGER.info("Failure...");
-                    spell.applyDefaultConfig();
+                    SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath());
                 }
             }
         });
