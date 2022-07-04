@@ -23,22 +23,26 @@ import java.util.function.Predicate;
 
 public class SpellsUtil
 {
-    public static Field ACCESS_FIELD;
+    public static final Field ACCESS_FIELD;
+    public static final String ACCESS_FIELD_NAME = "f_39450_";
     
     static
     {
+        Field access_field = null;
+        
         try
         {
             // !mojf access
             // send this to the forge bot, "access" being the field name at the time of writing this
-            ACCESS_FIELD = ObfuscationReflectionHelper.findField(EnchantmentMenu.class, "f_39450_");
+            access_field = ObfuscationReflectionHelper.findField(EnchantmentMenu.class, "f_39450_");
         }
         catch(ObfuscationReflectionHelper.UnableToFindFieldException e)
         {
-            SpellsAndShields.LOGGER.warn("Field f_39450_ (EnchantmentMenu#access) could not be found!");
+            SpellsAndShields.LOGGER.warn("Field " + ACCESS_FIELD_NAME + " (EnchantmentMenu#access) could not be found!");
             e.printStackTrace();
-            ACCESS_FIELD = null;
         }
+        
+        ACCESS_FIELD = access_field;
     }
     
     public static ContainerLevelAccess getAccess(Player player, EnchantmentMenu menu)
@@ -56,7 +60,7 @@ public class SpellsUtil
             }
             catch(IllegalAccessException e)
             {
-                SpellsAndShields.LOGGER.warn("Field f_39450_ (EnchantmentMenu#access) could not be accessed!");
+                SpellsAndShields.LOGGER.warn("Field " + ACCESS_FIELD_NAME + " (EnchantmentMenu#access) could not be accessed!");
                 e.printStackTrace();
             }
         }

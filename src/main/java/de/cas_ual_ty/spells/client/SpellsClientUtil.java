@@ -14,9 +14,11 @@ import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -28,6 +30,7 @@ public class SpellsClientUtil
     {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SpellsClientConfig.CLIENT_SPEC, SpellsAndShields.MOD_ID + "/client" + ".toml");
         
+        MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::rightClickBlock);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         SpellKeyBindings.register();
     }
@@ -55,6 +58,13 @@ public class SpellsClientUtil
         });
     }
     
+    private static BlockPos lastRightClickedBlock = null;
+    
+    public static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
+    {
+        lastRightClickedBlock = event.getPos();
+    }
+    
     public static void initScreen(ScreenEvent.InitScreenEvent.Post event)
     {
         if(Minecraft.getInstance().player != null)
@@ -62,7 +72,7 @@ public class SpellsClientUtil
             if(event.getScreen() instanceof EnchantmentScreen screen)
             {
                 event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, 176, SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
-                        (b) -> SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage()), 0));
+                        (b) -> SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlock)), 0));
             }
             else if(event.getScreen() instanceof InventoryScreen screen)
             {

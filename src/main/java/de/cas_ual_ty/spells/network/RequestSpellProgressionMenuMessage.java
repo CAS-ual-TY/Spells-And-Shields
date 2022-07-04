@@ -1,12 +1,12 @@
 package de.cas_ual_ty.spells.network;
 
-import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.progression.ProgressionHelper;
 import de.cas_ual_ty.spells.progression.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,15 +23,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
-public record RequestSpellProgressionMenuMessage()
+public record RequestSpellProgressionMenuMessage(BlockPos pos)
 {
     public static void encode(RequestSpellProgressionMenuMessage msg, FriendlyByteBuf buf)
     {
+        buf.writeBlockPos(msg.pos());
     }
     
     public static RequestSpellProgressionMenuMessage decode(FriendlyByteBuf buf)
     {
-        return new RequestSpellProgressionMenuMessage();
+        return new RequestSpellProgressionMenuMessage(buf.readBlockPos());
     }
     
     public static void handle(RequestSpellProgressionMenuMessage msg, Supplier<NetworkEvent.Context> context)
@@ -47,7 +48,8 @@ public record RequestSpellProgressionMenuMessage()
             
             if(player.containerMenu instanceof EnchantmentMenu menu)
             {
-                ContainerLevelAccess access = SpellsUtil.getAccess(player, menu);
+                //ContainerLevelAccess access = SpellsUtil.getAccess(player, menu);
+                ContainerLevelAccess access = ContainerLevelAccess.create(player.level, msg.pos());
                 
                 //player.closeContainer();
                 
@@ -69,7 +71,7 @@ public record RequestSpellProgressionMenuMessage()
                             @Override
                             public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
                             {
-                                return new SpellProgressionMenu(id, inventory, ContainerLevelAccess.create(level, blockPos), availableSpellTrees, progression);
+                                return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
                             }
                         }, buf ->
                         {
