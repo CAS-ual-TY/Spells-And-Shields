@@ -19,7 +19,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 
-version = '1.18.2-0.1'
+version = '1.18.2-0.2'
 group = 'de.cas_ual_ty.spells' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'spells_and_shields'
 
