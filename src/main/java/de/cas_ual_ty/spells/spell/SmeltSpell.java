@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.spell;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
-import de.cas_ual_ty.spells.spell.base.IngredientSpell;
+import de.cas_ual_ty.spells.spell.base.HandIngredientSpell;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.SimpleContainer;
@@ -14,11 +14,11 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
-public class SmeltSpell extends IngredientSpell
+public class SmeltSpell extends HandIngredientSpell
 {
     public SmeltSpell(float manaCost)
     {
-        super(manaCost, ItemStack.EMPTY);
+        super(manaCost);
     }
     
     @Override
@@ -47,7 +47,7 @@ public class SmeltSpell extends IngredientSpell
     }
     
     @Override
-    public boolean isItemStackIngredient(ManaHolder manaHolder, ItemStack itemStack)
+    public boolean checkHandIngredient(ManaHolder manaHolder, ItemStack itemStack)
     {
         return getBlastingRecipe(manaHolder.getPlayer().level, itemStack).isPresent();
     }

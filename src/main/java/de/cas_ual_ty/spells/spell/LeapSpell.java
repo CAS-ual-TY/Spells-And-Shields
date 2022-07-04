@@ -1,15 +1,24 @@
 package de.cas_ual_ty.spells.spell;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
-import de.cas_ual_ty.spells.spell.base.Spell;
+import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class LeapSpell extends Spell
+import java.util.List;
+
+public class LeapSpell extends BaseIngredientsSpell
 {
     public final double distance;
+    
+    public LeapSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, double distance)
+    {
+        super(manaCost, handIngredients, inventoryIngredients);
+        this.distance = distance;
+    }
     
     public LeapSpell(float manaCost, double distance)
     {

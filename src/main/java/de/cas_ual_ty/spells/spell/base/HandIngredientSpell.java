@@ -1,26 +1,90 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class HandIngredientSpell extends IngredientSpell
+import java.util.Optional;
+
+public abstract class HandIngredientSpell extends Spell
 {
-    public HandIngredientSpell(float manaCost, ItemStack ingredient)
+    public HandIngredientSpell(float manaCost)
     {
-        super(manaCost, ingredient);
+        super(manaCost);
+    }
+    
+    public void perform(ManaHolder manaHolder, ItemStack itemStack)
+    {
+        perform(manaHolder);
     }
     
     @Override
-    public ItemStack hasIngredient(ManaHolder manaHolder)
+    public void perform(ManaHolder manaHolder)
     {
-        for(ItemStack itemStack : manaHolder.getPlayer().getHandSlots())
+    }
+    
+    @Override
+    public boolean activate(ManaHolder manaHolder)
+    {
+        if(this.canActivate(manaHolder))
         {
-            if(this.isItemStackIngredient(manaHolder, itemStack))
+            Optional<ItemStack> ingredient = this.hasIngredient(manaHolder);
+            
+            ingredient.ifPresent(itemStack ->
             {
-                return itemStack;
+                this.perform(manaHolder, itemStack);
+                
+                if(!(manaHolder.getPlayer() instanceof Player player) || !player.isCreative())
+                {
+                    this.burnMana(manaHolder);
+                    this.consumeItemStack(manaHolder, itemStack);
+                }
+            });
+        }
+        
+        return false;
+    }
+    
+    public Optional<ItemStack> hasIngredient(ManaHolder manaHolder)
+    {
+        if(manaHolder.getPlayer() instanceof Player player)
+        {
+            for(ItemStack itemStack : player.getHandSlots())
+            {
+                if(this.checkHandIngredient(manaHolder, itemStack))
+                {
+                    return Optional.of(itemStack);
+                }
+            }
+            
+            for(ItemStack itemStack : player.getInventory().items)
+            {
+                if(this.checkInventoryIngredient(manaHolder, itemStack))
+                {
+                    return Optional.of(itemStack);
+                }
+            }
+        }
+        else
+        {
+            for(ItemStack itemStack : manaHolder.getPlayer().getHandSlots())
+            {
+                if(this.checkHandIngredient(manaHolder, itemStack))
+                {
+                    return Optional.of(itemStack);
+                }
             }
         }
         
-        return ItemStack.EMPTY;
+        return Optional.empty();
     }
+    
+    public abstract boolean checkHandIngredient(ManaHolder manaHolder, ItemStack itemStack);
+    
+    public boolean checkInventoryIngredient(ManaHolder manaHolder, ItemStack itemStack)
+    {
+        return checkHandIngredient(manaHolder, itemStack);
+    }
+    
+    public abstract void consumeItemStack(ManaHolder manaHolder, ItemStack itemStack);
 }

@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells;
 
+import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -8,6 +9,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.EnchantmentMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
@@ -16,6 +18,7 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -23,6 +26,9 @@ import java.util.function.Predicate;
 
 public class SpellsUtil
 {
+    public static final Optional<ItemStack> EMPTY_ITEMSTACK_OPTIONAL = Optional.of(ItemStack.EMPTY);
+    public static final Optional<List<ItemStack>> EMPTY_ITEMSTACK_LIST_OPTIONAL = Optional.of(ImmutableList.of(ItemStack.EMPTY));
+    
     public static final Field ACCESS_FIELD;
     public static final String ACCESS_FIELD_NAME = "f_39450_";
     

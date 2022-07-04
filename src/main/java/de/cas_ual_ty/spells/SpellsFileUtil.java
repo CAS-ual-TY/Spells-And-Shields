@@ -4,10 +4,12 @@ import com.google.gson.*;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.loading.FileUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -135,7 +137,7 @@ public class SpellsFileUtil
     {
         String id = jsonString(json, key);
         
-        if(id.equals("null"))
+        if(id.isEmpty())
         {
             if(allowNull)
             {
@@ -166,7 +168,7 @@ public class SpellsFileUtil
     {
         String id = jsonString(json, key);
         
-        if(id.equals("null"))
+        if(id.isEmpty())
         {
             if(allowNull)
             {
@@ -191,5 +193,38 @@ public class SpellsFileUtil
     public static ISpell jsonSpell(JsonObject json, String key) throws IllegalStateException
     {
         return jsonSpell(json, key, false);
+    }
+    
+    public static void jsonSpell(JsonObject json, @Nullable ISpell spell, String key)
+    {
+        if(spell == null)
+        {
+            json.addProperty(key, "");
+        }
+        else
+        {
+            json.addProperty(key, spell.getRegistryName().toString());
+        }
+    }
+    
+    public static ItemStack jsonItemStack(JsonObject json, String itemKey, String countKey) throws IllegalStateException
+    {
+        Item item = jsonItem(json, itemKey, true);
+        int count = jsonInt(json, countKey);
+        return count <= 0 || item == null ? ItemStack.EMPTY : new ItemStack(item, count);
+    }
+    
+    public static void jsonItemStack(JsonObject json, ItemStack itemStack, String itemKey, String countKey)
+    {
+        if(itemStack.isEmpty())
+        {
+            json.addProperty(itemKey, "");
+            json.addProperty(countKey, 0);
+        }
+        else
+        {
+            json.addProperty(itemKey, itemStack.getItem().getRegistryName().toString());
+            json.addProperty(countKey, itemStack.getCount());
+        }
     }
 }

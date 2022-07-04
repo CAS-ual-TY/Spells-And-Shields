@@ -33,17 +33,14 @@ public class SummonAnimalSpell extends HandIngredientSpell
     
     public SummonAnimalSpell(float manaCost, Map<Item, Ingredient> ingredientMap)
     {
-        super(manaCost, ItemStack.EMPTY);
-        this.ingredient = this.defaultIngredient;
-        
+        super(manaCost);
         this.defaultIngredientMap = ImmutableMap.copyOf(ingredientMap);
         this.ingredientMap = new HashMap<>();
     }
     
     public SummonAnimalSpell(float manaCost)
     {
-        super(manaCost, ItemStack.EMPTY);
-        this.ingredient = this.defaultIngredient;
+        super(manaCost);
         
         this.ingredientMap = new HashMap<>();
         this.addIngredient(Items.BEEF, 8, EntityType.COW);
@@ -53,6 +50,11 @@ public class SummonAnimalSpell extends HandIngredientSpell
         this.defaultIngredientMap = ImmutableMap.copyOf(ingredientMap);
         
         this.ingredientMap.clear();
+    }
+    
+    public void addIngredient(ItemStack ingredient, EntityType<?> entity)
+    {
+        this.ingredientMap.put(ingredient.getItem(), new Ingredient(ingredient, entity));
     }
     
     public void addIngredient(Item ingredient, int count, EntityType<?> entity)
@@ -101,9 +103,15 @@ public class SummonAnimalSpell extends HandIngredientSpell
     }
     
     @Override
-    public boolean isItemStackIngredient(ManaHolder manaHolder, ItemStack itemStack)
+    public boolean checkHandIngredient(ManaHolder manaHolder, ItemStack itemStack)
     {
         return itemStack.getCount() >= this.getRequiredCount(itemStack) && ingredientMap.containsKey(itemStack.getItem());
+    }
+    
+    @Override
+    public boolean checkInventoryIngredient(ManaHolder manaHolder, ItemStack itemStack)
+    {
+        return false;
     }
     
     public int getRequiredCount(ItemStack itemStack)
@@ -114,22 +122,19 @@ public class SummonAnimalSpell extends HandIngredientSpell
     @Override
     public void consumeItemStack(ManaHolder manaHolder, ItemStack itemStack)
     {
-        itemStack.setCount(itemStack.getCount() - ingredientMap.get(itemStack.getItem()).count());
+        itemStack.shrink(ingredientMap.get(itemStack.getItem()).count());
     }
     
     @Override
     public JsonObject makeDefaultConfig()
     {
-        JsonObject json = new JsonObject();
-        
-        json.addProperty("manaCost", this.defaultManaCost);
+        JsonObject json = super.makeDefaultConfig();
         
         JsonArray ingredients = new JsonArray();
         defaultIngredientMap.forEach((item, ingredient) ->
         {
             JsonObject o = new JsonObject();
-            o.addProperty("ingredient", ingredient.ingredient().getItem().getRegistryName().toString());
-            o.addProperty("count", ingredient.ingredient().getCount());
+            SpellsFileUtil.jsonItemStack(o, ingredient.ingredient(), "item", "count");
             o.addProperty("entity", ingredient.entity().getRegistryName().toString());
             ingredients.add(o);
         });
@@ -141,7 +146,7 @@ public class SummonAnimalSpell extends HandIngredientSpell
     @Override
     public void readFromConfig(JsonObject json)
     {
-        this.manaCost = SpellsFileUtil.jsonFloat(json, "manaCost");
+        super.readFromConfig(json);
         
         this.ingredientMap.clear();
         
@@ -156,11 +161,10 @@ public class SummonAnimalSpell extends HandIngredientSpell
             
             JsonObject ingredient = e.getAsJsonObject();
             
-            Item item = SpellsFileUtil.jsonItem(ingredient, "ingredient");
-            int count = SpellsFileUtil.jsonInt(ingredient, "count");
+            ItemStack itemStack = SpellsFileUtil.jsonItemStack(ingredient, "item", "count");
             EntityType<?> entity = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(SpellsFileUtil.jsonString(ingredient, "entity")));
             
-            if(count <= 0)
+            if(itemStack.isEmpty())
             {
                 throw new IllegalStateException();
             }
@@ -170,15 +174,14 @@ public class SummonAnimalSpell extends HandIngredientSpell
                 throw new IllegalStateException(new NullPointerException());
             }
             
-            this.addIngredient(item, count, entity);
+            this.addIngredient(itemStack, entity);
         }
     }
     
     @Override
     public void applyDefaultConfig()
     {
-        manaCost = defaultManaCost;
-        
+        super.applyDefaultConfig();
         this.ingredientMap.clear();
         this.ingredientMap.putAll(this.defaultIngredientMap);
     }
