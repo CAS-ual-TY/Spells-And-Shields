@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.tree.SpellNode;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;
@@ -46,7 +45,7 @@ public class SpellTreeTab extends GuiComponent
         this.index = index;
         this.spellTree = spellTree;
         this.spellNode = spellTree.getRoot();
-        this.icon = SpellsClientUtil.getSpellTexture(spellTree.getIcon());
+        this.icon = spellTree.getIcon();
         
         spellTree.forEach(spellNode -> this.addNode(spellNode, mainScreen.getMenu().spellProgression.getOrDefault(spellNode.getSpell(), SpellStatus.LOCKED)));
         this.root = this.widgets.get(spellTree.getRoot());

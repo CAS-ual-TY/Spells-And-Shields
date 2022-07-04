@@ -28,7 +28,7 @@ public class SpellTreeSerializer
     {
         buf.writeUUID(spellTree.getId());
         buf.writeComponent(spellTree.getTitle());
-        buf.writeRegistryId(spellTree.getIcon());
+        buf.writeRegistryId(spellTree.getIconSpell());
         
         SpellNode spellNode = spellTree.getRoot();
         encodeNode(spellNode, buf);
@@ -131,7 +131,7 @@ public class SpellTreeSerializer
             json.addProperty("title", tree.getTitle().getContents());
         }
         
-        json.addProperty("icon_spell", tree.getIcon().getRegistryName().toString());
+        json.addProperty("icon_spell", tree.getIconSpell().getRegistryName().toString());
         json.add("root_spell", tree.getRoot() != null ? nodeToJsonRec(tree.getRoot()) : JsonNull.INSTANCE);
         
         return json;

@@ -6,7 +6,6 @@ import de.cas_ual_ty.spells.client.progression.*;
 import de.cas_ual_ty.spells.network.RequestSpellProgressionMenuMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
-import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -87,10 +86,5 @@ public class SpellsClientUtil
                 }
             }
         }
-    }
-    
-    public static ResourceLocation getSpellTexture(ISpell spell)
-    {
-        return new ResourceLocation(spell.getRegistryName().getNamespace(), "textures/spell/" + spell.getRegistryName().getPath() + ".png");
     }
 }

@@ -2,7 +2,6 @@ package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.progression.ProgressionHelper;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
@@ -49,7 +48,7 @@ public class SelectedSpellWidget extends GuiComponent
         this.spellStatus = spellStatus;
         this.title = title;
         
-        this.spellTexture = SpellsClientUtil.getSpellTexture(spell.getSpell());
+        this.spellTexture = spell.getSpell().getIcon();
         
         if(spellStatus == SpellStatus.FORGOTTEN)
         {

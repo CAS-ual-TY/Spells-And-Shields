@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.client.progression;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsUtil;
-import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.progression.ProgressionHelper;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.tree.SpellNode;
@@ -76,7 +75,7 @@ public class SpellNodeWidget extends GuiComponent
         
         this.font = Minecraft.getInstance().font;
         
-        this.spellTexture = SpellsClientUtil.getSpellTexture(spell.getSpell());
+        this.spellTexture = spell.getSpell().getIcon();
         this.title = Language.getInstance().getVisualOrder(this.font.substrByWidth(SpellsUtil.getSpellName(spell.getSpell()), TITLE_MAX_WIDTH));
         
         // Position fixup later, after all widgets are done, in SpellTreeTab

@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.client.progression;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -65,7 +64,7 @@ public class SpellSlotWidget extends Button
                     int offX = (SpellNodeWidget.FRAME_WIDTH - SpellNodeWidget.SPELL_WIDTH) / 2;
                     int offY = (SpellNodeWidget.FRAME_HEIGHT - SpellNodeWidget.SPELL_HEIGHT) / 2;
                     
-                    ResourceLocation texture = SpellsClientUtil.getSpellTexture(spell);
+                    ResourceLocation texture = spell.getIcon();
                     RenderSystem.setShaderTexture(0, texture);
                     
                     // render spell icon
