@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.base;
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.SpellsFileUtil;
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -12,9 +13,12 @@ public abstract class Spell extends ForgeRegistryEntry<ISpell> implements ISpell
     
     protected float manaCost;
     
+    public ResourceLocation icon;
+    
     public Spell(float manaCost)
     {
         this.defaultManaCost = manaCost;
+        this.icon = null;
     }
     
     public float getManaCost()
@@ -69,6 +73,18 @@ public abstract class Spell extends ForgeRegistryEntry<ISpell> implements ISpell
     public void applyDefaultConfig()
     {
         manaCost = defaultManaCost;
+    }
+    
+    public Spell setIcon(ResourceLocation icon)
+    {
+        this.icon = icon;
+        return this;
+    }
+    
+    @Override
+    public ResourceLocation getIcon()
+    {
+        return icon != null ? icon : ISpell.super.getIcon();
     }
     
     @Override

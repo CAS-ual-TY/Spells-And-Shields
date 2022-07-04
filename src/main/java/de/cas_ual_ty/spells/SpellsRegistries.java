@@ -96,8 +96,9 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> LEAP = SPELLS.register("leap", () -> new LeapSpell(7F));
     public static final RegistryObject<ISpell> SUMMON_ANIMAL = SPELLS.register("summon_animal", () -> new SummonAnimalSpell(18F));
     public static final RegistryObject<ISpell> FIRE_BALL = SPELLS.register("fire_ball", () -> new FireSpell(5F));
-    public static final RegistryObject<ISpell> SMELT = SPELLS.register("smelt", () -> new SmeltSpell(6F));
+    public static final RegistryObject<ISpell> SMELT = SPELLS.register("smelt", () -> new SmeltSpell(6F).setIcon(new ResourceLocation("textures/item/coal.png")));
     public static final RegistryObject<ISpell> TRANSFER_MANA = SPELLS.register("transfer_mana", () -> new TransferManaSpell(4F));
+    public static final RegistryObject<ISpell> POCKET_BOW = SPELLS.register("pocket_bow", () -> new BowSpell(7F).setIcon(new ResourceLocation("textures/item/bow_pulling_0.png")));
     
     public static void register()
     {

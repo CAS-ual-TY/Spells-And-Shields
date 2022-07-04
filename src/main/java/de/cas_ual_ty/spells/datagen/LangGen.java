@@ -62,6 +62,8 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.FIRE_BALL, "Fire Ball", "Shoot a fire ball");
         addSpell(SpellsRegistries.LEAP, "Leap", "Leap forward");
         addSpell(SpellsRegistries.SUMMON_ANIMAL, "Summon Animal", "Create life");
+        addSpell(SpellsRegistries.POCKET_BOW, "Pocket Bow", "Magical bow");
+        addSpell(SpellsRegistries.SMELT, "Smelt", "Instant blast furnace");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         

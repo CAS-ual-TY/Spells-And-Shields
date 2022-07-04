@@ -25,6 +25,10 @@ public class SpellTrees
     {
         return SpellTree.builder(SpellsUtil.generateUUIDFromName("baseTree"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Basic Spell Tree"))
                 .add(SpellsRegistries.LEAP)
+                .add(SpellsRegistries.POCKET_BOW)
+                .leaf()
+                .add(SpellsRegistries.SMELT)
+                .leaf()
                 .leaf()
                 .add(SpellsRegistries.SUMMON_ANIMAL)
                 .finish();
