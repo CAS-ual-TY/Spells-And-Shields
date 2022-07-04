@@ -9,10 +9,17 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.EnchantmentMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
@@ -202,5 +209,61 @@ public class SpellsUtil
     {
         // prefixing with author name (me :D) to make sure this does not clash in case another mod does the same
         return generateUUIDFromName("cas:" + attribute.getRegistryName().toString());
+    }
+    
+    public static void addPotionRecipes(Potion base, Potion p, @Nullable Potion strongP, @Nullable Potion longP, Item ingredient, @Nullable Potion badP, @Nullable Potion badStrongP, @Nullable Potion badLongP, @Nullable Item badIngredient)
+    {
+        addPotionRecipe(ingredient, base, p);
+        
+        if(badP != null && badIngredient != null)
+        {
+            addPotionRecipe(badIngredient, p, badP);
+    
+            if(badStrongP != null)
+            {
+                addPotionRecipe(Items.GLOWSTONE_DUST, badP, badStrongP);
+            }
+    
+            if(badLongP != null)
+            {
+                addPotionRecipe(Items.REDSTONE, badP, badLongP);
+            }
+        }
+    
+        if(strongP != null)
+        {
+            addPotionRecipe(Items.GLOWSTONE_DUST, p, strongP);
+            
+            if(badStrongP != null && badIngredient != null)
+            {
+                addPotionRecipe(badIngredient, strongP, badStrongP);
+            }
+        }
+        
+        if(longP != null)
+        {
+            addPotionRecipe(Items.REDSTONE, p, longP);
+    
+            if(badLongP != null && badIngredient != null)
+            {
+                addPotionRecipe(badIngredient, longP, badLongP);
+            }
+        }
+    }
+    
+    public static void addPotionRecipe(Item ingredient, Potion from, Potion to)
+    {
+        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), from)), Ingredient.of(ingredient), PotionUtils.setPotion(new ItemStack(Items.POTION), to));
+        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), from)), Ingredient.of(ingredient), PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), to));
+        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), from)), Ingredient.of(ingredient), PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), to));
+    }
+    
+    public static void addPotionVariants(@Nullable Potion potion)
+    {
+        if(potion != null)
+        {
+            BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), potion)), Ingredient.of(Items.GUNPOWDER), PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), potion));
+            BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), potion)), Ingredient.of(Items.DRAGON_BREATH), PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), potion));
+        }
     }
 }
