@@ -1,5 +1,7 @@
 package de.cas_ual_ty.spells.spell;
 
+import com.google.gson.JsonObject;
+import de.cas_ual_ty.spells.SpellsFileUtil;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import net.minecraft.core.particles.ParticleTypes;
@@ -12,18 +14,20 @@ import java.util.List;
 
 public class LeapSpell extends BaseIngredientsSpell
 {
-    public final double distance;
+    public final double defaultSpeed;
     
-    public LeapSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, double distance)
+    protected double speed;
+    
+    public LeapSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, double speed)
     {
         super(manaCost, handIngredients, inventoryIngredients);
-        this.distance = distance;
+        this.defaultSpeed = speed;
     }
     
-    public LeapSpell(float manaCost, double distance)
+    public LeapSpell(float manaCost, double speed)
     {
         super(manaCost);
-        this.distance = distance;
+        this.defaultSpeed = speed;
     }
     
     public LeapSpell(float manaCost)
@@ -38,7 +42,7 @@ public class LeapSpell extends BaseIngredientsSpell
         
         Vec3 direction = entity.getViewVector(1.0F).normalize();
         double y = direction.y;
-        direction = direction.add(0, -direction.y, 0).scale(this.distance);
+        direction = direction.add(0, -direction.y, 0).scale(this.speed);
         
         entity.setDeltaMovement(direction.x, Math.max(0.5D, y + 0.5D), direction.z);
         entity.fallDistance = 0F;
@@ -56,5 +60,27 @@ public class LeapSpell extends BaseIngredientsSpell
     public boolean performOnClient()
     {
         return true;
+    }
+    
+    @Override
+    public JsonObject makeDefaultConfig()
+    {
+        JsonObject json = super.makeDefaultConfig();
+        json.addProperty("speed", this.defaultSpeed);
+        return json;
+    }
+    
+    @Override
+    public void readFromConfig(JsonObject json)
+    {
+        super.readFromConfig(json);
+        this.speed = SpellsFileUtil.jsonDouble(json, "speed");
+    }
+    
+    @Override
+    public void applyDefaultConfig()
+    {
+        super.applyDefaultConfig();
+        this.speed = this.defaultSpeed;
     }
 }

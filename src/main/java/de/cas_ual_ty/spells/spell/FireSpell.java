@@ -103,7 +103,7 @@ public class FireSpell extends BaseIngredientsSpell implements IProjectileSpell
     {
         JsonObject json = super.makeDefaultConfig();
         json.addProperty("fireSeconds", this.defaultFireSeconds);
-        json.addProperty("damage", this.damage);
+        json.addProperty("damage", this.defaultDamage);
         return json;
     }
     
