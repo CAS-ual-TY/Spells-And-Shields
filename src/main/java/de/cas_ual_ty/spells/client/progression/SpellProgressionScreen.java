@@ -5,7 +5,6 @@ import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
 import de.cas_ual_ty.spells.network.RequestEquipSpellMessage;
@@ -16,6 +15,7 @@ import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.tree.SpellNode;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
@@ -23,6 +23,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -492,25 +493,39 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
+                poseStack.pushPose();
+                poseStack.translate(0, 0, 80);
+                
                 ISpell spell = spellHolder.getSpell(slot);
                 
                 List<Component> tooltip = new LinkedList<>();
+                List<Component> desc = null;
                 
                 if(spell != null)
                 {
-                    tooltip.add(SpellsUtil.getSpellName(spell));
+                    tooltip.add(spell.getSpellName());
+                    desc = spell.getSpellDescription();
                 }
                 
                 if(!SpellKeyBindings.slotKeys[slot].isUnbound())
                 {
-                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ").append(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage()));
+                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
+                            .append(new TextComponent(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.YELLOW)));
                 }
                 else
                 {
-                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ").append(new TranslatableComponent("key.keyboard.unknown")));
+                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
+                            .append(new TranslatableComponent("key.keyboard.unknown").withStyle(ChatFormatting.RED)));
+                }
+                
+                if(desc != null && !desc.isEmpty())
+                {
+                    tooltip.addAll(desc);
                 }
                 
                 screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
+                
+                poseStack.popPose();
             });
         }
     }

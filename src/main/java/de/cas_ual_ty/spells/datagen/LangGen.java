@@ -2,7 +2,6 @@ package de.cas_ual_ty.spells.datagen;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
-import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
@@ -59,11 +58,11 @@ public class LangGen extends LanguageProvider
             add(SpellKeyBindings.key(i), "Spell Slot " + (i + 1));
         }
         
-        addSpell(SpellsRegistries.FIRE_BALL, "Fire Ball", "Shoot a fire ball");
-        addSpell(SpellsRegistries.LEAP, "Leap", "Leap forward");
-        addSpell(SpellsRegistries.SUMMON_ANIMAL, "Summon Animal", "Create life");
-        addSpell(SpellsRegistries.POCKET_BOW, "Pocket Bow", "Magical bow");
-        addSpell(SpellsRegistries.SMELT, "Smelt", "Instant blast furnace");
+        addSpell(SpellsRegistries.FIRE_BALL, "Fire Ball", "Shoot a fire ball forward.");
+        addSpell(SpellsRegistries.LEAP, "Leap", "Leap forward.");
+        addSpell(SpellsRegistries.SUMMON_ANIMAL, "Summon Animal", "Create life based on the item in your hand.");
+        addSpell(SpellsRegistries.POCKET_BOW, "Pocket Bow", "Shoot a projectile from your hand without a bow.");
+        addSpell(SpellsRegistries.SMELT, "Smelt", "Works like an instant blast furnace on the item in your hand.");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
@@ -102,7 +101,7 @@ public class LangGen extends LanguageProvider
     
     public void addSpell(Supplier<? extends ISpell> key, String name, String desc)
     {
-        add(SpellsUtil.getSpellKey(key.get()), name);
-        add(SpellsUtil.getSpellDescKey(key.get()), desc);
+        add(key.get().getNameKey(), name);
+        add(key.get().getDescKey(), desc);
     }
 }

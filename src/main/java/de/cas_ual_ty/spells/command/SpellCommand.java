@@ -91,11 +91,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_LEARN_SINGLE, SpellsUtil.getSpellName(spell), players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_LEARN_SINGLE, spell.getSpellName(), players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_LEARN_MULTIPLE, SpellsUtil.getSpellName(spell), players.size()), true);
+            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_LEARN_MULTIPLE, spell.getSpellName(), players.size()), true);
         }
         
         return players.size();
@@ -194,11 +194,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_FORGET_SINGLE, SpellsUtil.getSpellName(spell), players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_FORGET_SINGLE, spell.getSpellName(), players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_FORGET_MULTIPLE, SpellsUtil.getSpellName(spell), players.size()), true);
+            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_FORGET_MULTIPLE, spell.getSpellName(), players.size()), true);
         }
         
         return players.size();
@@ -318,11 +318,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), SpellsUtil.getSpellName(spell)), true);
+            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getSpellName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), SpellsUtil.getSpellName(spell)), true);
+            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getSpellName()), true);
         }
         
         return players.size();

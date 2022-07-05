@@ -2,6 +2,10 @@ package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -124,4 +128,30 @@ public abstract class MultiIngredientSpell extends Spell
     }
     
     public abstract void consumeItemStacks(ManaHolder manaHolder, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients);
+    
+    @Override
+    public List<Component> getSpellDescription()
+    {
+        List<Component> list = new LinkedList<>();
+        list.add(new TranslatableComponent(getDescKey()));
+        
+        List<ItemStack> handIngredients = this.getRequiredHandIngredients();
+        List<ItemStack> inventoryIngredients = this.getRequiredInventoryIngredients();
+        
+        if(!handIngredients.isEmpty())
+        {
+            list.add(TextComponent.EMPTY);
+            list.add(new TextComponent("Required (Hand):").withStyle(ChatFormatting.BLUE));
+            handIngredients.stream().map(itemStack -> new TextComponent(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
+        }
+        
+        if(!inventoryIngredients.isEmpty())
+        {
+            list.add(TextComponent.EMPTY);
+            list.add(new TextComponent("Required (Inventory):").withStyle(ChatFormatting.BLUE));
+            inventoryIngredients.stream().map(itemStack -> new TextComponent(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
+        }
+        
+        return list;
+    }
 }

@@ -2,7 +2,6 @@ package de.cas_ual_ty.spells;
 
 import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.spell.base.ISpell;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -78,26 +77,6 @@ public class SpellsUtil
         }
         
         return ContainerLevelAccess.create(player.level, player.blockPosition());
-    }
-    
-    public static String getSpellKey(ISpell spell)
-    {
-        return "spell." + spell.getRegistryName().getNamespace() + "." + spell.getRegistryName().getPath();
-    }
-    
-    public static String getSpellDescKey(ISpell spell)
-    {
-        return getSpellKey(spell) + ".desc";
-    }
-    
-    public static TranslatableComponent getSpellName(ISpell spell)
-    {
-        return new TranslatableComponent(getSpellKey(spell));
-    }
-    
-    public static TranslatableComponent getSpellDescription(ISpell spell)
-    {
-        return new TranslatableComponent(getSpellDescKey(spell));
     }
     
     @Nullable
