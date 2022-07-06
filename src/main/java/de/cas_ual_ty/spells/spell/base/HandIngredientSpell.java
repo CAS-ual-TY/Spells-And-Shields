@@ -47,32 +47,11 @@ public abstract class HandIngredientSpell extends Spell
     
     public Optional<ItemStack> hasIngredient(ManaHolder manaHolder)
     {
-        if(manaHolder.getPlayer() instanceof Player player)
+        for(ItemStack itemStack : manaHolder.getPlayer().getHandSlots())
         {
-            for(ItemStack itemStack : player.getHandSlots())
+            if(this.checkHandIngredient(manaHolder, itemStack))
             {
-                if(this.checkHandIngredient(manaHolder, itemStack))
-                {
-                    return Optional.of(itemStack);
-                }
-            }
-            
-            for(ItemStack itemStack : player.getInventory().items)
-            {
-                if(this.checkInventoryIngredient(manaHolder, itemStack))
-                {
-                    return Optional.of(itemStack);
-                }
-            }
-        }
-        else
-        {
-            for(ItemStack itemStack : manaHolder.getPlayer().getHandSlots())
-            {
-                if(this.checkHandIngredient(manaHolder, itemStack))
-                {
-                    return Optional.of(itemStack);
-                }
+                return Optional.of(itemStack);
             }
         }
         
