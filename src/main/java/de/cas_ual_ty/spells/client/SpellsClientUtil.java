@@ -80,7 +80,7 @@ public class SpellsClientUtil
                     int x = screen.getGuiLeft() - SpellNodeWidget.FRAME_WIDTH;
                     int y = screen.getGuiTop() + i * (SpellNodeWidget.FRAME_HEIGHT + 1);
                     int slot = i;
-                    SpellSlotWidget s = new ExternalSpellSlotWidget(x, y, i, (j) -> {}, (b, pS, mX, mY) -> SpellProgressionScreen.spellSlotToolTip(screen, pS, mX, mY, slot));
+                    SpellSlotWidget s = new ExternalSpellSlotWidget(x, y, i, (j) -> {}, (b, pS, mX, mY) -> SpellSlotWidget.spellSlotToolTip(screen, pS, mX, mY, slot));
                     event.addListener(s);
                     s.active = false;
                 }

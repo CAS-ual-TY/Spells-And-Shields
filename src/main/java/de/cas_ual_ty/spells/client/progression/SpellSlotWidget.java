@@ -3,14 +3,22 @@ package de.cas_ual_ty.spells.client.progression;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.client.SpellKeyBindings;
 import de.cas_ual_ty.spells.spell.base.ISpell;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.IntConsumer;
 
 public class SpellSlotWidget extends Button
@@ -23,6 +31,46 @@ public class SpellSlotWidget extends Button
     {
         super(x, y, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, TextComponent.EMPTY, (b) -> onPress.accept(slot), tooltip);
         this.slot = slot;
+    }
+    
+    public static void spellSlotToolTip(Screen screen, PoseStack poseStack, int mouseX, int mouseY, int slot)
+    {
+        Player player = Minecraft.getInstance().player;
+        
+        if(player != null)
+        {
+            SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
+            {
+                ISpell spell = spellHolder.getSpell(slot);
+                
+                List<Component> tooltip = new LinkedList<>();
+                List<Component> desc = null;
+                
+                if(spell != null)
+                {
+                    tooltip.add(spell.getSpellName());
+                    desc = spell.getSpellDescription();
+                }
+                
+                if(!SpellKeyBindings.slotKeys[slot].isUnbound())
+                {
+                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
+                            .append(new TextComponent(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.YELLOW)));
+                }
+                else
+                {
+                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
+                            .append(new TranslatableComponent("key.keyboard.unknown").withStyle(ChatFormatting.RED)));
+                }
+                
+                if(desc != null && !desc.isEmpty())
+                {
+                    tooltip.addAll(desc);
+                }
+                
+                screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
+            });
+        }
     }
     
     
