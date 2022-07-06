@@ -1,8 +1,8 @@
 package de.cas_ual_ty.spells.spell.tree;
 
 import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.Stack;
@@ -60,7 +60,7 @@ public class SpellTree
         return icon;
     }
     
-    public ResourceLocation getIcon()
+    public SpellIcon getIcon()
     {
         return getIconSpell().getIcon();
     }

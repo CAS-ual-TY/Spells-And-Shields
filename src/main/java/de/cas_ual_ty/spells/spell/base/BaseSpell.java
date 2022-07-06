@@ -6,7 +6,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public abstract class BaseSpell extends ForgeRegistryEntry<ISpell> implements IConfigurableSpell
 {
-    public ResourceLocation icon;
+    public SpellIcon icon;
     
     public BaseSpell()
     {
@@ -29,16 +29,27 @@ public abstract class BaseSpell extends ForgeRegistryEntry<ISpell> implements IC
     {
     }
     
-    public BaseSpell setIcon(ResourceLocation icon)
+    public BaseSpell setIcon(SpellIcon icon)
     {
         this.icon = icon;
         return this;
     }
     
-    @Override
-    public ResourceLocation getIcon()
+    public BaseSpell setIcon(ResourceLocation icon)
     {
-        return icon != null ? icon : IConfigurableSpell.super.getIcon();
+        this.icon = new SpellIcon(icon, 0, 0, 16, 16, 16, 16);
+        return this;
+    }
+    
+    @Override
+    public SpellIcon getIcon()
+    {
+        if(this.icon == null)
+        {
+            icon = new SpellIcon(new ResourceLocation(getRegistryName().getNamespace(), "textures/spell/" + getRegistryName().getPath() + ".png"), 0, 0, 16, 16, 16, 16);
+        }
+        
+        return icon;
     }
     
     @Override

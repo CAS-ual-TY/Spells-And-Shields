@@ -5,7 +5,6 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.List;
@@ -19,10 +18,7 @@ public interface ISpell extends IForgeRegistryEntry<ISpell>
         return false;
     }
     
-    default ResourceLocation getIcon()
-    {
-        return new ResourceLocation(getRegistryName().getNamespace(), "textures/spell/" + getRegistryName().getPath() + ".png");
-    }
+    SpellIcon getIcon();
     
     default String getNameKey()
     {

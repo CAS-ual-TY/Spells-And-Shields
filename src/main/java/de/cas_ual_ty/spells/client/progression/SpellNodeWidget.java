@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.client.progression;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import de.cas_ual_ty.spells.spell.tree.SpellNode;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.client.Minecraft;
@@ -50,7 +51,7 @@ public class SpellNodeWidget extends GuiComponent
     
     public final int width;
     
-    public final ResourceLocation spellTexture;
+    public final SpellIcon spellTexture;
     public final FormattedCharSequence title;
     
     public final Font font;
@@ -245,8 +246,8 @@ public class SpellNodeWidget extends GuiComponent
         this.blit(poseStack, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         // spell icon
-        RenderSystem.setShaderTexture(0, spellTexture);
-        blit(poseStack, x + this.x + FRAME_OFF_X, y + this.y + FRAME_OFF_Y, this.getBlitOffset(), 0, 0, SPELL_WIDTH, SPELL_HEIGHT, SPELL_HEIGHT, SPELL_WIDTH);
+        RenderSystem.setShaderTexture(0, spellTexture.getTexture());
+        blit(poseStack, x + this.x + FRAME_OFF_X, y + this.y + FRAME_OFF_Y, SPELL_WIDTH, SPELL_HEIGHT, spellTexture.getU(), spellTexture.getV(), spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getTextureWidth(), spellTexture.getTextureHeight());
         
         RenderSystem.disableBlend();
         
@@ -300,8 +301,8 @@ public class SpellNodeWidget extends GuiComponent
         
         RenderSystem.enableBlend();
         
-        RenderSystem.setShaderTexture(0, spellTexture);
-        blit(poseStack, scrollX + this.x + FRAME_OFF_X, scrollY + this.y + FRAME_OFF_Y, this.getBlitOffset(), 0, 0, 16, 16, 16, 16);
+        RenderSystem.setShaderTexture(0, spellTexture.getTexture());
+        blit(poseStack, scrollX + this.x + FRAME_OFF_X, scrollY + this.y + FRAME_OFF_Y, SPELL_WIDTH, SPELL_HEIGHT, spellTexture.getU(), spellTexture.getV(), spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getTextureWidth(), spellTexture.getTextureHeight());
         
         RenderSystem.disableBlend();
     }

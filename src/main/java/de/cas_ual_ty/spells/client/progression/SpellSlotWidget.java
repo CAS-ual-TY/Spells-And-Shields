@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
 import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -72,11 +73,11 @@ public class SpellSlotWidget extends Button
                     int offX = (SpellNodeWidget.FRAME_WIDTH - SpellNodeWidget.SPELL_WIDTH) / 2;
                     int offY = (SpellNodeWidget.FRAME_HEIGHT - SpellNodeWidget.SPELL_HEIGHT) / 2;
                     
-                    ResourceLocation texture = spell.getIcon();
-                    RenderSystem.setShaderTexture(0, texture);
+                    SpellIcon icon = spell.getIcon();
+                    RenderSystem.setShaderTexture(0, icon.getTexture());
                     
                     // render spell icon
-                    blit(poseStack, x + offX, y + offY, this.getBlitOffset(), 0, 0, SpellNodeWidget.SPELL_WIDTH, SpellNodeWidget.SPELL_HEIGHT, SpellNodeWidget.SPELL_HEIGHT, SpellNodeWidget.SPELL_WIDTH);
+                    blit(poseStack, x + offX, y + offY, SpellNodeWidget.SPELL_WIDTH, SpellNodeWidget.SPELL_HEIGHT, icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
                 }
             });
         }

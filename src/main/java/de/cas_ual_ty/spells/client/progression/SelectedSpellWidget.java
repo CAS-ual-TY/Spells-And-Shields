@@ -4,13 +4,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import de.cas_ual_ty.spells.spell.tree.SpellNode;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.Map;
@@ -29,7 +29,7 @@ public class SelectedSpellWidget extends GuiComponent
     public SpellNode spell;
     public SpellStatus spellStatus;
     
-    public ResourceLocation spellTexture;
+    public SpellIcon spellTexture;
     public int frameIcon;
     public int titleIcon;
     public FormattedCharSequence title;
@@ -91,9 +91,9 @@ public class SelectedSpellWidget extends GuiComponent
             this.blit(poseStack, this.x + TITLE_PADDING_LEFT, this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
             this.font.drawShadow(poseStack, title, (float) (this.x + TITLE_X), (float) (this.y + TITLE_Y), 0xFFFFFFFF);
             
-            RenderSystem.setShaderTexture(0, spellTexture);
+            RenderSystem.setShaderTexture(0, spellTexture.getTexture());
             RenderSystem.enableBlend();
-            blit(poseStack, this.x + SpellNodeWidget.FRAME_OFF_X, this.y + SpellNodeWidget.FRAME_OFF_Y, this.getBlitOffset(), 0, 0, 16, 16, 16, 16);
+            blit(poseStack, this.x + SpellNodeWidget.FRAME_OFF_X, this.y + SpellNodeWidget.FRAME_OFF_Y, SPELL_WIDTH, SPELL_HEIGHT, spellTexture.getU(), spellTexture.getV(), spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getTextureWidth(), spellTexture.getTextureHeight());
             RenderSystem.disableBlend();
         }
     }
