@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.base.SpellHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -22,8 +23,8 @@ public class SpellKeyBindings
     
     public static void clientSetup(FMLClientSetupEvent event)
     {
-        slotKeys = new KeyMapping[SpellsAndShields.SPELL_SLOTS];
-        cooldowns = new int[SpellsAndShields.SPELL_SLOTS];
+        slotKeys = new KeyMapping[SpellHolder.SPELL_SLOTS];
+        cooldowns = new int[SpellHolder.SPELL_SLOTS];
         
         for(int i = 0; i < slotKeys.length; ++i)
         {

@@ -5,7 +5,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionHolder;
@@ -64,8 +63,8 @@ public class SpellCommand
                         .then(Commands.literal("reset").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(SpellCommand::spellsProgressionReset)))
                 )
                 .then(Commands.literal("slots")
-                        .then(Commands.literal("set").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellsAndShields.SPELL_SLOTS)).then(Commands.argument(ARG_SPELL, SpellArgument.spell()).executes(SpellCommand::spellsSlotSet)))))
-                        .then(Commands.literal("remove").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellsAndShields.SPELL_SLOTS)).executes(SpellCommand::spellsSlotRemove))))
+                        .then(Commands.literal("set").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS)).then(Commands.argument(ARG_SPELL, SpellArgument.spell()).executes(SpellCommand::spellsSlotSet)))))
+                        .then(Commands.literal("remove").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS)).executes(SpellCommand::spellsSlotRemove))))
                         .then(Commands.literal("clear").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(SpellCommand::spellsSlotClear)))
                 )
         );

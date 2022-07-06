@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.network.RequestEquipSpellMessage;
 import de.cas_ual_ty.spells.network.RequestLearnSpellMessage;
 import de.cas_ual_ty.spells.progression.ProgressionHelper;
@@ -193,7 +194,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         addWidget(unavailableButton);
         addWidget(chooseButton);
         
-        spellSlotButtons = new SpellSlotWidget[SpellsAndShields.SPELL_SLOTS];
+        spellSlotButtons = new SpellSlotWidget[SpellHolder.SPELL_SLOTS];
         
         for(int i = 0; i < spellSlotButtons.length; ++i)
         {

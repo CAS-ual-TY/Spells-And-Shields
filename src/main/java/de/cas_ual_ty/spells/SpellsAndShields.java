@@ -30,8 +30,6 @@ public class SpellsAndShields
     
     public static final Logger LOGGER = LogManager.getLogger();
     
-    public static final int SPELL_SLOTS = 5;
-    
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(MOD_ID, "main"),

@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.client;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.*;
 import de.cas_ual_ty.spells.network.RequestSpellProgressionMenuMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
@@ -75,7 +76,7 @@ public class SpellsClientUtil
             }
             else if(event.getScreen() instanceof InventoryScreen screen)
             {
-                for(int i = 0; i < SpellsAndShields.SPELL_SLOTS; ++i)
+                for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)
                 {
                     int x = screen.getGuiLeft() - SpellNodeWidget.FRAME_WIDTH;
                     int y = screen.getGuiTop() + i * (SpellNodeWidget.FRAME_HEIGHT + 1);

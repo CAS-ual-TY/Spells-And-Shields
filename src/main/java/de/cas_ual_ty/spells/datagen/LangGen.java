@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.datagen;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
@@ -54,7 +55,7 @@ public class LangGen extends LanguageProvider
         addPotion(SpellsRegistries.STRONG_LEAKING, "Leaking");
         
         add(SpellKeyBindings.CATEGORY, "Spells & Shields");
-        for(int i = 0; i < SpellsAndShields.SPELL_SLOTS; ++i)
+        for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)
         {
             add(SpellKeyBindings.key(i), "Spell Slot " + (i + 1));
         }

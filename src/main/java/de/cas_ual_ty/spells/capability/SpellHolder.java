@@ -17,6 +17,8 @@ import java.util.Arrays;
 
 public class SpellHolder implements ISpellHolder
 {
+    public static final int SPELL_SLOTS = 5;
+    
     public static final String EMPTY_SLOT = "";
     
     protected final ISpell[] slots;
@@ -24,14 +26,14 @@ public class SpellHolder implements ISpellHolder
     
     public SpellHolder(Player player)
     {
-        slots = new ISpell[SpellsAndShields.SPELL_SLOTS];
+        slots = new ISpell[SPELL_SLOTS];
         this.player = player;
     }
     
     @Override
     public int getSlots()
     {
-        return SpellsAndShields.SPELL_SLOTS;
+        return SPELL_SLOTS;
     }
     
     @Override
@@ -66,7 +68,7 @@ public class SpellHolder implements ISpellHolder
     public ListTag serializeNBT()
     {
         ListTag tag = new ListTag();
-        for(int i = 0; i < SpellsAndShields.SPELL_SLOTS; ++i)
+        for(int i = 0; i < SPELL_SLOTS; ++i)
         {
             ISpell spell = this.getSpell(i);
             
@@ -85,7 +87,7 @@ public class SpellHolder implements ISpellHolder
     @Override
     public void deserializeNBT(ListTag tag)
     {
-        for(int i = 0; i < SpellsAndShields.SPELL_SLOTS && i < tag.size(); ++i)
+        for(int i = 0; i < SPELL_SLOTS && i < tag.size(); ++i)
         {
             if(tag.get(i).getId() != Tag.TAG_STRING)
             {
