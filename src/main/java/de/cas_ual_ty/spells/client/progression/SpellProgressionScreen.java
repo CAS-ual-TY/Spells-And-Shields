@@ -443,6 +443,8 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             RenderSystem.applyModelViewMatrix();
         }
         
+        this.selectedSpellWidget.drawTooltip(poseStack, mouseX, mouseY, this);
+        
         for(SpellSlotWidget b : this.spellSlotButtons)
         {
             b.renderToolTip(poseStack, mouseX, mouseY);

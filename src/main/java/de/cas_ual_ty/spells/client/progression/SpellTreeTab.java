@@ -245,7 +245,6 @@ public class SpellTreeTab extends GuiComponent
         {
             this.fade = Mth.clamp(this.fade - 0.04F, 0.0F, 1.0F);
         }
-        
     }
     
     public boolean isMouseOver(int x, int y, double mouseX, double mouseY)
