@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.SpellsFileUtil;
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 

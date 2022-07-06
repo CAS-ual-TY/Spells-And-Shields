@@ -10,10 +10,8 @@ import de.cas_ual_ty.spells.enchantment.ManaShieldEnchantment;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.recipe.TippedSpearRecipe;
 import de.cas_ual_ty.spells.spell.*;
-import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
-import de.cas_ual_ty.spells.spell.base.IConfigurableSpell;
-import de.cas_ual_ty.spells.spell.base.ISpell;
-import de.cas_ual_ty.spells.spell.base.SpellProjectile;
+import de.cas_ual_ty.spells.spell.base.*;
+import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -99,6 +97,7 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> SMELT = SPELLS.register("smelt", () -> new SmeltSpell(6F).setIcon(new ResourceLocation("textures/item/coal.png")));
     public static final RegistryObject<ISpell> TRANSFER_MANA = SPELLS.register("transfer_mana", () -> new TransferManaSpell(4F));
     public static final RegistryObject<ISpell> POCKET_BOW = SPELLS.register("pocket_bow", () -> new BowSpell(7F).setIcon(new ResourceLocation("textures/item/bow_pulling_0.png")));
+    public static final RegistryObject<ISpell> ATTR_TEST = SPELLS.register("attr_test", () -> new AttributeSpell().setIcon(new ResourceLocation("textures/item/redstone.png")));
     
     public static void register()
     {

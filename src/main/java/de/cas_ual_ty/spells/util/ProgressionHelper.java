@@ -1,6 +1,9 @@
-package de.cas_ual_ty.spells.progression;
+package de.cas_ual_ty.spells.util;
 
+import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
+import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
+import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.tree.SpellNode;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;

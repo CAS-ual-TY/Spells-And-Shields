@@ -1,9 +1,10 @@
-package de.cas_ual_ty.spells.spell.base;
+package de.cas_ual_ty.spells.util;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.network.FireSpellMessage;
+import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.PacketDistributor;
 

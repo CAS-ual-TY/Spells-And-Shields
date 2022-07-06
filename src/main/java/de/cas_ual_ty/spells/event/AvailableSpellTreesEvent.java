@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.event;
 
-import de.cas_ual_ty.spells.progression.SpellProgressionHolder;
+import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;

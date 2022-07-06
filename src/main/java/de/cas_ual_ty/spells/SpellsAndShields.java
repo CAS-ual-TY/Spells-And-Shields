@@ -5,6 +5,8 @@ import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.network.*;
 import de.cas_ual_ty.spells.spell.tree.SpellTrees;
+import de.cas_ual_ty.spells.util.SpellsFileUtil;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;

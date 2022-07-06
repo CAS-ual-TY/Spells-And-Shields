@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.spell.base.SpellHelper;
+import de.cas_ual_ty.spells.util.SpellHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;

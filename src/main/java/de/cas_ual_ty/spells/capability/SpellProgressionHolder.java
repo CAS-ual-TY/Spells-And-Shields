@@ -1,8 +1,8 @@
-package de.cas_ual_ty.spells.progression;
+package de.cas_ual_ty.spells.capability;
 
-import de.cas_ual_ty.spells.SpellsUtil;
-import de.cas_ual_ty.spells.capability.SpellsCapabilities;
+import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;

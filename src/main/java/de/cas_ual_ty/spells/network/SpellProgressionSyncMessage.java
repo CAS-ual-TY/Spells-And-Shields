@@ -4,7 +4,7 @@ import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;
-import de.cas_ual_ty.spells.spell.tree.SpellTreeSerializer;
+import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;

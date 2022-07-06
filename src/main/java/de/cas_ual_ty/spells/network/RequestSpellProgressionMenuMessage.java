@@ -1,11 +1,11 @@
 package de.cas_ual_ty.spells.network;
 
-import de.cas_ual_ty.spells.progression.ProgressionHelper;
-import de.cas_ual_ty.spells.progression.SpellProgressionHolder;
+import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;
+import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;

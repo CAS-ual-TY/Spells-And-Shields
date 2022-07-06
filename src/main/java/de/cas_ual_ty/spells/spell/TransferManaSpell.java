@@ -1,11 +1,11 @@
 package de.cas_ual_ty.spells.spell;
 
-import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.IProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;

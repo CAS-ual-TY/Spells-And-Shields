@@ -1,5 +1,6 @@
-package de.cas_ual_ty.spells.progression;
+package de.cas_ual_ty.spells.capability;
 
+import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;

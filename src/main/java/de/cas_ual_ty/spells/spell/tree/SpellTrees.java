@@ -1,8 +1,13 @@
 package de.cas_ual_ty.spells.spell.tree;
 
 import com.google.gson.JsonElement;
-import de.cas_ual_ty.spells.*;
+import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
+import de.cas_ual_ty.spells.util.SpellTreeSerializer;
+import de.cas_ual_ty.spells.util.SpellsFileUtil;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -28,6 +33,8 @@ public class SpellTrees
                 .add(SpellsRegistries.POCKET_BOW)
                 .leaf()
                 .add(SpellsRegistries.SMELT)
+                .leaf()
+                .add(SpellsRegistries.ATTR_TEST)
                 .leaf()
                 .leaf()
                 .add(SpellsRegistries.SUMMON_ANIMAL)

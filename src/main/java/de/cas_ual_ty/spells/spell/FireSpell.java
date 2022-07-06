@@ -1,11 +1,11 @@
 package de.cas_ual_ty.spells.spell;
 
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.SpellsFileUtil;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import de.cas_ual_ty.spells.spell.base.IProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
+import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

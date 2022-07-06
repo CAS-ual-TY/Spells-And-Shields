@@ -1,12 +1,13 @@
-package de.cas_ual_ty.spells.spell.tree;
+package de.cas_ual_ty.spells.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.SpellsFileUtil;
-import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.tree.SpellNode;
+import de.cas_ual_ty.spells.spell.tree.SpellTree;
+import de.cas_ual_ty.spells.spell.tree.SpellTreeClass;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;

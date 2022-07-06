@@ -1,8 +1,6 @@
 package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.progression.ISpellProgressionHolder;
-import de.cas_ual_ty.spells.progression.SpellProgressionHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
