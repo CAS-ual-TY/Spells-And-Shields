@@ -56,6 +56,8 @@
   "key.spells_and_shields.key.slot_3": "Spell Slot 3",
   "key.spells_and_shields.key.slot_4": "Spell Slot 4",
   "key.spells_and_shields.key.slot_5": "Spell Slot 5",
+  "spell.ingredients.hand": "Requirement (Hand):",
+  "spell.ingredients.inventory": "Requirement (Inventory):",
   "spell.spells_and_shields.fire_ball": "Fire Ball",
   "spell.spells_and_shields.fire_ball.desc": "Shoot a fire ball forward.",
   "spell.spells_and_shields.leap": "Leap",

@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.client.SpellKeyBindings;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
@@ -84,6 +85,9 @@ public class LangGen extends LanguageProvider
         add(SpellCommand.SPELLS_SLOT_SET_MULTIPLE, "Set active spell in slot %s of %s players to %s");
         add(SpellCommand.SPELLS_SLOT_CLEAR_SINGLE, "Cleared active spells of %s");
         add(SpellCommand.SPELLS_SLOT_CLEAR_MULTIPLE, "Cleared active spells of %s players");
+        
+        add(MultiIngredientSpell.KEY_REQUIRED_HAND, "Requirement (Hand):");
+        add(MultiIngredientSpell.KEY_REQUIRED_INVENTORY, "Requirement (Inventory):");
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)

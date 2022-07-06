@@ -15,6 +15,9 @@ import java.util.Optional;
 
 public abstract class MultiIngredientSpell extends Spell
 {
+    public static final String KEY_REQUIRED_HAND = "spell.ingredients.hand";
+    public static final String KEY_REQUIRED_INVENTORY = "spell.ingredients.inventory";
+    
     public MultiIngredientSpell(float manaCost)
     {
         super(manaCost);
@@ -141,14 +144,14 @@ public abstract class MultiIngredientSpell extends Spell
         if(!handIngredients.isEmpty())
         {
             list.add(TextComponent.EMPTY);
-            list.add(new TextComponent("Required (Hand):").withStyle(ChatFormatting.BLUE));
+            list.add(new TranslatableComponent(KEY_REQUIRED_HAND).withStyle(ChatFormatting.BLUE));
             handIngredients.stream().map(itemStack -> new TextComponent(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
         }
         
         if(!inventoryIngredients.isEmpty())
         {
             list.add(TextComponent.EMPTY);
-            list.add(new TextComponent("Required (Inventory):").withStyle(ChatFormatting.BLUE));
+            list.add(new TranslatableComponent(KEY_REQUIRED_INVENTORY).withStyle(ChatFormatting.BLUE));
             inventoryIngredients.stream().map(itemStack -> new TextComponent(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
         }
         
