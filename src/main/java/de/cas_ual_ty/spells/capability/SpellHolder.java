@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.capability;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
+import de.cas_ual_ty.spells.spell.base.IEquipSpell;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -13,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.Arrays;
+import javax.annotation.Nullable;
 
 public class SpellHolder implements ISpellHolder
 {
@@ -43,8 +44,18 @@ public class SpellHolder implements ISpellHolder
     }
     
     @Override
-    public void setSpell(int slot, ISpell spell)
+    public void setSpell(int slot, @Nullable ISpell spell)
     {
+        if(slots[slot] instanceof IEquipSpell equipSpell)
+        {
+            equipSpell.onUnequip(this, slot);
+        }
+        
+        if(spell instanceof IEquipSpell equipSpell)
+        {
+            equipSpell.onEquip(this, slot);
+        }
+        
         slots[slot] = spell;
     }
     
@@ -56,7 +67,10 @@ public class SpellHolder implements ISpellHolder
     
     public void clear()
     {
-        Arrays.fill(slots, null);
+        for(int i = 0; i < SPELL_SLOTS; i++)
+        {
+            removeSpell(i);
+        }
     }
     
     public SpellsSyncMessage makeSyncMessage()
