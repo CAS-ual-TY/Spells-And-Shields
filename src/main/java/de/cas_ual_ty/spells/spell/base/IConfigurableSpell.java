@@ -1,9 +1,8 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import com.google.gson.JsonObject;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public interface IConfigurableSpell extends IForgeRegistryEntry<ISpell>
+public interface IConfigurableSpell extends ISpell
 {
     JsonObject makeDefaultConfig();
     

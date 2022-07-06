@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class Spell extends ForgeRegistryEntry<ISpell> implements ISpell, IConfigurableSpell
+public abstract class Spell extends ForgeRegistryEntry<ISpell> implements IConfigurableSpell
 {
     public final float defaultManaCost;
     
@@ -84,7 +84,7 @@ public abstract class Spell extends ForgeRegistryEntry<ISpell> implements ISpell
     @Override
     public ResourceLocation getIcon()
     {
-        return icon != null ? icon : ISpell.super.getIcon();
+        return icon != null ? icon : IConfigurableSpell.super.getIcon();
     }
     
     @Override
