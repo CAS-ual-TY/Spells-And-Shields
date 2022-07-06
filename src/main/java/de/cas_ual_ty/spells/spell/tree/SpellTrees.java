@@ -62,7 +62,6 @@ public class SpellTrees
                 return;
             }
             
-            SpellTrees.addBaseTrees();
             int i = 0;
             for(SpellTree t : SpellTrees.LOADED_SPELL_TREES)
             {
