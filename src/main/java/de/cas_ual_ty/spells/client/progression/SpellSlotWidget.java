@@ -33,47 +33,6 @@ public class SpellSlotWidget extends Button
         this.slot = slot;
     }
     
-    public static void spellSlotToolTip(Screen screen, PoseStack poseStack, int mouseX, int mouseY, int slot)
-    {
-        Player player = Minecraft.getInstance().player;
-        
-        if(player != null)
-        {
-            SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
-            {
-                ISpell spell = spellHolder.getSpell(slot);
-                
-                List<Component> tooltip = new LinkedList<>();
-                List<Component> desc = null;
-                
-                if(spell != null)
-                {
-                    tooltip.add(spell.getSpellName());
-                    desc = spell.getSpellDescription();
-                }
-                
-                if(!SpellKeyBindings.slotKeys[slot].isUnbound())
-                {
-                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
-                            .append(new TextComponent(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.YELLOW)));
-                }
-                else
-                {
-                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
-                            .append(new TranslatableComponent("key.keyboard.unknown").withStyle(ChatFormatting.RED)));
-                }
-                
-                if(desc != null && !desc.isEmpty())
-                {
-                    tooltip.addAll(desc);
-                }
-                
-                screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
-            });
-        }
-    }
-    
-    
     protected void renderFrame(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
     {
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
@@ -96,6 +55,7 @@ public class SpellSlotWidget extends Button
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
+        RenderSystem.enableDepthTest();
         
         renderFrame(poseStack, mouseX, mouseY, deltaTick);
         
@@ -136,6 +96,52 @@ public class SpellSlotWidget extends Button
         if(this.isMouseOver(mouseX, mouseY))
         {
             super.renderToolTip(poseStack, mouseX, mouseY);
+        }
+    }
+    
+    public static void spellSlotToolTip(Screen screen, PoseStack poseStack, int mouseX, int mouseY, int slot)
+    {
+        Player player = Minecraft.getInstance().player;
+        
+        if(player != null)
+        {
+            SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
+            {
+                RenderSystem.enableDepthTest();
+                poseStack.pushPose();
+                poseStack.translate(0, 0, 10D);
+                
+                ISpell spell = spellHolder.getSpell(slot);
+                
+                List<Component> tooltip = new LinkedList<>();
+                List<Component> desc = null;
+                
+                if(spell != null)
+                {
+                    tooltip.add(spell.getSpellName());
+                    desc = spell.getSpellDescription();
+                }
+                
+                if(!SpellKeyBindings.slotKeys[slot].isUnbound())
+                {
+                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
+                            .append(new TextComponent(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.YELLOW)));
+                }
+                else
+                {
+                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
+                            .append(new TranslatableComponent("key.keyboard.unknown").withStyle(ChatFormatting.RED)));
+                }
+                
+                if(desc != null && !desc.isEmpty())
+                {
+                    tooltip.addAll(desc);
+                }
+                
+                screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
+                
+                poseStack.popPose();
+            });
         }
     }
 }
