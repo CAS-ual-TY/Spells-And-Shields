@@ -48,6 +48,13 @@ public class SpellsCapabilities
         }
     }
     
+    private static void playerClone(PlayerEvent.Clone event)
+    {
+        Player player = event.getOriginal();
+        SpellHolder.getSpellHolder(player).invalidate();
+        ManaHolder.getManaHolder(player).invalidate();
+    }
+    
     private static <T extends Tag, C extends INBTSerializable<T>> void attachCapability(AttachCapabilitiesEvent<?> event, C capData, Capability<C> capability, String name)
     {
         LazyOptional<C> optional = LazyOptional.of(() -> capData);
@@ -78,7 +85,6 @@ public class SpellsCapabilities
         };
         
         event.addCapability(new ResourceLocation(SpellsAndShields.MOD_ID, name), provider);
-        event.addListener(optional::invalidate);
     }
     
     private static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
@@ -86,7 +92,7 @@ public class SpellsCapabilities
         if(event.getPlayer() instanceof ServerPlayer player)
         {
             ManaHolder.getManaHolder(player).ifPresent(ManaHolder::checkSyncStatus);
-            SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sync);
+            SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
         }
     }
     
@@ -95,7 +101,7 @@ public class SpellsCapabilities
         if(event.getPlayer() instanceof ServerPlayer player)
         {
             ManaHolder.getManaHolder(player).ifPresent(ManaHolder::checkSyncStatus);
-            SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sync);
+            SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
         }
     }
     
@@ -104,7 +110,7 @@ public class SpellsCapabilities
         if(event.getPlayer() instanceof ServerPlayer player)
         {
             ManaHolder.getManaHolder(player).ifPresent(ManaHolder::checkSyncStatus);
-            SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sync);
+            SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
         }
     }
     
@@ -133,6 +139,7 @@ public class SpellsCapabilities
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsCapabilities::registerCapabilities);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, SpellsCapabilities::attachCapabilities);
+        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerClone);
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerLoggedIn);
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerRespawn);
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerChangedDimensions);

@@ -87,7 +87,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
                         spellHolder.setSpell(slot, spell);
                     }
                     
-                    spellHolder.sync();
+                    spellHolder.sendSync();
                 });
             });
         }

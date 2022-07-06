@@ -19,4 +19,6 @@ public interface IManaHolder extends INBTSerializable<ListTag>
     void burn(float amount);
     
     LivingEntity getPlayer();
+    
+    void sendSync();
 }

@@ -170,14 +170,7 @@ public class ManaHolder implements IManaHolder
                 return;
             }
             
-            if(player instanceof ServerPlayer serverPlayer)
-            {
-                SpellsAndShields.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayer), this.makeSyncMessage());
-            }
-            else
-            {
-                SpellsAndShields.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> player), this.makeSyncMessage());
-            }
+            sendSync();
         }
     }
     
@@ -202,6 +195,15 @@ public class ManaHolder implements IManaHolder
         {
             mana = tag.getFloat(0);
             extraMana = tag.getFloat(1);
+        }
+    }
+    
+    @Override
+    public void sendSync()
+    {
+        if(player instanceof ServerPlayer serverPlayer)
+        {
+            SpellsAndShields.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayer), this.makeSyncMessage());
         }
     }
     

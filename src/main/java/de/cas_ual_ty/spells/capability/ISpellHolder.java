@@ -16,5 +16,12 @@ public interface ISpellHolder extends INBTSerializable<ListTag>
     
     void setSpell(int slot, @Nullable ISpell spell);
     
+    default void removeSpell(int slot)
+    {
+        setSpell(slot, null);
+    }
+    
     Player getPlayer();
+    
+    void sendSync();
 }

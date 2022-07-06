@@ -52,14 +52,6 @@ public class SpellHolder implements ISpellHolder
         return player;
     }
     
-    public void sync()
-    {
-        if(player instanceof ServerPlayer serverPlayer)
-        {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayer), this.makeSyncMessage());
-        }
-    }
-    
     public void clear()
     {
         Arrays.fill(slots, null);
@@ -106,6 +98,15 @@ public class SpellHolder implements ISpellHolder
             {
                 slots[i] = SpellsUtil.getSpell(new ResourceLocation(key));
             }
+        }
+    }
+    
+    @Override
+    public void sendSync()
+    {
+        if(player instanceof ServerPlayer serverPlayer)
+        {
+            SpellsAndShields.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayer), this.makeSyncMessage());
         }
     }
     

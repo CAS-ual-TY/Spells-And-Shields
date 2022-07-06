@@ -186,7 +186,7 @@ public class SpellCommand
                     
                     if(changed)
                     {
-                        spellHolder.sync();
+                        spellHolder.sendSync();
                     }
                 });
             });
@@ -236,7 +236,7 @@ public class SpellCommand
                 SpellHolder.getSpellHolder(spellProgressionHolder.getPlayer()).ifPresent(spellHolder ->
                 {
                     spellHolder.clear();
-                    spellHolder.sync();
+                    spellHolder.sendSync();
                 });
             });
         });
@@ -279,7 +279,7 @@ public class SpellCommand
                 SpellHolder.getSpellHolder(spellProgressionHolder.getPlayer()).ifPresent(spellHolder ->
                 {
                     spellHolder.clear();
-                    spellHolder.sync();
+                    spellHolder.sendSync();
                 });
             });
         });
@@ -312,7 +312,7 @@ public class SpellCommand
             lazyOptional.ifPresent(spellHolder ->
             {
                 spellHolder.setSpell(slot, spell);
-                spellHolder.sync();
+                spellHolder.sendSync();
             });
         });
         
@@ -343,7 +343,7 @@ public class SpellCommand
             lazyOptional.ifPresent(spellHolder ->
             {
                 spellHolder.setSpell(slot, null);
-                spellHolder.sync();
+                spellHolder.sendSync();
             });
         });
         
@@ -373,7 +373,7 @@ public class SpellCommand
             lazyOptional.ifPresent(spellHolder ->
             {
                 spellHolder.clear();
-                spellHolder.sync();
+                spellHolder.sendSync();
             });
         });
         
