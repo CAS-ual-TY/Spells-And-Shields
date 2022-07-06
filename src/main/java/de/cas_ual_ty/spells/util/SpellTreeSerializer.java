@@ -197,7 +197,7 @@ public class SpellTreeSerializer
             }
             
             String name = SpellsFileUtil.jsonString(modifier, "name");
-            UUID id = SpellsUtil.getUUIDFromAttribute(attribute);
+            UUID id = SpellsUtil.generateUUIDForClassAttribute(attribute, name);
             
             c.addModifier(attribute, new AttributeModifier(id, name, amount, operation));
         }
@@ -219,7 +219,7 @@ public class SpellTreeSerializer
             modifier.addProperty("amount", entry.getValue().getAmount());
             modifier.addProperty("operation", entry.getValue().getOperation().toValue());
             modifier.addProperty("name", entry.getValue().getName());
-            modifier.addProperty("id", SpellsUtil.getUUIDFromAttribute(entry.getKey()).toString());
+            modifier.addProperty("id", SpellsUtil.generateUUIDForClassAttribute(entry.getKey(), c.getName()).toString());
             
             modifiers.add(modifier);
         }

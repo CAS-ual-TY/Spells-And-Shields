@@ -28,13 +28,14 @@ public class SpellTrees
     
     public static SpellTree makeBaseTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDFromName("baseTree"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Basic Spell Tree"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("baseTree"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Basic Spell Tree"))
                 .add(SpellsRegistries.LEAP)
                 .add(SpellsRegistries.POCKET_BOW)
                 .leaf()
                 .add(SpellsRegistries.SMELT)
                 .leaf()
-                .add(SpellsRegistries.ATTR_TEST)
+                .add(SpellsRegistries.MANA_BOOST)
+                .add(SpellsRegistries.HEALTH_BOOST)
                 .leaf()
                 .leaf()
                 .add(SpellsRegistries.SUMMON_ANIMAL)

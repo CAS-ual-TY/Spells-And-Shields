@@ -3,22 +3,17 @@ package de.cas_ual_ty.spells.spell.base;
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class Spell extends ForgeRegistryEntry<ISpell> implements IConfigurableSpell
+public abstract class Spell extends BaseSpell implements IConfigurableSpell
 {
     public final float defaultManaCost;
     
     protected float manaCost;
     
-    public ResourceLocation icon;
-    
     public Spell(float manaCost)
     {
         this.defaultManaCost = manaCost;
-        this.icon = null;
     }
     
     public float getManaCost()
@@ -58,7 +53,7 @@ public abstract class Spell extends ForgeRegistryEntry<ISpell> implements IConfi
     @Override
     public JsonObject makeDefaultConfig()
     {
-        JsonObject json = new JsonObject();
+        JsonObject json = super.makeDefaultConfig();
         json.addProperty("manaCost", this.defaultManaCost);
         return json;
     }
@@ -66,36 +61,14 @@ public abstract class Spell extends ForgeRegistryEntry<ISpell> implements IConfi
     @Override
     public void readFromConfig(JsonObject json)
     {
+        super.readFromConfig(json);
         this.manaCost = SpellsFileUtil.jsonFloat(json, "manaCost");
     }
     
     @Override
     public void applyDefaultConfig()
     {
+        super.applyDefaultConfig();
         manaCost = defaultManaCost;
-    }
-    
-    public Spell setIcon(ResourceLocation icon)
-    {
-        this.icon = icon;
-        return this;
-    }
-    
-    @Override
-    public ResourceLocation getIcon()
-    {
-        return icon != null ? icon : IConfigurableSpell.super.getIcon();
-    }
-    
-    @Override
-    public boolean equals(Object o)
-    {
-        return this == o;
-    }
-    
-    @Override
-    public int hashCode()
-    {
-        return this.getRegistryName().hashCode();
     }
 }

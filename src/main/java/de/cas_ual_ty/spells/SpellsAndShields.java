@@ -93,6 +93,6 @@ public class SpellsAndShields
     
     private void entityAttributeModification(EntityAttributeModificationEvent event)
     {
-        event.add(EntityType.PLAYER, SpellsRegistries.MANA_BOOST.get());
+        event.add(EntityType.PLAYER, SpellsRegistries.MAX_MANA.get());
     }
 }

@@ -141,7 +141,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             }
         }
         
-        if(selectedTab == null)
+        if(selectedTab == null && !tabs.isEmpty())
         {
             selectedTab = tabs.values().iterator().next();
         }

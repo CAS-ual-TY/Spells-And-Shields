@@ -180,15 +180,25 @@ public class SpellsUtil
         return SpellsRegistries.SPELLS_REGISTRY.get().getValues().size();
     }
     
-    public static UUID generateUUIDFromName(String name)
+    public static UUID generateUUIDFromName(String purpose, String name)
     {
-        return UUID.nameUUIDFromBytes(name.getBytes(StandardCharsets.UTF_8));
+        // prefixing with very specific string to make sure this does not clash in case another mod does the same
+        return UUID.nameUUIDFromBytes((SpellsAndShields.MOD_ID + "_" + purpose + "_" + name).getBytes(StandardCharsets.UTF_8));
     }
     
-    public static UUID getUUIDFromAttribute(Attribute attribute)
+    public static UUID generateUUIDForTree(String name)
     {
-        // prefixing with author name (me :D) to make sure this does not clash in case another mod does the same
-        return generateUUIDFromName("cas:" + attribute.getRegistryName().toString());
+        return generateUUIDFromName("tree", name);
+    }
+    
+    public static UUID generateUUIDForSlotAttribute(Attribute attribute, int slot)
+    {
+        return generateUUIDFromName("slot_" + slot, attribute.getRegistryName().toString());
+    }
+    
+    public static UUID generateUUIDForClassAttribute(Attribute attribute, String className)
+    {
+        return generateUUIDFromName("class_" + className, attribute.getRegistryName().toString());
     }
     
     public static void addPotionRecipes(Potion base, Potion p, @Nullable Potion strongP, @Nullable Potion longP, Item ingredient, @Nullable Potion badP, @Nullable Potion badStrongP, @Nullable Potion badLongP, @Nullable Item badIngredient)

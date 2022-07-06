@@ -17,6 +17,11 @@ public class SpellTreeClass
         this.modifiers = new HashMap<>();
     }
     
+    public String getName()
+    {
+        return ""; //TODO
+    }
+    
     public void addModifier(Attribute attribute, AttributeModifier modifier)
     {
         modifiers.put(attribute, modifier);
@@ -30,7 +35,7 @@ public class SpellTreeClass
             
             if(ai.hasModifier(entry.getValue()))
             {
-                ai.removeModifier(entry.getValue());
+                ai.removeModifier(entry.getValue().getId());
             }
         }
     }
@@ -43,7 +48,7 @@ public class SpellTreeClass
             
             if(ai.hasModifier(entry.getValue()))
             {
-                ai.removeModifier(entry.getValue());
+                ai.removeModifier(entry.getValue().getId());
             }
             
             ai.addPermanentModifier(entry.getValue());

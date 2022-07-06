@@ -128,7 +128,7 @@ public class ManaHolder implements IManaHolder
     
     public float getMaxMana()
     {
-        AttributeInstance attrMana = player.getAttribute(SpellsRegistries.MANA_BOOST.get());
+        AttributeInstance attrMana = player.getAttribute(SpellsRegistries.MAX_MANA.get());
         
         if(attrMana != null)
         {

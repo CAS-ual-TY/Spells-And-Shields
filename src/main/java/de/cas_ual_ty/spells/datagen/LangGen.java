@@ -28,7 +28,7 @@ public class LangGen extends LanguageProvider
     @Override
     protected void addTranslations()
     {
-        addAttribute(SpellsRegistries.MANA_BOOST, "Mana Boost");
+        addAttribute(SpellsRegistries.MAX_MANA, "Mana Boost");
         addEnchantment(SpellsRegistries.MAGIC_PROTECTION, "Magic Protection");
         addEnchantment(SpellsRegistries.MANA_BLADE, "Mana Blade");
         addEnchantment(SpellsRegistries.MANA_SHIELD, "Mana Shield");
@@ -65,6 +65,8 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.SUMMON_ANIMAL, "Summon Animal", "Create life based on the item in your hand.");
         addSpell(SpellsRegistries.POCKET_BOW, "Pocket Bow", "Shoot a projectile from your hand without a bow.");
         addSpell(SpellsRegistries.SMELT, "Smelt", "Works like an instant blast furnace on the item in your hand.");
+        addSpell(SpellsRegistries.HEALTH_BOOST, "Health Boost", "Increases your maximum health.");
+        addSpell(SpellsRegistries.MANA_BOOST, "Mana Boost", "Increases your maximum mana.");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
