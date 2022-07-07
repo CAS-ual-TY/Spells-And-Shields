@@ -45,7 +45,7 @@ public abstract class MultiIngredientSpell extends Spell
             {
                 this.perform(manaHolder, handIngredients.get(), inventoryIngredients.get());
                 
-                if(!(manaHolder.getPlayer() instanceof Player player) || !player.isCreative())
+                if(!manaHolder.getPlayer().level.isClientSide && (!(manaHolder.getPlayer() instanceof Player player) || !player.isCreative()))
                 {
                     this.burnMana(manaHolder);
                     this.consumeItemStacks(manaHolder, handIngredients.get(), inventoryIngredients.get());

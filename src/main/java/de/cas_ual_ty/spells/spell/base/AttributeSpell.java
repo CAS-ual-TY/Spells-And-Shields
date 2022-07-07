@@ -67,6 +67,11 @@ public class AttributeSpell extends BaseSpell implements IEquipSpell, IConfigura
     @Override
     public void onUnequip(SpellHolder spellHolder, int slot)
     {
+        if(spellHolder.getPlayer().level.isClientSide)
+        {
+            return;
+        }
+        
         Player player = spellHolder.getPlayer();
         AttributeInstance ai = player.getAttribute(this.attribute);
         

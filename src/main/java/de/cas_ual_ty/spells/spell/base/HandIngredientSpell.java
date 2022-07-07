@@ -34,7 +34,7 @@ public abstract class HandIngredientSpell extends Spell
             {
                 this.perform(manaHolder, itemStack);
                 
-                if(!(manaHolder.getPlayer() instanceof Player player) || !player.isCreative())
+                if(!manaHolder.getPlayer().level.isClientSide && (!(manaHolder.getPlayer() instanceof Player player) || !player.isCreative()))
                 {
                     this.burnMana(manaHolder);
                     this.consumeItemStack(manaHolder, itemStack);
