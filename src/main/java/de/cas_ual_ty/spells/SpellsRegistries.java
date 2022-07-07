@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
@@ -100,7 +101,9 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> POCKET_BOW = SPELLS.register("pocket_bow", () -> new BowSpell(7F).setIcon(new ResourceLocation("textures/item/bow_pulling_0.png")));
     public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/health_boost.png"), 0, 0, 18, 18, 18, 18)));
     public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(MAX_MANA::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new SpellIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png"), 0, 0, 18, 18, 18, 18)));
-    public static final RegistryObject<ISpell> SPEED = SPELLS.register("speed", () -> new AttributeSpell(() -> Attributes.MOVEMENT_SPEED, 0.1D, AttributeModifier.Operation.MULTIPLY_TOTAL).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/speed.png"), 0, 0, 18, 18, 18, 18)));
+    public static final RegistryObject<ISpell> SPEED = SPELLS.register("speed_boost", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED, 0).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/speed.png"), 0, 0, 18, 18, 18, 18)));
+    public static final RegistryObject<ISpell> JUMP_BOOST = SPELLS.register("jump_boost", () -> new MobEffectSpell(MobEffects.JUMP, 0).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/jump_boost.png"), 0, 0, 18, 18, 18, 18)));
+    public static final RegistryObject<ISpell> DOLPHINS_GRACE = SPELLS.register("dolphins_grace_boost", () -> new MobEffectSpell(MobEffects.DOLPHINS_GRACE, 0).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/dolphins_grace.png"), 0, 0, 18, 18, 18, 18)));
     
     public static void register()
     {
