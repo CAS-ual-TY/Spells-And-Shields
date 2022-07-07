@@ -111,7 +111,7 @@ public class SelectedSpellWidget extends GuiComponent
         {
             RenderSystem.enableDepthTest();
             poseStack.pushPose();
-            poseStack.translate(0, 0, 10D);
+            poseStack.translate(0, 0, 400D);
             
             ISpell spell = this.spell.getSpell();
             

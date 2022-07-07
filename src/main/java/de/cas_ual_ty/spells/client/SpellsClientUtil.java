@@ -1,9 +1,13 @@
 package de.cas_ual_ty.spells.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.client.progression.*;
+import de.cas_ual_ty.spells.client.progression.SpellInteractButton;
+import de.cas_ual_ty.spells.client.progression.SpellNodeWidget;
+import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
+import de.cas_ual_ty.spells.client.progression.SpellSlotWidget;
 import de.cas_ual_ty.spells.network.RequestSpellProgressionMenuMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
@@ -24,6 +28,9 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SpellsClientUtil
 {
     public static void onModConstruct()
@@ -32,6 +39,7 @@ public class SpellsClientUtil
         
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::rightClickBlock);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
+        MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
         SpellKeyBindings.register();
     }
     
@@ -65,6 +73,8 @@ public class SpellsClientUtil
         lastRightClickedBlock = event.getPos();
     }
     
+    private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
+    
     public static void initScreen(ScreenEvent.InitScreenEvent.Post event)
     {
         if(Minecraft.getInstance().player != null)
@@ -76,15 +86,31 @@ public class SpellsClientUtil
             }
             else if(event.getScreen() instanceof InventoryScreen screen)
             {
+                spellSlotWidgets.clear();
+                
                 for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)
                 {
                     int x = screen.getGuiLeft() - SpellNodeWidget.FRAME_WIDTH;
                     int y = screen.getGuiTop() + i * (SpellNodeWidget.FRAME_HEIGHT + 1);
                     int slot = i;
-                    SpellSlotWidget s = new ExternalSpellSlotWidget(x, y, i, (j) -> {}, (b, pS, mX, mY) -> SpellSlotWidget.spellSlotToolTip(screen, pS, mX, mY, slot));
+                    SpellSlotWidget s = new SpellSlotWidget(x, y, i, (j) -> {}, (b, pS, mX, mY) -> SpellSlotWidget.spellSlotToolTip(screen, pS, mX, mY, slot));
+                    spellSlotWidgets.add(s);
                     event.addListener(s);
                     s.active = false;
                 }
+            }
+        }
+    }
+    
+    public static void renderScreen(ScreenEvent.DrawScreenEvent.Post event)
+    {
+        if(event.getScreen() instanceof InventoryScreen screen)
+        {
+            for(SpellSlotWidget s : spellSlotWidgets)
+            {
+                RenderSystem.disableDepthTest();
+                s.renderToolTip(event.getPoseStack(), event.getMouseX(), event.getMouseY());
+                RenderSystem.enableDepthTest();
             }
         }
     }
