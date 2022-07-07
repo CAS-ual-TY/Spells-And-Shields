@@ -33,6 +33,8 @@ public class SpellTrees
                 .add(SpellsRegistries.POCKET_BOW)
                 .leaf()
                 .add(SpellsRegistries.SMELT)
+                .add(SpellsRegistries.SPEED)
+                .leaf()
                 .leaf()
                 .add(SpellsRegistries.MANA_BOOST)
                 .add(SpellsRegistries.HEALTH_BOOST)
