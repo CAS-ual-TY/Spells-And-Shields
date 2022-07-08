@@ -97,16 +97,16 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> LEAP = SPELLS.register("leap", () -> new LeapSpell(7F));
     public static final RegistryObject<ISpell> SUMMON_ANIMAL = SPELLS.register("summon_animal", () -> new SummonAnimalSpell(18F));
     public static final RegistryObject<ISpell> FIRE_BALL = SPELLS.register("fire_ball", () -> new FireSpell(5F));
-    public static final RegistryObject<ISpell> SMELT = SPELLS.register("smelt", () -> new SmeltSpell(6F).setIcon(new ResourceLocation("textures/item/coal.png")));
+    public static final RegistryObject<ISpell> SMELT = SPELLS.register("smelt", () -> new SmeltSpell(6F).setSmallIcon(new ResourceLocation("textures/item/coal.png")));
     public static final RegistryObject<ISpell> TRANSFER_MANA = SPELLS.register("transfer_mana", () -> new TransferManaSpell(4F));
-    public static final RegistryObject<ISpell> POCKET_BOW = SPELLS.register("pocket_bow", () -> new BowSpell(7F).setIcon(new ResourceLocation("textures/item/bow_pulling_0.png")));
-    public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/health_boost.png"), 0, 0, 18, 18, 18, 18)));
-    public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(MAX_MANA::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new SpellIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png"), 0, 0, 18, 18, 18, 18)));
-    public static final RegistryObject<ISpell> PASSIVE_SPEED = SPELLS.register("passive_speed", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED, 0).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/speed.png"), 0, 0, 18, 18, 18, 18)));
-    public static final RegistryObject<ISpell> PASSIVE_JUMP_BOOST = SPELLS.register("passive_jump_boost", () -> new MobEffectSpell(MobEffects.JUMP, 0).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/jump_boost.png"), 0, 0, 18, 18, 18, 18)));
-    public static final RegistryObject<ISpell> DOLPHINS_GRACE = SPELLS.register("passive_dolphins_grace", () -> new MobEffectSpell(MobEffects.DOLPHINS_GRACE, 0).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/dolphins_grace.png"), 0, 0, 18, 18, 18, 18)));
+    public static final RegistryObject<ISpell> POCKET_BOW = SPELLS.register("pocket_bow", () -> new BowSpell(7F).setSmallIcon(new ResourceLocation("textures/item/bow_pulling_0.png")));
+    public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation("textures/mob_effect/health_boost.png")));
+    public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(MAX_MANA::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
+    public static final RegistryObject<ISpell> PASSIVE_SPEED = SPELLS.register("passive_speed", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED, 0));
+    public static final RegistryObject<ISpell> PASSIVE_JUMP_BOOST = SPELLS.register("passive_jump_boost", () -> new MobEffectSpell(MobEffects.JUMP, 0));
+    public static final RegistryObject<ISpell> DOLPHINS_GRACE = SPELLS.register("passive_dolphins_grace", () -> new MobEffectSpell(MobEffects.DOLPHINS_GRACE, 0));
     public static final RegistryObject<ISpell> WATER_LEAP = SPELLS.register("water_leap", () -> new WaterLeapSpell(7F));
-    public static final RegistryObject<ISpell> AQUA_AFFINITY = SPELLS.register("passive_aqua_affinity", () -> new AquaAffinitySpell().setIcon(new ResourceLocation("textures/item/enchanted_book.png")));
+    public static final RegistryObject<ISpell> AQUA_AFFINITY = SPELLS.register("passive_aqua_affinity", () -> new AquaAffinitySpell().setSmallIcon(new ResourceLocation("textures/item/enchanted_book.png")));
     
     public static void register()
     {

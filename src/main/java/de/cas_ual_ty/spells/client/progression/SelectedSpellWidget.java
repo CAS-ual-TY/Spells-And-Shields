@@ -100,7 +100,9 @@ public class SelectedSpellWidget extends GuiComponent
             
             RenderSystem.setShaderTexture(0, spellTexture.getTexture());
             RenderSystem.enableBlend();
-            blit(poseStack, this.x + SpellNodeWidget.FRAME_OFF_X, this.y + SpellNodeWidget.FRAME_OFF_Y, SPELL_WIDTH, SPELL_HEIGHT, spellTexture.getU(), spellTexture.getV(), spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getTextureWidth(), spellTexture.getTextureHeight());
+            int offX = (SPELL_WIDTH - spellTexture.getWidth()) / 2;
+            int offY = (SPELL_HEIGHT - spellTexture.getHeight()) / 2;
+            blit(poseStack, this.x + SpellNodeWidget.FRAME_OFF_X + offX, this.y + SpellNodeWidget.FRAME_OFF_Y + offY, spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getU(), spellTexture.getV(), spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getTextureWidth(), spellTexture.getTextureHeight());
             RenderSystem.disableBlend();
         }
     }

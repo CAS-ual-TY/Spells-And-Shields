@@ -23,6 +23,11 @@ public class SpellIcon
         this.textureHeight = textureHeight;
     }
     
+    public SpellIcon(ResourceLocation texture)
+    {
+        this(texture, 0, 0, 18, 18, 18, 18);
+    }
+    
     public ResourceLocation getTexture()
     {
         return texture;

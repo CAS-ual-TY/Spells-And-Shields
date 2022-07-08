@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.IntConsumer;
 
+import static de.cas_ual_ty.spells.client.progression.SpellNodeWidget.SPELL_HEIGHT;
+import static de.cas_ual_ty.spells.client.progression.SpellNodeWidget.SPELL_WIDTH;
+
 public class SpellSlotWidget extends Button
 {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
@@ -77,8 +80,11 @@ public class SpellSlotWidget extends Button
                     SpellIcon icon = spell.getIcon();
                     RenderSystem.setShaderTexture(0, icon.getTexture());
                     
+                    int offX2 = (SPELL_WIDTH - icon.getWidth()) / 2;
+                    int offY2 = (SPELL_HEIGHT - icon.getHeight()) / 2;
+                    
                     // render spell icon
-                    blit(poseStack, x + offX, y + offY, SpellNodeWidget.SPELL_WIDTH, SpellNodeWidget.SPELL_HEIGHT, icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
+                    blit(poseStack, x + offX + offX2, y + offY + offY2, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
                 }
             });
         }

@@ -37,6 +37,12 @@ public abstract class BaseSpell extends ForgeRegistryEntry<ISpell> implements IC
     
     public BaseSpell setIcon(ResourceLocation icon)
     {
+        this.icon = new SpellIcon(icon, 0, 0, 18, 18, 18, 18);
+        return this;
+    }
+    
+    public BaseSpell setSmallIcon(ResourceLocation icon)
+    {
         this.icon = new SpellIcon(icon, 0, 0, 16, 16, 16, 16);
         return this;
     }
@@ -46,7 +52,7 @@ public abstract class BaseSpell extends ForgeRegistryEntry<ISpell> implements IC
     {
         if(this.icon == null)
         {
-            icon = new SpellIcon(new ResourceLocation(getRegistryName().getNamespace(), "textures/spell/" + getRegistryName().getPath() + ".png"), 0, 0, 16, 16, 16, 16);
+            icon = new SpellIcon(new ResourceLocation(getRegistryName().getNamespace(), "textures/spell/" + getRegistryName().getPath() + ".png"));
         }
         
         return icon;

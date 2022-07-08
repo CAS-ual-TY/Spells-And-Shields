@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -34,6 +35,7 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell
         this.ambient = ambient;
         this.visible = visible;
         this.showIcon = showIcon;
+        this.setIcon(new ResourceLocation(mobEffect.getRegistryName().getNamespace(), "textures/mob_effect/" + mobEffect.getRegistryName().getPath() + ".png"));
     }
     
     public MobEffectSpell(MobEffect mobEffect, int duration, int amplifier)
