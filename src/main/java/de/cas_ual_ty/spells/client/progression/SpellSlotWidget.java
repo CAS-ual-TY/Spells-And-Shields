@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
+import de.cas_ual_ty.spells.spell.base.IPassiveSpell;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import net.minecraft.ChatFormatting;
@@ -123,15 +124,18 @@ public class SpellSlotWidget extends Button
                     desc = spell.getSpellDescription();
                 }
                 
-                if(!SpellKeyBindings.slotKeys[slot].isUnbound())
+                if(!(spell instanceof IPassiveSpell))
                 {
-                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
-                            .append(new TextComponent(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.YELLOW)));
-                }
-                else
-                {
-                    tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
-                            .append(new TranslatableComponent("key.keyboard.unknown").withStyle(ChatFormatting.RED)));
+                    if(!SpellKeyBindings.slotKeys[slot].isUnbound())
+                    {
+                        tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
+                                .append(new TextComponent(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.YELLOW)));
+                    }
+                    else
+                    {
+                        tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
+                                .append(new TranslatableComponent("key.keyboard.unknown").withStyle(ChatFormatting.RED)));
+                    }
                 }
                 
                 if(desc != null && !desc.isEmpty())
