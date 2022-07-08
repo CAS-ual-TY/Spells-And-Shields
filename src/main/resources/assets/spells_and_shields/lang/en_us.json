@@ -1,5 +1,5 @@
 {
-  "attribute.name.generic.max_mana": "Mana Boost",
+  "attribute.name.generic.max_mana": "Max Mana",
   "container.spells_and_shields.spell_progression": "Spell Progression",
   "effect.spells_and_shields.extra_mana": "Extra Mana",
   "effect.spells_and_shields.instant_mana": "Instant Mana",
@@ -58,6 +58,7 @@
   "key.spells_and_shields.key.slot_5": "Spell Slot 5",
   "spell.ingredients.hand": "Requirement (Hand):",
   "spell.ingredients.inventory": "Requirement (Inventory):",
+  "spell.mob_effect.attributes": "When Applied:",
   "spell.spells_and_shields.fire_ball": "Fire Ball",
   "spell.spells_and_shields.fire_ball.desc": "Shoot a fire ball forward.",
   "spell.spells_and_shields.health_boost": "Health Boost",

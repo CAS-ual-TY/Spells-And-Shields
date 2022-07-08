@@ -3,13 +3,19 @@ package de.cas_ual_ty.spells.spell.base;
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -76,6 +82,20 @@ public class AttributeSpell extends PassiveSpell implements IEquipSpell, IConfig
     }
     
     @Override
+    public List<Component> getSpellDescription()
+    {
+        List<Component> list = new LinkedList<>();
+        list.add(new TranslatableComponent(getDescKey()));
+        
+        if(attribute != null && attributeModifier != null)
+        {
+            addTooltip(list, attribute, attributeModifier);
+        }
+        
+        return list;
+    }
+    
+    @Override
     public JsonObject makeDefaultConfig()
     {
         return new JsonObject();
@@ -93,5 +113,30 @@ public class AttributeSpell extends PassiveSpell implements IEquipSpell, IConfig
     {
         this.attribute = this.defaultAttribute.get();
         this.attributeModifier = this.defaultAttributeModifier;
+    }
+    
+    public static void addTooltip(List<Component> list, Attribute attribute, AttributeModifier attributeModifier)
+    {
+        double amount = attributeModifier.getAmount();
+        double renderedAmount;
+        
+        if(attributeModifier.getOperation() != AttributeModifier.Operation.MULTIPLY_BASE && attributeModifier.getOperation() != AttributeModifier.Operation.MULTIPLY_TOTAL)
+        {
+            renderedAmount = attributeModifier.getAmount();
+        }
+        else
+        {
+            renderedAmount = attributeModifier.getAmount() * 100D;
+        }
+        
+        if(amount > 0D)
+        {
+            list.add((new TranslatableComponent("attribute.modifier.plus." + attributeModifier.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(renderedAmount), new TranslatableComponent(attribute.getDescriptionId()))).withStyle(ChatFormatting.BLUE));
+        }
+        else if(amount < 0D)
+        {
+            renderedAmount *= -1D;
+            list.add((new TranslatableComponent("attribute.modifier.take." + attributeModifier.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(renderedAmount), new TranslatableComponent(attribute.getDescriptionId()))).withStyle(ChatFormatting.RED));
+        }
     }
 }

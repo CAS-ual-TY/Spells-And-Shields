@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.client.SpellKeyBindings;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
 import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -28,7 +29,7 @@ public class LangGen extends LanguageProvider
     @Override
     protected void addTranslations()
     {
-        addAttribute(SpellsRegistries.MAX_MANA, "Mana Boost");
+        addAttribute(SpellsRegistries.MAX_MANA, "Max Mana");
         addEnchantment(SpellsRegistries.MAGIC_PROTECTION, "Magic Protection");
         addEnchantment(SpellsRegistries.MANA_BLADE, "Mana Blade");
         addEnchantment(SpellsRegistries.MANA_SHIELD, "Mana Shield");
@@ -96,6 +97,7 @@ public class LangGen extends LanguageProvider
         
         add(MultiIngredientSpell.KEY_REQUIRED_HAND, "Requirement (Hand):");
         add(MultiIngredientSpell.KEY_REQUIRED_INVENTORY, "Requirement (Inventory):");
+        add(MobEffectSpell.KEY_WHEN_APPLIED, "When Applied:");
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)
