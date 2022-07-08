@@ -70,6 +70,8 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.SPEED, "Speed", "A passive effect.");
         addSpell(SpellsRegistries.JUMP_BOOST, "Jump Boost", "A passive effect.");
         addSpell(SpellsRegistries.DOLPHINS_GRACE, "Dolphin's Grace", "A passive effect.");
+        addSpell(SpellsRegistries.WATER_LEAP, "Water Leap", "Leap forward like a dolphin (must be underwater).");
+        addSpell(SpellsRegistries.AQUA_AFFINITY, "Dolphin's Grace", "A passive effect.");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         

@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.recipe.TippedSpearRecipe;
 import de.cas_ual_ty.spells.spell.*;
 import de.cas_ual_ty.spells.spell.base.*;
+import de.cas_ual_ty.spells.spell.tree.AquaAffinitySpell;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -104,6 +105,8 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> SPEED = SPELLS.register("speed_boost", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED, 0).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/speed.png"), 0, 0, 18, 18, 18, 18)));
     public static final RegistryObject<ISpell> JUMP_BOOST = SPELLS.register("jump_boost", () -> new MobEffectSpell(MobEffects.JUMP, 0).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/jump_boost.png"), 0, 0, 18, 18, 18, 18)));
     public static final RegistryObject<ISpell> DOLPHINS_GRACE = SPELLS.register("dolphins_grace_boost", () -> new MobEffectSpell(MobEffects.DOLPHINS_GRACE, 0).setIcon(new SpellIcon(new ResourceLocation("textures/mob_effect/dolphins_grace.png"), 0, 0, 18, 18, 18, 18)));
+    public static final RegistryObject<ISpell> WATER_LEAP = SPELLS.register("water_leap", () -> new WaterLeapSpell(7F));
+    public static final RegistryObject<ISpell> AQUA_AFFINITY = SPELLS.register("aqua_affinity", () -> new AquaAffinitySpell().setIcon(new ResourceLocation("textures/item/enchanted_book.png")));
     
     public static void register()
     {

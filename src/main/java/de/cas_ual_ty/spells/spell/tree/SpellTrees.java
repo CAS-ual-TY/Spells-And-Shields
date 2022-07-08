@@ -45,6 +45,9 @@ public class SpellTrees
                 .leaf()
                 .leaf()
                 .add(SpellsRegistries.SUMMON_ANIMAL)
+                .add(SpellsRegistries.WATER_LEAP)
+                .leaf()
+                .add(SpellsRegistries.AQUA_AFFINITY)
                 .finish();
     }
     
