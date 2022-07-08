@@ -84,6 +84,7 @@ public class SpellsAndShields
         SpellsUtil.addPotionRecipes(Potions.WATER, SpellsRegistries.LEAKING.get(), SpellsRegistries.STRONG_LEAKING.get(), SpellsRegistries.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
         SpellTrees.readOrWriteSpellTreeConfigs();
         SpellsRegistries.spellsConfigs();
+        SpellsRegistries.registerEventSpells();
     }
     
     private void clientSetup(FMLClientSetupEvent event)

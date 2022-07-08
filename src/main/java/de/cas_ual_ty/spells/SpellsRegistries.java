@@ -197,4 +197,15 @@ public class SpellsRegistries
             }
         });
     }
+    
+    public static void registerEventSpells()
+    {
+        SpellsRegistries.SPELLS_REGISTRY.get().forEach(spell ->
+        {
+            if(spell instanceof IEventSpell eventSpell)
+            {
+                eventSpell.registerEvents();
+            }
+        });
+    }
 }

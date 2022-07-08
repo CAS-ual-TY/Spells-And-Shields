@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.Util;
@@ -14,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class AttributeSpell extends BaseSpell implements IEquipSpell, IConfigurableSpell
+public class AttributeSpell extends PassiveSpell implements IEquipSpell, IConfigurableSpell
 {
     public final Supplier<Attribute> defaultAttribute;
     public final AttributeModifier defaultAttributeModifier;
@@ -31,12 +30,6 @@ public class AttributeSpell extends BaseSpell implements IEquipSpell, IConfigura
     public AttributeSpell(Supplier<Attribute> attribute, double amount, AttributeModifier.Operation operation)
     {
         this(attribute, () -> Util.makeDescriptionId("effect", attribute.get().getRegistryName()), amount, operation);
-    }
-    
-    @Override
-    public boolean activate(ManaHolder manaHolder)
-    {
-        return false;
     }
     
     @Override

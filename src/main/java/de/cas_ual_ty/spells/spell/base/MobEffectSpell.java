@@ -1,13 +1,12 @@
 package de.cas_ual_ty.spells.spell.base;
 
-import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 
 import java.util.List;
 
-public class MobEffectSpell extends BaseSpell implements IEquippedTickSpell
+public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell
 {
     public final MobEffect mobEffect;
     public final int duration;
@@ -39,12 +38,6 @@ public class MobEffectSpell extends BaseSpell implements IEquippedTickSpell
     public MobEffectSpell(MobEffect mobEffect)
     {
         this(mobEffect, 0);
-    }
-    
-    @Override
-    public boolean activate(ManaHolder manaHolder)
-    {
-        return false;
     }
     
     @Override
