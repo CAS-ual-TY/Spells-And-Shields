@@ -29,6 +29,16 @@ public class SpellTrees
     public static SpellTree makeBaseTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("baseTree"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Basic Spell Tree"))
+                .add(SpellsRegistries.PASSIVE_WATER_BREATHING)
+                .add(SpellsRegistries.PASSIVE_SLOW_FALLING)
+                .add(SpellsRegistries.PASSIVE_REGENERATION)
+                .leaf()
+                .leaf()
+                .add(SpellsRegistries.PASSIVE_DIG_SPEED)
+                .add(SpellsRegistries.PASSIVE_REPLENISHMENT)
+                .leaf()
+                .leaf()
+                .leaf()
                 .add(SpellsRegistries.LEAP)
                 .add(SpellsRegistries.POCKET_BOW)
                 .leaf()
@@ -37,7 +47,7 @@ public class SpellTrees
                 .leaf()
                 .add(SpellsRegistries.PASSIVE_JUMP_BOOST)
                 .leaf()
-                .add(SpellsRegistries.DOLPHINS_GRACE)
+                .add(SpellsRegistries.PASSIVE_DOLPHINS_GRACE)
                 .leaf()
                 .leaf()
                 .add(SpellsRegistries.MANA_BOOST)
@@ -47,7 +57,7 @@ public class SpellTrees
                 .add(SpellsRegistries.SUMMON_ANIMAL)
                 .add(SpellsRegistries.WATER_LEAP)
                 .leaf()
-                .add(SpellsRegistries.AQUA_AFFINITY)
+                .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
                 .finish();
     }
     

@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell
+public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, IEquipSpell
 {
     public static final String KEY_WHEN_APPLIED = "spell.mob_effect.attributes";
     
@@ -43,23 +43,77 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell
         this(mobEffect, duration, amplifier, false, false, false);
     }
     
-    public MobEffectSpell(MobEffect mobEffect, int amplifier)
+    public MobEffectSpell(MobEffect mobEffect, int duration)
     {
-        this(mobEffect, 20, amplifier);
+        this(mobEffect, duration, 0);
     }
     
     public MobEffectSpell(MobEffect mobEffect)
     {
-        this(mobEffect, 0);
+        this(mobEffect, 20);
+    }
+    
+    @Override
+    public void onEquip(SpellHolder spellHolder, int slot)
+    {
+        tick(spellHolder);
+    }
+    
+    @Override
+    public void onUnequip(SpellHolder spellHolder, int slot)
+    {
+        MobEffectInstance activeEffect = spellHolder.getPlayer().getEffect(this.mobEffect);
+        
+        if(activeEffect == null)
+        {
+            return;
+        }
+        
+        if(spellHolder.getPlayer().level.isClientSide)
+        {
+            activeEffect.setNoCounter(false);
+        }
+        
+        if(activeEffect.getDuration() <= duration + 1 &&
+                activeEffect.getAmplifier() == amplifier &&
+                activeEffect.isAmbient() == ambient &&
+                activeEffect.getEffect() == mobEffect)
+        {
+            spellHolder.getPlayer().removeEffect(mobEffect);
+        }
     }
     
     @Override
     public void tick(SpellHolder spellHolder)
     {
-        MobEffectInstance mobEffectInstance = new MobEffectInstance(mobEffect, duration, amplifier, ambient, visible, showIcon);
-        mobEffectInstance.setNoCounter(true);
-        mobEffectInstance.setCurativeItems(List.of());
-        spellHolder.getPlayer().addEffect(mobEffectInstance);
+        MobEffectInstance activeEffect = spellHolder.getPlayer().getEffect(this.mobEffect);
+        
+        if(spellHolder.getPlayer().level.isClientSide)
+        {
+            if(activeEffect != null)
+            {
+                activeEffect.setNoCounter(true);
+            }
+        }
+        else
+        {
+            MobEffectInstance newEffect = new MobEffectInstance(mobEffect, duration + 1, amplifier, ambient, visible, showIcon);
+            
+            if(activeEffect != null)
+            {
+                if(activeEffect.getDuration() == 1 &&
+                        activeEffect.getAmplifier() == amplifier &&
+                        activeEffect.isAmbient() == ambient &&
+                        activeEffect.getEffect() == mobEffect)
+                {
+                    activeEffect.update(newEffect);
+                }
+            }
+            else
+            {
+                spellHolder.getPlayer().addEffect(newEffect);
+            }
+        }
     }
     
     @Override

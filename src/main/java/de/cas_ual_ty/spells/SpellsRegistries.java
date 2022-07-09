@@ -102,11 +102,16 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> POCKET_BOW = SPELLS.register("pocket_bow", () -> new BowSpell(7F).setSmallIcon(new ResourceLocation("textures/item/bow_pulling_0.png")));
     public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation("textures/mob_effect/health_boost.png")));
     public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(MAX_MANA::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
-    public static final RegistryObject<ISpell> PASSIVE_SPEED = SPELLS.register("passive_speed", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED, 0));
-    public static final RegistryObject<ISpell> PASSIVE_JUMP_BOOST = SPELLS.register("passive_jump_boost", () -> new MobEffectSpell(MobEffects.JUMP, 0));
-    public static final RegistryObject<ISpell> DOLPHINS_GRACE = SPELLS.register("passive_dolphins_grace", () -> new MobEffectSpell(MobEffects.DOLPHINS_GRACE, 0));
+    public static final RegistryObject<ISpell> PASSIVE_SPEED = SPELLS.register("passive_speed", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED));
+    public static final RegistryObject<ISpell> PASSIVE_JUMP_BOOST = SPELLS.register("passive_jump_boost", () -> new MobEffectSpell(MobEffects.JUMP));
+    public static final RegistryObject<ISpell> PASSIVE_DOLPHINS_GRACE = SPELLS.register("passive_dolphins_grace", () -> new MobEffectSpell(MobEffects.DOLPHINS_GRACE));
     public static final RegistryObject<ISpell> WATER_LEAP = SPELLS.register("water_leap", () -> new WaterLeapSpell(7F));
-    public static final RegistryObject<ISpell> AQUA_AFFINITY = SPELLS.register("passive_aqua_affinity", () -> new AquaAffinitySpell().setSmallIcon(new ResourceLocation("textures/item/enchanted_book.png")));
+    public static final RegistryObject<ISpell> PASSIVE_AQUA_AFFINITY = SPELLS.register("passive_aqua_affinity", () -> new AquaAffinitySpell().setSmallIcon(new ResourceLocation("textures/item/enchanted_book.png")));
+    public static final RegistryObject<ISpell> PASSIVE_WATER_BREATHING = SPELLS.register("passive_water_breathing", () -> new MobEffectSpell(MobEffects.WATER_BREATHING));
+    public static final RegistryObject<ISpell> PASSIVE_SLOW_FALLING = SPELLS.register("passive_slow_falling", () -> new MobEffectSpell(MobEffects.SLOW_FALLING));
+    public static final RegistryObject<ISpell> PASSIVE_DIG_SPEED = SPELLS.register("passive_dig_speed", () -> new MobEffectSpell(MobEffects.DIG_SPEED));
+    public static final RegistryObject<ISpell> PASSIVE_REGENERATION = SPELLS.register("passive_regeneration", () -> new MobEffectSpell(MobEffects.REGENERATION, 50));
+    public static final RegistryObject<ISpell> PASSIVE_REPLENISHMENT = SPELLS.register("passive_replenishment", () -> new MobEffectSpell(REPLENISHMENT_EFFECT.get(), 50));
     
     public static void register()
     {

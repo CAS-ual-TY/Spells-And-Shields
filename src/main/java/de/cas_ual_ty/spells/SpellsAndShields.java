@@ -119,7 +119,7 @@ public class SpellsAndShields
         }
     }
     
-    private void tick(TickEvent.ServerTickEvent event)
+    private void tick(TickEvent.WorldTickEvent event)
     {
         if(event.phase == TickEvent.Phase.END)
         {
