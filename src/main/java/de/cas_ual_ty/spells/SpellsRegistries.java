@@ -112,6 +112,7 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> PASSIVE_DIG_SPEED = SPELLS.register("passive_dig_speed", () -> new MobEffectSpell(MobEffects.DIG_SPEED));
     public static final RegistryObject<ISpell> PASSIVE_REGENERATION = SPELLS.register("passive_regeneration", () -> new MobEffectSpell(MobEffects.REGENERATION, 50));
     public static final RegistryObject<ISpell> PASSIVE_REPLENISHMENT = SPELLS.register("passive_replenishment", () -> new MobEffectSpell(REPLENISHMENT_EFFECT.get(), 50));
+    public static final RegistryObject<ISpell> WATER_WHIP = SPELLS.register("water_whip", () -> new WaterWhipSpell(2.0F));
     
     public static void register()
     {

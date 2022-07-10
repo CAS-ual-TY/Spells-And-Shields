@@ -23,6 +23,10 @@ public class SpellTrees
     public static List<SpellTree> addBaseTrees()
     {
         LOADED_SPELL_TREES.add(makeBaseTree());
+        LOADED_SPELL_TREES.add(waterTree());
+        LOADED_SPELL_TREES.add(airTree());
+        LOADED_SPELL_TREES.add(fireTree());
+        LOADED_SPELL_TREES.add(earthTree());
         return LOADED_SPELL_TREES;
     }
     
@@ -58,6 +62,46 @@ public class SpellTrees
                 .add(SpellsRegistries.WATER_LEAP)
                 .leaf()
                 .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
+                .finish();
+    }
+    
+    public static SpellTree waterTree()
+    {
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("water"), SpellsRegistries.WATER_LEAP, 1, 20, new TextComponent("Water"))
+                .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
+                .add(SpellsRegistries.PASSIVE_WATER_BREATHING)
+                .leaf()
+                .add(SpellsRegistries.PASSIVE_DOLPHINS_GRACE)
+                .leaf()
+                .add(SpellsRegistries.PASSIVE_REGENERATION)
+                .leaf()
+                .add(SpellsRegistries.WATER_WHIP)
+                .finish();
+    }
+    
+    public static SpellTree airTree()
+    {
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("air"), SpellsRegistries.LEAP, 1, 20, new TextComponent("Air"))
+                .add(SpellsRegistries.PASSIVE_SPEED)
+                .leaf()
+                .add(SpellsRegistries.PASSIVE_JUMP_BOOST)
+                .add(SpellsRegistries.PASSIVE_SLOW_FALLING)
+                .leaf()
+                .leaf()
+                .add(SpellsRegistries.POCKET_BOW)
+                .finish();
+    }
+    
+    public static SpellTree fireTree()
+    {
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("fire"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Fire"))
+                .finish();
+    }
+    
+    public static SpellTree earthTree()
+    {
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("earth"), SpellsRegistries.PASSIVE_DIG_SPEED, 1, 20, new TextComponent("Earth"))
+                .add(SpellsRegistries.SMELT)
                 .finish();
     }
     

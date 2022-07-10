@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
@@ -94,13 +95,10 @@ public class HomingSpellProjectile extends SpellProjectile
         }
     }
     
-    public static void home(Entity source, IProjectileSpell spell, float velocity, Entity target, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
+    public static void home(Vec3 position, Vec3 direction, @Nullable Entity source, Entity target, IProjectileSpell spell, float velocity, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
     {
         if(source.level instanceof ServerLevel level)
         {
-            Vec3 position = source.getEyePosition();
-            Vec3 direction = source.getViewVector(1.0F).normalize();
-            
             HomingSpellProjectile projectile = new HomingSpellProjectile(SpellsRegistries.HOMING_SPELL_PROJECTILE.get(), level, spell);
             projectile.setOwnerAndTarget(source, target);
             
@@ -110,5 +108,15 @@ public class HomingSpellProjectile extends SpellProjectile
             
             followUp.accept(projectile, level);
         }
+    }
+    
+    public static void home(Entity source, IProjectileSpell spell, float velocity, Entity target, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
+    {
+        home(source.getEyePosition(), source.getViewVector(1.0F).normalize(), source, target, spell, velocity, followUp);
+    }
+    
+    public static void home(Entity source, IProjectileSpell spell, float velocity, Entity target)
+    {
+        home(source, spell, velocity, target, (entity, level) -> {});
     }
 }

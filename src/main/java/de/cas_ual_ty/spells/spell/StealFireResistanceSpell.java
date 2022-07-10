@@ -1,29 +1,34 @@
 package de.cas_ual_ty.spells.spell;
 
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
-import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
-import de.cas_ual_ty.spells.spell.base.IProjectileSpell;
+import de.cas_ual_ty.spells.spell.base.IReturnProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.Spell;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
 import java.util.Random;
 
-public class StealFireResistanceSpell extends Spell implements IProjectileSpell
+public class StealFireResistanceSpell extends Spell implements IReturnProjectileSpell
 {
-    public static final String TAG_OUTWARDS = SpellsAndShields.MOD_ID + ":" + "outwards";
-    public static final String TAG_RETURN = SpellsAndShields.MOD_ID + ":" + "return";
+    public static final String KEY_DIRECTION = "Direction";
+    public static final String KEY_POTION = "Effect";
     
     public StealFireResistanceSpell(float manaCost)
     {
         super(manaCost);
+    }
+    
+    @Override
+    public void perform(ManaHolder manaHolder)
+    {
+        IReturnProjectileSpell.super.shootStraight(manaHolder);
     }
     
     @Override
@@ -47,101 +52,48 @@ public class StealFireResistanceSpell extends Spell implements IProjectileSpell
     }
     
     @Override
-    public void perform(ManaHolder manaHolder)
+    public boolean onEntityHitDeparture(SpellProjectile entity, EntityHitResult entityHitResult)
     {
-        SpellProjectile.shoot(manaHolder.getPlayer(), this, 2.0F, 0.0F, (projectile, level) ->
+        if(entityHitResult.getEntity() instanceof LivingEntity livingEntity && livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE))
         {
-            projectile.addTag(TAG_OUTWARDS);
-        });
+            MobEffectInstance effect = livingEntity.getEffect(MobEffects.FIRE_RESISTANCE);
+            
+            if(effect != null)
+            {
+                livingEntity.removeEffect(MobEffects.FIRE_RESISTANCE);
+                entity.getSpellDataTag().put(KEY_POTION, effect.save(new CompoundTag()));
+                return true;
+            }
+            
+            entity.discard();
+        }
+        
+        return false;
     }
     
     @Override
-    public void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
+    public boolean onBlockHitDeparture(SpellProjectile entity, BlockHitResult blockHitResult)
     {
-        if(entity.getTags().contains(TAG_OUTWARDS))
-        {
-            if(entityHitResult.getEntity() instanceof LivingEntity livingEntity && livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE))
-            {
-                MobEffectInstance effect = livingEntity.getEffect(MobEffects.FIRE_RESISTANCE);
-                livingEntity.removeEffect(MobEffects.FIRE_RESISTANCE);
-                
-                if(entity.getOwner() != null && effect != null)
-                {
-                    HomingSpellProjectile.home(entityHitResult.getEntity(), this, 2.0F, entity.getOwner(), (projectile, level) ->
-                    {
-                        projectile.addTag(TAG_RETURN);
-                        projectile.addTag(effectToString(effect));
-                    });
-                }
-            }
-        }
-        else if(entity.getTags().contains(TAG_RETURN))
-        {
-            if(entityHitResult.getEntity() instanceof LivingEntity target)
-            {
-                for(String tag : entity.getTags())
-                {
-                    MobEffectInstance effect = stringToEffect(tag);
-                    
-                    if(effect != null)
-                    {
-                        target.addEffect(effect);
-                        break;
-                    }
-                }
-                
-            }
-        }
-        
-        IProjectileSpell.super.onEntityHit(entity, entityHitResult);
+        return false;
     }
     
-    public static String effectToString(MobEffectInstance effect)
+    @Override
+    public void onEntityHitReturn(SpellProjectile entity, EntityHitResult entityHitResult)
     {
-        return SpellsAndShields.MOD_ID
-                + ":" + effect.getDuration()
-                + ":" + effect.getAmplifier()
-                + ":" + effect.isAmbient()
-                + ":" + effect.isVisible()
-                + ":" + effect.showIcon()
-                + ":" + effect.isNoCounter();
-    }
-    
-    @Nullable
-    public static MobEffectInstance stringToEffect(String string)
-    {
-        String[] parts = string.split(":");
-        
-        if(parts.length == 7)
+        if(!entity.getSpellDataTag().contains(KEY_POTION))
         {
-            for(int i = 3; i <= 6; ++i)
+            entity.discard();
+        }
+        else if(entityHitResult.getEntity() instanceof LivingEntity target)
+        {
+            MobEffectInstance effect = MobEffectInstance.load(entity.getSpellDataTag().getCompound(KEY_POTION));
+            
+            if(effect != null)
             {
-                if(!parts[i].equalsIgnoreCase("true") && !parts[i].equalsIgnoreCase("false"))
-                {
-                    return null;
-                }
+                target.addEffect(effect);
             }
             
-            try
-            {
-                int duration = Integer.parseInt(parts[1]);
-                int amplifier = Integer.parseInt(parts[2]);
-                boolean ambient = Boolean.parseBoolean(parts[3]);
-                boolean visible = Boolean.parseBoolean(parts[4]);
-                boolean showIcon = Boolean.parseBoolean(parts[5]);
-                boolean noCounter = Boolean.parseBoolean(parts[6]);
-                
-                MobEffectInstance effect = new MobEffectInstance(MobEffects.FIRE_RESISTANCE, Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Boolean.parseBoolean(parts[3]), Boolean.parseBoolean(parts[4]), Boolean.parseBoolean(parts[5]));
-                effect.setNoCounter(Boolean.parseBoolean(parts[6]));
-                
-                return effect;
-            }
-            catch(NumberFormatException e)
-            {
-                return null;
-            }
+            entity.discard();
         }
-        
-        return null;
     }
 }

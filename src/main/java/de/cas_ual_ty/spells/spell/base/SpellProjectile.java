@@ -1,6 +1,9 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.SpellsRegistries;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
@@ -13,6 +16,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiConsumer;
 
@@ -20,15 +24,30 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
 {
     protected IProjectileSpell spell;
     
+    protected CompoundTag spellDataTag;
+    
     public SpellProjectile(EntityType<? extends SpellProjectile> entityType, Level level)
     {
         super(entityType, level);
+        this.spellDataTag = new CompoundTag();
     }
     
     public SpellProjectile(EntityType<? extends SpellProjectile> entityType, Level level, IProjectileSpell spell)
     {
         this(entityType, level);
         this.spell = spell;
+    }
+    
+    @Override
+    protected float getInertia()
+    {
+        return spell != null ? spell.getInertia() : 1F;
+    }
+    
+    @Override
+    protected ParticleOptions getTrailParticle()
+    {
+        return spell != null ? spell.getTrailParticle() : ParticleTypes.POOF;
     }
     
     @Override
@@ -44,6 +63,12 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
             spell.onTimeout(this);
             this.discard();
         }
+    }
+    
+    @NotNull
+    public CompoundTag getSpellDataTag()
+    {
+        return this.spellDataTag;
     }
     
     @Override
@@ -111,5 +136,19 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     public void readSpawnData(FriendlyByteBuf buf)
     {
         this.spell = (IProjectileSpell) buf.readRegistryId();
+    }
+    
+    @Override
+    public void addAdditionalSaveData(CompoundTag nbt)
+    {
+        super.addAdditionalSaveData(nbt);
+        nbt.put("SpellData", this.spellDataTag);
+    }
+    
+    @Override
+    public void readAdditionalSaveData(CompoundTag nbt)
+    {
+        super.readAdditionalSaveData(nbt);
+        this.spellDataTag = nbt.contains("SpellData") ? nbt.getCompound("SpellData") : new CompoundTag();
     }
 }
