@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
@@ -13,15 +14,18 @@ import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -30,6 +34,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class SpellsClientUtil
 {
@@ -88,12 +93,34 @@ public class SpellsClientUtil
             {
                 spellSlotWidgets.clear();
                 
+                RecipeBookComponent recipeBook = null;
+                
+                for(GuiEventListener l : event.getListenersList())
+                {
+                    if(l instanceof RecipeBookComponent c)
+                    {
+                        recipeBook = c;
+                    }
+                }
+                ProjectileImpactEvent
+                final RecipeBookComponent finalRecipeBook = recipeBook;
+                
+                BooleanSupplier isVisible = finalRecipeBook != null ? () -> !finalRecipeBook.isVisible() : () -> true;
+                
                 for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)
                 {
                     int x = screen.getGuiLeft() - SpellNodeWidget.FRAME_WIDTH;
                     int y = screen.getGuiTop() + i * (SpellNodeWidget.FRAME_HEIGHT + 1);
                     int slot = i;
-                    SpellSlotWidget s = new SpellSlotWidget(x, y, i, (j) -> {}, (b, pS, mX, mY) -> SpellSlotWidget.spellSlotToolTip(screen, pS, mX, mY, slot));
+                    SpellSlotWidget s = new SpellSlotWidget(x, y, i, (j) -> {}, (b, pS, mX, mY) -> SpellSlotWidget.spellSlotToolTip(screen, pS, mX, mY, slot))
+                    {
+                        @Override
+                        public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick)
+                        {
+                            this.visible = isVisible.getAsBoolean();
+                            super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+                        }
+                    };
                     spellSlotWidgets.add(s);
                     event.addListener(s);
                     s.active = false;

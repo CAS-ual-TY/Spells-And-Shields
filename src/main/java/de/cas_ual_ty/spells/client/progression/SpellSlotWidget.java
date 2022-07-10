@@ -101,7 +101,7 @@ public class SpellSlotWidget extends Button
     @Override
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY)
     {
-        if(this.isMouseOver(mouseX, mouseY))
+        if(this.visible && this.isMouseOver(mouseX, mouseY))
         {
             super.renderToolTip(poseStack, mouseX, mouseY);
         }
