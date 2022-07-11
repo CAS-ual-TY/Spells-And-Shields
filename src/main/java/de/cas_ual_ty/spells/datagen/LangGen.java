@@ -83,6 +83,7 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.WATER_WHIP, "Water Whip", "Shoots water out of the water bucket in your hand. The water returns and the bucket refills if you hold it on return.");
         addSpell(SpellsRegistries.POTION_SHOT, "Potion Shot", "Shots the contents of the potion in your hand forward.");
         addSpell(SpellsRegistries.PASSIVE_FROST_WALKER, "Frost Walker", PASSIVE_STRING);
+        addSpell(SpellsRegistries.JUMP, "Jump", "High jump. Be aware of fall damage.");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
