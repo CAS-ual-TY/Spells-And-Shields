@@ -76,6 +76,7 @@ public class SpellTrees
                 .add(SpellsRegistries.PASSIVE_REGENERATION)
                 .leaf()
                 .add(SpellsRegistries.WATER_WHIP)
+                .add(SpellsRegistries.POTION_SHOT)
                 .finish();
     }
     

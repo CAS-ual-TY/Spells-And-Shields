@@ -113,6 +113,7 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> PASSIVE_REGENERATION = SPELLS.register("passive_regeneration", () -> new MobEffectSpell(MobEffects.REGENERATION, 50));
     public static final RegistryObject<ISpell> PASSIVE_REPLENISHMENT = SPELLS.register("passive_replenishment", () -> new MobEffectSpell(REPLENISHMENT_EFFECT.get(), 50));
     public static final RegistryObject<ISpell> WATER_WHIP = SPELLS.register("water_whip", () -> new WaterWhipSpell(2.0F));
+    public static final RegistryObject<ISpell> POTION_SHOT = SPELLS.register("potion_shot", () -> new ShootPotionSpell(2.0F).setSmallIcon(new ResourceLocation("textures/item/potion.png")));
     
     public static void register()
     {

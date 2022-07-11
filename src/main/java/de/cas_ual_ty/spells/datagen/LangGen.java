@@ -78,6 +78,8 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.PASSIVE_DIG_SPEED, "Haste", "A passive effect.");
         addSpell(SpellsRegistries.PASSIVE_REGENERATION, "Regeneration", "A passive effect.");
         addSpell(SpellsRegistries.PASSIVE_REPLENISHMENT, "Replenishment", "A passive effect.");
+        addSpell(SpellsRegistries.WATER_WHIP, "Water Whip", "Shoots water out of the water bucket in your hand. The water returns and the bucket refills if you hold it on return.");
+        addSpell(SpellsRegistries.POTION_SHOT, "Potion Shot", "Shots the contents of the potion in your hand forward.");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
