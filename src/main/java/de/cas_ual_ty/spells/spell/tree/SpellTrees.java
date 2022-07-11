@@ -72,6 +72,8 @@ public class SpellTrees
                 .add(SpellsRegistries.PASSIVE_WATER_BREATHING)
                 .leaf()
                 .add(SpellsRegistries.PASSIVE_DOLPHINS_GRACE)
+                .add(SpellsRegistries.PASSIVE_FROST_WALKER)
+                .leaf()
                 .leaf()
                 .add(SpellsRegistries.PASSIVE_REGENERATION)
                 .leaf()

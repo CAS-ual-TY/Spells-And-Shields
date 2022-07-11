@@ -26,6 +26,8 @@ public class LangGen extends LanguageProvider
         super(dataGen, SpellsAndShields.MOD_ID, locale);
     }
     
+    public static final String PASSIVE_STRING = "A passive effect.";
+    
     @Override
     protected void addTranslations()
     {
@@ -68,18 +70,19 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.SMELT, "Smelt", "Works like an instant blast furnace on the item in your hand.");
         addSpell(SpellsRegistries.HEALTH_BOOST, "Health Boost", "Increases your maximum health.");
         addSpell(SpellsRegistries.MANA_BOOST, "Mana Boost", "Increases your maximum mana.");
-        addSpell(SpellsRegistries.PASSIVE_SPEED, "Speed", "A passive effect.");
-        addSpell(SpellsRegistries.PASSIVE_JUMP_BOOST, "Jump Boost", "A passive effect.");
-        addSpell(SpellsRegistries.PASSIVE_DOLPHINS_GRACE, "Dolphin's Grace", "A passive effect.");
+        addSpell(SpellsRegistries.PASSIVE_SPEED, "Speed", PASSIVE_STRING);
+        addSpell(SpellsRegistries.PASSIVE_JUMP_BOOST, "Jump Boost", PASSIVE_STRING);
+        addSpell(SpellsRegistries.PASSIVE_DOLPHINS_GRACE, "Dolphin's Grace", PASSIVE_STRING);
         addSpell(SpellsRegistries.WATER_LEAP, "Water Leap", "Leap forward like a dolphin (must be underwater).");
-        addSpell(SpellsRegistries.PASSIVE_AQUA_AFFINITY, "Aqua Affinity", "A passive effect.");
-        addSpell(SpellsRegistries.PASSIVE_WATER_BREATHING, "Water Breathing", "A passive effect.");
-        addSpell(SpellsRegistries.PASSIVE_SLOW_FALLING, "Slow Falling", "A passive effect.");
-        addSpell(SpellsRegistries.PASSIVE_DIG_SPEED, "Haste", "A passive effect.");
-        addSpell(SpellsRegistries.PASSIVE_REGENERATION, "Regeneration", "A passive effect.");
-        addSpell(SpellsRegistries.PASSIVE_REPLENISHMENT, "Replenishment", "A passive effect.");
+        addSpell(SpellsRegistries.PASSIVE_AQUA_AFFINITY, "Aqua Affinity", PASSIVE_STRING);
+        addSpell(SpellsRegistries.PASSIVE_WATER_BREATHING, "Water Breathing", PASSIVE_STRING);
+        addSpell(SpellsRegistries.PASSIVE_SLOW_FALLING, "Slow Falling", PASSIVE_STRING);
+        addSpell(SpellsRegistries.PASSIVE_DIG_SPEED, "Haste", PASSIVE_STRING);
+        addSpell(SpellsRegistries.PASSIVE_REGENERATION, "Regeneration", PASSIVE_STRING);
+        addSpell(SpellsRegistries.PASSIVE_REPLENISHMENT, "Replenishment", PASSIVE_STRING);
         addSpell(SpellsRegistries.WATER_WHIP, "Water Whip", "Shoots water out of the water bucket in your hand. The water returns and the bucket refills if you hold it on return.");
         addSpell(SpellsRegistries.POTION_SHOT, "Potion Shot", "Shots the contents of the potion in your hand forward.");
+        addSpell(SpellsRegistries.PASSIVE_FROST_WALKER, "Frost Walker", PASSIVE_STRING);
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         

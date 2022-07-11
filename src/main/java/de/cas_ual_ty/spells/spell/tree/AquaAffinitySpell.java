@@ -1,14 +1,15 @@
 package de.cas_ual_ty.spells.spell.tree;
 
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.spell.base.EventSpell;
+import de.cas_ual_ty.spells.spell.base.IEventSpell;
+import de.cas_ual_ty.spells.spell.base.PassiveSpell;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
-public class AquaAffinitySpell extends EventSpell<PlayerEvent.BreakSpeed>
+public class AquaAffinitySpell extends PassiveSpell implements IEventSpell
 {
     public void playerBreakSpeed(PlayerEvent.BreakSpeed event)
     {

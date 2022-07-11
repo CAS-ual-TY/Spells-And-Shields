@@ -61,6 +61,8 @@
   "spell.mob_effect.attributes": "When Applied:",
   "spell.spells_and_shields.fire_ball": "Fire Ball",
   "spell.spells_and_shields.fire_ball.desc": "Shoot a fire ball forward.",
+  "spell.spells_and_shields.frost_walker": "Frost Walker",
+  "spell.spells_and_shields.frost_walker.desc": "A passive effect.",
   "spell.spells_and_shields.health_boost": "Health Boost",
   "spell.spells_and_shields.health_boost.desc": "Increases your maximum health.",
   "spell.spells_and_shields.leap": "Leap",
