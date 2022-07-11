@@ -102,7 +102,7 @@ public class SpellsClientUtil
                         recipeBook = c;
                     }
                 }
-                ProjectileImpactEvent
+                
                 final RecipeBookComponent finalRecipeBook = recipeBook;
                 
                 BooleanSupplier isVisible = finalRecipeBook != null ? () -> !finalRecipeBook.isVisible() : () -> true;
