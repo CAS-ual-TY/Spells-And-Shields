@@ -97,6 +97,8 @@
   "spell.spells_and_shields.pocket_bow.desc": "Shoot a projectile from your hand without a bow.",
   "spell.spells_and_shields.potion_shot": "Potion Shot",
   "spell.spells_and_shields.potion_shot.desc": "Shots the contents of the potion in your hand forward.",
+  "spell.spells_and_shields.pressurize": "Pressurize",
+  "spell.spells_and_shields.pressurize.desc": "Knock back every entity around you and remove any fluid.",
   "spell.spells_and_shields.smelt": "Smelt",
   "spell.spells_and_shields.smelt.desc": "Works like an instant blast furnace on the item in your hand.",
   "spell.spells_and_shields.summon_animal": "Summon Animal",

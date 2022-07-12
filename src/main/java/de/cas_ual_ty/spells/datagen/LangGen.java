@@ -86,6 +86,7 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.JUMP, "Jump", "High jump. Be aware of fall damage.");
         addSpell(SpellsRegistries.FALL_DAMAGE_REDUCTION, "Reduce Fall Damage", "Consumes mana to reduce or cancel fall damage.");
         addSpell(SpellsRegistries.FIRE_CHARGE, "Fire Charge", "Shoot a fire charge forward, like a Ghast.");
+        addSpell(SpellsRegistries.PRESSURIZE, "Pressurize", "Knock back every entity around you and remove any fluid.");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         

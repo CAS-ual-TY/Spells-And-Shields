@@ -86,6 +86,8 @@ public class SpellTrees
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("air"), SpellsRegistries.LEAP, 1, 20, new TextComponent("Air"))
                 .add(SpellsRegistries.JUMP)
+                .add(SpellsRegistries.PRESSURIZE)
+                .leaf()
                 .leaf()
                 .add(SpellsRegistries.PASSIVE_SPEED)
                 .leaf()
