@@ -22,7 +22,6 @@ public class SpellTrees
     
     public static List<SpellTree> addBaseTrees()
     {
-        LOADED_SPELL_TREES.add(makeBaseTree());
         LOADED_SPELL_TREES.add(waterTree());
         LOADED_SPELL_TREES.add(airTree());
         LOADED_SPELL_TREES.add(fireTree());
@@ -30,44 +29,10 @@ public class SpellTrees
         return LOADED_SPELL_TREES;
     }
     
-    public static SpellTree makeBaseTree()
-    {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("baseTree"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Basic Spell Tree"))
-                .add(SpellsRegistries.PASSIVE_WATER_BREATHING)
-                .add(SpellsRegistries.PASSIVE_SLOW_FALLING)
-                .add(SpellsRegistries.PASSIVE_REGENERATION)
-                .leaf()
-                .leaf()
-                .add(SpellsRegistries.PASSIVE_DIG_SPEED)
-                .add(SpellsRegistries.PASSIVE_REPLENISHMENT)
-                .leaf()
-                .leaf()
-                .leaf()
-                .add(SpellsRegistries.LEAP)
-                .add(SpellsRegistries.POCKET_BOW)
-                .leaf()
-                .add(SpellsRegistries.SMELT)
-                .add(SpellsRegistries.PASSIVE_SPEED)
-                .leaf()
-                .add(SpellsRegistries.PASSIVE_JUMP_BOOST)
-                .leaf()
-                .add(SpellsRegistries.PASSIVE_DOLPHINS_GRACE)
-                .leaf()
-                .leaf()
-                .add(SpellsRegistries.MANA_BOOST)
-                .add(SpellsRegistries.HEALTH_BOOST)
-                .leaf()
-                .leaf()
-                .add(SpellsRegistries.SUMMON_ANIMAL)
-                .add(SpellsRegistries.WATER_LEAP)
-                .leaf()
-                .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
-                .finish();
-    }
-    
     public static SpellTree waterTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("water"), SpellsRegistries.WATER_LEAP, 1, 20, new TextComponent("Water"))
+                .icon(SpellsRegistries.WATER_WHIP.get())
                 .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
                 .add(SpellsRegistries.PASSIVE_WATER_BREATHING)
                 .leaf()
@@ -85,6 +50,7 @@ public class SpellTrees
     public static SpellTree airTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("air"), SpellsRegistries.LEAP, 1, 20, new TextComponent("Air"))
+                .icon(SpellsRegistries.PRESSURIZE.get())
                 .add(SpellsRegistries.JUMP)
                 .add(SpellsRegistries.PRESSURIZE)
                 .leaf()
@@ -104,6 +70,7 @@ public class SpellTrees
     public static SpellTree fireTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("fire"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Fire"))
+                .icon(SpellsRegistries.FIRE_BALL.get())
                 .add(SpellsRegistries.FIRE_CHARGE)
                 .finish();
     }
