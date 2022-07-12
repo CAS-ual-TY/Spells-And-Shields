@@ -27,6 +27,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
@@ -117,6 +119,7 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> PASSIVE_FROST_WALKER = SPELLS.register("frost_walker", () -> new WalkerSpell().setSmallIcon(new ResourceLocation("textures/item/golden_boots.png")));
     public static final RegistryObject<ISpell> JUMP = SPELLS.register("jump", () -> new JumpSpell(5F).setSmallIcon(new ResourceLocation("textures/item/feather.png")));
     public static final RegistryObject<ISpell> FALL_DAMAGE_REDUCTION = SPELLS.register("fall_damage_reduction", () -> new ReduceFallDamageSpell().setSmallIcon(new ResourceLocation("textures/item/diamond_boots.png")));
+    public static final RegistryObject<ISpell> FIRE_CHARGE = SPELLS.register("fire_charge", () -> new FireChargeSpell(4F, new ItemStack(Items.FIRE_CHARGE)).setSmallIcon(new ResourceLocation("textures/item/fire_charge.png")));
     
     public static void register()
     {

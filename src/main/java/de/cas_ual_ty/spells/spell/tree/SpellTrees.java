@@ -102,6 +102,7 @@ public class SpellTrees
     public static SpellTree fireTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("fire"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Fire"))
+                .add(SpellsRegistries.FIRE_CHARGE)
                 .finish();
     }
     
