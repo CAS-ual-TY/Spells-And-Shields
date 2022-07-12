@@ -22,17 +22,25 @@ public class SpellTrees
     
     public static List<SpellTree> addBaseTrees()
     {
-        LOADED_SPELL_TREES.add(waterTree());
-        LOADED_SPELL_TREES.add(airTree());
         LOADED_SPELL_TREES.add(fireTree());
+        LOADED_SPELL_TREES.add(waterTree());
         LOADED_SPELL_TREES.add(earthTree());
+        LOADED_SPELL_TREES.add(airTree());
         return LOADED_SPELL_TREES;
+    }
+    
+    public static SpellTree fireTree()
+    {
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("fire"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Fire"))
+                .icon(SpellsRegistries.FIRE_TREE.get())
+                .add(SpellsRegistries.FIRE_CHARGE)
+                .finish();
     }
     
     public static SpellTree waterTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("water"), SpellsRegistries.WATER_LEAP, 1, 20, new TextComponent("Water"))
-                .icon(SpellsRegistries.WATER_WHIP.get())
+                .icon(SpellsRegistries.WATER_TREE.get())
                 .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
                 .leaf()
                 .add(SpellsRegistries.PASSIVE_WATER_BREATHING)
@@ -48,10 +56,18 @@ public class SpellTrees
                 .finish();
     }
     
+    public static SpellTree earthTree()
+    {
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("earth"), SpellsRegistries.PASSIVE_DIG_SPEED, 1, 20, new TextComponent("Earth"))
+                .icon(SpellsRegistries.EARTH_TREE.get())
+                .add(SpellsRegistries.SMELT)
+                .finish();
+    }
+    
     public static SpellTree airTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("air"), SpellsRegistries.LEAP, 1, 20, new TextComponent("Air"))
-                .icon(SpellsRegistries.PRESSURIZE.get())
+                .icon(SpellsRegistries.AIR_TREE.get())
                 .add(SpellsRegistries.JUMP)
                 .add(SpellsRegistries.PRESSURIZE)
                 .leaf()
@@ -65,21 +81,6 @@ public class SpellTrees
                 .leaf()
                 .leaf()
                 .add(SpellsRegistries.POCKET_BOW)
-                .finish();
-    }
-    
-    public static SpellTree fireTree()
-    {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("fire"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Fire"))
-                .icon(SpellsRegistries.FIRE_BALL.get())
-                .add(SpellsRegistries.FIRE_CHARGE)
-                .finish();
-    }
-    
-    public static SpellTree earthTree()
-    {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("earth"), SpellsRegistries.PASSIVE_DIG_SPEED, 1, 20, new TextComponent("Earth"))
-                .add(SpellsRegistries.SMELT)
                 .finish();
     }
     
