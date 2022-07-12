@@ -34,6 +34,7 @@ public class SpellTrees
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("water"), SpellsRegistries.WATER_LEAP, 1, 20, new TextComponent("Water"))
                 .icon(SpellsRegistries.WATER_WHIP.get())
                 .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
+                .leaf()
                 .add(SpellsRegistries.PASSIVE_WATER_BREATHING)
                 .leaf()
                 .add(SpellsRegistries.PASSIVE_DOLPHINS_GRACE)
@@ -84,6 +85,11 @@ public class SpellTrees
     
     public static void readOrWriteSpellTreeConfigs()
     {
+        if(SpellsConfig.ADD_DEFAULT_SPELL_TREES.get())
+        {
+            SpellTrees.addBaseTrees();
+        }
+        
         boolean makeConfigs = !SpellsFileUtil.doesSubConfigDirExist("spell_trees");
         
         Path p = SpellsFileUtil.getOrCreateSubConfigDir("spell_trees");
@@ -96,12 +102,10 @@ public class SpellTrees
             return;
         }
         
-        if(makeConfigs)
+        if(SpellsConfig.CREATE_DEFAULT_SPELL_TREES.get())
         {
-            if(!SpellsConfig.CREATE_DEFAULT_SPELL_TREES.get())
-            {
-                return;
-            }
+            SpellsConfig.CREATE_DEFAULT_SPELL_TREES.set(false);
+            SpellsConfig.CREATE_DEFAULT_SPELL_TREES.save();
             
             int i = 0;
             for(SpellTree t : SpellTrees.LOADED_SPELL_TREES)
@@ -120,13 +124,9 @@ public class SpellTrees
                 }
             }
         }
-        else
+        
+        if(SpellsConfig.LOAD_SPELL_TREES.get())
         {
-            if(!SpellsConfig.LOAD_SPELL_TREES.get())
-            {
-                return;
-            }
-            
             for(File f : folder.listFiles())
             {
                 if(f.getName().toLowerCase().endsWith(".json"))
