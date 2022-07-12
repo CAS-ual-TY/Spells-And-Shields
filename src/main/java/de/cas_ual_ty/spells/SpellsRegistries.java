@@ -155,63 +155,73 @@ public class SpellsRegistries
             return;
         }
         
-        SPELLS_REGISTRY.get().getValues().stream().filter(s -> s instanceof IConfigurableSpell).map(s -> (IConfigurableSpell) s).forEach(spell ->
+        if(SpellsConfig.LOAD_SPELLS_CONFIGS.get())
         {
-            File f = p.resolve(spell.getFileName() + ".json").toFile();
-            
-            if(!f.exists())
+            SPELLS_REGISTRY.get().getValues().stream().filter(s -> s instanceof IConfigurableSpell).map(s -> (IConfigurableSpell) s).forEach(spell ->
             {
-                try
-                {
-                    SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
-                    SpellsAndShields.LOGGER.info("Successfully wrote default config of spell {} to file {}.", spell.getRegistryName().toString(), f.toPath());
-                }
-                catch(Exception e)
-                {
-                    SpellsAndShields.LOGGER.error("Failed writing default config of spell {} to file {}.", spell.getRegistryName().toString(), f.toPath(), e);
-                    e.printStackTrace();
-                }
+                File f = p.resolve(spell.getFileName() + ".json").toFile();
                 
-                spell.applyDefaultConfig();
-            }
-            else
-            {
-                boolean failed = false;
-                JsonElement json = null;
-                
-                try
+                if(!f.exists())
                 {
-                    json = SpellsFileUtil.readJsonFromFile(f);
-                }
-                catch(Exception e)
-                {
-                    failed = true;
-                    SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath(), e);
-                    e.printStackTrace();
+                    if(SpellsConfig.CREATE_SPELLS_CONFIGS.get())
+                    {
+                        try
+                        {
+                            SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
+                            SpellsAndShields.LOGGER.info("Successfully wrote default config of spell {} to file {}.", spell.getRegistryName().toString(), f.toPath());
+                        }
+                        catch(Exception e)
+                        {
+                            SpellsAndShields.LOGGER.error("Failed writing default config of spell {} to file {}.", spell.getRegistryName().toString(), f.toPath(), e);
+                            e.printStackTrace();
+                        }
+                    }
+                    
                     spell.applyDefaultConfig();
                 }
-                
-                if(json != null && json.isJsonObject())
+                else
                 {
+                    boolean failed = false;
+                    JsonElement json = null;
+                    
                     try
                     {
-                        spell.readFromConfig(json.getAsJsonObject());
-                        SpellsAndShields.LOGGER.info("Successfully read config of spell {} from file {}.", spell.getRegistryName().toString(), f.toPath());
+                        json = SpellsFileUtil.readJsonFromFile(f);
                     }
-                    catch(IllegalStateException e)
+                    catch(Exception e)
                     {
+                        failed = true;
                         SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath(), e);
                         e.printStackTrace();
                         spell.applyDefaultConfig();
                     }
+                    
+                    if(json != null && json.isJsonObject())
+                    {
+                        try
+                        {
+                            spell.readFromConfig(json.getAsJsonObject());
+                            SpellsAndShields.LOGGER.info("Successfully read config of spell {} from file {}.", spell.getRegistryName().toString(), f.toPath());
+                        }
+                        catch(IllegalStateException e)
+                        {
+                            SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath(), e);
+                            e.printStackTrace();
+                            spell.applyDefaultConfig();
+                        }
+                    }
+                    else if(!failed)
+                    {
+                        SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath());
+                        spell.applyDefaultConfig();
+                    }
                 }
-                else if(!failed)
-                {
-                    SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath());
-                    spell.applyDefaultConfig();
-                }
-            }
-        });
+            });
+        }
+        else
+        {
+            SPELLS_REGISTRY.get().getValues().stream().filter(s -> s instanceof IConfigurableSpell).map(s -> (IConfigurableSpell) s).forEach(IConfigurableSpell::applyDefaultConfig);
+        }
     }
     
     public static void registerEventSpells()

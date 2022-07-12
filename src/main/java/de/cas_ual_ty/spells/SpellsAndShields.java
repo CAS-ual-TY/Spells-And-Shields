@@ -74,11 +74,6 @@ public class SpellsAndShields
     
     private void setup(FMLCommonSetupEvent event)
     {
-        if(SpellsConfig.ADD_DEFAULT_SPELL_TREES.get())
-        {
-            SpellTrees.addBaseTrees();
-        }
-        
         SpellsUtil.addPotionRecipes(Potions.WATER, SpellsRegistries.INSTANT_MANA.get(), SpellsRegistries.STRONG_INSTANT_MANA.get(), null, Items.LAPIS_LAZULI, SpellsRegistries.MANA_BOMB.get(), SpellsRegistries.STRONG_MANA_BOMB.get(), null, Items.FERMENTED_SPIDER_EYE);
         SpellsUtil.addPotionRecipes(Potions.WATER, SpellsRegistries.REPLENISHMENT.get(), SpellsRegistries.STRONG_REPLENISHMENT.get(), SpellsRegistries.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
         SpellsUtil.addPotionRecipes(Potions.WATER, SpellsRegistries.LEAKING.get(), SpellsRegistries.STRONG_LEAKING.get(), SpellsRegistries.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
