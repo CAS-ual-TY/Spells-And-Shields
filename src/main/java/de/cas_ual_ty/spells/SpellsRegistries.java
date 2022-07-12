@@ -11,7 +11,6 @@ import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.recipe.TippedSpearRecipe;
 import de.cas_ual_ty.spells.spell.*;
 import de.cas_ual_ty.spells.spell.base.*;
-import de.cas_ual_ty.spells.spell.tree.AquaAffinitySpell;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
