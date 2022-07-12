@@ -116,6 +116,7 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> POTION_SHOT = SPELLS.register("potion_shot", () -> new ShootPotionSpell(2.0F).setSmallIcon(new ResourceLocation("textures/item/potion.png")));
     public static final RegistryObject<ISpell> PASSIVE_FROST_WALKER = SPELLS.register("frost_walker", () -> new WalkerSpell().setSmallIcon(new ResourceLocation("textures/item/golden_boots.png")));
     public static final RegistryObject<ISpell> JUMP = SPELLS.register("jump", () -> new JumpSpell(5F).setSmallIcon(new ResourceLocation("textures/item/feather.png")));
+    public static final RegistryObject<ISpell> FALL_DAMAGE_REDUCTION = SPELLS.register("fall_damage_reduction", () -> new ReduceFallDamageSpell().setSmallIcon(new ResourceLocation("textures/item/diamond_boots.png")));
     
     public static void register()
     {

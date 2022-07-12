@@ -90,6 +90,8 @@ public class SpellTrees
                 .add(SpellsRegistries.PASSIVE_SPEED)
                 .leaf()
                 .add(SpellsRegistries.PASSIVE_JUMP_BOOST)
+                .add(SpellsRegistries.FALL_DAMAGE_REDUCTION)
+                .leaf()
                 .add(SpellsRegistries.PASSIVE_SLOW_FALLING)
                 .leaf()
                 .leaf()

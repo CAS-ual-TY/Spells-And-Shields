@@ -59,6 +59,8 @@
   "spell.ingredients.hand": "Requirement (Hand):",
   "spell.ingredients.inventory": "Requirement (Inventory):",
   "spell.mob_effect.attributes": "When Applied:",
+  "spell.spells_and_shields.fall_damage_reduction": "Reduce Fall Damage",
+  "spell.spells_and_shields.fall_damage_reduction.desc": "Consumes mana to reduce or cancel fall damage.",
   "spell.spells_and_shields.fire_ball": "Fire Ball",
   "spell.spells_and_shields.fire_ball.desc": "Shoot a fire ball forward.",
   "spell.spells_and_shields.frost_walker": "Frost Walker",

@@ -84,6 +84,7 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.POTION_SHOT, "Potion Shot", "Shots the contents of the potion in your hand forward.");
         addSpell(SpellsRegistries.PASSIVE_FROST_WALKER, "Frost Walker", PASSIVE_STRING);
         addSpell(SpellsRegistries.JUMP, "Jump", "High jump. Be aware of fall damage.");
+        addSpell(SpellsRegistries.FALL_DAMAGE_REDUCTION, "Reduce Fall Damage", "Consumes mana to reduce or cancel fall damage.");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
