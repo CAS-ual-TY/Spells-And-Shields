@@ -142,7 +142,7 @@ public class SpellTreeTab extends GuiComponent
         RenderSystem.setShaderTexture(0, icon.getTexture());
         int offX = (SpellNodeWidget.SPELL_WIDTH - icon.getWidth()) / 2;
         int offY = (SpellNodeWidget.SPELL_HEIGHT - icon.getHeight()) / 2;
-        blit(poseStack, x + 32 * index + 6 + offX, y - 28 + 9 + offY, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
+        blit(poseStack, x + 32 * index + 5 + offX, y - 28 + 9 + offY, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
     }
     
     public void drawContents(PoseStack poseStack)
