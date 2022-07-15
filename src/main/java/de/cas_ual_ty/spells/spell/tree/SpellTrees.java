@@ -61,6 +61,7 @@ public class SpellTrees
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("earth"), SpellsRegistries.PASSIVE_DIG_SPEED, 1, 20, new TextComponent("Earth"))
                 .icon(SpellsRegistries.EARTH_TREE.get())
                 .add(SpellsRegistries.SMELT)
+                .add(SpellsRegistries.INSTANT_MINE)
                 .finish();
     }
     
