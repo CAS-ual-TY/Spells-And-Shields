@@ -31,59 +31,60 @@ public class SpellTrees
     
     public static SpellTree fireTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Nether"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), SpellsRegistries.FIRE_BALL, 15, 28, new TextComponent("Nether"))
                 .icon(SpellsRegistries.PASSIVE_FIRE_RESISTANCE.get())
-                .add(SpellsRegistries.PASSIVE_FIRE_RESISTANCE)
+                .add(SpellsRegistries.PASSIVE_FIRE_RESISTANCE, 30, 30)
                 .leaf()
-                .add(SpellsRegistries.FIRE_CHARGE)
+                .add(SpellsRegistries.FIRE_CHARGE, 10, 28)
                 .finish();
     }
     
     public static SpellTree waterTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), SpellsRegistries.WATER_LEAP, 1, 20, new TextComponent("Ocean"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), SpellsRegistries.PASSIVE_WATER_BREATHING, 10, 0, new TextComponent("Ocean"))
                 .icon(SpellsRegistries.PASSIVE_DOLPHINS_GRACE.get())
-                .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
-                .leaf()
-                .add(SpellsRegistries.PASSIVE_WATER_BREATHING)
-                .leaf()
-                .add(SpellsRegistries.PASSIVE_DOLPHINS_GRACE)
-                .add(SpellsRegistries.PASSIVE_FROST_WALKER)
+                .add(SpellsRegistries.PASSIVE_REGENERATION, 20, 20)
+                .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY, 20, 20)
                 .leaf()
                 .leaf()
-                .add(SpellsRegistries.PASSIVE_REGENERATION)
+                .add(SpellsRegistries.WATER_LEAP, 5, 10)
+                .add(SpellsRegistries.PASSIVE_DOLPHINS_GRACE, 30, 30)
                 .leaf()
-                .add(SpellsRegistries.WATER_WHIP)
-                .add(SpellsRegistries.POTION_SHOT)
+                .add(SpellsRegistries.PASSIVE_FROST_WALKER, 10, 14)
+                .leaf()
+                .leaf()
+                .add(SpellsRegistries.WATER_WHIP, 10, 10)
+                .add(SpellsRegistries.POTION_SHOT, 10, 10)
                 .finish();
     }
     
     public static SpellTree earthTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), SpellsRegistries.PASSIVE_DIG_SPEED, 1, 20, new TextComponent("Mining"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), SpellsRegistries.SMELT, 5, 8, new TextComponent("Mining"))
                 .icon(SpellsRegistries.PASSIVE_DIG_SPEED.get())
-                .add(SpellsRegistries.SMELT)
-                .add(SpellsRegistries.INSTANT_MINE)
+                .add(SpellsRegistries.INSTANT_MINE, 15, 18)
+                .add(SpellsRegistries.PASSIVE_DIG_SPEED, 25, 24)
                 .finish();
     }
     
     public static SpellTree airTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), SpellsRegistries.LEAP, 1, 20, new TextComponent("Movement"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), SpellsRegistries.PASSIVE_JUMP_BOOST, 15, 12, new TextComponent("Movement"))
                 .icon(SpellsRegistries.PASSIVE_JUMP_BOOST.get())
-                .add(SpellsRegistries.JUMP)
-                .add(SpellsRegistries.PRESSURIZE)
+                .add(SpellsRegistries.LEAP, 10, 14)
+                .add(SpellsRegistries.PASSIVE_SPEED, 20, 20)
+                .leaf()
+                .add(SpellsRegistries.JUMP, 14, 14)
                 .leaf()
                 .leaf()
-                .add(SpellsRegistries.PASSIVE_SPEED)
-                .leaf()
-                .add(SpellsRegistries.PASSIVE_JUMP_BOOST)
-                .add(SpellsRegistries.FALL_DAMAGE_REDUCTION)
-                .leaf()
-                .add(SpellsRegistries.PASSIVE_SLOW_FALLING)
+                .add(SpellsRegistries.FALL_DAMAGE_REDUCTION, 15, 12)
+                .add(SpellsRegistries.PASSIVE_SLOW_FALLING, 15, 16)
                 .leaf()
                 .leaf()
-                .add(SpellsRegistries.POCKET_BOW)
+                .add(SpellsRegistries.POCKET_BOW, 10, 16)
+                .add(SpellsRegistries.PRESSURIZE, 20, 18)
+                .leaf()
+                .leaf()
                 .finish();
     }
     
