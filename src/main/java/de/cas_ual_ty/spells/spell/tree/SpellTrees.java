@@ -31,7 +31,7 @@ public class SpellTrees
     
     public static SpellTree fireTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("fire"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Fire"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Nether"))
                 .icon(SpellsRegistries.PASSIVE_FIRE_RESISTANCE.get())
                 .add(SpellsRegistries.PASSIVE_FIRE_RESISTANCE)
                 .leaf()
@@ -41,7 +41,7 @@ public class SpellTrees
     
     public static SpellTree waterTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("water"), SpellsRegistries.WATER_LEAP, 1, 20, new TextComponent("Water"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), SpellsRegistries.WATER_LEAP, 1, 20, new TextComponent("Ocean"))
                 .icon(SpellsRegistries.PASSIVE_DOLPHINS_GRACE.get())
                 .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
                 .leaf()
@@ -60,7 +60,7 @@ public class SpellTrees
     
     public static SpellTree earthTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("earth"), SpellsRegistries.PASSIVE_DIG_SPEED, 1, 20, new TextComponent("Earth"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), SpellsRegistries.PASSIVE_DIG_SPEED, 1, 20, new TextComponent("Mining"))
                 .icon(SpellsRegistries.PASSIVE_DIG_SPEED.get())
                 .add(SpellsRegistries.SMELT)
                 .add(SpellsRegistries.INSTANT_MINE)
@@ -69,7 +69,7 @@ public class SpellTrees
     
     public static SpellTree airTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("air"), SpellsRegistries.LEAP, 1, 20, new TextComponent("Air"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), SpellsRegistries.LEAP, 1, 20, new TextComponent("Movement"))
                 .icon(SpellsRegistries.PASSIVE_JUMP_BOOST.get())
                 .add(SpellsRegistries.JUMP)
                 .add(SpellsRegistries.PRESSURIZE)
