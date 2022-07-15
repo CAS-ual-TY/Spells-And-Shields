@@ -73,8 +73,7 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, 
         {
             activeEffect.setNoCounter(false);
         }
-        
-        if(activeEffect.getDuration() <= duration + 1 &&
+        else if(activeEffect.getDuration() <= duration + 1 &&
                 activeEffect.getAmplifier() == amplifier &&
                 activeEffect.isAmbient() == ambient &&
                 activeEffect.getEffect() == mobEffect)

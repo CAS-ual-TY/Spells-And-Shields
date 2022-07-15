@@ -33,6 +33,8 @@ public class SpellTrees
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("fire"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Fire"))
                 .icon(SpellsRegistries.FIRE_TREE.get())
+                .add(SpellsRegistries.PASSIVE_FIRE_RESISTANCE)
+                .leaf()
                 .add(SpellsRegistries.FIRE_CHARGE)
                 .finish();
     }
