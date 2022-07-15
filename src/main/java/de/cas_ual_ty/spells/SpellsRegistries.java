@@ -95,11 +95,6 @@ public class SpellsRegistries
     public static final RegistryObject<EntityType<SpellProjectile>> SPELL_PROJECTILE = ENTITY_TYPES.register("spell_projectile", () -> EntityType.Builder.<SpellProjectile>of(SpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(10).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("spell_projectile"));
     public static final RegistryObject<EntityType<HomingSpellProjectile>> HOMING_SPELL_PROJECTILE = ENTITY_TYPES.register("homing_spell_projectile", () -> EntityType.Builder.<HomingSpellProjectile>of(HomingSpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(2).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("homing_spell_projectile"));
     
-    public static final RegistryObject<ISpell> FIRE_TREE = SPELLS.register("fire_tree", PassiveSpell::new);
-    public static final RegistryObject<ISpell> WATER_TREE = SPELLS.register("water_tree", PassiveSpell::new);
-    public static final RegistryObject<ISpell> EARTH_TREE = SPELLS.register("earth_tree", PassiveSpell::new);
-    public static final RegistryObject<ISpell> AIR_TREE = SPELLS.register("air_tree", PassiveSpell::new);
-    
     public static final RegistryObject<ISpell> LEAP = SPELLS.register("leap", () -> new LeapSpell(7F));
     public static final RegistryObject<ISpell> SUMMON_ANIMAL = SPELLS.register("summon_animal", () -> new SummonAnimalSpell(18F));
     public static final RegistryObject<ISpell> FIRE_BALL = SPELLS.register("fire_ball", () -> new FireSpell(5F));

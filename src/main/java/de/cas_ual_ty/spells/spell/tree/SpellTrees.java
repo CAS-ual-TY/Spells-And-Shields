@@ -32,7 +32,7 @@ public class SpellTrees
     public static SpellTree fireTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("fire"), SpellsRegistries.FIRE_BALL, 1, 20, new TextComponent("Fire"))
-                .icon(SpellsRegistries.FIRE_TREE.get())
+                .icon(SpellsRegistries.PASSIVE_FIRE_RESISTANCE.get())
                 .add(SpellsRegistries.PASSIVE_FIRE_RESISTANCE)
                 .leaf()
                 .add(SpellsRegistries.FIRE_CHARGE)
@@ -42,7 +42,7 @@ public class SpellTrees
     public static SpellTree waterTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("water"), SpellsRegistries.WATER_LEAP, 1, 20, new TextComponent("Water"))
-                .icon(SpellsRegistries.WATER_TREE.get())
+                .icon(SpellsRegistries.PASSIVE_DOLPHINS_GRACE.get())
                 .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY)
                 .leaf()
                 .add(SpellsRegistries.PASSIVE_WATER_BREATHING)
@@ -61,7 +61,7 @@ public class SpellTrees
     public static SpellTree earthTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("earth"), SpellsRegistries.PASSIVE_DIG_SPEED, 1, 20, new TextComponent("Earth"))
-                .icon(SpellsRegistries.EARTH_TREE.get())
+                .icon(SpellsRegistries.PASSIVE_DIG_SPEED.get())
                 .add(SpellsRegistries.SMELT)
                 .add(SpellsRegistries.INSTANT_MINE)
                 .finish();
@@ -70,7 +70,7 @@ public class SpellTrees
     public static SpellTree airTree()
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("air"), SpellsRegistries.LEAP, 1, 20, new TextComponent("Air"))
-                .icon(SpellsRegistries.AIR_TREE.get())
+                .icon(SpellsRegistries.PASSIVE_JUMP_BOOST.get())
                 .add(SpellsRegistries.JUMP)
                 .add(SpellsRegistries.PRESSURIZE)
                 .leaf()
