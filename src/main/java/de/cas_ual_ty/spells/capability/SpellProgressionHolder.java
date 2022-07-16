@@ -72,6 +72,7 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
             }
             
             CompoundTag tag = nbt.getCompound(i);
+            progression.clear();
             
             if(tag.contains(KEY_SPELL) && tag.contains(KEY_SPELL_STATUS) && tag.get(KEY_SPELL).getId() == Tag.TAG_STRING && tag.get(KEY_SPELL_STATUS).getId() == Tag.TAG_BYTE)
             {

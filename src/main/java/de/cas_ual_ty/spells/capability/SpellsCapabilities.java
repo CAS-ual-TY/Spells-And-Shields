@@ -48,9 +48,50 @@ public class SpellsCapabilities
     
     private static void playerClone(PlayerEvent.Clone event)
     {
-        Player player = event.getOriginal();
-        SpellHolder.getSpellHolder(player).invalidate();
-        ManaHolder.getManaHolder(player).invalidate();
+        event.getOriginal().reviveCaps();
+        
+        if(!event.isWasDeath())
+        {
+            SpellProgressionHolder.getSpellProgressionHolder(event.getPlayer()).ifPresent(current ->
+            {
+                SpellProgressionHolder.getSpellProgressionHolder(event.getOriginal()).ifPresent(original ->
+                {
+                    current.deserializeNBT(original.serializeNBT());
+                });
+            });
+            
+            ManaHolder.getManaHolder(event.getPlayer()).ifPresent(current ->
+            {
+                ManaHolder.getManaHolder(event.getOriginal()).ifPresent(original ->
+                {
+                    current.deserializeNBT(original.serializeNBT());
+                });
+                
+                current.sendSync();
+            });
+            
+            SpellHolder.getSpellHolder(event.getPlayer()).ifPresent(current ->
+            {
+                SpellHolder.getSpellHolder(event.getOriginal()).ifPresent(original ->
+                {
+                    current.deserializeNBT(original.serializeNBT());
+                });
+                
+                current.sendSync();
+            });
+        }
+        else
+        {
+            SpellProgressionHolder.getSpellProgressionHolder(event.getPlayer()).ifPresent(current ->
+            {
+                SpellProgressionHolder.getSpellProgressionHolder(event.getOriginal()).ifPresent(original ->
+                {
+                    current.deserializeNBT(original.serializeNBT());
+                });
+            });
+        }
+        
+        event.getOriginal().invalidateCaps();
     }
     
     private static <T extends Tag, C extends INBTSerializable<T>> void attachCapability(AttachCapabilitiesEvent<?> event, C capData, Capability<C> capability, String name)
@@ -89,7 +130,7 @@ public class SpellsCapabilities
     {
         if(event.getPlayer() instanceof ServerPlayer player)
         {
-            ManaHolder.getManaHolder(player).ifPresent(ManaHolder::checkSyncStatus);
+            ManaHolder.getManaHolder(player).ifPresent(ManaHolder::sendSync);
             SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
         }
     }
@@ -98,7 +139,7 @@ public class SpellsCapabilities
     {
         if(event.getPlayer() instanceof ServerPlayer player)
         {
-            ManaHolder.getManaHolder(player).ifPresent(ManaHolder::checkSyncStatus);
+            ManaHolder.getManaHolder(player).ifPresent(ManaHolder::sendSync);
             SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
         }
     }
@@ -107,7 +148,7 @@ public class SpellsCapabilities
     {
         if(event.getPlayer() instanceof ServerPlayer player)
         {
-            ManaHolder.getManaHolder(player).ifPresent(ManaHolder::checkSyncStatus);
+            ManaHolder.getManaHolder(player).ifPresent(ManaHolder::sendSync);
             SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
         }
     }
