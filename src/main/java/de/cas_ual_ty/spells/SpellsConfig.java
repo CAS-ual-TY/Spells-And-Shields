@@ -13,6 +13,10 @@ public class SpellsConfig
     public static final ForgeConfigSpec.BooleanValue CREATE_SPELLS_CONFIGS;
     public static final ForgeConfigSpec.BooleanValue LOAD_SPELLS_CONFIGS;
     
+    public static final ForgeConfigSpec.BooleanValue RESPAWN_WITH_FULL_MANA;
+    public static final ForgeConfigSpec.BooleanValue CLEAR_SLOTS_ON_DEATH;
+    public static final ForgeConfigSpec.BooleanValue FORGET_SPELLS_ON_DEATH;
+    
     static
     {
         ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
@@ -36,6 +40,18 @@ public class SpellsConfig
         CREATE_SPELLS_CONFIGS = configBuilder
                 .comment("Create default spell configuration files in the configuration folder (true) or not (false).")
                 .define("createSpells", false);
+        
+        RESPAWN_WITH_FULL_MANA = configBuilder
+                .comment("Players respawn with their mana bar filled (true) or empty (false).")
+                .define("respawnWithFullMana", false);
+        
+        CLEAR_SLOTS_ON_DEATH = configBuilder
+                .comment("Clear a player's spell slots on death (true) or not (false). If forgetSpellsOnDeath is set to true, this always behaves as if it was also set to true.")
+                .define("clearSlotsOnDeath", true);
+        
+        FORGET_SPELLS_ON_DEATH = configBuilder
+                .comment("Make a player forget all learned spells on death (true) or not (false). Forgotten spells are still visible in spell trees but must be relearned before you can equip them.")
+                .define("forgetSpellsOnDeath", true);
         
         GENERAL_SPEC = configBuilder.build();
     }

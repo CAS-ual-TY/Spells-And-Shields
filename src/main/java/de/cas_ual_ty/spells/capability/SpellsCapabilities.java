@@ -1,6 +1,9 @@
 package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -88,6 +91,40 @@ public class SpellsCapabilities
                 {
                     current.deserializeNBT(original.serializeNBT());
                 });
+                
+                if(SpellsConfig.FORGET_SPELLS_ON_DEATH.get())
+                {
+                    for(ISpell key : current.getProgression().keySet())
+                    {
+                        if(current.getSpellStatus(key) == SpellStatus.LEARNED)
+                        {
+                            current.setSpellStatus(key, SpellStatus.FORGOTTEN);
+                        }
+                    }
+                }
+            });
+            
+            if(!SpellsConfig.CLEAR_SLOTS_ON_DEATH.get() && !SpellsConfig.FORGET_SPELLS_ON_DEATH.get())
+            {
+                SpellHolder.getSpellHolder(event.getPlayer()).ifPresent(current ->
+                {
+                    SpellHolder.getSpellHolder(event.getOriginal()).ifPresent(original ->
+                    {
+                        current.deserializeNBT(original.serializeNBT());
+                    });
+                    
+                    current.sendSync();
+                });
+            }
+            
+            ManaHolder.getManaHolder(event.getPlayer()).ifPresent(manaHolder ->
+            {
+                if(SpellsConfig.RESPAWN_WITH_FULL_MANA.get())
+                {
+                    manaHolder.replenish(manaHolder.getMana());
+                }
+                
+                manaHolder.sendSync();
             });
         }
         
