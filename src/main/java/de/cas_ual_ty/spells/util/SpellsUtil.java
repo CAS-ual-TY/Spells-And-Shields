@@ -12,12 +12,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -217,17 +215,6 @@ public class SpellsUtil
     
     public static void addPotionRecipe(Item ingredient, Potion from, Potion to)
     {
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), from)), Ingredient.of(ingredient), PotionUtils.setPotion(new ItemStack(Items.POTION), to));
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), from)), Ingredient.of(ingredient), PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), to));
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), from)), Ingredient.of(ingredient), PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), to));
-    }
-    
-    public static void addPotionVariants(@Nullable Potion potion)
-    {
-        if(potion != null)
-        {
-            BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), potion)), Ingredient.of(Items.GUNPOWDER), PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), potion));
-            BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), potion)), Ingredient.of(Items.DRAGON_BREATH), PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), potion));
-        }
+        PotionBrewing.addMix(from, ingredient, to);
     }
 }
