@@ -7,23 +7,16 @@ import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
@@ -35,51 +28,6 @@ public class SpellsUtil
 {
     public static final Optional<ItemStack> EMPTY_ITEMSTACK_OPTIONAL = Optional.of(ItemStack.EMPTY);
     public static final Optional<List<ItemStack>> EMPTY_ITEMSTACK_LIST_OPTIONAL = Optional.of(ImmutableList.of(ItemStack.EMPTY));
-    
-    public static final Field ACCESS_FIELD;
-    public static final String ACCESS_FIELD_NAME = "f_39450_";
-    
-    static
-    {
-        Field access_field = null;
-        
-        try
-        {
-            // !mojf access
-            // send this to the forge bot, "access" being the field name at the time of writing this
-            access_field = ObfuscationReflectionHelper.findField(EnchantmentMenu.class, "f_39450_");
-        }
-        catch(ObfuscationReflectionHelper.UnableToFindFieldException e)
-        {
-            SpellsAndShields.LOGGER.warn("Field " + ACCESS_FIELD_NAME + " (EnchantmentMenu#access) could not be found!");
-            e.printStackTrace();
-        }
-        
-        ACCESS_FIELD = access_field;
-    }
-    
-    public static ContainerLevelAccess getAccess(Player player, EnchantmentMenu menu)
-    {
-        if(ACCESS_FIELD != null)
-        {
-            try
-            {
-                ContainerLevelAccess access = (ContainerLevelAccess) ACCESS_FIELD.get(menu);
-                
-                if(access != null)
-                {
-                    return access;
-                }
-            }
-            catch(IllegalAccessException e)
-            {
-                SpellsAndShields.LOGGER.warn("Field " + ACCESS_FIELD_NAME + " (EnchantmentMenu#access) could not be accessed!");
-                e.printStackTrace();
-            }
-        }
-        
-        return ContainerLevelAccess.create(player.level, player.blockPosition());
-    }
     
     @Nullable
     public static HitResult rayTrace(Level level, Entity source, double maxDist, Predicate<Entity> filter, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid)
@@ -243,17 +191,6 @@ public class SpellsUtil
     
     public static void addPotionRecipe(Item ingredient, Potion from, Potion to)
     {
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), from)), Ingredient.of(ingredient), PotionUtils.setPotion(new ItemStack(Items.POTION), to));
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), from)), Ingredient.of(ingredient), PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), to));
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), from)), Ingredient.of(ingredient), PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), to));
-    }
-    
-    public static void addPotionVariants(@Nullable Potion potion)
-    {
-        if(potion != null)
-        {
-            BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), potion)), Ingredient.of(Items.GUNPOWDER), PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), potion));
-            BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), potion)), Ingredient.of(Items.DRAGON_BREATH), PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), potion));
-        }
+        PotionBrewing.addMix(from, ingredient, to);
     }
 }
