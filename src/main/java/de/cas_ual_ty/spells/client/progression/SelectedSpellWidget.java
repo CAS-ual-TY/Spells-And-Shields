@@ -24,10 +24,9 @@ import static de.cas_ual_ty.spells.client.progression.SpellNodeWidget.*;
 
 public class SelectedSpellWidget extends GuiComponent
 {
-    public static final int RENDER_WIDTH = 120;
-    
     protected int x;
     protected int y;
+    protected int w;
     
     public boolean active = true;
     
@@ -41,10 +40,11 @@ public class SelectedSpellWidget extends GuiComponent
     public int titleIcon;
     public FormattedCharSequence title;
     
-    public SelectedSpellWidget(int x, int y)
+    public SelectedSpellWidget(int x, int y, int w)
     {
         this.x = x;
         this.y = y;
+        this.w = w;
         
         this.font = Minecraft.getInstance().font;
     }
@@ -82,7 +82,7 @@ public class SelectedSpellWidget extends GuiComponent
         if(active)
         {
             int w1 = 60;
-            int w2 = RENDER_WIDTH - 60;
+            int w2 = this.w - 60;
             
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -109,7 +109,7 @@ public class SelectedSpellWidget extends GuiComponent
     
     public void drawTooltip(PoseStack poseStack, int mouseX, int mouseY, Screen screen)
     {
-        if(active && mouseX >= this.x && mouseX < this.x + RENDER_WIDTH && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
+        if(active && mouseX >= this.x && mouseX < this.x + this.w && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
         {
             RenderSystem.enableDepthTest();
             poseStack.pushPose();

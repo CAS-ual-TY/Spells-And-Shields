@@ -151,9 +151,13 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             maxPages = this.tabs.size() / MAX_TABS;
         }
         
-        this.selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT);
+        int totalW = 280;
+        int leftW = 150;
+        int rightW = totalW - 180;
         
-        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - 120, getGuiTop() + GUI_HEIGHT, 120, SpellNodeWidget.FRAME_HEIGHT, Component.literal("Learn"), this::buttonClicked, 1)
+        this.selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT, leftW);
+        
+        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.literal("Learn"), this::buttonClicked, 1)
         {
             @Override
             public void render(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
@@ -181,9 +185,9 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                 }
             }
         };
-        this.equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - 120, getGuiTop() + GUI_HEIGHT, 120, SpellNodeWidget.FRAME_HEIGHT, Component.literal("Equip"), this::buttonClicked, 0);
-        this.unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - 120, getGuiTop() + GUI_HEIGHT, 120, SpellNodeWidget.FRAME_HEIGHT, Component.literal("Unavailable..."), this::buttonClicked, 2);
-        this.chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - 120, getGuiTop() + GUI_HEIGHT, 120, SpellNodeWidget.FRAME_HEIGHT, Component.literal("Choose a slot (left)..."), this::buttonClicked, 2);
+        this.equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.literal("Equip"), this::buttonClicked, 0);
+        this.unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.literal("Unavailable..."), this::buttonClicked, 2);
+        this.chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.literal("Slot?"), this::buttonClicked, 2);
         this.unavailableButton.active = false;
         this.chooseButton.active = false;
         
