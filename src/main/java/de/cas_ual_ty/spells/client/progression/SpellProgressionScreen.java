@@ -265,17 +265,21 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                     }
                     else if(tab == selectedTab)
                     {
-                        int x = Mth.floor(getGuiLeft() + tab.getScrollX());
-                        int y = Mth.floor(getGuiTop() + tab.getScrollY());
-                        int mX = Mth.floor(mouseX - WINDOW_OFF_X);
-                        int mY = Mth.floor(mouseY - WINDOW_OFF_Y);
-                        
-                        for(SpellNodeWidget w : tab.widgets.values())
+                        if(mouseX >= getGuiLeft() + WINDOW_OFF_X && mouseX < getGuiLeft() + WINDOW_OFF_X + WINDOW_WIDTH &&
+                                mouseY >= getGuiTop() + WINDOW_OFF_Y && mouseY < getGuiTop() + WINDOW_OFF_Y + WINDOW_HEIGHT)
                         {
-                            if(w.isMouseOver(x, y, mX, mY))
+                            int x = Mth.floor(getGuiLeft() + tab.getScrollX());
+                            int y = Mth.floor(getGuiTop() + tab.getScrollY());
+                            int mX = Mth.floor(mouseX - WINDOW_OFF_X);
+                            int mY = Mth.floor(mouseY - WINDOW_OFF_Y);
+                            
+                            for(SpellNodeWidget w : tab.widgets.values())
                             {
-                                spellClicked(w);
-                                break;
+                                if(w.isMouseOver(x, y, mX, mY))
+                                {
+                                    spellClicked(w);
+                                    break;
+                                }
                             }
                         }
                     }
