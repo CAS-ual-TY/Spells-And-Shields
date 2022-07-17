@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.network;
 
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,7 +17,7 @@ public record RequestEquipSpellMessage(ISpell spell, byte slot, UUID treeId)
         if(msg.spell() != null)
         {
             buf.writeBoolean(true);
-            buf.writeRegistryId(msg.spell());
+            buf.writeRegistryId(SpellsRegistries.SPELLS_REGISTRY.get(), msg.spell());
         }
         else
         {

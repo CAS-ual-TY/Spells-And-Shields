@@ -4,12 +4,10 @@ import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -20,66 +18,20 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class SpellsUtil
 {
     public static final Optional<ItemStack> EMPTY_ITEMSTACK_OPTIONAL = Optional.of(ItemStack.EMPTY);
     public static final Optional<List<ItemStack>> EMPTY_ITEMSTACK_LIST_OPTIONAL = Optional.of(ImmutableList.of(ItemStack.EMPTY));
-    
-    public static final Field ACCESS_FIELD;
-    public static final String ACCESS_FIELD_NAME = "f_39450_";
-    
-    static
-    {
-        Field access_field = null;
-        
-        try
-        {
-            // !mojf access
-            // send this to the forge bot, "access" being the field name at the time of writing this
-            access_field = ObfuscationReflectionHelper.findField(EnchantmentMenu.class, "f_39450_");
-        }
-        catch(ObfuscationReflectionHelper.UnableToFindFieldException e)
-        {
-            SpellsAndShields.LOGGER.warn("Field " + ACCESS_FIELD_NAME + " (EnchantmentMenu#access) could not be found!");
-            e.printStackTrace();
-        }
-        
-        ACCESS_FIELD = access_field;
-    }
-    
-    public static ContainerLevelAccess getAccess(Player player, EnchantmentMenu menu)
-    {
-        if(ACCESS_FIELD != null)
-        {
-            try
-            {
-                ContainerLevelAccess access = (ContainerLevelAccess) ACCESS_FIELD.get(menu);
-                
-                if(access != null)
-                {
-                    return access;
-                }
-            }
-            catch(IllegalAccessException e)
-            {
-                SpellsAndShields.LOGGER.warn("Field " + ACCESS_FIELD_NAME + " (EnchantmentMenu#access) could not be accessed!");
-                e.printStackTrace();
-            }
-        }
-        
-        return ContainerLevelAccess.create(player.level, player.blockPosition());
-    }
     
     @Nullable
     public static HitResult rayTrace(Level level, Entity source, double maxDist, Predicate<Entity> filter, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid)
@@ -165,14 +117,36 @@ public class SpellsUtil
         return currentEntity == null ? null : new EntityHitResult(currentEntity);
     }
     
+    public static SpellIcon getDefaultSpellIcon(ISpell spell)
+    {
+        ResourceLocation key = getSpellKey(spell);
+        return new SpellIcon(new ResourceLocation(key.getNamespace(), "textures/spell/" + key.getPath() + ".png"));
+    }
+    
+    public static String getDefaultSpellNameKey(ISpell spell)
+    {
+        ResourceLocation key = getSpellKey(spell);
+        return "spell." + key.getNamespace() + "." + key.getPath();
+    }
+    
+    public static String getDefaultSpellDescKey(ISpell spell)
+    {
+        return getDefaultSpellNameKey(spell) + ".desc";
+    }
+    
     public static ISpell getSpell(ResourceLocation key)
     {
         return SpellsRegistries.SPELLS_REGISTRY.get().getValue(key);
     }
     
-    public static void forEachSpell(Consumer<ISpell> consumer)
+    public static ResourceLocation getSpellKey(ISpell spell)
     {
-        SpellsRegistries.SPELLS_REGISTRY.get().forEach(consumer);
+        return SpellsRegistries.SPELLS_REGISTRY.get().getKey(spell);
+    }
+    
+    public static void forEachSpell(BiConsumer<ResourceLocation, ISpell> consumer)
+    {
+        SpellsRegistries.SPELLS_REGISTRY.get().getEntries().forEach(e -> consumer.accept(e.getKey().location(), e.getValue()));
     }
     
     public static int getSpellsAmount()
@@ -193,12 +167,12 @@ public class SpellsUtil
     
     public static UUID generateUUIDForSlotAttribute(Attribute attribute, int slot)
     {
-        return generateUUIDFromName("slot_" + slot, attribute.getRegistryName().toString());
+        return generateUUIDFromName("slot_" + slot, ForgeRegistries.ATTRIBUTES.getKey(attribute).toString());
     }
     
     public static UUID generateUUIDForClassAttribute(Attribute attribute, String className)
     {
-        return generateUUIDFromName("class_" + className, attribute.getRegistryName().toString());
+        return generateUUIDFromName("class_" + className, ForgeRegistries.ATTRIBUTES.getKey(attribute).toString());
     }
     
     public static void addPotionRecipes(Potion base, Potion p, @Nullable Potion strongP, @Nullable Potion longP, Item ingredient, @Nullable Potion badP, @Nullable Potion badStrongP, @Nullable Potion badLongP, @Nullable Item badIngredient)

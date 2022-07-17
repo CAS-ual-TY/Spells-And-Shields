@@ -88,7 +88,7 @@ public class SpellHolder implements ISpellHolder
             
             if(spell != null)
             {
-                tag.add(i, StringTag.valueOf(spell.getRegistryName().toString()));
+                tag.add(i, StringTag.valueOf(SpellsUtil.getSpellKey(spell).toString()));
             }
             else
             {

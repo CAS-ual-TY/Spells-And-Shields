@@ -60,7 +60,7 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                         List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, blockPos);
                         HashMap<ISpell, SpellStatus> progression = spellProgressionHolder.getProgression();
                         
-                        NetworkHooks.openGui(player, new MenuProvider()
+                        NetworkHooks.openScreen(player, new MenuProvider()
                         {
                             @Override
                             public Component getDisplayName()

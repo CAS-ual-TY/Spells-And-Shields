@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.spell;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.base.Spell;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 public class DebugSpell extends Spell
@@ -20,7 +20,7 @@ public class DebugSpell extends Spell
     {
         if(manaHolder.getPlayer() instanceof ServerPlayer player)
         {
-            player.displayClientMessage(new TextComponent(message + " " + System.currentTimeMillis()), true);
+            player.displayClientMessage(Component.literal(message + " " + System.currentTimeMillis()), true);
         }
     }
 }

@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells;
 
 import com.google.gson.JsonElement;
+import de.cas_ual_ty.spells.command.SpellArgument;
 import de.cas_ual_ty.spells.effect.ExtraManaMobEffect;
 import de.cas_ual_ty.spells.effect.InstantManaMobEffect;
 import de.cas_ual_ty.spells.effect.ManaMobEffect;
@@ -12,6 +13,10 @@ import de.cas_ual_ty.spells.recipe.TippedSpearRecipe;
 import de.cas_ual_ty.spells.spell.*;
 import de.cas_ual_ty.spells.spell.base.*;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -56,10 +61,13 @@ public class SpellsRegistries
     private static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MOD_ID);
     private static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, MOD_ID);
     
-    private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
+    private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MOD_ID);
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MOD_ID);
     
-    private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
+    private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
+    
+    private static final DeferredRegister<ArgumentTypeInfo<?, ?>> ARGUMENT_TYPES = DeferredRegister.create(Registry.COMMAND_ARGUMENT_TYPE_REGISTRY, MOD_ID);
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> SPELL_ARGUMENT_TYPE = ARGUMENT_TYPES.register("spell", () -> ArgumentTypeInfos.registerByClass(SpellArgument.class, SingletonArgumentInfo.contextAware(SpellArgument::spell)));
     
     private static final DeferredRegister<ISpell> SPELLS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spells"), MOD_ID);
     
@@ -137,11 +145,12 @@ public class SpellsRegistries
         RECIPE_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         SPELLS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ARGUMENT_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        SPELLS_REGISTRY = event.create(new RegistryBuilder<ISpell>().setType(ISpell.class).setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spells")));
+        SPELLS_REGISTRY = event.create(new RegistryBuilder<ISpell>()/*.setType(ISpell.class)*/.setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spells")));
     }
     
     public static void spellsConfigs()
@@ -159,9 +168,12 @@ public class SpellsRegistries
         
         if(SpellsConfig.LOAD_SPELLS_CONFIGS.get())
         {
-            SPELLS_REGISTRY.get().getValues().stream().filter(s -> s instanceof IConfigurableSpell).map(s -> (IConfigurableSpell) s).forEach(spell ->
+            SPELLS_REGISTRY.get().getEntries().stream().filter(e -> e.getValue() instanceof IConfigurableSpell).forEach(entry ->
             {
-                File f = p.resolve(spell.getFileName() + ".json").toFile();
+                IConfigurableSpell spell = (IConfigurableSpell) entry.getValue();
+                ResourceLocation key = entry.getKey().location();
+                
+                File f = p.resolve(spell.getFileName(key) + ".json").toFile();
                 
                 if(!f.exists())
                 {
@@ -170,11 +182,11 @@ public class SpellsRegistries
                         try
                         {
                             SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
-                            SpellsAndShields.LOGGER.info("Successfully wrote default config of spell {} to file {}.", spell.getRegistryName().toString(), f.toPath());
+                            SpellsAndShields.LOGGER.info("Successfully wrote default config of spell {} to file {}.", key.toString(), f.toPath());
                         }
                         catch(Exception e)
                         {
-                            SpellsAndShields.LOGGER.error("Failed writing default config of spell {} to file {}.", spell.getRegistryName().toString(), f.toPath(), e);
+                            SpellsAndShields.LOGGER.error("Failed writing default config of spell {} to file {}.", key.toString(), f.toPath(), e);
                             e.printStackTrace();
                         }
                     }
@@ -193,7 +205,7 @@ public class SpellsRegistries
                     catch(Exception e)
                     {
                         failed = true;
-                        SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath(), e);
+                        SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", key.toString(), f.toPath(), e);
                         e.printStackTrace();
                         spell.applyDefaultConfig();
                     }
@@ -203,18 +215,18 @@ public class SpellsRegistries
                         try
                         {
                             spell.readFromConfig(json.getAsJsonObject());
-                            SpellsAndShields.LOGGER.info("Successfully read config of spell {} from file {}.", spell.getRegistryName().toString(), f.toPath());
+                            SpellsAndShields.LOGGER.info("Successfully read config of spell {} from file {}.", key.toString(), f.toPath());
                         }
                         catch(IllegalStateException e)
                         {
-                            SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath(), e);
+                            SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", key.toString(), f.toPath(), e);
                             e.printStackTrace();
                             spell.applyDefaultConfig();
                         }
                     }
                     else if(!failed)
                     {
-                        SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", spell.getRegistryName().toString(), f.toPath());
+                        SpellsAndShields.LOGGER.error("Failed reading config of spell {} from file {}, applying default config.", key.toString(), f.toPath());
                         spell.applyDefaultConfig();
                     }
                 }

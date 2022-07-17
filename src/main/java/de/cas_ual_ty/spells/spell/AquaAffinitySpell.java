@@ -13,7 +13,7 @@ public class AquaAffinitySpell extends PassiveSpell implements IEventSpell
 {
     public void playerBreakSpeed(PlayerEvent.BreakSpeed event)
     {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         
         if(player.isEyeInFluid(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(player))
         {

@@ -12,7 +12,7 @@ public class ReduceFallDamageSpell extends PassiveSpell implements IEventSpell
 {
     public void livingHurt(LivingHurtEvent event)
     {
-        if(event.getSource().isFall() && event.getEntityLiving() instanceof Player player)
+        if(event.getSource().isFall() && event.getEntity() instanceof Player player)
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {

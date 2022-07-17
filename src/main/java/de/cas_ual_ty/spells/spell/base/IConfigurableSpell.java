@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import com.google.gson.JsonObject;
+import net.minecraft.resources.ResourceLocation;
 
 public interface IConfigurableSpell extends ISpell
 {
@@ -10,8 +11,8 @@ public interface IConfigurableSpell extends ISpell
     
     void applyDefaultConfig();
     
-    default String getFileName()
+    default String getFileName(ResourceLocation registryName)
     {
-        return this.getRegistryName().getNamespace() + "." + this.getRegistryName().getPath();
+        return registryName.getNamespace() + "." + registryName.getPath();
     }
 }

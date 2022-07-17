@@ -8,7 +8,7 @@ import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
 import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import de.cas_ual_ty.spells.util.SpellsUtil;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
@@ -31,7 +31,7 @@ public class SpellTrees
     
     public static SpellTree fireTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), SpellsRegistries.FIRE_BALL, 15, 28, new TextComponent("Nether"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), SpellsRegistries.FIRE_BALL, 15, 28, Component.literal("Nether"))
                 .icon(SpellsRegistries.PASSIVE_FIRE_RESISTANCE.get())
                 .add(SpellsRegistries.PASSIVE_FIRE_RESISTANCE, 30, 30)
                 .leaf()
@@ -41,7 +41,7 @@ public class SpellTrees
     
     public static SpellTree waterTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), SpellsRegistries.PASSIVE_WATER_BREATHING, 10, 0, new TextComponent("Ocean"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), SpellsRegistries.PASSIVE_WATER_BREATHING, 10, 0, Component.literal("Ocean"))
                 .icon(SpellsRegistries.PASSIVE_DOLPHINS_GRACE.get())
                 .add(SpellsRegistries.PASSIVE_REGENERATION, 20, 20)
                 .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY, 20, 20)
@@ -60,7 +60,7 @@ public class SpellTrees
     
     public static SpellTree earthTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), SpellsRegistries.SMELT, 5, 8, new TextComponent("Mining"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), SpellsRegistries.SMELT, 5, 8, Component.literal("Mining"))
                 .icon(SpellsRegistries.PASSIVE_DIG_SPEED.get())
                 .add(SpellsRegistries.INSTANT_MINE, 15, 18)
                 .add(SpellsRegistries.PASSIVE_DIG_SPEED, 25, 24)
@@ -69,7 +69,7 @@ public class SpellTrees
     
     public static SpellTree airTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), SpellsRegistries.PASSIVE_JUMP_BOOST, 15, 12, new TextComponent("Movement"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), SpellsRegistries.PASSIVE_JUMP_BOOST, 15, 12, Component.literal("Movement"))
                 .icon(SpellsRegistries.PASSIVE_JUMP_BOOST.get())
                 .add(SpellsRegistries.LEAP, 10, 14)
                 .add(SpellsRegistries.PASSIVE_SPEED, 20, 20)

@@ -10,10 +10,11 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
@@ -44,26 +45,26 @@ public class SpellCommand
     public static final String ARG_SPELL = "spell";
     public static final String ARG_SLOT = "slot";
     
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher)
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext cbx)
     {
         dispatcher.register(Commands.literal("spells").requires(css -> css.hasPermission(2))
                 .then(Commands.literal("progression")
                         .then(Commands.literal("learn")
                                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players())
-                                        .then(Commands.argument(ARG_SPELL, SpellArgument.spell()).executes(SpellCommand::spellsProgressionLearn))
+                                        .then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx)).executes(SpellCommand::spellsProgressionLearn))
                                         .then(Commands.argument("all", StringArgumentType.string()).executes(SpellCommand::spellsProgressionLearnAll))
                                 )
                         )
                         .then(Commands.literal("forget")
                                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players())
-                                        .then(Commands.argument(ARG_SPELL, SpellArgument.spell()).executes(SpellCommand::spellsProgressionForget))
+                                        .then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx)).executes(SpellCommand::spellsProgressionForget))
                                         .then(Commands.argument("all", StringArgumentType.string()).executes(SpellCommand::spellsProgressionForgetAll))
                                 )
                         )
                         .then(Commands.literal("reset").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(SpellCommand::spellsProgressionReset)))
                 )
                 .then(Commands.literal("slots")
-                        .then(Commands.literal("set").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS)).then(Commands.argument(ARG_SPELL, SpellArgument.spell()).executes(SpellCommand::spellsSlotSet)))))
+                        .then(Commands.literal("set").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS)).then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx)).executes(SpellCommand::spellsSlotSet)))))
                         .then(Commands.literal("remove").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS)).executes(SpellCommand::spellsSlotRemove))))
                         .then(Commands.literal("clear").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(SpellCommand::spellsSlotClear)))
                 )
@@ -90,11 +91,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_LEARN_SINGLE, spell.getSpellName(), players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_LEARN_SINGLE, spell.getSpellName(), players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_LEARN_MULTIPLE, spell.getSpellName(), players.size()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_LEARN_MULTIPLE, spell.getSpellName(), players.size()), true);
         }
         
         return players.size();
@@ -116,7 +117,7 @@ public class SpellCommand
         {
             lazyOptional.ifPresent(spellProgressionHolder ->
             {
-                SpellsUtil.forEachSpell(spell ->
+                SpellsUtil.forEachSpell((key, spell) ->
                 {
                     if(single)
                     {
@@ -135,17 +136,17 @@ public class SpellCommand
         {
             if(learned.get() > 0)
             {
-                context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_LEARN_ALL_SINGLE, learned.get(), players.iterator().next().getDisplayName()), true);
+                context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_LEARN_ALL_SINGLE, learned.get(), players.iterator().next().getDisplayName()), true);
             }
             else
             {
-                context.getSource().sendFailure(new TranslatableComponent(SPELLS_PROGRESSION_LEARN_ALL_SINGLE_FAILED, players.iterator().next().getDisplayName()));
+                context.getSource().sendFailure(Component.translatable(SPELLS_PROGRESSION_LEARN_ALL_SINGLE_FAILED, players.iterator().next().getDisplayName()));
             }
         }
         else
         {
             final int amount = SpellsUtil.getSpellsAmount();
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_LEARN_ALL_MULTIPLE, amount, players.size()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_LEARN_ALL_MULTIPLE, amount, players.size()), true);
         }
         
         return players.size();
@@ -193,11 +194,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_FORGET_SINGLE, spell.getSpellName(), players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_FORGET_SINGLE, spell.getSpellName(), players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_FORGET_MULTIPLE, spell.getSpellName(), players.size()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_FORGET_MULTIPLE, spell.getSpellName(), players.size()), true);
         }
         
         return players.size();
@@ -219,7 +220,7 @@ public class SpellCommand
         {
             lazyOptional.ifPresent(spellProgressionHolder ->
             {
-                SpellsUtil.forEachSpell(spell ->
+                SpellsUtil.forEachSpell((key, spell) ->
                 {
                     if(spellProgressionHolder.getSpellStatus(spell) == SpellStatus.LEARNED)
                     {
@@ -244,17 +245,17 @@ public class SpellCommand
         {
             if(forgotten.get() > 0)
             {
-                context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_FORGET_ALL_SINGLE, forgotten.get(), players.iterator().next().getDisplayName()), true);
+                context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_FORGET_ALL_SINGLE, forgotten.get(), players.iterator().next().getDisplayName()), true);
             }
             else
             {
-                context.getSource().sendFailure(new TranslatableComponent(SPELLS_PROGRESSION_FORGET_ALL_SINGLE_FAILED, players.iterator().next().getDisplayName()));
+                context.getSource().sendFailure(Component.translatable(SPELLS_PROGRESSION_FORGET_ALL_SINGLE_FAILED, players.iterator().next().getDisplayName()));
             }
         }
         else
         {
             final int amount = SpellsUtil.getSpellsAmount();
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_FORGET_ALL_MULTIPLE, amount, players.size()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_FORGET_ALL_MULTIPLE, amount, players.size()), true);
         }
         
         return players.size();
@@ -285,11 +286,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_RESET_SINGLE, players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_RESET_SINGLE, players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_PROGRESSION_RESET_MULTIPLE, players.size()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_RESET_MULTIPLE, players.size()), true);
         }
         
         return 0;
@@ -317,11 +318,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getSpellName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getSpellName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getSpellName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getSpellName()), true);
         }
         
         return players.size();
@@ -348,11 +349,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_REMOVE_SINGLE, slot, players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_REMOVE_SINGLE, slot, players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_REMOVE_MULTIPLE, slot, players.size()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_REMOVE_MULTIPLE, slot, players.size()), true);
         }
         
         return players.size();
@@ -378,11 +379,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_CLEAR_SINGLE, players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_CLEAR_SINGLE, players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(new TranslatableComponent(SPELLS_SLOT_CLEAR_MULTIPLE, players.size()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_CLEAR_MULTIPLE, players.size()), true);
         }
         
         return players.size();

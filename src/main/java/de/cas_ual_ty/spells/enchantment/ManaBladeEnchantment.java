@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.enchantment;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -14,8 +15,6 @@ import net.minecraft.world.item.enchantment.DamageEnchantment;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.Random;
 
 public class ManaBladeEnchantment extends Enchantment
 {
@@ -72,7 +71,7 @@ public class ManaBladeEnchantment extends Enchantment
                     manaHolder.burn(damage);
                     livingEntity.hurt(DamageSource.indirectMagic(user, null), damage);
                     
-                    Random random = user.getRandom();
+                    RandomSource random = user.getRandom();
                     
                     int i = 20 + random.nextInt(10 * level);
                     livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, i, 3));

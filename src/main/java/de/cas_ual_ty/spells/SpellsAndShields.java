@@ -89,7 +89,7 @@ public class SpellsAndShields
     
     private void registerCommands(RegisterCommandsEvent event)
     {
-        SpellCommand.register(event.getDispatcher());
+        SpellCommand.register(event.getDispatcher(), event.getBuildContext());
     }
     
     private void entityAttributeModification(EntityAttributeModificationEvent event)
@@ -114,7 +114,7 @@ public class SpellsAndShields
         }
     }
     
-    private void tick(TickEvent.WorldTickEvent event)
+    private void tick(TickEvent.LevelTickEvent event)
     {
         if(event.phase == TickEvent.Phase.END)
         {

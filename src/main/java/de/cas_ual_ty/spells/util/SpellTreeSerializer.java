@@ -4,13 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.tree.SpellNode;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;
 import de.cas_ual_ty.spells.spell.tree.SpellTreeClass;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,7 +29,7 @@ public class SpellTreeSerializer
     {
         buf.writeUUID(spellTree.getId());
         buf.writeComponent(spellTree.getTitle());
-        buf.writeRegistryId(spellTree.getIconSpell());
+        buf.writeRegistryId(SpellsRegistries.SPELLS_REGISTRY.get(), spellTree.getIconSpell());
         
         SpellNode spellNode = spellTree.getRoot();
         encodeNode(spellNode, buf);
@@ -57,7 +57,7 @@ public class SpellTreeSerializer
     
     private static void encodeNode(SpellNode spellNode, FriendlyByteBuf buf)
     {
-        buf.writeRegistryId(spellNode.getSpell());
+        buf.writeRegistryId(SpellsRegistries.SPELLS_REGISTRY.get(), spellNode.getSpell());
         buf.writeInt(spellNode.getLevelCost());
         buf.writeByte(spellNode.getRequiredBookshelves());
     }
@@ -104,7 +104,7 @@ public class SpellTreeSerializer
     {
         JsonObject json = new JsonObject();
         
-        json.addProperty("spell", node.getSpell().getRegistryName().toString());
+        json.addProperty("spell", SpellsUtil.getSpellKey(node.getSpell()).toString());
         
         json.addProperty("levelCost", node.getLevelCost());
         json.addProperty("requiredBookshelves", node.getRequiredBookshelves());
@@ -123,16 +123,9 @@ public class SpellTreeSerializer
         
         json.addProperty("id", tree.getId().toString());
         
-        if(tree.getTitle() instanceof TranslatableComponent t)
-        {
-            json.addProperty("title", t.getKey());
-        }
-        else
-        {
-            json.addProperty("title", tree.getTitle().getContents());
-        }
+        json.add("title", Component.Serializer.toJsonTree(tree.getTitle()));
         
-        json.addProperty("icon_spell", tree.getIconSpell().getRegistryName().toString());
+        json.addProperty("icon_spell", SpellsUtil.getSpellKey(tree.getIconSpell()).toString());
         json.add("root_spell", tree.getRoot() != null ? nodeToJsonRec(tree.getRoot()) : JsonNull.INSTANCE);
         
         return json;
@@ -155,7 +148,7 @@ public class SpellTreeSerializer
     public static SpellTree treeFromJson(JsonObject json)
     {
         UUID id = UUID.fromString(SpellsFileUtil.jsonString(json, "id"));
-        TranslatableComponent title = new TranslatableComponent(SpellsFileUtil.jsonString(json, "title"));
+        Component title = Component.Serializer.fromJson(SpellsFileUtil.jsonElement(json, "title"));
         ISpell icon = SpellsFileUtil.jsonSpell(json, "icon_spell");
         SpellNode root = nodeFromJson(SpellsFileUtil.jsonObject(json, "root_spell"));
         
@@ -215,7 +208,7 @@ public class SpellTreeSerializer
         {
             JsonObject modifier = new JsonObject();
             
-            modifier.addProperty("attribute", entry.getKey().getRegistryName().toString());
+            modifier.addProperty("attribute", ForgeRegistries.ATTRIBUTES.getKey(entry.getKey()).toString());
             modifier.addProperty("amount", entry.getValue().getAmount());
             modifier.addProperty("operation", entry.getValue().getOperation().toValue());
             modifier.addProperty("name", entry.getValue().getName());

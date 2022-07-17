@@ -2,15 +2,19 @@ package de.cas_ual_ty.spells.spell.base;
 
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class BaseSpell extends ForgeRegistryEntry<ISpell> implements IConfigurableSpell
+public abstract class BaseSpell implements IConfigurableSpell
 {
     public SpellIcon icon;
+    
+    public String nameKey;
+    public String descKey;
     
     public BaseSpell()
     {
         this.icon = null;
+        this.nameKey = null;
+        this.descKey = null;
     }
     
     @Override
@@ -35,16 +39,20 @@ public abstract class BaseSpell extends ForgeRegistryEntry<ISpell> implements IC
         return this;
     }
     
+    public BaseSpell setIcon(ResourceLocation icon, int size)
+    {
+        this.icon = new SpellIcon(icon, 0, 0, size, size, size, size);
+        return this;
+    }
+    
     public BaseSpell setIcon(ResourceLocation icon)
     {
-        this.icon = new SpellIcon(icon, 0, 0, 18, 18, 18, 18);
-        return this;
+        return setIcon(icon, 18);
     }
     
     public BaseSpell setSmallIcon(ResourceLocation icon)
     {
-        this.icon = new SpellIcon(icon, 0, 0, 16, 16, 16, 16);
-        return this;
+        return setIcon(icon, 16);
     }
     
     @Override
@@ -52,21 +60,37 @@ public abstract class BaseSpell extends ForgeRegistryEntry<ISpell> implements IC
     {
         if(this.icon == null)
         {
-            icon = new SpellIcon(new ResourceLocation(getRegistryName().getNamespace(), "textures/spell/" + getRegistryName().getPath() + ".png"));
+            icon = IConfigurableSpell.super.getIcon();
         }
         
         return icon;
     }
     
     @Override
-    public boolean equals(Object o)
+    public String getNameKey()
     {
-        return this == o;
+        if(this.nameKey == null)
+        {
+            nameKey = IConfigurableSpell.super.getNameKey();
+        }
+        
+        return nameKey;
     }
     
     @Override
-    public int hashCode()
+    public String getDescKey()
     {
-        return this.getRegistryName().hashCode();
+        if(this.descKey == null)
+        {
+            descKey = IConfigurableSpell.super.getDescKey();
+        }
+        
+        return descKey;
+    }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        return this == o;
     }
 }

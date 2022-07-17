@@ -7,11 +7,11 @@ import de.cas_ual_ty.spells.util.SpellHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class SpellKeyBindings
 {
@@ -21,7 +21,7 @@ public class SpellKeyBindings
     public static KeyMapping[] slotKeys;
     public static int[] cooldowns;
     
-    public static void clientSetup(FMLClientSetupEvent event)
+    private static void registerKeyMappings(RegisterKeyMappingsEvent event)
     {
         slotKeys = new KeyMapping[SpellHolder.SPELL_SLOTS];
         cooldowns = new int[SpellHolder.SPELL_SLOTS];
@@ -29,7 +29,7 @@ public class SpellKeyBindings
         for(int i = 0; i < slotKeys.length; ++i)
         {
             slotKeys[i] = new KeyMapping(key(i), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-            ClientRegistry.registerKeyBinding(slotKeys[i]);
+            event.register(slotKeys[i]);
         }
     }
     
@@ -38,7 +38,7 @@ public class SpellKeyBindings
         return "key." + SpellsAndShields.MOD_ID + ".key.slot_" + (slot + 1);
     }
     
-    public static void clientTick(TickEvent.ClientTickEvent event)
+    private static void clientTick(TickEvent.ClientTickEvent event)
     {
         Player player = Minecraft.getInstance().player;
         
@@ -61,6 +61,7 @@ public class SpellKeyBindings
     
     public static void register()
     {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellKeyBindings::registerKeyMappings);
         MinecraftForge.EVENT_BUS.addListener(SpellKeyBindings::clientTick);
     }
 }

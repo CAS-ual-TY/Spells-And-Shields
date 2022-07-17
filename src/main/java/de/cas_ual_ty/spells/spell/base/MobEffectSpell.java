@@ -4,13 +4,12 @@ import de.cas_ual_ty.spells.capability.SpellHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +34,8 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, 
         this.ambient = ambient;
         this.visible = visible;
         this.showIcon = showIcon;
-        this.setIcon(new ResourceLocation(mobEffect.getRegistryName().getNamespace(), "textures/mob_effect/" + mobEffect.getRegistryName().getPath() + ".png"));
+        ResourceLocation rl = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
+        this.setIcon(new ResourceLocation(rl.getNamespace(), "textures/mob_effect/" + rl.getPath() + ".png"));
     }
     
     public MobEffectSpell(MobEffect mobEffect, int duration, int amplifier)
@@ -119,13 +119,13 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, 
     public List<Component> getSpellDescription()
     {
         List<Component> list = new LinkedList<>();
-        list.add(new TranslatableComponent(getDescKey()));
+        list.add(Component.translatable(getDescKey()));
         
-        MutableComponent component = new TranslatableComponent(mobEffect.getDescriptionId());
+        MutableComponent component = Component.translatable(mobEffect.getDescriptionId());
         
         if(amplifier > 0)
         {
-            component = new TranslatableComponent("potion.withAmplifier", component, new TranslatableComponent("potion.potency." + amplifier));
+            component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
         
         list.add(component.withStyle(mobEffect.getCategory().getTooltipFormatting()));
@@ -134,8 +134,8 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, 
         
         if(!map.isEmpty())
         {
-            list.add(TextComponent.EMPTY);
-            list.add((new TranslatableComponent(KEY_WHEN_APPLIED)).withStyle(ChatFormatting.DARK_PURPLE));
+            list.add(Component.empty());
+            list.add((Component.translatable(KEY_WHEN_APPLIED)).withStyle(ChatFormatting.DARK_PURPLE));
             
             
             for(Map.Entry<Attribute, AttributeModifier> entry : map.entrySet())

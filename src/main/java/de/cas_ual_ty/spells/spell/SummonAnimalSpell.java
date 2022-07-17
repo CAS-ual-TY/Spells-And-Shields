@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -23,7 +24,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class SummonAnimalSpell extends HandIngredientSpell
 {
@@ -94,7 +94,7 @@ public class SummonAnimalSpell extends HandIngredientSpell
             
             if(level instanceof ServerLevel serverLevel)
             {
-                Random random = livingEntity.getRandom();
+                RandomSource random = livingEntity.getRandom();
                 final int count = 3;
                 final double spread = 0.4D;
                 serverLevel.sendParticles(ParticleTypes.EXPLOSION, position.x, position.y, position.z, count, random.nextGaussian() * spread, random.nextGaussian() * spread, random.nextGaussian() * spread, 0.0D);
@@ -135,7 +135,7 @@ public class SummonAnimalSpell extends HandIngredientSpell
         {
             JsonObject o = new JsonObject();
             SpellsFileUtil.jsonItemStack(o, ingredient.ingredient(), "item", "count");
-            o.addProperty("entity", ingredient.entity().getRegistryName().toString());
+            o.addProperty("entity", ForgeRegistries.ENTITY_TYPES.getKey(ingredient.entity()).toString());
             ingredients.add(o);
         });
         json.add("ingredients", ingredients);
@@ -162,7 +162,7 @@ public class SummonAnimalSpell extends HandIngredientSpell
             JsonObject ingredient = e.getAsJsonObject();
             
             ItemStack itemStack = SpellsFileUtil.jsonItemStack(ingredient, "item", "count");
-            EntityType<?> entity = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(SpellsFileUtil.jsonString(ingredient, "entity")));
+            EntityType<?> entity = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(SpellsFileUtil.jsonString(ingredient, "entity")));
             
             if(itemStack.isEmpty())
             {

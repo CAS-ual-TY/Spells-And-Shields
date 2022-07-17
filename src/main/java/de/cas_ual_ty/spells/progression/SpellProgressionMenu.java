@@ -11,7 +11,6 @@ import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.network.PacketDistributor;
@@ -29,7 +29,7 @@ import java.util.UUID;
 
 public class SpellProgressionMenu extends AbstractContainerMenu
 {
-    public static Component TITLE = new TranslatableComponent("container." + SpellsAndShields.MOD_ID + ".spell_progression");
+    public static Component TITLE = Component.translatable("container." + SpellsAndShields.MOD_ID + ".spell_progression");
     
     public final ContainerLevelAccess access;
     public final Player player;
@@ -93,6 +93,12 @@ public class SpellProgressionMenu extends AbstractContainerMenu
                 });
             });
         }
+    }
+    
+    @Override
+    public ItemStack quickMoveStack(Player p_38941_, int p_38942_)
+    {
+        return ItemStack.EMPTY;
     }
     
     @Override

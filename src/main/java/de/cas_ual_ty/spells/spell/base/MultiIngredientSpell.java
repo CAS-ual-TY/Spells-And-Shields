@@ -4,8 +4,6 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -136,23 +134,23 @@ public abstract class MultiIngredientSpell extends Spell
     public List<Component> getSpellDescription()
     {
         List<Component> list = new LinkedList<>();
-        list.add(new TranslatableComponent(getDescKey()));
+        list.add(Component.translatable(getDescKey()));
         
         List<ItemStack> handIngredients = this.getRequiredHandIngredients();
         List<ItemStack> inventoryIngredients = this.getRequiredInventoryIngredients();
         
         if(!handIngredients.isEmpty())
         {
-            list.add(TextComponent.EMPTY);
-            list.add(new TranslatableComponent(KEY_REQUIRED_HAND).withStyle(ChatFormatting.BLUE));
-            handIngredients.stream().map(itemStack -> new TextComponent(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
+            list.add(Component.empty());
+            list.add(Component.translatable(KEY_REQUIRED_HAND).withStyle(ChatFormatting.BLUE));
+            handIngredients.stream().map(itemStack -> Component.literal(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
         }
         
         if(!inventoryIngredients.isEmpty())
         {
-            list.add(TextComponent.EMPTY);
-            list.add(new TranslatableComponent(KEY_REQUIRED_INVENTORY).withStyle(ChatFormatting.BLUE));
-            inventoryIngredients.stream().map(itemStack -> new TextComponent(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
+            list.add(Component.empty());
+            list.add(Component.translatable(KEY_REQUIRED_INVENTORY).withStyle(ChatFormatting.BLUE));
+            inventoryIngredients.stream().map(itemStack -> Component.literal(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
         }
         
         return list;

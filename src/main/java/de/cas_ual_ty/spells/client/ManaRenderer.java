@@ -10,15 +10,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
-import net.minecraftforge.client.gui.OverlayRegistry;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
-public class ManaRenderer implements IIngameOverlay
+public class ManaRenderer implements IGuiOverlay
 {
     public static final ResourceLocation GUI_SAS_ICONS_LOCATION = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/gui/spells_icons.png");
     
@@ -42,7 +43,7 @@ public class ManaRenderer implements IIngameOverlay
     }
     
     @Override
-    public void render(ForgeIngameGui gui, PoseStack mStack, float partialTicks, int width, int height)
+    public void render(ForgeGui gui, PoseStack mStack, float partialTicks, int width, int height)
     {
         if(doRender.getAsBoolean() && !Minecraft.getInstance().options.hideGui && gui.shouldDrawSurvivalElements())
         {
@@ -51,7 +52,7 @@ public class ManaRenderer implements IIngameOverlay
         }
     }
     
-    public void renderMana(ForgeIngameGui gui, int width, int height, PoseStack pStack)
+    public void renderMana(ForgeGui gui, int width, int height, PoseStack pStack)
     {
         RenderSystem.setShaderTexture(0, GUI_SAS_ICONS_LOCATION); //== bind
         RenderSystem.enableBlend();
@@ -107,7 +108,7 @@ public class ManaRenderer implements IIngameOverlay
             this.random.setSeed(gui.getGuiTicks() * 27);
             
             int left = width / 2 + 10;
-            int top = height - gui.right_height;
+            int top = height - gui.rightHeight;
             
             int regen = -1;
             
@@ -118,11 +119,11 @@ public class ManaRenderer implements IIngameOverlay
             
             this.renderUnit(gui, pStack, player, left, top, rowHeight, regen, manaMax, mana, manaLast, extra, highlight);
             
-            gui.right_height += (rows * rowHeight);
+            gui.rightHeight += (rows * rowHeight);
             
             if(rowHeight != 10)
             {
-                gui.right_height += 10 - rowHeight;
+                gui.rightHeight += 10 - rowHeight;
             }
         });
         
@@ -130,7 +131,7 @@ public class ManaRenderer implements IIngameOverlay
         RenderSystem.disableBlend();
     }
     
-    protected void renderUnit(ForgeIngameGui gui, PoseStack poseStack, Player player, int left, int top, int rowHeight, int regen, float manaMax, int mana, int manaLast, int extra, boolean highlight)
+    protected void renderUnit(ForgeGui gui, PoseStack poseStack, Player player, int left, int top, int rowHeight, int regen, float manaMax, int mana, int manaLast, int extra, boolean highlight)
     {
         UnitType unitType = UnitType.forPlayer(player);
         
@@ -185,7 +186,7 @@ public class ManaRenderer implements IIngameOverlay
         }
     }
     
-    private void renderUnit(ForgeIngameGui gui, PoseStack poseStack, UnitType unitType, int x, int y, int v, boolean highlight, boolean half)
+    private void renderUnit(ForgeGui gui, PoseStack poseStack, UnitType unitType, int x, int y, int v, boolean highlight, boolean half)
     {
         gui.blit(poseStack, x, y, unitType.getU(half, highlight), v, 9, 9);
     }
@@ -235,9 +236,14 @@ public class ManaRenderer implements IIngameOverlay
         }
     }
     
-    public static void clientSetup(FMLClientSetupEvent event)
+    private static void registerGuiOverlays(RegisterGuiOverlaysEvent event)
     {
-        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Player Mana", new ManaRenderer(() -> SpellsClientConfig.MANA_ABOVE_FOOD.get()));
-        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Player Mana", new ManaRenderer(() -> !SpellsClientConfig.MANA_ABOVE_FOOD.get()));
+        event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), "player_mana_above_hunger", new ManaRenderer(() -> SpellsClientConfig.MANA_ABOVE_FOOD.get()));
+        event.registerBelow(VanillaGuiOverlay.FOOD_LEVEL.id(), "player_mana_below_hunger", new ManaRenderer(() -> !SpellsClientConfig.MANA_ABOVE_FOOD.get()));
+    }
+    
+    public static void register()
+    {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ManaRenderer::registerGuiOverlays);
     }
 }

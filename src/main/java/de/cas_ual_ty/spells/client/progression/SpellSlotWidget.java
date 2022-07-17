@@ -13,8 +13,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
@@ -34,7 +32,7 @@ public class SpellSlotWidget extends Button
     
     public SpellSlotWidget(int x, int y, int slot, IntConsumer onPress, OnTooltip tooltip)
     {
-        super(x, y, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, TextComponent.EMPTY, (b) -> onPress.accept(slot), tooltip);
+        super(x, y, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, Component.empty(), (b) -> onPress.accept(slot), tooltip);
         this.slot = slot;
     }
     
@@ -134,13 +132,13 @@ public class SpellSlotWidget extends Button
                 {
                     if(!SpellKeyBindings.slotKeys[slot].isUnbound())
                     {
-                        tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
-                                .append(new TextComponent(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.YELLOW)));
+                        tooltip.add(Component.translatable("controls.keybinds.title").append(": ")
+                                .append(Component.literal(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.YELLOW)));
                     }
                     else
                     {
-                        tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
-                                .append(new TranslatableComponent("key.keyboard.unknown").withStyle(ChatFormatting.RED)));
+                        tooltip.add(Component.translatable("controls.keybinds.title").append(": ")
+                                .append(Component.translatable("key.keyboard.unknown").withStyle(ChatFormatting.RED)));
                     }
                 }
                 

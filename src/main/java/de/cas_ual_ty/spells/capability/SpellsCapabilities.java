@@ -55,7 +55,7 @@ public class SpellsCapabilities
         
         if(!event.isWasDeath())
         {
-            SpellProgressionHolder.getSpellProgressionHolder(event.getPlayer()).ifPresent(current ->
+            SpellProgressionHolder.getSpellProgressionHolder(event.getEntity()).ifPresent(current ->
             {
                 SpellProgressionHolder.getSpellProgressionHolder(event.getOriginal()).ifPresent(original ->
                 {
@@ -63,7 +63,7 @@ public class SpellsCapabilities
                 });
             });
             
-            ManaHolder.getManaHolder(event.getPlayer()).ifPresent(current ->
+            ManaHolder.getManaHolder(event.getEntity()).ifPresent(current ->
             {
                 ManaHolder.getManaHolder(event.getOriginal()).ifPresent(original ->
                 {
@@ -73,7 +73,7 @@ public class SpellsCapabilities
                 current.sendSync();
             });
             
-            SpellHolder.getSpellHolder(event.getPlayer()).ifPresent(current ->
+            SpellHolder.getSpellHolder(event.getEntity()).ifPresent(current ->
             {
                 SpellHolder.getSpellHolder(event.getOriginal()).ifPresent(original ->
                 {
@@ -85,7 +85,7 @@ public class SpellsCapabilities
         }
         else
         {
-            SpellProgressionHolder.getSpellProgressionHolder(event.getPlayer()).ifPresent(current ->
+            SpellProgressionHolder.getSpellProgressionHolder(event.getEntity()).ifPresent(current ->
             {
                 SpellProgressionHolder.getSpellProgressionHolder(event.getOriginal()).ifPresent(original ->
                 {
@@ -106,7 +106,7 @@ public class SpellsCapabilities
             
             if(!SpellsConfig.CLEAR_SLOTS_ON_DEATH.get() && !SpellsConfig.FORGET_SPELLS_ON_DEATH.get())
             {
-                SpellHolder.getSpellHolder(event.getPlayer()).ifPresent(current ->
+                SpellHolder.getSpellHolder(event.getEntity()).ifPresent(current ->
                 {
                     SpellHolder.getSpellHolder(event.getOriginal()).ifPresent(original ->
                     {
@@ -117,7 +117,7 @@ public class SpellsCapabilities
                 });
             }
             
-            ManaHolder.getManaHolder(event.getPlayer()).ifPresent(manaHolder ->
+            ManaHolder.getManaHolder(event.getEntity()).ifPresent(manaHolder ->
             {
                 if(SpellsConfig.RESPAWN_WITH_FULL_MANA.get())
                 {
@@ -165,7 +165,7 @@ public class SpellsCapabilities
     
     private static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
     {
-        if(event.getPlayer() instanceof ServerPlayer player)
+        if(event.getEntity() instanceof ServerPlayer player)
         {
             ManaHolder.getManaHolder(player).ifPresent(ManaHolder::sendSync);
             SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
@@ -174,7 +174,7 @@ public class SpellsCapabilities
     
     private static void playerRespawn(PlayerEvent.PlayerRespawnEvent event)
     {
-        if(event.getPlayer() instanceof ServerPlayer player)
+        if(event.getEntity() instanceof ServerPlayer player)
         {
             ManaHolder.getManaHolder(player).ifPresent(ManaHolder::sendSync);
             SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
@@ -183,7 +183,7 @@ public class SpellsCapabilities
     
     private static void playerChangedDimensions(PlayerEvent.PlayerChangedDimensionEvent event)
     {
-        if(event.getPlayer() instanceof ServerPlayer player)
+        if(event.getEntity() instanceof ServerPlayer player)
         {
             ManaHolder.getManaHolder(player).ifPresent(ManaHolder::sendSync);
             SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
@@ -192,7 +192,7 @@ public class SpellsCapabilities
     
     private static void startTracking(PlayerEvent.StartTracking event)
     {
-        if(event.getPlayer() instanceof ServerPlayer serverPlayer && event.getTarget() instanceof LivingEntity livingEntity)
+        if(event.getEntity() instanceof ServerPlayer serverPlayer && event.getTarget() instanceof LivingEntity livingEntity)
         {
             ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder -> SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), manaHolder.makeSyncMessage()));
             

@@ -129,13 +129,13 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     @Override
     public void writeSpawnData(FriendlyByteBuf buf)
     {
-        buf.writeRegistryId(this.getSpell());
+        buf.writeRegistryId(SpellsRegistries.SPELLS_REGISTRY.get(), this.getSpell());
     }
     
     @Override
     public void readSpawnData(FriendlyByteBuf buf)
     {
-        this.spell = (IProjectileSpell) buf.readRegistryId();
+        this.spell = buf.readRegistryId();
     }
     
     @Override

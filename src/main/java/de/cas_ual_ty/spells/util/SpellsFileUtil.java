@@ -111,6 +111,18 @@ public class SpellsFileUtil
         return element.getAsDouble();
     }
     
+    public static JsonElement jsonElement(JsonObject json, String key) throws IllegalStateException
+    {
+        JsonElement element = json.get(key);
+        
+        if(element == null)
+        {
+            throw new IllegalStateException();
+        }
+        
+        return element;
+    }
+    
     public static JsonObject jsonObject(JsonObject json, String key) throws IllegalStateException
     {
         JsonElement element = json.get(key);
@@ -205,7 +217,7 @@ public class SpellsFileUtil
         }
         else
         {
-            json.addProperty(key, spell.getRegistryName().toString());
+            json.addProperty(key, SpellsUtil.getSpellKey(spell).toString());
         }
     }
     
@@ -225,7 +237,7 @@ public class SpellsFileUtil
         }
         else
         {
-            json.addProperty(itemKey, itemStack.getItem().getRegistryName().toString());
+            json.addProperty(itemKey, ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
             json.addProperty(countKey, itemStack.getCount());
         }
     }

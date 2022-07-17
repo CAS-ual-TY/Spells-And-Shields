@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.network;
 
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
@@ -33,7 +34,7 @@ public record SpellProgressionSyncMessage(BlockPos blockPos, List<SpellTree> spe
         
         for(Map.Entry<ISpell, SpellStatus> entry : msg.map().entrySet())
         {
-            buf.writeRegistryId(entry.getKey());
+            buf.writeRegistryId(SpellsRegistries.SPELLS_REGISTRY.get(), entry.getKey());
             buf.writeByte(entry.getValue().ordinal());
         }
     }

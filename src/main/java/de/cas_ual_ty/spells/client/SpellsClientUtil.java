@@ -45,12 +45,11 @@ public class SpellsClientUtil
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
         SpellKeyBindings.register();
+        ManaRenderer.register();
     }
     
     public static void clientSetup(FMLClientSetupEvent event)
     {
-        ManaRenderer.clientSetup(event);
-        SpellKeyBindings.clientSetup(event);
         MenuScreens.register(SpellsRegistries.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
         EntityRenderers.register(SpellsRegistries.SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
         {
@@ -79,7 +78,7 @@ public class SpellsClientUtil
     
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
     
-    public static void initScreen(ScreenEvent.InitScreenEvent.Post event)
+    public static void initScreen(ScreenEvent.Init.Post event)
     {
         if(Minecraft.getInstance().player != null)
         {
@@ -128,7 +127,7 @@ public class SpellsClientUtil
         }
     }
     
-    public static void renderScreen(ScreenEvent.DrawScreenEvent.Post event)
+    public static void renderScreen(ScreenEvent.Render.Post event)
     {
         if(event.getScreen() instanceof InventoryScreen screen)
         {

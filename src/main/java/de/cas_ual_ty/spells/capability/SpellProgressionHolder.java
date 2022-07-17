@@ -53,7 +53,7 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
         for(Map.Entry<ISpell, SpellStatus> entry : progression.entrySet())
         {
             CompoundTag tag = new CompoundTag();
-            tag.putString("spell", entry.getKey().getRegistryName().toString());
+            tag.putString("spell", SpellsUtil.getSpellKey(entry.getKey()).toString());
             tag.putByte("spell_status", (byte) entry.getValue().ordinal());
             list.add(tag);
         }
