@@ -20,15 +20,16 @@ import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class SpellsClientUtil
     {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SpellsClientConfig.CLIENT_SPEC, SpellsAndShields.MOD_ID + "/client" + ".toml");
         
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::clientSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::entityRenderers);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::rightClickBlock);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
@@ -48,10 +51,14 @@ public class SpellsClientUtil
         ManaRenderer.register();
     }
     
-    public static void clientSetup(FMLClientSetupEvent event)
+    private static void clientSetup(FMLClientSetupEvent event)
     {
         MenuScreens.register(SpellsRegistries.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
-        EntityRenderers.register(SpellsRegistries.SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
+    }
+    
+    private static void entityRenderers(EntityRenderersEvent.RegisterRenderers event)
+    {
+        event.registerEntityRenderer(SpellsRegistries.SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
         {
             @Override
             public ResourceLocation getTextureLocation(SpellProjectile pEntity)
@@ -59,7 +66,7 @@ public class SpellsClientUtil
                 return null;
             }
         });
-        EntityRenderers.register(SpellsRegistries.HOMING_SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
+        event.registerEntityRenderer(SpellsRegistries.HOMING_SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
         {
             @Override
             public ResourceLocation getTextureLocation(HomingSpellProjectile pEntity)
