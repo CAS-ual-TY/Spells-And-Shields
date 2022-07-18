@@ -14,7 +14,6 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SpellTrees
@@ -98,7 +97,7 @@ public class SpellTrees
     public static void readOrWriteSpellTreeConfigs()
     {
         List<SpellTree> baseTrees = SpellTrees.getBaseTrees();
-    
+        
         if(SpellsConfig.ADD_DEFAULT_SPELL_TREES.get())
         {
             LOADED_SPELL_TREES.addAll(baseTrees);
