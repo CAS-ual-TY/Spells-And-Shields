@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
 import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
+import de.cas_ual_ty.spells.spell.tree.SpellTrees;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
@@ -90,6 +91,11 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.PRESSURIZE, "Pressurize", "Knock back every entity around you and remove any fluid.");
         addSpell(SpellsRegistries.INSTANT_MINE, "Instant Mine", "Breaks the block your are looking at using the tool in your hand.");
         addSpell(SpellsRegistries.PASSIVE_FIRE_RESISTANCE, "Fire Resistance", PASSIVE_STRING);
+        
+        add(SpellTrees.KEY_NETHER, "Nether");
+        add(SpellTrees.KEY_OCEAN, "Ocean");
+        add(SpellTrees.KEY_MINING, "Mining");
+        add(SpellTrees.KEY_MOVEMENT, "Movement");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
