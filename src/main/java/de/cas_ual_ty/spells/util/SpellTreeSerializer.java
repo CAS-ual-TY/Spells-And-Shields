@@ -10,7 +10,6 @@ import de.cas_ual_ty.spells.spell.tree.SpellTree;
 import de.cas_ual_ty.spells.spell.tree.SpellTreeClass;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -122,16 +121,7 @@ public class SpellTreeSerializer
         JsonObject json = new JsonObject();
         
         json.addProperty("id", tree.getId().toString());
-        
-        if(tree.getTitle() instanceof TranslatableComponent t)
-        {
-            json.addProperty("title", t.getKey());
-        }
-        else
-        {
-            json.addProperty("title", tree.getTitle().getContents());
-        }
-        
+        json.add("title", Component.Serializer.toJsonTree(tree.getTitle()));
         json.addProperty("icon_spell", tree.getIconSpell().getRegistryName().toString());
         json.add("root_spell", tree.getRoot() != null ? nodeToJsonRec(tree.getRoot()) : JsonNull.INSTANCE);
         
@@ -155,7 +145,7 @@ public class SpellTreeSerializer
     public static SpellTree treeFromJson(JsonObject json)
     {
         UUID id = UUID.fromString(SpellsFileUtil.jsonString(json, "id"));
-        TranslatableComponent title = new TranslatableComponent(SpellsFileUtil.jsonString(json, "title"));
+        Component title = Component.Serializer.fromJson(SpellsFileUtil.jsonElement(json, "title"));
         ISpell icon = SpellsFileUtil.jsonSpell(json, "icon_spell");
         SpellNode root = nodeFromJson(SpellsFileUtil.jsonObject(json, "root_spell"));
         
