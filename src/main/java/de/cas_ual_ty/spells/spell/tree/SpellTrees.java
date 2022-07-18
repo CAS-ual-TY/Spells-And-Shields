@@ -13,20 +13,22 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class SpellTrees
 {
-    public static final List<SpellTree> LOADED_SPELL_TREES = new LinkedList<>();
+    public static final List<SpellTree> LOADED_SPELL_TREES = new ArrayList<>();
     
-    public static List<SpellTree> addBaseTrees()
+    public static List<SpellTree> getBaseTrees()
     {
-        LOADED_SPELL_TREES.add(fireTree());
-        LOADED_SPELL_TREES.add(waterTree());
-        LOADED_SPELL_TREES.add(earthTree());
-        LOADED_SPELL_TREES.add(airTree());
-        return LOADED_SPELL_TREES;
+        List<SpellTree> list = new ArrayList<>(4);
+        list.add(fireTree());
+        list.add(waterTree());
+        list.add(earthTree());
+        list.add(airTree());
+        return list;
     }
     
     public static SpellTree fireTree()
@@ -90,9 +92,11 @@ public class SpellTrees
     
     public static void readOrWriteSpellTreeConfigs()
     {
+        List<SpellTree> baseTrees = SpellTrees.getBaseTrees();
+    
         if(SpellsConfig.ADD_DEFAULT_SPELL_TREES.get())
         {
-            SpellTrees.addBaseTrees();
+            LOADED_SPELL_TREES.addAll(baseTrees);
         }
         
         boolean makeConfigs = !SpellsFileUtil.doesSubConfigDirExist("spell_trees");
@@ -113,7 +117,7 @@ public class SpellTrees
             SpellsConfig.CREATE_DEFAULT_SPELL_TREES.save();
             
             int i = 0;
-            for(SpellTree t : SpellTrees.LOADED_SPELL_TREES)
+            for(SpellTree t : baseTrees)
             {
                 File f = p.resolve("tree_" + i++ + ".json").toFile();
                 
