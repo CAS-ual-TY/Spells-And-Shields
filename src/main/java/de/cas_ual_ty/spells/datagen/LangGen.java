@@ -4,6 +4,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
+import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.ISpell;
@@ -114,6 +115,10 @@ public class LangGen extends LanguageProvider
         add(MultiIngredientSpell.KEY_REQUIRED_HAND, "Requirement (Hand):");
         add(MultiIngredientSpell.KEY_REQUIRED_INVENTORY, "Requirement (Inventory):");
         add(MobEffectSpell.KEY_WHEN_APPLIED, "When Applied:");
+        add(SpellProgressionScreen.KEY_LEARN, "Learn");
+        add(SpellProgressionScreen.KEY_EQUIP, "Equip");
+        add(SpellProgressionScreen.KEY_UNAVAILABLE, "Unavailable");
+        add(SpellProgressionScreen.KEY_CHOOSE_SLOT, "Choose a Slot");
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)
