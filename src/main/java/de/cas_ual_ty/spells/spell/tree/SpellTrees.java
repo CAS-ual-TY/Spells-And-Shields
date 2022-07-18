@@ -8,30 +8,36 @@ import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
 import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import de.cas_ual_ty.spells.util.SpellsUtil;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpellTrees
 {
-    public static final List<SpellTree> LOADED_SPELL_TREES = new LinkedList<>();
+    public static final List<SpellTree> LOADED_SPELL_TREES = new ArrayList<>();
     
-    public static List<SpellTree> addBaseTrees()
+    public static final String KEY_NETHER = "spell_tree.nether";
+    public static final String KEY_OCEAN = "spell_tree.ocean";
+    public static final String KEY_MINING = "spell_tree.mining";
+    public static final String KEY_MOVEMENT = "spell_tree.movement";
+    
+    public static List<SpellTree> getBaseTrees()
     {
-        LOADED_SPELL_TREES.add(fireTree());
-        LOADED_SPELL_TREES.add(waterTree());
-        LOADED_SPELL_TREES.add(earthTree());
-        LOADED_SPELL_TREES.add(airTree());
-        return LOADED_SPELL_TREES;
+        List<SpellTree> list = new ArrayList<>(4);
+        list.add(fireTree());
+        list.add(waterTree());
+        list.add(earthTree());
+        list.add(airTree());
+        return list;
     }
     
     public static SpellTree fireTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), SpellsRegistries.FIRE_BALL, 15, 28, new TextComponent("Nether"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), SpellsRegistries.FIRE_BALL, 15, 28, new TranslatableComponent(KEY_NETHER))
                 .icon(SpellsRegistries.PASSIVE_FIRE_RESISTANCE.get())
                 .add(SpellsRegistries.PASSIVE_FIRE_RESISTANCE, 30, 30)
                 .leaf()
@@ -41,7 +47,7 @@ public class SpellTrees
     
     public static SpellTree waterTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), SpellsRegistries.PASSIVE_WATER_BREATHING, 10, 0, new TextComponent("Ocean"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), SpellsRegistries.PASSIVE_WATER_BREATHING, 10, 0, new TranslatableComponent(KEY_OCEAN))
                 .icon(SpellsRegistries.PASSIVE_DOLPHINS_GRACE.get())
                 .add(SpellsRegistries.PASSIVE_REGENERATION, 20, 20)
                 .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY, 20, 20)
@@ -60,7 +66,7 @@ public class SpellTrees
     
     public static SpellTree earthTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), SpellsRegistries.SMELT, 5, 8, new TextComponent("Mining"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), SpellsRegistries.SMELT, 5, 8, new TranslatableComponent(KEY_MINING))
                 .icon(SpellsRegistries.PASSIVE_DIG_SPEED.get())
                 .add(SpellsRegistries.INSTANT_MINE, 15, 18)
                 .add(SpellsRegistries.PASSIVE_DIG_SPEED, 25, 24)
@@ -69,7 +75,7 @@ public class SpellTrees
     
     public static SpellTree airTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), SpellsRegistries.PASSIVE_JUMP_BOOST, 15, 12, new TextComponent("Movement"))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), SpellsRegistries.PASSIVE_JUMP_BOOST, 15, 12, new TranslatableComponent(KEY_MOVEMENT))
                 .icon(SpellsRegistries.PASSIVE_JUMP_BOOST.get())
                 .add(SpellsRegistries.LEAP, 10, 14)
                 .add(SpellsRegistries.PASSIVE_SPEED, 20, 20)
@@ -77,11 +83,11 @@ public class SpellTrees
                 .add(SpellsRegistries.JUMP, 14, 14)
                 .leaf()
                 .leaf()
-                .add(SpellsRegistries.FALL_DAMAGE_REDUCTION, 15, 12)
+                .add(SpellsRegistries.MANA_SOLES, 15, 12)
                 .add(SpellsRegistries.PASSIVE_SLOW_FALLING, 15, 16)
                 .leaf()
                 .leaf()
-                .add(SpellsRegistries.POCKET_BOW, 10, 16)
+                .add(SpellsRegistries.BLOW_ARROW, 10, 16)
                 .add(SpellsRegistries.PRESSURIZE, 20, 18)
                 .leaf()
                 .leaf()
@@ -90,9 +96,11 @@ public class SpellTrees
     
     public static void readOrWriteSpellTreeConfigs()
     {
+        List<SpellTree> baseTrees = SpellTrees.getBaseTrees();
+        
         if(SpellsConfig.ADD_DEFAULT_SPELL_TREES.get())
         {
-            SpellTrees.addBaseTrees();
+            LOADED_SPELL_TREES.addAll(baseTrees);
         }
         
         boolean makeConfigs = !SpellsFileUtil.doesSubConfigDirExist("spell_trees");
@@ -113,7 +121,7 @@ public class SpellTrees
             SpellsConfig.CREATE_DEFAULT_SPELL_TREES.save();
             
             int i = 0;
-            for(SpellTree t : SpellTrees.LOADED_SPELL_TREES)
+            for(SpellTree t : baseTrees)
             {
                 File f = p.resolve("tree_" + i++ + ".json").toFile();
                 

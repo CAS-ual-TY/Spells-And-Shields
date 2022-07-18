@@ -12,9 +12,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-public class BreakBlockSpell extends Spell
+public class InstantMineSpell extends Spell
 {
-    public BreakBlockSpell(float manaCost)
+    public InstantMineSpell(float manaCost)
     {
         super(manaCost);
     }

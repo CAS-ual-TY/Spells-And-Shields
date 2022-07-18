@@ -2,7 +2,6 @@ package de.cas_ual_ty.spells;
 
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
-import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.network.*;
 import de.cas_ual_ty.spells.spell.base.IEquippedTickSpell;
@@ -13,14 +12,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
@@ -51,7 +51,6 @@ public class SpellsAndShields
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common" + ".toml");
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::entityAttributeModification);
         
         MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
@@ -69,7 +68,7 @@ public class SpellsAndShields
         CHANNEL.registerMessage(5, RequestLearnSpellMessage.class, RequestLearnSpellMessage::encode, RequestLearnSpellMessage::decode, RequestLearnSpellMessage::handle);
         CHANNEL.registerMessage(6, RequestEquipSpellMessage.class, RequestEquipSpellMessage::encode, RequestEquipSpellMessage::decode, RequestEquipSpellMessage::handle);
         
-        SpellsClientUtil.onModConstruct();
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> de.cas_ual_ty.spells.client.SpellsClientUtil::onModConstruct);
     }
     
     private void setup(FMLCommonSetupEvent event)
@@ -80,11 +79,6 @@ public class SpellsAndShields
         SpellTrees.readOrWriteSpellTreeConfigs();
         SpellsRegistries.spellsConfigs();
         SpellsRegistries.registerEventSpells();
-    }
-    
-    private void clientSetup(FMLClientSetupEvent event)
-    {
-        SpellsClientUtil.clientSetup(event);
     }
     
     private void registerCommands(RegisterCommandsEvent event)

@@ -35,6 +35,11 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("textures/gui/advancements/window.png");
     private static final ResourceLocation TABS_LOCATION = new ResourceLocation("textures/gui/advancements/tabs.png");
     
+    public static final String KEY_LEARN = "spell_progression.learn";
+    public static final String KEY_EQUIP = "spell_progression.equip";
+    public static final String KEY_UNAVAILABLE = "spell_progression.unavailable";
+    public static final String KEY_CHOOSE_SLOT = "spell_progression.choose";
+    
     public static final int GUI_WIDTH = 252;
     public static final int GUI_HEIGHT = 140;
     
@@ -153,9 +158,13 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             maxPages = this.tabs.size() / MAX_TABS;
         }
         
-        this.selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT);
+        int totalW = 280;
+        int leftW = 150;
+        int rightW = totalW - 180;
         
-        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - 120, getGuiTop() + GUI_HEIGHT, 120, SpellNodeWidget.FRAME_HEIGHT, new TextComponent("Learn"), this::buttonClicked, 1)
+        this.selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT, leftW);
+        
+        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, new TranslatableComponent(KEY_LEARN), this::buttonClicked, 1)
         {
             @Override
             public void render(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
@@ -183,9 +192,9 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                 }
             }
         };
-        this.equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - 120, getGuiTop() + GUI_HEIGHT, 120, SpellNodeWidget.FRAME_HEIGHT, new TextComponent("Equip"), this::buttonClicked, 0);
-        this.unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - 120, getGuiTop() + GUI_HEIGHT, 120, SpellNodeWidget.FRAME_HEIGHT, new TextComponent("Unavailable..."), this::buttonClicked, 2);
-        this.chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - 120, getGuiTop() + GUI_HEIGHT, 120, SpellNodeWidget.FRAME_HEIGHT, new TextComponent("Choose a slot (left)..."), this::buttonClicked, 2);
+        this.equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, new TranslatableComponent(KEY_EQUIP), this::buttonClicked, 0);
+        this.unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, new TranslatableComponent(KEY_UNAVAILABLE), this::buttonClicked, 2);
+        this.chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, new TranslatableComponent(KEY_CHOOSE_SLOT), this::buttonClicked, 2);
         this.unavailableButton.active = false;
         this.chooseButton.active = false;
         
@@ -263,17 +272,21 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                     }
                     else if(tab == selectedTab)
                     {
-                        int x = Mth.floor(getGuiLeft() + tab.getScrollX());
-                        int y = Mth.floor(getGuiTop() + tab.getScrollY());
-                        int mX = Mth.floor(mouseX - WINDOW_OFF_X);
-                        int mY = Mth.floor(mouseY - WINDOW_OFF_Y);
-                        
-                        for(SpellNodeWidget w : tab.widgets.values())
+                        if(mouseX >= getGuiLeft() + WINDOW_OFF_X && mouseX < getGuiLeft() + WINDOW_OFF_X + WINDOW_WIDTH &&
+                                mouseY >= getGuiTop() + WINDOW_OFF_Y && mouseY < getGuiTop() + WINDOW_OFF_Y + WINDOW_HEIGHT)
                         {
-                            if(w.isMouseOver(x, y, mX, mY))
+                            int x = Mth.floor(getGuiLeft() + tab.getScrollX());
+                            int y = Mth.floor(getGuiTop() + tab.getScrollY());
+                            int mX = Mth.floor(mouseX - WINDOW_OFF_X);
+                            int mY = Mth.floor(mouseY - WINDOW_OFF_Y);
+                            
+                            for(SpellNodeWidget w : tab.widgets.values())
                             {
-                                spellClicked(w);
-                                break;
+                                if(w.isMouseOver(x, y, mX, mY))
+                                {
+                                    spellClicked(w);
+                                    break;
+                                }
                             }
                         }
                     }

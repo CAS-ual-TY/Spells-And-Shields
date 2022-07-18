@@ -4,11 +4,13 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
+import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
 import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
+import de.cas_ual_ty.spells.spell.tree.SpellTrees;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
@@ -66,7 +68,7 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.FIRE_BALL, "Fire Ball", "Shoot a fire ball forward.");
         addSpell(SpellsRegistries.LEAP, "Leap", "Leap forward.");
         addSpell(SpellsRegistries.SUMMON_ANIMAL, "Summon Animal", "Create life based on the item in your hand.");
-        addSpell(SpellsRegistries.POCKET_BOW, "Pocket Bow", "Shoot a projectile from your hand without a bow.");
+        addSpell(SpellsRegistries.BLOW_ARROW, "Blow Arrow", "Shoot a projectile from your hand without a bow.");
         addSpell(SpellsRegistries.SMELT, "Smelt", "Works like an instant blast furnace on the item in your hand.");
         addSpell(SpellsRegistries.HEALTH_BOOST, "Health Boost", "Increases your maximum health.");
         addSpell(SpellsRegistries.MANA_BOOST, "Mana Boost", "Increases your maximum mana.");
@@ -84,11 +86,16 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.POTION_SHOT, "Potion Shot", "Shots the contents of the potion in your hand forward.");
         addSpell(SpellsRegistries.PASSIVE_FROST_WALKER, "Frost Walker", PASSIVE_STRING);
         addSpell(SpellsRegistries.JUMP, "Jump", "High jump. Be aware of fall damage.");
-        addSpell(SpellsRegistries.FALL_DAMAGE_REDUCTION, "Reduce Fall Damage", "Consumes mana to reduce or cancel fall damage.");
+        addSpell(SpellsRegistries.MANA_SOLES, "Mana Soles", "Consumes mana to reduce or cancel fall damage.");
         addSpell(SpellsRegistries.FIRE_CHARGE, "Fire Charge", "Shoot a fire charge forward, like a Ghast.");
         addSpell(SpellsRegistries.PRESSURIZE, "Pressurize", "Knock back every entity around you and remove any fluid.");
         addSpell(SpellsRegistries.INSTANT_MINE, "Instant Mine", "Breaks the block your are looking at using the tool in your hand.");
         addSpell(SpellsRegistries.PASSIVE_FIRE_RESISTANCE, "Fire Resistance", PASSIVE_STRING);
+        
+        add(SpellTrees.KEY_NETHER, "Nether");
+        add(SpellTrees.KEY_OCEAN, "Ocean");
+        add(SpellTrees.KEY_MINING, "Mining");
+        add(SpellTrees.KEY_MOVEMENT, "Movement");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
@@ -114,6 +121,10 @@ public class LangGen extends LanguageProvider
         add(MultiIngredientSpell.KEY_REQUIRED_HAND, "Requirement (Hand):");
         add(MultiIngredientSpell.KEY_REQUIRED_INVENTORY, "Requirement (Inventory):");
         add(MobEffectSpell.KEY_WHEN_APPLIED, "When Applied:");
+        add(SpellProgressionScreen.KEY_LEARN, "Learn");
+        add(SpellProgressionScreen.KEY_EQUIP, "Equip");
+        add(SpellProgressionScreen.KEY_UNAVAILABLE, "Unavailable");
+        add(SpellProgressionScreen.KEY_CHOOSE_SLOT, "Choose a Slot");
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)
