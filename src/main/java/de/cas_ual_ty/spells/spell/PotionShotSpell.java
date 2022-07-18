@@ -16,11 +16,11 @@ import net.minecraft.world.phys.EntityHitResult;
 
 import java.util.List;
 
-public class ShootPotionSpell extends HandIngredientSpell implements IProjectileSpell
+public class PotionShotSpell extends HandIngredientSpell implements IProjectileSpell
 {
     public static final String KEY_EFFECTS = "Effects";
     
-    public ShootPotionSpell(float manaCost)
+    public PotionShotSpell(float manaCost)
     {
         super(manaCost);
     }

@@ -67,7 +67,7 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.FIRE_BALL, "Fire Ball", "Shoot a fire ball forward.");
         addSpell(SpellsRegistries.LEAP, "Leap", "Leap forward.");
         addSpell(SpellsRegistries.SUMMON_ANIMAL, "Summon Animal", "Create life based on the item in your hand.");
-        addSpell(SpellsRegistries.POCKET_BOW, "Pocket Bow", "Shoot a projectile from your hand without a bow.");
+        addSpell(SpellsRegistries.BLOW_ARROW, "Blow Arrow", "Shoot a projectile from your hand without a bow.");
         addSpell(SpellsRegistries.SMELT, "Smelt", "Works like an instant blast furnace on the item in your hand.");
         addSpell(SpellsRegistries.HEALTH_BOOST, "Health Boost", "Increases your maximum health.");
         addSpell(SpellsRegistries.MANA_BOOST, "Mana Boost", "Increases your maximum mana.");
@@ -85,7 +85,7 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.POTION_SHOT, "Potion Shot", "Shots the contents of the potion in your hand forward.");
         addSpell(SpellsRegistries.PASSIVE_FROST_WALKER, "Frost Walker", PASSIVE_STRING);
         addSpell(SpellsRegistries.JUMP, "Jump", "High jump. Be aware of fall damage.");
-        addSpell(SpellsRegistries.FALL_DAMAGE_REDUCTION, "Reduce Fall Damage", "Consumes mana to reduce or cancel fall damage.");
+        addSpell(SpellsRegistries.MANA_SOLES, "Mana Soles", "Consumes mana to reduce or cancel fall damage.");
         addSpell(SpellsRegistries.FIRE_CHARGE, "Fire Charge", "Shoot a fire charge forward, like a Ghast.");
         addSpell(SpellsRegistries.PRESSURIZE, "Pressurize", "Knock back every entity around you and remove any fluid.");
         addSpell(SpellsRegistries.INSTANT_MINE, "Instant Mine", "Breaks the block your are looking at using the tool in your hand.");

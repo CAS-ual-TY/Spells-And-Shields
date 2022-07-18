@@ -105,10 +105,10 @@ public class SpellsRegistries
     
     public static final RegistryObject<ISpell> LEAP = SPELLS.register("leap", () -> new LeapSpell(7F));
     public static final RegistryObject<ISpell> SUMMON_ANIMAL = SPELLS.register("summon_animal", () -> new SummonAnimalSpell(18F));
-    public static final RegistryObject<ISpell> FIRE_BALL = SPELLS.register("fire_ball", () -> new FireSpell(5F));
+    public static final RegistryObject<ISpell> FIRE_BALL = SPELLS.register("fire_ball", () -> new FireBallSpell(5F));
     public static final RegistryObject<ISpell> SMELT = SPELLS.register("smelt", () -> new SmeltSpell(6F).setSmallIcon(new ResourceLocation("textures/item/coal.png")));
     public static final RegistryObject<ISpell> TRANSFER_MANA = SPELLS.register("transfer_mana", () -> new TransferManaSpell(4F));
-    public static final RegistryObject<ISpell> POCKET_BOW = SPELLS.register("pocket_bow", () -> new BowSpell(7F).setSmallIcon(new ResourceLocation("textures/item/bow_pulling_0.png")));
+    public static final RegistryObject<ISpell> BLOW_ARROW = SPELLS.register("pocket_bow", () -> new BlowArrowSpell(7F).setSmallIcon(new ResourceLocation("textures/item/bow_pulling_0.png")));
     public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation("textures/mob_effect/health_boost.png")));
     public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(MAX_MANA::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
     public static final RegistryObject<ISpell> PASSIVE_SPEED = SPELLS.register("passive_speed", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED));
@@ -122,13 +122,13 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> PASSIVE_REGENERATION = SPELLS.register("passive_regeneration", () -> new MobEffectSpell(MobEffects.REGENERATION, 50));
     public static final RegistryObject<ISpell> PASSIVE_REPLENISHMENT = SPELLS.register("passive_replenishment", () -> new MobEffectSpell(REPLENISHMENT_EFFECT.get(), 50));
     public static final RegistryObject<ISpell> WATER_WHIP = SPELLS.register("water_whip", () -> new WaterWhipSpell(2.0F));
-    public static final RegistryObject<ISpell> POTION_SHOT = SPELLS.register("potion_shot", () -> new ShootPotionSpell(2.0F).setSmallIcon(new ResourceLocation("textures/item/potion.png")));
+    public static final RegistryObject<ISpell> POTION_SHOT = SPELLS.register("potion_shot", () -> new PotionShotSpell(2.0F).setSmallIcon(new ResourceLocation("textures/item/potion.png")));
     public static final RegistryObject<ISpell> PASSIVE_FROST_WALKER = SPELLS.register("frost_walker", () -> new WalkerSpell().setSmallIcon(new ResourceLocation("textures/item/golden_boots.png")));
     public static final RegistryObject<ISpell> JUMP = SPELLS.register("jump", () -> new JumpSpell(5F).setSmallIcon(new ResourceLocation("textures/item/feather.png")));
-    public static final RegistryObject<ISpell> FALL_DAMAGE_REDUCTION = SPELLS.register("fall_damage_reduction", () -> new ReduceFallDamageSpell().setSmallIcon(new ResourceLocation("textures/item/diamond_boots.png")));
+    public static final RegistryObject<ISpell> MANA_SOLES = SPELLS.register("fall_damage_reduction", () -> new ManaSolesSpell().setSmallIcon(new ResourceLocation("textures/item/diamond_boots.png")));
     public static final RegistryObject<ISpell> FIRE_CHARGE = SPELLS.register("fire_charge", () -> new FireChargeSpell(4F, new ItemStack(Items.FIRE_CHARGE)).setSmallIcon(new ResourceLocation("textures/item/fire_charge.png")));
     public static final RegistryObject<ISpell> PRESSURIZE = SPELLS.register("pressurize", () -> new PressurizeSpell(4F));
-    public static final RegistryObject<ISpell> INSTANT_MINE = SPELLS.register("instant_mine", () -> new BreakBlockSpell(5F).setSmallIcon(new ResourceLocation("textures/item/diamond_pickaxe.png")));
+    public static final RegistryObject<ISpell> INSTANT_MINE = SPELLS.register("instant_mine", () -> new InstantMineSpell(5F).setSmallIcon(new ResourceLocation("textures/item/diamond_pickaxe.png")));
     public static final RegistryObject<ISpell> PASSIVE_FIRE_RESISTANCE = SPELLS.register("passive_fire_resistance", () -> new MobEffectSpell(MobEffects.FIRE_RESISTANCE));
     
     public static void register()

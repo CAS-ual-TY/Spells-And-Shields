@@ -10,9 +10,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-public class BowSpell extends HandIngredientSpell
+public class BlowArrowSpell extends HandIngredientSpell
 {
-    public BowSpell(float manaCost)
+    public BlowArrowSpell(float manaCost)
     {
         super(manaCost);
     }

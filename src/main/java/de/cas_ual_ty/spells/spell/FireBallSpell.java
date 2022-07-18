@@ -20,7 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Random;
 
-public class FireSpell extends BaseIngredientsSpell implements IProjectileSpell
+public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSpell
 {
     public final int defaultFireSeconds;
     public final float defaultDamage;
@@ -28,21 +28,21 @@ public class FireSpell extends BaseIngredientsSpell implements IProjectileSpell
     protected int fireSeconds;
     protected float damage;
     
-    public FireSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, int defaultFireSeconds, float defaultDamage)
+    public FireBallSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, int defaultFireSeconds, float defaultDamage)
     {
         super(manaCost, handIngredients, inventoryIngredients);
         this.defaultFireSeconds = defaultFireSeconds;
         this.defaultDamage = defaultDamage;
     }
     
-    public FireSpell(float manaCost, ItemStack ingredient, int fireSeconds, float damage)
+    public FireBallSpell(float manaCost, ItemStack ingredient, int fireSeconds, float damage)
     {
         super(manaCost, ingredient);
         this.defaultFireSeconds = fireSeconds;
         this.defaultDamage = damage;
     }
     
-    public FireSpell(float manaCost)
+    public FireBallSpell(float manaCost)
     {
         this(manaCost, new ItemStack(Items.BLAZE_POWDER), 2, 2F);
     }

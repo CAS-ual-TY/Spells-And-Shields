@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
-public class ReduceFallDamageSpell extends PassiveSpell implements IEventSpell
+public class ManaSolesSpell extends PassiveSpell implements IEventSpell
 {
     public void livingHurt(LivingHurtEvent event)
     {
