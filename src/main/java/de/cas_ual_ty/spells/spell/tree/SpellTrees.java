@@ -70,6 +70,9 @@ public class SpellTrees
                 .icon(SpellsRegistries.PASSIVE_DIG_SPEED.get())
                 .add(SpellsRegistries.INSTANT_MINE, 15, 18)
                 .add(SpellsRegistries.PASSIVE_DIG_SPEED, 25, 24)
+                .leaf()
+                .leaf()
+                .add(SpellsRegistries.SPIT_METAL, 10, 12)
                 .finish();
     }
     

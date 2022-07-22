@@ -12,7 +12,10 @@ import java.util.function.BiConsumer;
 public interface IProjectileSpell extends ISpell
 {
     // performed on both sides
-    void tick(SpellProjectile entity);
+    default void tick(SpellProjectile entity)
+    {
+    
+    }
     
     // performed on both sides
     default void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
