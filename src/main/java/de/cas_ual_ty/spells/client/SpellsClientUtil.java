@@ -42,10 +42,10 @@ public class SpellsClientUtil
     public static void onModConstruct()
     {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SpellsClientConfig.CLIENT_SPEC, SpellsAndShields.MOD_ID + "/client" + ".toml");
-    
+        
         SpellKeyBindings.register();
         ManaRenderer.register();
-    
+        
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::entityRenderers);
         
