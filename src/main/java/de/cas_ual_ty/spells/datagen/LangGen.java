@@ -91,6 +91,7 @@ public class LangGen extends LanguageProvider
         addSpell(SpellsRegistries.PRESSURIZE, "Pressurize", "Knock back every entity around you and remove any fluid.");
         addSpell(SpellsRegistries.INSTANT_MINE, "Instant Mine", "Breaks the block your are looking at using the tool in your hand.");
         addSpell(SpellsRegistries.PASSIVE_FIRE_RESISTANCE, "Fire Resistance", PASSIVE_STRING);
+        addSpell(SpellsRegistries.SPIT_METAL, "Spit Metal", "Spit a nugget that deals damage.");
         
         add(SpellTrees.KEY_NETHER, "Nether");
         add(SpellTrees.KEY_OCEAN, "Ocean");

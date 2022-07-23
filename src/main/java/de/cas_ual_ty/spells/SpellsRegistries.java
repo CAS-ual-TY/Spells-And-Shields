@@ -122,6 +122,7 @@ public class SpellsRegistries
     public static final RegistryObject<ISpell> PRESSURIZE = SPELLS.register("pressurize", () -> new PressurizeSpell(4F));
     public static final RegistryObject<ISpell> INSTANT_MINE = SPELLS.register("instant_mine", () -> new InstantMineSpell(5F).setSmallIcon(new ResourceLocation("textures/item/diamond_pickaxe.png")));
     public static final RegistryObject<ISpell> PASSIVE_FIRE_RESISTANCE = SPELLS.register("passive_fire_resistance", () -> new MobEffectSpell(MobEffects.FIRE_RESISTANCE));
+    public static final RegistryObject<ISpell> SPIT_METAL = SPELLS.register("spit_metal", () -> new SpitMetalSpell(4F).setSmallIcon(new ResourceLocation("textures/item/iron_nugget.png")));
     
     public static void register()
     {
