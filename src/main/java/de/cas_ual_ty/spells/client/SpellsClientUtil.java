@@ -42,14 +42,16 @@ public class SpellsClientUtil
     public static void onModConstruct()
     {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SpellsClientConfig.CLIENT_SPEC, SpellsAndShields.MOD_ID + "/client" + ".toml");
-        
+    
+        SpellKeyBindings.register();
+        ManaRenderer.register();
+    
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::entityRenderers);
+        
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::rightClickBlock);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
-        SpellKeyBindings.register();
-        ManaRenderer.register();
     }
     
     private static void clientSetup(FMLClientSetupEvent event)
@@ -79,14 +81,14 @@ public class SpellsClientUtil
     
     private static BlockPos lastRightClickedBlock = null;
     
-    public static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
+    private static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
         lastRightClickedBlock = event.getPos();
     }
     
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
     
-    public static void initScreen(ScreenEvent.Init.Post event)
+    private static void initScreen(ScreenEvent.Init.Post event)
     {
         if(Minecraft.getInstance().player != null)
         {
@@ -135,7 +137,7 @@ public class SpellsClientUtil
         }
     }
     
-    public static void renderScreen(ScreenEvent.Render.Post event)
+    private static void renderScreen(ScreenEvent.Render.Post event)
     {
         if(event.getScreen() instanceof InventoryScreen screen)
         {

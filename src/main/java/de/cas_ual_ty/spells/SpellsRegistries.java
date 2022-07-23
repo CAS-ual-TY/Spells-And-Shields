@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells;
 
 import de.cas_ual_ty.spells.command.SpellArgument;
+import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.effect.ExtraManaMobEffect;
 import de.cas_ual_ty.spells.effect.InstantManaMobEffect;
 import de.cas_ual_ty.spells.effect.ManaMobEffect;
@@ -31,6 +32,9 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
@@ -103,5 +107,21 @@ public class SpellsRegistries
         RECIPE_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ARGUMENT_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
+    
+    private static void registerCommands(RegisterCommandsEvent event)
+    {
+        SpellCommand.register(event.getDispatcher(), event.getBuildContext());
+    }
+    
+    private static void entityAttributeModification(EntityAttributeModificationEvent event)
+    {
+        event.add(EntityType.PLAYER, SpellsRegistries.MAX_MANA.get());
+    }
+    
+    public static void registerEvents()
+    {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsRegistries::entityAttributeModification);
+        MinecraftForge.EVENT_BUS.addListener(SpellsRegistries::registerCommands);
     }
 }

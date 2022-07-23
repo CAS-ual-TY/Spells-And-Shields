@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells;
 
 import com.google.gson.JsonElement;
+import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.*;
 import de.cas_ual_ty.spells.spell.base.*;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
@@ -10,6 +11,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 
@@ -61,7 +64,38 @@ public class Spells
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        SPELLS_REGISTRY = event.create(new RegistryBuilder<ISpell>()/*.setType(ISpell.class)*/.setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spells")));
+        SPELLS_REGISTRY = event.create(new RegistryBuilder<ISpell>().setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spells")));
+    }
+    
+    private static void playerTick(TickEvent.PlayerTickEvent event)
+    {
+        if(event.phase == TickEvent.Phase.END)
+        {
+            SpellHolder.getSpellHolder(event.player).ifPresent(spellHolder ->
+            {
+                for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
+                {
+                    if(spellHolder.getSpell(i) instanceof IEquippedTickSpell spell)
+                    {
+                        spell.tick(spellHolder);
+                    }
+                }
+            });
+        }
+    }
+    
+    private static void tick(TickEvent.LevelTickEvent event)
+    {
+        if(event.phase == TickEvent.Phase.END)
+        {
+            Spells.SPELLS_REGISTRY.get().forEach(s ->
+            {
+                if(s instanceof IEquippedTickSpell spell)
+                {
+                    spell.tickSingleton();
+                }
+            });
+        }
     }
     
     public static void spellsConfigs()
@@ -158,5 +192,11 @@ public class Spells
                 eventSpell.registerEvents();
             }
         });
+    }
+    
+    public static void registerEvents()
+    {
+        MinecraftForge.EVENT_BUS.addListener(Spells::playerTick);
+        MinecraftForge.EVENT_BUS.addListener(Spells::tick);
     }
 }

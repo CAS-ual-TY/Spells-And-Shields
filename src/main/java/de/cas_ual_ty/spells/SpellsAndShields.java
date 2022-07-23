@@ -1,22 +1,14 @@
 package de.cas_ual_ty.spells;
 
-import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
-import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.network.*;
-import de.cas_ual_ty.spells.spell.base.IEquippedTickSpell;
 import de.cas_ual_ty.spells.spell.tree.SpellTrees;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -45,19 +37,16 @@ public class SpellsAndShields
     
     public SpellsAndShields()
     {
-        SpellsRegistries.register();
         Spells.register();
+        SpellsRegistries.register();
         
         SpellsFileUtil.getOrCreateConfigDir();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common" + ".toml");
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::entityAttributeModification);
         
-        MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
-        MinecraftForge.EVENT_BUS.addListener(this::playerTick);
-        MinecraftForge.EVENT_BUS.addListener(this::tick);
-        
+        Spells.registerEvents();
+        SpellsRegistries.registerEvents();
         SpellsCapabilities.registerEvents();
         SpellTrees.registerEvents();
         
@@ -80,46 +69,5 @@ public class SpellsAndShields
         SpellTrees.readOrWriteSpellTreeConfigs();
         Spells.spellsConfigs();
         Spells.registerEventSpells();
-    }
-    
-    private void registerCommands(RegisterCommandsEvent event)
-    {
-        SpellCommand.register(event.getDispatcher(), event.getBuildContext());
-    }
-    
-    private void entityAttributeModification(EntityAttributeModificationEvent event)
-    {
-        event.add(EntityType.PLAYER, SpellsRegistries.MAX_MANA.get());
-    }
-    
-    private void playerTick(TickEvent.PlayerTickEvent event)
-    {
-        if(event.phase == TickEvent.Phase.END)
-        {
-            SpellHolder.getSpellHolder(event.player).ifPresent(spellHolder ->
-            {
-                for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
-                {
-                    if(spellHolder.getSpell(i) instanceof IEquippedTickSpell spell)
-                    {
-                        spell.tick(spellHolder);
-                    }
-                }
-            });
-        }
-    }
-    
-    private void tick(TickEvent.LevelTickEvent event)
-    {
-        if(event.phase == TickEvent.Phase.END)
-        {
-            Spells.SPELLS_REGISTRY.get().forEach(s ->
-            {
-                if(s instanceof IEquippedTickSpell spell)
-                {
-                    spell.tickSingleton();
-                }
-            });
-        }
     }
 }
