@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.tree.SpellNode;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;
@@ -29,7 +29,7 @@ public class SpellTreeSerializer
     {
         buf.writeUUID(spellTree.getId());
         buf.writeComponent(spellTree.getTitle());
-        buf.writeRegistryId(SpellsRegistries.SPELLS_REGISTRY.get(), spellTree.getIconSpell());
+        buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), spellTree.getIconSpell());
         
         SpellNode spellNode = spellTree.getRoot();
         encodeNode(spellNode, buf);
@@ -57,7 +57,7 @@ public class SpellTreeSerializer
     
     private static void encodeNode(SpellNode spellNode, FriendlyByteBuf buf)
     {
-        buf.writeRegistryId(SpellsRegistries.SPELLS_REGISTRY.get(), spellNode.getSpell());
+        buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), spellNode.getSpell());
         buf.writeInt(spellNode.getLevelCost());
         buf.writeByte(spellNode.getRequiredBookshelves());
     }

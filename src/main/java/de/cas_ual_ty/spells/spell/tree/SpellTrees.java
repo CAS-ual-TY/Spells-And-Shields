@@ -1,9 +1,9 @@
 package de.cas_ual_ty.spells.spell.tree;
 
 import com.google.gson.JsonElement;
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
-import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
 import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
@@ -37,61 +37,61 @@ public class SpellTrees
     
     public static SpellTree fireTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), SpellsRegistries.FIRE_BALL, 15, 28, Component.translatable(KEY_NETHER))
-                .icon(SpellsRegistries.PASSIVE_FIRE_RESISTANCE.get())
-                .add(SpellsRegistries.PASSIVE_FIRE_RESISTANCE, 30, 30)
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), Spells.FIRE_BALL, 15, 28, Component.translatable(KEY_NETHER))
+                .icon(Spells.FIRE_RESISTANCE.get())
+                .add(Spells.FIRE_RESISTANCE, 30, 30)
                 .leaf()
-                .add(SpellsRegistries.FIRE_CHARGE, 10, 28)
+                .add(Spells.FIRE_CHARGE, 10, 28)
                 .finish();
     }
     
     public static SpellTree waterTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), SpellsRegistries.PASSIVE_WATER_BREATHING, 10, 0, Component.translatable(KEY_OCEAN))
-                .icon(SpellsRegistries.PASSIVE_DOLPHINS_GRACE.get())
-                .add(SpellsRegistries.PASSIVE_REGENERATION, 20, 20)
-                .add(SpellsRegistries.PASSIVE_AQUA_AFFINITY, 20, 20)
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), Spells.WATER_BREATHING, 10, 0, Component.translatable(KEY_OCEAN))
+                .icon(Spells.DOLPHINS_GRACE.get())
+                .add(Spells.REGENERATION, 20, 20)
+                .add(Spells.AQUA_AFFINITY, 20, 20)
                 .leaf()
                 .leaf()
-                .add(SpellsRegistries.WATER_LEAP, 5, 10)
-                .add(SpellsRegistries.PASSIVE_DOLPHINS_GRACE, 30, 30)
+                .add(Spells.WATER_LEAP, 5, 10)
+                .add(Spells.DOLPHINS_GRACE, 30, 30)
                 .leaf()
-                .add(SpellsRegistries.PASSIVE_FROST_WALKER, 10, 14)
+                .add(Spells.FROST_WALKER, 10, 14)
                 .leaf()
                 .leaf()
-                .add(SpellsRegistries.WATER_WHIP, 10, 10)
-                .add(SpellsRegistries.POTION_SHOT, 10, 10)
+                .add(Spells.WATER_WHIP, 10, 10)
+                .add(Spells.POTION_SHOT, 10, 10)
                 .finish();
     }
     
     public static SpellTree earthTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), SpellsRegistries.SMELT, 5, 8, Component.translatable(KEY_MINING))
-                .icon(SpellsRegistries.PASSIVE_DIG_SPEED.get())
-                .add(SpellsRegistries.INSTANT_MINE, 15, 18)
-                .add(SpellsRegistries.PASSIVE_DIG_SPEED, 25, 24)
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), Spells.BLAST_SMELT, 5, 8, Component.translatable(KEY_MINING))
+                .icon(Spells.HASTE.get())
+                .add(Spells.INSTANT_MINE, 15, 18)
+                .add(Spells.HASTE, 25, 24)
                 .leaf()
                 .leaf()
-                .add(SpellsRegistries.SPIT_METAL, 10, 12)
+                .add(Spells.SPIT_METAL, 10, 12)
                 .finish();
     }
     
     public static SpellTree airTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), SpellsRegistries.PASSIVE_JUMP_BOOST, 15, 12, Component.translatable(KEY_MOVEMENT))
-                .icon(SpellsRegistries.PASSIVE_JUMP_BOOST.get())
-                .add(SpellsRegistries.LEAP, 10, 14)
-                .add(SpellsRegistries.PASSIVE_SPEED, 20, 20)
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), Spells.JUMP_BOOST, 15, 12, Component.translatable(KEY_MOVEMENT))
+                .icon(Spells.JUMP_BOOST.get())
+                .add(Spells.LEAP, 10, 14)
+                .add(Spells.SPEED, 20, 20)
                 .leaf()
-                .add(SpellsRegistries.JUMP, 14, 14)
-                .leaf()
-                .leaf()
-                .add(SpellsRegistries.MANA_SOLES, 15, 12)
-                .add(SpellsRegistries.PASSIVE_SLOW_FALLING, 15, 16)
+                .add(Spells.JUMP, 14, 14)
                 .leaf()
                 .leaf()
-                .add(SpellsRegistries.BLOW_ARROW, 10, 16)
-                .add(SpellsRegistries.PRESSURIZE, 20, 18)
+                .add(Spells.MANA_SOLES, 15, 12)
+                .add(Spells.SLOW_FALLING, 15, 16)
+                .leaf()
+                .leaf()
+                .add(Spells.BLOW_ARROW, 10, 16)
+                .add(Spells.PRESSURIZE, 20, 18)
                 .leaf()
                 .leaf()
                 .finish();

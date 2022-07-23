@@ -46,6 +46,7 @@ public class SpellsAndShields
     public SpellsAndShields()
     {
         SpellsRegistries.register();
+        Spells.register();
         
         SpellsFileUtil.getOrCreateConfigDir();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common" + ".toml");
@@ -77,8 +78,8 @@ public class SpellsAndShields
         SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.REPLENISHMENT.get(), SpellsRegistries.STRONG_REPLENISHMENT.get(), SpellsRegistries.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
         SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.LEAKING.get(), SpellsRegistries.STRONG_LEAKING.get(), SpellsRegistries.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
         SpellTrees.readOrWriteSpellTreeConfigs();
-        SpellsRegistries.spellsConfigs();
-        SpellsRegistries.registerEventSpells();
+        Spells.spellsConfigs();
+        Spells.registerEventSpells();
     }
     
     private void registerCommands(RegisterCommandsEvent event)
@@ -112,7 +113,7 @@ public class SpellsAndShields
     {
         if(event.phase == TickEvent.Phase.END)
         {
-            SpellsRegistries.SPELLS_REGISTRY.get().forEach(s ->
+            Spells.SPELLS_REGISTRY.get().forEach(s ->
             {
                 if(s instanceof IEquippedTickSpell spell)
                 {

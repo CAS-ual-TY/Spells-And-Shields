@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.spell.base;
 
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -129,7 +130,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     @Override
     public void writeSpawnData(FriendlyByteBuf buf)
     {
-        buf.writeRegistryId(SpellsRegistries.SPELLS_REGISTRY.get(), this.getSpell());
+        buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), this.getSpell());
     }
     
     @Override

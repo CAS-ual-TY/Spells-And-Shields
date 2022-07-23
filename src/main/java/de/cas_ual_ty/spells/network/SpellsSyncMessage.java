@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.network;
 
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import net.minecraft.network.FriendlyByteBuf;
@@ -19,7 +19,7 @@ public record SpellsSyncMessage(int entityId, ISpell[] spells)
             if(spell != null)
             {
                 buf.writeBoolean(true);
-                buf.writeRegistryId(SpellsRegistries.SPELLS_REGISTRY.get(), spell);
+                buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), spell);
             }
             else
             {
