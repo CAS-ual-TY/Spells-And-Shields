@@ -6,7 +6,6 @@ import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.base.ISpell;
 import de.cas_ual_ty.spells.spell.tree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,16 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
-public record RequestSpellProgressionMenuMessage(BlockPos pos)
+public record RequestSpellProgressionMenuMessage()
 {
     public static void encode(RequestSpellProgressionMenuMessage msg, FriendlyByteBuf buf)
     {
-        buf.writeBlockPos(msg.pos());
     }
     
     public static RequestSpellProgressionMenuMessage decode(FriendlyByteBuf buf)
     {
-        return new RequestSpellProgressionMenuMessage(buf.readBlockPos());
+        return new RequestSpellProgressionMenuMessage();
     }
     
     public static void handle(RequestSpellProgressionMenuMessage msg, Supplier<NetworkEvent.Context> context)
@@ -48,10 +46,7 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
             
             if(player.containerMenu instanceof EnchantmentMenu menu)
             {
-                //ContainerLevelAccess access = SpellsUtil.getAccess(player, menu);
-                ContainerLevelAccess access = ContainerLevelAccess.create(player.level, msg.pos());
-                
-                //player.closeContainer();
+                ContainerLevelAccess access = menu.access;
                 
                 SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
                 {
