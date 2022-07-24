@@ -53,8 +53,8 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
         for(Map.Entry<ISpell, SpellStatus> entry : progression.entrySet())
         {
             CompoundTag tag = new CompoundTag();
-            tag.putString("spell", SpellsUtil.getSpellKey(entry.getKey()).toString());
-            tag.putByte("spell_status", (byte) entry.getValue().ordinal());
+            tag.putString(KEY_SPELL, SpellsUtil.getSpellKey(entry.getKey()).toString());
+            tag.putByte(KEY_SPELL_STATUS, (byte) entry.getValue().ordinal());
             list.add(tag);
         }
         
@@ -64,15 +64,16 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
     @Override
     public void deserializeNBT(ListTag nbt)
     {
+        progression.clear();
+        
+        if(nbt.getElementType() != Tag.TAG_COMPOUND)
+        {
+            return;
+        }
+        
         for(int i = 0; i < nbt.size(); ++i)
         {
-            if(nbt.get(i).getId() != Tag.TAG_COMPOUND)
-            {
-                continue;
-            }
-            
             CompoundTag tag = nbt.getCompound(i);
-            progression.clear();
             
             if(tag.contains(KEY_SPELL) && tag.contains(KEY_SPELL_STATUS) && tag.get(KEY_SPELL).getId() == Tag.TAG_STRING && tag.get(KEY_SPELL_STATUS).getId() == Tag.TAG_BYTE)
             {
