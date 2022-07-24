@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.spell.impl;
 
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.IClientSpell;
 import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
