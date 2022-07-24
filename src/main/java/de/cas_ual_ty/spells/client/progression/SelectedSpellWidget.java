@@ -81,8 +81,8 @@ public class SelectedSpellWidget extends GuiComponent
     {
         if(active)
         {
-            int w1 = this.w;
-            int w2 = w1 - 60;
+            int w1 = 60;
+            int w2 = this.w - 60;
             
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
