@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellInteractButton;
 import de.cas_ual_ty.spells.client.progression.SpellNodeWidget;
@@ -29,6 +30,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -164,5 +166,17 @@ public class SpellsClientUtil
     private static void registerClientTooltipComponent(RegisterClientTooltipComponentFactoriesEvent event)
     {
         event.register(ManaTooltipComponent.class, tooltip -> new ManaClientTooltipComponent(tooltip.mana));
+    }
+    
+    public static LazyOptional<ManaHolder> getClientManaHolder()
+    {
+        if(Minecraft.getInstance().player != null)
+        {
+            return ManaHolder.getManaHolder(Minecraft.getInstance().player);
+        }
+        else
+        {
+            return LazyOptional.empty();
+        }
     }
 }

@@ -1,7 +1,9 @@
 package de.cas_ual_ty.spells.spell.impl;
 
 import com.google.gson.JsonObject;
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.IClientSpell;
 import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.core.particles.ParticleTypes;
@@ -12,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class LeapSpell extends BaseIngredientsSpell
+public class LeapSpell extends BaseIngredientsSpell implements IClientSpell
 {
     public final double defaultSpeed;
     
@@ -57,9 +59,9 @@ public class LeapSpell extends BaseIngredientsSpell
     }
     
     @Override
-    public boolean performOnClient()
+    public void performOnClient(ManaHolder manaHolder)
     {
-        return true;
+        perform(manaHolder);
     }
     
     @Override

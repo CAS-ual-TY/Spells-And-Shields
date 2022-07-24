@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.client;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
+import de.cas_ual_ty.spells.network.FireClientSpellMessage;
 import de.cas_ual_ty.spells.network.ManaSyncMessage;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
@@ -60,5 +61,13 @@ public class ClientMessageHandler
             screen.getMenu().spellProgression = msg.map();
             screen.spellTreesUpdated();
         }
+    }
+    
+    public static void handleFireSpell(FireClientSpellMessage msg)
+    {
+        SpellsClientUtil.getClientManaHolder().ifPresent(manaHolder ->
+        {
+            msg.spell().performOnClient(manaHolder);
+        });
     }
 }

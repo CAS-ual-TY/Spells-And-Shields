@@ -47,6 +47,7 @@ public abstract class MultiIngredientSpell extends Spell
                 {
                     this.burnMana(manaHolder);
                     this.consumeItemStacks(manaHolder, handIngredients.get(), inventoryIngredients.get());
+                    return true;
                 }
             }
         }

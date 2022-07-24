@@ -17,11 +17,6 @@ public interface ISpell
 {
     boolean activate(ManaHolder manaHolder);
     
-    default boolean performOnClient()
-    {
-        return false;
-    }
-    
     default SpellIcon getIcon()
     {
         return SpellsUtil.getDefaultSpellIcon(this);
