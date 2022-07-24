@@ -20,11 +20,13 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -47,6 +49,7 @@ public class SpellsClientUtil
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::entityRenderers);
         
+        MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::rightClickBlock);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
     }
@@ -76,6 +79,13 @@ public class SpellsClientUtil
         });
     }
     
+    private static BlockPos lastRightClickedBlock = null;
+    
+    private static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
+    {
+        lastRightClickedBlock = event.getPos();
+    }
+    
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
     
     private static void initScreen(ScreenEvent.Init.Post event)
@@ -85,7 +95,7 @@ public class SpellsClientUtil
             if(event.getScreen() instanceof AbstractContainerScreen screen && screen.getMenu() instanceof EnchantmentMenu)
             {
                 event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, 176, SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
-                        (b) -> SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage()), 0));
+                        (b) -> SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlock)), 0));
             }
             else if(event.getScreen() instanceof InventoryScreen screen)
             {
