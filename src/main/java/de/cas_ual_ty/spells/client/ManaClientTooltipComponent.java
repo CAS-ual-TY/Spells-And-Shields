@@ -27,24 +27,13 @@ public class ManaClientTooltipComponent extends ManaTooltipComponent implements 
     @Override
     public int getHeight()
     {
-        return rows * rowHeight;
+        return Math.max(rows, 1) * rowHeight;
     }
     
     @Override
     public int getWidth(Font font)
     {
-        if(rows == 0)
-        {
-            return 0;
-        }
-        else if(rows == 1)
-        {
-            return (leftOver / 2 + leftOver % 2) * 9;
-        }
-        else
-        {
-            return 10 * 9;
-        }
+        return 10 * 8;
     }
     
     @Override
