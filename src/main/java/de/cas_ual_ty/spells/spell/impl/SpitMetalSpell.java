@@ -1,10 +1,10 @@
-package de.cas_ual_ty.spells.spell;
+package de.cas_ual_ty.spells.spell.impl;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.IProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.HandIngredientSpell;
-import de.cas_ual_ty.spells.spell.base.IProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.sounds.SoundEvents;

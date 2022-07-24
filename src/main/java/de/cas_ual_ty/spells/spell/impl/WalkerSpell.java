@@ -1,7 +1,7 @@
-package de.cas_ual_ty.spells.spell;
+package de.cas_ual_ty.spells.spell.impl;
 
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.spell.base.IEventSpell;
+import de.cas_ual_ty.spells.spell.IEventSpell;
 import de.cas_ual_ty.spells.spell.base.PassiveSpell;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;

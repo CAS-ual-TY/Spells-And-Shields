@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.util;
 import com.google.gson.*;
 import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

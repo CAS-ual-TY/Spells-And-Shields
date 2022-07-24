@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells;
 
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.network.*;
-import de.cas_ual_ty.spells.spell.tree.SpellTrees;
+import de.cas_ual_ty.spells.spelltree.SpellTrees;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.resources.ResourceLocation;

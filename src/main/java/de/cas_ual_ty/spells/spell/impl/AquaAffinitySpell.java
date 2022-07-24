@@ -1,7 +1,7 @@
-package de.cas_ual_ty.spells.spell;
+package de.cas_ual_ty.spells.spell.impl;
 
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.spell.base.IEventSpell;
+import de.cas_ual_ty.spells.spell.IEventSpell;
 import de.cas_ual_ty.spells.spell.base.PassiveSpell;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;

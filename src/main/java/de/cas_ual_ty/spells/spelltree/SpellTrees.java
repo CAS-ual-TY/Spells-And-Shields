@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.tree;
+package de.cas_ual_ty.spells.spelltree;
 
 import com.google.gson.JsonElement;
 import de.cas_ual_ty.spells.Spells;

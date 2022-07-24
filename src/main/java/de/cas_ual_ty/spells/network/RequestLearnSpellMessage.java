@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;

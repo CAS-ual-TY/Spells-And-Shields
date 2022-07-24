@@ -1,6 +1,7 @@
-package de.cas_ual_ty.spells.spell.base;
+package de.cas_ual_ty.spells.spell;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

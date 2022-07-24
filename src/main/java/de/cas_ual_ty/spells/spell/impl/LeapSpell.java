@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell;
+package de.cas_ual_ty.spells.spell.impl;
 
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.ManaHolder;

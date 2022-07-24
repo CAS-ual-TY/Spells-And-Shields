@@ -1,8 +1,8 @@
-package de.cas_ual_ty.spells.spell;
+package de.cas_ual_ty.spells.spell.impl;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.IProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.HandIngredientSpell;
-import de.cas_ual_ty.spells.spell.base.IProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

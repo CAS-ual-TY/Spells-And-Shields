@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.IReturnProjectileSpell;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;

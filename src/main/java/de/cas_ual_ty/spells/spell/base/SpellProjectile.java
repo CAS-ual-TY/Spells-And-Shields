@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.spell.IProjectileSpell;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;

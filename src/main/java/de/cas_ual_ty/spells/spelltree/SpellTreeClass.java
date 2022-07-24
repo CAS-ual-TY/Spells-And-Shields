@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.tree;
+package de.cas_ual_ty.spells.spelltree;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;

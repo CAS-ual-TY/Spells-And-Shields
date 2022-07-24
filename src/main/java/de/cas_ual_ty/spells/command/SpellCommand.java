@@ -8,7 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;

@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import com.google.gson.JsonObject;
+import de.cas_ual_ty.spells.spell.IConfigurableSpell;
 import net.minecraft.resources.ResourceLocation;
 
 public abstract class BaseSpell implements IConfigurableSpell

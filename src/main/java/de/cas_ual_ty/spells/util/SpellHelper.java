@@ -4,7 +4,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.network.FireSpellMessage;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.PacketDistributor;
 

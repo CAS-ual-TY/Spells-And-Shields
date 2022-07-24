@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

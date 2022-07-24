@@ -1,8 +1,8 @@
-package de.cas_ual_ty.spells.spell;
+package de.cas_ual_ty.spells.spell.impl;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.IReturnProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.HandIngredientSpell;
-import de.cas_ual_ty.spells.spell.base.IReturnProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;

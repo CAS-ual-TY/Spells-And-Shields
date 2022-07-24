@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.base;
+package de.cas_ual_ty.spells.spell;
 
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;

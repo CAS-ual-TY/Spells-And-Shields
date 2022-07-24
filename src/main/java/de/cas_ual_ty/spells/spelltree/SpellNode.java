@@ -1,6 +1,6 @@
-package de.cas_ual_ty.spells.spell.tree;
+package de.cas_ual_ty.spells.spelltree;
 
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;

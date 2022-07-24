@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.capability;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;

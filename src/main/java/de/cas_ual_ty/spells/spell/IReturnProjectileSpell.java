@@ -1,6 +1,8 @@
-package de.cas_ual_ty.spells.spell.base;
+package de.cas_ual_ty.spells.spell;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
+import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.BlockHitResult;

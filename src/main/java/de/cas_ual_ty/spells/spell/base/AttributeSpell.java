@@ -2,6 +2,8 @@ package de.cas_ual_ty.spells.spell.base;
 
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.spell.IConfigurableSpell;
+import de.cas_ual_ty.spells.spell.IEquipSpell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
