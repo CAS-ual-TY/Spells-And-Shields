@@ -48,12 +48,6 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
     }
     
     @Override
-    public float getVelocity()
-    {
-        return 3.2F;
-    }
-    
-    @Override
     public void tick(SpellProjectile entity)
     {
         if(entity.level.isClientSide)
@@ -89,7 +83,7 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
     @Override
     public void perform(ManaHolder manaHolder)
     {
-        shootStraight(manaHolder, (projectile, level) -> level.playSound(null, manaHolder.getPlayer(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F));
+        shootStraight(manaHolder, 3F, (projectile, level) -> level.playSound(null, manaHolder.getPlayer(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F));
     }
     
     @Override

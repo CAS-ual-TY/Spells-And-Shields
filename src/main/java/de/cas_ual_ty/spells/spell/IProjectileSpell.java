@@ -45,34 +45,39 @@ public interface IProjectileSpell extends ISpell
         
     }
     
-    default float getVelocity()
+    default void shootStraight(ManaHolder manaHolder, float velocity, float inaccuracy, BiConsumer<SpellProjectile, ServerLevel> followUp)
     {
-        return 2F;
+        SpellProjectile.shoot(manaHolder.getPlayer(), this, velocity, inaccuracy, followUp);
     }
     
-    default void shootStraight(ManaHolder manaHolder, float inaccuracy, BiConsumer<SpellProjectile, ServerLevel> followUp)
+    default void shootStraight(ManaHolder manaHolder, float velocity, BiConsumer<SpellProjectile, ServerLevel> followUp)
     {
-        SpellProjectile.shoot(manaHolder.getPlayer(), this, getVelocity(), inaccuracy, followUp);
+        shootStraight(manaHolder, velocity, 0F, followUp);
     }
     
     default void shootStraight(ManaHolder manaHolder, BiConsumer<SpellProjectile, ServerLevel> followUp)
     {
-        shootStraight(manaHolder, 0F, followUp);
+        shootStraight(manaHolder, 2F, followUp);
     }
     
-    default void shootStraight(ManaHolder manaHolder, float inaccuracy)
+    default void shootStraight(ManaHolder manaHolder, float velocity)
     {
-        shootStraight(manaHolder, inaccuracy, (spellProjectile, serverLevel) -> {});
+        shootStraight(manaHolder, velocity, (spellProjectile, serverLevel) -> {});
     }
     
     default void shootStraight(ManaHolder manaHolder)
     {
-        shootStraight(manaHolder, 0F);
+        shootStraight(manaHolder, 2F);
+    }
+    
+    default void shootHoming(ManaHolder manaHolder, Entity target, float velocity, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
+    {
+        HomingSpellProjectile.home(manaHolder.getPlayer(), this, velocity, target, followUp);
     }
     
     default void shootHoming(ManaHolder manaHolder, Entity target, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
     {
-        HomingSpellProjectile.home(manaHolder.getPlayer(), this, getVelocity(), target, followUp);
+        shootHoming(manaHolder, target, 2F, followUp);
     }
     
     default void shootHoming(ManaHolder manaHolder, Entity target)

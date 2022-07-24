@@ -19,13 +19,9 @@ public class AquaAffinitySpell extends PassiveSpell implements IEventSpell
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
-                for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
+                if(spellHolder.getAmountSpellEquipped(this) > 0)
                 {
-                    if(spellHolder.getSpell(i) == this)
-                    {
-                        event.setNewSpeed(event.getNewSpeed() * 5.0F);
-                        break;
-                    }
+                    event.setNewSpeed(event.getNewSpeed() * 5.0F);
                 }
             });
         }

@@ -2,10 +2,7 @@ package de.cas_ual_ty.spells;
 
 import com.google.gson.JsonElement;
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.spell.IConfigurableSpell;
-import de.cas_ual_ty.spells.spell.IEquippedTickSpell;
-import de.cas_ual_ty.spells.spell.IEventSpell;
-import de.cas_ual_ty.spells.spell.ISpell;
+import de.cas_ual_ty.spells.spell.*;
 import de.cas_ual_ty.spells.spell.base.AttributeSpell;
 import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
 import de.cas_ual_ty.spells.spell.impl.*;
@@ -193,6 +190,17 @@ public class Spells
                     }
                 }
             });
+            
+            SpellHolder.getSpellHolder(event.player).ifPresent(spellHolder ->
+            {
+                for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
+                {
+                    if(spellHolder.getSpell(i) instanceof IIndividualEquippedTickSpell spell)
+                    {
+                        spell.tick(spellHolder, i);
+                    }
+                }
+            });
         }
     }
     
@@ -202,7 +210,7 @@ public class Spells
         {
             Spells.SPELLS_REGISTRY.get().forEach(s ->
             {
-                if(s instanceof IEquippedTickSpell spell)
+                if(s instanceof ISingletonTickSpell spell)
                 {
                     spell.tickSingleton();
                 }

@@ -16,28 +16,18 @@ public class ManaSolesSpell extends PassiveSpell implements IEventSpell
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
-                int amount = 0;
-                
-                for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
-                {
-                    if(spellHolder.getSpell(i) == this)
-                    {
-                        amount++;
-                    }
-                }
+                int amount = spellHolder.getAmountSpellEquipped(this);
                 
                 if(amount > 0)
                 {
-                    float finalAmount = amount;
-                    
                     ManaHolder.getManaHolder(player).ifPresent(manaHolder ->
                     {
-                        float mana = manaHolder.getMana() * finalAmount;
+                        float mana = manaHolder.getMana() * amount;
                         float damage = event.getAmount();
                         
                         float min = Math.min(mana, damage);
                         
-                        manaHolder.burn(min / finalAmount);
+                        manaHolder.burn(min / amount);
                         
                         event.setAmount(damage - min);
                         

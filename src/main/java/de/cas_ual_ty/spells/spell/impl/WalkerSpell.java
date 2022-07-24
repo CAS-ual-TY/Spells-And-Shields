@@ -22,12 +22,11 @@ public class WalkerSpell extends PassiveSpell implements IEventSpell
     {
         SpellHolder.getSpellHolder(event.player).ifPresent(spellHolder ->
         {
-            for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
+            int amount = spellHolder.getAmountSpellEquipped(this);
+            
+            if(amount > 0)
             {
-                if(spellHolder.getSpell(i) == this)
-                {
-                    onEntityMoved(spellHolder.getPlayer(), 1, Blocks.WATER, Material.WATER, Blocks.FROSTED_ICE.defaultBlockState());
-                }
+                onEntityMoved(spellHolder.getPlayer(), amount, Blocks.WATER, Material.WATER, Blocks.FROSTED_ICE.defaultBlockState());
             }
         });
     }
