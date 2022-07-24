@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PassiveSpell extends BaseSpell implements IPassiveSpell
+public class PassiveSpell extends BaseSpell
 {
     public static final String KEY_WHEN_APPLIED = "spell.passive.when_applied";
     
