@@ -3,8 +3,6 @@ package de.cas_ual_ty.spells.spell.base;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -67,15 +65,5 @@ public interface ISpell
     default Optional<TooltipComponent> getTooltipComponent()
     {
         return Optional.empty();
-    }
-    
-    default float getInertia()
-    {
-        return 1F;
-    }
-    
-    default ParticleOptions getTrailParticle()
-    {
-        return ParticleTypes.POOF;
     }
 }

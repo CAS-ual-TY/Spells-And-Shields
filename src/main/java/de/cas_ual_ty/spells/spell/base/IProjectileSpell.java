@@ -1,6 +1,8 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -74,5 +76,15 @@ public interface IProjectileSpell extends ISpell
     default void shootHoming(ManaHolder manaHolder, Entity target)
     {
         shootHoming(manaHolder, target, (homingSpellProjectile, serverLevel) -> {});
+    }
+    
+    default float getInertia()
+    {
+        return 1F;
+    }
+    
+    default ParticleOptions getTrailParticle()
+    {
+        return ParticleTypes.POOF;
     }
 }
