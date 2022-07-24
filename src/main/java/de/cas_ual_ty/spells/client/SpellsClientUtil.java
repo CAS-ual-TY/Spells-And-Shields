@@ -22,7 +22,8 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.EnchantmentMenu;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -79,11 +80,13 @@ public class SpellsClientUtil
         });
     }
     
-    private static BlockPos lastRightClickedBlock = null;
+    private static BlockPos lastRightClickedBlockPos = null;
+    private static Block lastRightClickedBlock = null;
     
     private static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
-        lastRightClickedBlock = event.getPos();
+        lastRightClickedBlockPos = event.getPos();
+        lastRightClickedBlock = event.getEntity().level.getBlockState(event.getPos()).getBlock();
     }
     
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
@@ -92,10 +95,11 @@ public class SpellsClientUtil
     {
         if(Minecraft.getInstance().player != null)
         {
-            if(event.getScreen() instanceof AbstractContainerScreen screen && screen.getMenu() instanceof EnchantmentMenu)
+            if(event.getScreen() instanceof AbstractContainerScreen screen && lastRightClickedBlock == Blocks.ENCHANTING_TABLE)
             {
-                event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, 176, SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
-                        (b) -> SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlock)), 0));
+                event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, Math.min(176, screen.width), SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
+                        (b) -> SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlockPos)), 0));
+                lastRightClickedBlock = null;
             }
             else if(event.getScreen() instanceof InventoryScreen screen)
             {

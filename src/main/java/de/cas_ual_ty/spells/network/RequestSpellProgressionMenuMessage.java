@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -46,12 +45,9 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                 return;
             }
             
-            if(player.containerMenu instanceof EnchantmentMenu menu)
+            if(player.containerMenu != null)
             {
-                //ContainerLevelAccess access = SpellsUtil.getAccess(player, menu);
                 ContainerLevelAccess access = ContainerLevelAccess.create(player.level, msg.pos());
-                
-                //player.closeContainer();
                 
                 SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
                 {
