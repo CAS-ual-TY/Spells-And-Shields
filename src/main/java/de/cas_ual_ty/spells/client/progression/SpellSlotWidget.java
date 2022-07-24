@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import java.util.List;
 import java.util.Optional;
@@ -121,7 +122,9 @@ public class SpellSlotWidget extends Button
                     
                     Component keyBindTooltip = SpellKeyBindings.getBaseTooltip().append(": ").append(SpellKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
                     List<Component> tooltip = spell.getTooltip(keyBindTooltip);
-                    screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
+                    Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
+                    
+                    screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);
                     
                     poseStack.popPose();
                 }

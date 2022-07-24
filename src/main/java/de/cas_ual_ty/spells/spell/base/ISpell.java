@@ -7,10 +7,12 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public interface ISpell
 {
@@ -60,6 +62,11 @@ public interface ISpell
         addSpellDesc(tooltip);
         
         return tooltip;
+    }
+    
+    default Optional<TooltipComponent> getTooltipComponent()
+    {
+        return Optional.empty();
     }
     
     default float getInertia()

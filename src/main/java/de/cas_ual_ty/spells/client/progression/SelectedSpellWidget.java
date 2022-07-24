@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import java.util.List;
 import java.util.Map;
@@ -119,7 +120,9 @@ public class SelectedSpellWidget extends GuiComponent
                 poseStack.translate(0, 0, 400D);
                 
                 List<Component> tooltip = spell.getTooltip(null);
-                screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
+                Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
+                
+                screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);
                 
                 poseStack.popPose();
             }

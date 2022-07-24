@@ -133,7 +133,7 @@ public abstract class MultiIngredientSpell extends Spell
     @Override
     public void addSpellDesc(List<Component> list)
     {
-        list.add(Component.translatable(getDescKey()));
+        super.addSpellDesc(list);
         
         List<ItemStack> handIngredients = this.getRequiredHandIngredients();
         List<ItemStack> inventoryIngredients = this.getRequiredInventoryIngredients();

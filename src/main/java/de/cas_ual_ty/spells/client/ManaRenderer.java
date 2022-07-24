@@ -21,7 +21,7 @@ import java.util.function.BooleanSupplier;
 
 public class ManaRenderer implements IGuiOverlay
 {
-    public static final ResourceLocation GUI_SAS_ICONS_LOCATION = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/gui/spells_icons.png");
+    public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/gui/spells_icons.png");
     
     protected Minecraft minecraft;
     
@@ -54,7 +54,7 @@ public class ManaRenderer implements IGuiOverlay
     
     public void renderMana(ForgeGui gui, int width, int height, PoseStack pStack)
     {
-        RenderSystem.setShaderTexture(0, GUI_SAS_ICONS_LOCATION); //== bind
+        RenderSystem.setShaderTexture(0, GUI_ICONS_LOCATION); //== bind
         RenderSystem.enableBlend();
         
         Player player = (Player) minecraft.getCameraEntity();
@@ -191,7 +191,7 @@ public class ManaRenderer implements IGuiOverlay
         gui.blit(poseStack, x, y, unitType.getU(half, highlight), v, 9, 9);
     }
     
-    protected enum UnitType
+    public enum UnitType
     {
         CONTAINER(0, false),
         NORMAL(2, true),
