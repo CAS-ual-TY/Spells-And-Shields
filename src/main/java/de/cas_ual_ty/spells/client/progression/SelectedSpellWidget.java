@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -111,28 +110,19 @@ public class SelectedSpellWidget extends GuiComponent
     {
         if(active && mouseX >= this.x && mouseX < this.x + this.w && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
         {
-            RenderSystem.enableDepthTest();
-            poseStack.pushPose();
-            poseStack.translate(0, 0, 400D);
-            
             ISpell spell = this.spell.getSpell();
-            
-            List<Component> tooltip = new LinkedList<>();
             
             if(spell != null)
             {
-                tooltip.add(spell.getSpellName());
-                List<Component> desc = spell.getSpellDescription();
+                RenderSystem.enableDepthTest();
+                poseStack.pushPose();
+                poseStack.translate(0, 0, 400D);
                 
-                if(!desc.isEmpty())
-                {
-                    tooltip.addAll(desc);
-                }
+                List<Component> tooltip = spell.getTooltip(null);
+                screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
+                
+                poseStack.popPose();
             }
-            
-            screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
-            
-            poseStack.popPose();
         }
     }
 }

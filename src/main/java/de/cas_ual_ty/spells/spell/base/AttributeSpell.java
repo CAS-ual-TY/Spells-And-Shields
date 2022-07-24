@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -82,17 +81,17 @@ public class AttributeSpell extends PassiveSpell implements IEquipSpell, IConfig
     }
     
     @Override
-    public List<Component> getSpellDescription()
+    public void addSpellDesc(List<Component> list)
     {
-        List<Component> list = new LinkedList<>();
         list.add(Component.translatable(getDescKey()));
         
         if(attribute != null && attributeModifier != null)
         {
+            list.add(Component.empty());
+            list.add(whenAppliedComponent());
+            
             addTooltip(list, attribute, attributeModifier);
         }
-        
-        return list;
     }
     
     @Override

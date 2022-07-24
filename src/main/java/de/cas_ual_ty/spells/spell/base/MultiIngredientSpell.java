@@ -131,9 +131,8 @@ public abstract class MultiIngredientSpell extends Spell
     public abstract void consumeItemStacks(ManaHolder manaHolder, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients);
     
     @Override
-    public List<Component> getSpellDescription()
+    public void addSpellDesc(List<Component> list)
     {
-        List<Component> list = new LinkedList<>();
         list.add(Component.translatable(getDescKey()));
         
         List<ItemStack> handIngredients = this.getRequiredHandIngredients();
@@ -152,7 +151,5 @@ public abstract class MultiIngredientSpell extends Spell
             list.add(Component.translatable(KEY_REQUIRED_INVENTORY).withStyle(ChatFormatting.BLUE));
             inventoryIngredients.stream().map(itemStack -> Component.literal(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
         }
-        
-        return list;
     }
 }

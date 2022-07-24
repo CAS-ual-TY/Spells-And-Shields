@@ -1,13 +1,15 @@
 package de.cas_ual_ty.spells.spell.base;
 
-import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
+import javax.annotation.Nullable;
+import java.util.LinkedList;
 import java.util.List;
 
 public interface ISpell
@@ -34,14 +36,30 @@ public interface ISpell
         return SpellsUtil.getDefaultSpellDescKey(this);
     }
     
-    default Component getSpellName()
+    default MutableComponent getSpellName()
     {
-        return Component.translatable(getNameKey()).withStyle(ChatFormatting.YELLOW);
+        return Component.translatable(getNameKey());
     }
     
-    default List<Component> getSpellDescription()
+    default void addSpellDesc(List<Component> tooltip)
     {
-        return ImmutableList.of(Component.translatable(getDescKey()));
+        tooltip.add(Component.translatable(getDescKey()));
+    }
+    
+    default List<Component> getTooltip(@Nullable Component keyBindTooltip)
+    {
+        List<Component> tooltip = new LinkedList<>();
+        
+        tooltip.add(getSpellName().withStyle(ChatFormatting.YELLOW));
+        
+        if(keyBindTooltip != null)
+        {
+            tooltip.add(keyBindTooltip);
+        }
+        
+        addSpellDesc(tooltip);
+        
+        return tooltip;
     }
     
     default float getInertia()

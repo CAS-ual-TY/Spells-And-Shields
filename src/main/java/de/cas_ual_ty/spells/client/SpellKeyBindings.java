@@ -6,6 +6,8 @@ import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.util.SpellHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -36,6 +38,16 @@ public class SpellKeyBindings
     public static String key(int slot)
     {
         return "key." + SpellsAndShields.MOD_ID + ".key.slot_" + (slot + 1);
+    }
+    
+    public static MutableComponent getBaseTooltip()
+    {
+        return Component.translatable("controls.keybinds.title");
+    }
+    
+    public static MutableComponent getTooltip(int slot)
+    {
+        return Component.literal(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString());
     }
     
     private static void clientTick(TickEvent.ClientTickEvent event)

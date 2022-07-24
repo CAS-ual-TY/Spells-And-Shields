@@ -11,14 +11,11 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, IEquipSpell
 {
-    public static final String KEY_WHEN_APPLIED = "spell.mob_effect.attributes";
-    
     public final MobEffect mobEffect;
     public final int duration;
     public final int amplifier;
@@ -116,11 +113,8 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, 
     }
     
     @Override
-    public List<Component> getSpellDescription()
+    public MutableComponent getSpellName()
     {
-        List<Component> list = new LinkedList<>();
-        list.add(Component.translatable(getDescKey()));
-        
         MutableComponent component = Component.translatable(mobEffect.getDescriptionId());
         
         if(amplifier > 0)
@@ -128,14 +122,20 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, 
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
         
-        list.add(component.withStyle(mobEffect.getCategory().getTooltipFormatting()));
+        return component.withStyle(ChatFormatting.YELLOW);
+    }
+    
+    @Override
+    public void addSpellDesc(List<Component> list)
+    {
+        list.add(Component.translatable(getDescKey()));
         
         Map<Attribute, AttributeModifier> map = mobEffect.getAttributeModifiers();
         
         if(!map.isEmpty())
         {
             list.add(Component.empty());
-            list.add((Component.translatable(KEY_WHEN_APPLIED)).withStyle(ChatFormatting.DARK_PURPLE));
+            list.add(whenAppliedComponent());
             
             
             for(Map.Entry<Attribute, AttributeModifier> entry : map.entrySet())
@@ -149,7 +149,5 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, 
                 AttributeSpell.addTooltip(list, attribute, attributeModifier);
             }
         }
-        
-        return list;
     }
 }
