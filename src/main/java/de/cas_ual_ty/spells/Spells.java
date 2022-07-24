@@ -23,6 +23,7 @@ import net.minecraftforge.registries.*;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.LinkedList;
 import java.util.function.Supplier;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
@@ -70,37 +71,6 @@ public class Spells
     private static void newRegistry(NewRegistryEvent event)
     {
         SPELLS_REGISTRY = event.create(new RegistryBuilder<ISpell>().setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spells")));
-    }
-    
-    private static void playerTick(TickEvent.PlayerTickEvent event)
-    {
-        if(event.phase == TickEvent.Phase.END)
-        {
-            SpellHolder.getSpellHolder(event.player).ifPresent(spellHolder ->
-            {
-                for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
-                {
-                    if(spellHolder.getSpell(i) instanceof IEquippedTickSpell spell)
-                    {
-                        spell.tick(spellHolder);
-                    }
-                }
-            });
-        }
-    }
-    
-    private static void tick(TickEvent.LevelTickEvent event)
-    {
-        if(event.phase == TickEvent.Phase.END)
-        {
-            Spells.SPELLS_REGISTRY.get().forEach(s ->
-            {
-                if(s instanceof IEquippedTickSpell spell)
-                {
-                    spell.tickSingleton();
-                }
-            });
-        }
     }
     
     public static void spellsConfigs()
@@ -185,6 +155,58 @@ public class Spells
         else
         {
             SPELLS_REGISTRY.get().getValues().stream().filter(s -> s instanceof IConfigurableSpell).map(s -> (IConfigurableSpell) s).forEach(IConfigurableSpell::applyDefaultConfig);
+        }
+    }
+    
+    private static void playerTick(TickEvent.PlayerTickEvent event)
+    {
+        if(event.phase == TickEvent.Phase.END)
+        {
+            SpellHolder.getSpellHolder(event.player).ifPresent(spellHolder ->
+            {
+                LinkedList<Integer> idx = new LinkedList<>();
+                
+                for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
+                {
+                    idx.addLast(i);
+                }
+                
+                while(!idx.isEmpty())
+                {
+                    int i = idx.removeFirst();
+                    
+                    if(spellHolder.getSpell(i) instanceof IEquippedTickSpell spell)
+                    {
+                        int amount = 0;
+                        
+                        for(int j = 0; j < SpellHolder.SPELL_SLOTS; j++)
+                        {
+                            if(j > i)
+                            {
+                                idx.removeFirstOccurrence(j);
+                            }
+                            
+                            amount++;
+                        }
+                        
+                        spell.tick(spellHolder, amount);
+                    }
+                }
+            });
+        }
+    }
+    
+    private static void tick(TickEvent.LevelTickEvent event)
+    {
+        if(event.phase == TickEvent.Phase.END)
+        {
+            Spells.SPELLS_REGISTRY.get().forEach(s ->
+            {
+                if(s instanceof IEquippedTickSpell spell)
+                {
+                    spell.tickSingleton();
+                }
+            });
         }
     }
     

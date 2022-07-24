@@ -55,7 +55,7 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, 
     @Override
     public void onEquip(SpellHolder spellHolder, int slot)
     {
-        tick(spellHolder);
+        tick(spellHolder, spellHolder.getAmountSpellEquipped(this));
     }
     
     @Override
@@ -82,7 +82,7 @@ public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, 
     }
     
     @Override
-    public void tick(SpellHolder spellHolder)
+    public void tick(SpellHolder spellHolder, int amount)
     {
         MobEffectInstance activeEffect = spellHolder.getPlayer().getEffect(this.mobEffect);
         

@@ -65,6 +65,21 @@ public class SpellHolder implements ISpellHolder
         return player;
     }
     
+    public int getAmountSpellEquipped(ISpell spell)
+    {
+        int amount = 0;
+        
+        for(int i = 0; i < SPELL_SLOTS; ++i)
+        {
+            if(getSpell(i) == spell)
+            {
+                amount++;
+            }
+        }
+        
+        return amount;
+    }
+    
     public void clear()
     {
         for(int i = 0; i < SPELL_SLOTS; i++)
