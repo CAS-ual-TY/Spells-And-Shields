@@ -172,7 +172,7 @@ public class Spells
                 {
                     int i = idx.removeFirst();
                     
-                    if(spellHolder.getSpell(i) instanceof IEquippedTickSpell spell)
+                    if(spellHolder.getSpell(i) instanceof ITickSpell spell)
                     {
                         int amount = 0;
                         
@@ -192,7 +192,7 @@ public class Spells
     
                 for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
                 {
-                    if(spellHolder.getSpell(i) instanceof IIndividualEquippedTickSpell spell)
+                    if(spellHolder.getSpell(i) instanceof IStackedTickSpell spell)
                     {
                         spell.tick(spellHolder, i);
                     }
