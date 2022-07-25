@@ -16,12 +16,14 @@ import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -77,11 +79,13 @@ public class SpellsClientUtil
         });
     }
     
-    private static BlockPos lastRightClickedBlock = null;
+    private static BlockPos lastRightClickedBlockPos = null;
+    private static Block lastRightClickedBlock = null;
     
     public static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
-        lastRightClickedBlock = event.getPos();
+        lastRightClickedBlockPos = event.getPos();
+        lastRightClickedBlock = event.getEntity().level.getBlockState(lastRightClickedBlockPos).getBlock();
     }
     
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
@@ -90,10 +94,14 @@ public class SpellsClientUtil
     {
         if(Minecraft.getInstance().player != null)
         {
-            if(event.getScreen() instanceof EnchantmentScreen screen)
+            if(event.getScreen() instanceof AbstractContainerScreen screen && lastRightClickedBlock == SpellsRegistries.VANILLA_ENCHANTING_TABLE.get())
             {
+                lastRightClickedBlock = null;
                 event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, 176, SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
-                        (b) -> SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlock)), 0));
+                        (b) ->
+                        {
+                            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlockPos));
+                        }, 0));
             }
             else if(event.getScreen() instanceof InventoryScreen screen)
             {

@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.network;
 
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
@@ -46,12 +47,9 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                 return;
             }
             
-            if(player.containerMenu instanceof EnchantmentMenu menu)
+            if(player.containerMenu != null && player.level.getBlockState(msg.pos()).getBlock() == SpellsRegistries.VANILLA_ENCHANTING_TABLE.get())
             {
-                //ContainerLevelAccess access = SpellsUtil.getAccess(player, menu);
                 ContainerLevelAccess access = ContainerLevelAccess.create(player.level, msg.pos());
-                
-                //player.closeContainer();
                 
                 SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
                 {

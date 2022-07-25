@@ -63,6 +63,8 @@ public class SpellsRegistries
     
     private static final DeferredRegister<ISpell> SPELLS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spells"), MOD_ID);
     
+    public static final RegistryObject<Block> VANILLA_ENCHANTING_TABLE = RegistryObject.create(new ResourceLocation("minecraft:enchanting_table"), ForgeRegistries.BLOCKS);
+    
     public static final RegistryObject<RangedAttribute> MAX_MANA = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20.0D, 1.0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<Enchantment> MAGIC_PROTECTION = ENCHANTMENTS.register("magic_protection", () -> new MagicProtectionEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
     public static final RegistryObject<Enchantment> MANA_BLADE = ENCHANTMENTS.register("mana_blade", () -> new ManaBladeEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND));
