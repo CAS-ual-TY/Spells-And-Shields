@@ -189,10 +189,7 @@ public class Spells
                         spell.tick(spellHolder, amount);
                     }
                 }
-            });
-            
-            SpellHolder.getSpellHolder(event.player).ifPresent(spellHolder ->
-            {
+    
                 for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
                 {
                     if(spellHolder.getSpell(i) instanceof IIndividualEquippedTickSpell spell)
