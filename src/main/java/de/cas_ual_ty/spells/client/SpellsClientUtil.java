@@ -25,7 +25,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -100,13 +99,13 @@ public class SpellsClientUtil
     {
         if(Minecraft.getInstance().player != null)
         {
-            if(event.getScreen() instanceof AbstractContainerScreen screen && lastRightClickedBlock == Blocks.ENCHANTING_TABLE)
+            if(event.getScreen() instanceof AbstractContainerScreen screen && lastRightClickedBlock == SpellsRegistries.VANILLA_ENCHANTING_TABLE.get())
             {
+                lastRightClickedBlock = null;
                 event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, Math.min(176, screen.width), SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
                         (b) ->
                         {
                             SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlockPos));
-                            lastRightClickedBlock = null;
                         },
                         0));
             }

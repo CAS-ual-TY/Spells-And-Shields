@@ -20,7 +20,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.HashMap;
@@ -104,7 +103,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     @Override
     public boolean stillValid(Player player)
     {
-        return stillValid(this.access, player, Blocks.ENCHANTING_TABLE);
+        return stillValid(this.access, player, SpellsRegistries.VANILLA_ENCHANTING_TABLE.get());
     }
     
     public static float getEnchantingPower(Level level, BlockPos pos)
