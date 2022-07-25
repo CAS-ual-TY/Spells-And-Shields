@@ -2,10 +2,13 @@ package de.cas_ual_ty.spells.spell.base;
 
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.spell.IConfigurableSpell;
+import de.cas_ual_ty.spells.spell.IEquipSpell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -14,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -82,17 +84,17 @@ public class AttributeSpell extends PassiveSpell implements IEquipSpell, IConfig
     }
     
     @Override
-    public List<Component> getSpellDescription()
+    public void addSpellDesc(List<Component> list)
     {
-        List<Component> list = new LinkedList<>();
         list.add(new TranslatableComponent(getDescKey()));
         
         if(attribute != null && attributeModifier != null)
         {
+            list.add(TextComponent.EMPTY);
+            list.add(whenAppliedComponent());
+            
             addTooltip(list, attribute, attributeModifier);
         }
-        
-        return list;
     }
     
     @Override

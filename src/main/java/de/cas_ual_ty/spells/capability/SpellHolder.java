@@ -2,8 +2,8 @@ package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
-import de.cas_ual_ty.spells.spell.base.IEquipSpell;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.IEquipSpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -63,6 +63,21 @@ public class SpellHolder implements ISpellHolder
     public Player getPlayer()
     {
         return player;
+    }
+    
+    public int getAmountSpellEquipped(ISpell spell)
+    {
+        int amount = 0;
+        
+        for(int i = 0; i < SPELL_SLOTS; ++i)
+        {
+            if(getSpell(i) == spell)
+            {
+                amount++;
+            }
+        }
+        
+        return amount;
     }
     
     public void clear()

@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 

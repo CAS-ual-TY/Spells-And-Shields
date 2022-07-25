@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellInteractButton;
 import de.cas_ual_ty.spells.client.progression.SpellNodeWidget;
@@ -13,6 +14,7 @@ import de.cas_ual_ty.spells.network.RequestSpellProgressionMenuMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
+import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -23,9 +25,11 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -43,18 +47,22 @@ public class SpellsClientUtil
     {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SpellsClientConfig.CLIENT_SPEC, SpellsAndShields.MOD_ID + "/client" + ".toml");
         
+        SpellKeyBindings.register();
+        
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::entityRenderers);
+        
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::rightClickBlock);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
-        SpellKeyBindings.register();
     }
     
     private static void clientSetup(FMLClientSetupEvent event)
     {
         ManaRenderer.clientSetup(event);
         SpellKeyBindings.clientSetup(event);
+        MinecraftForgeClient.registerTooltipComponentFactory(ManaTooltipComponent.class, tooltip -> new ManaClientTooltipComponent(tooltip.mana));
+        
         MenuScreens.register(SpellsRegistries.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
     }
     
@@ -152,6 +160,18 @@ public class SpellsClientUtil
                 s.renderToolTip(event.getPoseStack(), event.getMouseX(), event.getMouseY());
                 RenderSystem.enableDepthTest();
             }
+        }
+    }
+    
+    public static LazyOptional<ManaHolder> getClientManaHolder()
+    {
+        if(Minecraft.getInstance().player != null)
+        {
+            return ManaHolder.getManaHolder(Minecraft.getInstance().player);
+        }
+        else
+        {
+            return LazyOptional.empty();
         }
     }
 }

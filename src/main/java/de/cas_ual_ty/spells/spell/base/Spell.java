@@ -2,14 +2,21 @@ package de.cas_ual_ty.spells.spell.base;
 
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.IConfigurableSpell;
+import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+
+import java.util.Optional;
 
 public abstract class Spell extends BaseSpell implements IConfigurableSpell
 {
     public final float defaultManaCost;
     
     protected float manaCost;
+    
+    protected Optional<TooltipComponent> tooltipComponent;
     
     public Spell(float manaCost)
     {
@@ -51,6 +58,13 @@ public abstract class Spell extends BaseSpell implements IConfigurableSpell
     }
     
     @Override
+    public Optional<TooltipComponent> getTooltipComponent()
+    {
+        return tooltipComponent;
+    }
+    
+    
+    @Override
     public JsonObject makeDefaultConfig()
     {
         JsonObject json = super.makeDefaultConfig();
@@ -63,6 +77,11 @@ public abstract class Spell extends BaseSpell implements IConfigurableSpell
     {
         super.readFromConfig(json);
         this.manaCost = SpellsFileUtil.jsonFloat(json, "manaCost");
+        
+        if(manaCost > 0)
+        {
+            this.tooltipComponent = Optional.of(new ManaTooltipComponent(manaCost));
+        }
     }
     
     @Override
@@ -70,5 +89,10 @@ public abstract class Spell extends BaseSpell implements IConfigurableSpell
     {
         super.applyDefaultConfig();
         manaCost = defaultManaCost;
+        
+        if(manaCost > 0)
+        {
+            this.tooltipComponent = Optional.of(new ManaTooltipComponent(manaCost));
+        }
     }
 }

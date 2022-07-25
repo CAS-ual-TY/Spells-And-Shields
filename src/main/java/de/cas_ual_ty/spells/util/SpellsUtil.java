@@ -1,9 +1,9 @@
 package de.cas_ual_ty.spells.util;
 
 import com.google.common.collect.ImmutableList;
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.SpellsRegistries;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -115,17 +115,17 @@ public class SpellsUtil
     
     public static ISpell getSpell(ResourceLocation key)
     {
-        return SpellsRegistries.SPELLS_REGISTRY.get().getValue(key);
+        return Spells.SPELLS_REGISTRY.get().getValue(key);
     }
     
     public static void forEachSpell(Consumer<ISpell> consumer)
     {
-        SpellsRegistries.SPELLS_REGISTRY.get().forEach(consumer);
+        Spells.SPELLS_REGISTRY.get().forEach(consumer);
     }
     
     public static int getSpellsAmount()
     {
-        return SpellsRegistries.SPELLS_REGISTRY.get().getValues().size();
+        return Spells.SPELLS_REGISTRY.get().getValues().size();
     }
     
     public static UUID generateUUIDFromName(String purpose, String name)

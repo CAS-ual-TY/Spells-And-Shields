@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.spell.IProjectileSpell;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

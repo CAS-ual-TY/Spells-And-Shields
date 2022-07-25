@@ -3,9 +3,9 @@ package de.cas_ual_ty.spells.client.progression;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
-import de.cas_ual_ty.spells.spell.tree.SpellNode;
+import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -14,8 +14,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -111,28 +111,21 @@ public class SelectedSpellWidget extends GuiComponent
     {
         if(active && mouseX >= this.x && mouseX < this.x + this.w && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
         {
-            RenderSystem.enableDepthTest();
-            poseStack.pushPose();
-            poseStack.translate(0, 0, 400D);
-            
             ISpell spell = this.spell.getSpell();
-            
-            List<Component> tooltip = new LinkedList<>();
             
             if(spell != null)
             {
-                tooltip.add(spell.getSpellName());
-                List<Component> desc = spell.getSpellDescription();
+                RenderSystem.enableDepthTest();
+                poseStack.pushPose();
+                poseStack.translate(0, 0, 400D);
                 
-                if(!desc.isEmpty())
-                {
-                    tooltip.addAll(desc);
-                }
+                List<Component> tooltip = spell.getTooltip(null);
+                Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
+                
+                screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);
+                
+                poseStack.popPose();
             }
-            
-            screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
-            
-            poseStack.popPose();
         }
     }
 }

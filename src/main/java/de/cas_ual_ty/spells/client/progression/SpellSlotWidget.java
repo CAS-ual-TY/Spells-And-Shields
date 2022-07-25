@@ -4,8 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
-import de.cas_ual_ty.spells.spell.base.IPassiveSpell;
-import de.cas_ual_ty.spells.spell.base.ISpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -14,11 +13,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntConsumer;
@@ -115,43 +113,22 @@ public class SpellSlotWidget extends Button
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
-                RenderSystem.enableDepthTest();
-                poseStack.pushPose();
-                poseStack.translate(0, 0, 10D);
-                
                 ISpell spell = spellHolder.getSpell(slot);
-                
-                List<Component> tooltip = new LinkedList<>();
-                List<Component> desc = null;
                 
                 if(spell != null)
                 {
-                    tooltip.add(spell.getSpellName());
-                    desc = spell.getSpellDescription();
+                    RenderSystem.enableDepthTest();
+                    poseStack.pushPose();
+                    poseStack.translate(0, 0, 10D);
+                    
+                    Component keyBindTooltip = SpellKeyBindings.getBaseTooltip().append(": ").append(SpellKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
+                    List<Component> tooltip = spell.getTooltip(keyBindTooltip);
+                    Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
+                    
+                    screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);
+                    
+                    poseStack.popPose();
                 }
-                
-                if(!(spell instanceof IPassiveSpell))
-                {
-                    if(!SpellKeyBindings.slotKeys[slot].isUnbound())
-                    {
-                        tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
-                                .append(new TextComponent(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString()).withStyle(ChatFormatting.YELLOW)));
-                    }
-                    else
-                    {
-                        tooltip.add(new TranslatableComponent("controls.keybinds.title").append(": ")
-                                .append(new TranslatableComponent("key.keyboard.unknown").withStyle(ChatFormatting.RED)));
-                    }
-                }
-                
-                if(desc != null && !desc.isEmpty())
-                {
-                    tooltip.addAll(desc);
-                }
-                
-                screen.renderTooltip(poseStack, tooltip, Optional.empty(), mouseX, mouseY);
-                
-                poseStack.popPose();
             });
         }
     }

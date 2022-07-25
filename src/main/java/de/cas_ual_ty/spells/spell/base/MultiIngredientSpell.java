@@ -49,6 +49,7 @@ public abstract class MultiIngredientSpell extends Spell
                 {
                     this.burnMana(manaHolder);
                     this.consumeItemStacks(manaHolder, handIngredients.get(), inventoryIngredients.get());
+                    return true;
                 }
             }
         }
@@ -133,10 +134,9 @@ public abstract class MultiIngredientSpell extends Spell
     public abstract void consumeItemStacks(ManaHolder manaHolder, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients);
     
     @Override
-    public List<Component> getSpellDescription()
+    public void addSpellDesc(List<Component> list)
     {
-        List<Component> list = new LinkedList<>();
-        list.add(new TranslatableComponent(getDescKey()));
+        super.addSpellDesc(list);
         
         List<ItemStack> handIngredients = this.getRequiredHandIngredients();
         List<ItemStack> inventoryIngredients = this.getRequiredInventoryIngredients();
@@ -154,7 +154,5 @@ public abstract class MultiIngredientSpell extends Spell
             list.add(new TranslatableComponent(KEY_REQUIRED_INVENTORY).withStyle(ChatFormatting.BLUE));
             inventoryIngredients.stream().map(itemStack -> new TextComponent(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
         }
-        
-        return list;
     }
 }
