@@ -34,10 +34,12 @@ public class LangGen extends LanguageProvider
     @Override
     protected void addTranslations()
     {
-        addAttribute(SpellsRegistries.MAX_MANA, "Max Mana");
-        addEnchantment(SpellsRegistries.MAGIC_PROTECTION, "Magic Protection");
-        addEnchantment(SpellsRegistries.MANA_BLADE, "Mana Blade");
-        addEnchantment(SpellsRegistries.MANA_SHIELD, "Mana Shield");
+        addAttribute(SpellsRegistries.MAX_MANA_ATTRIBUTE, "Max Mana");
+        addEnchantment(SpellsRegistries.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection");
+        addEnchantment(SpellsRegistries.MANA_BLADE_ENCHANTMENT, "Mana Blade");
+        addEnchantment(SpellsRegistries.MANA_SHIELD_ENCHANTMENT, "Mana Shield");
+        addEnchantment(SpellsRegistries.MANA_REGEN_ENCHANTMENT, "Mana Regeneration");
+        addEnchantment(SpellsRegistries.MAX_MANA_ENCHANTMENT, "Maximum Mana");
         
         addEffect(SpellsRegistries.INSTANT_MANA_EFFECT, "Instant Mana");
         addEffect(SpellsRegistries.MANA_BOMB_EFFECT, "Mana Bomb");

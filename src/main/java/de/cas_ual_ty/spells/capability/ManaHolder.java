@@ -2,13 +2,19 @@ package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.event.ManaRegValueEvent;
 import de.cas_ual_ty.spells.network.ManaSyncMessage;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -24,6 +30,7 @@ public class ManaHolder implements IManaHolder
     protected float lastSentExtraMana;
     
     public int regenTime;
+    public int ticksUntilNextReg;
     public int changeTime;
     
     protected final LivingEntity player;
@@ -35,6 +42,7 @@ public class ManaHolder implements IManaHolder
         lastSentMana = -1F;
         lastSentExtraMana = -1F;
         regenTime = 0;
+        ticksUntilNextReg = this.calcTicksUntilReg();
         changeTime = -1;
         this.player = player;
     }
@@ -128,16 +136,22 @@ public class ManaHolder implements IManaHolder
     
     public float getMaxMana()
     {
-        AttributeInstance attrMana = player.getAttribute(SpellsRegistries.MAX_MANA.get());
+        AttributeInstance attrMana = player.getAttribute(SpellsRegistries.MAX_MANA_ATTRIBUTE.get());
         
-        if(attrMana != null)
+        double attribute = attrMana == null ? 0F : attrMana.getValue();
+        
+        for(EquipmentSlot s : EquipmentSlot.values())
         {
-            return (float) attrMana.getValue();
+            if(s.getType() == EquipmentSlot.Type.ARMOR)
+            {
+                ItemStack itemStack = player.getItemBySlot(s);
+                int level = itemStack.getEnchantmentLevel(SpellsRegistries.MAX_MANA_ENCHANTMENT.get());
+                double increase = SpellsRegistries.MAX_MANA_ENCHANTMENT.get().getAttributeIncrease(level);
+                attribute += increase;
+            }
         }
-        else
-        {
-            return 0F;
-        }
+        
+        return (float) attribute;
     }
     
     public void tick()
@@ -149,10 +163,46 @@ public class ManaHolder implements IManaHolder
         
         ++regenTime;
         
-        if(regenTime >= TICKS_UNTIL_REG || this.getMana() > this.getMaxMana())
+        if(regenTime >= ticksUntilNextReg || this.getMana() > this.getMaxMana())
         {
             replenish(1.0F);
             regenTime = 0;
+            ticksUntilNextReg = calcTicksUntilReg();
+        }
+    }
+    
+    protected int calcTicksUntilReg()
+    {
+        if(!(player instanceof Player))
+        {
+            return TICKS_UNTIL_REG;
+        }
+        
+        Player player = (Player) this.player;
+        
+        double attribute = player.getAttributeValue(SpellsRegistries.MANA_REGEN_ATTRIBUTE.get());
+        
+        for(EquipmentSlot s : EquipmentSlot.values())
+        {
+            if(s.getType() == EquipmentSlot.Type.ARMOR)
+            {
+                ItemStack itemStack = player.getItemBySlot(s);
+                int level = itemStack.getEnchantmentLevel(SpellsRegistries.MANA_REGEN_ENCHANTMENT.get());
+                double increase = SpellsRegistries.MANA_REGEN_ENCHANTMENT.get().getAttributeIncrease(level);
+                attribute += increase;
+            }
+        }
+        
+        ManaRegValueEvent event = new ManaRegValueEvent(player, this, attribute);
+        MinecraftForge.EVENT_BUS.post(event);
+        
+        if(attribute <= 0)
+        {
+            return Integer.MAX_VALUE;
+        }
+        else
+        {
+            return Mth.ceil(TICKS_UNTIL_REG / attribute);
         }
     }
     
