@@ -193,9 +193,6 @@ public class ManaHolder implements IManaHolder
             }
         }
         
-        ManaRegValueEvent event = new ManaRegValueEvent(player, this, attribute);
-        MinecraftForge.EVENT_BUS.post(event);
-        
         if(attribute <= 0)
         {
             return Integer.MAX_VALUE;
