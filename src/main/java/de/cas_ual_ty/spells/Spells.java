@@ -50,7 +50,7 @@ public class Spells
     public static final RegistryObject<ISpell> DOLPHINS_GRACE = SPELLS.register("dolphins_grace", () -> new MobEffectSpell(MobEffects.DOLPHINS_GRACE));
     public static final RegistryObject<ISpell> JUMP_BOOST = SPELLS.register("jump_boost", () -> new MobEffectSpell(MobEffects.JUMP));
     public static final RegistryObject<ISpell> SPEED = SPELLS.register("speed", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED));
-    public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(SpellsRegistries.MAX_MANA::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
+    public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(SpellsRegistries.MAX_MANA_ATTRIBUTE::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
     public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation("textures/mob_effect/health_boost.png")));
     public static final RegistryObject<ISpell> BLOW_ARROW = SPELLS.register("blow_arrow", () -> new BlowArrowSpell(7F).setSmallIcon(new ResourceLocation("textures/item/bow_pulling_0.png")));
     public static final RegistryObject<ISpell> TRANSFER_MANA = SPELLS.register("transfer_mana", () -> new TransferManaSpell(4F));
@@ -169,7 +169,7 @@ public class Spells
                 {
                     int i = idx.removeFirst();
                     
-                    if(spellHolder.getSpell(i) instanceof IEquippedTickSpell spell)
+                    if(spellHolder.getSpell(i) instanceof ITickSpell spell)
                     {
                         int amount = 0;
                         
@@ -186,13 +186,10 @@ public class Spells
                         spell.tick(spellHolder, amount);
                     }
                 }
-            });
-            
-            SpellHolder.getSpellHolder(event.player).ifPresent(spellHolder ->
-            {
+                
                 for(int i = 0; i < SpellHolder.SPELL_SLOTS; i++)
                 {
-                    if(spellHolder.getSpell(i) instanceof IIndividualEquippedTickSpell spell)
+                    if(spellHolder.getSpell(i) instanceof IStackedTickSpell spell)
                     {
                         spell.tick(spellHolder, i);
                     }

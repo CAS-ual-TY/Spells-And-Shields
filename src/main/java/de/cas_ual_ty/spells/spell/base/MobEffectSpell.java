@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.IEquipSpell;
-import de.cas_ual_ty.spells.spell.IEquippedTickSpell;
+import de.cas_ual_ty.spells.spell.ITickSpell;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,7 +17,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import java.util.List;
 import java.util.Map;
 
-public class MobEffectSpell extends PassiveSpell implements IEquippedTickSpell, IEquipSpell
+public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSpell
 {
     public final MobEffect mobEffect;
     public final int duration;
