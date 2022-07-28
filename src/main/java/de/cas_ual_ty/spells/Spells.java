@@ -178,7 +178,7 @@ public class Spells
                         
                         for(int j = 0; j < SpellHolder.SPELL_SLOTS; j++)
                         {
-                            if(j > i)
+                            if(j > i && spellHolder.getSpell(j) == spell)
                             {
                                 idx.removeFirstOccurrence(j);
                             }
