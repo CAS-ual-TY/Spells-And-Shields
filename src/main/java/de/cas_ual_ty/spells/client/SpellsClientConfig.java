@@ -18,7 +18,7 @@ public class SpellsClientConfig
                 .defineInRange("manaHideDelay", 0, 0, 1200); // max = 1 min
         MANA_ABOVE_FOOD = builder
                 .comment("Put the mana bar above the food bar (true) or else put it below (false).")
-                .define("manaAboveFood", false);
+                .define("manaAboveFood", true);
         
         CLIENT_SPEC = builder.build();
     }
