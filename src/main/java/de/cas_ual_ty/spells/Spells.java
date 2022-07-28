@@ -171,18 +171,17 @@ public class Spells
                     
                     if(spellHolder.getSpell(i) instanceof ITickSpell spell)
                     {
-                        int amount = 0;
-                        
-                        for(int j = 0; j < SpellHolder.SPELL_SLOTS; j++)
+                        int amount = 1;
+    
+                        for(int j = i + 1; j < SpellHolder.SPELL_SLOTS; j++)
                         {
-                            if(j > i)
+                            if(spellHolder.getSpell(j) == spell)
                             {
                                 idx.removeFirstOccurrence(j);
+                                amount++;
                             }
-                            
-                            amount++;
                         }
-                        
+    
                         spell.tick(spellHolder, amount);
                     }
                 }
