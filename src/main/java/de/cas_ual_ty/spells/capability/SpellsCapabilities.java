@@ -49,6 +49,38 @@ public class SpellsCapabilities
         }
     }
     
+    private static <T extends Tag, C extends INBTSerializable<T>> void attachCapability(AttachCapabilitiesEvent<?> event, C capData, Capability<C> capability, String name)
+    {
+        LazyOptional<C> optional = LazyOptional.of(() -> capData);
+        ICapabilitySerializable<T> provider = new ICapabilitySerializable<>()
+        {
+            @Override
+            public <S> LazyOptional<S> getCapability(Capability<S> cap, Direction side)
+            {
+                if(cap == capability)
+                {
+                    return optional.cast();
+                }
+                
+                return LazyOptional.empty();
+            }
+            
+            @Override
+            public T serializeNBT()
+            {
+                return capData.serializeNBT();
+            }
+            
+            @Override
+            public void deserializeNBT(T tag)
+            {
+                capData.deserializeNBT(tag);
+            }
+        };
+        
+        event.addCapability(new ResourceLocation(SpellsAndShields.MOD_ID, name), provider);
+    }
+    
     private static void playerClone(PlayerEvent.Clone event)
     {
         event.getOriginal().reviveCaps();
@@ -129,38 +161,6 @@ public class SpellsCapabilities
         }
         
         event.getOriginal().invalidateCaps();
-    }
-    
-    private static <T extends Tag, C extends INBTSerializable<T>> void attachCapability(AttachCapabilitiesEvent<?> event, C capData, Capability<C> capability, String name)
-    {
-        LazyOptional<C> optional = LazyOptional.of(() -> capData);
-        ICapabilitySerializable<T> provider = new ICapabilitySerializable<>()
-        {
-            @Override
-            public <S> LazyOptional<S> getCapability(Capability<S> cap, Direction side)
-            {
-                if(cap == capability)
-                {
-                    return optional.cast();
-                }
-                
-                return LazyOptional.empty();
-            }
-            
-            @Override
-            public T serializeNBT()
-            {
-                return capData.serializeNBT();
-            }
-            
-            @Override
-            public void deserializeNBT(T tag)
-            {
-                capData.deserializeNBT(tag);
-            }
-        };
-        
-        event.addCapability(new ResourceLocation(SpellsAndShields.MOD_ID, name), provider);
     }
     
     private static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
