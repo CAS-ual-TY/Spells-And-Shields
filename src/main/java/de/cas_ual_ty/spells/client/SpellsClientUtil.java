@@ -107,7 +107,7 @@ public class SpellsClientUtil
                         {
                             SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlockPos));
                         },
-                        0));
+                        0, null));
             }
             else if(event.getScreen() instanceof InventoryScreen screen)
             {

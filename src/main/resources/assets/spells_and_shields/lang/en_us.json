@@ -140,5 +140,6 @@
   "spells.slot.remove.success.multiple": "Cleared active spell in slot %s of %s players",
   "spells.slot.remove.success.single": "Cleared active spell in slot %s of %s",
   "spells.slot.set.success.multiple": "Set active spell in slot %s of %s players to %s",
-  "spells.slot.set.success.single": "Set active spell in slot %s of %s to %s"
+  "spells.slot.set.success.single": "Set active spell in slot %s of %s to %s",
+  "spells_and_shields:bookshelves": "Bookshelves"
 }

@@ -13,9 +13,9 @@ public class SpellInteractButton extends Button
 {
     public final int v;
     
-    public SpellInteractButton(int x, int y, int width, int height, Component component, OnPress onPress, int v)
+    public SpellInteractButton(int x, int y, int width, int height, Component component, OnPress onPress, int v, OnTooltip tooltip)
     {
-        super(x, y, width, height, component, onPress);
+        super(x, y, width, height, component, onPress, tooltip);
         this.v = v;
     }
     
@@ -47,5 +47,11 @@ public class SpellInteractButton extends Button
     public boolean isMouseOver(double mouseX, double mouseY)
     {
         return this.visible && mouseX >= (double) this.x && mouseY >= (double) this.y && mouseX < (double) (this.x + this.width) && mouseY < (double) (this.y + this.height);
+    }
+    
+    @Override
+    public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
+    {
+        super.renderToolTip(pPoseStack, pMouseX, pMouseY);
     }
 }

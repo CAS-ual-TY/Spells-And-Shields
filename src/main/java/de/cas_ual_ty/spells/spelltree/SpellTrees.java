@@ -4,7 +4,9 @@ import com.google.gson.JsonElement;
 import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
+import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
 import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import de.cas_ual_ty.spells.util.SpellsUtil;
@@ -37,61 +39,61 @@ public class SpellTrees
     
     public static SpellTree fireTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), Spells.FIRE_BALL, 15, 28, Component.translatable(KEY_NETHER))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), Component.translatable(KEY_NETHER), Spells.FIRE_BALL, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 28))
                 .icon(Spells.FIRE_RESISTANCE.get())
-                .add(Spells.FIRE_RESISTANCE, 30, 30)
+                .add(Spells.FIRE_RESISTANCE, 30, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 30))
                 .leaf()
-                .add(Spells.FIRE_CHARGE, 10, 28)
+                .add(Spells.FIRE_CHARGE, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 28))
                 .finish();
     }
     
     public static SpellTree waterTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), Spells.WATER_BREATHING, 10, 0, Component.translatable(KEY_OCEAN))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), Component.translatable(KEY_OCEAN), Spells.WATER_BREATHING, 10)
                 .icon(Spells.DOLPHINS_GRACE.get())
-                .add(Spells.REGENERATION, 20, 20)
-                .add(Spells.AQUA_AFFINITY, 20, 20)
+                .add(Spells.REGENERATION, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 20))
+                .add(Spells.AQUA_AFFINITY, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 20))
                 .leaf()
                 .leaf()
-                .add(Spells.WATER_LEAP, 5, 10)
-                .add(Spells.DOLPHINS_GRACE, 30, 30)
+                .add(Spells.WATER_LEAP, 5, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 10))
+                .add(Spells.DOLPHINS_GRACE, 30, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 30))
                 .leaf()
-                .add(Spells.FROST_WALKER, 10, 14)
+                .add(Spells.FROST_WALKER, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 14))
                 .leaf()
                 .leaf()
-                .add(Spells.WATER_WHIP, 10, 10)
-                .add(Spells.POTION_SHOT, 10, 10)
+                .add(Spells.WATER_WHIP, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 10))
+                .add(Spells.POTION_SHOT, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 10))
                 .finish();
     }
     
     public static SpellTree earthTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), Spells.BLAST_SMELT, 5, 8, Component.translatable(KEY_MINING))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), Component.translatable(KEY_MINING), Spells.BLAST_SMELT, 5, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 8))
                 .icon(Spells.HASTE.get())
-                .add(Spells.INSTANT_MINE, 15, 18)
-                .add(Spells.HASTE, 25, 24)
+                .add(Spells.INSTANT_MINE, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 18))
+                .add(Spells.HASTE, 25, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 24))
                 .leaf()
                 .leaf()
-                .add(Spells.SPIT_METAL, 10, 12)
+                .add(Spells.SPIT_METAL, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 12))
                 .finish();
     }
     
     public static SpellTree airTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), Spells.JUMP_BOOST, 15, 12, Component.translatable(KEY_MOVEMENT))
+        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), Component.translatable(KEY_MOVEMENT), Spells.JUMP_BOOST, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 12))
                 .icon(Spells.JUMP_BOOST.get())
-                .add(Spells.LEAP, 10, 14)
-                .add(Spells.SPEED, 20, 20)
+                .add(Spells.LEAP, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 14))
+                .add(Spells.SPEED, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 20))
                 .leaf()
-                .add(Spells.JUMP, 14, 14)
-                .leaf()
-                .leaf()
-                .add(Spells.MANA_SOLES, 15, 12)
-                .add(Spells.SLOW_FALLING, 15, 16)
+                .add(Spells.JUMP, 14, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 14))
                 .leaf()
                 .leaf()
-                .add(Spells.BLOW_ARROW, 10, 16)
-                .add(Spells.PRESSURIZE, 20, 18)
+                .add(Spells.MANA_SOLES, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 12))
+                .add(Spells.SLOW_FALLING, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 16))
+                .leaf()
+                .leaf()
+                .add(Spells.BLOW_ARROW, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 16))
+                .add(Spells.PRESSURIZE, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 18))
                 .leaf()
                 .leaf()
                 .finish();

@@ -1,30 +1,31 @@
 package de.cas_ual_ty.spells.util;
 
+import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.requirement.WrappedRequirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class ProgressionHelper
 {
-    public static List<SpellTree> getStrippedSpellTrees(SpellProgressionHolder spellProgressionHolder, int bookshelves)
+    public static List<SpellTree> stripSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, List<SpellTree> allAvailableSkillTrees)
     {
-        List<SpellTree> allAvailableSkillTrees = getAllAvailableSpellTrees(spellProgressionHolder);
-        
         List<SpellTree> strippedSkillTrees = new LinkedList<>();
         
         for(SpellTree spellTree0 : allAvailableSkillTrees)
         {
-            if(spellTree0.getRoot() == null || spellTree0.getRoot().getRequiredBookshelves() > bookshelves)
+            if(spellTree0.getRoot() == null)
             {
                 continue;
             }
@@ -89,15 +90,20 @@ public class ProgressionHelper
             
             invisibleNodes.forEach(spellNode -> spellNode.getParent().getChildren().remove(spellNode));
             
+            stripped.forEach(node ->
+            {
+                node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
+            });
             strippedSkillTrees.add(stripped);
         }
         
         return strippedSkillTrees;
     }
     
-    public static List<SpellTree> getStrippedSpellTrees(SpellProgressionHolder spellProgressionHolder, BlockPos enchantTable)
+    public static List<SpellTree> getStrippedSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        List<SpellTree> availableSpellTrees = getStrippedSpellTrees(spellProgressionHolder, SpellProgressionMenu.getSurroundingEnchantingPower(spellProgressionHolder.getPlayer().level, enchantTable));
+        List<SpellTree> allAvailableSkillTrees = getAllAvailableSpellTrees(spellProgressionHolder, access);
+        List<SpellTree> availableSpellTrees = stripSpellTrees(spellProgressionHolder, access, allAvailableSkillTrees);
         
         // if a spell is available for learning in two or more different spell trees
         // but the level cost is different for each entry
@@ -125,7 +131,7 @@ public class ProgressionHelper
         return availableSpellTrees;
     }
     
-    public static List<SpellTree> getAllAvailableSpellTrees(SpellProgressionHolder spellProgressionHolder)
+    public static List<SpellTree> getAllAvailableSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess containerLevelAccess)
     {
         List<SpellTree> availableSpellTrees = new LinkedList<>();
         
@@ -152,27 +158,22 @@ public class ProgressionHelper
     
     public static boolean tryBuySpell(SpellProgressionMenu menu, ISpell spell, UUID id)
     {
-        return menu.access.evaluate((level, blockPos) ->
-        {
-            return tryBuySpell(menu, spell, SpellProgressionMenu.getSurroundingEnchantingPower(level, blockPos), id);
-        }, false);
-    }
-    
-    public static boolean tryBuySpell(SpellProgressionMenu menu, ISpell spell, int availableBookshelves, UUID id)
-    {
         Player player = menu.player;
         
         AtomicBoolean found = new AtomicBoolean(false);
         
-        menu.spellTrees.stream().filter(tree -> tree.getId().equals(id)).findFirst().ifPresent(spellTree ->
+        SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
         {
-            spellTree.forEach(spellNode ->
+            menu.spellTrees.stream().filter(tree -> tree.getId().equals(id)).findFirst().ifPresent(spellTree ->
             {
-                if(!found.get() && spellNode.getSpell() == spell && spellNode.getRequiredBookshelves() <= availableBookshelves && (player.experienceLevel >= spellNode.getLevelCost() || player.isCreative()))
+                spellTree.forEach(spellNode ->
                 {
-                    found.set(true);
-                    player.giveExperienceLevels(-spellNode.getLevelCost());
-                }
+                    if(!found.get() && spellNode.getSpell() == spell && ((spellNode.passes(spellProgressionHolder, menu.access) && player.experienceLevel >= spellNode.getLevelCost()) || player.isCreative()))
+                    {
+                        found.set(true);
+                        player.giveExperienceLevels(-spellNode.getLevelCost());
+                    }
+                });
             });
         });
         
