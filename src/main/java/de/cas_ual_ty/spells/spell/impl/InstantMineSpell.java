@@ -5,6 +5,8 @@ import de.cas_ual_ty.spells.spell.base.Spell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,6 +41,7 @@ public class InstantMineSpell extends Spell
                     !player.blockActionRestricted(level, pos, player.gameMode.getGameModeForPlayer()) &&
                     block.getDestroySpeed(level, pos) != -1.0F)
             {
+                level.playSound(null, manaHolder.getPlayer(), level.getBlockState(pos).getSoundType(level, pos, player).getBreakSound(), SoundSource.PLAYERS, 1.0F, 1.0F);
                 player.gameMode.destroyBlock(pos);
             }
         }
