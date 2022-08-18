@@ -34,6 +34,6 @@ public class WaterLeapSpell extends LeapSpell
     @Override
     public boolean canActivate(ManaHolder manaHolder)
     {
-        return manaHolder.getPlayer().isEyeInFluid(FluidTags.WATER);
+        return manaHolder.getPlayer().isEyeInFluid(FluidTags.WATER) && super.canActivate(manaHolder);
     }
 }
