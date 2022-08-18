@@ -30,10 +30,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -69,6 +71,7 @@ public class SpellsRegistries
     public static final RegistryObject<ArgumentTypeInfo<?, ?>> SPELL_ARGUMENT_TYPE = ARGUMENT_TYPES.register("spell", () -> ArgumentTypeInfos.registerByClass(SpellArgument.class, SingletonArgumentInfo.contextAware(SpellArgument::spell)));
     
     public static final RegistryObject<Block> VANILLA_ENCHANTING_TABLE = RegistryObject.create(new ResourceLocation("minecraft:enchanting_table"), ForgeRegistries.BLOCKS);
+    public static final EnchantmentCategory SHIELD_ENCHANTMENT_CATEGORY = EnchantmentCategory.create("SHIELD", item -> item instanceof ShieldItem);
     
     public static final RegistryObject<IRequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("requirements", () -> WrappedRequirement::new);
     public static final RegistryObject<IRequirementType<BookshelvesRequirement>> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> BookshelvesRequirement::new);
