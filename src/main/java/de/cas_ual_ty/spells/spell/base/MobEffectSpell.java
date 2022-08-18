@@ -124,7 +124,7 @@ public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSp
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
         
-        return component.withStyle(ChatFormatting.YELLOW);
+        return component;
     }
     
     @Override
