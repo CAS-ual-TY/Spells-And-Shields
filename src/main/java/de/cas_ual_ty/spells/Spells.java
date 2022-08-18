@@ -30,7 +30,7 @@ public class Spells
     public static Supplier<IForgeRegistry<ISpell>> SPELLS_REGISTRY;
     private static final DeferredRegister<ISpell> SPELLS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spells"), MOD_ID);
     
-    public static final RegistryObject<ISpell> SPIT_METAL = SPELLS.register("spit_metal", () -> new SpitMetalSpell(4F));
+    public static final RegistryObject<ISpell> SPIT_METAL = SPELLS.register("spit_metal", () -> new SpitMetalSpell(5F));
     public static final RegistryObject<ISpell> FIRE_RESISTANCE = SPELLS.register("fire_resistance", () -> new MobEffectSpell(MobEffects.FIRE_RESISTANCE));
     public static final RegistryObject<ISpell> INSTANT_MINE = SPELLS.register("instant_mine", () -> new InstantMineSpell(5F));
     public static final RegistryObject<ISpell> PRESSURIZE = SPELLS.register("pressurize", () -> new PressurizeSpell(4F));
@@ -52,7 +52,7 @@ public class Spells
     public static final RegistryObject<ISpell> SPEED = SPELLS.register("speed", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED));
     public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(SpellsRegistries.MAX_MANA_ATTRIBUTE::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
     public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation("textures/mob_effect/health_boost.png")));
-    public static final RegistryObject<ISpell> BLOW_ARROW = SPELLS.register("blow_arrow", () -> new BlowArrowSpell(7F));
+    public static final RegistryObject<ISpell> BLOW_ARROW = SPELLS.register("blow_arrow", () -> new BlowArrowSpell(5F));
     public static final RegistryObject<ISpell> TRANSFER_MANA = SPELLS.register("transfer_mana", () -> new TransferManaSpell(4F));
     public static final RegistryObject<ISpell> BLAST_SMELT = SPELLS.register("blast_smelt", () -> new SmeltSpell(6F));
     public static final RegistryObject<ISpell> FIRE_BALL = SPELLS.register("fire_ball", () -> new FireBallSpell(5F));
