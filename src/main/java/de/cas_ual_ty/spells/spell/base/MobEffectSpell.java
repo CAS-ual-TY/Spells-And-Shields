@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.spell.base;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.IEquipSpell;
 import de.cas_ual_ty.spells.spell.ITickSpell;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
