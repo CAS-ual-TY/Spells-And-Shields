@@ -73,7 +73,7 @@ public class SpellsRegistries
     public static final RegistryObject<Block> VANILLA_ENCHANTING_TABLE = RegistryObject.create(new ResourceLocation("minecraft:enchanting_table"), ForgeRegistries.BLOCKS);
     public static final EnchantmentCategory SHIELD_ENCHANTMENT_CATEGORY = EnchantmentCategory.create("SHIELD", item -> item instanceof ShieldItem);
     
-    public static final RegistryObject<IRequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("requirements", () -> WrappedRequirement::new);
+    public static final RegistryObject<IRequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("client_wrap", () -> WrappedRequirement::new);
     public static final RegistryObject<IRequirementType<BookshelvesRequirement>> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> BookshelvesRequirement::new);
     public static final RegistryObject<IRequirementType<AdvancementRequirement>> ADVANCEMENT_REQUIREMENT = REQUIREMENTS.register("advancement", () -> AdvancementRequirement::new);
     

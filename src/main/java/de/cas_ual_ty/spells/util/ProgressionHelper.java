@@ -89,12 +89,15 @@ public class ProgressionHelper
             
             invisibleNodes.forEach(spellNode -> spellNode.getParent().getChildren().remove(spellNode));
             
-            stripped.forEach(node ->
-            {
-                node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
-            });
             strippedSkillTrees.add(stripped);
         }
+        
+        strippedSkillTrees.forEach(tree ->
+                tree.forEach(node ->
+                {
+                    node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
+                })
+        );
         
         return strippedSkillTrees;
     }

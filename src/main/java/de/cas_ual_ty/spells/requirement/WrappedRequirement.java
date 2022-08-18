@@ -37,12 +37,7 @@ public class WrappedRequirement extends Requirement
     public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         this.status = RequirementStatus.decide(passes(spellProgressionHolder, access));
-        this.component = makeDescription(spellProgressionHolder, access);
-        
-        if(status.isDecided())
-        {
-            component = Component.literal("- ").append(component.withStyle(status.passes ? ChatFormatting.GREEN : ChatFormatting.RED));
-        }
+        this.component = Component.literal("- ").append(makeDescription(spellProgressionHolder, access).withStyle(status.passes ? ChatFormatting.GREEN : ChatFormatting.RED));
     }
     
     @Override
