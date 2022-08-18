@@ -82,39 +82,44 @@ public class Spells
             SPELLS_REGISTRY.get().getValues().stream().filter(s -> s instanceof IConfigurableSpell).map(s -> (IConfigurableSpell) s).forEach(IConfigurableSpell::applyDefaultConfig);
             return;
         }
-        
-        if(SpellsConfig.LOAD_SPELLS_CONFIGS.get())
+    
+        SPELLS_REGISTRY.get().getEntries().stream().filter(e -> e.getValue() instanceof IConfigurableSpell).forEach(entry ->
         {
-            SPELLS_REGISTRY.get().getEntries().stream().filter(e -> e.getValue() instanceof IConfigurableSpell).forEach(entry ->
+            IConfigurableSpell spell = (IConfigurableSpell) entry.getValue();
+            ResourceLocation key = entry.getKey().location();
+        
+            File f = p.resolve(spell.getFileName(key) + ".json").toFile();
+            
+            if(SpellsConfig.CREATE_SPELLS_CONFIGS.get())
             {
-                IConfigurableSpell spell = (IConfigurableSpell) entry.getValue();
-                ResourceLocation key = entry.getKey().location();
+                SpellsConfig.CREATE_SPELLS_CONFIGS.set(false);
+                SpellsConfig.CREATE_SPELLS_CONFIGS.save();
+    
+                try
+                {
+                    SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
+                    SpellsAndShields.LOGGER.info("Successfully wrote default config of spell {} to file {}.", key.toString(), f.toPath());
+                }
+                catch(Exception e)
+                {
+                    SpellsAndShields.LOGGER.error("Failed writing default config of spell {} to file {}.", key.toString(), f.toPath(), e);
+                    e.printStackTrace();
+                }
                 
-                File f = p.resolve(spell.getFileName(key) + ".json").toFile();
-                
+                spell.applyDefaultConfig();
+            }
+            else if(SpellsConfig.LOAD_SPELLS_CONFIGS.get())
+            {
                 if(!f.exists())
                 {
-                    if(SpellsConfig.CREATE_SPELLS_CONFIGS.get())
-                    {
-                        try
-                        {
-                            SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
-                            SpellsAndShields.LOGGER.info("Successfully wrote default config of spell {} to file {}.", key.toString(), f.toPath());
-                        }
-                        catch(Exception e)
-                        {
-                            SpellsAndShields.LOGGER.error("Failed writing default config of spell {} to file {}.", key.toString(), f.toPath(), e);
-                            e.printStackTrace();
-                        }
-                    }
-                    
+                    SpellsAndShields.LOGGER.info("Can not find config of spell {} at {}, applying default config.", key.toString(), f.toPath());
                     spell.applyDefaultConfig();
                 }
                 else
                 {
                     boolean failed = false;
                     JsonElement json = null;
-                    
+        
                     try
                     {
                         json = SpellsFileUtil.readJsonFromFile(f);
@@ -126,7 +131,7 @@ public class Spells
                         e.printStackTrace();
                         spell.applyDefaultConfig();
                     }
-                    
+        
                     if(json != null && json.isJsonObject())
                     {
                         try
@@ -147,12 +152,23 @@ public class Spells
                         spell.applyDefaultConfig();
                     }
                 }
-            });
-        }
-        else
-        {
-            SPELLS_REGISTRY.get().getValues().stream().filter(s -> s instanceof IConfigurableSpell).map(s -> (IConfigurableSpell) s).forEach(IConfigurableSpell::applyDefaultConfig);
-        }
+            }
+            else
+            {
+                spell.applyDefaultConfig();
+            }
+        
+            try
+            {
+                SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
+                SpellsAndShields.LOGGER.info("Successfully wrote default config of spell {} to file {}.", key.toString(), f.toPath());
+            }
+            catch(Exception e)
+            {
+                SpellsAndShields.LOGGER.error("Failed writing default config of spell {} to file {}.", key.toString(), f.toPath(), e);
+                e.printStackTrace();
+            }
+        });
     }
     
     private static void playerTick(TickEvent.PlayerTickEvent event)
