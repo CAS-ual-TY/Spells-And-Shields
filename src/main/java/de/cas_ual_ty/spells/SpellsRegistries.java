@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.effect.ManaMobEffect;
 import de.cas_ual_ty.spells.enchantment.*;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.recipe.TippedSpearRecipe;
+import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
 import de.cas_ual_ty.spells.requirement.IRequirementType;
 import de.cas_ual_ty.spells.requirement.WrappedRequirement;
@@ -71,6 +72,7 @@ public class SpellsRegistries
     
     public static final RegistryObject<IRequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("requirements", () -> WrappedRequirement::new);
     public static final RegistryObject<IRequirementType<BookshelvesRequirement>> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> BookshelvesRequirement::new);
+    public static final RegistryObject<IRequirementType<AdvancementRequirement>> ADVANCEMENT_REQUIREMENT = REQUIREMENTS.register("advancement", () -> AdvancementRequirement::new);
     
     public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20.0D, 1.0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<RangedAttribute> MANA_REGEN_ATTRIBUTE = ATTRIBUTES.register("generic.mana_regen", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.mana_regen", 1D, 0D, 50D).setSyncable(true));

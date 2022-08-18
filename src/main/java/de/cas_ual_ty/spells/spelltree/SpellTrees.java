@@ -6,11 +6,13 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
+import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
 import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
@@ -43,7 +45,7 @@ public class SpellTrees
                 .icon(Spells.FIRE_RESISTANCE.get())
                 .add(Spells.FIRE_RESISTANCE, 30, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 30))
                 .leaf()
-                .add(Spells.FIRE_CHARGE, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 28))
+                .add(Spells.FIRE_CHARGE, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 28), new AdvancementRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT.get(), new ResourceLocation("minecraft:nether/return_to_sender")))
                 .finish();
     }
     

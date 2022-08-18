@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.requirement;
 
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.core.BlockPos;
@@ -37,7 +36,7 @@ public class BookshelvesRequirement extends Requirement
     public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         int amount = access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0);
-        return Component.literal(amount + "/" + bookshelves).append(" ").append(Component.translatable(descriptionId));
+        return Component.translatable(descriptionId, amount, bookshelves);
     }
     
     @Override

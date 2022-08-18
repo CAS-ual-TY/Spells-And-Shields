@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 

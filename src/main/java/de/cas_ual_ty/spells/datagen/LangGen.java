@@ -98,7 +98,9 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.FIRE_RESISTANCE, "Fire Resistance", PASSIVE_STRING);
         addSpell(Spells.SPIT_METAL, "Spit Metal", "Spit a nugget that deals damage (from your hand).");
         
-        addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "Bookshelves");
+        addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
+        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s (%s)");
+        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, ".error", "Unknown Advancement (config error): %s");
         
         add(SpellTrees.KEY_NETHER, "Nether");
         add(SpellTrees.KEY_OCEAN, "Ocean");
@@ -156,8 +158,13 @@ public class LangGen extends LanguageProvider
     
     public void addRequirement(Supplier<? extends IRequirementType<?>> requirement, String desc)
     {
+        addRequirement(requirement, "", desc);
+    }
+    
+    public void addRequirement(Supplier<? extends IRequirementType<?>> requirement, String suffix, String desc)
+    {
         Requirement inst = requirement.get().makeInstance();
         String descriptionId = inst.getDescriptionId();
-        add(descriptionId, desc);
+        add(descriptionId + suffix, desc);
     }
 }

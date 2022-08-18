@@ -41,7 +41,7 @@ public class WrappedRequirement extends Requirement
         
         if(status.isDecided())
         {
-            component = component.withStyle(status.passes ? ChatFormatting.GREEN : ChatFormatting.RED);
+            component = Component.literal("- ").append(component.withStyle(status.passes ? ChatFormatting.GREEN : ChatFormatting.RED));
         }
     }
     

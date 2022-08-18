@@ -1,11 +1,9 @@
 package de.cas_ual_ty.spells.spelltree;
 
-import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import javax.annotation.Nullable;

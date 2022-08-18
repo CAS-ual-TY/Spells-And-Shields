@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.util;
 
-import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
