@@ -4,6 +4,8 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.base.Spell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -43,6 +45,11 @@ public class InstantMineSpell extends Spell
             {
                 level.playSound(null, manaHolder.getPlayer(), level.getBlockState(pos).getSoundType(level, pos, player).getBreakSound(), SoundSource.PLAYERS, 1.0F, 1.0F);
                 player.gameMode.destroyBlock(pos);
+                
+                if(level instanceof ServerLevel serverLevel)
+                {
+                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 1, 0, 0, 0, 0.0D);
+                }
             }
         }
     }

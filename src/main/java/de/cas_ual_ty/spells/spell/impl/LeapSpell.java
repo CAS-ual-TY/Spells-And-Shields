@@ -7,6 +7,9 @@ import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -54,7 +57,13 @@ public class LeapSpell extends BaseIngredientsSpell implements IClientSpell
             final double spread = 0.1D;
             Vec3 position = entity.position();
             serverLevel.sendParticles(ParticleTypes.POOF, position.x, position.y, position.z, count, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, 0.0D);
+            serverLevel.playSound(null, manaHolder.getPlayer(), getJumpSound(), SoundSource.PLAYERS, 1.0F, 1.0F);
         }
+    }
+    
+    protected SoundEvent getJumpSound()
+    {
+        return SoundEvents.ENDER_DRAGON_FLAP;
     }
     
     @Override

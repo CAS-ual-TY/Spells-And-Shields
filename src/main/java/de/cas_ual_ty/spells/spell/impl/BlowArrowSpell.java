@@ -2,6 +2,8 @@ package de.cas_ual_ty.spells.spell.impl;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.base.HandIngredientSpell;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
@@ -41,6 +43,7 @@ public class BlowArrowSpell extends HandIngredientSpell
         }
         
         level.addFreshEntity(arrow);
+        level.playSound(null, manaHolder.getPlayer(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F);
     }
     
     @Override
