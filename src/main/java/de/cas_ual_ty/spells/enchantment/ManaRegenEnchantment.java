@@ -27,8 +27,15 @@ public class ManaRegenEnchantment extends ManaArmorEnchantment
         return 2;
     }
     
-    public double getAttributeIncrease(int level)
+    public double getAttributeIncrease(int level, EquipmentSlot s)
     {
-        return level == 0 ? 0 : (0.15D + (level - 1) * 0.1D);
+        if(s == EquipmentSlot.CHEST || s == EquipmentSlot.LEGS)
+        {
+            return level == 0 ? 0 : (0.2D + (level - 1) * 0.1D);
+        }
+        else
+        {
+            return level == 0 ? 0 : (0.1D + (level - 1) * 0.1D);
+        }
     }
 }
