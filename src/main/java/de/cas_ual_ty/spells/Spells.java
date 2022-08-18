@@ -82,19 +82,19 @@ public class Spells
             SPELLS_REGISTRY.get().getValues().stream().filter(s -> s instanceof IConfigurableSpell).map(s -> (IConfigurableSpell) s).forEach(IConfigurableSpell::applyDefaultConfig);
             return;
         }
-    
+        
         SPELLS_REGISTRY.get().getEntries().stream().filter(e -> e.getValue() instanceof IConfigurableSpell).forEach(entry ->
         {
             IConfigurableSpell spell = (IConfigurableSpell) entry.getValue();
             ResourceLocation key = entry.getKey().location();
-        
+            
             File f = p.resolve(spell.getFileName(key) + ".json").toFile();
             
             if(SpellsConfig.CREATE_SPELLS_CONFIGS.get())
             {
                 SpellsConfig.CREATE_SPELLS_CONFIGS.set(false);
                 SpellsConfig.CREATE_SPELLS_CONFIGS.save();
-    
+                
                 try
                 {
                     SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
@@ -119,7 +119,7 @@ public class Spells
                 {
                     boolean failed = false;
                     JsonElement json = null;
-        
+                    
                     try
                     {
                         json = SpellsFileUtil.readJsonFromFile(f);
@@ -131,7 +131,7 @@ public class Spells
                         e.printStackTrace();
                         spell.applyDefaultConfig();
                     }
-        
+                    
                     if(json != null && json.isJsonObject())
                     {
                         try
@@ -157,7 +157,7 @@ public class Spells
             {
                 spell.applyDefaultConfig();
             }
-        
+            
             try
             {
                 SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
