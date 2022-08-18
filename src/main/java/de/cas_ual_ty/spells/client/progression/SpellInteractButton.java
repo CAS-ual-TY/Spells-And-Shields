@@ -19,6 +19,11 @@ public class SpellInteractButton extends Button
         this.v = v;
     }
     
+    public SpellInteractButton(int x, int y, int width, int height, Component component, OnPress onPress, int v)
+    {
+        this(x, y, width, height, component, onPress, v, NO_TOOLTIP);
+    }
+    
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
     {

@@ -194,9 +194,9 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                 }
             }
         };
-        this.equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_EQUIP), this::buttonClicked, 0, null);
-        this.unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_UNAVAILABLE), this::buttonClicked, 2, null);
-        this.chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_CHOOSE_SLOT), this::buttonClicked, 2, null);
+        this.equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_EQUIP), this::buttonClicked, 0);
+        this.unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_UNAVAILABLE), this::buttonClicked, 2);
+        this.chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_CHOOSE_SLOT), this::buttonClicked, 2);
         this.unavailableButton.active = false;
         this.chooseButton.active = false;
         
