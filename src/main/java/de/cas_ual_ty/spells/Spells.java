@@ -157,17 +157,6 @@ public class Spells
             {
                 spell.applyDefaultConfig();
             }
-            
-            try
-            {
-                SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
-                SpellsAndShields.LOGGER.info("Successfully wrote default config of spell {} to file {}.", key.toString(), f.toPath());
-            }
-            catch(Exception e)
-            {
-                SpellsAndShields.LOGGER.error("Failed writing default config of spell {} to file {}.", key.toString(), f.toPath(), e);
-                e.printStackTrace();
-            }
         });
     }
     
