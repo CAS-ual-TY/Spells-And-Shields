@@ -47,7 +47,7 @@ public class PressurizeSpell extends BaseIngredientsSpell
             
             double strength = 2D;
             
-            caster.level.playSound(null, caster, SoundEvents.ENDER_DRAGON_FLAP, SoundSource.PLAYERS, 1.0F, 1.0F);
+            caster.level.playSound(null, caster, SoundEvents.PLAYER_BREATH, SoundSource.PLAYERS, 1.0F, 1.0F);
             
             List<Entity> entities = caster.level.getEntities(caster, area);
             

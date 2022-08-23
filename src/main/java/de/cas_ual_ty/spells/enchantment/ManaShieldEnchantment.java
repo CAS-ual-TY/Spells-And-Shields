@@ -1,10 +1,10 @@
 package de.cas_ual_ty.spells.enchantment;
 
+import de.cas_ual_ty.spells.SpellsRegistries;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class ManaShieldEnchantment extends Enchantment
 {
@@ -13,7 +13,7 @@ public class ManaShieldEnchantment extends Enchantment
     
     public ManaShieldEnchantment(Rarity rarity, EquipmentSlot... equipmentSlots)
     {
-        super(rarity, EnchantmentCategory.BREAKABLE, equipmentSlots);
+        super(rarity, SpellsRegistries.SHIELD_ENCHANTMENT_CATEGORY, equipmentSlots);
     }
     
     @Override

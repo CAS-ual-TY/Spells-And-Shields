@@ -1,6 +1,8 @@
 package de.cas_ual_ty.spells.spell.impl;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.ItemStack;
 
@@ -24,8 +26,14 @@ public class WaterLeapSpell extends LeapSpell
     }
     
     @Override
+    protected SoundEvent getJumpSound()
+    {
+        return SoundEvents.DOLPHIN_JUMP;
+    }
+    
+    @Override
     public boolean canActivate(ManaHolder manaHolder)
     {
-        return manaHolder.getPlayer().isEyeInFluid(FluidTags.WATER);
+        return manaHolder.getPlayer().isEyeInFluid(FluidTags.WATER) && super.canActivate(manaHolder);
     }
 }

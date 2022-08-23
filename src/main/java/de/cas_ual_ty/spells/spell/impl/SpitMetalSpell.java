@@ -40,7 +40,7 @@ public class SpitMetalSpell extends HandIngredientSpell implements IProjectileSp
     public SpitMetalSpell(float manaCost)
     {
         super(manaCost);
-        this.defaultBaseDamage = 4F;
+        this.defaultBaseDamage = 8F;
         
         this.ingredientMap = new HashMap<>();
         ingredientMap.put(Items.IRON_NUGGET, Tiers.IRON.getAttackDamageBonus());

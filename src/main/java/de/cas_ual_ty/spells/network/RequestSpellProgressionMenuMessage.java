@@ -54,7 +54,7 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                 {
                     access.execute((level, blockPos) ->
                     {
-                        List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, blockPos);
+                        List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
                         HashMap<ISpell, SpellStatus> progression = spellProgressionHolder.getProgression();
                         
                         NetworkHooks.openGui(player, new MenuProvider()

@@ -8,7 +8,6 @@ import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -19,8 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.HashMap;
@@ -55,15 +53,13 @@ public class SpellProgressionMenu extends AbstractContainerMenu
             {
                 access.execute((level, blockPos) ->
                 {
-                    int bookshelves = getSurroundingEnchantingPower(level, blockPos);
-                    
-                    if(ProgressionHelper.tryBuySpell(this, spell, bookshelves, treeId))
+                    if(ProgressionHelper.tryBuySpell(this, spell, treeId))
                     {
                         spellProgressionHolder.setSpellStatus(spell, SpellStatus.LEARNED);
                         level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.1F + 0.9F);
                     }
                     
-                    this.spellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, bookshelves);
+                    this.spellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
                     this.spellProgression = spellProgressionHolder.getProgression();
                     
                     SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SpellProgressionSyncMessage(blockPos, spellTrees, spellProgression));
@@ -96,41 +92,15 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     }
     
     @Override
+    public ItemStack quickMoveStack(Player p_38941_, int p_38942_)
+    {
+        return ItemStack.EMPTY;
+    }
+    
+    @Override
     public boolean stillValid(Player player)
     {
-        return stillValid(this.access, player, Blocks.ENCHANTING_TABLE);
-    }
-    
-    public static float getEnchantingPower(Level level, BlockPos pos)
-    {
-        return level.getBlockState(pos).getEnchantPowerBonus(level, pos);
-    }
-    
-    public static int getSurroundingEnchantingPower(Level level, BlockPos blockPos)
-    {
-        int sum = 0;
-        
-        for(int z = -1; z <= 1; ++z)
-        {
-            for(int x = -1; x <= 1; ++x)
-            {
-                if((z != 0 || x != 0) && level.isEmptyBlock(blockPos.offset(x, 0, z)) && level.isEmptyBlock(blockPos.offset(x, 1, z)))
-                {
-                    sum += getEnchantingPower(level, blockPos.offset(x * 2, 0, z * 2));
-                    sum += getEnchantingPower(level, blockPos.offset(x * 2, 1, z * 2));
-                    
-                    if(x != 0 && z != 0)
-                    {
-                        sum += getEnchantingPower(level, blockPos.offset(x * 2, 0, z));
-                        sum += getEnchantingPower(level, blockPos.offset(x * 2, 1, z));
-                        sum += getEnchantingPower(level, blockPos.offset(x, 0, z * 2));
-                        sum += getEnchantingPower(level, blockPos.offset(x, 1, z * 2));
-                    }
-                }
-            }
-        }
-        
-        return sum;
+        return stillValid(this.access, player, SpellsRegistries.VANILLA_ENCHANTING_TABLE.get());
     }
     
     public static SpellProgressionMenu construct(int id, Inventory inventory, FriendlyByteBuf extraData)

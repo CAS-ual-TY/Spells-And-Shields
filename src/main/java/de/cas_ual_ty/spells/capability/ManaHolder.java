@@ -145,7 +145,7 @@ public class ManaHolder implements IManaHolder
             {
                 ItemStack itemStack = player.getItemBySlot(s);
                 int level = EnchantmentHelper.getItemEnchantmentLevel(SpellsRegistries.MAX_MANA_ENCHANTMENT.get(), itemStack);
-                double increase = SpellsRegistries.MAX_MANA_ENCHANTMENT.get().getAttributeIncrease(level);
+                double increase = SpellsRegistries.MAX_MANA_ENCHANTMENT.get().getAttributeIncrease(level, s);
                 attribute += increase;
             }
         }
@@ -187,7 +187,7 @@ public class ManaHolder implements IManaHolder
             {
                 ItemStack itemStack = player.getItemBySlot(s);
                 int level = EnchantmentHelper.getItemEnchantmentLevel(SpellsRegistries.MANA_REGEN_ENCHANTMENT.get(), itemStack);
-                double increase = SpellsRegistries.MANA_REGEN_ENCHANTMENT.get().getAttributeIncrease(level);
+                double increase = SpellsRegistries.MANA_REGEN_ENCHANTMENT.get().getAttributeIncrease(level, s);
                 attribute += increase;
             }
         }

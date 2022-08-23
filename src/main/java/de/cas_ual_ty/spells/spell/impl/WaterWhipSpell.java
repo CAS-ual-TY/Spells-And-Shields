@@ -1,9 +1,11 @@
 package de.cas_ual_ty.spells.spell.impl;
 
+import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.IReturnProjectileSpell;
 import de.cas_ual_ty.spells.spell.base.HandIngredientSpell;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
+import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -20,9 +22,18 @@ import java.util.Random;
 
 public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjectileSpell
 {
+    public final float defaultDamage;
+    protected float damage;
+    
     public WaterWhipSpell(float manaCost)
     {
+        this(manaCost, 10F);
+    }
+    
+    public WaterWhipSpell(float manaCost, float damage)
+    {
         super(manaCost);
+        defaultDamage = damage;
     }
     
     @Override
@@ -85,7 +96,7 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     {
         if(entityHitResult.getEntity() instanceof LivingEntity hit)
         {
-            hit.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), 2F);
+            hit.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), 10F);
         }
         
         entity.discard();
@@ -110,5 +121,27 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
             
             entity.discard();
         }
+    }
+    
+    @Override
+    public JsonObject makeDefaultConfig()
+    {
+        JsonObject json = super.makeDefaultConfig();
+        json.addProperty("damage", this.defaultDamage);
+        return json;
+    }
+    
+    @Override
+    public void readFromConfig(JsonObject json)
+    {
+        super.readFromConfig(json);
+        this.damage = SpellsFileUtil.jsonFloat(json, "damage");
+    }
+    
+    @Override
+    public void applyDefaultConfig()
+    {
+        super.applyDefaultConfig();
+        this.damage = defaultDamage;
     }
 }

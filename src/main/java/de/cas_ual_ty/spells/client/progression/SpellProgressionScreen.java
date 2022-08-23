@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.network.RequestEquipSpellMessage;
 import de.cas_ual_ty.spells.network.RequestLearnSpellMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
@@ -84,6 +85,8 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     
     public SpellSlotWidget[] spellSlotButtons;
     
+    public SpellProgressionHolder spellProgressionHolder;
+    
     public SpellProgressionScreen(SpellProgressionMenu menu, Inventory inventory, Component component)
     {
         super(menu, inventory, component);
@@ -92,6 +95,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         imageWidth = GUI_WIDTH;
         imageHeight = GUI_HEIGHT;
         tabPage = 0;
+        this.spellProgressionHolder = SpellProgressionHolder.getSpellProgressionHolder(menu.player).orElse(null);
     }
     
     public void spellTreesUpdated()
@@ -164,12 +168,12 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         
         this.selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT, leftW);
         
-        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, new TranslatableComponent(KEY_LEARN), this::buttonClicked, 1)
+        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, new TranslatableComponent(KEY_LEARN), this::buttonClicked, 1, this::learnButtonTooltip)
         {
             @Override
             public void render(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
             {
-                this.active = selectedSpellWidget.spell != null && (menu.player.experienceLevel >= selectedSpellWidget.spell.getLevelCost() || menu.player.isCreative());
+                this.active = selectedSpellWidget.spell != null && selectedSpellWidget.spell.canLearn(spellProgressionHolder, menu.access);
                 super.render(poseStack, mouseX, mouseY, deltaTick);
             }
             
@@ -183,7 +187,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                     int cost = selectedSpellWidget.spell.getLevelCost();
                     
                     // active ? lime green : dark green
-                    int color = menu.player.experienceLevel >= cost || menu.player.isCreative() ? 0x80FF20 : 0x407F10;
+                    int color = this.active ? 0x80FF20 : 0x407F10;
                     
                     String costStr = String.valueOf(cost);
                     int x = this.x + this.width - font.width(costStr) - 2;
@@ -216,6 +220,14 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         disableSlotButtons();
         
         this.spellClicked(null);
+    }
+    
+    private void learnButtonTooltip(Button button, PoseStack poseStack, int mouseX, int mouseY)
+    {
+        if(selectedSpellWidget.spell != null && button.isMouseOver(mouseX, mouseY))
+        {
+            renderTooltip(poseStack, selectedSpellWidget.spell.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
+        }
     }
     
     private void buttonClicked(Button button)
@@ -473,6 +485,8 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                 }
             }
         }
+        
+        learnButton.renderToolTip(poseStack, mouseX, mouseY);
     }
     
     private void renderBottom(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)

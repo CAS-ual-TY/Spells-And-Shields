@@ -26,7 +26,7 @@ public class SpellsConfig
                 .define("loadSpellTrees", false);
         
         CREATE_DEFAULT_SPELL_TREES = configBuilder
-                .comment("Create default spell tree configuration files in the configuration folder if said folder does not exist (true) or not (false).")
+                .comment("Create default spell tree configuration files in the configuration folder if said folder does not exist (true) or not (false). Automatically switches back to false after creating the files.")
                 .define("createDefaultSpellTrees", false);
         
         ADD_DEFAULT_SPELL_TREES = configBuilder
@@ -38,7 +38,7 @@ public class SpellsConfig
                 .define("loadSpells", false);
         
         CREATE_SPELLS_CONFIGS = configBuilder
-                .comment("Create default spell configuration files in the configuration folder (true) or not (false).")
+                .comment("Create default spell configuration files in the configuration folder (true) or not (false). Automatically switches back to false after creating the files.")
                 .define("createSpells", false);
         
         RESPAWN_WITH_FULL_MANA = configBuilder

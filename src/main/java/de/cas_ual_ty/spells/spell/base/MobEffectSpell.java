@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.spell.base;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.IEquipSpell;
 import de.cas_ual_ty.spells.spell.ITickSpell;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -124,7 +123,7 @@ public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSp
             component = new TranslatableComponent("potion.withAmplifier", component, new TranslatableComponent("potion.potency." + amplifier));
         }
         
-        return component.withStyle(ChatFormatting.YELLOW);
+        return component;
     }
     
     @Override

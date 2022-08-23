@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import de.cas_ual_ty.spells.requirement.IRequirementType;
+import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
@@ -15,6 +17,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -54,11 +58,17 @@ public class SpellTreeSerializer
         buf.writeByte(TYPE_UP);
     }
     
+    private static void encodeRequirements(List<Requirement> list, FriendlyByteBuf buf)
+    {
+        buf.writeInt(list.size());
+        list.forEach(requirement -> IRequirementType.writeToBuf(buf, requirement));
+    }
+    
     private static void encodeNode(SpellNode spellNode, FriendlyByteBuf buf)
     {
         buf.writeRegistryId(spellNode.getSpell());
         buf.writeInt(spellNode.getLevelCost());
-        buf.writeByte(spellNode.getRequiredBookshelves());
+        encodeRequirements(spellNode.getRequirements(), buf);
     }
     
     public static SpellTree decodeTree(FriendlyByteBuf buf)
@@ -67,7 +77,7 @@ public class SpellTreeSerializer
         Component title = buf.readComponent();
         ISpell icon = buf.readRegistryId();
         
-        SpellTree.Builder builder = SpellTree.builder(id, decodeNode(buf), title);
+        SpellTree.Builder builder = SpellTree.builder(id, title, decodeNode(buf));
         
         byte next;
         
@@ -90,13 +100,26 @@ public class SpellTreeSerializer
         return builder.icon(icon).finish();
     }
     
+    private static List<Requirement> decodeRequirements(FriendlyByteBuf buf)
+    {
+        int size = buf.readInt();
+        List<Requirement> list = new LinkedList<>();
+        
+        for(int i = 0; i < size; i++)
+        {
+            list.add(IRequirementType.readFromBuf(buf));
+        }
+        
+        return list;
+    }
+    
     public static SpellNode decodeNode(FriendlyByteBuf buf)
     {
         ISpell spell = buf.readRegistryId();
         int levelCost = buf.readInt();
-        byte requiredBookshelves = buf.readByte();
+        List<Requirement> requirements = decodeRequirements(buf);
         
-        return new SpellNode(spell, levelCost, requiredBookshelves);
+        return new SpellNode(spell, levelCost, requirements);
     }
     
     private static JsonObject nodeToJsonRec(SpellNode node)
@@ -106,7 +129,10 @@ public class SpellTreeSerializer
         json.addProperty("spell", node.getSpell().getRegistryName().toString());
         
         json.addProperty("levelCost", node.getLevelCost());
-        json.addProperty("requiredBookshelves", node.getRequiredBookshelves());
+        
+        JsonArray requirements = new JsonArray();
+        node.getRequirements().forEach(requirement -> requirements.add(IRequirementType.writeToJson(requirement)));
+        json.add("requirements", requirements);
         
         JsonArray children = new JsonArray();
         node.getChildren().forEach(child -> children.add(nodeToJsonRec(child)));
@@ -121,7 +147,9 @@ public class SpellTreeSerializer
         JsonObject json = new JsonObject();
         
         json.addProperty("id", tree.getId().toString());
+        
         json.add("title", Component.Serializer.toJsonTree(tree.getTitle()));
+        
         json.addProperty("icon_spell", tree.getIconSpell().getRegistryName().toString());
         json.add("root_spell", tree.getRoot() != null ? nodeToJsonRec(tree.getRoot()) : JsonNull.INSTANCE);
         
@@ -132,10 +160,26 @@ public class SpellTreeSerializer
     {
         ISpell spell = SpellsFileUtil.jsonSpell(json, "spell");
         int levelCost = SpellsFileUtil.jsonInt(json, "levelCost");
-        int requiredBookshelves = SpellsFileUtil.jsonInt(json, "requiredBookshelves");
+        JsonArray array = SpellsFileUtil.jsonArray(json, "requirements");
         JsonArray children = SpellsFileUtil.jsonArray(json, "children");
         
-        SpellNode node = new SpellNode(spell, levelCost, requiredBookshelves);
+        List<Requirement> requirements = new LinkedList<>();
+        array.forEach(jsonElement ->
+        {
+            if(!jsonElement.isJsonObject())
+            {
+                return;
+            }
+            
+            Requirement requirement = IRequirementType.readFromJson(jsonElement.getAsJsonObject());
+            
+            if(requirement != null)
+            {
+                requirements.add(requirement);
+            }
+        });
+        
+        SpellNode node = new SpellNode(spell, levelCost, requirements);
         
         children.forEach(e -> SpellTree.connect(node, nodeFromJson(e.getAsJsonObject())));
         
@@ -205,7 +249,7 @@ public class SpellTreeSerializer
         {
             JsonObject modifier = new JsonObject();
             
-            modifier.addProperty("attribute", entry.getKey().getRegistryName().toString());
+            modifier.addProperty("attribute", ForgeRegistries.ATTRIBUTES.getKey(entry.getKey()).toString());
             modifier.addProperty("amount", entry.getValue().getAmount());
             modifier.addProperty("operation", entry.getValue().getOperation().toValue());
             modifier.addProperty("name", entry.getValue().getName());

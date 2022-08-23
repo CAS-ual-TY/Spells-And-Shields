@@ -7,6 +7,10 @@ import de.cas_ual_ty.spells.effect.ManaMobEffect;
 import de.cas_ual_ty.spells.enchantment.*;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.recipe.TippedSpearRecipe;
+import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
+import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
+import de.cas_ual_ty.spells.requirement.IRequirementType;
+import de.cas_ual_ty.spells.requirement.WrappedRequirement;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import net.minecraft.resources.ResourceLocation;
@@ -21,24 +25,28 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.IContainerFactory;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.*;
+
+import java.util.function.Supplier;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class SpellsRegistries
 {
+    public static Supplier<IForgeRegistry<IRequirementType.RequirementType>> REQUIREMENTS_REGISTRY;
+    private static final DeferredRegister<IRequirementType.RequirementType> REQUIREMENTS = DeferredRegister.create(new ResourceLocation(MOD_ID, "requirements"), MOD_ID);
     
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
@@ -55,6 +63,11 @@ public class SpellsRegistries
     private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
     
     public static final RegistryObject<Block> VANILLA_ENCHANTING_TABLE = RegistryObject.create(new ResourceLocation("minecraft:enchanting_table"), ForgeRegistries.BLOCKS);
+    public static final EnchantmentCategory SHIELD_ENCHANTMENT_CATEGORY = EnchantmentCategory.create("SHIELD", item -> item instanceof ShieldItem);
+    
+    public static final RegistryObject<IRequirementType.RequirementType> WRAPPED_REQUIREMENT = REQUIREMENTS.register("client_wrap", () -> new IRequirementType.RequirementType(WrappedRequirement::new));
+    public static final RegistryObject<IRequirementType.RequirementType> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> new IRequirementType.RequirementType(BookshelvesRequirement::new));
+    public static final RegistryObject<IRequirementType.RequirementType> ADVANCEMENT_REQUIREMENT = REQUIREMENTS.register("advancement", () -> new IRequirementType.RequirementType(AdvancementRequirement::new));
     
     public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20.0D, 1.0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<RangedAttribute> MANA_REGEN_ATTRIBUTE = ATTRIBUTES.register("generic.mana_regen", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.mana_regen", 1D, 0D, 50D).setSyncable(true));
@@ -95,6 +108,8 @@ public class SpellsRegistries
     
     public static void register()
     {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsRegistries::newRegistry);
+        REQUIREMENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         MOB_EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -104,6 +119,11 @@ public class SpellsRegistries
         CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RECIPE_SERIALIZERS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
+    
+    private static void newRegistry(NewRegistryEvent event)
+    {
+        REQUIREMENTS_REGISTRY = event.create(new RegistryBuilder<IRequirementType.RequirementType>().setType(IRequirementType.RequirementType.class).setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
     }
     
     private static void registerCommands(RegisterCommandsEvent event)

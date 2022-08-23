@@ -1,10 +1,12 @@
 package de.cas_ual_ty.spells.spelltree;
 
+import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -147,78 +149,57 @@ public class SpellTree
         child.setParent(parent);
     }
     
-    public static Builder builder(UUID id, Supplier<ISpell> root, int levelCost, int requiredBookshelves, Component treeTitle)
+    public static Builder builder(UUID id, Component treeTitle, Supplier<ISpell> root, int levelCost, Requirement... requirements)
     {
-        return new Builder(id, root, levelCost, requiredBookshelves, treeTitle);
+        return new Builder(id, treeTitle, root, levelCost, requirements);
     }
     
-    public static Builder builder(UUID id, ISpell root, int levelCost, int requiredBookshelves, Component treeTitle)
+    public static Builder builder(UUID id, Component treeTitle, ISpell root, int levelCost, Requirement... requirements)
     {
-        return new Builder(id, root, levelCost, requiredBookshelves, treeTitle);
+        return new Builder(id, treeTitle, root, levelCost, requirements);
     }
     
-    public static Builder builder(UUID id, SpellNode root, Component treeTitle)
+    public static Builder builder(UUID id, Component treeTitle, SpellNode root)
     {
-        return new Builder(id, root, treeTitle);
+        return new Builder(id, treeTitle, root);
     }
     
     public static class Builder
     {
         private UUID id;
+        private Component title;
         private Stack<SpellNode> stack;
         private SpellNode root;
-        private Component title;
         private ISpell icon;
         
-        private Builder(UUID id, SpellNode root, Component title)
+        private Builder(UUID id, Component title, SpellNode root)
         {
             this.id = id;
+            this.title = title;
             this.stack = new Stack<>();
             this.root = root;
-            this.title = title;
             icon = null;
             this.stack.push(this.root);
         }
         
-        private Builder(UUID id, ISpell root, int levelCost, int requiredBookshelves, Component title)
+        private Builder(UUID id, Component title, ISpell root, int levelCost, Requirement... requirements)
         {
-            this(id, new SpellNode(root, levelCost, requiredBookshelves), title);
+            this(id, title, new SpellNode(root, levelCost, List.of(requirements)));
         }
         
-        public Builder(UUID id, Supplier<ISpell> root, int levelCost, int requiredBookshelves, Component title)
+        public Builder(UUID id, Component title, Supplier<ISpell> root, int levelCost, Requirement... requirements)
         {
-            this(id, root.get(), levelCost, requiredBookshelves, title);
+            this(id, title, root.get(), levelCost, requirements);
         }
         
-        public Builder add(Supplier<ISpell> spell, int levelCost, int requiredBookshelves)
+        public Builder add(Supplier<ISpell> spell, int levelCost, Requirement... requirements)
         {
-            return add(spell.get(), levelCost, requiredBookshelves);
+            return add(spell.get(), levelCost, requirements);
         }
         
-        public Builder add(Supplier<ISpell> spell, int levelCost)
+        public Builder add(ISpell spell, int levelCost, Requirement... requirements)
         {
-            return add(spell.get(), levelCost, root.getRequiredBookshelves());
-        }
-        
-        public Builder add(Supplier<ISpell> spell)
-        {
-            return add(spell, root.getLevelCost());
-        }
-        
-        public Builder add(ISpell spell, int levelCost, int requiredBookshelves)
-        {
-            add(new SpellNode(spell, levelCost, requiredBookshelves));
-            return this;
-        }
-        
-        public Builder add(ISpell spell, int levelCost)
-        {
-            return add(spell, levelCost, root.getRequiredBookshelves());
-        }
-        
-        public Builder add(ISpell spell)
-        {
-            return add(spell, root.getLevelCost());
+            return add(new SpellNode(spell, levelCost, List.of(requirements)));
         }
         
         public Builder add(SpellNode spellNode)

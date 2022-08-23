@@ -1,24 +1,29 @@
 package de.cas_ual_ty.spells.spelltree;
 
+import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
+import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
+import java.util.List;
 
 public class SpellNode
 {
     protected final ISpell spell;
     protected int levelCost;
-    protected int requiredBookshelves;
+    protected List<Requirement> requirements;
     
     protected SpellNode parent;
     protected LinkedList<SpellNode> children;
     
-    public SpellNode(ISpell spell, int levelCost, int requiredBookshelves)
+    public SpellNode(ISpell spell, int levelCost, List<Requirement> requirements)
     {
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
-        this.requiredBookshelves = Math.max(0, Math.min(32, requiredBookshelves));
+        this.requirements = requirements;
         children = new LinkedList<>();
     }
     
@@ -32,19 +37,42 @@ public class SpellNode
         return this.levelCost;
     }
     
-    public int getRequiredBookshelves()
-    {
-        return this.requiredBookshelves;
-    }
-    
     public void setLevelCost(int levelCost)
     {
         this.levelCost = levelCost;
     }
     
-    public void setRequiredBookshelves(int requiredBookshelves)
+    public List<Requirement> getRequirements()
     {
-        this.requiredBookshelves = requiredBookshelves;
+        return requirements;
+    }
+    
+    public void addRequirement(Requirement requirement)
+    {
+        this.requirements.add(requirement);
+    }
+    
+    public void setRequirements(List<Requirement> requirements)
+    {
+        this.requirements = requirements;
+    }
+    
+    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return requirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
+    }
+    
+    public boolean canLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return spellProgressionHolder.getPlayer().isCreative() || (spellProgressionHolder.getPlayer().experienceLevel >= this.levelCost && passes(spellProgressionHolder, access));
+    }
+    
+    public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        List<Component> tooltips = new LinkedList<>();
+        tooltips.add(spell.getSpellName());
+        requirements.forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access)));
+        return tooltips;
     }
     
     public void setParent(@Nullable SpellNode parent)
@@ -59,7 +87,7 @@ public class SpellNode
     
     public SpellNode copy()
     {
-        return new SpellNode(spell, levelCost, requiredBookshelves);
+        return new SpellNode(spell, levelCost, requirements);
     }
     
     @Nullable

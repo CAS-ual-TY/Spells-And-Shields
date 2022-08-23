@@ -8,6 +8,8 @@ import de.cas_ual_ty.spells.client.SpellKeyBindings;
 import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
+import de.cas_ual_ty.spells.requirement.IRequirementType;
+import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
 import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
@@ -96,6 +98,10 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.FIRE_RESISTANCE, "Fire Resistance", PASSIVE_STRING);
         addSpell(Spells.SPIT_METAL, "Spit Metal", "Spit a nugget that deals damage (from your hand).");
         
+        addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
+        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s (%s)");
+        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, ".error", "Unknown Advancement (config error): %s");
+        
         add(SpellTrees.KEY_NETHER, "Nether");
         add(SpellTrees.KEY_OCEAN, "Ocean");
         add(SpellTrees.KEY_MINING, "Mining");
@@ -148,5 +154,17 @@ public class LangGen extends LanguageProvider
     {
         add(key.get().getNameKey(), name);
         add(key.get().getDescKey(), desc);
+    }
+    
+    public void addRequirement(Supplier<? extends IRequirementType> requirement, String desc)
+    {
+        addRequirement(requirement, "", desc);
+    }
+    
+    public void addRequirement(Supplier<? extends IRequirementType> requirement, String suffix, String desc)
+    {
+        Requirement inst = requirement.get().makeInstance();
+        String descriptionId = inst.getDescriptionId();
+        add(descriptionId + suffix, desc);
     }
 }
