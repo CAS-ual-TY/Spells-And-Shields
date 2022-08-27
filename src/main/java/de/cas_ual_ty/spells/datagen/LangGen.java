@@ -94,7 +94,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.MANA_SOLES, "Mana Soles", "Consumes mana to reduce or cancel fall damage.");
         addSpell(Spells.FIRE_CHARGE, "Fire Charge", "Shoot a fire charge forward, like a Ghast.");
         addSpell(Spells.PRESSURIZE, "Pressurize", "Knock back every entity around you and remove any fluid.");
-        addSpell(Spells.INSTANT_MINE, "Instant Mine", "Breaks the block your are looking at using the tool in your hand.");
+        addSpell(Spells.INSTANT_MINE, "Instant Mine", "Breaks the block you are looking at using the tool in your hand.");
         addSpell(Spells.FIRE_RESISTANCE, "Fire Resistance", PASSIVE_STRING);
         addSpell(Spells.SPIT_METAL, "Spit Metal", "Spit a nugget that deals damage (from your hand).");
         
