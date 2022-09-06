@@ -15,11 +15,13 @@ import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
 import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
 import de.cas_ual_ty.spells.spelltree.SpellTrees;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.data.LanguageProvider;
 
 import java.util.function.Supplier;
@@ -37,18 +39,23 @@ public class LangGen extends LanguageProvider
     protected void addTranslations()
     {
         addAttribute(SpellsRegistries.MAX_MANA_ATTRIBUTE, "Max Mana");
-        addEnchantment(SpellsRegistries.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection");
-        addEnchantment(SpellsRegistries.MANA_BLADE_ENCHANTMENT, "Mana Blade");
-        addEnchantment(SpellsRegistries.MANA_SHIELD_ENCHANTMENT, "Mana Shield");
-        addEnchantment(SpellsRegistries.MANA_REGEN_ENCHANTMENT, "Mana Regeneration");
-        addEnchantment(SpellsRegistries.MAX_MANA_ENCHANTMENT, "Maximum Mana");
+    
+        // support JEI Enchantment Info
+        // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
+        add("enchantment." + SpellsAndShields.MOD_ID + ".type." + SpellsRegistries.SHIELD_ENCHANTMENT_CATEGORY.name().toLowerCase(), "shields");
         
-        addEffect(SpellsRegistries.INSTANT_MANA_EFFECT, "Instant Mana");
-        addEffect(SpellsRegistries.MANA_BOMB_EFFECT, "Mana Bomb");
-        addEffect(SpellsRegistries.REPLENISHMENT_EFFECT, "Replenishment");
-        addEffect(SpellsRegistries.LEAKING_MOB_EFFECT, "Leaking");
-        addEffect(SpellsRegistries.MANA_BOOST_EFFECT, "Mana Boost");
-        addEffect(SpellsRegistries.EXTRA_MANA_EFFECT, "Extra Mana");
+        addEnchantment(SpellsRegistries.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection", "Reduces magic damage.");
+        addEnchantment(SpellsRegistries.MANA_BLADE_ENCHANTMENT, "Mana Blade", "Consumes mana to increase damage.");
+        addEnchantment(SpellsRegistries.MANA_SHIELD_ENCHANTMENT, "Mana Shield", "WIP"); //TODO mana shield ench description
+        addEnchantment(SpellsRegistries.MANA_REGEN_ENCHANTMENT, "Mana Regeneration", "Increases your mana regeneration while worn. More potent on chestplates and leggings than helmets and boots.");
+        addEnchantment(SpellsRegistries.MAX_MANA_ENCHANTMENT, "Maximum Mana", "Increases your maximum mana while worn. More potent on chestplates and leggings than helmets and boots.");
+        
+        addEffect(SpellsRegistries.INSTANT_MANA_EFFECT, "Instant Mana", "Replenishes mana; higher levels increase the effect potency.");
+        addEffect(SpellsRegistries.MANA_BOMB_EFFECT, "Mana Bomb", "Burns mana; higher levels increase the effect potency.");
+        addEffect(SpellsRegistries.REPLENISHMENT_EFFECT, "Replenishment", "Replenishes mana over time; higher levels make mana be replenished quicker.");
+        addEffect(SpellsRegistries.LEAKING_MOB_EFFECT, "Leaking", "Burns mana over time; higher levels burn more mana.");
+        addEffect(SpellsRegistries.MANA_BOOST_EFFECT, "Mana Boost", "Increases maximum mana; higher levels give more additional mana bottles.");
+        addEffect(SpellsRegistries.EXTRA_MANA_EFFECT, "Extra Mana", "Adds burnable mana bottles (which can't be replenished); higher levels give more extra mana.");
         
         addPotion(SpellsRegistries.INSTANT_MANA, "Instant Mana");
         addPotion(SpellsRegistries.STRONG_INSTANT_MANA, "Instant Mana");
@@ -147,6 +154,22 @@ public class LangGen extends LanguageProvider
     public void addAttribute(Supplier<? extends Attribute> key, String name)
     {
         add(key.get().getDescriptionId(), name);
+    }
+    
+    public void addEnchantment(Supplier<? extends Enchantment> key, String name, String desc)
+    {
+        // support JEI Enchantment Info
+        // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
+        super.addEnchantment(key, name);
+        add(key.get().getDescriptionId() + ".desc", desc);
+    }
+    
+    public void addEffect(Supplier<? extends MobEffect> key, String name, String desc)
+    {
+        // support Just Enough Effect Descriptions
+        // https://www.curseforge.com/minecraft/mc-mods/just-enough-effect-descriptions-jeed
+        super.addEffect(key, name);
+        add(key.get().getDescriptionId() + ".description", desc);
     }
     
     public void addPotion(Supplier<? extends Potion> key, String name)
