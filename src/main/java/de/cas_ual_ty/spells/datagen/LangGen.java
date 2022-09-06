@@ -97,6 +97,13 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.INSTANT_MINE, "Instant Mine", "Breaks the block you are looking at using the tool in your hand.");
         addSpell(Spells.FIRE_RESISTANCE, "Fire Resistance", PASSIVE_STRING);
         addSpell(Spells.SPIT_METAL, "Spit Metal", "Spit a nugget that deals damage (from your hand).");
+        addSpell(Spells.NIGHT_VISION, "Night Vision", PASSIVE_STRING);
+        addSpell(Spells.STRENGTH, "Strength", PASSIVE_STRING);
+        addSpell(Spells.RESISTANCE, "Resistance", PASSIVE_STRING);
+        addSpell(Spells.INVISIBILITY, "Invisibility", PASSIVE_STRING);
+        addSpell(Spells.GLOWING, "Glowing", PASSIVE_STRING);
+        addSpell(Spells.LUCK, "Luck", PASSIVE_STRING);
+        addSpell(Spells.CONDUIT_POWER, "Conduit Power", PASSIVE_STRING);
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s (%s)");

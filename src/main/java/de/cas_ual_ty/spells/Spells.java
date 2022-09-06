@@ -30,6 +30,13 @@ public class Spells
     public static Supplier<IForgeRegistry<ISpell>> SPELLS_REGISTRY;
     private static final DeferredRegister<ISpell> SPELLS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spells"), MOD_ID);
     
+    public static final RegistryObject<ISpell> CONDUIT_POWER = SPELLS.register("conduit_power", () -> new MobEffectSpell(MobEffects.CONDUIT_POWER));
+    public static final RegistryObject<ISpell> LUCK = SPELLS.register("luck", () -> new MobEffectSpell(MobEffects.LUCK));
+    public static final RegistryObject<ISpell> GLOWING = SPELLS.register("glowing", () -> new MobEffectSpell(MobEffects.GLOWING));
+    public static final RegistryObject<ISpell> INVISIBILITY = SPELLS.register("invisibility", () -> new MobEffectSpell(MobEffects.INVISIBILITY));
+    public static final RegistryObject<ISpell> RESISTANCE = SPELLS.register("resistance", () -> new MobEffectSpell(MobEffects.DAMAGE_RESISTANCE));
+    public static final RegistryObject<ISpell> STRENGTH = SPELLS.register("strength", () -> new MobEffectSpell(MobEffects.DAMAGE_BOOST));
+    public static final RegistryObject<ISpell> NIGHT_VISION = SPELLS.register("night_vision", () -> new MobEffectSpell(MobEffects.NIGHT_VISION));
     public static final RegistryObject<ISpell> SPIT_METAL = SPELLS.register("spit_metal", () -> new SpitMetalSpell(4F));
     public static final RegistryObject<ISpell> FIRE_RESISTANCE = SPELLS.register("fire_resistance", () -> new MobEffectSpell(MobEffects.FIRE_RESISTANCE));
     public static final RegistryObject<ISpell> INSTANT_MINE = SPELLS.register("instant_mine", () -> new InstantMineSpell(4F));
