@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spelltree;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
@@ -15,6 +16,7 @@ import java.util.function.Supplier;
 public class SpellTree
 {
     public UUID id;
+    public String filename;
     
     public SpellNode root;
     public Component title;
@@ -35,6 +37,12 @@ public class SpellTree
     public SpellTree(UUID id, SpellNode root, Component title)
     {
         this(id, root, title, root.getSpell());
+    }
+    
+    public SpellTree setFilename(String filename)
+    {
+        this.filename = filename;
+        return this;
     }
     
     public UUID getId()
@@ -154,6 +162,11 @@ public class SpellTree
         return new Builder(id, treeTitle, root, levelCost, requirements);
     }
     
+    public static Builder builder(String filename, Component treeTitle, Supplier<ISpell> root, int levelCost, Requirement... requirements)
+    {
+        return new Builder(filename, treeTitle, root, levelCost, requirements);
+    }
+    
     public static Builder builder(UUID id, Component treeTitle, ISpell root, int levelCost, Requirement... requirements)
     {
         return new Builder(id, treeTitle, root, levelCost, requirements);
@@ -171,6 +184,7 @@ public class SpellTree
         private Stack<SpellNode> stack;
         private SpellNode root;
         private ISpell icon;
+        private String filename;
         
         private Builder(UUID id, Component title, SpellNode root)
         {
@@ -180,6 +194,13 @@ public class SpellTree
             this.root = root;
             icon = null;
             this.stack.push(this.root);
+            filename = null;
+        }
+        
+        private Builder(String filename, Component title, SpellNode root)
+        {
+            this(SpellsUtil.generateUUIDForTree(filename), title, root);
+            this.filename = filename;
         }
         
         private Builder(UUID id, Component title, ISpell root, int levelCost, Requirement... requirements)
@@ -187,9 +208,19 @@ public class SpellTree
             this(id, title, new SpellNode(root, levelCost, List.of(requirements)));
         }
         
+        private Builder(String filename, Component title, ISpell root, int levelCost, Requirement... requirements)
+        {
+            this(filename, title, new SpellNode(root, levelCost, List.of(requirements)));
+        }
+        
         public Builder(UUID id, Component title, Supplier<ISpell> root, int levelCost, Requirement... requirements)
         {
             this(id, title, root.get(), levelCost, requirements);
+        }
+        
+        public Builder(String filename, Component title, Supplier<ISpell> root, int levelCost, Requirement... requirements)
+        {
+            this(filename, title, root.get(), levelCost, requirements);
         }
         
         public Builder add(Supplier<ISpell> spell, int levelCost, Requirement... requirements)
@@ -223,7 +254,7 @@ public class SpellTree
         
         public SpellTree finish()
         {
-            return new SpellTree(id, root, title, icon != null ? icon : root.getSpell());
+            return new SpellTree(id, root, title, icon != null ? icon : root.getSpell()).setFilename(filename);
         }
     }
 }

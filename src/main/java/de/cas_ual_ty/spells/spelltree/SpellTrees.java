@@ -9,7 +9,6 @@ import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
 import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
 import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
-import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -39,7 +38,7 @@ public class SpellTrees
     
     public static SpellTree fireTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), Component.translatable(KEY_NETHER), Spells.FIRE_BALL, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 28))
+        return SpellTree.builder("nether", Component.translatable(KEY_NETHER), Spells.FIRE_BALL, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 28))
                 .icon(Spells.FIRE_RESISTANCE.get())
                 .add(Spells.LAVA_WALKER, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 19))
                 .add(Spells.FIRE_RESISTANCE, 30, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 30))
@@ -52,7 +51,7 @@ public class SpellTrees
     
     public static SpellTree waterTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("ocean"), Component.translatable(KEY_OCEAN), Spells.WATER_BREATHING, 10)
+        return SpellTree.builder("ocean", Component.translatable(KEY_OCEAN), Spells.WATER_BREATHING, 10)
                 .icon(Spells.DOLPHINS_GRACE.get())
                 .add(Spells.REGENERATION, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 20))
                 .add(Spells.AQUA_AFFINITY, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 20))
@@ -71,7 +70,7 @@ public class SpellTrees
     
     public static SpellTree earthTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("mining"), Component.translatable(KEY_MINING), Spells.BLAST_SMELT, 5, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 8))
+        return SpellTree.builder("mining", Component.translatable(KEY_MINING), Spells.BLAST_SMELT, 5, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 8))
                 .icon(Spells.HASTE.get())
                 .add(Spells.INSTANT_MINE, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 18))
                 .add(Spells.HASTE, 25, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 24))
@@ -83,7 +82,7 @@ public class SpellTrees
     
     public static SpellTree airTree()
     {
-        return SpellTree.builder(SpellsUtil.generateUUIDForTree("movement"), Component.translatable(KEY_MOVEMENT), Spells.JUMP_BOOST, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 12))
+        return SpellTree.builder("movement", Component.translatable(KEY_MOVEMENT), Spells.JUMP_BOOST, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 12))
                 .icon(Spells.JUMP_BOOST.get())
                 .add(Spells.LEAP, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 14))
                 .add(Spells.SPEED, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 20))
@@ -131,7 +130,9 @@ public class SpellTrees
             int i = 0;
             for(SpellTree t : baseTrees)
             {
-                File f = p.resolve("tree_" + i++ + ".json").toFile();
+                String filename = t.filename != null ? t.filename : ("tree_" + i);
+                File f = p.resolve(filename + ".json").toFile();
+                i++;
                 
                 try
                 {
