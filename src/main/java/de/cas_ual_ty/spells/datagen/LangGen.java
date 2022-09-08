@@ -56,7 +56,7 @@ public class LangGen extends LanguageProvider
         addEffect(SpellsRegistries.LEAKING_MOB_EFFECT, "Leaking", "Burns mana over time; higher levels burn more mana.");
         addEffect(SpellsRegistries.MANA_BOOST_EFFECT, "Mana Boost", "Increases maximum mana; higher levels give more additional mana bottles.");
         addEffect(SpellsRegistries.EXTRA_MANA_EFFECT, "Extra Mana", "Adds burnable mana bottles (which can't be replenished); higher levels give more extra mana.");
-        addEffect(SpellsRegistries.SILENCED_EFFECT, "Silenced", "No spells can be used while this effect is active.");
+        addEffect(SpellsRegistries.SILENCE_EFFECT, "Silenced", "No spells can be used while this effect is active.");
         
         addPotion(SpellsRegistries.INSTANT_MANA, "Instant Mana");
         addPotion(SpellsRegistries.STRONG_INSTANT_MANA, "Instant Mana");
@@ -72,8 +72,8 @@ public class LangGen extends LanguageProvider
         addPotion(SpellsRegistries.LONG_LEAKING, "Leaking");
         addPotion(SpellsRegistries.STRONG_LEAKING, "Leaking");
         
-        addPotion(SpellsRegistries.SILENCED, "Silenced");
-        addPotion(SpellsRegistries.LONG_SILENCED, "Silenced");
+        addPotion(SpellsRegistries.SILENCE, "Silenced");
+        addPotion(SpellsRegistries.LONG_SILENCE, "Silenced");
         
         add(SpellKeyBindings.CATEGORY, "Spells & Shields");
         for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)

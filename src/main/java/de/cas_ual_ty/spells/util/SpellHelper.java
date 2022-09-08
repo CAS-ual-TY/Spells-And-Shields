@@ -41,6 +41,6 @@ public class SpellHelper
     
     public static boolean isSilenced(Player player)
     {
-        return player.hasEffect(SpellsRegistries.SILENCED_EFFECT.get());
+        return player.hasEffect(SpellsRegistries.SILENCE_EFFECT.get());
     }
 }
