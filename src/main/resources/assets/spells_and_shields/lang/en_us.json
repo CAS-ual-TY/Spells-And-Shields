@@ -131,6 +131,8 @@
   "spell.spells_and_shields.replenishment.desc": "A passive effect.",
   "spell.spells_and_shields.resistance": "Resistance",
   "spell.spells_and_shields.resistance.desc": "A passive effect.",
+  "spell.spells_and_shields.silence": "Silence",
+  "spell.spells_and_shields.silence.desc": "Silence the target you are looking at within a certain range.",
   "spell.spells_and_shields.slow_falling": "Slow Falling",
   "spell.spells_and_shields.slow_falling.desc": "A passive effect.",
   "spell.spells_and_shields.speed": "Speed",

@@ -31,17 +31,12 @@ public class SpellsUtil
     public static final Optional<ItemStack> EMPTY_ITEMSTACK_OPTIONAL = Optional.of(ItemStack.EMPTY);
     public static final Optional<List<ItemStack>> EMPTY_ITEMSTACK_LIST_OPTIONAL = Optional.of(ImmutableList.of(ItemStack.EMPTY));
     
-    @Nullable
     public static HitResult rayTrace(Level level, Entity source, double maxDist, Predicate<Entity> filter, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid)
     {
         BlockHitResult blockHitResult = rayTraceBlock(level, source, maxDist, block, fluid);
         EntityHitResult entityHitResult = rayTraceEntity(level, source, maxDist, filter, bbInflation);
         
-        if(entityHitResult == null && blockHitResult.getType() == HitResult.Type.MISS)
-        {
-            return null;
-        }
-        else if(entityHitResult == null)
+        if(entityHitResult == null)
         {
             return blockHitResult;
         }

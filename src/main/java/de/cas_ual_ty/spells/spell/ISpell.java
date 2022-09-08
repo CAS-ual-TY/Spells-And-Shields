@@ -37,9 +37,14 @@ public interface ISpell
         return Component.translatable(getNameKey());
     }
     
+    default MutableComponent getSpellDesc()
+    {
+        return Component.translatable(getDescKey());
+    }
+    
     default void addSpellDesc(List<Component> tooltip)
     {
-        tooltip.add(Component.translatable(getDescKey()));
+        tooltip.add(getSpellDesc());
     }
     
     default List<Component> getTooltip(@Nullable Component keyBindTooltip)
