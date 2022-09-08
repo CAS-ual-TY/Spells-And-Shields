@@ -21,7 +21,7 @@ public abstract class MultiIngredientSpell extends Spell
         super(manaCost);
     }
     
-    public void perform(ManaHolder manaHolder, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients)
+    public void perform(ManaHolder manaHolder, Optional<List<ItemStack>> handIngredients, Optional<List<ItemStack>> inventoryIngredients)
     {
         perform(manaHolder);
     }
@@ -39,16 +39,31 @@ public abstract class MultiIngredientSpell extends Spell
             Optional<List<ItemStack>> handIngredients = this.hasHandIngredients(manaHolder);
             Optional<List<ItemStack>> inventoryIngredients = this.hasInventoryIngredients(manaHolder);
             
-            if(handIngredients.isPresent() && inventoryIngredients.isPresent())
+            if(manaHolder.getPlayer() instanceof Player player)
             {
-                this.perform(manaHolder, handIngredients.get(), inventoryIngredients.get());
-                
-                if(!manaHolder.getPlayer().level.isClientSide && (!(manaHolder.getPlayer() instanceof Player player) || !player.isCreative()))
+                if((handIngredients.isPresent() && inventoryIngredients.isPresent()) || player.isCreative())
                 {
-                    this.burnMana(manaHolder);
-                    this.consumeItemStacks(manaHolder, handIngredients.get(), inventoryIngredients.get());
+                    this.perform(manaHolder, handIngredients, inventoryIngredients);
+                    
+                    if(!player.level.isClientSide && !player.isCreative())
+                    {
+                        this.burnMana(manaHolder);
+                        this.consumeItemStacks(manaHolder, handIngredients.get(), inventoryIngredients.get());
+                    }
+                    
                     return true;
                 }
+            }
+            else
+            {
+                this.perform(manaHolder, handIngredients, inventoryIngredients);
+                
+                if(!manaHolder.getPlayer().level.isClientSide)
+                {
+                    this.consumeItemStacks(manaHolder, List.of(), List.of());
+                }
+                
+                return true;
             }
         }
         
