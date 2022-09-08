@@ -5,6 +5,7 @@ import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.effect.ExtraManaMobEffect;
 import de.cas_ual_ty.spells.effect.InstantManaMobEffect;
 import de.cas_ual_ty.spells.effect.ManaMobEffect;
+import de.cas_ual_ty.spells.effect.SimpleEffect;
 import de.cas_ual_ty.spells.enchantment.*;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.recipe.TippedSpearRecipe;
@@ -94,12 +95,13 @@ public class SpellsRegistries
     public static final RegistryObject<ManaRegenEnchantment> MANA_REGEN_ENCHANTMENT = ENCHANTMENTS.register("mana_regen", () -> new ManaRegenEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
     public static final RegistryObject<MaxManaEnchantment> MAX_MANA_ENCHANTMENT = ENCHANTMENTS.register("max_mana", () -> new MaxManaEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
     
-    public static final RegistryObject<InstantManaMobEffect> INSTANT_MANA_EFFECT = MOB_EFFECTS.register("instant_mana", () -> new InstantManaMobEffect(MobEffectCategory.BENEFICIAL, 0x06B7BD));
-    public static final RegistryObject<InstantManaMobEffect> MANA_BOMB_EFFECT = MOB_EFFECTS.register("mana_bomb", () -> new InstantManaMobEffect(MobEffectCategory.HARMFUL, 0x820A60));
-    public static final RegistryObject<ManaMobEffect> REPLENISHMENT_EFFECT = MOB_EFFECTS.register("replenishment", () -> new ManaMobEffect(MobEffectCategory.BENEFICIAL, 0x9E17BD));
-    public static final RegistryObject<ManaMobEffect> LEAKING_MOB_EFFECT = MOB_EFFECTS.register("leaking", () -> new ManaMobEffect(MobEffectCategory.HARMFUL, 0x3EDE63));
-    public static final RegistryObject<MobEffect> MANA_BOOST_EFFECT = MOB_EFFECTS.register("mana_boost", () -> new ManaMobEffect(MobEffectCategory.BENEFICIAL, 0x4E20B3).addAttributeModifier(MAX_MANA_ATTRIBUTE.get(), "65CAA54F-F98E-4AA0-99F1-B4AC438C6DB8", 0.5F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<MobEffect> INSTANT_MANA_EFFECT = MOB_EFFECTS.register("instant_mana", () -> new InstantManaMobEffect(MobEffectCategory.BENEFICIAL, 0x06B7BD));
+    public static final RegistryObject<MobEffect> MANA_BOMB_EFFECT = MOB_EFFECTS.register("mana_bomb", () -> new InstantManaMobEffect(MobEffectCategory.HARMFUL, 0x820A60));
+    public static final RegistryObject<MobEffect> REPLENISHMENT_EFFECT = MOB_EFFECTS.register("replenishment", () -> new ManaMobEffect(MobEffectCategory.BENEFICIAL, 0x9E17BD));
+    public static final RegistryObject<MobEffect> LEAKING_MOB_EFFECT = MOB_EFFECTS.register("leaking", () -> new ManaMobEffect(MobEffectCategory.HARMFUL, 0x3EDE63));
+    public static final RegistryObject<MobEffect> MANA_BOOST_EFFECT = MOB_EFFECTS.register("mana_boost", () -> new SimpleEffect(MobEffectCategory.BENEFICIAL, 0x4E20B3).addAttributeModifier(MAX_MANA_ATTRIBUTE.get(), "65CAA54F-F98E-4AA0-99F1-B4AC438C6DB8", 0.5F, AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final RegistryObject<MobEffect> EXTRA_MANA_EFFECT = MOB_EFFECTS.register("extra_mana", () -> new ExtraManaMobEffect(MobEffectCategory.BENEFICIAL, 0x3E55E6));
+    public static final RegistryObject<MobEffect> SILENCED_EFFECT = MOB_EFFECTS.register("silenced", () -> new SimpleEffect(MobEffectCategory.HARMFUL, 0x786634));
     
     public static final RegistryObject<Potion> INSTANT_MANA = POTIONS.register("instant_mana", () -> new Potion(new MobEffectInstance(INSTANT_MANA_EFFECT.get(), 1)));
     public static final RegistryObject<Potion> STRONG_INSTANT_MANA = POTIONS.register("strong_instant_mana", () -> new Potion(new MobEffectInstance(INSTANT_MANA_EFFECT.get(), 1, 1)));
@@ -114,6 +116,9 @@ public class SpellsRegistries
     public static final RegistryObject<Potion> LEAKING = POTIONS.register("leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT.get(), 900)));
     public static final RegistryObject<Potion> LONG_LEAKING = POTIONS.register("long_leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT.get(), 1800)));
     public static final RegistryObject<Potion> STRONG_LEAKING = POTIONS.register("strong_leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT.get(), 432, 1)));
+    
+    public static final RegistryObject<Potion> SILENCED = POTIONS.register("silenced", () -> new Potion(new MobEffectInstance(SILENCED_EFFECT.get(), 900)));
+    public static final RegistryObject<Potion> LONG_SILENCED = POTIONS.register("long_silenced", () -> new Potion(new MobEffectInstance(SILENCED_EFFECT.get(), 1800)));
     
     public static final RegistryObject<MenuType<SpellProgressionMenu>> SPELL_PROGRESSION_MENU = CONTAINERS.register("spell_progression", () -> new MenuType<>((IContainerFactory<SpellProgressionMenu>) SpellProgressionMenu::construct));
     public static final RegistryObject<SimpleRecipeSerializer<?>> TIPPED_SPEAR = RECIPE_SERIALIZERS.register("tipped_spear", () -> new SimpleRecipeSerializer<>(TippedSpearRecipe::new));
