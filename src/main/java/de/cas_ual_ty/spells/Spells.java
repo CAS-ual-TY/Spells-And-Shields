@@ -30,6 +30,7 @@ public class Spells
     public static Supplier<IForgeRegistry<ISpell>> SPELLS_REGISTRY;
     private static final DeferredRegister<ISpell> SPELLS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spells"), MOD_ID);
     
+    public static final RegistryObject<ISpell> FLAMETHROWER = SPELLS.register("flamethrower", () -> new FlamethrowerSpell(7.0F));
     public static final RegistryObject<ISpell> CONDUIT_POWER = SPELLS.register("conduit_power", () -> new MobEffectSpell(MobEffects.CONDUIT_POWER));
     public static final RegistryObject<ISpell> LUCK = SPELLS.register("luck", () -> new MobEffectSpell(MobEffects.LUCK));
     public static final RegistryObject<ISpell> GLOWING = SPELLS.register("glowing", () -> new MobEffectSpell(MobEffects.GLOWING));

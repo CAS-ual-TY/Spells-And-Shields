@@ -12,8 +12,11 @@ import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
 import de.cas_ual_ty.spells.requirement.IRequirementType;
 import de.cas_ual_ty.spells.requirement.WrappedRequirement;
+import de.cas_ual_ty.spells.spell.ITickedDataSpell;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
+import de.cas_ual_ty.spells.spelldata.ISpellDataType;
+import de.cas_ual_ty.spells.spelldata.SimpleTickedSpellData;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
@@ -53,6 +56,9 @@ public class SpellsRegistries
     public static Supplier<IForgeRegistry<IRequirementType<?>>> REQUIREMENTS_REGISTRY;
     private static final DeferredRegister<IRequirementType<?>> REQUIREMENTS = DeferredRegister.create(new ResourceLocation(MOD_ID, "requirements"), MOD_ID);
     
+    public static Supplier<IForgeRegistry<ISpellDataType<?>>> SPELL_DATA_REGISTRY;
+    private static final DeferredRegister<ISpellDataType<?>> SPELL_DATA = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_data"), MOD_ID);
+    
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
     
@@ -76,6 +82,8 @@ public class SpellsRegistries
     public static final RegistryObject<IRequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("client_wrap", () -> WrappedRequirement::new);
     public static final RegistryObject<IRequirementType<BookshelvesRequirement>> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> BookshelvesRequirement::new);
     public static final RegistryObject<IRequirementType<AdvancementRequirement>> ADVANCEMENT_REQUIREMENT = REQUIREMENTS.register("advancement", () -> AdvancementRequirement::new);
+    
+    public static final RegistryObject<ISpellDataType<SimpleTickedSpellData>> FLAMETHROWER_DATA = SPELL_DATA.register("flamethrower", () -> ITickedDataSpell.makeDataType(Spells.FLAMETHROWER));
     
     public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20.0D, 1.0D, 1024.0D).setSyncable(true));
     public static final RegistryObject<RangedAttribute> MANA_REGEN_ATTRIBUTE = ATTRIBUTES.register("generic.mana_regen", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.mana_regen", 1D, 0D, 50D).setSyncable(true));
@@ -117,6 +125,7 @@ public class SpellsRegistries
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsRegistries::newRegistry);
         REQUIREMENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        SPELL_DATA.register(FMLJavaModLoadingContext.get().getModEventBus());
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         MOB_EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -132,6 +141,7 @@ public class SpellsRegistries
     private static void newRegistry(NewRegistryEvent event)
     {
         REQUIREMENTS_REGISTRY = event.create(new RegistryBuilder<IRequirementType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
+        SPELL_DATA_REGISTRY = event.create(new RegistryBuilder<ISpellDataType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "spell_data")));
     }
     
     private static void registerCommands(RegisterCommandsEvent event)

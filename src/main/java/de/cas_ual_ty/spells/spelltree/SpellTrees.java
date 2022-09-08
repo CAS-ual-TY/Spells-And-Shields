@@ -43,7 +43,8 @@ public class SpellTrees
                 .icon(Spells.FIRE_RESISTANCE.get())
                 .add(Spells.FIRE_RESISTANCE, 30, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 30))
                 .leaf()
-                .add(Spells.FIRE_CHARGE, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 28))
+                .add(Spells.FIRE_CHARGE, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 20))
+                .add(Spells.FLAMETHROWER, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 24))
                 .finish();
     }
     

@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.PacketDistributor;
@@ -26,12 +27,14 @@ public class SpellsCapabilities
     public static Capability<IManaHolder> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static Capability<ISpellHolder> SPELLS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static Capability<ISpellProgressionHolder> SPELL_PROGRESSION_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<ISpellDataHolder> SPELL_DATA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     
     private static void registerCapabilities(RegisterCapabilitiesEvent event)
     {
         event.register(IManaHolder.class);
         event.register(ISpellHolder.class);
         event.register(ISpellProgressionHolder.class);
+        event.register(ISpellDataHolder.class);
     }
     
     private static void attachCapabilities(AttachCapabilitiesEvent<Entity> event)
@@ -46,6 +49,12 @@ public class SpellsCapabilities
             
             SpellProgressionHolder spellProgressionHolder = new SpellProgressionHolder(player);
             attachCapability(event, spellProgressionHolder, SPELL_PROGRESSION_CAPABILITY, "spell_progression_holder");
+        }
+        
+        if(event.getObject() instanceof LivingEntity entity)
+        {
+            SpellDataHolder spellDataHolder = new SpellDataHolder(entity);
+            attachCapability(event, spellDataHolder, SPELL_DATA_CAPABILITY, "spell_data_holder");
         }
     }
     
@@ -113,6 +122,16 @@ public class SpellsCapabilities
                 });
                 
                 current.sendSync();
+            });
+            
+            SpellDataHolder.getSpellDataHolder(event.getEntity()).ifPresent(current ->
+            {
+                SpellDataHolder.getSpellDataHolder(event.getOriginal()).ifPresent(original ->
+                {
+                    current.deserializeNBT(original.serializeNBT());
+                });
+                
+                // TODO sync
             });
         }
         else
@@ -211,6 +230,11 @@ public class SpellsCapabilities
         }
     }
     
+    private static void livingTick(LivingEvent.LivingTickEvent event)
+    {
+        SpellDataHolder.getSpellDataHolder(event.getEntity()).ifPresent(SpellDataHolder::tick);
+    }
+    
     public static void registerEvents()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsCapabilities::registerCapabilities);
@@ -221,5 +245,6 @@ public class SpellsCapabilities
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerChangedDimensions);
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::startTracking);
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerTick);
+        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::livingTick);
     }
 }

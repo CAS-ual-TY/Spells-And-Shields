@@ -39,7 +39,7 @@ public class LangGen extends LanguageProvider
     protected void addTranslations()
     {
         addAttribute(SpellsRegistries.MAX_MANA_ATTRIBUTE, "Max Mana");
-    
+        
         // support JEI Enchantment Info
         // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
         add("enchantment." + SpellsAndShields.MOD_ID + ".type." + SpellsRegistries.SHIELD_ENCHANTMENT_CATEGORY.name().toLowerCase(), "shields");
@@ -111,6 +111,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.GLOWING, "Glowing", PASSIVE_STRING);
         addSpell(Spells.LUCK, "Luck", PASSIVE_STRING);
         addSpell(Spells.CONDUIT_POWER, "Conduit Power", PASSIVE_STRING);
+        addSpell(Spells.FLAMETHROWER, "Flamethrower", "Breath flames from your mouth setting everything on fire.");
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s (%s)");

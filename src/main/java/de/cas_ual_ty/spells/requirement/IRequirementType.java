@@ -20,8 +20,10 @@ public interface IRequirementType<R extends Requirement>
     static JsonObject writeToJson(Requirement requirement)
     {
         JsonObject json = new JsonObject();
+        
         json.addProperty("type", SpellsRegistries.REQUIREMENTS_REGISTRY.get().getKey(requirement.getType()).toString());
         requirement.writeToJson(json);
+        
         return json;
     }
     
