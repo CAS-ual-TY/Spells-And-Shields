@@ -11,8 +11,5 @@ public class DataGen
     public static void gatherData(GatherDataEvent event)
     {
         event.getGenerator().addProvider(true, new LangGen(event.getGenerator(), "en_us"));
-        //event.getGenerator().addProvider(new RecipesGen(event.getGenerator()));
-        
-        event.getGenerator().addProvider(true, new BlockStatesGen(event.getGenerator(), event.getExistingFileHelper()));
     }
 }
