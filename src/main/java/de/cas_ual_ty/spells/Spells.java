@@ -13,6 +13,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -30,6 +32,7 @@ public class Spells
     public static Supplier<IForgeRegistry<ISpell>> SPELLS_REGISTRY;
     private static final DeferredRegister<ISpell> SPELLS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spells"), MOD_ID);
     
+    public static final RegistryObject<ISpell> LAVA_WALKER = SPELLS.register("lava_walker", () -> new WalkerSpell(() -> Blocks.LAVA, () -> Material.LAVA, Blocks.OBSIDIAN::defaultBlockState));
     public static final RegistryObject<ISpell> FLAMETHROWER = SPELLS.register("flamethrower", () -> new FlamethrowerSpell(7.0F));
     public static final RegistryObject<ISpell> CONDUIT_POWER = SPELLS.register("conduit_power", () -> new MobEffectSpell(MobEffects.CONDUIT_POWER));
     public static final RegistryObject<ISpell> LUCK = SPELLS.register("luck", () -> new MobEffectSpell(MobEffects.LUCK));
@@ -45,7 +48,7 @@ public class Spells
     public static final RegistryObject<ISpell> FIRE_CHARGE = SPELLS.register("fire_charge", () -> new FireChargeSpell(4F, new ItemStack(Items.FIRE_CHARGE)).setSmallIcon(new ResourceLocation("textures/item/fire_charge.png")));
     public static final RegistryObject<ISpell> MANA_SOLES = SPELLS.register("mana_soles", () -> new ManaSolesSpell());
     public static final RegistryObject<ISpell> JUMP = SPELLS.register("jump", () -> new JumpSpell(5F));
-    public static final RegistryObject<ISpell> FROST_WALKER = SPELLS.register("frost_walker", () -> new WalkerSpell());
+    public static final RegistryObject<ISpell> FROST_WALKER = SPELLS.register("frost_walker", () -> new WalkerSpell(() -> Blocks.WATER, () -> Material.WATER, Blocks.FROSTED_ICE::defaultBlockState));
     public static final RegistryObject<ISpell> POTION_SHOT = SPELLS.register("potion_shot", () -> new PotionShotSpell(2F).setSmallIcon(new ResourceLocation("textures/item/potion.png")));
     public static final RegistryObject<ISpell> WATER_WHIP = SPELLS.register("water_whip", () -> new WaterWhipSpell(5F));
     public static final RegistryObject<ISpell> REPLENISHMENT = SPELLS.register("replenishment", () -> new MobEffectSpell(SpellsRegistries.REPLENISHMENT_EFFECT.get(), 50));

@@ -107,6 +107,8 @@
   "spell.spells_and_shields.jump.desc": "High jump. Be aware of fall damage.",
   "spell.spells_and_shields.jump_boost": "Jump Boost",
   "spell.spells_and_shields.jump_boost.desc": "A passive effect.",
+  "spell.spells_and_shields.lava_walker": "Lava Walker",
+  "spell.spells_and_shields.lava_walker.desc": "Walk on lava by turning the blocks you walk on into obsidian.",
   "spell.spells_and_shields.leap": "Leap",
   "spell.spells_and_shields.leap.desc": "Leap forward.",
   "spell.spells_and_shields.luck": "Luck",

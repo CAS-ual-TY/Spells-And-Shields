@@ -112,6 +112,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.LUCK, "Luck", PASSIVE_STRING);
         addSpell(Spells.CONDUIT_POWER, "Conduit Power", PASSIVE_STRING);
         addSpell(Spells.FLAMETHROWER, "Flamethrower", "Breath flames from your mouth setting everything on fire.");
+        addSpell(Spells.LAVA_WALKER, "Lava Walker", "Walk on lava by turning the blocks you walk on into obsidian.");
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s (%s)");

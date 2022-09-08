@@ -8,7 +8,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -16,8 +15,22 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 
+import java.util.function.Supplier;
+
 public class WalkerSpell extends PassiveSpell implements IEventSpell
 {
+    protected Supplier<Block> oldBlock;
+    protected Supplier<Material> oldMaterial;
+    protected Supplier<BlockState> newBlock;
+    
+    public WalkerSpell(Supplier<Block> oldBlock, Supplier<Material> oldMaterial, Supplier<BlockState> newBlock)
+    {
+        super();
+        this.oldBlock = oldBlock;
+        this.oldMaterial = oldMaterial;
+        this.newBlock = newBlock;
+    }
+    
     private void playerTick(TickEvent.PlayerTickEvent event)
     {
         SpellHolder.getSpellHolder(event.player).ifPresent(spellHolder ->
@@ -26,7 +39,7 @@ public class WalkerSpell extends PassiveSpell implements IEventSpell
             
             if(amount > 0)
             {
-                onEntityMoved(spellHolder.getPlayer(), amount, Blocks.WATER, Material.WATER, Blocks.FROSTED_ICE.defaultBlockState());
+                onEntityMoved(spellHolder.getPlayer(), amount, oldBlock.get(), oldMaterial.get(), newBlock.get());
             }
         });
     }

@@ -41,7 +41,9 @@ public class SpellTrees
     {
         return SpellTree.builder(SpellsUtil.generateUUIDForTree("nether"), Component.translatable(KEY_NETHER), Spells.FIRE_BALL, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 28))
                 .icon(Spells.FIRE_RESISTANCE.get())
+                .add(Spells.LAVA_WALKER, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 19))
                 .add(Spells.FIRE_RESISTANCE, 30, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 30))
+                .leaf()
                 .leaf()
                 .add(Spells.FIRE_CHARGE, 10, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 20))
                 .add(Spells.FLAMETHROWER, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 24))
