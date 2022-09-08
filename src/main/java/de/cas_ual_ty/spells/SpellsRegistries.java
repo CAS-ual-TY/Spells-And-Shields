@@ -8,7 +8,6 @@ import de.cas_ual_ty.spells.effect.ManaMobEffect;
 import de.cas_ual_ty.spells.effect.SimpleEffect;
 import de.cas_ual_ty.spells.enchantment.*;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
-import de.cas_ual_ty.spells.recipe.TippedSpearRecipe;
 import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
 import de.cas_ual_ty.spells.requirement.IRequirementType;
@@ -121,7 +120,6 @@ public class SpellsRegistries
     public static final RegistryObject<Potion> LONG_SILENCE = POTIONS.register("long_silence", () -> new Potion(new MobEffectInstance(SILENCE_EFFECT.get(), 1800)));
     
     public static final RegistryObject<MenuType<SpellProgressionMenu>> SPELL_PROGRESSION_MENU = CONTAINERS.register("spell_progression", () -> new MenuType<>((IContainerFactory<SpellProgressionMenu>) SpellProgressionMenu::construct));
-    public static final RegistryObject<SimpleRecipeSerializer<?>> TIPPED_SPEAR = RECIPE_SERIALIZERS.register("tipped_spear", () -> new SimpleRecipeSerializer<>(TippedSpearRecipe::new));
     
     public static final RegistryObject<EntityType<SpellProjectile>> SPELL_PROJECTILE = ENTITY_TYPES.register("spell_projectile", () -> EntityType.Builder.<SpellProjectile>of(SpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(10).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("spell_projectile"));
     public static final RegistryObject<EntityType<HomingSpellProjectile>> HOMING_SPELL_PROJECTILE = ENTITY_TYPES.register("homing_spell_projectile", () -> EntityType.Builder.<HomingSpellProjectile>of(HomingSpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(2).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("homing_spell_projectile"));
