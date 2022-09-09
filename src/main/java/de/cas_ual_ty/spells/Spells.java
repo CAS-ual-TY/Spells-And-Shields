@@ -33,6 +33,7 @@ public class Spells
     public static Supplier<IForgeRegistry<ISpell>> SPELLS_REGISTRY;
     private static final DeferredRegister<ISpell> SPELLS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spells"), MOD_ID);
     
+    public static final RegistryObject<ISpell> RANDOM_TELEPORT = SPELLS.register("random_teleport", () -> new RandomTeleportSpell(10.0F));
     public static final RegistryObject<ISpell> SILENCE_TARGET = SPELLS.register("silence", () -> new SilenceTargetSpell(5.0F));
     public static final RegistryObject<ISpell> LAVA_WALKER = SPELLS.register("lava_walker", () -> new WalkerSpell(() -> Blocks.LAVA, () -> Material.LAVA, Blocks.OBSIDIAN::defaultBlockState));
     public static final RegistryObject<ISpell> FLAMETHROWER = SPELLS.register("flamethrower", () -> new FlamethrowerSpell(7.0F));

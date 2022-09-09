@@ -25,14 +25,16 @@ public class SpellTrees
     public static final String KEY_OCEAN = "spell_tree.ocean";
     public static final String KEY_MINING = "spell_tree.mining";
     public static final String KEY_MOVEMENT = "spell_tree.movement";
+    public static final String KEY_END = "spell_tree.end";
     
     public static List<SpellTree> getBaseTrees()
     {
-        List<SpellTree> list = new ArrayList<>(4);
+        List<SpellTree> list = new ArrayList<>(5);
         list.add(fireTree());
         list.add(waterTree());
         list.add(earthTree());
         list.add(airTree());
+        list.add(enderTree());
         return list;
     }
     
@@ -100,6 +102,13 @@ public class SpellTrees
                 .add(Spells.PRESSURIZE, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 18))
                 .leaf()
                 .leaf()
+                .finish();
+    }
+    
+    public static SpellTree enderTree()
+    {
+        return SpellTree.builder("end", Component.translatable(KEY_END), Spells.RANDOM_TELEPORT, 20, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 20))
+                .icon(Spells.RANDOM_TELEPORT.get())
                 .finish();
     }
     

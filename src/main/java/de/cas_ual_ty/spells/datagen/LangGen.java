@@ -115,6 +115,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.FLAMETHROWER, "Flamethrower", "Breath flames from your mouth setting everything on fire.");
         addSpell(Spells.LAVA_WALKER, "Lava Walker", "Walk on lava by turning the blocks you walk on into obsidian.");
         addSpell(Spells.SILENCE_TARGET, "Silence Target", "Silence the target you are looking at within a certain range.");
+        addSpell(Spells.RANDOM_TELEPORT, "Random Teleport", "Randomly teleport away. This spell can fail.");
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s (%s)");
@@ -124,6 +125,7 @@ public class LangGen extends LanguageProvider
         add(SpellTrees.KEY_OCEAN, "Ocean");
         add(SpellTrees.KEY_MINING, "Mining");
         add(SpellTrees.KEY_MOVEMENT, "Movement");
+        add(SpellTrees.KEY_END, "End");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
