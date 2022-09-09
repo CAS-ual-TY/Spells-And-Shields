@@ -20,7 +20,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class SilenceSpell extends BaseIngredientsSpell
+public class SilenceTargetSpell extends BaseIngredientsSpell
 {
     public final double defaultRange;
     public final int defaultSilenceSeconds;
@@ -28,21 +28,21 @@ public class SilenceSpell extends BaseIngredientsSpell
     protected double range;
     protected int silenceSeconds;
     
-    public SilenceSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, double range, int silenceSeconds)
+    public SilenceTargetSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, double range, int silenceSeconds)
     {
         super(manaCost, handIngredients, inventoryIngredients);
         this.defaultRange = range;
         this.defaultSilenceSeconds = silenceSeconds;
     }
     
-    public SilenceSpell(float manaCost, ItemStack handIngredient, double range, int silenceSeconds)
+    public SilenceTargetSpell(float manaCost, ItemStack handIngredient, double range, int silenceSeconds)
     {
         super(manaCost, handIngredient);
         this.defaultRange = range;
         this.defaultSilenceSeconds = silenceSeconds;
     }
     
-    public SilenceSpell(float manaCost)
+    public SilenceTargetSpell(float manaCost)
     {
         this(manaCost, new ItemStack(Items.AMETHYST_SHARD), 20D, 15);
     }

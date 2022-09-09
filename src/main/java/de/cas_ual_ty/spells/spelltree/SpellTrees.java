@@ -72,7 +72,7 @@ public class SpellTrees
     {
         return SpellTree.builder("mining", Component.translatable(KEY_MINING), Spells.BLAST_SMELT, 5, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 8))
                 .icon(Spells.HASTE.get())
-                .add(Spells.SILENCE, 25, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 26))
+                .add(Spells.SILENCE_TARGET, 25, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 26))
                 .leaf()
                 .add(Spells.INSTANT_MINE, 15, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 18))
                 .add(Spells.HASTE, 25, new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), 24))

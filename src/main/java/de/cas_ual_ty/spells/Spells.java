@@ -5,7 +5,7 @@ import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.*;
 import de.cas_ual_ty.spells.spell.base.AttributeSpell;
 import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
-import de.cas_ual_ty.spells.spell.base.SilenceSpell;
+import de.cas_ual_ty.spells.spell.base.SilenceTargetSpell;
 import de.cas_ual_ty.spells.spell.impl.*;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -33,7 +33,7 @@ public class Spells
     public static Supplier<IForgeRegistry<ISpell>> SPELLS_REGISTRY;
     private static final DeferredRegister<ISpell> SPELLS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spells"), MOD_ID);
     
-    public static final RegistryObject<ISpell> SILENCE = SPELLS.register("silence", () -> new SilenceSpell(4.0F));
+    public static final RegistryObject<ISpell> SILENCE_TARGET = SPELLS.register("silence", () -> new SilenceTargetSpell(5.0F));
     public static final RegistryObject<ISpell> LAVA_WALKER = SPELLS.register("lava_walker", () -> new WalkerSpell(() -> Blocks.LAVA, () -> Material.LAVA, Blocks.OBSIDIAN::defaultBlockState));
     public static final RegistryObject<ISpell> FLAMETHROWER = SPELLS.register("flamethrower", () -> new FlamethrowerSpell(7.0F));
     public static final RegistryObject<ISpell> CONDUIT_POWER = SPELLS.register("conduit_power", () -> new MobEffectSpell(MobEffects.CONDUIT_POWER));
