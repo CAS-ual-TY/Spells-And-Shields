@@ -5,7 +5,7 @@ import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.*;
 import de.cas_ual_ty.spells.spell.base.AttributeSpell;
 import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
-import de.cas_ual_ty.spells.spell.base.SilenceTargetSpell;
+import de.cas_ual_ty.spells.spell.impl.SilenceTargetSpell;
 import de.cas_ual_ty.spells.spell.impl.*;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;

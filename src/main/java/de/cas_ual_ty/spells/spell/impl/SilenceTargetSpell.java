@@ -1,8 +1,9 @@
-package de.cas_ual_ty.spells.spell.base;
+package de.cas_ual_ty.spells.spell.impl;
 
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.particles.ParticleTypes;
