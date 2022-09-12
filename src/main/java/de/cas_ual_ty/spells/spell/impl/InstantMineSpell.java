@@ -22,6 +22,11 @@ public class InstantMineSpell extends Spell
         super(manaCost);
     }
     
+    public InstantMineSpell()
+    {
+        this(4F);
+    }
+    
     @Override
     public void perform(ManaHolder manaHolder)
     {

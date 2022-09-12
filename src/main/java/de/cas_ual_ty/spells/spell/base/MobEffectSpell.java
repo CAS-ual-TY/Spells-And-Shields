@@ -32,6 +32,7 @@ public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSp
         this.ambient = ambient;
         this.visible = visible;
         this.showIcon = showIcon;
+        
         ResourceLocation rl = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         this.setIcon(new ResourceLocation(rl.getNamespace(), "textures/mob_effect/" + rl.getPath() + ".png"));
     }
@@ -67,7 +68,7 @@ public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSp
             return;
         }
         
-        if(spellHolder.getPlayer().level.isClientSide)
+        if(spellHolder.getPlayer().level.isClientSide && activeEffect.isNoCounter())
         {
             activeEffect.setNoCounter(false);
         }
@@ -87,7 +88,7 @@ public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSp
         
         if(spellHolder.getPlayer().level.isClientSide)
         {
-            if(activeEffect != null)
+            if(activeEffect != null && !activeEffect.isNoCounter())
             {
                 activeEffect.setNoCounter(true);
             }

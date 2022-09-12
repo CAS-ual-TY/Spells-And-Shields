@@ -25,6 +25,11 @@ public class PotionShotSpell extends HandIngredientSpell implements IProjectileS
         super(manaCost);
     }
     
+    public PotionShotSpell()
+    {
+        super(2F);
+    }
+    
     @Override
     public void perform(ManaHolder manaHolder, ItemStack itemStack)
     {

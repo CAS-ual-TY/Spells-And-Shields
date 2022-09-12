@@ -25,15 +25,15 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     public final float defaultDamage;
     protected float damage;
     
-    public WaterWhipSpell(float manaCost)
-    {
-        this(manaCost, 10F);
-    }
-    
     public WaterWhipSpell(float manaCost, float damage)
     {
         super(manaCost);
         defaultDamage = damage;
+    }
+    
+    public WaterWhipSpell()
+    {
+        this(5F, 10F);
     }
     
     @Override
@@ -127,7 +127,7 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     public JsonObject makeDefaultConfig()
     {
         JsonObject json = super.makeDefaultConfig();
-        json.addProperty("damage", this.defaultDamage);
+        json.addProperty("damage", defaultDamage);
         return json;
     }
     
@@ -135,13 +135,13 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     public void readFromConfig(JsonObject json)
     {
         super.readFromConfig(json);
-        this.damage = SpellsFileUtil.jsonFloat(json, "damage");
+        damage = SpellsFileUtil.jsonFloat(json, "damage");
     }
     
     @Override
     public void applyDefaultConfig()
     {
         super.applyDefaultConfig();
-        this.damage = defaultDamage;
+        damage = defaultDamage;
     }
 }

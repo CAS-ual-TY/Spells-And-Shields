@@ -21,28 +21,29 @@ public class SmeltSpell extends HandIngredientSpell
         super(manaCost);
     }
     
+    public SmeltSpell()
+    {
+        super(4F);
+    }
+    
     @Override
     public void perform(ManaHolder manaHolder, ItemStack itemStack)
     {
         Level level = manaHolder.getPlayer().level;
+        Optional<BlastingRecipe> blastingRecipe = getBlastingRecipe(manaHolder.getPlayer().level, itemStack);
         
-        if(!level.isClientSide)
+        if(manaHolder.getPlayer() instanceof Player player && blastingRecipe.isPresent())
         {
-            Optional<BlastingRecipe> blastingRecipe = getBlastingRecipe(manaHolder.getPlayer().level, itemStack);
-            
-            if(manaHolder.getPlayer() instanceof Player player && blastingRecipe.isPresent())
-            {
-                player.getInventory().placeItemBackInInventory(blastingRecipe.get().getResultItem().copy());
-            }
-            
-            Vec3 position = manaHolder.getPlayer().position().add(0D, manaHolder.getPlayer().getEyeHeight() * 0.5D, 0D);
-            
-            if(level instanceof ServerLevel serverLevel)
-            {
-                final int count = 3;
-                final double spread = 0.5D;
-                serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, position.x, position.y, position.z, count, manaHolder.getPlayer().getRandom().nextGaussian() * spread, manaHolder.getPlayer().getRandom().nextGaussian() * spread, manaHolder.getPlayer().getRandom().nextGaussian() * spread, 0.0D);
-            }
+            player.getInventory().placeItemBackInInventory(blastingRecipe.get().getResultItem().copy());
+        }
+        
+        Vec3 position = manaHolder.getPlayer().position().add(0D, manaHolder.getPlayer().getEyeHeight() * 0.5D, 0D);
+        
+        if(level instanceof ServerLevel serverLevel)
+        {
+            final int count = 3;
+            final double spread = 0.5D;
+            serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, position.x, position.y, position.z, count, manaHolder.getPlayer().getRandom().nextGaussian() * spread, manaHolder.getPlayer().getRandom().nextGaussian() * spread, manaHolder.getPlayer().getRandom().nextGaussian() * spread, 0.0D);
         }
     }
     

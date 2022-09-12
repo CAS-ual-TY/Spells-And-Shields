@@ -24,6 +24,11 @@ public class TransferManaSpell extends BaseIngredientsSpell implements IProjecti
         super(manaCost);
     }
     
+    public TransferManaSpell()
+    {
+        super(4F);
+    }
+    
     @Override
     public void tick(SpellProjectile entity)
     {

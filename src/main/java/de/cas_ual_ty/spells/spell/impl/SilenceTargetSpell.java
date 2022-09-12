@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -32,43 +33,52 @@ public class SilenceTargetSpell extends BaseIngredientsSpell
     public SilenceTargetSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, double range, int silenceSeconds)
     {
         super(manaCost, handIngredients, inventoryIngredients);
-        this.defaultRange = range;
-        this.defaultSilenceSeconds = silenceSeconds;
+        defaultRange = range;
+        defaultSilenceSeconds = silenceSeconds;
     }
     
     public SilenceTargetSpell(float manaCost, ItemStack handIngredient, double range, int silenceSeconds)
     {
         super(manaCost, handIngredient);
-        this.defaultRange = range;
-        this.defaultSilenceSeconds = silenceSeconds;
+        defaultRange = range;
+        defaultSilenceSeconds = silenceSeconds;
     }
     
-    public SilenceTargetSpell(float manaCost)
+    public SilenceTargetSpell(float manaCost, double range, int silenceSeconds)
     {
-        this(manaCost, new ItemStack(Items.AMETHYST_SHARD), 20D, 15);
+        super(manaCost);
+        defaultRange = range;
+        defaultSilenceSeconds = silenceSeconds;
+    }
+    
+    public SilenceTargetSpell()
+    {
+        this(5F, new ItemStack(Items.AMETHYST_SHARD), 20D, 15);
     }
     
     @Override
     public void perform(ManaHolder manaHolder)
     {
-        if(!manaHolder.getPlayer().level.isClientSide && manaHolder.getPlayer().level instanceof ServerLevel level)
+        Level level = manaHolder.getPlayer().level;
+        
+        LivingEntity entity = manaHolder.getPlayer();
+        HitResult hit = SpellsUtil.rayTrace(level, entity, range, e -> e instanceof LivingEntity, 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE);
+        
+        if(hit.getType() == HitResult.Type.ENTITY)
         {
-            LivingEntity entity = manaHolder.getPlayer();
-            HitResult hit = SpellsUtil.rayTrace(level, entity, 20, e -> e instanceof LivingEntity, 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE);
+            EntityHitResult entityHit = (EntityHitResult) hit;
             
-            if(hit.getType() == HitResult.Type.ENTITY)
+            if(entityHit.getEntity() instanceof LivingEntity target)
             {
-                EntityHitResult entityHit = (EntityHitResult) hit;
+                target.addEffect(new MobEffectInstance(SpellsRegistries.SILENCE_EFFECT.get(), silenceSeconds));
                 
-                if(entityHit.getEntity() instanceof LivingEntity target)
+                level.playSound(null, manaHolder.getPlayer(), SoundEvents.AMETHYST_CLUSTER_HIT, SoundSource.PLAYERS, 1F, 1F);
+                level.playSound(null, target, SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.PLAYERS, 1F, 1F);
+                
+                if(level instanceof ServerLevel serverLevel)
                 {
-                    target.addEffect(new MobEffectInstance(SpellsRegistries.SILENCE_EFFECT.get(), 15));
-                    
-                    level.playSound(null, manaHolder.getPlayer(), SoundEvents.AMETHYST_CLUSTER_HIT, SoundSource.PLAYERS, 1.0F, 1.0F);
-                    level.playSound(null, target, SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
-                    
                     Vec3 pos = target.getEyePosition();
-                    level.sendParticles(ParticleTypes.POOF, pos.x, pos.y, pos.z, 5, 0, 0, 0, 0D);
+                    serverLevel.sendParticles(ParticleTypes.POOF, pos.x, pos.y, pos.z, 5, 0, 0, 0, 0D);
                 }
             }
         }
@@ -78,8 +88,8 @@ public class SilenceTargetSpell extends BaseIngredientsSpell
     public JsonObject makeDefaultConfig()
     {
         JsonObject json = super.makeDefaultConfig();
-        json.addProperty("range", 20D);
-        json.addProperty("silenceSeconds", 15);
+        json.addProperty("range", defaultRange);
+        json.addProperty("silenceSeconds", defaultSilenceSeconds);
         return json;
     }
     

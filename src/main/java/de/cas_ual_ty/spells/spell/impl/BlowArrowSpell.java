@@ -19,6 +19,11 @@ public class BlowArrowSpell extends HandIngredientSpell
         super(manaCost);
     }
     
+    public BlowArrowSpell()
+    {
+        super(5F);
+    }
+    
     @Override
     public void perform(ManaHolder manaHolder, ItemStack itemStack)
     {

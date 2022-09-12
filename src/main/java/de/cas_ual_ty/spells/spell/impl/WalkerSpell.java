@@ -52,9 +52,10 @@ public class WalkerSpell extends PassiveSpell implements IEventSpell
     
     public static void onEntityMoved(LivingEntity livingEntity, int extraRadius, Block oldBlock, Material oldMaterial, BlockState newBlock)
     {
-        if(livingEntity.isOnGround())
+        Level level = livingEntity.level;
+        
+        if(!level.isClientSide && livingEntity.isOnGround())
         {
-            Level level = livingEntity.level;
             BlockPos pos = livingEntity.blockPosition();
             double r = Math.min(16, 2 + extraRadius);
             

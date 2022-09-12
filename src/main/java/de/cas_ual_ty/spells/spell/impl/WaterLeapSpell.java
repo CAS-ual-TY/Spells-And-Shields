@@ -20,9 +20,9 @@ public class WaterLeapSpell extends LeapSpell
         super(manaCost, speed);
     }
     
-    public WaterLeapSpell(float manaCost)
+    public WaterLeapSpell()
     {
-        super(manaCost, 4D);
+        super(5F, 4D);
     }
     
     @Override

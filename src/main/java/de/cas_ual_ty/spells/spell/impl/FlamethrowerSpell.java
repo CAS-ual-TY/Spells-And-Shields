@@ -41,29 +41,39 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
     
     protected int maxTime;
     
-    public FlamethrowerSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, int defaultFireSeconds, int defaultRepetitions, int defaultRepetitionDelay, int defaultShotsPerRepetition, float defaultInaccuracy)
+    public FlamethrowerSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, int fireSeconds, int repetitions, int repetitionDelay, int shotsPerRepetition, float inaccuracy)
     {
         super(manaCost, handIngredients, inventoryIngredients);
-        this.defaultFireSeconds = defaultFireSeconds;
-        this.defaultRepetitions = defaultRepetitions;
-        this.defaultRepetitionDelay = defaultRepetitionDelay;
-        this.defaultShotsPerRepetition = defaultShotsPerRepetition;
-        this.defaultInaccuracy = defaultInaccuracy;
+        defaultFireSeconds = fireSeconds;
+        defaultRepetitions = repetitions;
+        defaultRepetitionDelay = repetitionDelay;
+        defaultShotsPerRepetition = shotsPerRepetition;
+        defaultInaccuracy = inaccuracy;
     }
     
-    public FlamethrowerSpell(float manaCost, ItemStack ingredient, int defaultFireSeconds, int defaultRepetitions, int defaultRepetitionDelay, int defaultShotsPerRepetition, float defaultInaccuracy)
+    public FlamethrowerSpell(float manaCost, ItemStack ingredient, int fireSeconds, int repetitions, int repetitionDelay, int shotsPerRepetition, float inaccuracy)
     {
         super(manaCost, ingredient);
-        this.defaultFireSeconds = defaultFireSeconds;
-        this.defaultRepetitions = defaultRepetitions;
-        this.defaultRepetitionDelay = defaultRepetitionDelay;
-        this.defaultShotsPerRepetition = defaultShotsPerRepetition;
-        this.defaultInaccuracy = defaultInaccuracy;
+        defaultFireSeconds = fireSeconds;
+        defaultRepetitions = repetitions;
+        defaultRepetitionDelay = repetitionDelay;
+        defaultShotsPerRepetition = shotsPerRepetition;
+        defaultInaccuracy = inaccuracy;
     }
     
-    public FlamethrowerSpell(float manaCost)
+    public FlamethrowerSpell(float manaCost, int fireSeconds, int repetitions, int repetitionDelay, int shotsPerRepetition, float inaccuracy)
     {
-        this(manaCost, new ItemStack(Items.BLAZE_POWDER), 10, 5, 4, 3, 15F);
+        super(manaCost);
+        defaultFireSeconds = fireSeconds;
+        defaultRepetitions = repetitions;
+        defaultRepetitionDelay = repetitionDelay;
+        defaultShotsPerRepetition = shotsPerRepetition;
+        defaultInaccuracy = inaccuracy;
+    }
+    
+    public FlamethrowerSpell()
+    {
+        this(7F, new ItemStack(Items.BLAZE_POWDER), 10, 5, 4, 3, 15F);
     }
     
     @Override
@@ -125,7 +135,7 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
                     shootStraight(manaHolder, 2F, inaccuracy, (projectile, level) -> {});
                 }
                 
-                spellDataHolder.getEntity().level.playSound(null, manaHolder.getPlayer(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F);
+                spellDataHolder.getEntity().level.playSound(null, manaHolder.getPlayer(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1F, 1F);
             }
         });
     }
@@ -158,11 +168,11 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
     public JsonObject makeDefaultConfig()
     {
         JsonObject json = super.makeDefaultConfig();
-        json.addProperty("fireSeconds", this.defaultFireSeconds);
-        json.addProperty("repetitions", this.defaultRepetitions);
-        json.addProperty("repetitionDelay", this.defaultRepetitionDelay);
-        json.addProperty("shotsPerRepetition", this.defaultShotsPerRepetition);
-        json.addProperty("inaccuracy", this.defaultInaccuracy);
+        json.addProperty("fireSeconds", defaultFireSeconds);
+        json.addProperty("repetitions", defaultRepetitions);
+        json.addProperty("repetitionDelay", defaultRepetitionDelay);
+        json.addProperty("shotsPerRepetition", defaultShotsPerRepetition);
+        json.addProperty("inaccuracy", defaultInaccuracy);
         return json;
     }
     
@@ -170,11 +180,11 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
     public void readFromConfig(JsonObject json)
     {
         super.readFromConfig(json);
-        this.fireSeconds = SpellsFileUtil.jsonInt(json, "fireSeconds");
-        this.repetitions = SpellsFileUtil.jsonInt(json, "repetitions");
-        this.repetitionDelay = SpellsFileUtil.jsonInt(json, "repetitionDelay");
-        this.shotsPerRepetition = SpellsFileUtil.jsonInt(json, "shotsPerRepetition");
-        this.inaccuracy = SpellsFileUtil.jsonFloat(json, "inaccuracy");
+        fireSeconds = SpellsFileUtil.jsonInt(json, "fireSeconds");
+        repetitions = SpellsFileUtil.jsonInt(json, "repetitions");
+        repetitionDelay = SpellsFileUtil.jsonInt(json, "repetitionDelay");
+        shotsPerRepetition = SpellsFileUtil.jsonInt(json, "shotsPerRepetition");
+        inaccuracy = SpellsFileUtil.jsonFloat(json, "inaccuracy");
         
         calculateMaxTime();
     }
@@ -183,11 +193,11 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
     public void applyDefaultConfig()
     {
         super.applyDefaultConfig();
-        this.fireSeconds = defaultFireSeconds;
-        this.repetitions = defaultRepetitions;
-        this.repetitionDelay = defaultRepetitionDelay;
-        this.shotsPerRepetition = defaultShotsPerRepetition;
-        this.inaccuracy = defaultInaccuracy;
+        fireSeconds = defaultFireSeconds;
+        repetitions = defaultRepetitions;
+        repetitionDelay = defaultRepetitionDelay;
+        shotsPerRepetition = defaultShotsPerRepetition;
+        inaccuracy = defaultInaccuracy;
         
         calculateMaxTime();
     }

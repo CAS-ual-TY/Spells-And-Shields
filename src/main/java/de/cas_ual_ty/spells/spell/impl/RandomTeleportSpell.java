@@ -4,12 +4,12 @@ import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -43,21 +43,18 @@ public class RandomTeleportSpell extends BaseIngredientsSpell
         defaultTeleportRange = teleportRange;
     }
     
-    public RandomTeleportSpell(float manaCost)
+    public RandomTeleportSpell()
     {
-        this(manaCost, 5, 32);
+        this(10F, 5, 32);
     }
     
     @Override
     public void perform(ManaHolder manaHolder)
     {
-        if(!manaHolder.getPlayer().level.isClientSide && manaHolder.getPlayer().level instanceof ServerLevel level)
-        {
-            teleport(manaHolder.getPlayer(), level, attempts, teleportRange);
-        }
+        teleport(manaHolder.getPlayer(), manaHolder.getPlayer().level, attempts, teleportRange);
     }
     
-    public static void teleport(LivingEntity entity, ServerLevel level, int attempts, int range)
+    public static void teleport(LivingEntity entity, Level level, int attempts, int range)
     {
         RandomSource random = entity.getRandom();
         Vec3 pos = entity.position();
@@ -80,12 +77,12 @@ public class RandomTeleportSpell extends BaseIngredientsSpell
         
         if(success)
         {
-            level.playSound(null, x, y, z, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.0F);
-            level.playSound(null, entity, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, x, y, z, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+            level.playSound(null, entity, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
         }
         else
         {
-            level.playSound(null, entity, SoundEvents.ENDERMAN_SCREAM, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, entity, SoundEvents.ENDERMAN_SCREAM, SoundSource.PLAYERS, 1F, 1F);
         }
     }
     
@@ -93,8 +90,8 @@ public class RandomTeleportSpell extends BaseIngredientsSpell
     public JsonObject makeDefaultConfig()
     {
         JsonObject json = super.makeDefaultConfig();
-        json.addProperty("attempts", 5);
-        json.addProperty("teleportRange", 32);
+        json.addProperty("attempts", defaultAttempts);
+        json.addProperty("teleportRange", defaultTeleportRange);
         return json;
     }
     
@@ -102,8 +99,8 @@ public class RandomTeleportSpell extends BaseIngredientsSpell
     public void readFromConfig(JsonObject json)
     {
         super.readFromConfig(json);
-        this.attempts = SpellsFileUtil.jsonInt(json, "attempts");
-        this.teleportRange = SpellsFileUtil.jsonInt(json, "teleportRange");
+        attempts = SpellsFileUtil.jsonInt(json, "attempts");
+        teleportRange = SpellsFileUtil.jsonInt(json, "teleportRange");
     }
     
     @Override
