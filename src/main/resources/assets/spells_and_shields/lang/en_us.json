@@ -123,6 +123,8 @@
   "spell.spells_and_shields.lightning_strike.desc": "Summon a lightning strike where you are looking at. The target must see skylight.",
   "spell.spells_and_shields.luck": "Luck",
   "spell.spells_and_shields.luck.desc": "A passive effect.",
+  "spell.spells_and_shields.magic_immune_self": "Magic Immune Self",
+  "spell.spells_and_shields.magic_immune_self.desc": "Applies the %s effect for a short period of time.",
   "spell.spells_and_shields.mana_boost": "Mana Boost",
   "spell.spells_and_shields.mana_boost.desc": "Increases your maximum mana.",
   "spell.spells_and_shields.mana_soles": "Mana Soles",

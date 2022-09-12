@@ -84,6 +84,8 @@ public class SpellTrees
         return SpellTree.builder("mining", Component.translatable(KEY_MINING), Spells.BLAST_SMELT, 5, bookshelves(8))
                 .icon(Spells.HASTE.get())
                 .add(Spells.SILENCE_TARGET, 25, bookshelves(26))
+                .add(Spells.MAGIC_IMMUNE_SELF, 25, bookshelves(26))
+                .leaf()
                 .leaf()
                 .add(Spells.INSTANT_MINE, 15, bookshelves(18))
                 .add(Spells.HASTE, 25, bookshelves(24))

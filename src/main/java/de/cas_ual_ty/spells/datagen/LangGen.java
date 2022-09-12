@@ -11,8 +11,8 @@ import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.requirement.IRequirementType;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
-import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
 import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
+import de.cas_ual_ty.spells.spell.base.PermanentMobEffectSpell;
 import de.cas_ual_ty.spells.spelltree.SpellTrees;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.effect.MobEffect;
@@ -34,6 +34,7 @@ public class LangGen extends LanguageProvider
     }
     
     public static final String PASSIVE_STRING = "A passive effect.";
+    public static final String SELF_STRING = "Applies the %s effect for a short period of time.";
     
     @Override
     protected void addTranslations()
@@ -121,6 +122,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.TELEPORT, "Teleport", "Teleport to where you are looking at.");
         addSpell(Spells.LIGHTNING_STRIKE, "Lightning Strike", "Summon a lightning strike where you are looking at. The target must see skylight.");
         addSpell(Spells.GROWTH, "Growth", "Apply the bone meal effect to plants around you.");
+        addSpell(Spells.MAGIC_IMMUNE_SELF, "Magic Immune Self", SELF_STRING);
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");
@@ -155,7 +157,7 @@ public class LangGen extends LanguageProvider
         
         add(MultiIngredientSpell.KEY_REQUIRED_HAND, "Requirement (Hand):");
         add(MultiIngredientSpell.KEY_REQUIRED_INVENTORY, "Requirement (Inventory):");
-        add(MobEffectSpell.KEY_WHEN_APPLIED, "When Applied:");
+        add(PermanentMobEffectSpell.KEY_WHEN_APPLIED, "When Applied:");
         add(SpellProgressionScreen.KEY_LEARN, "Learn");
         add(SpellProgressionScreen.KEY_EQUIP, "Equip");
         add(SpellProgressionScreen.KEY_UNAVAILABLE, "Unavailable");
