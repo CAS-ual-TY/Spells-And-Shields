@@ -58,7 +58,7 @@ public class AdvancementRequirement extends Requirement
             
             if(a != null)
             {
-                return Component.translatable(descriptionId, a.getDisplay().getTitle(), advancementRL.toString());
+                return Component.translatable(descriptionId, a.getDisplay().getTitle());
             }
             else
             {

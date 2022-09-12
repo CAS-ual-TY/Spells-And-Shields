@@ -178,7 +178,7 @@
   "spells.slot.remove.success.single": "Cleared active spell in slot %s of %s",
   "spells.slot.set.success.multiple": "Set active spell in slot %s of %s players to %s",
   "spells.slot.set.success.single": "Set active spell in slot %s of %s to %s",
-  "spells_and_shields:advancement": "Advancement: %s (%s)",
+  "spells_and_shields:advancement": "Advancement: %s",
   "spells_and_shields:advancement.error": "Unknown Advancement (config error): %s",
   "spells_and_shields:bookshelves": "%s/%s Bookshelves"
 }

@@ -118,7 +118,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.RANDOM_TELEPORT, "Random Teleport", "Randomly teleport away. This spell can fail.");
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
-        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s (%s)");
+        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, ".error", "Unknown Advancement (config error): %s");
         
         add(SpellTrees.KEY_NETHER, "Nether");
