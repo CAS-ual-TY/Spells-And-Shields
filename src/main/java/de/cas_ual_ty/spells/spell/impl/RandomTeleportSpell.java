@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -45,16 +46,16 @@ public class RandomTeleportSpell extends BaseIngredientsSpell
     
     public RandomTeleportSpell()
     {
-        this(10F, 5, 32);
+        this(5F, new ItemStack(Items.CHORUS_FRUIT), 5, 32);
     }
     
     @Override
     public void perform(ManaHolder manaHolder)
     {
-        teleport(manaHolder.getPlayer(), manaHolder.getPlayer().level, attempts, teleportRange);
+        randomTeleport(manaHolder.getPlayer(), manaHolder.getPlayer().level, attempts, teleportRange);
     }
     
-    public static void teleport(LivingEntity entity, Level level, int attempts, int range)
+    public static boolean randomTeleport(LivingEntity entity, Level level, int attempts, int range)
     {
         RandomSource random = entity.getRandom();
         Vec3 pos = entity.position();
@@ -79,10 +80,12 @@ public class RandomTeleportSpell extends BaseIngredientsSpell
         {
             level.playSound(null, x, y, z, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
             level.playSound(null, entity, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+            return true;
         }
         else
         {
             level.playSound(null, entity, SoundEvents.ENDERMAN_SCREAM, SoundSource.PLAYERS, 1F, 1F);
+            return false;
         }
     }
     

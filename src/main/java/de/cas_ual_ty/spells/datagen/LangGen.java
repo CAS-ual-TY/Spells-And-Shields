@@ -116,6 +116,8 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.LAVA_WALKER, "Lava Walker", "Walk on lava by turning the blocks you walk on into obsidian.");
         addSpell(Spells.SILENCE_TARGET, "Silence Target", "Silence the target you are looking at within a certain range.");
         addSpell(Spells.RANDOM_TELEPORT, "Random Teleport", "Randomly teleport away. This spell can fail.");
+        addSpell(Spells.FORCED_TELEPORT, "Forced Teleport", "Randomly teleports the target you are looking at away. This spell can fail.");
+        addSpell(Spells.TELEPORT, "Teleport", "Teleport to where you are looking at.");
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");

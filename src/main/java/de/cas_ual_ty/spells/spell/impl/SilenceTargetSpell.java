@@ -24,27 +24,27 @@ import java.util.List;
 
 public class SilenceTargetSpell extends BaseIngredientsSpell
 {
-    public final double defaultRange;
+    public final int defaultRange;
     public final int defaultSilenceSeconds;
     
-    protected double range;
+    protected int range;
     protected int silenceSeconds;
     
-    public SilenceTargetSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, double range, int silenceSeconds)
+    public SilenceTargetSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, int range, int silenceSeconds)
     {
         super(manaCost, handIngredients, inventoryIngredients);
         defaultRange = range;
         defaultSilenceSeconds = silenceSeconds;
     }
     
-    public SilenceTargetSpell(float manaCost, ItemStack handIngredient, double range, int silenceSeconds)
+    public SilenceTargetSpell(float manaCost, ItemStack handIngredient, int range, int silenceSeconds)
     {
         super(manaCost, handIngredient);
         defaultRange = range;
         defaultSilenceSeconds = silenceSeconds;
     }
     
-    public SilenceTargetSpell(float manaCost, double range, int silenceSeconds)
+    public SilenceTargetSpell(float manaCost, int range, int silenceSeconds)
     {
         super(manaCost);
         defaultRange = range;
@@ -53,7 +53,7 @@ public class SilenceTargetSpell extends BaseIngredientsSpell
     
     public SilenceTargetSpell()
     {
-        this(5F, new ItemStack(Items.AMETHYST_SHARD), 20D, 15);
+        this(5F, new ItemStack(Items.AMETHYST_SHARD), 20, 15);
     }
     
     @Override
@@ -97,7 +97,7 @@ public class SilenceTargetSpell extends BaseIngredientsSpell
     public void readFromConfig(JsonObject json)
     {
         super.readFromConfig(json);
-        range = SpellsFileUtil.jsonDouble(json, "range");
+        range = SpellsFileUtil.jsonInt(json, "range");
         silenceSeconds = SpellsFileUtil.jsonInt(json, "silenceSeconds");
     }
     

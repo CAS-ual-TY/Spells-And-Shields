@@ -69,6 +69,8 @@ public class Spells
     public static final RegistryObject<ISpell> LAVA_WALKER = SPELLS.register("lava_walker", () -> new WalkerSpell(() -> Blocks.LAVA, () -> Material.LAVA, Blocks.OBSIDIAN::defaultBlockState));
     public static final RegistryObject<ISpell> SILENCE_TARGET = SPELLS.register("silence", SilenceTargetSpell::new);
     public static final RegistryObject<ISpell> RANDOM_TELEPORT = SPELLS.register("random_teleport", RandomTeleportSpell::new);
+    public static final RegistryObject<ISpell> FORCED_TELEPORT = SPELLS.register("forced_teleport", ForcedTeleportSpell::new);
+    public static final RegistryObject<ISpell> TELEPORT = SPELLS.register("teleport", TeleportSpell::new);
     
     public static void register()
     {
