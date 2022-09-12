@@ -49,7 +49,7 @@ public class Spells
     public static final RegistryObject<ISpell> REGENERATION = SPELLS.register("regeneration", () -> new MobEffectSpell(MobEffects.REGENERATION, 50));
     public static final RegistryObject<ISpell> REPLENISHMENT = SPELLS.register("replenishment", () -> new MobEffectSpell(SpellsRegistries.REPLENISHMENT_EFFECT.get(), 50));
     public static final RegistryObject<ISpell> WATER_WHIP = SPELLS.register("water_whip", WaterWhipSpell::new);
-    public static final RegistryObject<ISpell> POTION_SHOT = SPELLS.register("potion_shot", () -> new PotionShotSpell().setSmallIcon(new ResourceLocation("textures/item/potion.png")));
+    public static final RegistryObject<ISpell> POTION_SHOT = SPELLS.register("potion_shot", PotionShotSpell::new);
     public static final RegistryObject<ISpell> FROST_WALKER = SPELLS.register("frost_walker", () -> new WalkerSpell(() -> Blocks.WATER, () -> Material.WATER, Blocks.FROSTED_ICE::defaultBlockState));
     public static final RegistryObject<ISpell> JUMP = SPELLS.register("jump", JumpSpell::new);
     public static final RegistryObject<ISpell> MANA_SOLES = SPELLS.register("mana_soles", ManaSolesSpell::new);
