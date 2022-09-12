@@ -120,6 +120,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.FORCED_TELEPORT, "Forced Teleport", "Randomly teleports the target you are looking at away. This spell can fail.");
         addSpell(Spells.TELEPORT, "Teleport", "Teleport to where you are looking at.");
         addSpell(Spells.LIGHTNING_STRIKE, "Lightning Strike", "Summon a lightning strike where you are looking at. The target must see skylight.");
+        addSpell(Spells.GROWTH, "Growth", "Apply the bone meal effect to plants around you.");
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");

@@ -59,6 +59,8 @@ public class SpellTrees
         return SpellTree.builder("ocean", Component.translatable(KEY_OCEAN), Spells.WATER_BREATHING, 10)
                 .icon(Spells.DOLPHINS_GRACE.get())
                 .add(Spells.REGENERATION, 20, bookshelves(20))
+                .add(Spells.GROWTH, 20, bookshelves(20))
+                .leaf()
                 .add(Spells.AQUA_AFFINITY, 20, bookshelves(20))
                 .leaf()
                 .leaf()
