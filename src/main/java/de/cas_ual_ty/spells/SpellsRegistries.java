@@ -42,6 +42,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.*;
@@ -100,6 +101,7 @@ public class SpellsRegistries
     public static final RegistryObject<MobEffect> MANA_BOOST_EFFECT = MOB_EFFECTS.register("mana_boost", () -> new SimpleEffect(MobEffectCategory.BENEFICIAL, 0x4E20B3).addAttributeModifier(MAX_MANA_ATTRIBUTE.get(), "65CAA54F-F98E-4AA0-99F1-B4AC438C6DB8", 0.5F, AttributeModifier.Operation.MULTIPLY_TOTAL));
     public static final RegistryObject<MobEffect> EXTRA_MANA_EFFECT = MOB_EFFECTS.register("extra_mana", () -> new ExtraManaMobEffect(MobEffectCategory.BENEFICIAL, 0x3E55E6));
     public static final RegistryObject<MobEffect> SILENCE_EFFECT = MOB_EFFECTS.register("silence", () -> new SimpleEffect(MobEffectCategory.HARMFUL, 0x786634));
+    public static final RegistryObject<MobEffect> MAGIC_IMMUNE_EFFECT = MOB_EFFECTS.register("magic_immune", () -> new SimpleEffect(MobEffectCategory.BENEFICIAL, 0xFFC636));
     
     public static final RegistryObject<Potion> INSTANT_MANA = POTIONS.register("instant_mana", () -> new Potion(new MobEffectInstance(INSTANT_MANA_EFFECT.get(), 1)));
     public static final RegistryObject<Potion> STRONG_INSTANT_MANA = POTIONS.register("strong_instant_mana", () -> new Potion(new MobEffectInstance(INSTANT_MANA_EFFECT.get(), 1, 1)));
@@ -143,20 +145,29 @@ public class SpellsRegistries
         SPELL_DATA_REGISTRY = event.create(new RegistryBuilder<ISpellDataType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "spell_data")));
     }
     
-    private static void registerCommands(RegisterCommandsEvent event)
-    {
-        SpellCommand.register(event.getDispatcher(), event.getBuildContext());
-    }
-    
     private static void entityAttributeModification(EntityAttributeModificationEvent event)
     {
         event.add(EntityType.PLAYER, SpellsRegistries.MAX_MANA_ATTRIBUTE.get());
         event.add(EntityType.PLAYER, SpellsRegistries.MANA_REGEN_ATTRIBUTE.get());
     }
     
+    private static void registerCommands(RegisterCommandsEvent event)
+    {
+        SpellCommand.register(event.getDispatcher(), event.getBuildContext());
+    }
+    
+    private static void livingHurt(LivingHurtEvent event)
+    {
+        if(!event.getEntity().level.isClientSide && event.getSource().isMagic() && !event.getSource().isBypassInvul() && event.getEntity().hasEffect(SpellsRegistries.MAGIC_IMMUNE_EFFECT.get()))
+        {
+            event.setCanceled(true);
+        }
+    }
+    
     public static void registerEvents()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsRegistries::entityAttributeModification);
         MinecraftForge.EVENT_BUS.addListener(SpellsRegistries::registerCommands);
+        MinecraftForge.EVENT_BUS.addListener(SpellsRegistries::livingHurt);
     }
 }

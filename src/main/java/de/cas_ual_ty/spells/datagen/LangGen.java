@@ -57,6 +57,7 @@ public class LangGen extends LanguageProvider
         addEffect(SpellsRegistries.MANA_BOOST_EFFECT, "Mana Boost", "Increases maximum mana; higher levels give more additional mana bottles.");
         addEffect(SpellsRegistries.EXTRA_MANA_EFFECT, "Extra Mana", "Adds burnable mana bottles (which can't be replenished); higher levels give more extra mana.");
         addEffect(SpellsRegistries.SILENCE_EFFECT, "Silence", "No spells can be used while this effect is active.");
+        addEffect(SpellsRegistries.MAGIC_IMMUNE_EFFECT, "Magic Immune", "Makes you ignore any magic damage.");
         
         addPotion(SpellsRegistries.INSTANT_MANA, "Instant Mana");
         addPotion(SpellsRegistries.STRONG_INSTANT_MANA, "Instant Mana");

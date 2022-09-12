@@ -7,6 +7,8 @@
   "effect.spells_and_shields.instant_mana.description": "Replenishes mana; higher levels increase the effect potency.",
   "effect.spells_and_shields.leaking": "Leaking",
   "effect.spells_and_shields.leaking.description": "Burns mana over time; higher levels burn more mana.",
+  "effect.spells_and_shields.magic_immune": "Magic Immune",
+  "effect.spells_and_shields.magic_immune.description": "Makes you ignore any magic damage.",
   "effect.spells_and_shields.mana_bomb": "Mana Bomb",
   "effect.spells_and_shields.mana_bomb.description": "Burns mana; higher levels increase the effect potency.",
   "effect.spells_and_shields.mana_boost": "Mana Boost",
