@@ -71,6 +71,7 @@ public class Spells
     public static final RegistryObject<ISpell> RANDOM_TELEPORT = SPELLS.register("random_teleport", RandomTeleportSpell::new);
     public static final RegistryObject<ISpell> FORCED_TELEPORT = SPELLS.register("forced_teleport", ForcedTeleportSpell::new);
     public static final RegistryObject<ISpell> TELEPORT = SPELLS.register("teleport", TeleportSpell::new);
+    public static final RegistryObject<ISpell> LIGHTNING_STRIKE = SPELLS.register("lightning_strike", LightningStrikeSpell::new);
     
     public static void register()
     {

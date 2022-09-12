@@ -115,6 +115,8 @@
   "spell.spells_and_shields.lava_walker.desc": "Walk on lava by turning the blocks you walk on into obsidian.",
   "spell.spells_and_shields.leap": "Leap",
   "spell.spells_and_shields.leap.desc": "Leap forward.",
+  "spell.spells_and_shields.lightning_strike": "Lightning Strike",
+  "spell.spells_and_shields.lightning_strike.desc": "Summon a lightning strike where you are looking at. The target must see skylight.",
   "spell.spells_and_shields.luck": "Luck",
   "spell.spells_and_shields.luck.desc": "A passive effect.",
   "spell.spells_and_shields.mana_boost": "Mana Boost",

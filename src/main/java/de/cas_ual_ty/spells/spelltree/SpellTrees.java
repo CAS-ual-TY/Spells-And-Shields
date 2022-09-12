@@ -70,6 +70,10 @@ public class SpellTrees
                 .leaf()
                 .add(Spells.WATER_WHIP, 10, bookshelves(10))
                 .add(Spells.POTION_SHOT, 10, bookshelves(10))
+                .leaf()
+                .leaf()
+                .add(Spells.LIGHTNING_STRIKE, 25, bookshelves(24), advancement("adventure/lightning_rod_with_villager_no_fire"))
+                .leaf()
                 .finish();
     }
     
@@ -95,7 +99,6 @@ public class SpellTrees
                 .add(Spells.SPEED, 20, bookshelves(20))
                 .leaf()
                 .add(Spells.JUMP, 14, bookshelves(14))
-                .leaf()
                 .leaf()
                 .add(Spells.MANA_SOLES, 15, bookshelves(12))
                 .add(Spells.SLOW_FALLING, 15, bookshelves(16))
