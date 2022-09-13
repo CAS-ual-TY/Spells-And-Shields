@@ -48,6 +48,8 @@ public class SpellTrees
                 .add(Spells.LAVA_WALKER, 20, bookshelves(19))
                 .add(Spells.FIRE_RESISTANCE, 30, bookshelves(30))
                 .leaf()
+                .add(Spells.DRAIN_FLAME, 20, bookshelves(20))
+                .leaf()
                 .leaf()
                 .add(Spells.FIRE_CHARGE, 10, bookshelves(20))
                 .add(Spells.FLAMETHROWER, 20, bookshelves(24))

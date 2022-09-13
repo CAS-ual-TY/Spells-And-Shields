@@ -87,6 +87,8 @@
   "spell.spells_and_shields.conduit_power.desc": "A passive effect.",
   "spell.spells_and_shields.dolphins_grace": "Dolphin's Grace",
   "spell.spells_and_shields.dolphins_grace.desc": "A passive effect.",
+  "spell.spells_and_shields.drain_flame": "Drain Flame",
+  "spell.spells_and_shields.drain_flame.desc": "Drain fire to convert it into mana regeneration. The fire must be infinite (eg. on top of Netherrack) for this to work.",
   "spell.spells_and_shields.fire_ball": "Fire Ball",
   "spell.spells_and_shields.fire_ball.desc": "Shoot a fire ball forward.",
   "spell.spells_and_shields.fire_charge": "Fire Charge",
