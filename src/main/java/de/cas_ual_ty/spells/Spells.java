@@ -75,8 +75,8 @@ public class Spells
     public static final RegistryObject<ISpell> FORCED_TELEPORT = SPELLS.register("forced_teleport", ForcedTeleportSpell::new);
     public static final RegistryObject<ISpell> TELEPORT = SPELLS.register("teleport", TeleportSpell::new);
     public static final RegistryObject<ISpell> LIGHTNING_STRIKE = SPELLS.register("lightning_strike", LightningStrikeSpell::new);
-    public static final RegistryObject<ISpell> DRAIN_FLAME = SPELLS.register("drain_flame", () -> new DrainFlameSpell());
-    public static final RegistryObject<ISpell> GROWTH = SPELLS.register("growth", () -> new GrowthSpell());
+    public static final RegistryObject<ISpell> DRAIN_FLAME = SPELLS.register("drain_flame", DrainFlameSpell::new);
+    public static final RegistryObject<ISpell> GROWTH = SPELLS.register("growth", GrowthSpell::new);
     public static final RegistryObject<ISpell> MAGIC_IMMUNE_SELF = SPELLS.register("magic_immune_self", () -> new TemporaryMobEffect(7F, new ItemStack(Items.GLASS_PANE), SpellsRegistries.MAGIC_IMMUNE_EFFECT.get(), 20 * 20, 0, false, true, true));
     
     public static void register()
