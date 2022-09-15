@@ -102,7 +102,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.FROST_WALKER, "Frost Walker", PASSIVE_STRING);
         addSpell(Spells.JUMP, "Jump", "High jump. Be aware of fall damage.");
         addSpell(Spells.MANA_SOLES, "Mana Soles", "Consumes mana to reduce or cancel fall damage.");
-        addSpell(Spells.FIRE_CHARGE, "Fire Charge", "Shoot a fire charge forward, like a Ghast.");
+        addSpell(Spells.FIRE_CHARGE, "Fire Charge", "Shoot a fire charge forward instantly.");
         addSpell(Spells.PRESSURIZE, "Pressurize", "Knock back every entity around you and remove any fluid.");
         addSpell(Spells.INSTANT_MINE, "Instant Mine", "Breaks the block you are looking at using the tool in your hand.");
         addSpell(Spells.FIRE_RESISTANCE, "Fire Resistance", PASSIVE_STRING);
@@ -124,6 +124,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.DRAIN_FLAME, "Drain Flame", "Drain fire to convert it into mana regeneration. The fire must be infinite (eg. on top of Netherrack) for this to work.");
         addSpell(Spells.GROWTH, "Growth", "Apply effect of Bonemeal to plants around you.");
         addSpell(Spells.MAGIC_IMMUNE_SELF, "Magic Immune Self", SELF_STRING);
+        addSpell(Spells.GHAST, "Ghast", "Shoot a fire charge forward, like a Ghast.");
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");

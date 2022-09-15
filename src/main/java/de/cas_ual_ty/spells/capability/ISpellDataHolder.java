@@ -21,6 +21,8 @@ public interface ISpellDataHolder extends INBTSerializable<ListTag>
     
     void removeAllOfType(ISpellDataType<?> type);
     
+    boolean hasOfType(ISpellDataType<?> type);
+    
     void clear();
     
     List<SpellData> getList();

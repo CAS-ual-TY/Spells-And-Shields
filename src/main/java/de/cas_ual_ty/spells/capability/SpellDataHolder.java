@@ -62,6 +62,12 @@ public class SpellDataHolder implements ISpellDataHolder
     }
     
     @Override
+    public boolean hasOfType(ISpellDataType<?> type)
+    {
+        return list.stream().anyMatch(data -> data.type == type);
+    }
+    
+    @Override
     public void clear()
     {
         list.clear();

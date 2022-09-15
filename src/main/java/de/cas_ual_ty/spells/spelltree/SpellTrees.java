@@ -51,7 +51,7 @@ public class SpellTrees
                 .add(Spells.DRAIN_FLAME, 20, bookshelves(20))
                 .leaf()
                 .leaf()
-                .add(Spells.FIRE_CHARGE, 10, bookshelves(20))
+                .add(Spells.GHAST, 10, bookshelves(20))
                 .add(Spells.FLAMETHROWER, 20, bookshelves(24))
                 .finish();
     }
