@@ -3,11 +3,14 @@ package de.cas_ual_ty.spells.spell.base;
 import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.spell.IProjectileSpell;
+import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -57,13 +60,15 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     {
         super.tick();
         
-        IProjectileSpell spell = this.getSpell();
-        spell.tick(this);
-        
-        if(this.tickCount >= spell.getTimeout() && !this.level.isClientSide)
+        if(spell != null)
         {
-            spell.onTimeout(this);
-            this.discard();
+            spell.tick(this);
+            
+            if(this.tickCount >= spell.getTimeout() && !this.level.isClientSide)
+            {
+                spell.onTimeout(this);
+                this.discard();
+            }
         }
     }
     
@@ -76,15 +81,19 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult)
     {
-        IProjectileSpell spell = this.getSpell();
-        spell.onEntityHit(this, entityHitResult);
+        if(spell != null)
+        {
+            spell.onEntityHit(this, entityHitResult);
+        }
     }
     
     @Override
     protected void onHitBlock(BlockHitResult blockHitResult)
     {
-        IProjectileSpell spell = this.getSpell();
-        spell.onBlockHit(this, blockHitResult);
+        if(spell != null)
+        {
+            spell.onBlockHit(this, blockHitResult);
+        }
     }
     
     @Override
@@ -131,13 +140,24 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     @Override
     public void writeSpawnData(FriendlyByteBuf buf)
     {
-        buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), this.getSpell());
+        boolean exist = spell != null;
+        
+        buf.writeBoolean(exist);
+        if(exist)
+        {
+            buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), spell);
+        }
     }
     
     @Override
     public void readSpawnData(FriendlyByteBuf buf)
     {
-        this.spell = buf.readRegistryId();
+        boolean exist = buf.readBoolean();
+        
+        if(exist)
+        {
+            this.spell = buf.readRegistryId();
+        }
     }
     
     @Override
@@ -145,6 +165,15 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     {
         super.addAdditionalSaveData(nbt);
         nbt.put("SpellData", this.spellDataTag);
+        
+        if(spell != null)
+        {
+            nbt.putString("Spell", Spells.SPELLS_REGISTRY.get().getKey(spell).toString());
+        }
+        else
+        {
+            discard();
+        }
     }
     
     @Override
@@ -152,5 +181,21 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     {
         super.readAdditionalSaveData(nbt);
         this.spellDataTag = nbt.contains("SpellData") ? nbt.getCompound("SpellData") : new CompoundTag();
+        
+        if(nbt.contains("Spell", StringTag.TAG_STRING))
+        {
+            String key = nbt.getString("Spell");
+            ISpell spell = Spells.SPELLS_REGISTRY.get().getValue(new ResourceLocation(key));
+            
+            if(spell instanceof IProjectileSpell projectileSpell)
+            {
+                this.spell = projectileSpell;
+            }
+        }
+        
+        if(spell == null)
+        {
+            discard();
+        }
     }
 }
