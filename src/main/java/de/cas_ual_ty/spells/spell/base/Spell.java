@@ -81,6 +81,10 @@ public abstract class Spell extends BaseSpell implements IConfigurableSpell
         {
             this.tooltipComponent = Optional.of(new ManaTooltipComponent(manaCost));
         }
+        else
+        {
+            this.tooltipComponent = Optional.empty();
+        }
     }
     
     @Override
@@ -92,6 +96,10 @@ public abstract class Spell extends BaseSpell implements IConfigurableSpell
         if(manaCost > 0)
         {
             this.tooltipComponent = Optional.of(new ManaTooltipComponent(manaCost));
+        }
+        else
+        {
+            this.tooltipComponent = Optional.empty();
         }
     }
 }
