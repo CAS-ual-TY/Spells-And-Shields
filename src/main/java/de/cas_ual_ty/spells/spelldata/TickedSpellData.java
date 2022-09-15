@@ -18,7 +18,7 @@ public abstract class TickedSpellData extends SpellData implements ITickedSpellD
     {
         tick(spellDataHolder, tickTime++);
         
-        if(getMaxTime(spellDataHolder) != -1 && tickTime >= getMaxTime(spellDataHolder))
+        if(getMaxTime(spellDataHolder) != -1 && tickTime > getMaxTime(spellDataHolder))
         {
             remove();
         }
