@@ -114,9 +114,6 @@ public class Spells
             
             if(SpellsConfig.CREATE_SPELLS_CONFIGS.get())
             {
-                SpellsConfig.CREATE_SPELLS_CONFIGS.set(false);
-                SpellsConfig.CREATE_SPELLS_CONFIGS.save();
-                
                 try
                 {
                     SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
@@ -180,6 +177,12 @@ public class Spells
                 spell.applyDefaultConfig();
             }
         });
+        
+        if(SpellsConfig.CREATE_SPELLS_CONFIGS.get())
+        {
+            SpellsConfig.CREATE_SPELLS_CONFIGS.set(false);
+            SpellsConfig.CREATE_SPELLS_CONFIGS.save();
+        }
     }
     
     private static void playerTick(TickEvent.PlayerTickEvent event)
