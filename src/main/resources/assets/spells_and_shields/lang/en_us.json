@@ -74,6 +74,9 @@
   "key.spells_and_shields.key.slot_3": "Spell Slot 3",
   "key.spells_and_shields.key.slot_4": "Spell Slot 4",
   "key.spells_and_shields.key.slot_5": "Spell Slot 5",
+  "requirement.spells_and_shields.advancement": "Advancement: %s",
+  "requirement.spells_and_shields.advancement.error": "Unknown Advancement (config error): %s",
+  "requirement.spells_and_shields.bookshelves": "%s/%s Bookshelves",
   "spell.ingredients.hand": "Requirement (Hand):",
   "spell.ingredients.inventory": "Requirement (Inventory):",
   "spell.passive.when_applied": "When Applied:",
@@ -193,8 +196,5 @@
   "spells.slot.remove.success.multiple": "Cleared active spell in slot %s of %s players",
   "spells.slot.remove.success.single": "Cleared active spell in slot %s of %s",
   "spells.slot.set.success.multiple": "Set active spell in slot %s of %s players to %s",
-  "spells.slot.set.success.single": "Set active spell in slot %s of %s to %s",
-  "spells_and_shields:advancement": "Advancement: %s",
-  "spells_and_shields:advancement.error": "Unknown Advancement (config error): %s",
-  "spells_and_shields:bookshelves": "%s/%s Bookshelves"
+  "spells.slot.set.success.single": "Set active spell in slot %s of %s to %s"
 }

@@ -5,6 +5,7 @@ import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
 public abstract class Requirement
@@ -16,7 +17,8 @@ public abstract class Requirement
     public Requirement(IRequirementType<?> type)
     {
         this.type = type;
-        this.descriptionId = SpellsRegistries.REQUIREMENTS_REGISTRY.get().getKey(type).toString();
+        ResourceLocation rl = SpellsRegistries.REQUIREMENTS_REGISTRY.get().getKey(type);
+        this.descriptionId = "requirement." + rl.getNamespace() + "." + rl.getPath();
     }
     
     public IRequirementType<?> getType()
