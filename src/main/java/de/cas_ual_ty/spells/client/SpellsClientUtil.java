@@ -15,6 +15,7 @@ import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import de.cas_ual_ty.spells.util.ManaTooltipComponent;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -31,6 +32,7 @@ import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -38,8 +40,10 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 public class SpellsClientUtil
 {
@@ -54,7 +58,7 @@ public class SpellsClientUtil
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::entityRenderers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::registerClientTooltipComponent);
         
-        MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::rightClickBlock);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, SpellsClientUtil::rightClickBlock);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
     }
@@ -84,8 +88,9 @@ public class SpellsClientUtil
         });
     }
     
-    private static BlockPos lastRightClickedBlockPos = null;
-    private static Block lastRightClickedBlock = null;
+    public static List<Supplier<Block>> ACCEPTED_BLOCKS = new LinkedList<>();
+    public static BlockPos lastRightClickedBlockPos = null;
+    public static Block lastRightClickedBlock = null;
     
     private static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
@@ -99,7 +104,7 @@ public class SpellsClientUtil
     {
         if(Minecraft.getInstance().player != null)
         {
-            if(event.getScreen() instanceof AbstractContainerScreen screen && lastRightClickedBlock == SpellsRegistries.VANILLA_ENCHANTING_TABLE.get())
+            if(event.getScreen() instanceof AbstractContainerScreen screen && SpellsUtil.isEnchantingTable(lastRightClickedBlock))
             {
                 lastRightClickedBlock = null;
                 event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, Math.min(176, screen.width), SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,

@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.util;
 import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -211,5 +213,15 @@ public class SpellsUtil
     public static void addPotionRecipe(Item ingredient, Potion from, Potion to)
     {
         PotionBrewing.addMix(from, ingredient, to);
+    }
+    
+    public static boolean isEnchantingTable(Block block)
+    {
+        return block != null && isEnchantingTable(ForgeRegistries.BLOCKS.getKey(block));
+    }
+    
+    public static boolean isEnchantingTable(ResourceLocation key)
+    {
+        return key != null && SpellsConfig.ENCHANTING_TABLE.get().stream().anyMatch(rl -> rl.equals(key.toString()));
     }
 }

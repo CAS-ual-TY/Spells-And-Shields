@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -99,7 +100,10 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     @Override
     public boolean stillValid(Player player)
     {
-        return stillValid(this.access, player, SpellsRegistries.VANILLA_ENCHANTING_TABLE.get());
+        return access.evaluate((level, blockPos) ->
+        {
+            return !SpellsUtil.isEnchantingTable(level.getBlockState(blockPos).getBlock()) ? false : player.distanceToSqr(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D) <= 64.0D;
+        }, true);
     }
     
     public static SpellProgressionMenu construct(int id, Inventory inventory, FriendlyByteBuf extraData)

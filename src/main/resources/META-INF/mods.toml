@@ -6,7 +6,7 @@ issueTrackerURL="https://github.com/CAS-ual-TY/Spells-And-Shields/issues"
 [[mods]]
     modId="spells_and_shields"
     version="${file.jarVersion}"
-    displayName="Spells and Shields"
+    displayName="Spells & Shields"
     displayURL="https://github.com/CAS-ual-TY/Spells-And-Shields"
     logoFile="logo.png"
     credits="Mojang and the Minecraft Forge Team"
