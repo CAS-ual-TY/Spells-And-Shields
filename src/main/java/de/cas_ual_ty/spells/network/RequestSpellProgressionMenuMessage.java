@@ -1,12 +1,12 @@
 package de.cas_ual_ty.spells.network;
 
-import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -46,7 +46,7 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                 return;
             }
             
-            if(player.containerMenu != null && player.level.getBlockState(msg.pos()).getBlock() == SpellsRegistries.VANILLA_ENCHANTING_TABLE.get())
+            if(player.containerMenu != null && SpellsUtil.isEnchantingTable(player.level.getBlockState(msg.pos()).getBlock()))
             {
                 ContainerLevelAccess access = ContainerLevelAccess.create(player.level, msg.pos());
                 

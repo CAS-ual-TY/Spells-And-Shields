@@ -35,9 +35,14 @@ public interface ISpell extends IForgeRegistryEntry<ISpell>
         return new TranslatableComponent(getNameKey());
     }
     
+    default MutableComponent getSpellDesc()
+    {
+        return new TranslatableComponent(getDescKey());
+    }
+    
     default void addSpellDesc(List<Component> tooltip)
     {
-        tooltip.add(new TranslatableComponent(getDescKey()));
+        tooltip.add(getSpellDesc());
     }
     
     default List<Component> getTooltip(@Nullable Component keyBindTooltip)

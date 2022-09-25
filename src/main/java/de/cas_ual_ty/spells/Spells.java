@@ -4,7 +4,9 @@ import com.google.gson.JsonElement;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.*;
 import de.cas_ual_ty.spells.spell.base.AttributeSpell;
-import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
+import de.cas_ual_ty.spells.spell.base.PermanentMobEffectSpell;
+import de.cas_ual_ty.spells.spell.base.SpellIcon;
+import de.cas_ual_ty.spells.spell.base.TemporaryMobEffect;
 import de.cas_ual_ty.spells.spell.impl.*;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +15,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -30,34 +34,52 @@ public class Spells
     public static Supplier<IForgeRegistry<ISpell>> SPELLS_REGISTRY;
     private static final DeferredRegister<ISpell> SPELLS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spells"), MOD_ID);
     
-    public static final RegistryObject<ISpell> SPIT_METAL = SPELLS.register("spit_metal", () -> new SpitMetalSpell(4F));
-    public static final RegistryObject<ISpell> FIRE_RESISTANCE = SPELLS.register("fire_resistance", () -> new MobEffectSpell(MobEffects.FIRE_RESISTANCE));
-    public static final RegistryObject<ISpell> INSTANT_MINE = SPELLS.register("instant_mine", () -> new InstantMineSpell(4F));
-    public static final RegistryObject<ISpell> PRESSURIZE = SPELLS.register("pressurize", () -> new PressurizeSpell(4F));
-    public static final RegistryObject<ISpell> FIRE_CHARGE = SPELLS.register("fire_charge", () -> new FireChargeSpell(4F, new ItemStack(Items.FIRE_CHARGE)).setSmallIcon(new ResourceLocation("textures/item/fire_charge.png")));
-    public static final RegistryObject<ISpell> MANA_SOLES = SPELLS.register("mana_soles", () -> new ManaSolesSpell());
-    public static final RegistryObject<ISpell> JUMP = SPELLS.register("jump", () -> new JumpSpell(5F));
-    public static final RegistryObject<ISpell> FROST_WALKER = SPELLS.register("frost_walker", () -> new WalkerSpell());
-    public static final RegistryObject<ISpell> POTION_SHOT = SPELLS.register("potion_shot", () -> new PotionShotSpell(2F).setSmallIcon(new ResourceLocation("textures/item/potion.png")));
-    public static final RegistryObject<ISpell> WATER_WHIP = SPELLS.register("water_whip", () -> new WaterWhipSpell(5F));
-    public static final RegistryObject<ISpell> REPLENISHMENT = SPELLS.register("replenishment", () -> new MobEffectSpell(SpellsRegistries.REPLENISHMENT_EFFECT.get(), 50));
-    public static final RegistryObject<ISpell> REGENERATION = SPELLS.register("regeneration", () -> new MobEffectSpell(MobEffects.REGENERATION, 50));
-    public static final RegistryObject<ISpell> HASTE = SPELLS.register("haste", () -> new MobEffectSpell(MobEffects.DIG_SPEED));
-    public static final RegistryObject<ISpell> SLOW_FALLING = SPELLS.register("slow_falling", () -> new MobEffectSpell(MobEffects.SLOW_FALLING));
-    public static final RegistryObject<ISpell> WATER_BREATHING = SPELLS.register("water_breathing", () -> new MobEffectSpell(MobEffects.WATER_BREATHING));
-    public static final RegistryObject<ISpell> AQUA_AFFINITY = SPELLS.register("aqua_affinity", () -> new AquaAffinitySpell().setSmallIcon(new ResourceLocation("textures/item/enchanted_book.png")));
-    public static final RegistryObject<ISpell> WATER_LEAP = SPELLS.register("water_leap", () -> new WaterLeapSpell(5F));
-    public static final RegistryObject<ISpell> DOLPHINS_GRACE = SPELLS.register("dolphins_grace", () -> new MobEffectSpell(MobEffects.DOLPHINS_GRACE));
-    public static final RegistryObject<ISpell> JUMP_BOOST = SPELLS.register("jump_boost", () -> new MobEffectSpell(MobEffects.JUMP));
-    public static final RegistryObject<ISpell> SPEED = SPELLS.register("speed", () -> new MobEffectSpell(MobEffects.MOVEMENT_SPEED));
-    public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(SpellsRegistries.MAX_MANA_ATTRIBUTE::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
+    public static final RegistryObject<ISpell> LEAP = SPELLS.register("leap", LeapSpell::new);
+    public static final RegistryObject<ISpell> SUMMON_ANIMAL = SPELLS.register("summon_animal", SummonAnimalSpell::new);
+    public static final RegistryObject<ISpell> FIRE_BALL = SPELLS.register("fire_ball", FireBallSpell::new);
+    public static final RegistryObject<ISpell> BLAST_SMELT = SPELLS.register("blast_smelt", SmeltSpell::new);
+    public static final RegistryObject<ISpell> TRANSFER_MANA = SPELLS.register("transfer_mana", TransferManaSpell::new);
+    public static final RegistryObject<ISpell> BLOW_ARROW = SPELLS.register("blow_arrow", BlowArrowSpell::new);
     public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation("textures/mob_effect/health_boost.png")));
-    public static final RegistryObject<ISpell> BLOW_ARROW = SPELLS.register("blow_arrow", () -> new BlowArrowSpell(5F));
-    public static final RegistryObject<ISpell> TRANSFER_MANA = SPELLS.register("transfer_mana", () -> new TransferManaSpell(4F));
-    public static final RegistryObject<ISpell> BLAST_SMELT = SPELLS.register("blast_smelt", () -> new SmeltSpell(4F));
-    public static final RegistryObject<ISpell> FIRE_BALL = SPELLS.register("fire_ball", () -> new FireBallSpell(5F));
-    public static final RegistryObject<ISpell> SUMMON_ANIMAL = SPELLS.register("summon_animal", () -> new SummonAnimalSpell(18F));
-    public static final RegistryObject<ISpell> LEAP = SPELLS.register("leap", () -> new LeapSpell(6F));
+    public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(SpellsRegistries.MAX_MANA_ATTRIBUTE::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
+    public static final RegistryObject<ISpell> SPEED = SPELLS.register("speed", () -> new PermanentMobEffectSpell(MobEffects.MOVEMENT_SPEED));
+    public static final RegistryObject<ISpell> JUMP_BOOST = SPELLS.register("jump_boost", () -> new PermanentMobEffectSpell(MobEffects.JUMP));
+    public static final RegistryObject<ISpell> DOLPHINS_GRACE = SPELLS.register("dolphins_grace", () -> new PermanentMobEffectSpell(MobEffects.DOLPHINS_GRACE));
+    public static final RegistryObject<ISpell> WATER_LEAP = SPELLS.register("water_leap", WaterLeapSpell::new);
+    public static final RegistryObject<ISpell> AQUA_AFFINITY = SPELLS.register("aqua_affinity", () -> new AquaAffinitySpell().setSmallIcon(new ResourceLocation("textures/item/enchanted_book.png")));
+    public static final RegistryObject<ISpell> WATER_BREATHING = SPELLS.register("water_breathing", () -> new PermanentMobEffectSpell(MobEffects.WATER_BREATHING));
+    public static final RegistryObject<ISpell> SLOW_FALLING = SPELLS.register("slow_falling", () -> new PermanentMobEffectSpell(MobEffects.SLOW_FALLING));
+    public static final RegistryObject<ISpell> HASTE = SPELLS.register("haste", () -> new PermanentMobEffectSpell(MobEffects.DIG_SPEED));
+    public static final RegistryObject<ISpell> REGENERATION = SPELLS.register("regeneration", () -> new PermanentMobEffectSpell(MobEffects.REGENERATION, 50));
+    public static final RegistryObject<ISpell> REPLENISHMENT = SPELLS.register("replenishment", () -> new PermanentMobEffectSpell(SpellsRegistries.REPLENISHMENT_EFFECT.get(), 50));
+    public static final RegistryObject<ISpell> WATER_WHIP = SPELLS.register("water_whip", WaterWhipSpell::new);
+    public static final RegistryObject<ISpell> POTION_SHOT = SPELLS.register("potion_shot", PotionShotSpell::new);
+    public static final RegistryObject<ISpell> FROST_WALKER = SPELLS.register("frost_walker", () -> new WalkerSpell(() -> Blocks.WATER, () -> Material.WATER, Blocks.FROSTED_ICE::defaultBlockState));
+    public static final RegistryObject<ISpell> JUMP = SPELLS.register("jump", JumpSpell::new);
+    public static final RegistryObject<ISpell> MANA_SOLES = SPELLS.register("mana_soles", ManaSolesSpell::new);
+    public static final RegistryObject<ISpell> FIRE_CHARGE = SPELLS.register("fire_charge", () -> new FireChargeSpell().setSmallIcon(new ResourceLocation("textures/item/fire_charge.png")));
+    public static final RegistryObject<ISpell> PRESSURIZE = SPELLS.register("pressurize", PressurizeSpell::new);
+    public static final RegistryObject<ISpell> INSTANT_MINE = SPELLS.register("instant_mine", InstantMineSpell::new);
+    public static final RegistryObject<ISpell> FIRE_RESISTANCE = SPELLS.register("fire_resistance", () -> new PermanentMobEffectSpell(MobEffects.FIRE_RESISTANCE));
+    public static final RegistryObject<ISpell> SPIT_METAL = SPELLS.register("spit_metal", SpitMetalSpell::new);
+    public static final RegistryObject<ISpell> NIGHT_VISION = SPELLS.register("night_vision", () -> new PermanentMobEffectSpell(MobEffects.NIGHT_VISION));
+    public static final RegistryObject<ISpell> STRENGTH = SPELLS.register("strength", () -> new PermanentMobEffectSpell(MobEffects.DAMAGE_BOOST));
+    public static final RegistryObject<ISpell> RESISTANCE = SPELLS.register("resistance", () -> new PermanentMobEffectSpell(MobEffects.DAMAGE_RESISTANCE));
+    public static final RegistryObject<ISpell> INVISIBILITY = SPELLS.register("invisibility", () -> new PermanentMobEffectSpell(MobEffects.INVISIBILITY));
+    public static final RegistryObject<ISpell> GLOWING = SPELLS.register("glowing", () -> new PermanentMobEffectSpell(MobEffects.GLOWING));
+    public static final RegistryObject<ISpell> LUCK = SPELLS.register("luck", () -> new PermanentMobEffectSpell(MobEffects.LUCK));
+    public static final RegistryObject<ISpell> CONDUIT_POWER = SPELLS.register("conduit_power", () -> new PermanentMobEffectSpell(MobEffects.CONDUIT_POWER));
+    public static final RegistryObject<ISpell> FLAMETHROWER = SPELLS.register("flamethrower", FlamethrowerSpell::new);
+    public static final RegistryObject<ISpell> LAVA_WALKER = SPELLS.register("lava_walker", () -> new WalkerSpell(() -> Blocks.LAVA, () -> Material.LAVA, Blocks.OBSIDIAN::defaultBlockState));
+    public static final RegistryObject<ISpell> SILENCE_TARGET = SPELLS.register("silence_target", () -> new SilenceTargetSpell().setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/silence.png")));
+    public static final RegistryObject<ISpell> RANDOM_TELEPORT = SPELLS.register("random_teleport", RandomTeleportSpell::new);
+    public static final RegistryObject<ISpell> FORCED_TELEPORT = SPELLS.register("forced_teleport", ForcedTeleportSpell::new);
+    public static final RegistryObject<ISpell> TELEPORT = SPELLS.register("teleport", TeleportSpell::new);
+    public static final RegistryObject<ISpell> LIGHTNING_STRIKE = SPELLS.register("lightning_strike", LightningStrikeSpell::new);
+    public static final RegistryObject<ISpell> DRAIN_FLAME = SPELLS.register("drain_flame", DrainFlameSpell::new);
+    public static final RegistryObject<ISpell> GROWTH = SPELLS.register("growth", GrowthSpell::new);
+    public static final RegistryObject<ISpell> MAGIC_IMMUNE_SELF = SPELLS.register("magic_immune_self", () -> new TemporaryMobEffect(7F, new ItemStack(Items.GLASS_PANE), SpellsRegistries.MAGIC_IMMUNE_EFFECT.get(), 20 * 20, 0, false, true, true));
+    public static final RegistryObject<ISpell> GHAST = SPELLS.register("ghast", () -> new GhastSpell().setIcon(new SpellIcon(new ResourceLocation("textures/entity/ghast/ghast.png"), 16, 16, 16, 16, 64, 32)));
     
     public static void register()
     {
@@ -92,9 +114,6 @@ public class Spells
             
             if(SpellsConfig.CREATE_SPELLS_CONFIGS.get())
             {
-                SpellsConfig.CREATE_SPELLS_CONFIGS.set(false);
-                SpellsConfig.CREATE_SPELLS_CONFIGS.save();
-                
                 try
                 {
                     SpellsFileUtil.writeJsonToFile(f, spell.makeDefaultConfig());
@@ -158,6 +177,12 @@ public class Spells
                 spell.applyDefaultConfig();
             }
         });
+        
+        if(SpellsConfig.CREATE_SPELLS_CONFIGS.get())
+        {
+            SpellsConfig.CREATE_SPELLS_CONFIGS.set(false);
+            SpellsConfig.CREATE_SPELLS_CONFIGS.save();
+        }
     }
     
     private static void playerTick(TickEvent.PlayerTickEvent event)

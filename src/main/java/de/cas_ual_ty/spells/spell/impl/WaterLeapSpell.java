@@ -25,6 +25,11 @@ public class WaterLeapSpell extends LeapSpell
         super(manaCost, 4D);
     }
     
+    public WaterLeapSpell()
+    {
+        super(5F, 4D);
+    }
+    
     @Override
     protected SoundEvent getJumpSound()
     {

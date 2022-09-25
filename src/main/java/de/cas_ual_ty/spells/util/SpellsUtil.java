@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.util;
 import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.*;
 
 import javax.annotation.Nullable;
@@ -29,17 +31,12 @@ public class SpellsUtil
     public static final Optional<ItemStack> EMPTY_ITEMSTACK_OPTIONAL = Optional.of(ItemStack.EMPTY);
     public static final Optional<List<ItemStack>> EMPTY_ITEMSTACK_LIST_OPTIONAL = Optional.of(ImmutableList.of(ItemStack.EMPTY));
     
-    @Nullable
     public static HitResult rayTrace(Level level, Entity source, double maxDist, Predicate<Entity> filter, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid)
     {
         BlockHitResult blockHitResult = rayTraceBlock(level, source, maxDist, block, fluid);
         EntityHitResult entityHitResult = rayTraceEntity(level, source, maxDist, filter, bbInflation);
         
-        if(entityHitResult == null && blockHitResult.getType() == HitResult.Type.MISS)
-        {
-            return null;
-        }
-        else if(entityHitResult == null)
+        if(entityHitResult == null)
         {
             return blockHitResult;
         }
@@ -192,5 +189,15 @@ public class SpellsUtil
     public static void addPotionRecipe(Item ingredient, Potion from, Potion to)
     {
         PotionBrewing.addMix(from, ingredient, to);
+    }
+    
+    public static boolean isEnchantingTable(Block block)
+    {
+        return block != null && isEnchantingTable(block.getRegistryName());
+    }
+    
+    public static boolean isEnchantingTable(ResourceLocation key)
+    {
+        return key != null && SpellsConfig.ENCHANTING_TABLE.get().stream().anyMatch(rl -> rl.equals(key.toString()));
     }
 }

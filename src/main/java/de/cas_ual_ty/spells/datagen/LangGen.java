@@ -11,15 +11,17 @@ import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.requirement.IRequirementType;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
-import de.cas_ual_ty.spells.spell.base.MobEffectSpell;
 import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
+import de.cas_ual_ty.spells.spell.base.PermanentMobEffectSpell;
 import de.cas_ual_ty.spells.spelltree.SpellTrees;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.data.LanguageProvider;
 
 import java.util.function.Supplier;
@@ -32,23 +34,31 @@ public class LangGen extends LanguageProvider
     }
     
     public static final String PASSIVE_STRING = "A passive effect.";
+    public static final String SELF_STRING = "Applies the %s effect for a short period of time.";
     
     @Override
     protected void addTranslations()
     {
         addAttribute(SpellsRegistries.MAX_MANA_ATTRIBUTE, "Max Mana");
-        addEnchantment(SpellsRegistries.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection");
-        addEnchantment(SpellsRegistries.MANA_BLADE_ENCHANTMENT, "Mana Blade");
-        addEnchantment(SpellsRegistries.MANA_SHIELD_ENCHANTMENT, "Mana Shield");
-        addEnchantment(SpellsRegistries.MANA_REGEN_ENCHANTMENT, "Mana Regeneration");
-        addEnchantment(SpellsRegistries.MAX_MANA_ENCHANTMENT, "Maximum Mana");
         
-        addEffect(SpellsRegistries.INSTANT_MANA_EFFECT, "Instant Mana");
-        addEffect(SpellsRegistries.MANA_BOMB_EFFECT, "Mana Bomb");
-        addEffect(SpellsRegistries.REPLENISHMENT_EFFECT, "Replenishment");
-        addEffect(SpellsRegistries.LEAKING_MOB_EFFECT, "Leaking");
-        addEffect(SpellsRegistries.MANA_BOOST_EFFECT, "Mana Boost");
-        addEffect(SpellsRegistries.EXTRA_MANA_EFFECT, "Extra Mana");
+        // support JEI Enchantment Info
+        // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
+        add("enchantment." + SpellsAndShields.MOD_ID + ".type." + SpellsRegistries.SHIELD_ENCHANTMENT_CATEGORY.name().toLowerCase(), "shields");
+        
+        addEnchantment(SpellsRegistries.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection", "Reduces magic damage.");
+        addEnchantment(SpellsRegistries.MANA_BLADE_ENCHANTMENT, "Mana Blade", "Consumes mana to increase damage.");
+        addEnchantment(SpellsRegistries.MANA_SHIELD_ENCHANTMENT, "Mana Shield", "WIP"); //TODO mana shield ench description
+        addEnchantment(SpellsRegistries.MANA_REGEN_ENCHANTMENT, "Mana Regeneration", "Increases your mana regeneration while worn. More potent on chestplates and leggings than helmets and boots.");
+        addEnchantment(SpellsRegistries.MAX_MANA_ENCHANTMENT, "Maximum Mana", "Increases your maximum mana while worn. More potent on chestplates and leggings than helmets and boots.");
+        
+        addEffect(SpellsRegistries.INSTANT_MANA_EFFECT, "Instant Mana", "Replenishes mana; higher levels increase the effect potency.");
+        addEffect(SpellsRegistries.MANA_BOMB_EFFECT, "Mana Bomb", "Burns mana; higher levels increase the effect potency.");
+        addEffect(SpellsRegistries.REPLENISHMENT_EFFECT, "Replenishment", "Replenishes mana over time; higher levels make mana be replenished quicker.");
+        addEffect(SpellsRegistries.LEAKING_MOB_EFFECT, "Leaking", "Burns mana over time; higher levels burn more mana.");
+        addEffect(SpellsRegistries.MANA_BOOST_EFFECT, "Mana Boost", "Increases maximum mana; higher levels give more additional mana bottles.");
+        addEffect(SpellsRegistries.EXTRA_MANA_EFFECT, "Extra Mana", "Adds burnable mana bottles (which can't be replenished); higher levels give more extra mana.");
+        addEffect(SpellsRegistries.SILENCE_EFFECT, "Silence", "No spells can be used while this effect is active.");
+        addEffect(SpellsRegistries.MAGIC_IMMUNE_EFFECT, "Magic Immune", "Makes you ignore any magic damage.");
         
         addPotion(SpellsRegistries.INSTANT_MANA, "Instant Mana");
         addPotion(SpellsRegistries.STRONG_INSTANT_MANA, "Instant Mana");
@@ -92,20 +102,39 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.FROST_WALKER, "Frost Walker", PASSIVE_STRING);
         addSpell(Spells.JUMP, "Jump", "High jump. Be aware of fall damage.");
         addSpell(Spells.MANA_SOLES, "Mana Soles", "Consumes mana to reduce or cancel fall damage.");
-        addSpell(Spells.FIRE_CHARGE, "Fire Charge", "Shoot a fire charge forward, like a Ghast.");
+        addSpell(Spells.FIRE_CHARGE, "Fire Charge", "Shoot a fire charge forward instantly.");
         addSpell(Spells.PRESSURIZE, "Pressurize", "Knock back every entity around you and remove any fluid.");
-        addSpell(Spells.INSTANT_MINE, "Instant Mine", "Breaks the block your are looking at using the tool in your hand.");
+        addSpell(Spells.INSTANT_MINE, "Instant Mine", "Breaks the block you are looking at using the tool in your hand.");
         addSpell(Spells.FIRE_RESISTANCE, "Fire Resistance", PASSIVE_STRING);
         addSpell(Spells.SPIT_METAL, "Spit Metal", "Spit a nugget that deals damage (from your hand).");
+        addSpell(Spells.NIGHT_VISION, "Night Vision", PASSIVE_STRING);
+        addSpell(Spells.STRENGTH, "Strength", PASSIVE_STRING);
+        addSpell(Spells.RESISTANCE, "Resistance", PASSIVE_STRING);
+        addSpell(Spells.INVISIBILITY, "Invisibility", PASSIVE_STRING);
+        addSpell(Spells.GLOWING, "Glowing", PASSIVE_STRING);
+        addSpell(Spells.LUCK, "Luck", PASSIVE_STRING);
+        addSpell(Spells.CONDUIT_POWER, "Conduit Power", PASSIVE_STRING);
+        addSpell(Spells.FLAMETHROWER, "Flamethrower", "Breath flames from your mouth setting everything on fire.");
+        addSpell(Spells.LAVA_WALKER, "Lava Walker", "Walk on lava by turning the blocks you walk on into obsidian.");
+        addSpell(Spells.SILENCE_TARGET, "Silence Target", "Silence the target you are looking at within a certain range.");
+        addSpell(Spells.RANDOM_TELEPORT, "Random Teleport", "Randomly teleport away. This spell can fail.");
+        addSpell(Spells.FORCED_TELEPORT, "Forced Teleport", "Randomly teleports the target you are looking at away. This spell can fail.");
+        addSpell(Spells.TELEPORT, "Teleport", "Teleport to where you are looking at.");
+        addSpell(Spells.LIGHTNING_STRIKE, "Lightning Strike", "Summon a lightning strike where you are looking at. The target must see skylight.");
+        addSpell(Spells.DRAIN_FLAME, "Drain Flame", "Drain fire to convert it into mana regeneration. The fire must be infinite (eg. on top of Netherrack) for this to work.");
+        addSpell(Spells.GROWTH, "Growth", "Apply the effect of Bonemeal to plants around you.");
+        addSpell(Spells.MAGIC_IMMUNE_SELF, "Magic Immune Self", SELF_STRING);
+        addSpell(Spells.GHAST, "Ghast", "Shoot a fire charge forward, like a Ghast.");
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
-        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s (%s)");
+        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, ".error", "Unknown Advancement (config error): %s");
         
         add(SpellTrees.KEY_NETHER, "Nether");
         add(SpellTrees.KEY_OCEAN, "Ocean");
         add(SpellTrees.KEY_MINING, "Mining");
         add(SpellTrees.KEY_MOVEMENT, "Movement");
+        add(SpellTrees.KEY_END, "End");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
@@ -130,7 +159,7 @@ public class LangGen extends LanguageProvider
         
         add(MultiIngredientSpell.KEY_REQUIRED_HAND, "Requirement (Hand):");
         add(MultiIngredientSpell.KEY_REQUIRED_INVENTORY, "Requirement (Inventory):");
-        add(MobEffectSpell.KEY_WHEN_APPLIED, "When Applied:");
+        add(PermanentMobEffectSpell.KEY_WHEN_APPLIED, "When Applied:");
         add(SpellProgressionScreen.KEY_LEARN, "Learn");
         add(SpellProgressionScreen.KEY_EQUIP, "Equip");
         add(SpellProgressionScreen.KEY_UNAVAILABLE, "Unavailable");
@@ -140,6 +169,22 @@ public class LangGen extends LanguageProvider
     public void addAttribute(Supplier<? extends Attribute> key, String name)
     {
         add(key.get().getDescriptionId(), name);
+    }
+    
+    public void addEnchantment(Supplier<? extends Enchantment> key, String name, String desc)
+    {
+        // support JEI Enchantment Info
+        // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
+        super.addEnchantment(key, name);
+        add(key.get().getDescriptionId() + ".desc", desc);
+    }
+    
+    public void addEffect(Supplier<? extends MobEffect> key, String name, String desc)
+    {
+        // support Just Enough Effect Descriptions
+        // https://www.curseforge.com/minecraft/mc-mods/just-enough-effect-descriptions-jeed
+        super.addEffect(key, name);
+        add(key.get().getDescriptionId() + ".description", desc);
     }
     
     public void addPotion(Supplier<? extends Potion> key, String name)

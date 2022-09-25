@@ -27,17 +27,17 @@ public class BaseIngredientsSpell extends MultiIngredientSpell
         this.defaultInventoryIngredients = ImmutableList.copyOf(inventoryIngredients);
     }
     
-    public BaseIngredientsSpell(float manaCost)
-    {
-        super(manaCost);
-        this.defaultHandIngredients = ImmutableList.of();
-        this.defaultInventoryIngredients = ImmutableList.of();
-    }
-    
     public BaseIngredientsSpell(float manaCost, ItemStack handIngredient)
     {
         super(manaCost);
         this.defaultHandIngredients = ImmutableList.of(handIngredient);
+        this.defaultInventoryIngredients = ImmutableList.of();
+    }
+    
+    public BaseIngredientsSpell(float manaCost)
+    {
+        super(manaCost);
+        this.defaultHandIngredients = ImmutableList.of();
         this.defaultInventoryIngredients = ImmutableList.of();
     }
     

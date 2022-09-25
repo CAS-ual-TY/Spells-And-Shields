@@ -1,6 +1,9 @@
 package de.cas_ual_ty.spells;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraftforge.common.ForgeConfigSpec;
+
+import java.util.List;
 
 public class SpellsConfig
 {
@@ -16,6 +19,8 @@ public class SpellsConfig
     public static final ForgeConfigSpec.BooleanValue RESPAWN_WITH_FULL_MANA;
     public static final ForgeConfigSpec.BooleanValue CLEAR_SLOTS_ON_DEATH;
     public static final ForgeConfigSpec.BooleanValue FORGET_SPELLS_ON_DEATH;
+    
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANTING_TABLE;
     
     static
     {
@@ -52,6 +57,10 @@ public class SpellsConfig
         FORGET_SPELLS_ON_DEATH = configBuilder
                 .comment("Make a player forget all learned spells on death (true) or not (false). Forgotten spells are still visible in spell trees but must be relearned before you can equip them.")
                 .define("forgetSpellsOnDeath", true);
+        
+        ENCHANTING_TABLE = configBuilder
+                .comment("Resource location of the enchanting table. Some mods could change that.")
+                .defineList("enchantingTables", ImmutableList.of("minecraft:enchanting_table", "quark:matrix_enchanter"), s -> true);
         
         GENERAL_SPEC = configBuilder.build();
     }

@@ -16,7 +16,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import java.util.List;
 import java.util.Map;
 
-public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSpell
+public class PermanentMobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSpell
 {
     public final MobEffect mobEffect;
     public final int duration;
@@ -25,7 +25,7 @@ public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSp
     public final boolean visible;
     public final boolean showIcon;
     
-    public MobEffectSpell(MobEffect mobEffect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon)
+    public PermanentMobEffectSpell(MobEffect mobEffect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon)
     {
         this.mobEffect = mobEffect;
         this.duration = duration;
@@ -36,17 +36,17 @@ public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSp
         this.setIcon(new ResourceLocation(mobEffect.getRegistryName().getNamespace(), "textures/mob_effect/" + mobEffect.getRegistryName().getPath() + ".png"));
     }
     
-    public MobEffectSpell(MobEffect mobEffect, int duration, int amplifier)
+    public PermanentMobEffectSpell(MobEffect mobEffect, int duration, int amplifier)
     {
         this(mobEffect, duration, amplifier, false, false, false);
     }
     
-    public MobEffectSpell(MobEffect mobEffect, int duration)
+    public PermanentMobEffectSpell(MobEffect mobEffect, int duration)
     {
         this(mobEffect, duration, 0);
     }
     
-    public MobEffectSpell(MobEffect mobEffect)
+    public PermanentMobEffectSpell(MobEffect mobEffect)
     {
         this(mobEffect, 20);
     }
@@ -67,7 +67,7 @@ public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSp
             return;
         }
         
-        if(spellHolder.getPlayer().level.isClientSide)
+        if(spellHolder.getPlayer().level.isClientSide && activeEffect.isNoCounter())
         {
             activeEffect.setNoCounter(false);
         }
@@ -87,7 +87,7 @@ public class MobEffectSpell extends PassiveSpell implements ITickSpell, IEquipSp
         
         if(spellHolder.getPlayer().level.isClientSide)
         {
-            if(activeEffect != null)
+            if(activeEffect != null && activeEffect.isNoCounter())
             {
                 activeEffect.setNoCounter(true);
             }

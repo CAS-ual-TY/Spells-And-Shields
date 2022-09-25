@@ -25,18 +25,18 @@ public class LeapSpell extends BaseIngredientsSpell implements IClientSpell
     public LeapSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, double speed)
     {
         super(manaCost, handIngredients, inventoryIngredients);
-        this.defaultSpeed = speed;
+        defaultSpeed = speed;
     }
     
     public LeapSpell(float manaCost, double speed)
     {
         super(manaCost);
-        this.defaultSpeed = speed;
+        defaultSpeed = speed;
     }
     
-    public LeapSpell(float manaCost)
+    public LeapSpell()
     {
-        this(manaCost, 2.5D);
+        this(6F, 2.5D);
     }
     
     @Override

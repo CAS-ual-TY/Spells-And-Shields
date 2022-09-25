@@ -28,23 +28,30 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
     protected int fireSeconds;
     protected float damage;
     
-    public FireBallSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, int defaultFireSeconds, float defaultDamage)
+    public FireBallSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, int fireSeconds, float damage)
     {
         super(manaCost, handIngredients, inventoryIngredients);
-        this.defaultFireSeconds = defaultFireSeconds;
-        this.defaultDamage = defaultDamage;
+        defaultFireSeconds = fireSeconds;
+        defaultDamage = damage;
     }
     
     public FireBallSpell(float manaCost, ItemStack ingredient, int fireSeconds, float damage)
     {
         super(manaCost, ingredient);
-        this.defaultFireSeconds = fireSeconds;
-        this.defaultDamage = damage;
+        defaultFireSeconds = fireSeconds;
+        defaultDamage = damage;
     }
     
-    public FireBallSpell(float manaCost)
+    public FireBallSpell(float manaCost, int fireSeconds, float damage)
     {
-        this(manaCost, new ItemStack(Items.BLAZE_POWDER), 2, 2F);
+        super(manaCost);
+        defaultFireSeconds = fireSeconds;
+        defaultDamage = damage;
+    }
+    
+    public FireBallSpell()
+    {
+        this(5F, new ItemStack(Items.BLAZE_POWDER), 2, 2F);
     }
     
     @Override
@@ -83,7 +90,10 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
     @Override
     public void perform(ManaHolder manaHolder)
     {
-        shootStraight(manaHolder, 3F, (projectile, level) -> level.playSound(null, manaHolder.getPlayer(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F));
+        shootStraight(manaHolder, 3F, (projectile, level) ->
+        {
+            level.playSound(null, manaHolder.getPlayer(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1F, 1F);
+        });
     }
     
     @Override
@@ -92,8 +102,8 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
         Entity hit = entityHitResult.getEntity();
         if(hit instanceof LivingEntity livingEntity)
         {
-            livingEntity.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), this.damage);
-            livingEntity.setSecondsOnFire(this.fireSeconds);
+            livingEntity.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), damage);
+            livingEntity.setSecondsOnFire(fireSeconds);
         }
         IProjectileSpell.super.onEntityHit(entity, entityHitResult);
     }
@@ -102,8 +112,8 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
     public JsonObject makeDefaultConfig()
     {
         JsonObject json = super.makeDefaultConfig();
-        json.addProperty("fireSeconds", this.defaultFireSeconds);
-        json.addProperty("damage", this.defaultDamage);
+        json.addProperty("fireSeconds", defaultFireSeconds);
+        json.addProperty("damage", defaultDamage);
         return json;
     }
     
@@ -111,15 +121,15 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
     public void readFromConfig(JsonObject json)
     {
         super.readFromConfig(json);
-        this.fireSeconds = SpellsFileUtil.jsonInt(json, "fireSeconds");
-        this.damage = SpellsFileUtil.jsonFloat(json, "damage");
+        fireSeconds = SpellsFileUtil.jsonInt(json, "fireSeconds");
+        damage = SpellsFileUtil.jsonFloat(json, "damage");
     }
     
     @Override
     public void applyDefaultConfig()
     {
         super.applyDefaultConfig();
-        this.fireSeconds = defaultFireSeconds;
-        this.damage = defaultDamage;
+        fireSeconds = defaultFireSeconds;
+        damage = defaultDamage;
     }
 }

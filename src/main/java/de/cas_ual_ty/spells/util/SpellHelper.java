@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.util;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.network.FireSpellMessage;
@@ -19,7 +20,7 @@ public class SpellHelper
             SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new FireSpellMessage(slot));
         }
         
-        else if(player instanceof ServerPlayer serverPlayer)
+        else if(player instanceof ServerPlayer serverPlayer && !isSilenced(player))
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
@@ -37,5 +38,10 @@ public class SpellHelper
                 }
             });
         }
+    }
+    
+    public static boolean isSilenced(Player player)
+    {
+        return player.hasEffect(SpellsRegistries.SILENCE_EFFECT.get());
     }
 }

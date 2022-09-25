@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -19,14 +20,19 @@ public class FireChargeSpell extends BaseIngredientsSpell
         super(manaCost, handIngredients, inventoryIngredients);
     }
     
+    public FireChargeSpell(float manaCost, ItemStack handIngredient)
+    {
+        super(manaCost, handIngredient);
+    }
+    
     public FireChargeSpell(float manaCost)
     {
         super(manaCost);
     }
     
-    public FireChargeSpell(float manaCost, ItemStack handIngredient)
+    public FireChargeSpell()
     {
-        super(manaCost, handIngredient);
+        this(4F, new ItemStack(Items.FIRE_CHARGE));
     }
     
     @Override

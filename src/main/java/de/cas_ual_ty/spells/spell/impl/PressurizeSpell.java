@@ -25,14 +25,19 @@ public class PressurizeSpell extends BaseIngredientsSpell
         super(manaCost, handIngredients, inventoryIngredients);
     }
     
+    public PressurizeSpell(float manaCost, ItemStack handIngredient)
+    {
+        super(manaCost, handIngredient);
+    }
+    
     public PressurizeSpell(float manaCost)
     {
         super(manaCost);
     }
     
-    public PressurizeSpell(float manaCost, ItemStack handIngredient)
+    public PressurizeSpell()
     {
-        super(manaCost, handIngredient);
+        this(4F);
     }
     
     @Override
@@ -47,7 +52,7 @@ public class PressurizeSpell extends BaseIngredientsSpell
             
             double strength = 2D;
             
-            caster.level.playSound(null, caster, SoundEvents.PLAYER_BREATH, SoundSource.PLAYERS, 1.0F, 1.0F);
+            caster.level.playSound(null, caster, SoundEvents.PLAYER_BREATH, SoundSource.PLAYERS, 1F, 1F);
             
             List<Entity> entities = caster.level.getEntities(caster, area);
             

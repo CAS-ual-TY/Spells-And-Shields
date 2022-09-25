@@ -38,9 +38,9 @@ public class SummonAnimalSpell extends HandIngredientSpell
         this.ingredientMap = new HashMap<>();
     }
     
-    public SummonAnimalSpell(float manaCost)
+    public SummonAnimalSpell()
     {
-        super(manaCost);
+        super(18F);
         
         this.ingredientMap = new HashMap<>();
         this.addIngredient(Items.BEEF, 8, EntityType.COW);
@@ -148,8 +148,6 @@ public class SummonAnimalSpell extends HandIngredientSpell
     {
         super.readFromConfig(json);
         
-        this.ingredientMap.clear();
-        
         JsonArray ingredients = SpellsFileUtil.jsonArray(json, "ingredients");
         
         for(JsonElement e : ingredients)
@@ -182,8 +180,8 @@ public class SummonAnimalSpell extends HandIngredientSpell
     public void applyDefaultConfig()
     {
         super.applyDefaultConfig();
-        this.ingredientMap.clear();
-        this.ingredientMap.putAll(this.defaultIngredientMap);
+        ingredientMap.clear();
+        ingredientMap.putAll(defaultIngredientMap);
     }
     
     private static record Ingredient(ItemStack ingredient, EntityType<?> entity)

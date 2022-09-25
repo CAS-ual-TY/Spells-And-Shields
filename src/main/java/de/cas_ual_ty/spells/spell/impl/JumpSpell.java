@@ -16,24 +16,29 @@ import java.util.List;
 public class JumpSpell extends BaseIngredientsSpell implements IClientSpell
 {
     public final double defaultSpeed;
-    
     protected double speed;
     
     public JumpSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, double speed)
     {
         super(manaCost, handIngredients, inventoryIngredients);
-        this.defaultSpeed = speed;
+        defaultSpeed = speed;
+    }
+    
+    public JumpSpell(float manaCost, ItemStack ingredient, double speed)
+    {
+        super(manaCost, ingredient);
+        defaultSpeed = speed;
     }
     
     public JumpSpell(float manaCost, double speed)
     {
         super(manaCost);
-        this.defaultSpeed = speed;
+        defaultSpeed = speed;
     }
     
-    public JumpSpell(float manaCost)
+    public JumpSpell()
     {
-        this(manaCost, 1.5D);
+        this(5F, 1.5D);
     }
     
     @Override
@@ -65,7 +70,7 @@ public class JumpSpell extends BaseIngredientsSpell implements IClientSpell
     public JsonObject makeDefaultConfig()
     {
         JsonObject json = super.makeDefaultConfig();
-        json.addProperty("speed", this.defaultSpeed);
+        json.addProperty("speed", defaultSpeed);
         return json;
     }
     
@@ -73,13 +78,13 @@ public class JumpSpell extends BaseIngredientsSpell implements IClientSpell
     public void readFromConfig(JsonObject json)
     {
         super.readFromConfig(json);
-        this.speed = SpellsFileUtil.jsonDouble(json, "speed");
+        speed = SpellsFileUtil.jsonDouble(json, "speed");
     }
     
     @Override
     public void applyDefaultConfig()
     {
         super.applyDefaultConfig();
-        this.speed = this.defaultSpeed;
+        speed = defaultSpeed;
     }
 }

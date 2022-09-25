@@ -32,21 +32,22 @@ public class SpitMetalSpell extends HandIngredientSpell implements IProjectileSp
     public SpitMetalSpell(float manaCost, float baseDamage, Map<Item, Float> ingredientMap)
     {
         super(manaCost);
-        this.defaultBaseDamage = baseDamage;
-        this.defaultIngredientMap = ingredientMap;
+        defaultBaseDamage = baseDamage;
+        defaultIngredientMap = ingredientMap;
+        
         this.ingredientMap = new HashMap<>();
     }
     
-    public SpitMetalSpell(float manaCost)
+    public SpitMetalSpell()
     {
-        super(manaCost);
-        this.defaultBaseDamage = 8F;
+        super(4F);
+        defaultBaseDamage = 8F;
         
-        this.ingredientMap = new HashMap<>();
+        ingredientMap = new HashMap<>();
         ingredientMap.put(Items.IRON_NUGGET, Tiers.IRON.getAttackDamageBonus());
         ingredientMap.put(Items.GOLD_NUGGET, Tiers.GOLD.getAttackDamageBonus());
-        this.defaultIngredientMap = ImmutableMap.copyOf(ingredientMap);
-        this.ingredientMap.clear();
+        defaultIngredientMap = ImmutableMap.copyOf(ingredientMap);
+        ingredientMap.clear();
     }
     
     @Override
@@ -87,7 +88,7 @@ public class SpitMetalSpell extends HandIngredientSpell implements IProjectileSp
     public JsonObject makeDefaultConfig()
     {
         JsonObject json = super.makeDefaultConfig();
-        json.addProperty("baseDamage", this.defaultBaseDamage);
+        json.addProperty("baseDamage", defaultBaseDamage);
         return json;
     }
     
@@ -95,15 +96,15 @@ public class SpitMetalSpell extends HandIngredientSpell implements IProjectileSp
     public void readFromConfig(JsonObject json)
     {
         super.readFromConfig(json);
-        this.baseDamage = SpellsFileUtil.jsonFloat(json, "baseDamage");
-        this.ingredientMap.putAll(this.defaultIngredientMap);
+        baseDamage = SpellsFileUtil.jsonFloat(json, "baseDamage");
+        ingredientMap.putAll(defaultIngredientMap);
     }
     
     @Override
     public void applyDefaultConfig()
     {
         super.applyDefaultConfig();
-        this.baseDamage = defaultBaseDamage;
-        this.ingredientMap.putAll(this.defaultIngredientMap);
+        baseDamage = defaultBaseDamage;
+        ingredientMap.putAll(defaultIngredientMap);
     }
 }
