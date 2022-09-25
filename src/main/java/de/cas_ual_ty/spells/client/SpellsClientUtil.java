@@ -40,10 +40,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 public class SpellsClientUtil
 {
@@ -88,7 +86,6 @@ public class SpellsClientUtil
         });
     }
     
-    public static List<Supplier<Block>> ACCEPTED_BLOCKS = new LinkedList<>();
     public static BlockPos lastRightClickedBlockPos = null;
     public static Block lastRightClickedBlock = null;
     
