@@ -71,7 +71,7 @@ public class Spells
     public static final RegistryObject<ISpell> CONDUIT_POWER = SPELLS.register("conduit_power", () -> new PermanentMobEffectSpell(MobEffects.CONDUIT_POWER));
     public static final RegistryObject<ISpell> FLAMETHROWER = SPELLS.register("flamethrower", FlamethrowerSpell::new);
     public static final RegistryObject<ISpell> LAVA_WALKER = SPELLS.register("lava_walker", () -> new WalkerSpell(() -> Blocks.LAVA, () -> Material.LAVA, Blocks.OBSIDIAN::defaultBlockState));
-    public static final RegistryObject<ISpell> SILENCE_TARGET = SPELLS.register("silence", () -> new SilenceTargetSpell().setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/silence.png")));
+    public static final RegistryObject<ISpell> SILENCE_TARGET = SPELLS.register("silence_target", () -> new SilenceTargetSpell().setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/silence.png")));
     public static final RegistryObject<ISpell> RANDOM_TELEPORT = SPELLS.register("random_teleport", RandomTeleportSpell::new);
     public static final RegistryObject<ISpell> FORCED_TELEPORT = SPELLS.register("forced_teleport", ForcedTeleportSpell::new);
     public static final RegistryObject<ISpell> TELEPORT = SPELLS.register("teleport", TeleportSpell::new);
