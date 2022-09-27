@@ -6,7 +6,7 @@ import de.cas_ual_ty.spells.spell.*;
 import de.cas_ual_ty.spells.spell.base.AttributeSpell;
 import de.cas_ual_ty.spells.spell.base.PermanentMobEffectSpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
-import de.cas_ual_ty.spells.spell.base.TemporaryMobEffect;
+import de.cas_ual_ty.spells.spell.base.TemporaryMobEffectSpell;
 import de.cas_ual_ty.spells.spell.impl.*;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -78,7 +78,7 @@ public class Spells
     public static final RegistryObject<ISpell> LIGHTNING_STRIKE = SPELLS.register("lightning_strike", LightningStrikeSpell::new);
     public static final RegistryObject<ISpell> DRAIN_FLAME = SPELLS.register("drain_flame", DrainFlameSpell::new);
     public static final RegistryObject<ISpell> GROWTH = SPELLS.register("growth", GrowthSpell::new);
-    public static final RegistryObject<ISpell> MAGIC_IMMUNE_SELF = SPELLS.register("magic_immune_self", () -> new TemporaryMobEffect(7F, new ItemStack(Items.GLASS_PANE), SpellsRegistries.MAGIC_IMMUNE_EFFECT.get(), 20 * 20, 0, false, true, true));
+    public static final RegistryObject<ISpell> MAGIC_IMMUNE_SELF = SPELLS.register("magic_immune_self", () -> new TemporaryMobEffectSpell(7F, new ItemStack(Items.GLASS_PANE), SpellsRegistries.MAGIC_IMMUNE_EFFECT.get(), 20 * 20, 0, false, true, true));
     public static final RegistryObject<ISpell> GHAST = SPELLS.register("ghast", () -> new GhastSpell().setIcon(new SpellIcon(new ResourceLocation("textures/entity/ghast/ghast.png"), 16, 16, 16, 16, 64, 32)));
     
     public static void register()

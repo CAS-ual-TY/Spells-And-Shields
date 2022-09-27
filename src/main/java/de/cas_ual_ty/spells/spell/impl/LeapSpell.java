@@ -28,6 +28,12 @@ public class LeapSpell extends BaseIngredientsSpell implements IClientSpell
         defaultSpeed = speed;
     }
     
+    public LeapSpell(float manaCost, ItemStack handIngredient, double speed)
+    {
+        super(manaCost, handIngredient);
+        defaultSpeed = speed;
+    }
+    
     public LeapSpell(float manaCost, double speed)
     {
         super(manaCost);

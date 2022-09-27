@@ -27,7 +27,7 @@ public class WaterLeapSpell extends LeapSpell
     
     public WaterLeapSpell()
     {
-        super(5F, 4D);
+        this(5F, 4D);
     }
     
     @Override

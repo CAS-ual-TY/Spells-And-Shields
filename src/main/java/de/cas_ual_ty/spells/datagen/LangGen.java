@@ -40,6 +40,7 @@ public class LangGen extends LanguageProvider
     protected void addTranslations()
     {
         addAttribute(SpellsRegistries.MAX_MANA_ATTRIBUTE, "Max Mana");
+        addAttribute(SpellsRegistries.MANA_REGEN_ATTRIBUTE, "Mana Regeneration");
         
         // support JEI Enchantment Info
         // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
@@ -211,5 +212,11 @@ public class LangGen extends LanguageProvider
         Requirement inst = requirement.get().makeInstance();
         String descriptionId = inst.getDescriptionId();
         add(descriptionId + suffix, desc);
+    }
+    
+    @Override
+    public String getName()
+    {
+        return "Spells & Shields Lang File";
     }
 }

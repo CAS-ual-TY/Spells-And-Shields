@@ -14,7 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-public class TemporaryMobEffect extends BaseIngredientsSpell
+public class TemporaryMobEffectSpell extends BaseIngredientsSpell
 {
     public final MobEffect mobEffect;
     public final int duration;
@@ -23,7 +23,7 @@ public class TemporaryMobEffect extends BaseIngredientsSpell
     public final boolean visible;
     public final boolean showIcon;
     
-    public TemporaryMobEffect(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, MobEffect mobEffect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon)
+    public TemporaryMobEffectSpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, MobEffect mobEffect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon)
     {
         super(manaCost, handIngredients, inventoryIngredients);
         this.mobEffect = mobEffect;
@@ -37,7 +37,7 @@ public class TemporaryMobEffect extends BaseIngredientsSpell
         this.setIcon(new ResourceLocation(rl.getNamespace(), "textures/mob_effect/" + rl.getPath() + ".png"));
     }
     
-    public TemporaryMobEffect(float manaCost, ItemStack handIngredient, MobEffect mobEffect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon)
+    public TemporaryMobEffectSpell(float manaCost, ItemStack handIngredient, MobEffect mobEffect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon)
     {
         super(manaCost, handIngredient);
         this.mobEffect = mobEffect;
@@ -51,7 +51,7 @@ public class TemporaryMobEffect extends BaseIngredientsSpell
         this.setIcon(new ResourceLocation(rl.getNamespace(), "textures/mob_effect/" + rl.getPath() + ".png"));
     }
     
-    public TemporaryMobEffect(float manaCost, MobEffect mobEffect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon)
+    public TemporaryMobEffectSpell(float manaCost, MobEffect mobEffect, int duration, int amplifier, boolean ambient, boolean visible, boolean showIcon)
     {
         super(manaCost);
         this.mobEffect = mobEffect;
