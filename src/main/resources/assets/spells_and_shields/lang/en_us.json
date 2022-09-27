@@ -1,4 +1,5 @@
 {
+  "attribute.name.generic.mana_regen": "Mana Regeneration",
   "attribute.name.generic.max_mana": "Max Mana",
   "container.spells_and_shields.spell_progression": "Spell Progression",
   "effect.spells_and_shields.extra_mana": "Extra Mana",
