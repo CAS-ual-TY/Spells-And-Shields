@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.requirement;
 
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.advancements.Advancement;
@@ -53,8 +52,6 @@ public class AdvancementRequirement extends Requirement
         if(spellProgressionHolder.getPlayer() instanceof ServerPlayer player)
         {
             Advancement a = player.server.getAdvancements().getAdvancement(advancementRL);
-            
-            player.server.getAdvancements().getAllAdvancements().stream().forEach(ad -> SpellsAndShields.LOGGER.info(ad.getId().toString()));
             
             if(a != null)
             {
