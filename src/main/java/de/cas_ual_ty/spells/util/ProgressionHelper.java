@@ -29,6 +29,11 @@ public class ProgressionHelper
                 continue;
             }
             
+            if(!spellTree0.passes(spellProgressionHolder, access))
+            {
+                continue;
+            }
+            
             SpellTree stripped = spellTree0.copy();
             
             List<SpellNode> visibleNodes = new LinkedList<>();
@@ -93,11 +98,22 @@ public class ProgressionHelper
         }
         
         strippedSkillTrees.forEach(tree ->
-                tree.forEach(node ->
-                {
-                    node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
-                })
-        );
+        {
+            tree.forEach(node ->
+            {
+                node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
+            });
+        });
+        
+        strippedSkillTrees.forEach(tree ->
+        {
+            tree.forEach(node ->
+            {
+                node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
+            });
+            
+            tree.setRequirements(tree.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
+        });
         
         return strippedSkillTrees;
     }

@@ -119,8 +119,9 @@ public class SpellTrees
     
     public static SpellTree enderTree()
     {
-        return SpellTree.builder("end", Component.translatable(KEY_END), Spells.RANDOM_TELEPORT, 20, bookshelves(28), advancement("end/root"))
+        return SpellTree.builder("end", Component.translatable(KEY_END), Spells.RANDOM_TELEPORT, 20, bookshelves(28))
                 .icon(Spells.TELEPORT.get())
+                .requirement(advancement("end/root"))
                 .add(Spells.FORCED_TELEPORT.get(), 30, bookshelves(28))
                 .leaf()
                 .add(Spells.TELEPORT.get(), 30, bookshelves(28), advancement("end/respawn_dragon"))

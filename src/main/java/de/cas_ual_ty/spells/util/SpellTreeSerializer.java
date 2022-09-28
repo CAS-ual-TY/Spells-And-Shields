@@ -34,6 +34,7 @@ public class SpellTreeSerializer
         buf.writeUUID(spellTree.getId());
         buf.writeComponent(spellTree.getTitle());
         buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), spellTree.getIconSpell());
+        encodeRequirements(spellTree.getRequirements(), buf);
         
         SpellNode spellNode = spellTree.getRoot();
         encodeNode(spellNode, buf);
@@ -77,6 +78,7 @@ public class SpellTreeSerializer
         UUID id = buf.readUUID();
         Component title = buf.readComponent();
         ISpell icon = buf.readRegistryId();
+        List<Requirement> requirements = decodeRequirements(buf);
         
         SpellTree.Builder builder = SpellTree.builder(id, title, decodeNode(buf));
         
@@ -98,7 +100,7 @@ public class SpellTreeSerializer
             }
         }
         
-        return builder.icon(icon).finish();
+        return builder.icon(icon).finish().setRequirements(requirements);
     }
     
     private static List<Requirement> decodeRequirements(FriendlyByteBuf buf)
@@ -128,12 +130,8 @@ public class SpellTreeSerializer
         JsonObject json = new JsonObject();
         
         json.addProperty("spell", SpellsUtil.getSpellKey(node.getSpell()).toString());
-        
         json.addProperty("levelCost", node.getLevelCost());
-        
-        JsonArray requirements = new JsonArray();
-        node.getRequirements().forEach(requirement -> requirements.add(IRequirementType.writeToJson(requirement)));
-        json.add("requirements", requirements);
+        json.add("requirements", requirementsToJson(node.getRequirements()));
         
         JsonArray children = new JsonArray();
         node.getChildren().forEach(child -> children.add(nodeToJsonRec(child)));
@@ -143,15 +141,21 @@ public class SpellTreeSerializer
         return json;
     }
     
+    private static JsonArray requirementsToJson(List<Requirement> requirements)
+    {
+        JsonArray json = new JsonArray();
+        requirements.forEach(requirement -> json.add(IRequirementType.writeToJson(requirement)));
+        return json;
+    }
+    
     public static JsonObject treeToJson(SpellTree tree)
     {
         JsonObject json = new JsonObject();
         
         json.addProperty("id", tree.getId().toString());
-        
         json.add("title", Component.Serializer.toJsonTree(tree.getTitle()));
-        
         json.addProperty("icon_spell", SpellsUtil.getSpellKey(tree.getIconSpell()).toString());
+        json.add("requirements", requirementsToJson(tree.getRequirements()));
         json.add("root_spell", tree.getRoot() != null ? nodeToJsonRec(tree.getRoot()) : JsonNull.INSTANCE);
         
         return json;
@@ -161,11 +165,20 @@ public class SpellTreeSerializer
     {
         ISpell spell = SpellsFileUtil.jsonSpell(json, "spell");
         int levelCost = SpellsFileUtil.jsonInt(json, "levelCost");
-        JsonArray array = SpellsFileUtil.jsonArray(json, "requirements");
-        JsonArray children = SpellsFileUtil.jsonArray(json, "children");
+        List<Requirement> requirements = requirementsFromJson(SpellsFileUtil.jsonArray(json, "requirements"));
         
+        SpellNode node = new SpellNode(spell, levelCost, requirements);
+        
+        JsonArray children = SpellsFileUtil.jsonArray(json, "children");
+        children.forEach(e -> SpellTree.connect(node, nodeFromJson(e.getAsJsonObject())));
+        
+        return node;
+    }
+    
+    public static List<Requirement> requirementsFromJson(JsonArray json)
+    {
         List<Requirement> requirements = new LinkedList<>();
-        array.forEach(jsonElement ->
+        json.forEach(jsonElement ->
         {
             if(!jsonElement.isJsonObject())
             {
@@ -179,12 +192,7 @@ public class SpellTreeSerializer
                 requirements.add(requirement);
             }
         });
-        
-        SpellNode node = new SpellNode(spell, levelCost, requirements);
-        
-        children.forEach(e -> SpellTree.connect(node, nodeFromJson(e.getAsJsonObject())));
-        
-        return node;
+        return requirements;
     }
     
     public static SpellTree treeFromJson(JsonObject json)
@@ -192,9 +200,10 @@ public class SpellTreeSerializer
         UUID id = UUID.fromString(SpellsFileUtil.jsonString(json, "id"));
         Component title = Component.Serializer.fromJson(SpellsFileUtil.jsonElement(json, "title"));
         ISpell icon = SpellsFileUtil.jsonSpell(json, "icon_spell");
+        List<Requirement> requirements = requirementsFromJson(SpellsFileUtil.jsonArray(json, "requirements"));
         SpellNode root = nodeFromJson(SpellsFileUtil.jsonObject(json, "root_spell"));
         
-        return new SpellTree(id, root, title, icon);
+        return new SpellTree(id, root, title, icon).setRequirements(requirements);
     }
     
     public static SpellTreeClass classFromJson(JsonObject json)
