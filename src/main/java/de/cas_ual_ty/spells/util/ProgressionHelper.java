@@ -103,14 +103,6 @@ public class ProgressionHelper
             {
                 node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
             });
-        });
-        
-        strippedSkillTrees.forEach(tree ->
-        {
-            tree.forEach(node ->
-            {
-                node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
-            });
             
             tree.setRequirements(tree.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
         });
