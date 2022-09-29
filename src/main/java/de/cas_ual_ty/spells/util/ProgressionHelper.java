@@ -113,30 +113,8 @@ public class ProgressionHelper
     public static List<SpellTree> getStrippedSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         List<SpellTree> allAvailableSkillTrees = getAllAvailableSpellTrees(spellProgressionHolder, access);
+        
         List<SpellTree> availableSpellTrees = stripSpellTrees(spellProgressionHolder, access, allAvailableSkillTrees);
-        
-        // if a spell is available for learning in two or more different spell trees
-        // but the level cost is different for each entry
-        // they all get reduced to the cheapest found price
-        // since the player unlocks them all when buying a single one of them
-        
-        HashMap<ISpell, Integer> cheapestCosts = new HashMap<>();
-        
-        for(SpellTree spellTree : availableSpellTrees)
-        {
-            spellTree.forEach(spellNode ->
-            {
-                cheapestCosts.put(spellNode.getSpell(), Math.min(spellNode.getLevelCost(), cheapestCosts.getOrDefault(spellNode.getSpell(), Integer.MAX_VALUE)));
-            });
-        }
-        
-        for(SpellTree spellTree : availableSpellTrees)
-        {
-            spellTree.forEach(spellNode ->
-            {
-                spellNode.setLevelCost(cheapestCosts.getOrDefault(spellNode.getSpell(), spellNode.getLevelCost()));
-            });
-        }
         availableSpellTrees.forEach(SpellTree::assignNodeIds);
         
         return availableSpellTrees;
