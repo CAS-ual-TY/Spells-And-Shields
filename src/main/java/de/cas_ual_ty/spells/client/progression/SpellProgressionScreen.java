@@ -238,7 +238,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
         else if(button == learnButton && selectedTab != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.spell.getSpell(), selectedTab.spellTree.getId()));
+            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.spell.getId(), selectedSpellWidget.spell.getSpell(), selectedTab.spellTree.getId()));
         }
     }
     

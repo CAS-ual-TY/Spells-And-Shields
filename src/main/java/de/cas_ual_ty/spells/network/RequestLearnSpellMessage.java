@@ -10,17 +10,18 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public record RequestLearnSpellMessage(ISpell spell, UUID treeId)
+public record RequestLearnSpellMessage(int id, ISpell spell, UUID treeId)
 {
     public static void encode(RequestLearnSpellMessage msg, FriendlyByteBuf buf)
     {
+        buf.writeShort(msg.id());
         buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), msg.spell());
         buf.writeUUID(msg.treeId());
     }
     
     public static RequestLearnSpellMessage decode(FriendlyByteBuf buf)
     {
-        return new RequestLearnSpellMessage(buf.readRegistryId(), buf.readUUID());
+        return new RequestLearnSpellMessage(buf.readShort(), buf.readRegistryId(), buf.readUUID());
     }
     
     public static void handle(RequestLearnSpellMessage msg, Supplier<NetworkEvent.Context> context)
@@ -36,7 +37,7 @@ public record RequestLearnSpellMessage(ISpell spell, UUID treeId)
             
             if(player.containerMenu instanceof SpellProgressionMenu menu)
             {
-                menu.buySpellRequest(msg.spell(), msg.treeId());
+                menu.buySpellRequest(msg.id(), msg.spell(), msg.treeId());
             }
         });
         

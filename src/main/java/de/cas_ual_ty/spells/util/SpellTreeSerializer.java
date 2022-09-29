@@ -71,6 +71,7 @@ public class SpellTreeSerializer
         buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), spellNode.getSpell());
         buf.writeInt(spellNode.getLevelCost());
         encodeRequirements(spellNode.getRequirements(), buf);
+        buf.writeShort(spellNode.getId());
     }
     
     public static SpellTree decodeTree(FriendlyByteBuf buf)
@@ -121,8 +122,9 @@ public class SpellTreeSerializer
         ISpell spell = buf.readRegistryId();
         int levelCost = buf.readInt();
         List<Requirement> requirements = decodeRequirements(buf);
+        int id = buf.readShort();
         
-        return new SpellNode(spell, levelCost, requirements);
+        return new SpellNode(spell, levelCost, requirements, id);
     }
     
     private static JsonObject nodeToJsonRec(SpellNode node)

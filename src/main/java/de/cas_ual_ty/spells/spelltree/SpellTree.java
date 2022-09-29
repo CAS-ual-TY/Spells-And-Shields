@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -136,6 +137,33 @@ public class SpellTree
             
             return 0;
         }
+    }
+    
+    public SpellTree assignNodeIds()
+    {
+        AtomicInteger i = new AtomicInteger(0);
+        forEach(spellNode -> spellNode.setId(i.getAndIncrement()));
+        return this;
+    }
+    
+    public SpellNode findNode(int id)
+    {
+        Stack<SpellNode> stack = new Stack<>();
+        stack.push(root);
+        
+        while(!stack.isEmpty())
+        {
+            SpellNode node = stack.pop();
+            
+            if(node.getId() == id)
+            {
+                return node;
+            }
+            
+            node.getChildren().forEach(stack::push);
+        }
+        
+        return null;
     }
     
     public void forEach(Consumer<SpellNode> consumer)

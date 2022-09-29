@@ -137,6 +137,7 @@ public class ProgressionHelper
                 spellNode.setLevelCost(cheapestCosts.getOrDefault(spellNode.getSpell(), spellNode.getLevelCost()));
             });
         }
+        availableSpellTrees.forEach(SpellTree::assignNodeIds);
         
         return availableSpellTrees;
     }
@@ -166,25 +167,21 @@ public class ProgressionHelper
         return true;
     }
     
-    public static boolean tryBuySpell(SpellProgressionMenu menu, ISpell spell, UUID id)
+    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, int id, ISpell spell, UUID uuid)
     {
         Player player = menu.player;
         
         AtomicBoolean found = new AtomicBoolean(false);
         
-        SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
+        menu.spellTrees.stream().filter(tree -> tree.getId().equals(uuid)).findFirst().ifPresent(spellTree ->
         {
-            menu.spellTrees.stream().filter(tree -> tree.getId().equals(id)).findFirst().ifPresent(spellTree ->
+            SpellNode spellNode = spellTree.findNode(id);
+            
+            if(spellNode.getSpell() == spell && ((spellNode.passes(spellProgressionHolder, menu.access) && player.experienceLevel >= spellNode.getLevelCost()) || player.isCreative()))
             {
-                spellTree.forEach(spellNode ->
-                {
-                    if(!found.get() && spellNode.getSpell() == spell && ((spellNode.passes(spellProgressionHolder, menu.access) && player.experienceLevel >= spellNode.getLevelCost()) || player.isCreative()))
-                    {
-                        found.set(true);
-                        player.giveExperienceLevels(-spellNode.getLevelCost());
-                    }
-                });
-            });
+                found.set(true);
+                player.giveExperienceLevels(-spellNode.getLevelCost());
+            }
         });
         
         return found.get();
