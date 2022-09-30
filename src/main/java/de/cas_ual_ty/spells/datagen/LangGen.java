@@ -131,7 +131,7 @@ public class LangGen extends LanguageProvider
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");
-        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, ".error", "Unknown Advancement (config error): %s");
+        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, AdvancementRequirement.ERROR_SUFFIX, "Unknown Advancement (config error): %s");
         addRequirement(SpellsRegistries.ITEM_REQUIREMENT, "%s (Not Consumed)");
         addRequirement(SpellsRegistries.ITEM_REQUIREMENT, ItemRequirement.CONSUMED_SUFFIX, "%s (Consumed)");
         addRequirement(SpellsRegistries.ITEM_REQUIREMENT, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");

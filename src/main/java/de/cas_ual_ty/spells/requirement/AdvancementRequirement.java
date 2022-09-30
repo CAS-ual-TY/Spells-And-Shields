@@ -13,6 +13,8 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 
 public class AdvancementRequirement extends Requirement
 {
+    public static final String ERROR_SUFFIX = ".error";
+    
     protected ResourceLocation advancementRL;
     
     public AdvancementRequirement(IRequirementType<?> type)
@@ -59,7 +61,7 @@ public class AdvancementRequirement extends Requirement
             }
             else
             {
-                return Component.translatable(descriptionId + ".error", advancementRL.toString());
+                return Component.translatable(descriptionId + ERROR_SUFFIX, advancementRL.toString());
             }
         }
         
@@ -75,7 +77,7 @@ public class AdvancementRequirement extends Requirement
     @Override
     public void readFromJson(JsonObject json)
     {
-        this.advancementRL = new ResourceLocation(SpellsFileUtil.jsonString(json, "advancement"));
+        advancementRL = new ResourceLocation(SpellsFileUtil.jsonString(json, "advancement"));
     }
     
     @Override
