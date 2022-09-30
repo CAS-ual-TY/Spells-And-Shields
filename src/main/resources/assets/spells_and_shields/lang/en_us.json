@@ -83,6 +83,8 @@
   "requirement.spells_and_shields.item.consumed.multiple": "%sx %s (Consumed)",
   "requirement.spells_and_shields.item.multiple": "%sx %s (Not Consumed)",
   "spell.ingredients.hand": "Requirement (Hand):",
+  "spell.ingredients.ingredient": "%s",
+  "spell.ingredients.ingredient.multiple": "%sx %s",
   "spell.ingredients.inventory": "Requirement (Inventory):",
   "spell.passive.when_applied": "When Applied:",
   "spell.spells_and_shields.aqua_affinity": "Aqua Affinity",

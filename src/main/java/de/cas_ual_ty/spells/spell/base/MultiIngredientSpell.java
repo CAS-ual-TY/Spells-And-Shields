@@ -15,6 +15,8 @@ public abstract class MultiIngredientSpell extends Spell
 {
     public static final String KEY_REQUIRED_HAND = "spell.ingredients.hand";
     public static final String KEY_REQUIRED_INVENTORY = "spell.ingredients.inventory";
+    public static final String KEY_INGREDIENT = "spell.ingredients.ingredient";
+    public static final String KEY_INGREDIENT_MULTIPLE = "spell.ingredients.ingredient.multiple";
     
     public MultiIngredientSpell(float manaCost)
     {
@@ -158,14 +160,34 @@ public abstract class MultiIngredientSpell extends Spell
         {
             list.add(Component.empty());
             list.add(Component.translatable(KEY_REQUIRED_HAND).withStyle(ChatFormatting.BLUE));
-            handIngredients.stream().map(itemStack -> Component.literal(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
+            handIngredients.stream().map(itemStack ->
+            {
+                if(itemStack.getCount() == 1)
+                {
+                    return Component.translatable(KEY_INGREDIENT, itemStack.getHoverName());
+                }
+                else
+                {
+                    return Component.translatable(KEY_INGREDIENT_MULTIPLE, itemStack.getCount(), itemStack.getHoverName());
+                }
+            }).map(component -> Component.literal(" ").append(component).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
         }
         
         if(!inventoryIngredients.isEmpty())
         {
             list.add(Component.empty());
             list.add(Component.translatable(KEY_REQUIRED_INVENTORY).withStyle(ChatFormatting.BLUE));
-            inventoryIngredients.stream().map(itemStack -> Component.literal(" ").append(itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
+            inventoryIngredients.stream().map(itemStack ->
+            {
+                if(itemStack.getCount() == 1)
+                {
+                    return Component.translatable(KEY_INGREDIENT, itemStack.getHoverName());
+                }
+                else
+                {
+                    return Component.translatable(KEY_INGREDIENT_MULTIPLE, itemStack.getCount(), itemStack.getHoverName());
+                }
+            }).map(component -> Component.literal(" ").append(component).withStyle(ChatFormatting.YELLOW)).forEach(list::add);
         }
     }
 }

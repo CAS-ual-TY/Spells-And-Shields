@@ -166,6 +166,8 @@ public class LangGen extends LanguageProvider
         
         add(MultiIngredientSpell.KEY_REQUIRED_HAND, "Requirement (Hand):");
         add(MultiIngredientSpell.KEY_REQUIRED_INVENTORY, "Requirement (Inventory):");
+        add(MultiIngredientSpell.KEY_INGREDIENT, "%s");
+        add(MultiIngredientSpell.KEY_INGREDIENT_MULTIPLE, "%sx %s");
         add(PermanentMobEffectSpell.KEY_WHEN_APPLIED, "When Applied:");
         add(SpellProgressionScreen.KEY_LEARN, "Learn");
         add(SpellProgressionScreen.KEY_EQUIP, "Equip");
