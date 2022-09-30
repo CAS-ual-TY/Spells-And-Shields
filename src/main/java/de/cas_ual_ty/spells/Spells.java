@@ -80,6 +80,7 @@ public class Spells
     public static final RegistryObject<ISpell> GROWTH = SPELLS.register("growth", GrowthSpell::new);
     public static final RegistryObject<ISpell> MAGIC_IMMUNE_SELF = SPELLS.register("magic_immune_self", () -> new TemporaryMobEffectSpell(7F, new ItemStack(Items.GLASS_PANE), SpellsRegistries.MAGIC_IMMUNE_EFFECT.get(), 20 * 20, 0, false, true, true));
     public static final RegistryObject<ISpell> GHAST = SPELLS.register("ghast", () -> new GhastSpell().setIcon(new SpellIcon(new ResourceLocation("textures/entity/ghast/ghast.png"), 16, 16, 16, 16, 64, 32)));
+    public static final RegistryObject<ISpell> END_ARMY = SPELLS.register("end_army", () -> new EndArmySpell());
     
     public static void register()
     {
