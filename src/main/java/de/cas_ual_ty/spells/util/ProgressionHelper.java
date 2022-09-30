@@ -12,7 +12,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -29,7 +32,7 @@ public class ProgressionHelper
                 continue;
             }
             
-            if(!spellTree0.passes(spellProgressionHolder, access))
+            if(!spellTree0.canSee(spellProgressionHolder, access))
             {
                 continue;
             }
@@ -155,10 +158,16 @@ public class ProgressionHelper
         {
             SpellNode spellNode = spellTree.findNode(id);
             
-            if(spellNode.getSpell() == spell && ((spellNode.passes(spellProgressionHolder, menu.access) && player.experienceLevel >= spellNode.getLevelCost()) || player.isCreative()))
+            if(spellNode.getSpell() == spell && spellNode.canLearn(spellProgressionHolder, menu.access))
             {
                 found.set(true);
-                player.giveExperienceLevels(-spellNode.getLevelCost());
+                
+                if(!player.isCreative())
+                {
+                    player.giveExperienceLevels(-spellNode.getLevelCost());
+                }
+                
+                spellNode.onSpellLearned(spellProgressionHolder, menu.access);
             }
         });
         

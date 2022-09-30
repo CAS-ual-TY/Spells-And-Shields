@@ -34,6 +34,12 @@ public class WrappedRequirement extends Requirement
         return status.isDecided() ? status.passes : requirement.passes(spellProgressionHolder, access);
     }
     
+    @Override
+    public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        requirement.onSpellLearned(spellProgressionHolder, access);
+    }
+    
     public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         this.status = RequirementStatus.decide(passes(spellProgressionHolder, access));

@@ -111,6 +111,18 @@ public class SpellsFileUtil
         return element.getAsDouble();
     }
     
+    public static boolean jsonBoolean(JsonObject json, String key) throws IllegalStateException
+    {
+        JsonElement element = json.get(key);
+        
+        if(element == null || !element.isJsonPrimitive() || !element.getAsJsonPrimitive().isBoolean())
+        {
+            throw new IllegalStateException();
+        }
+        
+        return element.getAsBoolean();
+    }
+    
     public static JsonElement jsonElement(JsonObject json, String key) throws IllegalStateException
     {
         JsonElement element = json.get(key);

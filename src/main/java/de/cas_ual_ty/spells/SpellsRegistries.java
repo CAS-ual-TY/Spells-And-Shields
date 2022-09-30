@@ -8,10 +8,7 @@ import de.cas_ual_ty.spells.effect.ManaMobEffect;
 import de.cas_ual_ty.spells.effect.SimpleEffect;
 import de.cas_ual_ty.spells.enchantment.*;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
-import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
-import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
-import de.cas_ual_ty.spells.requirement.IRequirementType;
-import de.cas_ual_ty.spells.requirement.WrappedRequirement;
+import de.cas_ual_ty.spells.requirement.*;
 import de.cas_ual_ty.spells.spell.ITickedDataSpell;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
@@ -78,6 +75,7 @@ public class SpellsRegistries
     public static final RegistryObject<IRequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("client_wrap", () -> WrappedRequirement::new);
     public static final RegistryObject<IRequirementType<BookshelvesRequirement>> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> BookshelvesRequirement::new);
     public static final RegistryObject<IRequirementType<AdvancementRequirement>> ADVANCEMENT_REQUIREMENT = REQUIREMENTS.register("advancement", () -> AdvancementRequirement::new);
+    public static final RegistryObject<IRequirementType<ItemRequirement>> ITEM_REQUIREMENT = REQUIREMENTS.register("item", () -> ItemRequirement::new);
     
     public static final RegistryObject<ISpellDataType<SimpleTickedSpellData>> FLAMETHROWER_DATA = SPELL_DATA.register("flamethrower", () -> ITickedDataSpell.makeDataType(Spells.FLAMETHROWER));
     public static final RegistryObject<ISpellDataType<SimpleTickedSpellData>> GHAST_DATA = SPELL_DATA.register("ghast", () -> ITickedDataSpell.makeDataType(Spells.GHAST));

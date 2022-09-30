@@ -115,6 +115,11 @@ public class SpellTree
         return treeRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
     }
     
+    public boolean canSee(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return spellProgressionHolder.getPlayer().isCreative() || passes(spellProgressionHolder, access);
+    }
+    
     private int find(int depth, SpellNode spellNode, ISpell spell)
     {
         if(spellNode.getSpell() == spell)

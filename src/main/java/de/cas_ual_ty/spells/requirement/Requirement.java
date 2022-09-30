@@ -28,6 +28,10 @@ public abstract class Requirement
     
     public abstract boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access);
     
+    public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+    }
+    
     public abstract MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access);
     
     public String getDescriptionId()
