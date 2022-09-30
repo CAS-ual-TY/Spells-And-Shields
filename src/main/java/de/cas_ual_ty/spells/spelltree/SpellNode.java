@@ -70,10 +70,10 @@ public class SpellNode
         return requirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
     }
     
-    public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    /*public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         requirements.forEach(requirement -> requirement.onSpellLearned(spellProgressionHolder, access));
-    }
+    }*/
     
     public boolean canLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
