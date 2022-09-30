@@ -73,6 +73,14 @@ public class SpellTree
         return title;
     }
     
+    public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        List<Component> tooltips = new LinkedList<>();
+        tooltips.add(getTitle());
+        treeRequirements.forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access)));
+        return tooltips;
+    }
+    
     public void setTitle(Component title)
     {
         this.title = title;

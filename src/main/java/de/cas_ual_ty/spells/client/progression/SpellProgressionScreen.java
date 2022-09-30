@@ -479,7 +479,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             {
                 if(tab.getPage() == tabPage && tab.isMouseOver(offX, offY, mouseX, mouseY))
                 {
-                    this.renderTooltip(poseStack, tab.getTitle(), mouseX, mouseY);
+                    this.renderTooltip(poseStack, tab.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
                 }
             }
         }
