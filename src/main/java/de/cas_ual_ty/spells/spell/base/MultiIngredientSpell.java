@@ -83,29 +83,21 @@ public abstract class MultiIngredientSpell extends Spell
             
             for(ItemStack required : requiredList)
             {
-                System.out.println("REQUIRED " + required.getItem() + " / " + required.getCount());
-                
                 if(required.isEmpty())
                 {
                     continue;
                 }
                 
                 int count = required.getCount();
-                System.out.println("    count " + count);
                 
                 for(InteractionHand hand : InteractionHand.values())
                 {
-                    System.out.println("    HAND");
-                    System.out.println("        hand" + hand);
-                    
                     if(hand == prevHand)
                     {
                         continue;
                     }
                     
                     ItemStack toTest = player.getItemInHand(hand);
-                    System.out.println("        toTest" + toTest.getCount() + " / " + toTest.getCount());
-                    System.out.println("        if" + toTest.getCount() + " / " + toTest.getCount());
                     
                     if(ItemStack.isSameItemSameTags(toTest, required))
                     {
