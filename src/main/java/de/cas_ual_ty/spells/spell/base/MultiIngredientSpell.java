@@ -43,15 +43,16 @@ public abstract class MultiIngredientSpell extends Spell
             
             if(manaHolder.getPlayer() instanceof Player player)
             {
-                if((handIngredients.isPresent() && inventoryIngredients.isPresent()) || player.isCreative())
+                if(player.isCreative())
                 {
                     this.perform(manaHolder, handIngredients, inventoryIngredients);
-                    
-                    if(!player.level.isClientSide && !player.isCreative())
-                    {
-                        this.burnMana(manaHolder);
-                        this.consumeItemStacks(manaHolder, handIngredients.get(), inventoryIngredients.get());
-                    }
+                    return true;
+                }
+                else if(handIngredients.isPresent() && inventoryIngredients.isPresent())
+                {
+                    this.perform(manaHolder, handIngredients, inventoryIngredients);
+                    this.burnMana(manaHolder);
+                    this.consumeItemStacks(manaHolder, handIngredients.get(), inventoryIngredients.get());
                     
                     return true;
                 }
