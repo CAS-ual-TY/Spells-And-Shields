@@ -1,9 +1,9 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
-import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -38,8 +38,8 @@ public abstract class MultiIngredientSpell extends Spell
     {
         if(this.canActivate(manaHolder))
         {
-            Optional<List<ItemStack>> handIngredients = this.hasHandIngredients(manaHolder);
-            Optional<List<ItemStack>> inventoryIngredients = this.hasInventoryIngredients(manaHolder);
+            Optional<List<ItemStack>> handIngredients = this.findHandIngredients(manaHolder);
+            Optional<List<ItemStack>> inventoryIngredients = this.findInventoryIngredients(manaHolder);
             
             if(manaHolder.getPlayer() instanceof Player player)
             {
@@ -72,26 +72,60 @@ public abstract class MultiIngredientSpell extends Spell
         return false;
     }
     
-    public List<ItemStack> findHandIngredients(ManaHolder manaHolder)
+    public Optional<List<ItemStack>> findHandIngredients(ManaHolder manaHolder)
     {
         List<ItemStack> foundList = new LinkedList<>();
         
-        for(ItemStack required : getRequiredHandIngredients())
+        if(manaHolder.getPlayer() instanceof Player player)
         {
-            for(ItemStack toTest : manaHolder.getPlayer().getHandSlots())
+            InteractionHand prevHand = null;
+            List<ItemStack> requiredList = getRequiredHandIngredients();
+            
+            for(ItemStack required : requiredList)
             {
-                if(this.checkHandIngredient(manaHolder, required, toTest))
+                System.out.println("REQUIRED " + required.getItem() + " / " + required.getCount());
+                
+                if(required.isEmpty())
                 {
-                    foundList.add(toTest);
-                    break;
+                    continue;
+                }
+                
+                int count = required.getCount();
+                System.out.println("    count " + count);
+                
+                for(InteractionHand hand : InteractionHand.values())
+                {
+                    System.out.println("    HAND");
+                    System.out.println("        hand" + hand);
+                    
+                    if(hand == prevHand)
+                    {
+                        continue;
+                    }
+                    
+                    ItemStack toTest = player.getItemInHand(hand);
+                    System.out.println("        toTest" + toTest.getCount() + " / " + toTest.getCount());
+                    System.out.println("        if" + toTest.getCount() + " / " + toTest.getCount());
+                    
+                    if(ItemStack.isSameItemSameTags(toTest, required))
+                    {
+                        prevHand = hand;
+                        foundList.add(toTest);
+                        count -= toTest.getCount();
+                    }
+                }
+                
+                if(count > 0)
+                {
+                    return Optional.empty();
                 }
             }
         }
         
-        return foundList;
+        return Optional.of(foundList);
     }
     
-    public List<ItemStack> findInventoryIngredients(ManaHolder manaHolder)
+    public Optional<List<ItemStack>> findInventoryIngredients(ManaHolder manaHolder)
     {
         List<ItemStack> foundList = new LinkedList<>();
         
@@ -99,37 +133,30 @@ public abstract class MultiIngredientSpell extends Spell
         {
             for(ItemStack required : getRequiredInventoryIngredients())
             {
+                if(required.isEmpty())
+                {
+                    continue;
+                }
+                
+                int count = required.getCount();
+                
                 for(ItemStack toTest : player.getInventory().items)
                 {
-                    if(toTest != player.getMainHandItem() && this.checkInventoryIngredient(manaHolder, required, toTest))
+                    if(toTest != player.getMainHandItem() && ItemStack.isSameItemSameTags(toTest, required))
                     {
                         foundList.add(toTest);
-                        break;
+                        count -= toTest.getCount();
                     }
+                }
+                
+                if(count > 0)
+                {
+                    return Optional.empty();
                 }
             }
         }
         
-        return foundList;
-    }
-    
-    public Optional<List<ItemStack>> hasHandIngredients(ManaHolder manaHolder)
-    {
-        List<ItemStack> handIngredients = findHandIngredients(manaHolder);
-        return getRequiredHandIngredients().size() == handIngredients.size() ? Optional.of(handIngredients) : Optional.empty();
-    }
-    
-    public Optional<List<ItemStack>> hasInventoryIngredients(ManaHolder manaHolder)
-    {
-        if(manaHolder.getPlayer() instanceof Player)
-        {
-            List<ItemStack> inventoryIngredients = findInventoryIngredients(manaHolder);
-            return getRequiredInventoryIngredients().size() == inventoryIngredients.size() ? Optional.of(inventoryIngredients) : Optional.empty();
-        }
-        else
-        {
-            return SpellsUtil.EMPTY_ITEMSTACK_LIST_OPTIONAL;
-        }
+        return Optional.of(foundList);
     }
     
     public abstract List<ItemStack> getRequiredHandIngredients();
