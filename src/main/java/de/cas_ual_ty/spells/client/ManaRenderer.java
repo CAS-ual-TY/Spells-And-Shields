@@ -60,9 +60,16 @@ public class ManaRenderer implements IGuiOverlay
         Player player = (Player) minecraft.getCameraEntity();
         ManaHolder.getManaHolder(player).ifPresent(manaHolder ->
         {
+            float maxMana = manaHolder.getMaxMana();
+            
+            if(maxMana <= 0)
+            {
+                return;
+            }
+            
             int mana = Mth.ceil(manaHolder.getMana());
             
-            if(manaHolder.getMana() >= manaHolder.getMaxMana())
+            if(manaHolder.getMana() >= maxMana)
             {
                 if(mana != lastMana)
                 {
@@ -99,13 +106,13 @@ public class ManaRenderer implements IGuiOverlay
             this.lastMana = mana;
             int manaLast = this.displayMana;
             
-            float manaMax = Math.max(manaHolder.getMaxMana(), Math.max(manaLast, mana));
+            float manaMax = Math.max(maxMana, Math.max(manaLast, mana));
             int extra = Mth.ceil(manaHolder.getExtraMana());
             
             int rows = Mth.ceil((manaMax + extra) / 2.0F / 10.0F);
             int rowHeight = Math.max(10 - (rows - 2), 3);
             
-            this.random.setSeed(gui.getGuiTicks() * 27);
+            this.random.setSeed(gui.getGuiTicks() * 27L);
             
             int left = width / 2 + 10;
             int top = height - gui.rightHeight;
@@ -147,7 +154,7 @@ public class ManaRenderer implements IGuiOverlay
             int x = left + column * 8;
             int y = top - row * rowHeight;
             
-            if(mana + extra <= 4)
+            if(SpellsClientConfig.MANA_JITTER.get() && mana + extra <= 4)
             {
                 y += this.random.nextInt(2);
             }

@@ -8,6 +8,8 @@ public class SpellsClientConfig
     
     public static final ForgeConfigSpec.IntValue MANA_HIDE_DELAY;
     public static final ForgeConfigSpec.BooleanValue MANA_ABOVE_FOOD;
+    public static final ForgeConfigSpec.BooleanValue MANA_JITTER;
+    public static final ForgeConfigSpec.BooleanValue ALWAYS_SHOW_SPELL_SLOTS;
     
     static
     {
@@ -19,6 +21,12 @@ public class SpellsClientConfig
         MANA_ABOVE_FOOD = builder
                 .comment("Put the mana bar above the food bar (true) or else put it below (false).")
                 .define("manaAboveFood", true);
+        MANA_JITTER = builder
+                .comment("The mana bar icons jitter when your current mana is low (true) or else the icons always stay put (false).")
+                .define("manaJitter", true);
+        ALWAYS_SHOW_SPELL_SLOTS = builder
+                .comment("Always show all spell slots (true) or else only show them if at least 1 spell is equipped (false).")
+                .define("alwaysShowSpellSlots", true);
         
         CLIENT_SPEC = builder.build();
     }
