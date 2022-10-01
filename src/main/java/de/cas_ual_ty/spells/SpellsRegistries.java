@@ -29,8 +29,10 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
@@ -71,6 +73,7 @@ public class SpellsRegistries
     public static final RegistryObject<ArgumentTypeInfo<?, ?>> SPELL_ARGUMENT_TYPE = ARGUMENT_TYPES.register("spell", () -> ArgumentTypeInfos.registerByClass(SpellArgument.class, SingletonArgumentInfo.contextAware(SpellArgument::spell)));
     
     public static final EnchantmentCategory SHIELD_ENCHANTMENT_CATEGORY = EnchantmentCategory.create("SHIELD", item -> item instanceof ShieldItem);
+    public static final EnchantmentCategory SWORD_OR_AXE_ENCHANTMENT_CATEGORY = EnchantmentCategory.create("SWORD_OR_AXE", item -> item instanceof AxeItem || item instanceof SwordItem);
     
     public static final RegistryObject<IRequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("client_wrap", () -> WrappedRequirement::new);
     public static final RegistryObject<IRequirementType<BookshelvesRequirement>> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> BookshelvesRequirement::new);

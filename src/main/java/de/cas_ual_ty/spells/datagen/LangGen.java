@@ -47,6 +47,7 @@ public class LangGen extends LanguageProvider
         // support JEI Enchantment Info
         // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
         add("enchantment." + SpellsAndShields.MOD_ID + ".type." + SpellsRegistries.SHIELD_ENCHANTMENT_CATEGORY.name().toLowerCase(), "shields");
+        add("enchantment." + SpellsAndShields.MOD_ID + ".type." + SpellsRegistries.SWORD_OR_AXE_ENCHANTMENT_CATEGORY.name().toLowerCase(), "axes, swords");
         
         addEnchantment(SpellsRegistries.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection", "Reduces magic damage.");
         addEnchantment(SpellsRegistries.MANA_BLADE_ENCHANTMENT, "Mana Blade", "Consumes mana to increase damage.");

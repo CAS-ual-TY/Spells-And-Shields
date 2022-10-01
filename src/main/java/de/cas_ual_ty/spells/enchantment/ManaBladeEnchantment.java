@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.enchantment;
 
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
@@ -24,7 +25,7 @@ public class ManaBladeEnchantment extends Enchantment
     
     public ManaBladeEnchantment(Enchantment.Rarity rarity, EquipmentSlot... equipmentSlots)
     {
-        super(rarity, EnchantmentCategory.WEAPON, equipmentSlots);
+        super(rarity, SpellsRegistries.SWORD_OR_AXE_ENCHANTMENT_CATEGORY, equipmentSlots);
     }
     
     @Override
@@ -86,6 +87,5 @@ public class ManaBladeEnchantment extends Enchantment
                 }
             });
         }
-        
     }
 }
