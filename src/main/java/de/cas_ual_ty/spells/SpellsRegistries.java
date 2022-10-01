@@ -81,13 +81,13 @@ public class SpellsRegistries
     public static final RegistryObject<ISpellDataType<SimpleTickedSpellData>> GHAST_DATA = SPELL_DATA.register("ghast", () -> ITickedDataSpell.makeDataType(Spells.GHAST));
     
     public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20.0D, 1.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<RangedAttribute> MANA_REGEN_ATTRIBUTE = ATTRIBUTES.register("generic.mana_regen", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.mana_regen", 1D, 0D, 50D).setSyncable(true));
+    public static final RegistryObject<RangedAttribute> MANA_REGENERATION_ATTRIBUTE = ATTRIBUTES.register("generic.mana_regeneration", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.mana_regen", 1D, 0D, 50D).setSyncable(true));
     
     public static final RegistryObject<Enchantment> MAGIC_PROTECTION_ENCHANTMENT = ENCHANTMENTS.register("magic_protection", () -> new MagicProtectionEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
     public static final RegistryObject<Enchantment> MANA_BLADE_ENCHANTMENT = ENCHANTMENTS.register("mana_blade", () -> new ManaBladeEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> MANA_SHIELD_ENCHANTMENT = ENCHANTMENTS.register("mana_shield", () -> new ManaShieldEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.OFFHAND));
-    public static final RegistryObject<ManaRegenEnchantment> MANA_REGEN_ENCHANTMENT = ENCHANTMENTS.register("mana_regen", () -> new ManaRegenEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
     public static final RegistryObject<MaxManaEnchantment> MAX_MANA_ENCHANTMENT = ENCHANTMENTS.register("max_mana", () -> new MaxManaEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
+    public static final RegistryObject<ManaRegenEnchantment> MANA_REGENERATION_ENCHANTMENT = ENCHANTMENTS.register("mana_regeneration", () -> new ManaRegenEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
     
     public static final RegistryObject<MobEffect> INSTANT_MANA_EFFECT = MOB_EFFECTS.register("instant_mana", () -> new InstantManaMobEffect(MobEffectCategory.BENEFICIAL, 0x06B7BD));
     public static final RegistryObject<MobEffect> MANA_BOMB_EFFECT = MOB_EFFECTS.register("mana_bomb", () -> new InstantManaMobEffect(MobEffectCategory.HARMFUL, 0x820A60));
@@ -117,6 +117,9 @@ public class SpellsRegistries
     public static final RegistryObject<EntityType<SpellProjectile>> SPELL_PROJECTILE = ENTITY_TYPES.register("spell_projectile", () -> EntityType.Builder.<SpellProjectile>of(SpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(10).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("spell_projectile"));
     public static final RegistryObject<EntityType<HomingSpellProjectile>> HOMING_SPELL_PROJECTILE = ENTITY_TYPES.register("homing_spell_projectile", () -> EntityType.Builder.<HomingSpellProjectile>of(HomingSpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(2).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("homing_spell_projectile"));
     
+    public static final RegistryObject<RangedAttribute> MANA_REGEN_ATTRIBUTE = MANA_REGENERATION_ATTRIBUTE; //TODO Remove in 1.20
+    public static final RegistryObject<ManaRegenEnchantment> MANA_REGEN_ENCHANTMENT = MANA_REGENERATION_ENCHANTMENT;
+    
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsRegistries::newRegistry);
@@ -142,7 +145,7 @@ public class SpellsRegistries
     private static void entityAttributeModification(EntityAttributeModificationEvent event)
     {
         event.add(EntityType.PLAYER, SpellsRegistries.MAX_MANA_ATTRIBUTE.get());
-        event.add(EntityType.PLAYER, SpellsRegistries.MANA_REGEN_ATTRIBUTE.get());
+        event.add(EntityType.PLAYER, SpellsRegistries.MANA_REGENERATION_ATTRIBUTE.get());
     }
     
     private static void registerCommands(RegisterCommandsEvent event)

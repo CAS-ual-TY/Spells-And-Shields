@@ -42,7 +42,7 @@ public class LangGen extends LanguageProvider
     protected void addTranslations()
     {
         addAttribute(SpellsRegistries.MAX_MANA_ATTRIBUTE, "Max Mana");
-        addAttribute(SpellsRegistries.MANA_REGEN_ATTRIBUTE, "Mana Regeneration");
+        addAttribute(SpellsRegistries.MANA_REGENERATION_ATTRIBUTE, "Mana Regeneration");
         
         // support JEI Enchantment Info
         // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
@@ -51,8 +51,8 @@ public class LangGen extends LanguageProvider
         addEnchantment(SpellsRegistries.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection", "Reduces magic damage.");
         addEnchantment(SpellsRegistries.MANA_BLADE_ENCHANTMENT, "Mana Blade", "Consumes mana to increase damage.");
         addEnchantment(SpellsRegistries.MANA_SHIELD_ENCHANTMENT, "Mana Shield", "WIP"); //TODO mana shield ench description
-        addEnchantment(SpellsRegistries.MANA_REGEN_ENCHANTMENT, "Mana Regeneration", "Increases your mana regeneration while worn. More potent on chestplates and leggings than helmets and boots.");
         addEnchantment(SpellsRegistries.MAX_MANA_ENCHANTMENT, "Maximum Mana", "Increases your maximum mana while worn. More potent on chestplates and leggings than helmets and boots.");
+        addEnchantment(SpellsRegistries.MANA_REGENERATION_ENCHANTMENT, "Mana Regeneration", "Increases your mana regeneration while worn. More potent on chestplates and leggings than helmets and boots.");
         
         addEffect(SpellsRegistries.INSTANT_MANA_EFFECT, "Instant Mana", "Replenishes mana; higher levels increase the effect potency.");
         addEffect(SpellsRegistries.MANA_BOMB_EFFECT, "Mana Bomb", "Burns mana; higher levels increase the effect potency.");
