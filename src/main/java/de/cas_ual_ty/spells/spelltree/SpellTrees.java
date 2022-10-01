@@ -129,6 +129,7 @@ public class SpellTrees
                 .add(Spells.FORCED_TELEPORT.get(), 30, bookshelves(28))
                 .leaf()
                 .add(Spells.TELEPORT.get(), 30, bookshelves(28), advancement("end/respawn_dragon"))
+                .add(Spells.ENDER_ARMY.get(), 50, bookshelves(30), item(Items.DRAGON_EGG, 1, false))
                 .finish();
     }
     

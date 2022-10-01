@@ -21,7 +21,7 @@ import net.minecraft.world.phys.HitResult;
 
 import java.util.List;
 
-public class EndArmySpell extends BaseIngredientsSpell
+public class EnderArmySpell extends BaseIngredientsSpell
 {
     public final int defaultTargetRange;
     public final int defaultEndermanRange;
@@ -29,30 +29,30 @@ public class EndArmySpell extends BaseIngredientsSpell
     protected int targetRange;
     protected int endermanRange;
     
-    public EndArmySpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, int targetRange, int endermanRange)
+    public EnderArmySpell(float manaCost, List<ItemStack> handIngredients, List<ItemStack> inventoryIngredients, int targetRange, int endermanRange)
     {
         super(manaCost, handIngredients, inventoryIngredients);
         defaultTargetRange = targetRange;
         defaultEndermanRange = endermanRange;
     }
     
-    public EndArmySpell(float manaCost, ItemStack handIngredient, int targetRange, int endermanRange)
+    public EnderArmySpell(float manaCost, ItemStack handIngredient, int targetRange, int endermanRange)
     {
         super(manaCost, handIngredient);
         defaultTargetRange = targetRange;
         defaultEndermanRange = endermanRange;
     }
     
-    public EndArmySpell(float manaCost, int targetRange, int endermanRange)
+    public EnderArmySpell(float manaCost, int targetRange, int endermanRange)
     {
         super(manaCost);
         defaultTargetRange = targetRange;
         defaultEndermanRange = endermanRange;
     }
     
-    public EndArmySpell()
+    public EnderArmySpell()
     {
-        this(5F, new ItemStack(Items.AMETHYST_SHARD), 50, 40);
+        this(20F, new ItemStack(Items.DRAGON_HEAD), 50, 40);
     }
     
     @Override

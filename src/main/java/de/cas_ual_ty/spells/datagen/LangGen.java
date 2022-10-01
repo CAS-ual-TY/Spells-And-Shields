@@ -129,6 +129,7 @@ public class LangGen extends LanguageProvider
         addSpell(Spells.GROWTH, "Growth", "Apply the effect of Bonemeal to plants around you.");
         addSpell(Spells.MAGIC_IMMUNE_SELF, "Magic Immune Self", SELF_STRING);
         addSpell(Spells.GHAST, "Ghast", "Shoot a fire charge forward, like a Ghast.");
+        addSpell(Spells.ENDER_ARMY, "Ender Army", "Make all Endermen close to the target you are looking at attack said target.");
         
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");
