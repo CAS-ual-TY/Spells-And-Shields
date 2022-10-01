@@ -8,11 +8,15 @@ import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
 import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
+import de.cas_ual_ty.spells.requirement.ItemRequirement;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
@@ -51,7 +55,7 @@ public class SpellTrees
                 .add(Spells.DRAIN_FLAME, 20, bookshelves(20))
                 .leaf()
                 .leaf()
-                .add(Spells.GHAST, 10, bookshelves(20))
+                .add(Spells.GHAST, 10, bookshelves(20), item(Items.GHAST_TEAR, 1, true))
                 .add(Spells.FLAMETHROWER, 20, bookshelves(24))
                 .finish();
     }
@@ -136,6 +140,11 @@ public class SpellTrees
     public static Requirement advancement(String advancementRL)
     {
         return new AdvancementRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT.get(), new ResourceLocation(advancementRL));
+    }
+    
+    public static Requirement item(Item item, int count, boolean consume)
+    {
+        return new ItemRequirement(SpellsRegistries.ITEM_REQUIREMENT.get(), new ItemStack(item, count), consume);
     }
     
     public static void readOrWriteSpellTreeConfigs()
