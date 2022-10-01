@@ -68,7 +68,7 @@ public class ManaBladeEnchantment extends Enchantment
                 {
                     float damage = Math.min(manaHolder.getMana(), (float) level * 2.5F);
                     
-                    manaHolder.burn(damage);
+                    manaHolder.burn(5F);
                     livingEntity.hurt(DamageSource.indirectMagic(user, null), damage);
                     
                     RandomSource random = user.getRandom();
