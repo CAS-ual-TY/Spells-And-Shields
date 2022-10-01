@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.util;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.Spells;
@@ -10,17 +9,11 @@ import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
-import de.cas_ual_ty.spells.spelltree.SpellTreeClass;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class SpellTreeSerializer
@@ -206,72 +199,5 @@ public class SpellTreeSerializer
         SpellNode root = nodeFromJson(SpellsFileUtil.jsonObject(json, "root_spell"));
         
         return new SpellTree(id, root, title, icon).setRequirements(requirements);
-    }
-    
-    public static SpellTreeClass classFromJson(JsonObject json)
-    {
-        SpellTreeClass c = new SpellTreeClass();
-        
-        JsonArray modifiers = SpellsFileUtil.jsonArray(json, "modifiers");
-        
-        for(JsonElement eModifier : modifiers)
-        {
-            if(!eModifier.isJsonObject())
-            {
-                throw new IllegalStateException();
-            }
-            
-            JsonObject modifier = eModifier.getAsJsonObject();
-            
-            Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(SpellsFileUtil.jsonString(modifier, "attribute")));
-            
-            if(attribute == null)
-            {
-                throw new IllegalStateException(new NullPointerException());
-            }
-            
-            double amount = SpellsFileUtil.jsonDouble(modifier, "amount");
-            AttributeModifier.Operation operation;
-            
-            try
-            {
-                operation = AttributeModifier.Operation.fromValue(SpellsFileUtil.jsonInt(modifier, "operation"));
-            }
-            catch(IllegalArgumentException e) // NumberFormatException included
-            {
-                throw new IllegalStateException(e);
-            }
-            
-            String name = SpellsFileUtil.jsonString(modifier, "name");
-            UUID id = SpellsUtil.generateUUIDForClassAttribute(attribute, name);
-            
-            c.addModifier(attribute, new AttributeModifier(id, name, amount, operation));
-        }
-        
-        return c;
-    }
-    
-    public static JsonObject classToJson(SpellTreeClass c)
-    {
-        JsonObject json = new JsonObject();
-        
-        JsonArray modifiers = new JsonArray();
-        
-        for(Map.Entry<Attribute, AttributeModifier> entry : c.modifiers.entrySet())
-        {
-            JsonObject modifier = new JsonObject();
-            
-            modifier.addProperty("attribute", ForgeRegistries.ATTRIBUTES.getKey(entry.getKey()).toString());
-            modifier.addProperty("amount", entry.getValue().getAmount());
-            modifier.addProperty("operation", entry.getValue().getOperation().toValue());
-            modifier.addProperty("name", entry.getValue().getName());
-            modifier.addProperty("id", SpellsUtil.generateUUIDForClassAttribute(entry.getKey(), c.getName()).toString());
-            
-            modifiers.add(modifier);
-        }
-        
-        json.add("modifiers", modifiers);
-        
-        return json;
     }
 }

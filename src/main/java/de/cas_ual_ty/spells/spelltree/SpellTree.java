@@ -8,7 +8,6 @@ import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
-import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -26,9 +25,6 @@ public class SpellTree
     public Component title;
     public ISpell icon;
     
-    @Nullable
-    public SpellTreeClass treeClass;
-    
     public List<Requirement> treeRequirements;
     
     public SpellTree(UUID id, SpellNode root, Component title, ISpell icon)
@@ -37,7 +33,6 @@ public class SpellTree
         this.root = root;
         this.title = title;
         this.icon = icon;
-        this.treeClass = null;
         this.treeRequirements = new LinkedList<>();
     }
     
