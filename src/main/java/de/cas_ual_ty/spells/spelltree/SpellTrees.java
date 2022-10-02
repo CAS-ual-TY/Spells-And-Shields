@@ -28,11 +28,11 @@ public class SpellTrees
 {
     public static final List<SpellTree> LOADED_SPELL_TREES = new ArrayList<>();
     
-    public static final String KEY_NETHER = "spell_tree.nether";
-    public static final String KEY_OCEAN = "spell_tree.ocean";
-    public static final String KEY_MINING = "spell_tree.mining";
-    public static final String KEY_MOVEMENT = "spell_tree.movement";
-    public static final String KEY_END = "spell_tree.end";
+    public static final String KEY_NETHER = "spell_tree." + SpellsAndShields.MOD_ID + ".nether";
+    public static final String KEY_OCEAN = "spell_tree." + SpellsAndShields.MOD_ID + ".ocean";
+    public static final String KEY_MINING = "spell_tree." + SpellsAndShields.MOD_ID + ".mining";
+    public static final String KEY_MOVEMENT = "spell_tree." + SpellsAndShields.MOD_ID + ".movement";
+    public static final String KEY_END = "spell_tree." + SpellsAndShields.MOD_ID + ".end";
     
     public static List<SpellTree> getBaseTrees()
     {
