@@ -85,7 +85,7 @@ public class SelectedSpellWidget extends GuiComponent
             int w2 = this.w - 60;
             
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
             RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
             RenderSystem.enableBlend();
             

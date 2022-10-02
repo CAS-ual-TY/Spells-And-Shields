@@ -163,7 +163,7 @@ public class ManaHolder implements IManaHolder
         
         if(regenTime >= ticksUntilNextReg || this.getMana() > this.getMaxMana())
         {
-            replenish(1.0F);
+            replenish(1F);
             regenTime = 0;
             ticksUntilNextReg = calcTicksUntilReg();
         }

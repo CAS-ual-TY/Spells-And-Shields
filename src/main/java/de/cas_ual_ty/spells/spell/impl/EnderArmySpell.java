@@ -77,11 +77,11 @@ public class EnderArmySpell extends BaseIngredientsSpell
                         e.setBeingStaredAt();
                         
                         double spread = 0.25D;
-                        level.sendParticles(ParticleTypes.ANGRY_VILLAGER, e.getEyePosition().x, e.getEyePosition().y, e.getEyePosition().z, 3, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, 0.0D);
+                        level.sendParticles(ParticleTypes.ANGRY_VILLAGER, e.getEyePosition().x, e.getEyePosition().y, e.getEyePosition().z, 3, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, 0D);
                     });
                     
-                    level.playSound(null, manaHolder.getPlayer(), SoundEvents.ENDERMAN_SCREAM, SoundSource.PLAYERS, 1.0F, 1.0F);
-                    level.playSound(null, target, SoundEvents.ENDERMAN_SCREAM, SoundSource.PLAYERS, 1.0F, 1.0F);
+                    level.playSound(null, manaHolder.getPlayer(), SoundEvents.ENDERMAN_SCREAM, SoundSource.PLAYERS, 1F, 1F);
+                    level.playSound(null, target, SoundEvents.ENDERMAN_SCREAM, SoundSource.PLAYERS, 1F, 1F);
                 }
             }
         }

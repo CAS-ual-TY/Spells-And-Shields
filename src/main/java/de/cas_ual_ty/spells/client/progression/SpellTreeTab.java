@@ -156,7 +156,7 @@ public class SpellTreeTab extends GuiComponent
     public void drawContents(PoseStack poseStack)
     {
         poseStack.pushPose();
-        poseStack.translate(0.0D, 0.0D, 950.0D);
+        poseStack.translate(0D, 0D, 950D);
         
         RenderSystem.enableDepthTest();
         RenderSystem.colorMask(false, false, false, false);
@@ -166,7 +166,7 @@ public class SpellTreeTab extends GuiComponent
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthFunc(518);
         
-        poseStack.translate(0.0D, 0.0D, -950.0D);
+        poseStack.translate(0D, 0D, -950D);
         
         fill(poseStack, SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, 0, 0, 0xFF000000);
         
@@ -184,7 +184,7 @@ public class SpellTreeTab extends GuiComponent
         {
             for(int bgY = -1; bgY <= SpellProgressionScreen.BACKGROUND_TILE_COUNT_Y + 1; ++bgY)
             {
-                blit(poseStack, scrollX16 + 16 * bgX, scrollY16 + 16 * bgY, 0.0F, 0.0F, 16, 16, 16, 16);
+                blit(poseStack, scrollX16 + 16 * bgX, scrollY16 + 16 * bgY, 0F, 0F, 16, 16, 16, 16);
             }
         }
         
@@ -207,7 +207,7 @@ public class SpellTreeTab extends GuiComponent
         vLine(poseStack, (int) scrollX, (int) (scrollY - 10), (int) (scrollY + 10), 0xFF0000FF);
         hLine(poseStack, (int) (scrollX - 10), (int) (scrollX + 10), (int) scrollY, 0xFF0000FF);*/
         
-        poseStack.translate(0.0D, 0.0D, -950.0D);
+        poseStack.translate(0D, 0D, -950D);
         
         RenderSystem.depthFunc(GlConst.GL_GEQUAL);
         RenderSystem.colorMask(false, false, false, false);
@@ -223,9 +223,9 @@ public class SpellTreeTab extends GuiComponent
     public void drawTooltips(PoseStack poseStack, int mouseX, int mouseY, int offX, int offY)
     {
         poseStack.pushPose();
-        poseStack.translate(0.0D, 0.0D, -200.0D);
+        poseStack.translate(0D, 0D, -200D);
         
-        fill(poseStack, 0, 0, SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
+        fill(poseStack, 0, 0, SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, Mth.floor(this.fade * 255F) << 24);
         
         boolean found = false;
         
@@ -249,11 +249,11 @@ public class SpellTreeTab extends GuiComponent
         
         if(found)
         {
-            this.fade = Mth.clamp(this.fade + 0.02F, 0.0F, 0.3F);
+            this.fade = Mth.clamp(this.fade + 0.02F, 0F, 0.3F);
         }
         else
         {
-            this.fade = Mth.clamp(this.fade - 0.04F, 0.0F, 1.0F);
+            this.fade = Mth.clamp(this.fade - 0.04F, 0F, 1F);
         }
     }
     

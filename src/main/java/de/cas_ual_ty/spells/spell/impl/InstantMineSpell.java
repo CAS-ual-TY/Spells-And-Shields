@@ -45,14 +45,14 @@ public class InstantMineSpell extends Spell
                     pos.getY() <= level.getMaxBuildHeight() &&
                     level.mayInteract(player, pos) &&
                     !player.blockActionRestricted(level, pos, player.gameMode.getGameModeForPlayer()) &&
-                    block.getDestroySpeed(level, pos) != -1.0F)
+                    block.getDestroySpeed(level, pos) != -1F)
             {
-                level.playSound(null, manaHolder.getPlayer(), level.getBlockState(pos).getSoundType(level, pos, player).getBreakSound(), SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, manaHolder.getPlayer(), level.getBlockState(pos).getSoundType(level, pos, player).getBreakSound(), SoundSource.PLAYERS, 1F, 1F);
                 player.gameMode.destroyBlock(pos);
                 
                 if(level instanceof ServerLevel serverLevel)
                 {
-                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 1, 0, 0, 0, 0.0D);
+                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 1, 0, 0, 0, 0D);
                 }
             }
         }

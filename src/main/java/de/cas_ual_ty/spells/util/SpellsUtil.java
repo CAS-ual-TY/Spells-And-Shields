@@ -73,7 +73,7 @@ public class SpellsUtil
         final double maxDistSqr = maxDist * maxDist;
         
         Vec3 start = source.getEyePosition();
-        Vec3 direction = source.getViewVector(1.0F).normalize();
+        Vec3 direction = source.getViewVector(1F).normalize();
         Vec3 end = start.add(direction.scale(maxDist));
         
         return level.clip(new ClipContext(start, end, block, fluid, source));
@@ -88,7 +88,7 @@ public class SpellsUtil
         Entity currentEntity = null;
         
         Vec3 start = source.getEyePosition();
-        Vec3 direction = source.getViewVector(1.0F).normalize();
+        Vec3 direction = source.getViewVector(1F).normalize();
         Vec3 end = start.add(direction.scale(maxDist));
         
         for(Entity entity : level.getEntities(source, AABB.ofSize(start, maxDistSqr, maxDistSqr, maxDistSqr)))

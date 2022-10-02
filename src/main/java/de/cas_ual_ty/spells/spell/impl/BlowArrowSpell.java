@@ -32,7 +32,7 @@ public class BlowArrowSpell extends HandIngredientSpell
         ArrowItem arrowItem = (ArrowItem) (itemStack.getItem() instanceof ArrowItem ? itemStack.getItem() : Items.ARROW);
         
         AbstractArrow arrow = arrowItem.createArrow(level, itemStack, manaHolder.getPlayer());
-        arrow.shootFromRotation(manaHolder.getPlayer(), manaHolder.getPlayer().getXRot(), manaHolder.getPlayer().getYRot(), 0.0F, 3.0F, 1.0F);
+        arrow.shootFromRotation(manaHolder.getPlayer(), manaHolder.getPlayer().getXRot(), manaHolder.getPlayer().getYRot(), 0F, 3F, 1F);
         arrow.setCritArrow(true);
         
         if(manaHolder.getPlayer() instanceof Player player)
@@ -48,7 +48,7 @@ public class BlowArrowSpell extends HandIngredientSpell
         }
         
         level.addFreshEntity(arrow);
-        level.playSound(null, manaHolder.getPlayer(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F);
+        level.playSound(null, manaHolder.getPlayer(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1F, 1F);
     }
     
     @Override

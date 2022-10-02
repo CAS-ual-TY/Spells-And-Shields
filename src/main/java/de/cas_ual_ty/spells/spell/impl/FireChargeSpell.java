@@ -42,12 +42,12 @@ public class FireChargeSpell extends BaseIngredientsSpell
         
         Fireball fireball = new LargeFireball(EntityType.FIREBALL, level);
         fireball.setPos(manaHolder.getPlayer().getEyePosition()
-                .add(manaHolder.getPlayer().getViewVector(1.0F).scale(2D))
+                .add(manaHolder.getPlayer().getViewVector(1F).scale(2D))
                 .add(manaHolder.getPlayer().getDeltaMovement()));
-        fireball.shootFromRotation(manaHolder.getPlayer(), manaHolder.getPlayer().getXRot(), manaHolder.getPlayer().getYRot(), 0.0F, 3.0F, 1.0F);
+        fireball.shootFromRotation(manaHolder.getPlayer(), manaHolder.getPlayer().getXRot(), manaHolder.getPlayer().getYRot(), 0F, 3F, 1F);
         fireball.setOwner(manaHolder.getPlayer());
         
-        level.playSound(null, manaHolder.getPlayer(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F);
+        level.playSound(null, manaHolder.getPlayer(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1F, 1F);
         
         level.addFreshEntity(fireball);
     }

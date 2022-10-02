@@ -30,7 +30,7 @@ public class SpellInteractButton extends Button
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, SpellNodeWidget.WIDGETS_LOCATION);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+        RenderSystem.setShaderColor(1F, 1F, 1F, this.alpha);
         int i = this.isHoveredOrFocused() && active ? this.v : 2;
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -45,7 +45,7 @@ public class SpellInteractButton extends Button
     public void renderTitle(PoseStack poseStack, int mouseX, int mouseY, float deltaTick, Font font)
     {
         int color = getFGColor();
-        drawCenteredString(poseStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, color | Mth.ceil(this.alpha * 255.0F) << 24);
+        drawCenteredString(poseStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, color | Mth.ceil(this.alpha * 255F) << 24);
     }
     
     @Override

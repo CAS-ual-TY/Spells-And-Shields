@@ -109,7 +109,7 @@ public class ManaRenderer implements IGuiOverlay
             float manaMax = Math.max(maxMana, Math.max(manaLast, mana));
             int extra = Mth.ceil(manaHolder.getExtraMana());
             
-            int rows = Mth.ceil((manaMax + extra) / 2.0F / 10.0F);
+            int rows = Mth.ceil((manaMax + extra) / 2F / 10F);
             int rowHeight = Math.max(10 - (rows - 2), 3);
             
             this.random.setSeed(gui.getGuiTicks() * 27L);
@@ -121,7 +121,7 @@ public class ManaRenderer implements IGuiOverlay
             
             if(player.hasEffect(SpellsRegistries.REPLENISHMENT_EFFECT.get()))
             {
-                regen = gui.getGuiTicks() % Mth.ceil(manaMax + 5.0F);
+                regen = gui.getGuiTicks() % Mth.ceil(manaMax + 5F);
             }
             
             this.renderUnit(gui, pStack, player, left, top, rowHeight, regen, manaMax, mana, manaLast, extra, highlight);
@@ -143,8 +143,8 @@ public class ManaRenderer implements IGuiOverlay
         UnitType unitType = UnitType.forPlayer(player);
         
         int v = 0;
-        int totalUnits = Mth.ceil((double) manaMax / 2.0D);
-        int totalExtraUnits = Mth.ceil((double) extra / 2.0D);
+        int totalUnits = Mth.ceil((double) manaMax / 2D);
+        int totalExtraUnits = Mth.ceil((double) extra / 2D);
         int manaCeil = totalUnits * 2;
         
         for(int idx = totalUnits + totalExtraUnits - 1; idx >= 0; --idx)

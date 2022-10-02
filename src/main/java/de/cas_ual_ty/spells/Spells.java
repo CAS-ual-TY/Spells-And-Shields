@@ -40,8 +40,8 @@ public class Spells
     public static final RegistryObject<ISpell> BLAST_SMELT = SPELLS.register("blast_smelt", SmeltSpell::new);
     public static final RegistryObject<ISpell> TRANSFER_MANA = SPELLS.register("transfer_mana", TransferManaSpell::new);
     public static final RegistryObject<ISpell> BLOW_ARROW = SPELLS.register("blow_arrow", BlowArrowSpell::new);
-    public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation("textures/mob_effect/health_boost.png")));
-    public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(SpellsRegistries.MAX_MANA_ATTRIBUTE::get, 4.0D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
+    public static final RegistryObject<ISpell> HEALTH_BOOST = SPELLS.register("health_boost", () -> new AttributeSpell(() -> Attributes.MAX_HEALTH, 4D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation("textures/mob_effect/health_boost.png")));
+    public static final RegistryObject<ISpell> MANA_BOOST = SPELLS.register("mana_boost", () -> new AttributeSpell(SpellsRegistries.MAX_MANA_ATTRIBUTE::get, 4D, AttributeModifier.Operation.ADDITION).setIcon(new ResourceLocation(MOD_ID, "textures/mob_effect/mana_boost.png")));
     public static final RegistryObject<ISpell> WATER_LEAP = SPELLS.register("water_leap", WaterLeapSpell::new);
     public static final RegistryObject<ISpell> AQUA_AFFINITY = SPELLS.register("aqua_affinity", () -> new AquaAffinitySpell().setSmallIcon(new ResourceLocation("textures/item/enchanted_book.png")));
     public static final RegistryObject<ISpell> WATER_WHIP = SPELLS.register("water_whip", WaterWhipSpell::new);

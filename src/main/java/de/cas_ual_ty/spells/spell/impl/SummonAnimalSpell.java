@@ -83,7 +83,7 @@ public class SummonAnimalSpell extends HandIngredientSpell
         {
             Vec3 position = manaHolder.getPlayer().position();
             
-            livingEntity.moveTo(position.x, position.y, position.z, 0.0F, manaHolder.getPlayer().getYRot() - 180F);
+            livingEntity.moveTo(position.x, position.y, position.z, 0F, manaHolder.getPlayer().getYRot() - 180F);
             
             if(livingEntity instanceof AgeableMob ageableMob)
             {
@@ -97,7 +97,7 @@ public class SummonAnimalSpell extends HandIngredientSpell
                 RandomSource random = livingEntity.getRandom();
                 final int count = 3;
                 final double spread = 0.4D;
-                serverLevel.sendParticles(ParticleTypes.EXPLOSION, position.x, position.y, position.z, count, random.nextGaussian() * spread, random.nextGaussian() * spread, random.nextGaussian() * spread, 0.0D);
+                serverLevel.sendParticles(ParticleTypes.EXPLOSION, position.x, position.y, position.z, count, random.nextGaussian() * spread, random.nextGaussian() * spread, random.nextGaussian() * spread, 0D);
             }
         }
     }

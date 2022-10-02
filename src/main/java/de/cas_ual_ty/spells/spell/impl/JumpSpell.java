@@ -56,7 +56,7 @@ public class JumpSpell extends BaseIngredientsSpell implements IClientSpell
             final int count = 4;
             final double spread = 0.1D;
             Vec3 position = entity.position();
-            serverLevel.sendParticles(ParticleTypes.POOF, position.x, position.y, position.z, count, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, 0.0D);
+            serverLevel.sendParticles(ParticleTypes.POOF, position.x, position.y, position.z, count, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, 0D);
         }
     }
     

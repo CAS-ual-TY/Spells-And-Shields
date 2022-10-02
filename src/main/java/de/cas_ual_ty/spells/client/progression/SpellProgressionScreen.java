@@ -407,7 +407,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         {
             PoseStack posestack = RenderSystem.getModelViewStack();
             posestack.pushPose();
-            posestack.translate(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, 0.0D);
+            posestack.translate(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, 0D);
             RenderSystem.applyModelViewMatrix();
             tab.drawContents(poseStack);
             posestack.popPose();
@@ -419,7 +419,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     
     public void renderWindow(PoseStack poseStack, int offX, int offY)
     {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, WINDOW_LOCATION);
@@ -452,12 +452,12 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     
     private void renderTooltips(PoseStack poseStack, int mouseX, int mouseY, int offX, int offY)
     {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         if(this.selectedTab != null)
         {
             PoseStack posestack = RenderSystem.getModelViewStack();
             posestack.pushPose();
-            posestack.translate(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, 400.0D);
+            posestack.translate(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, 400D);
             RenderSystem.applyModelViewMatrix();
             RenderSystem.enableDepthTest();
             this.selectedTab.drawTooltips(poseStack, mouseX - offX - WINDOW_OFF_X, mouseY - offY - WINDOW_OFF_Y, offX, offY);
