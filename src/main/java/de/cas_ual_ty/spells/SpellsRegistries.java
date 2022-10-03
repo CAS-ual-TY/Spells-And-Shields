@@ -14,6 +14,7 @@ import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import de.cas_ual_ty.spells.spelldata.ISpellDataType;
 import de.cas_ual_ty.spells.spelldata.SimpleTickedSpellData;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
@@ -29,11 +30,9 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ShieldItem;
-import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.Block;
@@ -137,6 +136,13 @@ public class SpellsRegistries
         CONTAINER_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ARGUMENT_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
+    
+    public static void addPotionRecipes()
+    {
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.INSTANT_MANA.get(), SpellsRegistries.STRONG_INSTANT_MANA.get(), null, Items.TUBE_CORAL, SpellsRegistries.MANA_BOMB.get(), SpellsRegistries.STRONG_MANA_BOMB.get(), null, Items.FERMENTED_SPIDER_EYE);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.REPLENISHMENT.get(), SpellsRegistries.STRONG_REPLENISHMENT.get(), SpellsRegistries.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.LEAKING.get(), SpellsRegistries.STRONG_LEAKING.get(), SpellsRegistries.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
     }
     
     private static void newRegistry(NewRegistryEvent event)

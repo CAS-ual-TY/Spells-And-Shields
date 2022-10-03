@@ -66,7 +66,7 @@ public class Spells
     public static final RegistryObject<ISpell> ENDER_ARMY = SPELLS.register("ender_army", EnderArmySpell::new);
     
     public static final RegistryObject<ISpell> PERMANENT_REPLENISHMENT = SPELLS.register("permanent_replenishment", () -> new PermanentMobEffectSpell(SpellsRegistries.REPLENISHMENT_EFFECT.get(), 50));
-    public static final RegistryObject<ISpell> TEMPORARY_REPLENISHMENT = SPELLS.register("temporary_replenishment", () -> new TemporaryMobEffectSpell(new ItemStack(Items.SUGAR), SpellsRegistries.REPLENISHMENT_EFFECT.get()));
+    public static final RegistryObject<ISpell> TEMPORARY_REPLENISHMENT = SPELLS.register("temporary_replenishment", () -> new TemporaryMobEffectSpell(new ItemStack(Items.TUBE_CORAL_FAN), SpellsRegistries.REPLENISHMENT_EFFECT.get()));
     
     public static final RegistryObject<ISpell> PERMANENT_SPEED = SPELLS.register("permanent_speed", () -> new PermanentMobEffectSpell(MobEffects.MOVEMENT_SPEED));
     public static final RegistryObject<ISpell> PERMANENT_JUMP_BOOST = SPELLS.register("permanent_jump_boost", () -> new PermanentMobEffectSpell(MobEffects.JUMP));
