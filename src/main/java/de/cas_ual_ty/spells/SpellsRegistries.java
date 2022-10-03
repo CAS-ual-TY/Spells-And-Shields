@@ -138,17 +138,17 @@ public class SpellsRegistries
         ARGUMENT_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
     
+    private static void newRegistry(NewRegistryEvent event)
+    {
+        REQUIREMENTS_REGISTRY = event.create(new RegistryBuilder<IRequirementType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
+        SPELL_DATA_REGISTRY = event.create(new RegistryBuilder<ISpellDataType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "spell_data")));
+    }
+    
     public static void addPotionRecipes()
     {
         SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.INSTANT_MANA.get(), SpellsRegistries.STRONG_INSTANT_MANA.get(), null, Items.TUBE_CORAL, SpellsRegistries.MANA_BOMB.get(), SpellsRegistries.STRONG_MANA_BOMB.get(), null, Items.FERMENTED_SPIDER_EYE);
         SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.REPLENISHMENT.get(), SpellsRegistries.STRONG_REPLENISHMENT.get(), SpellsRegistries.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
         SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.LEAKING.get(), SpellsRegistries.STRONG_LEAKING.get(), SpellsRegistries.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
-    }
-    
-    private static void newRegistry(NewRegistryEvent event)
-    {
-        REQUIREMENTS_REGISTRY = event.create(new RegistryBuilder<IRequirementType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
-        SPELL_DATA_REGISTRY = event.create(new RegistryBuilder<ISpellDataType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "spell_data")));
     }
     
     private static void entityAttributeModification(EntityAttributeModificationEvent event)
