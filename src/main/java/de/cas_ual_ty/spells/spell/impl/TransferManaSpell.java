@@ -30,7 +30,7 @@ public class TransferManaSpell extends BaseIngredientsSpell implements IProjecti
     }
     
     @Override
-    public void tick(SpellProjectile entity)
+    public void projectileHit(SpellProjectile entity)
     {
         if(entity.level.isClientSide)
         {
@@ -74,13 +74,13 @@ public class TransferManaSpell extends BaseIngredientsSpell implements IProjecti
     }
     
     @Override
-    public void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
+    public void projectileHitEntity(SpellProjectile entity, EntityHitResult entityHitResult)
     {
         Entity hit = entityHitResult.getEntity();
         if(hit instanceof LivingEntity livingEntity)
         {
             ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder -> manaHolder.setMana(manaHolder.getMana() - manaHolder.getExtraMana() + this.manaCost));
         }
-        IProjectileSpell.super.onEntityHit(entity, entityHitResult);
+        IProjectileSpell.super.projectileHitEntity(entity, entityHitResult);
     }
 }

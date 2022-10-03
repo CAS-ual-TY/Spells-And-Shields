@@ -87,7 +87,7 @@ public class DrainFlameSpell extends BaseIngredientsSpell implements IProjectile
     }
     
     @Override
-    public void tick(SpellProjectile entity)
+    public void projectileHit(SpellProjectile entity)
     {
         Vec3 pos = entity.position();
         Random random = new Random();
@@ -107,19 +107,19 @@ public class DrainFlameSpell extends BaseIngredientsSpell implements IProjectile
     }
     
     @Override
-    public ParticleOptions getTrailParticle()
+    public ParticleOptions getProjectileParticle()
     {
         return ParticleTypes.SOUL_FIRE_FLAME;
     }
     
     @Override
-    public void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
+    public void projectileHitEntity(SpellProjectile entity, EntityHitResult entityHitResult)
     {
         if(entityHitResult.getEntity() instanceof LivingEntity target)
         {
             target.addEffect(new MobEffectInstance(SpellsRegistries.REPLENISHMENT_EFFECT.get(), 200));
             target.level.playSound(null, target, SoundEvents.FIRE_AMBIENT, SoundSource.PLAYERS, 1F, 1F);
-            IProjectileSpell.super.onEntityHit(entity, entityHitResult);
+            IProjectileSpell.super.projectileHitEntity(entity, entityHitResult);
         }
     }
 }

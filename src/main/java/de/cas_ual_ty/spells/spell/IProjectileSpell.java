@@ -16,31 +16,31 @@ import java.util.function.BiConsumer;
 public interface IProjectileSpell extends ISpell
 {
     // performed on both sides
-    default void tick(SpellProjectile entity)
+    default void projectileHit(SpellProjectile entity)
     {
     
     }
     
     // performed on both sides
-    default void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
+    default void projectileHitEntity(SpellProjectile entity, EntityHitResult entityHitResult)
     {
         entity.discard();
     }
     
     // performed on both sides
-    default void onBlockHit(SpellProjectile entity, BlockHitResult blockHitResult)
+    default void projectileHitBlock(SpellProjectile entity, BlockHitResult blockHitResult)
     {
         BlockState blockstate = entity.level.getBlockState(blockHitResult.getBlockPos());
         blockstate.onProjectileHit(entity.level, blockstate, blockHitResult, entity);
         entity.discard();
     }
     
-    default int getTimeout()
+    default int getProjectileTimeout()
     {
         return 50;
     }
     
-    default void onTimeout(SpellProjectile entity)
+    default void onProjectileTimeout(SpellProjectile entity)
     {
         
     }
@@ -85,12 +85,12 @@ public interface IProjectileSpell extends ISpell
         shootHoming(manaHolder, target, (homingSpellProjectile, serverLevel) -> {});
     }
     
-    default float getInertia()
+    default float getProjectileInertia()
     {
         return 1F;
     }
     
-    default ParticleOptions getTrailParticle()
+    default ParticleOptions getProjectileParticle()
     {
         return ParticleTypes.POOF;
     }

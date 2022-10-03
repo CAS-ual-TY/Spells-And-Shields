@@ -40,7 +40,7 @@ public interface IReturnProjectileSpell extends IProjectileSpell
     }
     
     @Override
-    default void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
+    default void projectileHitEntity(SpellProjectile entity, EntityHitResult entityHitResult)
     {
         String direction = entity.getSpellDataTag().getString(KEY_DIRECTION);
         
@@ -58,7 +58,7 @@ public interface IReturnProjectileSpell extends IProjectileSpell
     }
     
     @Override
-    default void onBlockHit(SpellProjectile entity, BlockHitResult blockHitResult)
+    default void projectileHitBlock(SpellProjectile entity, BlockHitResult blockHitResult)
     {
         String direction = entity.getSpellDataTag().getString(KEY_DIRECTION);
         
@@ -76,7 +76,7 @@ public interface IReturnProjectileSpell extends IProjectileSpell
     }
     
     @Override
-    default void onTimeout(SpellProjectile entity)
+    default void onProjectileTimeout(SpellProjectile entity)
     {
         String direction = entity.getSpellDataTag().getString(KEY_DIRECTION);
         

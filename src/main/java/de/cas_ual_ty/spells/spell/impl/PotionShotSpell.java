@@ -49,7 +49,7 @@ public class PotionShotSpell extends HandIngredientSpell implements IProjectileS
     }
     
     @Override
-    public void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
+    public void projectileHitEntity(SpellProjectile entity, EntityHitResult entityHitResult)
     {
         if(entityHitResult.getEntity() instanceof LivingEntity target)
         {
@@ -62,7 +62,7 @@ public class PotionShotSpell extends HandIngredientSpell implements IProjectileS
                         .forEach(target::addEffect);
             }
             
-            IProjectileSpell.super.onEntityHit(entity, entityHitResult);
+            IProjectileSpell.super.projectileHitEntity(entity, entityHitResult);
         }
     }
     
@@ -86,7 +86,7 @@ public class PotionShotSpell extends HandIngredientSpell implements IProjectileS
     }
     
     @Override
-    public void tick(SpellProjectile entity)
+    public void projectileHit(SpellProjectile entity)
     {
     
     }

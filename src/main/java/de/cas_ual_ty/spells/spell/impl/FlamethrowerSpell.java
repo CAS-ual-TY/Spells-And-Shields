@@ -77,7 +77,7 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
     }
     
     @Override
-    public int getTimeout()
+    public int getProjectileTimeout()
     {
         return 20;
     }
@@ -92,18 +92,18 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
     }
     
     @Override
-    public void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
+    public void projectileHitEntity(SpellProjectile entity, EntityHitResult entityHitResult)
     {
         if(entityHitResult.getEntity() instanceof LivingEntity hit)
         {
             hit.setSecondsOnFire(fireSeconds);
         }
         
-        IProjectileSpell.super.onEntityHit(entity, entityHitResult);
+        IProjectileSpell.super.projectileHitEntity(entity, entityHitResult);
     }
     
     @Override
-    public void onBlockHit(SpellProjectile entity, BlockHitResult blockHitResult)
+    public void projectileHitBlock(SpellProjectile entity, BlockHitResult blockHitResult)
     {
         if(!entity.level.isClientSide)
         {
@@ -114,7 +114,7 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
             }
         }
         
-        IProjectileSpell.super.onBlockHit(entity, blockHitResult);
+        IProjectileSpell.super.projectileHitBlock(entity, blockHitResult);
     }
     
     @Override
@@ -141,7 +141,7 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
     }
     
     @Override
-    public void tick(SpellProjectile entity)
+    public void projectileHit(SpellProjectile entity)
     {
         if(entity.level.isClientSide)
         {
@@ -159,7 +159,7 @@ public class FlamethrowerSpell extends BaseIngredientsSpell implements IProjecti
     }
     
     @Override
-    public ParticleOptions getTrailParticle()
+    public ParticleOptions getProjectileParticle()
     {
         return ParticleTypes.FLAME;
     }

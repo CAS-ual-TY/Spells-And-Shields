@@ -46,13 +46,13 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     @Override
     protected float getInertia()
     {
-        return spell != null ? spell.getInertia() : 1F;
+        return spell != null ? spell.getProjectileInertia() : 1F;
     }
     
     @Override
     protected ParticleOptions getTrailParticle()
     {
-        return spell != null ? spell.getTrailParticle() : ParticleTypes.POOF;
+        return spell != null ? spell.getProjectileParticle() : ParticleTypes.POOF;
     }
     
     @Override
@@ -62,11 +62,11 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         
         if(spell != null)
         {
-            spell.tick(this);
+            spell.projectileHit(this);
             
-            if(this.tickCount >= spell.getTimeout() && !this.level.isClientSide)
+            if(this.tickCount >= spell.getProjectileTimeout() && !this.level.isClientSide)
             {
-                spell.onTimeout(this);
+                spell.onProjectileTimeout(this);
                 this.discard();
             }
         }
@@ -83,7 +83,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     {
         if(spell != null)
         {
-            spell.onEntityHit(this, entityHitResult);
+            spell.projectileHitEntity(this, entityHitResult);
         }
     }
     
@@ -92,7 +92,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     {
         if(spell != null)
         {
-            spell.onBlockHit(this, blockHitResult);
+            spell.projectileHitBlock(this, blockHitResult);
         }
     }
     
