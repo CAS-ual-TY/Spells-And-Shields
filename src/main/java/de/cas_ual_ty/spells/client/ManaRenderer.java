@@ -17,15 +17,12 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.Random;
-import java.util.function.BooleanSupplier;
 
 public class ManaRenderer implements IGuiOverlay
 {
     public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/gui/spells_icons.png");
     
     protected Minecraft minecraft;
-    
-    protected final BooleanSupplier doRender;
     
     protected final Random random = new Random();
     
@@ -36,16 +33,20 @@ public class ManaRenderer implements IGuiOverlay
     
     protected long lastManaChangeTime;
     
-    public ManaRenderer(BooleanSupplier doRender)
+    protected final boolean above;
+    protected final boolean right;
+    
+    public ManaRenderer(boolean above, boolean right)
     {
-        this.doRender = doRender;
         minecraft = Minecraft.getInstance();
+        this.above = above;
+        this.right = right;
     }
     
     @Override
     public void render(ForgeGui gui, PoseStack mStack, float partialTicks, int width, int height)
     {
-        if(doRender.getAsBoolean() && !Minecraft.getInstance().options.hideGui && gui.shouldDrawSurvivalElements())
+        if(above == SpellsClientConfig.MANA_ABOVE_FOOD.get() && right == !SpellsClientConfig.MANA_BY_HEALTH.get() && !Minecraft.getInstance().options.hideGui && gui.shouldDrawSurvivalElements())
         {
             gui.setupOverlayRenderState(true, false);
             renderMana(gui, width, height, mStack);
@@ -114,8 +115,14 @@ public class ManaRenderer implements IGuiOverlay
             
             this.random.setSeed(gui.getGuiTicks() * 27L);
             
-            int left = width / 2 + 10;
-            int top = height - gui.rightHeight;
+            int left = right ? width / 2 + 10 : width / 2 - 91;
+    
+            int top = height - (right ? gui.rightHeight : gui.leftHeight);
+            
+            if(!right && above && player.getArmorValue() <= 0)
+            {
+                top += 10;
+            }
             
             int regen = -1;
             
@@ -126,11 +133,15 @@ public class ManaRenderer implements IGuiOverlay
             
             this.renderUnit(gui, pStack, player, left, top, rowHeight, regen, manaMax, mana, manaLast, extra, highlight);
             
-            gui.rightHeight += (rows * rowHeight);
+            int change = (rows * rowHeight) + (rowHeight != 10 ? 10 - rowHeight : 0);
             
-            if(rowHeight != 10)
+            if(right)
             {
-                gui.rightHeight += 10 - rowHeight;
+                gui.rightHeight += change;
+            }
+            else
+            {
+                gui.leftHeight += change;
             }
         });
         
@@ -245,8 +256,10 @@ public class ManaRenderer implements IGuiOverlay
     
     private static void registerGuiOverlays(RegisterGuiOverlaysEvent event)
     {
-        event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), "player_mana_above_hunger", new ManaRenderer(() -> SpellsClientConfig.MANA_ABOVE_FOOD.get()));
-        event.registerBelow(VanillaGuiOverlay.FOOD_LEVEL.id(), "player_mana_below_hunger", new ManaRenderer(() -> !SpellsClientConfig.MANA_ABOVE_FOOD.get()));
+        event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), "player_mana_above_hunger", new ManaRenderer(true, true));
+        event.registerBelow(VanillaGuiOverlay.FOOD_LEVEL.id(), "player_mana_below_hunger", new ManaRenderer(true, false));
+        event.registerAbove(VanillaGuiOverlay.PLAYER_HEALTH.id(), "player_mana_above_health", new ManaRenderer(false, true));
+        event.registerBelow(VanillaGuiOverlay.PLAYER_HEALTH.id(), "player_mana_below_health", new ManaRenderer(false, false));
     }
     
     public static void register()
