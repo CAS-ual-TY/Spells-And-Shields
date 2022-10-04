@@ -115,6 +115,11 @@ public class SpellsClientUtil
             }
             else if(event.getScreen() instanceof AbstractContainerScreen screen && (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen))
             {
+                if(screen.getGuiLeft() == 0 && screen.getGuiTop() == 0)
+                {
+                    return;
+                }
+                
                 spellSlotWidgets.clear();
                 
                 RecipeBookComponent recipeBook = null;
