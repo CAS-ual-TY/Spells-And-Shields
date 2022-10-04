@@ -101,9 +101,9 @@ public class SpellsClientUtil
     
     private static void initScreen(ScreenEvent.Init.Post event)
     {
-        if(Minecraft.getInstance().player != null)
+        if(Minecraft.getInstance().player != null && event.getScreen() instanceof AbstractContainerScreen screen)
         {
-            if(event.getScreen() instanceof AbstractContainerScreen screen && SpellsUtil.isEnchantingTable(lastRightClickedBlock))
+            if(SpellsUtil.isEnchantingTable(lastRightClickedBlock))
             {
                 lastRightClickedBlock = null;
                 event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, Math.min(176, screen.width), SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
@@ -113,7 +113,7 @@ public class SpellsClientUtil
                         },
                         0));
             }
-            else if(event.getScreen() instanceof AbstractContainerScreen screen && (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen))
+            else if(screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen)
             {
                 if(screen.getGuiLeft() == 0 && screen.getGuiTop() == 0)
                 {
