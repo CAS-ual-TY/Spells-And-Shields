@@ -86,18 +86,18 @@ public class GhastSpell extends BaseIngredientsSpell implements ITickedDataSpell
         
         if(tickTime == 10)
         {
-            level.playSound(null, entity, SoundEvents.GHAST_WARN, SoundSource.PLAYERS, 10.0F, 1.0F);
+            level.playSound(null, entity, SoundEvents.GHAST_WARN, SoundSource.PLAYERS, 10F, 1F);
         }
         else if(tickTime == 20)
         {
             Fireball fireball = new LargeFireball(EntityType.FIREBALL, level);
             fireball.setPos(entity.getEyePosition()
-                    .add(entity.getViewVector(1.0F).scale(2D))
+                    .add(entity.getViewVector(1F).scale(2D))
                     .add(entity.getDeltaMovement()));
-            fireball.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0.0F, 3.0F, 1.0F);
+            fireball.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0F, 3F, 1F);
             fireball.setOwner(entity);
             
-            level.playSound(null, entity, SoundEvents.GHAST_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, entity, SoundEvents.GHAST_SHOOT, SoundSource.PLAYERS, 1F, 1F);
             
             level.addFreshEntity(fireball);
         }

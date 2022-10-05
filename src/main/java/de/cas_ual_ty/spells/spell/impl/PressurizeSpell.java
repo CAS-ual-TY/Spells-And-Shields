@@ -43,18 +43,18 @@ public class PressurizeSpell extends BaseIngredientsSpell
     @Override
     public void perform(ManaHolder manaHolder)
     {
-        LivingEntity caster = manaHolder.getPlayer();
+        LivingEntity player = manaHolder.getPlayer();
         
-        if(caster.level instanceof ServerLevel level)
+        if(player.level instanceof ServerLevel level)
         {
             double r = knockBackRadius * 2;
-            AABB area = AABB.ofSize(caster.getEyePosition(), r, r, r);
+            AABB area = AABB.ofSize(player.getEyePosition(), r, r, r);
             
             double strength = 2D;
             
-            caster.level.playSound(null, caster, SoundEvents.PLAYER_BREATH, SoundSource.PLAYERS, 1F, 1F);
+            player.level.playSound(null, player, SoundEvents.PLAYER_BREATH, SoundSource.PLAYERS, 1F, 1F);
             
-            List<Entity> entities = caster.level.getEntities(caster, area);
+            List<Entity> entities = player.level.getEntities(player, area);
             
             for(int i = 0; i < 18; i++)
             {
@@ -67,7 +67,7 @@ public class PressurizeSpell extends BaseIngredientsSpell
             {
                 if(entity instanceof LivingEntity target)
                 {
-                    Vec3 dir = target.position().subtract(caster.position());
+                    Vec3 dir = target.position().subtract(player.position());
                     target.knockback(strength, -dir.x, -dir.z);
                     
                     Vec3 pos = target.getEyePosition();

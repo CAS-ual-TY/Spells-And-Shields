@@ -41,7 +41,7 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     {
         shootStraight(manaHolder, (projectile, level) ->
         {
-            level.playSound(null, manaHolder.getPlayer().blockPosition(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, manaHolder.getPlayer().blockPosition(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1F);
         });
     }
     
@@ -111,12 +111,12 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
             if(player.getMainHandItem().getItem() == Items.BUCKET)
             {
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WATER_BUCKET));
-                player.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                player.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1F, 1F);
             }
             else if(player.getOffhandItem().getItem() == Items.BUCKET)
             {
                 player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.WATER_BUCKET));
-                player.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                player.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1F, 1F);
             }
             
             entity.discard();

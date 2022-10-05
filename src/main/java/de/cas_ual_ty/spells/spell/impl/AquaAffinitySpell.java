@@ -21,7 +21,7 @@ public class AquaAffinitySpell extends PassiveSpell implements IEventSpell
             {
                 if(spellHolder.getAmountSpellEquipped(this) > 0)
                 {
-                    event.setNewSpeed(event.getNewSpeed() * 5.0F);
+                    event.setNewSpeed(event.getNewSpeed() * 5F);
                 }
             });
         }

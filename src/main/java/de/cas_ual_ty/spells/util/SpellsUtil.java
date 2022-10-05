@@ -6,6 +6,8 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.Item;
@@ -30,6 +32,8 @@ public class SpellsUtil
 {
     public static final Optional<ItemStack> EMPTY_ITEMSTACK_OPTIONAL = Optional.of(ItemStack.EMPTY);
     public static final Optional<List<ItemStack>> EMPTY_ITEMSTACK_LIST_OPTIONAL = Optional.of(ImmutableList.of(ItemStack.EMPTY));
+    
+    public static final Container EMPTY_CONTAINER = new SimpleContainer(0);
     
     public static HitResult rayTrace(Level level, Entity source, double maxDist, Predicate<Entity> filter, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid)
     {
@@ -67,7 +71,7 @@ public class SpellsUtil
         final double maxDistSqr = maxDist * maxDist;
         
         Vec3 start = source.getEyePosition();
-        Vec3 direction = source.getViewVector(1.0F).normalize();
+        Vec3 direction = source.getViewVector(1F).normalize();
         Vec3 end = start.add(direction.scale(maxDist));
         
         return level.clip(new ClipContext(start, end, block, fluid, source));
@@ -82,7 +86,7 @@ public class SpellsUtil
         Entity currentEntity = null;
         
         Vec3 start = source.getEyePosition();
-        Vec3 direction = source.getViewVector(1.0F).normalize();
+        Vec3 direction = source.getViewVector(1F).normalize();
         Vec3 end = start.add(direction.scale(maxDist));
         
         for(Entity entity : level.getEntities(source, AABB.ofSize(start, maxDistSqr, maxDistSqr, maxDistSqr)))

@@ -43,7 +43,7 @@ public class SmeltSpell extends HandIngredientSpell
         {
             final int count = 3;
             final double spread = 0.5D;
-            serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, position.x, position.y, position.z, count, manaHolder.getPlayer().getRandom().nextGaussian() * spread, manaHolder.getPlayer().getRandom().nextGaussian() * spread, manaHolder.getPlayer().getRandom().nextGaussian() * spread, 0.0D);
+            serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, position.x, position.y, position.z, count, manaHolder.getPlayer().getRandom().nextGaussian() * spread, manaHolder.getPlayer().getRandom().nextGaussian() * spread, manaHolder.getPlayer().getRandom().nextGaussian() * spread, 0D);
         }
     }
     

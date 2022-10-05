@@ -117,7 +117,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         if(source.level instanceof ServerLevel level)
         {
             Vec3 position = source.getEyePosition();
-            Vec3 direction = source.getViewVector(1.0F).normalize();
+            Vec3 direction = source.getViewVector(1F).normalize();
             
             SpellProjectile projectile = new SpellProjectile(SpellsRegistries.SPELL_PROJECTILE.get(), level, spell);
             

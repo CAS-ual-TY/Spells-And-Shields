@@ -34,7 +34,7 @@ public class InstantManaMobEffect extends MobEffect
     {
         // directSource = eg. area of effect cloud
         // indirectSource = eg. player who threw potion
-        // 0 < strength <= 1.0D
+        // 0 < strength <= 1D
         
         LazyOptional<ManaHolder> manaHolder = ManaHolder.getManaHolder(entity);
         

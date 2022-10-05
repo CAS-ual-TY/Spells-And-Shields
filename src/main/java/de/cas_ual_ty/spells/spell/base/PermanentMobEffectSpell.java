@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.base;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.IEquipSpell;
 import de.cas_ual_ty.spells.spell.ITickSpell;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -123,13 +124,26 @@ public class PermanentMobEffectSpell extends PassiveSpell implements ITickSpell,
             component = new TranslatableComponent("potion.withAmplifier", component, new TranslatableComponent("potion.potency." + amplifier));
         }
         
-        return component;
+        return new TranslatableComponent(getNameKey(), component);
+    }
+    
+    @Override
+    public MutableComponent getSpellDesc()
+    {
+        MutableComponent component = new TranslatableComponent(mobEffect.getDescriptionId());
+        
+        if(amplifier > 0)
+        {
+            component = new TranslatableComponent("potion.withAmplifier", component, new TranslatableComponent("potion.potency." + amplifier));
+        }
+        
+        return new TranslatableComponent(getDescKey(), component.withStyle(ChatFormatting.YELLOW));
     }
     
     @Override
     public void addSpellDesc(List<Component> list)
     {
-        list.add(new TranslatableComponent(getDescKey()));
+        list.add(getSpellDesc());
         
         Map<Attribute, AttributeModifier> map = mobEffect.getAttributeModifiers();
         
@@ -137,7 +151,6 @@ public class PermanentMobEffectSpell extends PassiveSpell implements ITickSpell,
         {
             list.add(TextComponent.EMPTY);
             list.add(whenAppliedComponent());
-            
             
             for(Map.Entry<Attribute, AttributeModifier> entry : map.entrySet())
             {

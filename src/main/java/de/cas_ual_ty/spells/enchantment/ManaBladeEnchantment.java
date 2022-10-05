@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.enchantment;
 
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
@@ -12,7 +13,6 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.DamageEnchantment;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Random;
@@ -25,7 +25,7 @@ public class ManaBladeEnchantment extends Enchantment
     
     public ManaBladeEnchantment(Enchantment.Rarity rarity, EquipmentSlot... equipmentSlots)
     {
-        super(rarity, EnchantmentCategory.WEAPON, equipmentSlots);
+        super(rarity, SpellsRegistries.SWORD_OR_AXE_ENCHANTMENT_CATEGORY, equipmentSlots);
     }
     
     @Override
@@ -67,9 +67,9 @@ public class ManaBladeEnchantment extends Enchantment
             {
                 if(manaHolder.getMana() > 2F)
                 {
-                    float damage = Math.min(manaHolder.getMana(), (float) level * 2.5F);
+                    float damage = Math.min(manaHolder.getMana(), (float) level * 2F);
                     
-                    manaHolder.burn(damage);
+                    manaHolder.burn(5F);
                     livingEntity.hurt(DamageSource.indirectMagic(user, null), damage);
                     
                     Random random = user.getRandom();

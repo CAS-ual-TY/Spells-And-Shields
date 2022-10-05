@@ -62,7 +62,7 @@ public class GrowthSpell extends BaseIngredientsSpell
                         Vec3 pos1 = new Vec3(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
                         
                         BoneMealItem.applyBonemeal(ItemStack.EMPTY, player.level, pos, player);
-                        level.sendParticles(ParticleTypes.POOF, pos1.x, pos1.y, pos1.z, 1, 0, 0, 0, 0.0D);
+                        level.sendParticles(ParticleTypes.POOF, pos1.x, pos1.y, pos1.z, 1, 0, 0, 0, 0D);
                     }
                 }
             }

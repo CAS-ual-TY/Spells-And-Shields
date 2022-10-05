@@ -50,7 +50,7 @@ public class LeapSpell extends BaseIngredientsSpell implements IClientSpell
     {
         LivingEntity entity = manaHolder.getPlayer();
         
-        Vec3 direction = entity.getViewVector(1.0F).normalize();
+        Vec3 direction = entity.getViewVector(1F).normalize();
         double y = direction.y;
         direction = direction.add(0, -direction.y, 0).scale(this.speed);
         
@@ -62,8 +62,8 @@ public class LeapSpell extends BaseIngredientsSpell implements IClientSpell
             final int count = 4;
             final double spread = 0.1D;
             Vec3 position = entity.position();
-            serverLevel.sendParticles(ParticleTypes.POOF, position.x, position.y, position.z, count, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, 0.0D);
-            serverLevel.playSound(null, manaHolder.getPlayer(), getJumpSound(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            serverLevel.sendParticles(ParticleTypes.POOF, position.x, position.y, position.z, count, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, entity.getRandom().nextGaussian() * spread, 0D);
+            serverLevel.playSound(null, manaHolder.getPlayer(), getJumpSound(), SoundSource.PLAYERS, 1F, 1F);
         }
     }
     

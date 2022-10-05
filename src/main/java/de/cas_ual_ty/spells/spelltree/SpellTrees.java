@@ -8,11 +8,15 @@ import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
 import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
+import de.cas_ual_ty.spells.requirement.ItemRequirement;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
@@ -44,30 +48,30 @@ public class SpellTrees
     public static SpellTree fireTree()
     {
         return SpellTree.builder("nether", new TranslatableComponent(KEY_NETHER), Spells.FIRE_BALL, 15, bookshelves(28))
-                .icon(Spells.FIRE_RESISTANCE.get())
+                .icon(Spells.TEMPORARY_FIRE_RESISTANCE.get())
                 .add(Spells.LAVA_WALKER, 20, bookshelves(19))
-                .add(Spells.FIRE_RESISTANCE, 30, bookshelves(30))
+                .add(Spells.TEMPORARY_FIRE_RESISTANCE, 30, bookshelves(30))
                 .leaf()
                 .add(Spells.DRAIN_FLAME, 20, bookshelves(20))
                 .leaf()
                 .leaf()
-                .add(Spells.GHAST, 10, bookshelves(20))
+                .add(Spells.GHAST, 10, bookshelves(20), item(Items.GHAST_TEAR, 1, true))
                 .add(Spells.FLAMETHROWER, 20, bookshelves(24))
                 .finish();
     }
     
     public static SpellTree waterTree()
     {
-        return SpellTree.builder("ocean", new TranslatableComponent(KEY_OCEAN), Spells.WATER_BREATHING, 10)
-                .icon(Spells.DOLPHINS_GRACE.get())
-                .add(Spells.REGENERATION, 20, bookshelves(20))
+        return SpellTree.builder("ocean", new TranslatableComponent(KEY_OCEAN), Spells.TEMPORARY_WATER_BREATHING, 10)
+                .icon(Spells.TEMPORARY_DOLPHINS_GRACE.get())
+                .add(Spells.TEMPORARY_REGENERATION, 20, bookshelves(20))
                 .add(Spells.GROWTH, 20, bookshelves(20))
                 .leaf()
                 .add(Spells.AQUA_AFFINITY, 20, bookshelves(20))
                 .leaf()
                 .leaf()
                 .add(Spells.WATER_LEAP, 5, bookshelves(10))
-                .add(Spells.DOLPHINS_GRACE, 30, bookshelves(30))
+                .add(Spells.TEMPORARY_DOLPHINS_GRACE, 30, bookshelves(30))
                 .leaf()
                 .add(Spells.FROST_WALKER, 10, bookshelves(14))
                 .leaf()
@@ -84,13 +88,13 @@ public class SpellTrees
     public static SpellTree earthTree()
     {
         return SpellTree.builder("mining", new TranslatableComponent(KEY_MINING), Spells.BLAST_SMELT, 5, bookshelves(8))
-                .icon(Spells.HASTE.get())
+                .icon(Spells.TEMPORARY_HASTE.get())
                 .add(Spells.SILENCE_TARGET, 25, bookshelves(26))
-                .add(Spells.MAGIC_IMMUNE_SELF, 25, bookshelves(26))
+                .add(Spells.TEMPORARY_MAGIC_IMMUNE, 25, bookshelves(26))
                 .leaf()
                 .leaf()
                 .add(Spells.INSTANT_MINE, 15, bookshelves(18))
-                .add(Spells.HASTE, 25, bookshelves(24))
+                .add(Spells.TEMPORARY_HASTE, 25, bookshelves(24))
                 .leaf()
                 .leaf()
                 .add(Spells.SPIT_METAL, 10, bookshelves(12))
@@ -99,15 +103,15 @@ public class SpellTrees
     
     public static SpellTree airTree()
     {
-        return SpellTree.builder("movement", new TranslatableComponent(KEY_MOVEMENT), Spells.JUMP_BOOST, 15, bookshelves(12))
-                .icon(Spells.JUMP_BOOST.get())
+        return SpellTree.builder("movement", new TranslatableComponent(KEY_MOVEMENT), Spells.TEMPORARY_JUMP_BOOST, 15, bookshelves(12))
+                .icon(Spells.TEMPORARY_JUMP_BOOST.get())
                 .add(Spells.LEAP, 10, bookshelves(14))
-                .add(Spells.SPEED, 20, bookshelves(20))
+                .add(Spells.TEMPORARY_SPEED, 20, bookshelves(20))
                 .leaf()
                 .add(Spells.JUMP, 14, bookshelves(14))
                 .leaf()
                 .add(Spells.MANA_SOLES, 15, bookshelves(12))
-                .add(Spells.SLOW_FALLING, 15, bookshelves(16))
+                .add(Spells.TEMPORARY_SLOW_FALLING, 15, bookshelves(16))
                 .leaf()
                 .leaf()
                 .add(Spells.BLOW_ARROW, 10, bookshelves(16))
@@ -119,11 +123,13 @@ public class SpellTrees
     
     public static SpellTree enderTree()
     {
-        return SpellTree.builder("end", new TranslatableComponent(KEY_END), Spells.RANDOM_TELEPORT, 20, bookshelves(28), advancement("end/root"))
+        return SpellTree.builder("end", new TranslatableComponent(KEY_END), Spells.RANDOM_TELEPORT, 20, bookshelves(28))
                 .icon(Spells.TELEPORT.get())
+                .requirement(advancement("end/root"))
                 .add(Spells.FORCED_TELEPORT.get(), 30, bookshelves(28))
                 .leaf()
                 .add(Spells.TELEPORT.get(), 30, bookshelves(28), advancement("end/respawn_dragon"))
+                .add(Spells.ENDER_ARMY.get(), 50, bookshelves(30), item(Items.DRAGON_EGG, 1, false))
                 .finish();
     }
     
@@ -135,6 +141,11 @@ public class SpellTrees
     public static Requirement advancement(String advancementRL)
     {
         return new AdvancementRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT.get(), new ResourceLocation(advancementRL));
+    }
+    
+    public static Requirement item(Item item, int count, boolean consume)
+    {
+        return new ItemRequirement(SpellsRegistries.ITEM_REQUIREMENT.get(), new ItemStack(item, count), consume);
     }
     
     public static void readOrWriteSpellTreeConfigs()

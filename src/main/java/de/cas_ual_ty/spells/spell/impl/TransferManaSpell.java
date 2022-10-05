@@ -62,13 +62,13 @@ public class TransferManaSpell extends BaseIngredientsSpell implements IProjecti
             LivingEntity player = manaHolder.getPlayer();
             
             Vec3 position = player.getEyePosition();
-            Vec3 direction = player.getViewVector(1.0F).normalize();
+            Vec3 direction = player.getViewVector(1F).normalize();
             
             EntityHitResult entityHit = SpellsUtil.rayTraceEntity(level, player, 25D, (entity -> entity instanceof LivingEntity), 0.5F);
             
             if(entityHit != null)
             {
-                HomingSpellProjectile.home(player, this, 1.0F, entityHit.getEntity(), (projectile, level1) -> level1.playSound(null, manaHolder.getPlayer(), SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, SoundSource.PLAYERS, 1.0F, 1.0F));
+                HomingSpellProjectile.home(player, this, 1F, entityHit.getEntity(), (projectile, level1) -> level1.playSound(null, manaHolder.getPlayer(), SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, SoundSource.PLAYERS, 1F, 1F));
             }
         }
     }

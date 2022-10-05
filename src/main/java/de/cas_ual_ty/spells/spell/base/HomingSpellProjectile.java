@@ -37,7 +37,7 @@ public class HomingSpellProjectile extends SpellProjectile
     public void home(float velocity)
     {
         Vec3 direction = cachedTarget.getEyePosition().subtract(this.position()).normalize();
-        shoot(direction.x, direction.y, direction.z, velocity, 0.0F);
+        shoot(direction.x, direction.y, direction.z, velocity, 0F);
     }
     
     @Override
@@ -104,7 +104,7 @@ public class HomingSpellProjectile extends SpellProjectile
             projectile.setOwnerAndTarget(source, target);
             
             projectile.moveTo(position.x, position.y, position.z, source.getXRot(), source.getYRot());
-            projectile.shoot(direction.x, direction.y, direction.z, velocity, 0.0F);
+            projectile.shoot(direction.x, direction.y, direction.z, velocity, 0F);
             level.addFreshEntity(projectile);
             
             followUp.accept(projectile, level);
@@ -113,7 +113,7 @@ public class HomingSpellProjectile extends SpellProjectile
     
     public static void home(Entity source, IProjectileSpell spell, float velocity, Entity target, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
     {
-        home(source.getEyePosition(), source.getViewVector(1.0F).normalize(), source, target, spell, velocity, followUp);
+        home(source.getEyePosition(), source.getViewVector(1F).normalize(), source, target, spell, velocity, followUp);
     }
     
     public static void home(Entity source, IProjectileSpell spell, float velocity, Entity target)

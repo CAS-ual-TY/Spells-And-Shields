@@ -56,7 +56,7 @@ public class SpellSlotWidget extends Button
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
     {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         

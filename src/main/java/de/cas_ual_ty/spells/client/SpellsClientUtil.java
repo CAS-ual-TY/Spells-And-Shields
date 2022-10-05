@@ -20,6 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -41,6 +42,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
 
 public class SpellsClientUtil
@@ -99,48 +101,90 @@ public class SpellsClientUtil
     
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
     
-    public static void initScreen(ScreenEvent.InitScreenEvent.Post event)
+    private static void initScreen(ScreenEvent.InitScreenEvent.Post event)
     {
-        if(Minecraft.getInstance().player != null)
+        if(Minecraft.getInstance().player != null && event.getScreen() instanceof AbstractContainerScreen screen)
         {
-            if(event.getScreen() instanceof AbstractContainerScreen screen && SpellsUtil.isEnchantingTable(lastRightClickedBlock))
+            if(SpellsUtil.isEnchantingTable(lastRightClickedBlock))
             {
                 lastRightClickedBlock = null;
-                event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, 176, SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
+                event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, Math.min(176, screen.width), SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
                         (b) ->
                         {
                             SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlockPos));
-                        }, 0));
+                        },
+                        0));
             }
-            else if(event.getScreen() instanceof InventoryScreen screen)
+            else if(screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen)
             {
+                if(screen.getGuiLeft() == 0 && screen.getGuiTop() == 0)
+                {
+                    return;
+                }
+                
                 spellSlotWidgets.clear();
                 
                 RecipeBookComponent recipeBook = null;
                 
-                for(GuiEventListener l : event.getListenersList())
+                if(screen instanceof InventoryScreen)
                 {
-                    if(l instanceof RecipeBookComponent c)
+                    for(GuiEventListener l : event.getListenersList())
                     {
-                        recipeBook = c;
+                        if(l instanceof RecipeBookComponent c)
+                        {
+                            recipeBook = c;
+                        }
                     }
                 }
                 
                 final RecipeBookComponent finalRecipeBook = recipeBook;
                 
-                BooleanSupplier isVisible = finalRecipeBook != null ? () -> !finalRecipeBook.isVisible() : () -> true;
+                BooleanSupplier isRecipeBookClosed = finalRecipeBook != null ? () -> !finalRecipeBook.isVisible() : () -> true;
+                BooleanSupplier hasSpellLearned = () ->
+                {
+                    if(SpellsClientConfig.ALWAYS_SHOW_SPELL_SLOTS.get())
+                    {
+                        return true;
+                    }
+                    
+                    AtomicBoolean ret = new AtomicBoolean(false);
+                    
+                    if(Minecraft.getInstance().player != null)
+                    {
+                        SpellHolder.getSpellHolder(Minecraft.getInstance().player).ifPresent(spellHolder ->
+                        {
+                            for(int i = 0; i < spellHolder.getSlots(); i++)
+                            {
+                                if(spellHolder.getSpell(i) != null)
+                                {
+                                    ret.set(true);
+                                    return;
+                                }
+                            }
+                        });
+                    }
+                    
+                    return ret.get();
+                };
                 
                 for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)
                 {
                     int x = screen.getGuiLeft() - SpellNodeWidget.FRAME_WIDTH;
                     int y = screen.getGuiTop() + i * (SpellNodeWidget.FRAME_HEIGHT + 1);
+                    
+                    // if the recipe book is open already, fix position
+                    if(!isRecipeBookClosed.getAsBoolean())
+                    {
+                        x -= 77;
+                    }
+                    
                     int slot = i;
                     SpellSlotWidget s = new SpellSlotWidget(x, y, i, (j) -> {}, (b, pS, mX, mY) -> SpellSlotWidget.spellSlotToolTip(screen, pS, mX, mY, slot))
                     {
                         @Override
                         public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick)
                         {
-                            this.visible = isVisible.getAsBoolean();
+                            this.visible = isRecipeBookClosed.getAsBoolean() && hasSpellLearned.getAsBoolean();
                             super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
                         }
                     };
@@ -154,7 +198,7 @@ public class SpellsClientUtil
     
     public static void renderScreen(ScreenEvent.DrawScreenEvent.Post event)
     {
-        if(event.getScreen() instanceof InventoryScreen screen)
+        if(event.getScreen() instanceof AbstractContainerScreen screen && (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen))
         {
             for(SpellSlotWidget s : spellSlotWidgets)
             {

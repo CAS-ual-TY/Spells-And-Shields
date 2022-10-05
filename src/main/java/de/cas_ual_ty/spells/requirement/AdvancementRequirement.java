@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.requirement;
 
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.advancements.Advancement;
@@ -15,6 +14,8 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 
 public class AdvancementRequirement extends Requirement
 {
+    public static final String ERROR_SUFFIX = ".error";
+    
     protected ResourceLocation advancementRL;
     
     public AdvancementRequirement(IRequirementType.RequirementType type)
@@ -55,15 +56,13 @@ public class AdvancementRequirement extends Requirement
         {
             Advancement a = player.server.getAdvancements().getAdvancement(advancementRL);
             
-            player.server.getAdvancements().getAllAdvancements().stream().forEach(ad -> SpellsAndShields.LOGGER.info(ad.getId().toString()));
-            
             if(a != null)
             {
                 return new TranslatableComponent(descriptionId, a.getDisplay().getTitle());
             }
             else
             {
-                return new TranslatableComponent(descriptionId + ".error", advancementRL.toString());
+                return new TranslatableComponent(descriptionId + ERROR_SUFFIX, advancementRL.toString());
             }
         }
         
@@ -79,7 +78,7 @@ public class AdvancementRequirement extends Requirement
     @Override
     public void readFromJson(JsonObject json)
     {
-        this.advancementRL = new ResourceLocation(SpellsFileUtil.jsonString(json, "advancement"));
+        advancementRL = new ResourceLocation(SpellsFileUtil.jsonString(json, "advancement"));
     }
     
     @Override

@@ -16,15 +16,12 @@ import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.Random;
-import java.util.function.BooleanSupplier;
 
 public class ManaRenderer implements IIngameOverlay
 {
     public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/gui/spells_icons.png");
     
     protected Minecraft minecraft;
-    
-    protected final BooleanSupplier doRender;
     
     protected final Random random = new Random();
     
@@ -35,16 +32,20 @@ public class ManaRenderer implements IIngameOverlay
     
     protected long lastManaChangeTime;
     
-    public ManaRenderer(BooleanSupplier doRender)
+    protected final boolean above;
+    protected final boolean right;
+    
+    public ManaRenderer(boolean above, boolean right)
     {
-        this.doRender = doRender;
         minecraft = Minecraft.getInstance();
+        this.above = above;
+        this.right = right;
     }
     
     @Override
     public void render(ForgeIngameGui gui, PoseStack mStack, float partialTicks, int width, int height)
     {
-        if(doRender.getAsBoolean() && !Minecraft.getInstance().options.hideGui && gui.shouldDrawSurvivalElements())
+        if(above == SpellsClientConfig.MANA_ABOVE_FOOD.get() && right == !SpellsClientConfig.MANA_BY_HEALTH.get() && !Minecraft.getInstance().options.hideGui && gui.shouldDrawSurvivalElements())
         {
             gui.setupOverlayRenderState(true, false);
             renderMana(gui, width, height, mStack);
@@ -59,9 +60,16 @@ public class ManaRenderer implements IIngameOverlay
         Player player = (Player) minecraft.getCameraEntity();
         ManaHolder.getManaHolder(player).ifPresent(manaHolder ->
         {
+            float maxMana = manaHolder.getMaxMana();
+            
+            if(maxMana <= 0)
+            {
+                return;
+            }
+            
             int mana = Mth.ceil(manaHolder.getMana());
             
-            if(manaHolder.getMana() >= manaHolder.getMaxMana())
+            if(manaHolder.getMana() >= maxMana)
             {
                 if(mana != lastMana)
                 {
@@ -98,31 +106,41 @@ public class ManaRenderer implements IIngameOverlay
             this.lastMana = mana;
             int manaLast = this.displayMana;
             
-            float manaMax = Math.max(manaHolder.getMaxMana(), Math.max(manaLast, mana));
+            float manaMax = Math.max(maxMana, Math.max(manaLast, mana));
             int extra = Mth.ceil(manaHolder.getExtraMana());
             
-            int rows = Mth.ceil((manaMax + extra) / 2.0F / 10.0F);
+            int rows = Mth.ceil((manaMax + extra) / 2F / 10F);
             int rowHeight = Math.max(10 - (rows - 2), 3);
             
-            this.random.setSeed(gui.getGuiTicks() * 27);
+            this.random.setSeed(gui.getGuiTicks() * 27L);
             
-            int left = width / 2 + 10;
-            int top = height - gui.right_height;
+            int left = right ? width / 2 + 10 : width / 2 - 91;
+            
+            int top = height - (right ? gui.right_height : gui.left_height);
+            
+            if(!right && above && player.getArmorValue() <= 0)
+            {
+                top += 10;
+            }
             
             int regen = -1;
             
             if(player.hasEffect(SpellsRegistries.REPLENISHMENT_EFFECT.get()))
             {
-                regen = gui.getGuiTicks() % Mth.ceil(manaMax + 5.0F);
+                regen = gui.getGuiTicks() % Mth.ceil(manaMax + 5F);
             }
             
             this.renderUnit(gui, pStack, player, left, top, rowHeight, regen, manaMax, mana, manaLast, extra, highlight);
             
-            gui.right_height += (rows * rowHeight);
+            int change = (rows * rowHeight) + (rowHeight != 10 ? 10 - rowHeight : 0);
             
-            if(rowHeight != 10)
+            if(right)
             {
-                gui.right_height += 10 - rowHeight;
+                gui.right_height += change;
+            }
+            else
+            {
+                gui.left_height += change;
             }
         });
         
@@ -135,8 +153,8 @@ public class ManaRenderer implements IIngameOverlay
         UnitType unitType = UnitType.forPlayer(player);
         
         int v = 0;
-        int totalUnits = Mth.ceil((double) manaMax / 2.0D);
-        int totalExtraUnits = Mth.ceil((double) extra / 2.0D);
+        int totalUnits = Mth.ceil((double) manaMax / 2D);
+        int totalExtraUnits = Mth.ceil((double) extra / 2D);
         int manaCeil = totalUnits * 2;
         
         for(int idx = totalUnits + totalExtraUnits - 1; idx >= 0; --idx)
@@ -146,7 +164,7 @@ public class ManaRenderer implements IIngameOverlay
             int x = left + column * 8;
             int y = top - row * rowHeight;
             
-            if(mana + extra <= 4)
+            if(SpellsClientConfig.MANA_JITTER.get() && mana + extra <= 4)
             {
                 y += this.random.nextInt(2);
             }
@@ -237,7 +255,11 @@ public class ManaRenderer implements IIngameOverlay
     
     public static void clientSetup(FMLClientSetupEvent event)
     {
-        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Player Mana", new ManaRenderer(() -> SpellsClientConfig.MANA_ABOVE_FOOD.get()));
-        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Player Mana", new ManaRenderer(() -> !SpellsClientConfig.MANA_ABOVE_FOOD.get()));
+        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Player Mana", new ManaRenderer(true, true));
+        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Player Mana", new ManaRenderer(true, false));
+        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.PLAYER_HEALTH_ELEMENT, "Player Mana", new ManaRenderer(false, true));
+        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.PLAYER_HEALTH_ELEMENT, "Player Mana", new ManaRenderer(false, false));
+        
+        
     }
 }

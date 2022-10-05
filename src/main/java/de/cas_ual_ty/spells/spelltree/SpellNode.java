@@ -19,12 +19,20 @@ public class SpellNode
     protected SpellNode parent;
     protected LinkedList<SpellNode> children;
     
-    public SpellNode(ISpell spell, int levelCost, List<Requirement> requirements)
+    protected int id;
+    
+    public SpellNode(ISpell spell, int levelCost, List<Requirement> requirements, int id)
     {
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
         this.requirements = requirements;
         children = new LinkedList<>();
+        this.id = id;
+    }
+    
+    public SpellNode(ISpell spell, int levelCost, List<Requirement> requirements)
+    {
+        this(spell, levelCost, requirements, -1);
     }
     
     public ISpell getSpell()
@@ -60,6 +68,11 @@ public class SpellNode
     public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         return requirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
+    }
+    
+    public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        requirements.forEach(requirement -> requirement.onSpellLearned(spellProgressionHolder, access));
     }
     
     public boolean canLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
@@ -99,5 +112,15 @@ public class SpellNode
     public LinkedList<SpellNode> getChildren()
     {
         return children;
+    }
+    
+    public int getId()
+    {
+        return id;
+    }
+    
+    public void setId(int id)
+    {
+        this.id = id;
     }
 }

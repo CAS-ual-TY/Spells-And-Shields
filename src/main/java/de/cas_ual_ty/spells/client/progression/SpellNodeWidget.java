@@ -99,7 +99,7 @@ public class SpellNodeWidget extends GuiComponent
     
     private static float getMaxWidth(StringSplitter stringSplitter, List<FormattedText> list)
     {
-        return (float) list.stream().mapToDouble(stringSplitter::stringWidth).max().orElse(0.0D);
+        return (float) list.stream().mapToDouble(stringSplitter::stringWidth).max().orElse(0D);
     }
     
     private List<FormattedText> findOptimalLines(Component component, int w)
@@ -114,7 +114,7 @@ public class SpellNodeWidget extends GuiComponent
             List<FormattedText> split = splitter.splitLines(component, w - offset, Style.EMPTY);
             float length = Math.abs(getMaxWidth(splitter, split) - (float) w);
             
-            if(length <= 10.0F)
+            if(length <= 10F)
             {
                 return split;
             }
@@ -277,7 +277,7 @@ public class SpellNodeWidget extends GuiComponent
         int right = this.width - left;
         
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.enableBlend();
         
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);

@@ -164,7 +164,7 @@ public class ManaHolder implements IManaHolder
         
         if(regenTime >= ticksUntilNextReg || this.getMana() > this.getMaxMana())
         {
-            replenish(1.0F);
+            replenish(1F);
             regenTime = 0;
             ticksUntilNextReg = calcTicksUntilReg();
         }
@@ -179,15 +179,15 @@ public class ManaHolder implements IManaHolder
         
         Player player = (Player) this.player;
         
-        double attribute = player.getAttributeValue(SpellsRegistries.MANA_REGEN_ATTRIBUTE.get());
+        double attribute = player.getAttributeValue(SpellsRegistries.MANA_REGENERATION_ATTRIBUTE.get());
         
         for(EquipmentSlot s : EquipmentSlot.values())
         {
             if(s.getType() == EquipmentSlot.Type.ARMOR)
             {
                 ItemStack itemStack = player.getItemBySlot(s);
-                int level = EnchantmentHelper.getItemEnchantmentLevel(SpellsRegistries.MANA_REGEN_ENCHANTMENT.get(), itemStack);
-                double increase = SpellsRegistries.MANA_REGEN_ENCHANTMENT.get().getAttributeIncrease(level, s);
+                int level = EnchantmentHelper.getItemEnchantmentLevel(SpellsRegistries.MANA_REGENERATION_ENCHANTMENT.get(), itemStack);
+                double increase = SpellsRegistries.MANA_REGENERATION_ENCHANTMENT.get().getAttributeIncrease(level, s);
                 attribute += increase;
             }
         }

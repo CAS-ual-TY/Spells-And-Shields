@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.util;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.requirement.IRequirementType;
@@ -9,17 +8,11 @@ import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
-import de.cas_ual_ty.spells.spelltree.SpellTreeClass;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class SpellTreeSerializer
@@ -33,6 +26,7 @@ public class SpellTreeSerializer
         buf.writeUUID(spellTree.getId());
         buf.writeComponent(spellTree.getTitle());
         buf.writeRegistryId(spellTree.getIconSpell());
+        encodeRequirements(spellTree.getRequirements(), buf);
         
         SpellNode spellNode = spellTree.getRoot();
         encodeNode(spellNode, buf);
@@ -69,6 +63,7 @@ public class SpellTreeSerializer
         buf.writeRegistryId(spellNode.getSpell());
         buf.writeInt(spellNode.getLevelCost());
         encodeRequirements(spellNode.getRequirements(), buf);
+        buf.writeShort(spellNode.getId());
     }
     
     public static SpellTree decodeTree(FriendlyByteBuf buf)
@@ -76,6 +71,7 @@ public class SpellTreeSerializer
         UUID id = buf.readUUID();
         Component title = buf.readComponent();
         ISpell icon = buf.readRegistryId();
+        List<Requirement> requirements = decodeRequirements(buf);
         
         SpellTree.Builder builder = SpellTree.builder(id, title, decodeNode(buf));
         
@@ -97,7 +93,7 @@ public class SpellTreeSerializer
             }
         }
         
-        return builder.icon(icon).finish();
+        return builder.icon(icon).finish().setRequirements(requirements);
     }
     
     private static List<Requirement> decodeRequirements(FriendlyByteBuf buf)
@@ -118,8 +114,9 @@ public class SpellTreeSerializer
         ISpell spell = buf.readRegistryId();
         int levelCost = buf.readInt();
         List<Requirement> requirements = decodeRequirements(buf);
+        int id = buf.readShort();
         
-        return new SpellNode(spell, levelCost, requirements);
+        return new SpellNode(spell, levelCost, requirements, id);
     }
     
     private static JsonObject nodeToJsonRec(SpellNode node)
@@ -127,12 +124,8 @@ public class SpellTreeSerializer
         JsonObject json = new JsonObject();
         
         json.addProperty("spell", node.getSpell().getRegistryName().toString());
-        
         json.addProperty("levelCost", node.getLevelCost());
-        
-        JsonArray requirements = new JsonArray();
-        node.getRequirements().forEach(requirement -> requirements.add(IRequirementType.writeToJson(requirement)));
-        json.add("requirements", requirements);
+        json.add("requirements", requirementsToJson(node.getRequirements()));
         
         JsonArray children = new JsonArray();
         node.getChildren().forEach(child -> children.add(nodeToJsonRec(child)));
@@ -142,15 +135,21 @@ public class SpellTreeSerializer
         return json;
     }
     
+    private static JsonArray requirementsToJson(List<Requirement> requirements)
+    {
+        JsonArray json = new JsonArray();
+        requirements.forEach(requirement -> json.add(IRequirementType.writeToJson(requirement)));
+        return json;
+    }
+    
     public static JsonObject treeToJson(SpellTree tree)
     {
         JsonObject json = new JsonObject();
         
         json.addProperty("id", tree.getId().toString());
-        
         json.add("title", Component.Serializer.toJsonTree(tree.getTitle()));
-        
         json.addProperty("icon_spell", tree.getIconSpell().getRegistryName().toString());
+        json.add("requirements", requirementsToJson(tree.getRequirements()));
         json.add("root_spell", tree.getRoot() != null ? nodeToJsonRec(tree.getRoot()) : JsonNull.INSTANCE);
         
         return json;
@@ -160,11 +159,20 @@ public class SpellTreeSerializer
     {
         ISpell spell = SpellsFileUtil.jsonSpell(json, "spell");
         int levelCost = SpellsFileUtil.jsonInt(json, "levelCost");
-        JsonArray array = SpellsFileUtil.jsonArray(json, "requirements");
-        JsonArray children = SpellsFileUtil.jsonArray(json, "children");
+        List<Requirement> requirements = requirementsFromJson(SpellsFileUtil.jsonArray(json, "requirements"));
         
+        SpellNode node = new SpellNode(spell, levelCost, requirements);
+        
+        JsonArray children = SpellsFileUtil.jsonArray(json, "children");
+        children.forEach(e -> SpellTree.connect(node, nodeFromJson(e.getAsJsonObject())));
+        
+        return node;
+    }
+    
+    public static List<Requirement> requirementsFromJson(JsonArray json)
+    {
         List<Requirement> requirements = new LinkedList<>();
-        array.forEach(jsonElement ->
+        json.forEach(jsonElement ->
         {
             if(!jsonElement.isJsonObject())
             {
@@ -178,12 +186,7 @@ public class SpellTreeSerializer
                 requirements.add(requirement);
             }
         });
-        
-        SpellNode node = new SpellNode(spell, levelCost, requirements);
-        
-        children.forEach(e -> SpellTree.connect(node, nodeFromJson(e.getAsJsonObject())));
-        
-        return node;
+        return requirements;
     }
     
     public static SpellTree treeFromJson(JsonObject json)
@@ -191,75 +194,9 @@ public class SpellTreeSerializer
         UUID id = UUID.fromString(SpellsFileUtil.jsonString(json, "id"));
         Component title = Component.Serializer.fromJson(SpellsFileUtil.jsonElement(json, "title"));
         ISpell icon = SpellsFileUtil.jsonSpell(json, "icon_spell");
+        List<Requirement> requirements = requirementsFromJson(SpellsFileUtil.jsonArray(json, "requirements"));
         SpellNode root = nodeFromJson(SpellsFileUtil.jsonObject(json, "root_spell"));
         
-        return new SpellTree(id, root, title, icon);
-    }
-    
-    public static SpellTreeClass classFromJson(JsonObject json)
-    {
-        SpellTreeClass c = new SpellTreeClass();
-        
-        JsonArray modifiers = SpellsFileUtil.jsonArray(json, "modifiers");
-        
-        for(JsonElement eModifier : modifiers)
-        {
-            if(!eModifier.isJsonObject())
-            {
-                throw new IllegalStateException();
-            }
-            
-            JsonObject modifier = eModifier.getAsJsonObject();
-            
-            Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(SpellsFileUtil.jsonString(modifier, "attribute")));
-            
-            if(attribute == null)
-            {
-                throw new IllegalStateException(new NullPointerException());
-            }
-            
-            double amount = SpellsFileUtil.jsonDouble(modifier, "amount");
-            AttributeModifier.Operation operation;
-            
-            try
-            {
-                operation = AttributeModifier.Operation.fromValue(SpellsFileUtil.jsonInt(modifier, "operation"));
-            }
-            catch(IllegalArgumentException e) // NumberFormatException included
-            {
-                throw new IllegalStateException(e);
-            }
-            
-            String name = SpellsFileUtil.jsonString(modifier, "name");
-            UUID id = SpellsUtil.generateUUIDForClassAttribute(attribute, name);
-            
-            c.addModifier(attribute, new AttributeModifier(id, name, amount, operation));
-        }
-        
-        return c;
-    }
-    
-    public static JsonObject classToJson(SpellTreeClass c)
-    {
-        JsonObject json = new JsonObject();
-        
-        JsonArray modifiers = new JsonArray();
-        
-        for(Map.Entry<Attribute, AttributeModifier> entry : c.modifiers.entrySet())
-        {
-            JsonObject modifier = new JsonObject();
-            
-            modifier.addProperty("attribute", ForgeRegistries.ATTRIBUTES.getKey(entry.getKey()).toString());
-            modifier.addProperty("amount", entry.getValue().getAmount());
-            modifier.addProperty("operation", entry.getValue().getOperation().toValue());
-            modifier.addProperty("name", entry.getValue().getName());
-            modifier.addProperty("id", SpellsUtil.generateUUIDForClassAttribute(entry.getKey(), c.getName()).toString());
-            
-            modifiers.add(modifier);
-        }
-        
-        json.add("modifiers", modifiers);
-        
-        return json;
+        return new SpellTree(id, root, title, icon).setRequirements(requirements);
     }
 }

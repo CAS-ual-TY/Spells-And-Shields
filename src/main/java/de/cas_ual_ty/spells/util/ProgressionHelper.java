@@ -12,7 +12,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,11 @@ public class ProgressionHelper
         for(SpellTree spellTree0 : allAvailableSkillTrees)
         {
             if(spellTree0.getRoot() == null)
+            {
+                continue;
+            }
+            
+            if(!spellTree0.canSee(spellProgressionHolder, access))
             {
                 continue;
             }
@@ -93,11 +101,14 @@ public class ProgressionHelper
         }
         
         strippedSkillTrees.forEach(tree ->
-                tree.forEach(node ->
-                {
-                    node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
-                })
-        );
+        {
+            tree.forEach(node ->
+            {
+                node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
+            });
+            
+            tree.setRequirements(tree.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
+        });
         
         return strippedSkillTrees;
     }
@@ -105,30 +116,9 @@ public class ProgressionHelper
     public static List<SpellTree> getStrippedSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         List<SpellTree> allAvailableSkillTrees = getAllAvailableSpellTrees(spellProgressionHolder, access);
+        
         List<SpellTree> availableSpellTrees = stripSpellTrees(spellProgressionHolder, access, allAvailableSkillTrees);
-        
-        // if a spell is available for learning in two or more different spell trees
-        // but the level cost is different for each entry
-        // they all get reduced to the cheapest found price
-        // since the player unlocks them all when buying a single one of them
-        
-        HashMap<ISpell, Integer> cheapestCosts = new HashMap<>();
-        
-        for(SpellTree spellTree : availableSpellTrees)
-        {
-            spellTree.forEach(spellNode ->
-            {
-                cheapestCosts.put(spellNode.getSpell(), Math.min(spellNode.getLevelCost(), cheapestCosts.getOrDefault(spellNode.getSpell(), Integer.MAX_VALUE)));
-            });
-        }
-        
-        for(SpellTree spellTree : availableSpellTrees)
-        {
-            spellTree.forEach(spellNode ->
-            {
-                spellNode.setLevelCost(cheapestCosts.getOrDefault(spellNode.getSpell(), spellNode.getLevelCost()));
-            });
-        }
+        availableSpellTrees.forEach(SpellTree::assignNodeIds);
         
         return availableSpellTrees;
     }
@@ -158,25 +148,27 @@ public class ProgressionHelper
         return true;
     }
     
-    public static boolean tryBuySpell(SpellProgressionMenu menu, ISpell spell, UUID id)
+    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, int id, ISpell spell, UUID uuid)
     {
         Player player = menu.player;
         
         AtomicBoolean found = new AtomicBoolean(false);
         
-        SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
+        menu.spellTrees.stream().filter(tree -> tree.getId().equals(uuid)).findFirst().ifPresent(spellTree ->
         {
-            menu.spellTrees.stream().filter(tree -> tree.getId().equals(id)).findFirst().ifPresent(spellTree ->
+            SpellNode spellNode = spellTree.findNode(id);
+            
+            if(spellNode.getSpell() == spell && spellNode.canLearn(spellProgressionHolder, menu.access))
             {
-                spellTree.forEach(spellNode ->
+                found.set(true);
+                
+                if(!player.isCreative())
                 {
-                    if(!found.get() && spellNode.getSpell() == spell && ((spellNode.passes(spellProgressionHolder, menu.access) && player.experienceLevel >= spellNode.getLevelCost()) || player.isCreative()))
-                    {
-                        found.set(true);
-                        player.giveExperienceLevels(-spellNode.getLevelCost());
-                    }
-                });
-            });
+                    player.giveExperienceLevels(-spellNode.getLevelCost());
+                }
+                
+                spellNode.onSpellLearned(spellProgressionHolder, menu.access);
+            }
         });
         
         return found.get();

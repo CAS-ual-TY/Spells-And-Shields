@@ -46,7 +46,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
         this.spellProgression = spellProgression;
     }
     
-    public void buySpellRequest(ISpell spell, UUID treeId)
+    public void buySpellRequest(int id, ISpell spell, UUID treeId)
     {
         if(this.player instanceof ServerPlayer player)
         {
@@ -54,10 +54,10 @@ public class SpellProgressionMenu extends AbstractContainerMenu
             {
                 access.execute((level, blockPos) ->
                 {
-                    if(ProgressionHelper.tryBuySpell(this, spell, treeId))
+                    if(ProgressionHelper.tryBuySpell(spellProgressionHolder, this, id, spell, treeId))
                     {
                         spellProgressionHolder.setSpellStatus(spell, SpellStatus.LEARNED);
-                        level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.1F + 0.9F);
+                        level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1F, level.random.nextFloat() * 0.1F + 0.9F);
                     }
                     
                     this.spellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
@@ -103,7 +103,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     {
         return access.evaluate((level, blockPos) ->
         {
-            return !SpellsUtil.isEnchantingTable(level.getBlockState(blockPos).getBlock()) ? false : player.distanceToSqr(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D) <= 64.0D;
+            return !SpellsUtil.isEnchantingTable(level.getBlockState(blockPos).getBlock()) ? false : player.distanceToSqr(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D) <= 64D;
         }, true);
     }
     

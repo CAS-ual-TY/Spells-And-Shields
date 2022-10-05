@@ -56,7 +56,7 @@ public class SpitMetalSpell extends HandIngredientSpell implements IProjectileSp
         float damage = ingredientMap.getOrDefault(itemStack.getItem(), 0F);
         shootStraight(manaHolder, (projectile, level) ->
         {
-            level.playSound(null, manaHolder.getPlayer(), SoundEvents.LLAMA_SPIT, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, manaHolder.getPlayer(), SoundEvents.LLAMA_SPIT, SoundSource.PLAYERS, 1F, 1F);
             projectile.getSpellDataTag().putFloat("materialDamage", damage);
         });
     }

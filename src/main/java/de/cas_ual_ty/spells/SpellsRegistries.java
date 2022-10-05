@@ -7,14 +7,12 @@ import de.cas_ual_ty.spells.effect.ManaMobEffect;
 import de.cas_ual_ty.spells.effect.SimpleEffect;
 import de.cas_ual_ty.spells.enchantment.*;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
-import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
-import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
-import de.cas_ual_ty.spells.requirement.IRequirementType;
-import de.cas_ual_ty.spells.requirement.WrappedRequirement;
+import de.cas_ual_ty.spells.requirement.*;
 import de.cas_ual_ty.spells.spell.ITickedDataSpell;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import de.cas_ual_ty.spells.spelldata.ISpellDataType;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -26,9 +24,9 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.Block;
@@ -65,22 +63,24 @@ public class SpellsRegistries
     private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
     
     public static final EnchantmentCategory SHIELD_ENCHANTMENT_CATEGORY = EnchantmentCategory.create("SHIELD", item -> item instanceof ShieldItem);
+    public static final EnchantmentCategory SWORD_OR_AXE_ENCHANTMENT_CATEGORY = EnchantmentCategory.create("SWORD_OR_AXE", item -> item instanceof AxeItem || item instanceof SwordItem);
     
     public static final RegistryObject<IRequirementType.RequirementType> WRAPPED_REQUIREMENT = REQUIREMENTS.register("client_wrap", () -> new IRequirementType.RequirementType(WrappedRequirement::new));
     public static final RegistryObject<IRequirementType.RequirementType> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> new IRequirementType.RequirementType(BookshelvesRequirement::new));
     public static final RegistryObject<IRequirementType.RequirementType> ADVANCEMENT_REQUIREMENT = REQUIREMENTS.register("advancement", () -> new IRequirementType.RequirementType(AdvancementRequirement::new));
+    public static final RegistryObject<IRequirementType.RequirementType> ITEM_REQUIREMENT = REQUIREMENTS.register("item", () -> new IRequirementType.RequirementType(ItemRequirement::new));
     
     public static final RegistryObject<ISpellDataType.SpellDataType> FLAMETHROWER_DATA = SPELL_DATA.register("flamethrower", () -> ITickedDataSpell.makeDataType(Spells.FLAMETHROWER));
     public static final RegistryObject<ISpellDataType.SpellDataType> GHAST_DATA = SPELL_DATA.register("ghast", () -> ITickedDataSpell.makeDataType(Spells.GHAST));
     
-    public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20.0D, 1.0D, 1024.0D).setSyncable(true));
-    public static final RegistryObject<RangedAttribute> MANA_REGEN_ATTRIBUTE = ATTRIBUTES.register("generic.mana_regen", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.mana_regen", 1D, 0D, 50D).setSyncable(true));
+    public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20D, 1D, 1024D).setSyncable(true));
+    public static final RegistryObject<RangedAttribute> MANA_REGENERATION_ATTRIBUTE = ATTRIBUTES.register("generic.mana_regeneration", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.mana_regen", 1D, 0D, 50D).setSyncable(true));
     
     public static final RegistryObject<Enchantment> MAGIC_PROTECTION_ENCHANTMENT = ENCHANTMENTS.register("magic_protection", () -> new MagicProtectionEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
     public static final RegistryObject<Enchantment> MANA_BLADE_ENCHANTMENT = ENCHANTMENTS.register("mana_blade", () -> new ManaBladeEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.MAINHAND));
     public static final RegistryObject<Enchantment> MANA_SHIELD_ENCHANTMENT = ENCHANTMENTS.register("mana_shield", () -> new ManaShieldEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.OFFHAND));
     
-    public static final RegistryObject<ManaRegenEnchantment> MANA_REGEN_ENCHANTMENT = ENCHANTMENTS.register("mana_regen", () -> new ManaRegenEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
+    public static final RegistryObject<ManaRegenEnchantment> MANA_REGENERATION_ENCHANTMENT = ENCHANTMENTS.register("mana_regeneration", () -> new ManaRegenEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
     public static final RegistryObject<MaxManaEnchantment> MAX_MANA_ENCHANTMENT = ENCHANTMENTS.register("max_mana", () -> new MaxManaEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
     
     public static final RegistryObject<MobEffect> INSTANT_MANA_EFFECT = MOB_EFFECTS.register("instant_mana", () -> new InstantManaMobEffect(MobEffectCategory.BENEFICIAL, 0x06B7BD));
@@ -111,6 +111,9 @@ public class SpellsRegistries
     public static final RegistryObject<EntityType<SpellProjectile>> SPELL_PROJECTILE = ENTITY_TYPES.register("spell_projectile", () -> EntityType.Builder.<SpellProjectile>of(SpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(10).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("spell_projectile"));
     public static final RegistryObject<EntityType<HomingSpellProjectile>> HOMING_SPELL_PROJECTILE = ENTITY_TYPES.register("homing_spell_projectile", () -> EntityType.Builder.<HomingSpellProjectile>of(HomingSpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(2).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("homing_spell_projectile"));
     
+    public static final RegistryObject<RangedAttribute> MANA_REGEN_ATTRIBUTE = MANA_REGENERATION_ATTRIBUTE; //TODO Remove in 1.20
+    public static final RegistryObject<ManaRegenEnchantment> MANA_REGEN_ENCHANTMENT = MANA_REGENERATION_ENCHANTMENT;
+    
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsRegistries::newRegistry);
@@ -132,10 +135,17 @@ public class SpellsRegistries
         SPELL_DATA_REGISTRY = event.create(new RegistryBuilder<ISpellDataType.SpellDataType>().setType(ISpellDataType.SpellDataType.class).setMaxID(256).setName(new ResourceLocation(MOD_ID, "spell_data")));
     }
     
+    public static void addPotionRecipes()
+    {
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.INSTANT_MANA.get(), SpellsRegistries.STRONG_INSTANT_MANA.get(), null, Items.TUBE_CORAL, SpellsRegistries.MANA_BOMB.get(), SpellsRegistries.STRONG_MANA_BOMB.get(), null, Items.FERMENTED_SPIDER_EYE);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.REPLENISHMENT.get(), SpellsRegistries.STRONG_REPLENISHMENT.get(), SpellsRegistries.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.LEAKING.get(), SpellsRegistries.STRONG_LEAKING.get(), SpellsRegistries.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
+    }
+    
     private static void entityAttributeModification(EntityAttributeModificationEvent event)
     {
         event.add(EntityType.PLAYER, SpellsRegistries.MAX_MANA_ATTRIBUTE.get());
-        event.add(EntityType.PLAYER, SpellsRegistries.MANA_REGEN_ATTRIBUTE.get());
+        event.add(EntityType.PLAYER, SpellsRegistries.MANA_REGENERATION_ATTRIBUTE.get());
     }
     
     private static void registerCommands(RegisterCommandsEvent event)

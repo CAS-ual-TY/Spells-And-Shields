@@ -1,15 +1,18 @@
 package de.cas_ual_ty.spells.spelltree;
 
+import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 
-import javax.annotation.Nullable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -22,8 +25,7 @@ public class SpellTree
     public Component title;
     public ISpell icon;
     
-    @Nullable
-    public SpellTreeClass treeClass;
+    public List<Requirement> treeRequirements;
     
     public SpellTree(UUID id, SpellNode root, Component title, ISpell icon)
     {
@@ -31,7 +33,7 @@ public class SpellTree
         this.root = root;
         this.title = title;
         this.icon = icon;
-        this.treeClass = null;
+        this.treeRequirements = new LinkedList<>();
     }
     
     public SpellTree(UUID id, SpellNode root, Component title)
@@ -42,6 +44,12 @@ public class SpellTree
     public SpellTree setFilename(String filename)
     {
         this.filename = filename;
+        return this;
+    }
+    
+    public SpellTree setRequirements(List<Requirement> requirements)
+    {
+        treeRequirements = requirements;
         return this;
     }
     
@@ -58,6 +66,14 @@ public class SpellTree
     public Component getTitle()
     {
         return title;
+    }
+    
+    public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        List<Component> tooltips = new LinkedList<>();
+        tooltips.add(getTitle());
+        treeRequirements.forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access)));
+        return tooltips;
     }
     
     public void setTitle(Component title)
@@ -80,6 +96,11 @@ public class SpellTree
         this.icon = spell;
     }
     
+    public List<Requirement> getRequirements()
+    {
+        return treeRequirements;
+    }
+    
     public int getDepth(ISpell spell)
     {
         if(root == null)
@@ -90,6 +111,16 @@ public class SpellTree
         {
             return find(1, root, spell);
         }
+    }
+    
+    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return treeRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
+    }
+    
+    public boolean canSee(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return spellProgressionHolder.getPlayer().isCreative() || passes(spellProgressionHolder, access);
     }
     
     private int find(int depth, SpellNode spellNode, ISpell spell)
@@ -116,6 +147,33 @@ public class SpellTree
         }
     }
     
+    public SpellTree assignNodeIds()
+    {
+        AtomicInteger i = new AtomicInteger(0);
+        forEach(spellNode -> spellNode.setId(i.getAndIncrement()));
+        return this;
+    }
+    
+    public SpellNode findNode(int id)
+    {
+        Stack<SpellNode> stack = new Stack<>();
+        stack.push(root);
+        
+        while(!stack.isEmpty())
+        {
+            SpellNode node = stack.pop();
+            
+            if(node.getId() == id)
+            {
+                return node;
+            }
+            
+            node.getChildren().forEach(stack::push);
+        }
+        
+        return null;
+    }
+    
     public void forEach(Consumer<SpellNode> consumer)
     {
         if(root != null)
@@ -136,7 +194,7 @@ public class SpellTree
     
     public SpellTree copy() // deep copy
     {
-        return new SpellTree(id, innerDeepCopy(root), title.copy(), icon);
+        return new SpellTree(id, innerDeepCopy(root), title.copy(), icon).setFilename(filename).setRequirements(treeRequirements);
     }
     
     private SpellNode innerDeepCopy(SpellNode original)
@@ -185,6 +243,7 @@ public class SpellTree
         private SpellNode root;
         private ISpell icon;
         private String filename;
+        private List<Requirement> treeRequirements;
         
         private Builder(UUID id, Component title, SpellNode root)
         {
@@ -195,6 +254,7 @@ public class SpellTree
             icon = null;
             this.stack.push(this.root);
             filename = null;
+            treeRequirements = new LinkedList<>();
         }
         
         private Builder(String filename, Component title, SpellNode root)
@@ -221,6 +281,12 @@ public class SpellTree
         public Builder(String filename, Component title, Supplier<ISpell> root, int levelCost, Requirement... requirements)
         {
             this(filename, title, root.get(), levelCost, requirements);
+        }
+        
+        public Builder requirement(Requirement requirement)
+        {
+            treeRequirements.add(requirement);
+            return this;
         }
         
         public Builder add(Supplier<ISpell> spell, int levelCost, Requirement... requirements)
@@ -254,7 +320,7 @@ public class SpellTree
         
         public SpellTree finish()
         {
-            return new SpellTree(id, root, title, icon != null ? icon : root.getSpell()).setFilename(filename);
+            return new SpellTree(id, root, title, icon != null ? icon : root.getSpell()).setFilename(filename).setRequirements(treeRequirements);
         }
     }
 }
