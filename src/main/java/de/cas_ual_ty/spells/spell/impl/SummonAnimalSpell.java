@@ -134,7 +134,7 @@ public class SummonAnimalSpell extends HandIngredientSpell
         defaultIngredientMap.forEach((item, ingredient) ->
         {
             JsonObject o = new JsonObject();
-            SpellsFileUtil.jsonItemStack(o, ingredient.ingredient(), "item", "count");
+            SpellsFileUtil.jsonItemStack(o, ingredient.ingredient());
             o.addProperty("entity", ForgeRegistries.ENTITY_TYPES.getKey(ingredient.entity()).toString());
             ingredients.add(o);
         });
@@ -159,7 +159,7 @@ public class SummonAnimalSpell extends HandIngredientSpell
             
             JsonObject ingredient = e.getAsJsonObject();
             
-            ItemStack itemStack = SpellsFileUtil.jsonItemStack(ingredient, "item", "count");
+            ItemStack itemStack = SpellsFileUtil.jsonItemStack(ingredient);
             EntityType<?> entity = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(SpellsFileUtil.jsonString(ingredient, "entity")));
             
             if(itemStack.isEmpty())

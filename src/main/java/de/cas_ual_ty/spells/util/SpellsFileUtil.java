@@ -233,11 +233,34 @@ public class SpellsFileUtil
         }
     }
     
+    public static ItemStack jsonItemStack(JsonObject json, String itemStackObjectKey) throws IllegalStateException
+    {
+        JsonObject item = jsonObject(json, itemStackObjectKey);
+        return jsonItemStack(item);
+    }
+    
+    public static ItemStack jsonItemStack(JsonObject json) throws IllegalStateException
+    {
+        return jsonItemStack(json, "item", "count");
+    }
+    
     public static ItemStack jsonItemStack(JsonObject json, String itemKey, String countKey) throws IllegalStateException
     {
         Item item = jsonItem(json, itemKey, true);
         int count = jsonInt(json, countKey);
         return count <= 0 || item == null ? ItemStack.EMPTY : new ItemStack(item, count);
+    }
+    
+    public static void jsonItemStack(JsonObject json, ItemStack itemStack, String itemStackObjectKey)
+    {
+        JsonObject item = new JsonObject();
+        jsonItemStack(item, itemStack);
+        json.add(itemStackObjectKey, item);
+    }
+    
+    public static void jsonItemStack(JsonObject json, ItemStack itemStack)
+    {
+        jsonItemStack(json, itemStack, "item", "count");
     }
     
     public static void jsonItemStack(JsonObject json, ItemStack itemStack, String itemKey, String countKey)

@@ -81,14 +81,14 @@ public class ItemRequirement extends Requirement
     @Override
     public void writeToJson(JsonObject json)
     {
-        SpellsFileUtil.jsonItemStack(json, itemStack, "item", "count");
+        SpellsFileUtil.jsonItemStack(json, itemStack);
         json.addProperty("consume", consume);
     }
     
     @Override
     public void readFromJson(JsonObject json)
     {
-        itemStack = SpellsFileUtil.jsonItemStack(json, "item", "count");
+        itemStack = SpellsFileUtil.jsonItemStack(json);
         consume = SpellsFileUtil.jsonBoolean(json, "consume");
     }
     

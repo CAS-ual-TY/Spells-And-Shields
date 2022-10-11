@@ -116,7 +116,7 @@ public class ManaRenderer implements IGuiOverlay
             this.random.setSeed(gui.getGuiTicks() * 27L);
             
             int left = right ? width / 2 + 10 : width / 2 - 91;
-    
+            
             int top = height - (right ? gui.rightHeight : gui.leftHeight);
             
             if(!right && above && player.getArmorValue() <= 0)
