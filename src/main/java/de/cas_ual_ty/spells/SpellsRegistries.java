@@ -119,9 +119,6 @@ public class SpellsRegistries
     public static final RegistryObject<EntityType<SpellProjectile>> SPELL_PROJECTILE = ENTITY_TYPES.register("spell_projectile", () -> EntityType.Builder.<SpellProjectile>of(SpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(10).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("spell_projectile"));
     public static final RegistryObject<EntityType<HomingSpellProjectile>> HOMING_SPELL_PROJECTILE = ENTITY_TYPES.register("homing_spell_projectile", () -> EntityType.Builder.<HomingSpellProjectile>of(HomingSpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(2).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("homing_spell_projectile"));
     
-    public static final RegistryObject<RangedAttribute> MANA_REGEN_ATTRIBUTE = MANA_REGENERATION_ATTRIBUTE; //TODO Remove in 1.20
-    public static final RegistryObject<ManaRegenEnchantment> MANA_REGEN_ENCHANTMENT = MANA_REGENERATION_ENCHANTMENT;
-    
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsRegistries::newRegistry);
