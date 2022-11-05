@@ -11,6 +11,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -62,6 +63,7 @@ public class SpellsAndShields
     private void setup(FMLCommonSetupEvent event)
     {
         SpellTrees.readOrWriteSpellTreeConfigs();
+        Spells.spellsList();
         Spells.spellsConfigs();
         Spells.registerEventSpells();
         SpellsRegistries.addPotionRecipes();

@@ -20,6 +20,8 @@ public class SpellsConfig
     public static final ForgeConfigSpec.BooleanValue CLEAR_SLOTS_ON_DEATH;
     public static final ForgeConfigSpec.BooleanValue FORGET_SPELLS_ON_DEATH;
     
+    public static final ForgeConfigSpec.BooleanValue GEN_SPELLS_LIST;
+    
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANTING_TABLE;
     
     static
@@ -61,6 +63,10 @@ public class SpellsConfig
         ENCHANTING_TABLE = configBuilder
                 .comment("Resource location of the enchanting table. Some mods could change that.")
                 .defineList("enchantingTables", ImmutableList.of("minecraft:enchanting_table", "quark:matrix_enchanter"), s -> true);
+        
+        GEN_SPELLS_LIST = configBuilder
+                .comment("Create a file containing a list of all spells with their IDs. Automatically switches back to false after creating the file.")
+                .define("createSpellsList", false);
         
         GENERAL_SPEC = configBuilder.build();
     }
