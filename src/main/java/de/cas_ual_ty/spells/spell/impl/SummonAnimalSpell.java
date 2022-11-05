@@ -159,7 +159,7 @@ public class SummonAnimalSpell extends HandIngredientSpell
             
             JsonObject ingredient = e.getAsJsonObject();
             
-            ItemStack itemStack = SpellsFileUtil.jsonItemStack(ingredient, "item", "count");
+            ItemStack itemStack = SpellsFileUtil.jsonItemStack(ingredient);
             EntityType<?> entity = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(SpellsFileUtil.jsonString(ingredient, "entity")));
             
             if(itemStack.isEmpty())

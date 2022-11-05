@@ -62,6 +62,7 @@ public class SpellsAndShields
     private void setup(FMLCommonSetupEvent event)
     {
         SpellTrees.readOrWriteSpellTreeConfigs();
+        Spells.spellsList();
         Spells.spellsConfigs();
         Spells.registerEventSpells();
         SpellsRegistries.addPotionRecipes();

@@ -9,6 +9,7 @@ import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import de.cas_ual_ty.spells.spell.base.TemporaryMobEffectSpell;
 import de.cas_ual_ty.spells.spell.impl.*;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -22,9 +23,13 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
@@ -111,6 +116,31 @@ public class Spells
     private static void newRegistry(NewRegistryEvent event)
     {
         SPELLS_REGISTRY = event.create(new RegistryBuilder<ISpell>().setType(ISpell.class).setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spells")));
+    }
+    
+    public static void spellsList()
+    {
+        if(SpellsConfig.GEN_SPELLS_LIST.get())
+        {
+            File file = new File(SpellsFileUtil.getOrCreateConfigDir().toFile(), "spells_list.txt");
+            
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter(file)))
+            {
+                for(Map.Entry<ResourceKey<ISpell>, ISpell> entry : SPELLS_REGISTRY.get().getEntries())
+                {
+                    ResourceLocation key = entry.getKey().location();
+                    writer.write(key.toString());
+                    writer.newLine();
+                }
+                
+                SpellsAndShields.LOGGER.error("Successfully wrote spells list to file {}.", file.toPath());
+            }
+            catch(IOException e)
+            {
+                SpellsAndShields.LOGGER.error("Could not write spells list to file {}.", file.toPath());
+                e.printStackTrace();
+            }
+        }
     }
     
     public static void spellsConfigs()

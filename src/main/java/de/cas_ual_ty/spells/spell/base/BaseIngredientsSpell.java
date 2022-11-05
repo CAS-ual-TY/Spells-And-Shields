@@ -78,14 +78,14 @@ public class BaseIngredientsSpell extends MultiIngredientSpell
         for(ItemStack ingredient : this.defaultHandIngredients)
         {
             JsonObject o = new JsonObject();
-            SpellsFileUtil.jsonItemStack(o, ingredient, "item", "count");
+            SpellsFileUtil.jsonItemStack(o, ingredient);
             handIngredients.add(o);
         }
         
         for(ItemStack ingredient : this.defaultInventoryIngredients)
         {
             JsonObject o = new JsonObject();
-            SpellsFileUtil.jsonItemStack(o, ingredient, "item", "count");
+            SpellsFileUtil.jsonItemStack(o, ingredient);
             inventoryIngredients.add(o);
         }
         
@@ -125,7 +125,7 @@ public class BaseIngredientsSpell extends MultiIngredientSpell
             }
             
             JsonObject o = e.getAsJsonObject();
-            ItemStack ingredient = SpellsFileUtil.jsonItemStack(o, "item", "count");
+            ItemStack ingredient = SpellsFileUtil.jsonItemStack(o);
             this.handIngredients.add(ingredient);
         }
         
@@ -137,7 +137,7 @@ public class BaseIngredientsSpell extends MultiIngredientSpell
             }
             
             JsonObject o = e.getAsJsonObject();
-            ItemStack ingredient = SpellsFileUtil.jsonItemStack(o, "item", "count");
+            ItemStack ingredient = SpellsFileUtil.jsonItemStack(o);
             this.inventoryIngredients.add(ingredient);
         }
     }

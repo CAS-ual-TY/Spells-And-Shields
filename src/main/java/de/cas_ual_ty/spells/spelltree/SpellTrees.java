@@ -47,7 +47,7 @@ public class SpellTrees
     
     public static SpellTree fireTree()
     {
-        return SpellTree.builder("nether", new TranslatableComponent(KEY_NETHER), Spells.FIRE_BALL, 15, bookshelves(28))
+        return SpellTree.builder(SpellsAndShields.MOD_ID + ".nether", new TranslatableComponent(KEY_NETHER), Spells.FIRE_BALL, 15, bookshelves(28))
                 .icon(Spells.TEMPORARY_FIRE_RESISTANCE.get())
                 .add(Spells.LAVA_WALKER, 20, bookshelves(19))
                 .add(Spells.TEMPORARY_FIRE_RESISTANCE, 30, bookshelves(30))
@@ -62,7 +62,7 @@ public class SpellTrees
     
     public static SpellTree waterTree()
     {
-        return SpellTree.builder("ocean", new TranslatableComponent(KEY_OCEAN), Spells.TEMPORARY_WATER_BREATHING, 10)
+        return SpellTree.builder(SpellsAndShields.MOD_ID + ".ocean", new TranslatableComponent(KEY_OCEAN), Spells.TEMPORARY_WATER_BREATHING, 10)
                 .icon(Spells.TEMPORARY_DOLPHINS_GRACE.get())
                 .add(Spells.TEMPORARY_REGENERATION, 20, bookshelves(20))
                 .add(Spells.GROWTH, 20, bookshelves(20))
@@ -87,7 +87,7 @@ public class SpellTrees
     
     public static SpellTree earthTree()
     {
-        return SpellTree.builder("mining", new TranslatableComponent(KEY_MINING), Spells.BLAST_SMELT, 5, bookshelves(8))
+        return SpellTree.builder(SpellsAndShields.MOD_ID + ".mining", new TranslatableComponent(KEY_MINING), Spells.BLAST_SMELT, 5, bookshelves(8))
                 .icon(Spells.TEMPORARY_HASTE.get())
                 .add(Spells.SILENCE_TARGET, 25, bookshelves(26))
                 .add(Spells.TEMPORARY_MAGIC_IMMUNE, 25, bookshelves(26))
@@ -103,7 +103,7 @@ public class SpellTrees
     
     public static SpellTree airTree()
     {
-        return SpellTree.builder("movement", new TranslatableComponent(KEY_MOVEMENT), Spells.TEMPORARY_JUMP_BOOST, 15, bookshelves(12))
+        return SpellTree.builder(SpellsAndShields.MOD_ID + ".movement", new TranslatableComponent(KEY_MOVEMENT), Spells.TEMPORARY_JUMP_BOOST, 15, bookshelves(12))
                 .icon(Spells.TEMPORARY_JUMP_BOOST.get())
                 .add(Spells.LEAP, 10, bookshelves(14))
                 .add(Spells.TEMPORARY_SPEED, 20, bookshelves(20))
@@ -123,7 +123,7 @@ public class SpellTrees
     
     public static SpellTree enderTree()
     {
-        return SpellTree.builder("end", new TranslatableComponent(KEY_END), Spells.RANDOM_TELEPORT, 20, bookshelves(28))
+        return SpellTree.builder(SpellsAndShields.MOD_ID + ".end", new TranslatableComponent(KEY_END), Spells.RANDOM_TELEPORT, 20, bookshelves(28))
                 .icon(Spells.TELEPORT.get())
                 .requirement(advancement("end/root"))
                 .add(Spells.FORCED_TELEPORT.get(), 30, bookshelves(28))
