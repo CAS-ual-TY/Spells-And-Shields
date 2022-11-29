@@ -185,6 +185,11 @@ public class SpellsFileUtil
         return item;
     }
     
+    public static void jsonItem(JsonObject json, String key, Item item) throws IllegalStateException
+    {
+        json.addProperty(key, ForgeRegistries.ITEMS.getKey(item).toString());
+    }
+    
     public static Item jsonItem(JsonObject json, String key) throws IllegalStateException
     {
         return jsonItem(json, key, false);
@@ -272,7 +277,7 @@ public class SpellsFileUtil
         }
         else
         {
-            json.addProperty(itemKey, ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
+            jsonItem(json, itemKey, itemStack.getItem());
             json.addProperty(countKey, itemStack.getCount());
         }
     }
