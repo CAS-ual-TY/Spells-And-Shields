@@ -1,6 +1,8 @@
 package de.cas_ual_ty.spells.spell.impl;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.IProjectileSpell;
@@ -89,6 +91,17 @@ public class SpitMetalSpell extends HandIngredientSpell implements IProjectileSp
     {
         JsonObject json = super.makeDefaultConfig();
         json.addProperty("baseDamage", defaultBaseDamage);
+        
+        JsonArray materials = new JsonArray();
+        defaultIngredientMap.forEach((item, damage) ->
+        {
+            JsonObject material = new JsonObject();
+            SpellsFileUtil.jsonItem(material, "item", item);
+            material.addProperty("bonusDamage", damage);
+            materials.add(material);
+        });
+        json.add("materials", materials);
+        
         return json;
     }
     
@@ -97,7 +110,28 @@ public class SpitMetalSpell extends HandIngredientSpell implements IProjectileSp
     {
         super.readFromConfig(json);
         baseDamage = SpellsFileUtil.jsonFloat(json, "baseDamage");
-        ingredientMap.putAll(defaultIngredientMap);
+        
+        JsonArray materials = SpellsFileUtil.jsonArray(json, "materials");
+        
+        for(JsonElement e : materials)
+        {
+            if(!e.isJsonObject())
+            {
+                throw new IllegalStateException();
+            }
+            
+            JsonObject material = e.getAsJsonObject();
+            
+            Item item = SpellsFileUtil.jsonItem(material, "item");
+            float damage = SpellsFileUtil.jsonFloat(material, "bonusDamage");
+            
+            if(item == null)
+            {
+                throw new IllegalStateException();
+            }
+            
+            this.ingredientMap.put(item, damage);
+        }
     }
     
     @Override

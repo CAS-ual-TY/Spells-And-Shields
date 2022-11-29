@@ -190,6 +190,11 @@ public class SpellsFileUtil
         return jsonItem(json, key, false);
     }
     
+    public static void jsonItem(JsonObject json, String key, Item item) throws IllegalStateException
+    {
+        json.addProperty(key, item.getRegistryName().toString());
+    }
+    
     public static ISpell jsonSpell(JsonObject json, String key, boolean allowNull) throws IllegalStateException
     {
         String id = jsonString(json, key);
@@ -272,7 +277,7 @@ public class SpellsFileUtil
         }
         else
         {
-            json.addProperty(itemKey, itemStack.getItem().getRegistryName().toString());
+            jsonItem(json, itemKey, itemStack.getItem());
             json.addProperty(countKey, itemStack.getCount());
         }
     }
