@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells;
 
+import com.mojang.serialization.Codec;
 import de.cas_ual_ty.spells.command.SpellArgument;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.effect.ExtraManaMobEffect;
@@ -50,8 +51,9 @@ import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class SpellsRegistries
 {
-    public static Supplier<IForgeRegistry<IRequirementType<?>>> REQUIREMENTS_REGISTRY;
-    private static final DeferredRegister<IRequirementType<?>> REQUIREMENTS = DeferredRegister.create(new ResourceLocation(MOD_ID, "requirements"), MOD_ID);
+    public static Supplier<IForgeRegistry<RequirementType<?>>> REQUIREMENTS_REGISTRY;
+    private static final DeferredRegister<RequirementType<?>> REQUIREMENTS = DeferredRegister.create(new ResourceLocation(MOD_ID, "requirements"), MOD_ID);
+    public static Codec<Requirement> REQUIREMENT_CODEC;
     
     public static Supplier<IForgeRegistry<ISpellDataType<?>>> SPELL_DATA_REGISTRY;
     private static final DeferredRegister<ISpellDataType<?>> SPELL_DATA = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_data"), MOD_ID);
@@ -74,10 +76,10 @@ public class SpellsRegistries
     public static final EnchantmentCategory SHIELD_ENCHANTMENT_CATEGORY = EnchantmentCategory.create("SHIELD", item -> item instanceof ShieldItem);
     public static final EnchantmentCategory SWORD_OR_AXE_ENCHANTMENT_CATEGORY = EnchantmentCategory.create("SWORD_OR_AXE", item -> item instanceof AxeItem || item instanceof SwordItem);
     
-    public static final RegistryObject<IRequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("client_wrap", () -> WrappedRequirement::new);
-    public static final RegistryObject<IRequirementType<BookshelvesRequirement>> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> BookshelvesRequirement::new);
-    public static final RegistryObject<IRequirementType<AdvancementRequirement>> ADVANCEMENT_REQUIREMENT = REQUIREMENTS.register("advancement", () -> AdvancementRequirement::new);
-    public static final RegistryObject<IRequirementType<ItemRequirement>> ITEM_REQUIREMENT = REQUIREMENTS.register("item", () -> ItemRequirement::new);
+    public static final RegistryObject<RequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("client_wrap", () -> new RequirementType<>(WrappedRequirement::new, (type) -> WrappedRequirement.CODEC));
+    public static final RegistryObject<RequirementType<BookshelvesRequirement>> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> new RequirementType<>(BookshelvesRequirement::new, BookshelvesRequirement::makeCodec));
+    public static final RegistryObject<RequirementType<AdvancementRequirement>> ADVANCEMENT_REQUIREMENT = REQUIREMENTS.register("advancement", () -> new RequirementType<>(AdvancementRequirement::new, AdvancementRequirement::makeCodec));
+    public static final RegistryObject<RequirementType<ItemRequirement>> ITEM_REQUIREMENT = REQUIREMENTS.register("item", () -> new RequirementType<>(ItemRequirement::new, ItemRequirement::makeCodec));
     
     public static final RegistryObject<ISpellDataType<SimpleTickedSpellData>> FLAMETHROWER_DATA = SPELL_DATA.register("flamethrower", () -> ITickedDataSpell.makeDataType(Spells.FLAMETHROWER));
     public static final RegistryObject<ISpellDataType<SimpleTickedSpellData>> GHAST_DATA = SPELL_DATA.register("ghast", () -> ITickedDataSpell.makeDataType(Spells.GHAST));
@@ -137,8 +139,13 @@ public class SpellsRegistries
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REQUIREMENTS_REGISTRY = event.create(new RegistryBuilder<IRequirementType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
+        REQUIREMENTS_REGISTRY = event.create(new RegistryBuilder<RequirementType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
         SPELL_DATA_REGISTRY = event.create(new RegistryBuilder<ISpellDataType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "spell_data")));
+    }
+    
+    public static void makeCodecs()
+    {
+        REQUIREMENT_CODEC = REQUIREMENTS_REGISTRY.get().getCodec().dispatch("type", Requirement::getType, RequirementType::getCodec);
     }
     
     public static void addPotionRecipes()

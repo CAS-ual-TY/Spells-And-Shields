@@ -1,6 +1,10 @@
 package de.cas_ual_ty.spells.requirement;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.codecs.PrimitiveCodec;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import net.minecraft.ChatFormatting;
@@ -11,21 +15,56 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 
 public class WrappedRequirement extends Requirement
 {
+    public static final Codec<WrappedRequirement> CODEC = new PrimitiveCodec<>()
+    {
+        @Override
+        public <T> DataResult<WrappedRequirement> read(DynamicOps<T> ops, T input)
+        {
+            return DataResult.error("Can not (de)serialize a wrapped requirement");
+        }
+        
+        @Override
+        public <T> T write(DynamicOps<T> ops, WrappedRequirement value)
+        {
+            return ops.empty();
+        }
+    };
+    
     protected Requirement requirement;
     protected RequirementStatus status;
     protected MutableComponent component;
     
-    public WrappedRequirement(IRequirementType<?> type)
+    public WrappedRequirement(RequirementType<?> type)
     {
         super(type);
     }
     
-    public WrappedRequirement(IRequirementType<?> type, Requirement requirement)
+    protected WrappedRequirement(RequirementType<?> type, Requirement requirement, RequirementStatus status, MutableComponent component)
     {
-        super(type);
+        this(type);
         this.requirement = requirement;
-        this.status = RequirementStatus.UNDECIDED;
-        this.component = null;
+        this.status = status;
+        this.component = component;
+    }
+    
+    public WrappedRequirement(RequirementType<?> type, Requirement requirement)
+    {
+        this(type, requirement, RequirementStatus.UNDECIDED, null);
+    }
+    
+    public Requirement getRequirement()
+    {
+        return requirement;
+    }
+    
+    public RequirementStatus getStatus()
+    {
+        return status;
+    }
+    
+    public MutableComponent getComponent()
+    {
+        return component;
     }
     
     @Override
@@ -67,6 +106,7 @@ public class WrappedRequirement extends Requirement
     @Override
     public void writeToBuf(FriendlyByteBuf buf)
     {
+        
         //IRequirementType.writeToBuf(buf, requirement);
         buf.writeByte(status.ordinal());
         buf.writeComponent(component);

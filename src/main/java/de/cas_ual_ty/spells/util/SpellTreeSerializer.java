@@ -1,11 +1,15 @@
 package de.cas_ual_ty.spells.util;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import de.cas_ual_ty.spells.Spells;
-import de.cas_ual_ty.spells.requirement.IRequirementType;
+import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.requirement.Requirement;
+import de.cas_ual_ty.spells.requirement.RequirementType;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
@@ -56,7 +60,7 @@ public class SpellTreeSerializer
     private static void encodeRequirements(List<Requirement> list, FriendlyByteBuf buf)
     {
         buf.writeInt(list.size());
-        list.forEach(requirement -> IRequirementType.writeToBuf(buf, requirement));
+        list.forEach(requirement -> RequirementType.writeToBuf(buf, requirement));
     }
     
     private static void encodeNode(SpellNode spellNode, FriendlyByteBuf buf)
@@ -104,7 +108,7 @@ public class SpellTreeSerializer
         
         for(int i = 0; i < size; i++)
         {
-            list.add(IRequirementType.readFromBuf(buf));
+            list.add(RequirementType.readFromBuf(buf));
         }
         
         return list;
@@ -139,7 +143,11 @@ public class SpellTreeSerializer
     private static JsonArray requirementsToJson(List<Requirement> requirements)
     {
         JsonArray json = new JsonArray();
-        requirements.forEach(requirement -> json.add(IRequirementType.writeToJson(requirement)));
+        requirements.forEach(requirement ->
+        {
+            DataResult<JsonElement> j = SpellsRegistries.REQUIREMENT_CODEC.encodeStart(JsonOps.INSTANCE, requirement);
+            json.add(j.getOrThrow(false, IllegalStateException::new));
+        });
         return json;
     }
     
@@ -180,12 +188,8 @@ public class SpellTreeSerializer
                 return;
             }
             
-            Requirement requirement = IRequirementType.readFromJson(jsonElement.getAsJsonObject());
-            
-            if(requirement != null)
-            {
-                requirements.add(requirement);
-            }
+            DataResult<Requirement> requirement = SpellsRegistries.REQUIREMENT_CODEC.parse(JsonOps.INSTANCE, jsonElement);
+            requirements.add(requirement.getOrThrow(false, IllegalStateException::new));
         });
         return requirements;
     }

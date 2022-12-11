@@ -1,6 +1,8 @@
 package de.cas_ual_ty.spells.requirement;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.advancements.Advancement;
@@ -13,19 +15,31 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 
 public class AdvancementRequirement extends Requirement
 {
+    public static Codec<AdvancementRequirement> makeCodec(RequirementType<AdvancementRequirement> type)
+    {
+        return RecordCodecBuilder.create(instance -> instance.group(
+                ResourceLocation.CODEC.fieldOf("advancement").forGetter(AdvancementRequirement::getAdvancementRL)
+        ).apply(instance, (advancementRL) -> new AdvancementRequirement(type, advancementRL)));
+    }
+    
     public static final String ERROR_SUFFIX = ".error";
     
     protected ResourceLocation advancementRL;
     
-    public AdvancementRequirement(IRequirementType<?> type)
+    public AdvancementRequirement(RequirementType<?> type)
     {
         super(type);
     }
     
-    public AdvancementRequirement(IRequirementType<?> type, ResourceLocation advancementRL)
+    public AdvancementRequirement(RequirementType<?> type, ResourceLocation advancementRL)
     {
-        super(type);
+        this(type);
         this.advancementRL = advancementRL;
+    }
+    
+    public ResourceLocation getAdvancementRL()
+    {
+        return advancementRL;
     }
     
     @Override

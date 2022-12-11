@@ -1,6 +1,8 @@
 package de.cas_ual_ty.spells.requirement;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.core.BlockPos;
@@ -13,17 +15,29 @@ import net.minecraft.world.level.Level;
 
 public class BookshelvesRequirement extends Requirement
 {
+    public static Codec<BookshelvesRequirement> makeCodec(RequirementType<BookshelvesRequirement> type)
+    {
+        return RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.fieldOf("bookshelves").forGetter(BookshelvesRequirement::getBookshelves)
+        ).apply(instance, (bookshelves) -> new BookshelvesRequirement(type, bookshelves)));
+    }
+    
     protected int bookshelves;
     
-    public BookshelvesRequirement(IRequirementType<?> type)
+    public BookshelvesRequirement(RequirementType<?> type)
     {
         super(type);
     }
     
-    public BookshelvesRequirement(IRequirementType<?> type, int bookshelves)
+    public BookshelvesRequirement(RequirementType<?> type, int bookshelves)
     {
-        super(type);
+        this(type);
         this.bookshelves = Mth.clamp(bookshelves, 0, 32);
+    }
+    
+    public int getBookshelves()
+    {
+        return bookshelves;
     }
     
     @Override

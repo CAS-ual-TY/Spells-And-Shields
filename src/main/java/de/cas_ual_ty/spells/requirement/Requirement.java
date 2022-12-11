@@ -10,18 +10,19 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 
 public abstract class Requirement
 {
-    public final IRequirementType<?> type;
+    public final RequirementType<?> type;
     
     protected String descriptionId;
     
-    public Requirement(IRequirementType<?> type)
+    public Requirement(RequirementType<?> type)
     {
         this.type = type;
+        
         ResourceLocation rl = SpellsRegistries.REQUIREMENTS_REGISTRY.get().getKey(type);
         this.descriptionId = "requirement." + rl.getNamespace() + "." + rl.getPath();
     }
     
-    public IRequirementType<?> getType()
+    public RequirementType<?> getType()
     {
         return type;
     }

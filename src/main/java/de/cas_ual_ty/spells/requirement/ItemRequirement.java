@@ -1,6 +1,8 @@
 package de.cas_ual_ty.spells.requirement;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import de.cas_ual_ty.spells.util.SpellsUtil;
@@ -13,6 +15,14 @@ import net.minecraft.world.item.ItemStack;
 
 public class ItemRequirement extends Requirement
 {
+    public static Codec<ItemRequirement> makeCodec(RequirementType<ItemRequirement> type)
+    {
+        return RecordCodecBuilder.create(instance -> instance.group(
+                ItemStack.CODEC.fieldOf("itemstack").forGetter(ItemRequirement::getItemStack),
+                Codec.BOOL.fieldOf("consume").forGetter(ItemRequirement::getConsume)
+        ).apply(instance, (itemStack, consume) -> new ItemRequirement(type, itemStack, consume)));
+    }
+    
     public static final String CONSUMED_SUFFIX = ".consumed";
     public static final String MULTIPLE_SUFFIX = ".multiple";
     public static final String MULTIPLE_CONSUMED_SUFFIX = CONSUMED_SUFFIX + MULTIPLE_SUFFIX;
@@ -20,16 +30,26 @@ public class ItemRequirement extends Requirement
     protected ItemStack itemStack;
     protected boolean consume;
     
-    public ItemRequirement(IRequirementType<?> type)
+    public ItemRequirement(RequirementType<?> type)
     {
         super(type);
     }
     
-    public ItemRequirement(IRequirementType<?> type, ItemStack itemStack, boolean consume)
+    public ItemRequirement(RequirementType<?> type, ItemStack itemStack, boolean consume)
     {
-        super(type);
+        this(type);
         this.itemStack = itemStack;
         this.consume = consume;
+    }
+    
+    public ItemStack getItemStack()
+    {
+        return itemStack;
+    }
+    
+    public boolean getConsume()
+    {
+        return consume;
     }
     
     @Override
