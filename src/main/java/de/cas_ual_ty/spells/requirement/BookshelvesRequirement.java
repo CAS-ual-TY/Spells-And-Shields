@@ -1,10 +1,8 @@
 package de.cas_ual_ty.spells.requirement;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
-import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -51,18 +49,6 @@ public class BookshelvesRequirement extends Requirement
     {
         int amount = access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0);
         return Component.translatable(descriptionId, amount, bookshelves);
-    }
-    
-    @Override
-    public void writeToJson(JsonObject json)
-    {
-        json.addProperty("bookshelves", this.bookshelves);
-    }
-    
-    @Override
-    public void readFromJson(JsonObject json)
-    {
-        this.bookshelves = SpellsFileUtil.jsonInt(json, "bookshelves");
     }
     
     @Override

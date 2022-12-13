@@ -1,10 +1,8 @@
 package de.cas_ual_ty.spells.requirement;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
-import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -80,18 +78,6 @@ public class AdvancementRequirement extends Requirement
         }
         
         return Component.empty();
-    }
-    
-    @Override
-    public void writeToJson(JsonObject json)
-    {
-        json.addProperty("advancement", advancementRL.toString());
-    }
-    
-    @Override
-    public void readFromJson(JsonObject json)
-    {
-        advancementRL = new ResourceLocation(SpellsFileUtil.jsonString(json, "advancement"));
     }
     
     @Override

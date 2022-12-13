@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells;
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.network.*;
 import de.cas_ual_ty.spells.spelltree.SpellTrees;
+import de.cas_ual_ty.spells.util.SpellsCodecs;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,7 +35,10 @@ public class SpellsAndShields
     
     public SpellsAndShields()
     {
+        SpellsCodecs.makeCodecs();
+        
         Spells.register();
+        SpellTrees.register();
         SpellsRegistries.register();
         
         SpellsFileUtil.getOrCreateConfigDir();
@@ -45,7 +49,6 @@ public class SpellsAndShields
         Spells.registerEvents();
         SpellsRegistries.registerEvents();
         SpellsCapabilities.registerEvents();
-        SpellTrees.registerEvents();
         
         CHANNEL.registerMessage(0, ManaSyncMessage.class, ManaSyncMessage::encode, ManaSyncMessage::decode, ManaSyncMessage::handle);
         CHANNEL.registerMessage(1, SpellsSyncMessage.class, SpellsSyncMessage::encode, SpellsSyncMessage::decode, SpellsSyncMessage::handle);
@@ -61,8 +64,6 @@ public class SpellsAndShields
     
     private void setup(FMLCommonSetupEvent event)
     {
-        SpellsRegistries.makeCodecs();
-        SpellTrees.readOrWriteSpellTreeConfigs();
         Spells.spellsList();
         Spells.spellsConfigs();
         Spells.registerEventSpells();

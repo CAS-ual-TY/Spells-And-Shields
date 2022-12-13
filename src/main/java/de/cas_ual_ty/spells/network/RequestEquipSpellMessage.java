@@ -4,13 +4,13 @@ import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
-public record RequestEquipSpellMessage(ISpell spell, byte slot, UUID treeId)
+public record RequestEquipSpellMessage(ISpell spell, byte slot, ResourceLocation treeId)
 {
     public static void encode(RequestEquipSpellMessage msg, FriendlyByteBuf buf)
     {
@@ -25,12 +25,12 @@ public record RequestEquipSpellMessage(ISpell spell, byte slot, UUID treeId)
         }
         
         buf.writeByte(msg.slot());
-        buf.writeUUID(msg.treeId());
+        buf.writeResourceLocation(msg.treeId());
     }
     
     public static RequestEquipSpellMessage decode(FriendlyByteBuf buf)
     {
-        return new RequestEquipSpellMessage(buf.readBoolean() ? buf.readRegistryId() : null, buf.readByte(), buf.readUUID());
+        return new RequestEquipSpellMessage(buf.readBoolean() ? buf.readRegistryId() : null, buf.readByte(), buf.readResourceLocation());
     }
     
     public static void handle(RequestEquipSpellMessage msg, Supplier<NetworkEvent.Context> context)

@@ -17,9 +17,18 @@ public class SpellNode
     protected List<Requirement> requirements;
     
     protected SpellNode parent;
-    protected LinkedList<SpellNode> children;
+    protected List<SpellNode> children;
     
     protected int id;
+    
+    public SpellNode(ISpell spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
+    {
+        this.spell = spell;
+        this.levelCost = Math.max(0, levelCost);
+        this.requirements = requirements;
+        this.children = children;
+        this.id = 0;
+    }
     
     public SpellNode(ISpell spell, int levelCost, List<Requirement> requirements, int id)
     {
@@ -109,7 +118,7 @@ public class SpellNode
         return parent;
     }
     
-    public LinkedList<SpellNode> getChildren()
+    public List<SpellNode> getChildren()
     {
         return children;
     }

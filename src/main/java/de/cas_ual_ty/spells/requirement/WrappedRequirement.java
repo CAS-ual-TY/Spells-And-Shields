@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.requirement;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
@@ -89,18 +88,6 @@ public class WrappedRequirement extends Requirement
     public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         return this.component != null ? this.component : requirement.makeDescription(spellProgressionHolder, access);
-    }
-    
-    @Override
-    public void writeToJson(JsonObject json)
-    {
-        throw new IllegalStateException();
-    }
-    
-    @Override
-    public void readFromJson(JsonObject json)
-    {
-        throw new IllegalStateException();
     }
     
     @Override

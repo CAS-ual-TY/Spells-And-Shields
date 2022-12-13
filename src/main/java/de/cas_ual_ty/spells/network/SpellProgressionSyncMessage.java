@@ -24,14 +24,12 @@ public record SpellProgressionSyncMessage(BlockPos blockPos, List<SpellTree> spe
         buf.writeBlockPos(msg.blockPos());
         
         buf.writeInt(msg.spellTrees().size());
-        
         for(SpellTree spellTree : msg.spellTrees())
         {
             SpellTreeSerializer.encodeTree(spellTree, buf);
         }
         
         buf.writeInt(msg.map().size());
-        
         for(Map.Entry<ISpell, SpellStatus> entry : msg.map().entrySet())
         {
             buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), entry.getKey());

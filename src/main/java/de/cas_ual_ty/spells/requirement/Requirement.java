@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.requirement;
 
-import com.google.gson.JsonObject;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import net.minecraft.network.FriendlyByteBuf;
@@ -39,10 +38,6 @@ public abstract class Requirement
     {
         return descriptionId;
     }
-    
-    public abstract void writeToJson(JsonObject json);
-    
-    public abstract void readFromJson(JsonObject json);
     
     public abstract void writeToBuf(FriendlyByteBuf buf);
     

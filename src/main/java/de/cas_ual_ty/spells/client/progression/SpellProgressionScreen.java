@@ -127,7 +127,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         {
             if(previous != null)
             {
-                Optional<SpellTreeTab> optionalSpellTreeTab = tabs.values().stream().filter(tree -> previous.spellTree.getId().equals(tree.spellTree.getId())).findFirst();
+                Optional<SpellTreeTab> optionalSpellTreeTab = tabs.values().stream().filter(tree -> previous.spellTree.getClientId().equals(tree.spellTree.getClientId())).findFirst();
                 
                 optionalSpellTreeTab.ifPresent(tab ->
                 {
@@ -238,7 +238,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
         else if(button == learnButton && selectedTab != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.spell.getId(), selectedSpellWidget.spell.getSpell(), selectedTab.spellTree.getId()));
+            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.spell.getId(), selectedSpellWidget.spell.getSpell(), selectedTab.spellTree.getClientId()));
         }
     }
     
@@ -246,7 +246,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     {
         if(selectedTab != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage(selectedSpellWidget.spell.getSpell(), (byte) slot, selectedTab.spellTree.getId()));
+            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage(selectedSpellWidget.spell.getSpell(), (byte) slot, selectedTab.spellTree.getClientId()));
             this.spellClicked(null);
         }
     }

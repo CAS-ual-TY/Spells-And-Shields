@@ -1,0 +1,68 @@
+{
+    "icon": "spells_and_shields:teleport",
+    "requirements": [
+        {
+            "type": "spells_and_shields:advancement",
+            "advancement": "minecraft:end/root"
+        }
+    ],
+    "root": {
+        "children": [
+            {
+                "children": [],
+                "level_cost": 30,
+                "requirements": [
+                    {
+                        "type": "spells_and_shields:bookshelves",
+                        "bookshelves": 28
+                    }
+                ],
+                "spell": "spells_and_shields:forced_teleport"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "level_cost": 50,
+                        "requirements": [
+                            {
+                                "type": "spells_and_shields:bookshelves",
+                                "bookshelves": 30
+                            },
+                            {
+                                "type": "spells_and_shields:item",
+                                "consume": false,
+                                "itemstack": {
+                                    "Count": 1,
+                                    "id": "minecraft:dragon_egg"
+                                }
+                            }
+                        ],
+                        "spell": "spells_and_shields:ender_army"
+                    }
+                ],
+                "level_cost": 30,
+                "requirements": [
+                    {
+                        "type": "spells_and_shields:bookshelves",
+                        "bookshelves": 28
+                    },
+                    {
+                        "type": "spells_and_shields:advancement",
+                        "advancement": "minecraft:end/respawn_dragon"
+                    }
+                ],
+                "spell": "spells_and_shields:teleport"
+            }
+        ],
+        "level_cost": 20,
+        "requirements": [
+            {
+                "type": "spells_and_shields:bookshelves",
+                "bookshelves": 28
+            }
+        ],
+        "spell": "spells_and_shields:random_teleport"
+    },
+    "title": "spell_tree.spells_and_shields.end"
+}

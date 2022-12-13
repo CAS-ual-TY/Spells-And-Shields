@@ -1,10 +1,8 @@
 package de.cas_ual_ty.spells.requirement;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
-import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -96,20 +94,6 @@ public class ItemRequirement extends Requirement
                 return Component.translatable(getDescriptionId() + MULTIPLE_SUFFIX, itemStack.getCount(), itemStack.getHoverName());
             }
         }
-    }
-    
-    @Override
-    public void writeToJson(JsonObject json)
-    {
-        SpellsFileUtil.jsonItemStack(json, itemStack);
-        json.addProperty("consume", consume);
-    }
-    
-    @Override
-    public void readFromJson(JsonObject json)
-    {
-        itemStack = SpellsFileUtil.jsonItemStack(json);
-        consume = SpellsFileUtil.jsonBoolean(json, "consume");
     }
     
     @Override

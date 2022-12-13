@@ -1,27 +1,28 @@
 package de.cas_ual_ty.spells.util;
 
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
-import de.cas_ual_ty.spells.event.AvailableSpellTreesEvent;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.requirement.WrappedRequirement;
 import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
+import de.cas_ual_ty.spells.spelltree.SpellTrees;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraftforge.common.MinecraftForge;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class ProgressionHelper
 {
-    public static List<SpellTree> stripSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, List<SpellTree> allAvailableSkillTrees)
+    public static List<SpellTree> stripSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, Registry<SpellTree> registry, List<SpellTree> allAvailableSkillTrees)
     {
         List<SpellTree> strippedSkillTrees = new LinkedList<>();
         
@@ -37,7 +38,7 @@ public class ProgressionHelper
                 continue;
             }
             
-            SpellTree stripped = spellTree0.copy();
+            SpellTree stripped = spellTree0.copyWithId(registry);
             
             List<SpellNode> visibleNodes = new LinkedList<>();
             
@@ -115,21 +116,12 @@ public class ProgressionHelper
     
     public static List<SpellTree> getStrippedSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        List<SpellTree> allAvailableSkillTrees = getAllAvailableSpellTrees(spellProgressionHolder, access);
+        Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level);
+        ArrayList<SpellTree> allAvailableSkillTrees = new ArrayList<>(registry.size());
+        registry.forEach(allAvailableSkillTrees::add);
         
-        List<SpellTree> availableSpellTrees = stripSpellTrees(spellProgressionHolder, access, allAvailableSkillTrees);
+        List<SpellTree> availableSpellTrees = stripSpellTrees(spellProgressionHolder, access, registry, allAvailableSkillTrees);
         availableSpellTrees.forEach(SpellTree::assignNodeIds);
-        
-        return availableSpellTrees;
-    }
-    
-    public static List<SpellTree> getAllAvailableSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess containerLevelAccess)
-    {
-        List<SpellTree> availableSpellTrees = new LinkedList<>();
-        
-        AvailableSpellTreesEvent event = new AvailableSpellTreesEvent(spellProgressionHolder.getPlayer(), spellProgressionHolder, availableSpellTrees);
-        MinecraftForge.EVENT_BUS.post(event);
-        
         return availableSpellTrees;
     }
     
@@ -148,13 +140,15 @@ public class ProgressionHelper
         return true;
     }
     
-    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, int id, ISpell spell, UUID uuid)
+    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, int id, ISpell spell, ResourceLocation treeId)
     {
         Player player = menu.player;
         
         AtomicBoolean found = new AtomicBoolean(false);
         
-        menu.spellTrees.stream().filter(tree -> tree.getId().equals(uuid)).findFirst().ifPresent(spellTree ->
+        Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level);
+        
+        menu.spellTrees.stream().filter(tree -> tree.getId(registry).equals(treeId)).findFirst().ifPresent(spellTree ->
         {
             SpellNode spellNode = spellTree.findNode(id);
             

@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -23,7 +24,6 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class SpellProgressionMenu extends AbstractContainerMenu
 {
@@ -45,7 +45,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
         this.spellProgression = spellProgression;
     }
     
-    public void buySpellRequest(int id, ISpell spell, UUID treeId)
+    public void buySpellRequest(int id, ISpell spell, ResourceLocation treeId)
     {
         if(this.player instanceof ServerPlayer player)
         {
@@ -68,7 +68,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
         }
     }
     
-    public void equipSpellRequest(ISpell spell, int slot, UUID treeId)
+    public void equipSpellRequest(ISpell spell, int slot, ResourceLocation treeId)
     {
         if(this.player instanceof ServerPlayer player)
         {

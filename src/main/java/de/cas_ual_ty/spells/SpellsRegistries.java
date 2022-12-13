@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells;
 
-import com.mojang.serialization.Codec;
 import de.cas_ual_ty.spells.command.SpellArgument;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.effect.ExtraManaMobEffect;
@@ -53,7 +52,6 @@ public class SpellsRegistries
 {
     public static Supplier<IForgeRegistry<RequirementType<?>>> REQUIREMENTS_REGISTRY;
     private static final DeferredRegister<RequirementType<?>> REQUIREMENTS = DeferredRegister.create(new ResourceLocation(MOD_ID, "requirements"), MOD_ID);
-    public static Codec<Requirement> REQUIREMENT_CODEC;
     
     public static Supplier<IForgeRegistry<ISpellDataType<?>>> SPELL_DATA_REGISTRY;
     private static final DeferredRegister<ISpellDataType<?>> SPELL_DATA = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_data"), MOD_ID);
@@ -141,11 +139,6 @@ public class SpellsRegistries
     {
         REQUIREMENTS_REGISTRY = event.create(new RegistryBuilder<RequirementType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
         SPELL_DATA_REGISTRY = event.create(new RegistryBuilder<ISpellDataType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "spell_data")));
-    }
-    
-    public static void makeCodecs()
-    {
-        REQUIREMENT_CODEC = REQUIREMENTS_REGISTRY.get().getCodec().dispatch("type", Requirement::getType, RequirementType::getCodec);
     }
     
     public static void addPotionRecipes()
