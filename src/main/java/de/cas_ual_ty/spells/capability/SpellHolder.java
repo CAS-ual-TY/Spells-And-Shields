@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.Registry;
@@ -24,12 +24,12 @@ public class SpellHolder implements ISpellHolder
     
     public static final String EMPTY_SLOT = "";
     
-    protected final NewSpell[] slots;
+    protected final Spell[] slots;
     protected final Player player;
     
     public SpellHolder(Player player)
     {
-        slots = new NewSpell[SPELL_SLOTS];
+        slots = new Spell[SPELL_SLOTS];
         this.player = player;
     }
     
@@ -40,13 +40,13 @@ public class SpellHolder implements ISpellHolder
     }
     
     @Override
-    public NewSpell getSpell(int slot)
+    public Spell getSpell(int slot)
     {
         return slots[slot];
     }
     
     @Override
-    public void setSpell(int slot, @Nullable NewSpell spell)
+    public void setSpell(int slot, @Nullable Spell spell)
     {
         if(slots[slot] != null)
         {
@@ -67,7 +67,7 @@ public class SpellHolder implements ISpellHolder
         return player;
     }
     
-    public int getAmountSpellEquipped(NewSpell spell)
+    public int getAmountSpellEquipped(Spell spell)
     {
         int amount = 0;
         
@@ -92,19 +92,19 @@ public class SpellHolder implements ISpellHolder
     
     public SpellsSyncMessage makeSyncMessage()
     {
-        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
         return new SpellsSyncMessage(player.getId(), Arrays.stream(slots).map(s -> s != null ? registry.getKey(s) : null).toArray(ResourceLocation[]::new));
     }
     
     @Override
     public ListTag serializeNBT()
     {
-        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
         
         ListTag tag = new ListTag();
         for(int i = 0; i < SPELL_SLOTS; ++i)
         {
-            NewSpell spell = this.getSpell(i);
+            Spell spell = this.getSpell(i);
             
             if(spell != null)
             {
@@ -121,7 +121,7 @@ public class SpellHolder implements ISpellHolder
     @Override
     public void deserializeNBT(ListTag tag)
     {
-        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
         
         for(int i = 0; i < SPELL_SLOTS && i < tag.size(); ++i)
         {

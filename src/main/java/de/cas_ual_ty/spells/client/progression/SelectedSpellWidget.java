@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
@@ -50,7 +50,7 @@ public class SelectedSpellWidget extends GuiComponent
         this.font = Minecraft.getInstance().font;
     }
     
-    public void setContents(SpellNode spell, Map<NewSpell, SpellStatus> progression, SpellStatus spellStatus, FormattedCharSequence title)
+    public void setContents(SpellNode spell, Map<Spell, SpellStatus> progression, SpellStatus spellStatus, FormattedCharSequence title)
     {
         this.spell = spell;
         this.spellStatus = spellStatus;
@@ -107,7 +107,7 @@ public class SelectedSpellWidget extends GuiComponent
     {
         if(active && mouseX >= this.x && mouseX < this.x + this.w && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
         {
-            NewSpell spell = this.spell.getSpellDirect();
+            Spell spell = this.spell.getSpellDirect();
             
             if(spell != null)
             {

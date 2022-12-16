@@ -7,12 +7,12 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cas_ual_ty.spells.NewSpells;
 import de.cas_ual_ty.spells.SpellTrees;
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
@@ -28,7 +28,7 @@ import net.minecraft.util.ExtraCodecs;
 
 public class SpellsCodecs
 {
-    public static Codec<Holder<NewSpell>> SPELL;
+    public static Codec<Holder<Spell>> SPELL;
     public static Codec<Holder<SpellTree>> SPELL_TREE;
     
     public static Codec<RequirementType<?>> REQUIREMENT_TYPE;
@@ -42,13 +42,13 @@ public class SpellsCodecs
     public static Codec<SpellNode> SPELL_NODE;
     public static Codec<SpellTree> SPELL_TREE_CONTENTS;
     
-    public static Codec<NewSpell> NEW_SPELL_CONTENTS;
+    public static Codec<Spell> SPELL_CONTENTS;
     
     public static Codec<Component> COMPONENT; // json only, no NBT support
     
     public static void makeCodecs()
     {
-        SPELL = ExtraCodecs.lazyInitializedCodec(() -> RegistryFileCodec.create(NewSpells.SPELLS_REGISTRY_KEY, ExtraCodecs.lazyInitializedCodec(() -> NEW_SPELL_CONTENTS), false));
+        SPELL = ExtraCodecs.lazyInitializedCodec(() -> RegistryFileCodec.create(Spells.SPELLS_REGISTRY_KEY, ExtraCodecs.lazyInitializedCodec(() -> SPELL_CONTENTS), false));
         SPELL_TREE = ExtraCodecs.lazyInitializedCodec(() -> RegistryFixedCodec.create(SpellTrees.SPELL_TREES_REGISTRY_KEY));
         
         REQUIREMENT_TYPE = ExtraCodecs.lazyInitializedCodec(() -> SpellsRegistries.REQUIREMENTS_REGISTRY.get().getCodec());
@@ -73,13 +73,13 @@ public class SpellsCodecs
                 REQUIREMENT.listOf().fieldOf("requirements").forGetter(SpellTree::getRequirements)
         ).apply(instance, SpellTree::new)));
         
-        NEW_SPELL_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.lazyInitializedCodec(() -> SPELL_ACTION).listOf().fieldOf("spell_actions").forGetter(NewSpell::getSpellActions),
-                ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("icon").forGetter(NewSpell::getIcon),
-                COMPONENT.fieldOf("title").forGetter(NewSpell::getTitle),
-                COMPONENT.listOf().fieldOf("tooltip").forGetter(NewSpell::getTooltip),
-                Codec.FLOAT.fieldOf("mana_cost").forGetter(NewSpell::getManaCost)
-        ).apply(instance, NewSpell::new)));
+        SPELL_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
+                ExtraCodecs.lazyInitializedCodec(() -> SPELL_ACTION).listOf().fieldOf("spell_actions").forGetter(Spell::getSpellActions),
+                ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("icon").forGetter(Spell::getIcon),
+                COMPONENT.fieldOf("title").forGetter(Spell::getTitle),
+                COMPONENT.listOf().fieldOf("tooltip").forGetter(Spell::getTooltip),
+                Codec.FLOAT.fieldOf("mana_cost").forGetter(Spell::getManaCost)
+        ).apply(instance, Spell::new)));
         
         COMPONENT = ExtraCodecs.lazyInitializedCodec(() -> new PrimitiveCodec<>()
         {

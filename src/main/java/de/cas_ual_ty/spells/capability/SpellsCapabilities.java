@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.capability;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -126,7 +126,7 @@ public class SpellsCapabilities
                 
                 if(SpellsConfig.FORGET_SPELLS_ON_DEATH.get())
                 {
-                    for(NewSpell key : current.getProgression().keySet())
+                    for(Spell key : current.getProgression().keySet())
                     {
                         if(current.getSpellStatus(key) == SpellStatus.LEARNED)
                         {

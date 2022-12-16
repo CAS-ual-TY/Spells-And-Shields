@@ -2,9 +2,9 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-import de.cas_ual_ty.spells.NewSpells;
 import de.cas_ual_ty.spells.SpellTrees;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.Spells;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -32,7 +32,7 @@ public class SpellTreesGen implements DataProvider
     protected RegistryAccess registryAccess;
     protected RegistryOps<JsonElement> registryOps;
     
-    protected Registry<NewSpell> registry;
+    protected Registry<Spell> registry;
     
     public SpellTreesGen(DataGenerator gen, String modId, ExistingFileHelper exFileHelper)
     {
@@ -43,7 +43,7 @@ public class SpellTreesGen implements DataProvider
         this.registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
         
         spellTrees = new HashMap<>();
-        registry = registryOps.registry(NewSpells.SPELLS_REGISTRY_KEY).orElseThrow();
+        registry = registryOps.registry(Spells.SPELLS_REGISTRY_KEY).orElseThrow();
     }
     
     public void addSpellTree(String key, SpellTree spellTree)
@@ -58,7 +58,7 @@ public class SpellTreesGen implements DataProvider
     
     public void addSpellTrees()
     {
-        addSpellTree("debug", SpellTrees.debugTree(spellRef(NewSpells.TEST)));
+        addSpellTree("debug", SpellTrees.debugTree(spellRef(Spells.TEST)));
         
         /*addSpellTree("nether", SpellTrees.fireTree());
         addSpellTree("ocean", SpellTrees.waterTree());
@@ -67,7 +67,7 @@ public class SpellTreesGen implements DataProvider
         addSpellTree("end", SpellTrees.enderTree());*/
     }
     
-    protected Holder<NewSpell> spellRef(ResourceLocation spell)
+    protected Holder<Spell> spellRef(ResourceLocation spell)
     {
         return Holder.Reference.createStandAlone(registry, ResourceKey.create(registry.key(), spell));
     }

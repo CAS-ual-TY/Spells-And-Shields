@@ -4,7 +4,7 @@ import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
 import de.cas_ual_ty.spells.requirement.ItemRequirement;
 import de.cas_ual_ty.spells.requirement.Requirement;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Holder;
@@ -48,7 +48,7 @@ public class SpellTrees
         SPELL_TREES_REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).dataPackRegistry(SpellsCodecs.SPELL_TREE_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees")).onCreate((registry, stage) -> SPELL_TREES_REGISTRY_KEY = registry.getRegistryKey()));
     }
     
-    public static SpellTree debugTree(Holder<NewSpell> debugSpell)
+    public static SpellTree debugTree(Holder<Spell> debugSpell)
     {
         return SpellTree.builder(Component.literal("Debug Tree"), debugSpell, 15, bookshelves(28))
                 .finish();

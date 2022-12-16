@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.spelltree;
 
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.requirement.Requirement;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SpellNode
 {
-    protected final Holder<NewSpell> spell;
+    protected final Holder<Spell> spell;
     protected int levelCost;
     protected List<Requirement> requirements;
     
@@ -22,7 +22,7 @@ public class SpellNode
     
     protected int id;
     
-    public SpellNode(Holder<NewSpell> spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
+    public SpellNode(Holder<Spell> spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
     {
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
@@ -31,7 +31,7 @@ public class SpellNode
         this.id = 0;
     }
     
-    public SpellNode(Holder<NewSpell> spell, int levelCost, List<Requirement> requirements, int id)
+    public SpellNode(Holder<Spell> spell, int levelCost, List<Requirement> requirements, int id)
     {
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
@@ -40,12 +40,12 @@ public class SpellNode
         this.id = id;
     }
     
-    public SpellNode(Holder<NewSpell> spell, int levelCost, List<Requirement> requirements)
+    public SpellNode(Holder<Spell> spell, int levelCost, List<Requirement> requirements)
     {
         this(spell, levelCost, requirements, -1);
     }
     
-    public Holder<NewSpell> getSpell()
+    public Holder<Spell> getSpell()
     {
         return spell;
     }
@@ -75,7 +75,7 @@ public class SpellNode
         this.requirements = requirements;
     }
     
-    public NewSpell getSpellDirect()
+    public Spell getSpellDirect()
     {
         return spell.get();
     }

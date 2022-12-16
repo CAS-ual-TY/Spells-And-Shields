@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.spelltree;
 
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.requirement.Requirement;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -20,12 +20,12 @@ public class SpellTree
 {
     private SpellNode root;
     private Component title;
-    private Holder<NewSpell> icon;
+    private Holder<Spell> icon;
     private List<Requirement> requirements;
     
     private ResourceLocation id;
     
-    public SpellTree(SpellNode root, Component title, Holder<NewSpell> icon, List<Requirement> requirements)
+    public SpellTree(SpellNode root, Component title, Holder<Spell> icon, List<Requirement> requirements)
     {
         this.root = root;
         this.title = title;
@@ -35,7 +35,7 @@ public class SpellTree
         id = null;
     }
     
-    public SpellTree(SpellNode root, Component title, Holder<NewSpell> icon)
+    public SpellTree(SpellNode root, Component title, Holder<Spell> icon)
     {
         this(root, title, icon, new LinkedList<>());
     }
@@ -63,12 +63,12 @@ public class SpellTree
         return tooltips;
     }
     
-    public Holder<NewSpell> getIconSpell()
+    public Holder<Spell> getIconSpell()
     {
         return icon;
     }
     
-    public NewSpell getIconSpellDirect()
+    public Spell getIconSpellDirect()
     {
         return getIconSpell().get();
     }
@@ -103,7 +103,7 @@ public class SpellTree
         return this;
     }
     
-    public int getDepth(NewSpell spell)
+    public int getDepth(Spell spell)
     {
         if(root == null)
         {
@@ -125,7 +125,7 @@ public class SpellTree
         return spellProgressionHolder.getPlayer().isCreative() || passes(spellProgressionHolder, access);
     }
     
-    private int find(int depth, SpellNode spellNode, NewSpell spell)
+    private int find(int depth, SpellNode spellNode, Spell spell)
     {
         if(spellNode.getSpellDirect() == spell)
         {
@@ -222,12 +222,12 @@ public class SpellTree
         child.setParent(parent);
     }
     
-    public static Builder builder(Component title, Holder<NewSpell> root, int levelCost, Requirement... requirements)
+    public static Builder builder(Component title, Holder<Spell> root, int levelCost, Requirement... requirements)
     {
         return new Builder(title, root, levelCost, List.of(requirements));
     }
     
-    public static Builder builder(Component title, Holder<NewSpell> root, int levelCost, List<Requirement> requirements)
+    public static Builder builder(Component title, Holder<Spell> root, int levelCost, List<Requirement> requirements)
     {
         return new Builder(title, root, levelCost, requirements);
     }
@@ -241,7 +241,7 @@ public class SpellTree
     {
         private Component title;
         private SpellNode root;
-        private Holder<NewSpell> icon;
+        private Holder<Spell> icon;
         private List<Requirement> treeRequirements;
         
         private Stack<SpellNode> stack;
@@ -257,7 +257,7 @@ public class SpellTree
             this.stack.push(this.root);
         }
         
-        private Builder(Component title, Holder<NewSpell> root, int levelCost, List<Requirement> requirements)
+        private Builder(Component title, Holder<Spell> root, int levelCost, List<Requirement> requirements)
         {
             this(title, new SpellNode(root, levelCost, requirements));
         }
@@ -268,7 +268,7 @@ public class SpellTree
             return this;
         }
         
-        public Builder add(Holder<NewSpell> spell, int levelCost, Requirement... requirements)
+        public Builder add(Holder<Spell> spell, int levelCost, Requirement... requirements)
         {
             return add(new SpellNode(spell, levelCost, List.of(requirements)));
         }
@@ -286,7 +286,7 @@ public class SpellTree
             return this;
         }
         
-        public Builder icon(Holder<NewSpell> spell)
+        public Builder icon(Holder<Spell> spell)
         {
             this.icon = spell;
             return this;

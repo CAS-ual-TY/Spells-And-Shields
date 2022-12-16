@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.capability;
 
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -12,9 +12,9 @@ public interface ISpellHolder extends INBTSerializable<ListTag>
     int getSlots();
     
     @Nullable
-    NewSpell getSpell(int slot);
+    Spell getSpell(int slot);
     
-    void setSpell(int slot, @Nullable NewSpell spell);
+    void setSpell(int slot, @Nullable Spell spell);
     
     default void removeSpell(int slot)
     {

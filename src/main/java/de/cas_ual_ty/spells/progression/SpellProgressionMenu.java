@@ -6,7 +6,7 @@ import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
@@ -36,9 +36,9 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     public final Player player;
     
     public List<SpellTree> spellTrees;
-    public HashMap<NewSpell, SpellStatus> spellProgression;
+    public HashMap<Spell, SpellStatus> spellProgression;
     
-    public SpellProgressionMenu(int id, Inventory inventory, ContainerLevelAccess containerLevelAccess, List<SpellTree> spellTrees, HashMap<NewSpell, SpellStatus> spellProgression)
+    public SpellProgressionMenu(int id, Inventory inventory, ContainerLevelAccess containerLevelAccess, List<SpellTree> spellTrees, HashMap<Spell, SpellStatus> spellProgression)
     {
         super(SpellsRegistries.SPELL_PROGRESSION_MENU.get(), id);
         this.access = containerLevelAccess;
@@ -56,8 +56,8 @@ public class SpellProgressionMenu extends AbstractContainerMenu
             {
                 access.execute((level, blockPos) ->
                 {
-                    Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.level);
-                    NewSpell spell = registry.get(spellId);
+                    Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.level);
+                    Spell spell = registry.get(spellId);
                     
                     if(spell == null)
                     {
@@ -87,8 +87,8 @@ public class SpellProgressionMenu extends AbstractContainerMenu
             {
                 SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
                 {
-                    Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.level);
-                    NewSpell spell = registry.get(spellId);
+                    Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.level);
+                    Spell spell = registry.get(spellId);
                     
                     if(spell == null)
                     {
@@ -124,8 +124,8 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     {
         // client side construction
         SpellProgressionSyncMessage msg = SpellProgressionSyncMessage.decode(extraData);
-        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(SpellsUtil.getClientLevel());
-        HashMap<NewSpell, SpellStatus> map = new HashMap<>(msg.map().size());
+        Registry<Spell> registry = SpellsUtil.getSpellRegistry(SpellsUtil.getClientLevel());
+        HashMap<Spell, SpellStatus> map = new HashMap<>(msg.map().size());
         msg.map().forEach(p -> map.put(registry.get(p.getFirst()), p.getSecond()));
         return new SpellProgressionMenu(id, inventory, ContainerLevelAccess.create(inventory.player.level, msg.blockPos()), msg.spellTrees(), map);
     }

@@ -11,7 +11,7 @@ import de.cas_ual_ty.spells.network.RequestEquipSpellMessage;
 import de.cas_ual_ty.spells.network.RequestLearnSpellMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
@@ -88,7 +88,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     
     public SpellProgressionHolder spellProgressionHolder;
     
-    public Registry<NewSpell> spellRegistry;
+    public Registry<Spell> spellRegistry;
     
     public SpellProgressionScreen(SpellProgressionMenu menu, Inventory inventory, Component component)
     {

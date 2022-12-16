@@ -7,8 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import de.cas_ual_ty.spells.NewSpells;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.Spells;
+import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Holder;
@@ -20,15 +20,15 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class SpellArgument implements ArgumentType<NewSpell>
+public class SpellArgument implements ArgumentType<Spell>
 {
     public static final SimpleCommandExceptionType UNKNOWN_SPELL = new SimpleCommandExceptionType(Component.translatable("argument.spell.id.invalid"));
     
-    private final HolderLookup<NewSpell> spells;
+    private final HolderLookup<Spell> spells;
     
     public SpellArgument(CommandBuildContext cbx)
     {
-        spells = cbx.holderLookup(NewSpells.SPELLS_REGISTRY_KEY);
+        spells = cbx.holderLookup(Spells.SPELLS_REGISTRY_KEY);
     }
     
     public static SpellArgument spell(CommandBuildContext cbx)
@@ -37,10 +37,10 @@ public class SpellArgument implements ArgumentType<NewSpell>
     }
     
     @Override
-    public NewSpell parse(StringReader reader) throws CommandSyntaxException
+    public Spell parse(StringReader reader) throws CommandSyntaxException
     {
         ResourceLocation resourceLocation = ResourceLocation.read(reader);
-        Optional<Holder<NewSpell>> spell = spells.get(ResourceKey.create(NewSpells.SPELLS_REGISTRY_KEY, resourceLocation));
+        Optional<Holder<Spell>> spell = spells.get(ResourceKey.create(Spells.SPELLS_REGISTRY_KEY, resourceLocation));
         
         return spell.orElseThrow(UNKNOWN_SPELL::create).get();
     }
@@ -63,8 +63,8 @@ public class SpellArgument implements ArgumentType<NewSpell>
         return builder.buildFuture();
     }
     
-    public static NewSpell getSpell(CommandContext<CommandSourceStack> context, String argument)
+    public static Spell getSpell(CommandContext<CommandSourceStack> context, String argument)
     {
-        return context.getArgument(argument, NewSpell.class);
+        return context.getArgument(argument, Spell.class);
     }
 }

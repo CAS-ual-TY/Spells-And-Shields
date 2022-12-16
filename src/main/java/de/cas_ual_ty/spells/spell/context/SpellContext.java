@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.spell.context;
 
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -11,13 +11,13 @@ public class SpellContext
 {
     public final Level level;
     public final SpellHolder spellHolder;
-    public final NewSpell spell;
+    public final Spell spell;
     
     protected List<String> activationsList;
     protected Map<String, TargetGroup> targetGroups;
     protected boolean terminated;
     
-    public SpellContext(Level level, SpellHolder spellHolder, NewSpell spell)
+    public SpellContext(Level level, SpellHolder spellHolder, Spell spell)
     {
         this.level = level;
         this.spellHolder = spellHolder;

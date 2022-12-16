@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.SpellsRegistries;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -26,7 +26,7 @@ import java.util.function.BiConsumer;
 
 public class SpellProjectile extends AbstractHurtingProjectile implements IEntityAdditionalSpawnData
 {
-    protected NewSpell spell;
+    protected Spell spell;
     
     protected CompoundTag spellDataTag;
     
@@ -36,7 +36,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         this.spellDataTag = new CompoundTag();
     }
     
-    public SpellProjectile(EntityType<? extends SpellProjectile> entityType, Level level, NewSpell spell)
+    public SpellProjectile(EntityType<? extends SpellProjectile> entityType, Level level, Spell spell)
     {
         this(entityType, level);
         this.spell = spell;
@@ -95,17 +95,17 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         return false;
     }
     
-    public NewSpell getSpell()
+    public Spell getSpell()
     {
         return this.spell;
     }
     
-    public void setSpell(NewSpell spell)
+    public void setSpell(Spell spell)
     {
         this.spell = spell;
     }
     
-    public static void shoot(Entity source, NewSpell spell, float velocity, float inaccuracy, BiConsumer<SpellProjectile, ServerLevel> followUp)
+    public static void shoot(Entity source, Spell spell, float velocity, float inaccuracy, BiConsumer<SpellProjectile, ServerLevel> followUp)
     {
         if(source.level instanceof ServerLevel level)
         {

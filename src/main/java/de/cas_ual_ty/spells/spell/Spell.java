@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class NewSpell
+public class Spell
 {
     protected List<SpellAction> spellActions;
     protected SpellIcon icon;
@@ -31,7 +31,7 @@ public class NewSpell
     
     protected Optional<TooltipComponent> tooltipComponent;
     
-    public NewSpell(List<SpellAction> spellActions, SpellIcon icon, Component title, List<Component> tooltip, float manaCost)
+    public Spell(List<SpellAction> spellActions, SpellIcon icon, Component title, List<Component> tooltip, float manaCost)
     {
         this.spellActions = spellActions;
         this.icon = icon;
@@ -41,23 +41,23 @@ public class NewSpell
         tooltipComponent = manaCost != 0 ? Optional.of(new ManaTooltipComponent(manaCost)) : Optional.empty();
     }
     
-    public NewSpell(ResourceLocation icon, Component title, float manaCost)
+    public Spell(ResourceLocation icon, Component title, float manaCost)
     {
         this(new LinkedList<>(), new DefaultSpellIcon(SpellsRegistries.DEFAULT_SPELL_ICON.get(), icon), title, new LinkedList<>(), manaCost);
     }
     
-    public NewSpell(String modId, String icon, String titleKey, float manaCost)
+    public Spell(String modId, String icon, String titleKey, float manaCost)
     {
         this(new ResourceLocation(modId, "textures/spell/" + icon + ".png"), Component.translatable(titleKey), manaCost);
     }
     
-    public NewSpell addTooltip(Component component)
+    public Spell addTooltip(Component component)
     {
         tooltip.add(component);
         return this;
     }
     
-    public NewSpell addAction(SpellAction action)
+    public Spell addAction(SpellAction action)
     {
         spellActions.add(action);
         return this;

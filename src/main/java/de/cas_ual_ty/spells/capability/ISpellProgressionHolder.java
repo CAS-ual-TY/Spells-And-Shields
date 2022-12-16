@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -10,13 +10,13 @@ import java.util.Map;
 
 public interface ISpellProgressionHolder extends INBTSerializable<ListTag>
 {
-    boolean isSpellAvailable(NewSpell spell);
+    boolean isSpellAvailable(Spell spell);
     
-    SpellStatus getSpellStatus(NewSpell spell);
+    SpellStatus getSpellStatus(Spell spell);
     
-    void setSpellStatus(NewSpell spell, SpellStatus spellStatus);
+    void setSpellStatus(Spell spell, SpellStatus spellStatus);
     
-    Map<NewSpell, SpellStatus> getProgression();
+    Map<Spell, SpellStatus> getProgression();
     
     Player getPlayer();
 }

@@ -8,7 +8,7 @@ import de.cas_ual_ty.spells.network.ManaSyncMessage;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
@@ -49,7 +49,7 @@ public class ClientMessageHandler
         
         if(level != null && level.getEntity(msg.entityId()) instanceof Player player)
         {
-            Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.level);
+            Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.level);
             
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
@@ -65,8 +65,8 @@ public class ClientMessageHandler
     {
         if(Minecraft.getInstance().screen instanceof SpellProgressionScreen screen)
         {
-            Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(screen.getMenu().player.level);
-            HashMap<NewSpell, SpellStatus> map = new HashMap<>(msg.map().size());
+            Registry<Spell> registry = SpellsUtil.getSpellRegistry(screen.getMenu().player.level);
+            HashMap<Spell, SpellStatus> map = new HashMap<>(msg.map().size());
             msg.map().forEach(pair -> map.put(registry.get(pair.getFirst()), pair.getSecond()));
             
             screen.getMenu().spellTrees = msg.spellTrees();

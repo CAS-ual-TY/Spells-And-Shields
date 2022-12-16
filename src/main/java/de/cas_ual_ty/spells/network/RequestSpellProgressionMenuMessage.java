@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
@@ -58,9 +58,9 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                     access.execute((level, blockPos) ->
                     {
                         List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
-                        HashMap<NewSpell, SpellStatus> progression = spellProgressionHolder.getProgression();
+                        HashMap<Spell, SpellStatus> progression = spellProgressionHolder.getProgression();
                         
-                        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(level);
+                        Registry<Spell> registry = SpellsUtil.getSpellRegistry(level);
                         
                         NetworkHooks.openScreen(player, new MenuProvider()
                         {

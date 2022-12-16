@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.util;
 
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
@@ -20,7 +20,7 @@ public class SpellTreeSerializer
     private static byte TYPE_SPELL = 1;
     private static byte TYPE_UP = 2;
     
-    public static void encodeTree(SpellTree spellTree, Registry<NewSpell> registry, FriendlyByteBuf buf)
+    public static void encodeTree(SpellTree spellTree, Registry<Spell> registry, FriendlyByteBuf buf)
     {
         buf.writeResourceLocation(spellTree.getClientId());
         buf.writeComponent(spellTree.getTitle());
@@ -38,7 +38,7 @@ public class SpellTreeSerializer
         buf.writeByte(TYPE_FINISH);
     }
     
-    private static void encodeTreeRec(SpellNode spellNode, Registry<NewSpell> registry, FriendlyByteBuf buf)
+    private static void encodeTreeRec(SpellNode spellNode, Registry<Spell> registry, FriendlyByteBuf buf)
     {
         buf.writeByte(TYPE_SPELL);
         encodeNode(spellNode, registry, buf);
@@ -57,7 +57,7 @@ public class SpellTreeSerializer
         list.forEach(requirement -> RequirementType.writeToBuf(buf, requirement));
     }
     
-    private static void encodeNode(SpellNode spellNode, Registry<NewSpell> registry, FriendlyByteBuf buf)
+    private static void encodeNode(SpellNode spellNode, Registry<Spell> registry, FriendlyByteBuf buf)
     {
         buf.writeResourceLocation(registry.getKey(spellNode.getSpellDirect()));
         buf.writeInt(spellNode.getLevelCost());
@@ -65,11 +65,11 @@ public class SpellTreeSerializer
         buf.writeShort(spellNode.getId());
     }
     
-    public static SpellTree decodeTree(Registry<NewSpell> registry, FriendlyByteBuf buf)
+    public static SpellTree decodeTree(Registry<Spell> registry, FriendlyByteBuf buf)
     {
         ResourceLocation id = buf.readResourceLocation();
         Component title = buf.readComponent();
-        NewSpell icon = registry.get(buf.readResourceLocation());
+        Spell icon = registry.get(buf.readResourceLocation());
         List<Requirement> requirements = decodeRequirements(buf);
         
         SpellTree.Builder builder = SpellTree.builder(title, decodeNode(registry, buf));
@@ -108,9 +108,9 @@ public class SpellTreeSerializer
         return list;
     }
     
-    public static SpellNode decodeNode(Registry<NewSpell> registry, FriendlyByteBuf buf)
+    public static SpellNode decodeNode(Registry<Spell> registry, FriendlyByteBuf buf)
     {
-        NewSpell spell = registry.get(buf.readResourceLocation());
+        Spell spell = registry.get(buf.readResourceLocation());
         int levelCost = buf.readInt();
         List<Requirement> requirements = decodeRequirements(buf);
         int id = buf.readShort();

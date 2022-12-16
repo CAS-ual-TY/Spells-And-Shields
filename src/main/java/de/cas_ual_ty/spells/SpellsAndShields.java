@@ -37,7 +37,7 @@ public class SpellsAndShields
         SpellsCodecs.makeCodecs();
         
         //Spells.register();
-        NewSpells.register();
+        Spells.register();
         SpellTrees.register();
         SpellsRegistries.register();
         

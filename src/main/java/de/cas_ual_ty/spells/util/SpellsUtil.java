@@ -1,10 +1,10 @@
 package de.cas_ual_ty.spells.util;
 
 import com.google.common.collect.ImmutableList;
-import de.cas_ual_ty.spells.NewSpells;
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -119,17 +119,17 @@ public class SpellsUtil
         return currentEntity == null ? null : new EntityHitResult(currentEntity);
     }
     
-    public static Registry<NewSpell> getSpellRegistry(Level level)
+    public static Registry<Spell> getSpellRegistry(Level level)
     {
-        return level.registryAccess().registryOrThrow(NewSpells.SPELLS_REGISTRY_KEY);
+        return level.registryAccess().registryOrThrow(Spells.SPELLS_REGISTRY_KEY);
     }
     
-    public static void forEachSpell(Registry<NewSpell> registry, BiConsumer<ResourceLocation, NewSpell> consumer)
+    public static void forEachSpell(Registry<Spell> registry, BiConsumer<ResourceLocation, Spell> consumer)
     {
         registry.entrySet().forEach(e -> consumer.accept(e.getKey().location(), e.getValue()));
     }
     
-    public static int getSpellsAmount(Registry<NewSpell> registry)
+    public static int getSpellsAmount(Registry<Spell> registry)
     {
         return registry.size();
     }

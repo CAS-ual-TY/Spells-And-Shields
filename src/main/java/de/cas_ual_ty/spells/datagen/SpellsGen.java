@@ -2,9 +2,9 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-import de.cas_ual_ty.spells.NewSpells;
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsRegistries;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.effect.DamageAction;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class SpellsGen implements DataProvider
 {
-    protected Map<ResourceLocation, NewSpell> spells;
+    protected Map<ResourceLocation, Spell> spells;
     
     protected DataGenerator gen;
     protected String modId;
@@ -43,19 +43,19 @@ public class SpellsGen implements DataProvider
         spells = new HashMap<>();
     }
     
-    public void addSpell(String key, NewSpell spell)
+    public void addSpell(String key, Spell spell)
     {
         addSpell(new ResourceLocation(modId, key), spell);
     }
     
-    public void addSpell(ResourceLocation key, NewSpell spell)
+    public void addSpell(ResourceLocation key, Spell spell)
     {
         spells.put(key, spell);
     }
     
     protected void addSpells()
     {
-        addSpell(NewSpells.TEST, new NewSpell(modId, "textures/spell/default_fallback.png", NewSpells.KEY_TEST, 2F)
+        addSpell(Spells.TEST, new Spell(modId, "textures/spell/default_fallback.png", Spells.KEY_TEST, 2F)
                 .addTooltip(Component.literal("Description here // this is a debug spell"))
                 .addTooltip(Component.literal("You damage yourself using it"))
                 .addTooltip(Component.translatable("translated.description.key.line1"))
@@ -68,7 +68,7 @@ public class SpellsGen implements DataProvider
     public void run(CachedOutput pOutput) throws IOException
     {
         addSpells();
-        JsonCodecProvider<NewSpell> provider = JsonCodecProvider.forDatapackRegistry(gen, exFileHelper, modId, registryOps, NewSpells.SPELLS_REGISTRY_KEY, spells);
+        JsonCodecProvider<Spell> provider = JsonCodecProvider.forDatapackRegistry(gen, exFileHelper, modId, registryOps, Spells.SPELLS_REGISTRY_KEY, spells);
         provider.run(pOutput);
     }
     

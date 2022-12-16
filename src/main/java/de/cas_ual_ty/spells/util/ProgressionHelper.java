@@ -5,7 +5,7 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.requirement.WrappedRequirement;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
@@ -125,7 +125,7 @@ public class ProgressionHelper
         return availableSpellTrees;
     }
     
-    public static boolean isFullyLinked(SpellNode spellNode, Map<NewSpell, SpellStatus> progression)
+    public static boolean isFullyLinked(SpellNode spellNode, Map<Spell, SpellStatus> progression)
     {
         SpellNode parent = spellNode;
         
@@ -140,7 +140,7 @@ public class ProgressionHelper
         return true;
     }
     
-    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, int id, NewSpell spell, ResourceLocation treeId)
+    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, int id, Spell spell, ResourceLocation treeId)
     {
         Player player = menu.player;
         

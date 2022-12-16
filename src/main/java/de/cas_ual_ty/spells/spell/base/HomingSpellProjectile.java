@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.SpellsRegistries;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +23,7 @@ public class HomingSpellProjectile extends SpellProjectile
         super(entityType, level);
     }
     
-    public HomingSpellProjectile(EntityType<? extends HomingSpellProjectile> entityType, Level level, NewSpell spell)
+    public HomingSpellProjectile(EntityType<? extends HomingSpellProjectile> entityType, Level level, Spell spell)
     {
         super(entityType, level, spell);
     }
@@ -96,7 +96,7 @@ public class HomingSpellProjectile extends SpellProjectile
         }
     }
     
-    public static void home(Vec3 position, Vec3 direction, @Nullable Entity source, Entity target, NewSpell spell, float velocity, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
+    public static void home(Vec3 position, Vec3 direction, @Nullable Entity source, Entity target, Spell spell, float velocity, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
     {
         if(source.level instanceof ServerLevel level)
         {
@@ -111,12 +111,12 @@ public class HomingSpellProjectile extends SpellProjectile
         }
     }
     
-    public static void home(Entity source, NewSpell spell, float velocity, Entity target, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
+    public static void home(Entity source, Spell spell, float velocity, Entity target, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
     {
         home(source.getEyePosition(), source.getViewVector(1F).normalize(), source, target, spell, velocity, followUp);
     }
     
-    public static void home(Entity source, NewSpell spell, float velocity, Entity target)
+    public static void home(Entity source, Spell spell, float velocity, Entity target)
     {
         home(source, spell, velocity, target, (entity, level) -> {});
     }

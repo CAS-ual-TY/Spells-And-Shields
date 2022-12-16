@@ -8,7 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -76,7 +76,7 @@ public class SpellCommand
     private static int spellsProgressionLearn(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-        NewSpell spell = SpellArgument.getSpell(context, ARG_SPELL);
+        Spell spell = SpellArgument.getSpell(context, ARG_SPELL);
         
         if(players.size() == 0)
         {
@@ -120,7 +120,7 @@ public class SpellCommand
             lazyOptional.ifPresent(spellProgressionHolder ->
             {
                 Level level = spellProgressionHolder.getPlayer().getLevel();
-                Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(level);
+                Registry<Spell> registry = SpellsUtil.getSpellRegistry(level);
                 
                 SpellsUtil.forEachSpell(registry, (key, spell) ->
                 {
@@ -160,7 +160,7 @@ public class SpellCommand
     private static int spellsProgressionForget(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-        NewSpell spell = SpellArgument.getSpell(context, ARG_SPELL);
+        Spell spell = SpellArgument.getSpell(context, ARG_SPELL);
         
         if(players.size() == 0)
         {
@@ -226,7 +226,7 @@ public class SpellCommand
             lazyOptional.ifPresent(spellProgressionHolder ->
             {
                 Level level = spellProgressionHolder.getPlayer().getLevel();
-                Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(level);
+                Registry<Spell> registry = SpellsUtil.getSpellRegistry(level);
                 
                 SpellsUtil.forEachSpell(registry, (key, spell) ->
                 {
@@ -308,7 +308,7 @@ public class SpellCommand
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
         int slot = IntegerArgumentType.getInteger(context, ARG_SLOT);
-        NewSpell spell = SpellArgument.getSpell(context, ARG_SPELL);
+        Spell spell = SpellArgument.getSpell(context, ARG_SPELL);
         
         if(players.size() == 0)
         {
