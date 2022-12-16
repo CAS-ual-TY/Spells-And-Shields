@@ -40,9 +40,4 @@ public class RequirementType<R extends Requirement>
         requirement.readFromBuf(buf);
         return requirement;
     }
-    
-    static <R extends Requirement> RequirementType<R> make(Function<RequirementType<R>, R> constructor, Function<RequirementType<R>, Codec<R>> codec)
-    {
-        return new RequirementType<R>(constructor, codec);
-    }
 }

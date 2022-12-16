@@ -66,6 +66,7 @@ public class SpellsClientUtil
     private static void clientSetup(FMLClientSetupEvent event)
     {
         MenuScreens.register(SpellsRegistries.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
+        SpellIconRegistry.register(SpellsRegistries.DEFAULT_SPELL_ICON.get(), SpellIconRegistry.DEFAULT_RENDERER);
     }
     
     private static void entityRenderers(EntityRenderersEvent.RegisterRenderers event)

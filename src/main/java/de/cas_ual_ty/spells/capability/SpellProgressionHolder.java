@@ -1,8 +1,9 @@
 package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.ISpell;
+import de.cas_ual_ty.spells.spell.NewSpell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -19,7 +20,7 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
     public static final String KEY_SPELL_STATUS = "spell_status";
     
     protected final Player player;
-    protected final HashMap<ISpell, SpellStatus> progression;
+    protected final HashMap<NewSpell, SpellStatus> progression;
     
     public SpellProgressionHolder(Player player)
     {
@@ -28,19 +29,19 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
     }
     
     @Override
-    public boolean isSpellAvailable(ISpell spell)
+    public boolean isSpellAvailable(NewSpell spell)
     {
         return getSpellStatus(spell) == SpellStatus.LEARNED;
     }
     
     @Override
-    public SpellStatus getSpellStatus(ISpell spell)
+    public SpellStatus getSpellStatus(NewSpell spell)
     {
         return progression.getOrDefault(spell, SpellStatus.LOCKED);
     }
     
     @Override
-    public void setSpellStatus(ISpell spell, SpellStatus spellStatus)
+    public void setSpellStatus(NewSpell spell, SpellStatus spellStatus)
     {
         progression.put(spell, spellStatus);
     }
@@ -48,12 +49,14 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
     @Override
     public ListTag serializeNBT()
     {
+        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        
         ListTag list = new ListTag();
         
-        for(Map.Entry<ISpell, SpellStatus> entry : progression.entrySet())
+        for(Map.Entry<NewSpell, SpellStatus> entry : progression.entrySet())
         {
             CompoundTag tag = new CompoundTag();
-            tag.putString(KEY_SPELL, SpellsUtil.getSpellKey(entry.getKey()).toString());
+            tag.putString(KEY_SPELL, registry.getKey(entry.getKey()).toString());
             tag.putByte(KEY_SPELL_STATUS, (byte) entry.getValue().ordinal());
             list.add(tag);
         }
@@ -71,13 +74,15 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
             return;
         }
         
+        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        
         for(int i = 0; i < nbt.size(); ++i)
         {
             CompoundTag tag = nbt.getCompound(i);
             
             if(tag.contains(KEY_SPELL) && tag.contains(KEY_SPELL_STATUS) && tag.get(KEY_SPELL).getId() == Tag.TAG_STRING && tag.get(KEY_SPELL_STATUS).getId() == Tag.TAG_BYTE)
             {
-                ISpell spell = SpellsUtil.getSpell(new ResourceLocation(tag.getString(KEY_SPELL)));
+                NewSpell spell = registry.get(new ResourceLocation(tag.getString(KEY_SPELL)));
                 byte ordinal = tag.getByte(KEY_SPELL_STATUS);
                 
                 if(spell != null && ordinal >= 0 && ordinal < SpellStatus.values().length)
@@ -89,7 +94,7 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
     }
     
     @Override
-    public HashMap<ISpell, SpellStatus> getProgression()
+    public HashMap<NewSpell, SpellStatus> getProgression()
     {
         return progression;
     }

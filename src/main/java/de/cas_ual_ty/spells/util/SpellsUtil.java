@@ -1,11 +1,12 @@
 package de.cas_ual_ty.spells.util;
 
 import com.google.common.collect.ImmutableList;
-import de.cas_ual_ty.spells.Spells;
+import de.cas_ual_ty.spells.NewSpells;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
-import de.cas_ual_ty.spells.spell.ISpell;
-import de.cas_ual_ty.spells.spell.base.SpellIcon;
+import de.cas_ual_ty.spells.spell.NewSpell;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.*;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -116,41 +119,19 @@ public class SpellsUtil
         return currentEntity == null ? null : new EntityHitResult(currentEntity);
     }
     
-    public static SpellIcon getDefaultSpellIcon(ISpell spell)
+    public static Registry<NewSpell> getSpellRegistry(Level level)
     {
-        ResourceLocation key = getSpellKey(spell);
-        return new SpellIcon(new ResourceLocation(key.getNamespace(), "textures/spell/" + key.getPath() + ".png"));
+        return level.registryAccess().registryOrThrow(NewSpells.SPELLS_REGISTRY_KEY);
     }
     
-    public static String getDefaultSpellNameKey(ISpell spell)
+    public static void forEachSpell(Registry<NewSpell> registry, BiConsumer<ResourceLocation, NewSpell> consumer)
     {
-        ResourceLocation key = getSpellKey(spell);
-        return "spell." + key.getNamespace() + "." + key.getPath();
+        registry.entrySet().forEach(e -> consumer.accept(e.getKey().location(), e.getValue()));
     }
     
-    public static String getDefaultSpellDescKey(ISpell spell)
+    public static int getSpellsAmount(Registry<NewSpell> registry)
     {
-        return getDefaultSpellNameKey(spell) + ".desc";
-    }
-    
-    public static ISpell getSpell(ResourceLocation key)
-    {
-        return Spells.SPELLS_REGISTRY.get().getValue(key);
-    }
-    
-    public static ResourceLocation getSpellKey(ISpell spell)
-    {
-        return Spells.SPELLS_REGISTRY.get().getKey(spell);
-    }
-    
-    public static void forEachSpell(BiConsumer<ResourceLocation, ISpell> consumer)
-    {
-        Spells.SPELLS_REGISTRY.get().getEntries().forEach(e -> consumer.accept(e.getKey().location(), e.getValue()));
-    }
-    
-    public static int getSpellsAmount()
-    {
-        return Spells.SPELLS_REGISTRY.get().getValues().size();
+        return registry.size();
     }
     
     public static UUID generateUUIDFromName(String purpose, String name)
@@ -227,5 +208,10 @@ public class SpellsUtil
     public static boolean isEnchantingTable(ResourceLocation key)
     {
         return key != null && SpellsConfig.ENCHANTING_TABLE.get().stream().anyMatch(rl -> rl.equals(key.toString()));
+    }
+    
+    public static Level getClientLevel()
+    {
+        return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().level);
     }
 }

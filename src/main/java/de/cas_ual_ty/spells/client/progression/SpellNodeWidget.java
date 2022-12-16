@@ -2,8 +2,9 @@ package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.base.SpellIcon;
+import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.client.Minecraft;
@@ -75,8 +76,8 @@ public class SpellNodeWidget extends GuiComponent
         
         this.font = Minecraft.getInstance().font;
         
-        this.spellTexture = spell.getSpell().getIcon();
-        this.title = Language.getInstance().getVisualOrder(this.font.substrByWidth(spell.getSpell().getSpellName(), TITLE_MAX_WIDTH));
+        this.spellTexture = spell.getSpellDirect().getIcon();
+        this.title = Language.getInstance().getVisualOrder(this.font.substrByWidth(spell.getSpellDirect().getTitle(), TITLE_MAX_WIDTH));
         
         // Position fixup later, after all widgets are done, in SpellTreeTab
         this.x = 0;
@@ -87,7 +88,7 @@ public class SpellNodeWidget extends GuiComponent
         // 0 = squared = available
         // 1 = fancy = lost
         // 2 = round = locked
-        SpellStatus status = skillTreeTab.getScreen().getMenu().spellProgression.getOrDefault(spell.getSpell(), SpellStatus.LOCKED);
+        SpellStatus status = skillTreeTab.getScreen().getMenu().spellProgression.getOrDefault(spell.getSpellDirect(), SpellStatus.LOCKED);
         
         this.frameIcon = status == SpellStatus.FORGOTTEN ? 1 : 0;
         
@@ -236,7 +237,7 @@ public class SpellNodeWidget extends GuiComponent
         }
     }
     
-    public void draw(PoseStack poseStack, int x, int y)
+    public void draw(PoseStack poseStack, int x, int y, float deltaTick)
     {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableBlend();
@@ -246,16 +247,13 @@ public class SpellNodeWidget extends GuiComponent
         this.blit(poseStack, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         // spell icon
-        RenderSystem.setShaderTexture(0, spellTexture.getTexture());
-        int offX = (SPELL_WIDTH - spellTexture.getWidth()) / 2;
-        int offY = (SPELL_HEIGHT - spellTexture.getHeight()) / 2;
-        blit(poseStack, x + this.x + FRAME_OFF_X + offX, y + this.y + FRAME_OFF_Y + offY, spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getU(), spellTexture.getV(), spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getTextureWidth(), spellTexture.getTextureHeight());
+        SpellIconRegistry.render(spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, x + FRAME_OFF_X, y + FRAME_OFF_Y, deltaTick);
         
         RenderSystem.disableBlend();
         
         for(SpellNodeWidget spellNodeWidget : this.children)
         {
-            spellNodeWidget.draw(poseStack, x, y);
+            spellNodeWidget.draw(poseStack, x, y, deltaTick);
         }
     }
     
@@ -269,7 +267,7 @@ public class SpellNodeWidget extends GuiComponent
         this.children.add(spellNodeWidget);
     }
     
-    public void drawHover(PoseStack poseStack, int scrollX, int scrollY, int width, int height)
+    public void drawHover(PoseStack poseStack, int scrollX, int scrollY, int width, int height, float deltaTick)
     {
         boolean drawLeft = width + scrollX + this.x + this.width + FRAME_WIDTH >= this.tab.getScreen().width;
         
@@ -301,14 +299,7 @@ public class SpellNodeWidget extends GuiComponent
             this.font.drawShadow(poseStack, this.title, (float) (scrollX + this.x + TITLE_X), (float) (scrollY + this.y + TITLE_Y), 0xFFFFFFFF);
         }
         
-        RenderSystem.enableBlend();
-        
-        RenderSystem.setShaderTexture(0, spellTexture.getTexture());
-        int offX = (SPELL_WIDTH - spellTexture.getWidth()) / 2;
-        int offY = (SPELL_HEIGHT - spellTexture.getHeight()) / 2;
-        blit(poseStack, scrollX + this.x + FRAME_OFF_X + offX, scrollY + this.y + FRAME_OFF_Y + offY, spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getU(), spellTexture.getV(), spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getTextureWidth(), spellTexture.getTextureHeight());
-        
-        RenderSystem.disableBlend();
+        SpellIconRegistry.render(spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, scrollX + this.x + FRAME_OFF_X, scrollY + this.y + FRAME_OFF_Y, deltaTick);
     }
     
     public boolean isMouseOver(int x, int y, int mouseX, int mouseY)

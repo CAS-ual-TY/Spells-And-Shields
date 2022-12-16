@@ -2,14 +2,18 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.NewSpells;
+import de.cas_ual_ty.spells.SpellTrees;
+import de.cas_ual_ty.spells.spell.NewSpell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
-import de.cas_ual_ty.spells.spelltree.SpellTrees;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.JsonCodecProvider;
@@ -23,20 +27,28 @@ public class SpellTreesGen implements DataProvider
     protected Map<ResourceLocation, SpellTree> spellTrees;
     
     protected DataGenerator gen;
-    protected String modid;
+    protected String modId;
     protected ExistingFileHelper exFileHelper;
+    protected RegistryAccess registryAccess;
+    protected RegistryOps<JsonElement> registryOps;
     
-    public SpellTreesGen(DataGenerator gen, String modid, ExistingFileHelper exFileHelper)
+    protected Registry<NewSpell> registry;
+    
+    public SpellTreesGen(DataGenerator gen, String modId, ExistingFileHelper exFileHelper)
     {
         this.gen = gen;
-        this.modid = modid;
+        this.modId = modId;
         this.exFileHelper = exFileHelper;
+        this.registryAccess = RegistryAccess.builtinCopy();
+        this.registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        
         spellTrees = new HashMap<>();
+        registry = registryOps.registry(NewSpells.SPELLS_REGISTRY_KEY).orElseThrow();
     }
     
     public void addSpellTree(String key, SpellTree spellTree)
     {
-        addSpellTree(new ResourceLocation(modid, key), spellTree);
+        addSpellTree(new ResourceLocation(modId, key), spellTree);
     }
     
     public void addSpellTree(ResourceLocation key, SpellTree spellTree)
@@ -46,24 +58,25 @@ public class SpellTreesGen implements DataProvider
     
     public void addSpellTrees()
     {
-        addSpellTree("nether", SpellTrees.fireTree());
+        addSpellTree("debug", SpellTrees.debugTree(spellRef(NewSpells.TEST)));
+        
+        /*addSpellTree("nether", SpellTrees.fireTree());
         addSpellTree("ocean", SpellTrees.waterTree());
         addSpellTree("mining", SpellTrees.earthTree());
         addSpellTree("movement", SpellTrees.airTree());
-        addSpellTree("end", SpellTrees.enderTree());
+        addSpellTree("end", SpellTrees.enderTree());*/
+    }
+    
+    protected Holder<NewSpell> spellRef(ResourceLocation spell)
+    {
+        return Holder.Reference.createStandAlone(registry, ResourceKey.create(registry.key(), spell));
     }
     
     @Override
     public void run(CachedOutput pOutput) throws IOException
     {
-        DataGenerator generator = gen;
-        ExistingFileHelper existingFileHelper = exFileHelper;
-        RegistryAccess registryAccess = RegistryAccess.builtinCopy();
-        RegistryOps<JsonElement> registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
-        
         addSpellTrees();
-        
-        JsonCodecProvider<SpellTree> provider = JsonCodecProvider.forDatapackRegistry(gen, existingFileHelper, SpellsAndShields.MOD_ID, registryOps, SpellTrees.SPELL_TREES_REGISTRY_KEY, spellTrees);
+        JsonCodecProvider<SpellTree> provider = JsonCodecProvider.forDatapackRegistry(gen, exFileHelper, modId, registryOps, SpellTrees.SPELL_TREES_REGISTRY_KEY, spellTrees);
         provider.run(pOutput);
     }
     

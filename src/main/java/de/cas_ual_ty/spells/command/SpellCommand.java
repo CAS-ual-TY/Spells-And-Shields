@@ -8,14 +8,16 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.ISpell;
+import de.cas_ual_ty.spells.spell.NewSpell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -74,7 +76,7 @@ public class SpellCommand
     private static int spellsProgressionLearn(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-        ISpell spell = SpellArgument.getSpell(context, ARG_SPELL);
+        NewSpell spell = SpellArgument.getSpell(context, ARG_SPELL);
         
         if(players.size() == 0)
         {
@@ -91,11 +93,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_LEARN_SINGLE, spell.getSpellName(), players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_LEARN_SINGLE, spell.getTitle(), players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_LEARN_MULTIPLE, spell.getSpellName(), players.size()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_LEARN_MULTIPLE, spell.getTitle(), players.size()), true);
         }
         
         return players.size();
@@ -117,7 +119,10 @@ public class SpellCommand
         {
             lazyOptional.ifPresent(spellProgressionHolder ->
             {
-                SpellsUtil.forEachSpell((key, spell) ->
+                Level level = spellProgressionHolder.getPlayer().getLevel();
+                Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(level);
+                
+                SpellsUtil.forEachSpell(registry, (key, spell) ->
                 {
                     if(single)
                     {
@@ -145,7 +150,7 @@ public class SpellCommand
         }
         else
         {
-            final int amount = SpellsUtil.getSpellsAmount();
+            final int amount = SpellsUtil.getSpellsAmount(SpellsUtil.getSpellRegistry(context.getSource().getLevel()));
             context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_LEARN_ALL_MULTIPLE, amount, players.size()), true);
         }
         
@@ -155,7 +160,7 @@ public class SpellCommand
     private static int spellsProgressionForget(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-        ISpell spell = SpellArgument.getSpell(context, ARG_SPELL);
+        NewSpell spell = SpellArgument.getSpell(context, ARG_SPELL);
         
         if(players.size() == 0)
         {
@@ -194,11 +199,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_FORGET_SINGLE, spell.getSpellName(), players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_FORGET_SINGLE, spell.getTitle(), players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_FORGET_MULTIPLE, spell.getSpellName(), players.size()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_FORGET_MULTIPLE, spell.getTitle(), players.size()), true);
         }
         
         return players.size();
@@ -220,7 +225,10 @@ public class SpellCommand
         {
             lazyOptional.ifPresent(spellProgressionHolder ->
             {
-                SpellsUtil.forEachSpell((key, spell) ->
+                Level level = spellProgressionHolder.getPlayer().getLevel();
+                Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(level);
+                
+                SpellsUtil.forEachSpell(registry, (key, spell) ->
                 {
                     if(spellProgressionHolder.getSpellStatus(spell) == SpellStatus.LEARNED)
                     {
@@ -254,7 +262,7 @@ public class SpellCommand
         }
         else
         {
-            final int amount = SpellsUtil.getSpellsAmount();
+            final int amount = SpellsUtil.getSpellsAmount(SpellsUtil.getSpellRegistry(context.getSource().getLevel()));
             context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_FORGET_ALL_MULTIPLE, amount, players.size()), true);
         }
         
@@ -300,7 +308,7 @@ public class SpellCommand
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
         int slot = IntegerArgumentType.getInteger(context, ARG_SLOT);
-        ISpell spell = SpellArgument.getSpell(context, ARG_SPELL);
+        NewSpell spell = SpellArgument.getSpell(context, ARG_SPELL);
         
         if(players.size() == 0)
         {
@@ -318,11 +326,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getSpellName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getSpellName()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getTitle()), true);
         }
         
         return players.size();

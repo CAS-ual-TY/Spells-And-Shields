@@ -11,14 +11,17 @@ import de.cas_ual_ty.spells.network.RequestEquipSpellMessage;
 import de.cas_ual_ty.spells.network.RequestLearnSpellMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.spell.NewSpell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -85,6 +88,8 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     
     public SpellProgressionHolder spellProgressionHolder;
     
+    public Registry<NewSpell> spellRegistry;
+    
     public SpellProgressionScreen(SpellProgressionMenu menu, Inventory inventory, Component component)
     {
         super(menu, inventory, component);
@@ -94,6 +99,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         imageHeight = GUI_HEIGHT;
         tabPage = 0;
         this.spellProgressionHolder = SpellProgressionHolder.getSpellProgressionHolder(menu.player).orElse(null);
+        spellRegistry = SpellsUtil.getSpellRegistry(SpellsUtil.getClientLevel());
     }
     
     public void spellTreesUpdated()
@@ -238,7 +244,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
         else if(button == learnButton && selectedTab != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.spell.getId(), selectedSpellWidget.spell.getSpell(), selectedTab.spellTree.getClientId()));
+            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.spell.getId(), spellRegistry.getKey(selectedSpellWidget.spell.getSpellDirect()), selectedTab.spellTree.getClientId()));
         }
     }
     
@@ -246,7 +252,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     {
         if(selectedTab != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage(selectedSpellWidget.spell.getSpell(), (byte) slot, selectedTab.spellTree.getClientId()));
+            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage(spellRegistry.getKey(selectedSpellWidget.spell.getSpellDirect()), (byte) slot, selectedTab.spellTree.getClientId()));
             this.spellClicked(null);
         }
     }
@@ -359,9 +365,9 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
         this.renderBottom(poseStack, mouseX, mouseY, deltaTick);
         this.renderSpellSlots(poseStack, mouseX, mouseY, deltaTick);
-        this.renderInside(poseStack, mouseX, mouseY, getGuiLeft(), getGuiTop());
-        this.renderWindow(poseStack, getGuiLeft(), getGuiTop());
-        this.renderTooltips(poseStack, mouseX, mouseY, getGuiLeft(), getGuiTop());
+        this.renderInside(poseStack, mouseX, mouseY, getGuiLeft(), getGuiTop(), deltaTick);
+        this.renderWindow(poseStack, deltaTick, getGuiLeft(), getGuiTop());
+        this.renderTooltips(poseStack, mouseX, mouseY, getGuiLeft(), getGuiTop(), deltaTick);
     }
     
     @Override
@@ -393,7 +399,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
     }
     
-    private void renderInside(PoseStack poseStack, int mouseX, int mouseY, int offX, int offY)
+    private void renderInside(PoseStack poseStack, int mouseX, int mouseY, int offX, int offY, float deltaTick)
     {
         SpellTreeTab tab = this.selectedTab;
         if(tab == null)
@@ -409,7 +415,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             posestack.pushPose();
             posestack.translate(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, 0D);
             RenderSystem.applyModelViewMatrix();
-            tab.drawContents(poseStack);
+            tab.drawContents(poseStack, deltaTick);
             posestack.popPose();
             RenderSystem.applyModelViewMatrix();
             RenderSystem.depthFunc(GlConst.GL_LEQUAL);
@@ -417,7 +423,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
     }
     
-    public void renderWindow(PoseStack poseStack, int offX, int offY)
+    public void renderWindow(PoseStack poseStack, float deltaTick, int offX, int offY)
     {
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.enableBlend();
@@ -442,7 +448,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             {
                 if(tab.getPage() == tabPage)
                 {
-                    tab.drawIcon(poseStack, offX, offY);
+                    tab.drawIcon(poseStack, offX, offY, deltaTick);
                 }
             }
             
@@ -450,7 +456,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
     }
     
-    private void renderTooltips(PoseStack poseStack, int mouseX, int mouseY, int offX, int offY)
+    private void renderTooltips(PoseStack poseStack, int mouseX, int mouseY, int offX, int offY, float deltaTick)
     {
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         if(this.selectedTab != null)
@@ -460,7 +466,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             posestack.translate(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, 400D);
             RenderSystem.applyModelViewMatrix();
             RenderSystem.enableDepthTest();
-            this.selectedTab.drawTooltips(poseStack, mouseX - offX - WINDOW_OFF_X, mouseY - offY - WINDOW_OFF_Y, offX, offY);
+            this.selectedTab.drawTooltips(poseStack, mouseX - offX - WINDOW_OFF_X, mouseY - offY - WINDOW_OFF_Y, offX, offY, deltaTick);
             RenderSystem.disableDepthTest();
             posestack.popPose();
             RenderSystem.applyModelViewMatrix();

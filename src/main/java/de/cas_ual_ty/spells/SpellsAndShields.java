@@ -2,7 +2,6 @@ package de.cas_ual_ty.spells;
 
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.network.*;
-import de.cas_ual_ty.spells.spelltree.SpellTrees;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +36,8 @@ public class SpellsAndShields
     {
         SpellsCodecs.makeCodecs();
         
-        Spells.register();
+        //Spells.register();
+        NewSpells.register();
         SpellTrees.register();
         SpellsRegistries.register();
         
@@ -46,7 +46,7 @@ public class SpellsAndShields
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         
-        Spells.registerEvents();
+        //Spells.registerEvents();
         SpellsRegistries.registerEvents();
         SpellsCapabilities.registerEvents();
         
@@ -64,9 +64,9 @@ public class SpellsAndShields
     
     private void setup(FMLCommonSetupEvent event)
     {
-        Spells.spellsList();
-        Spells.spellsConfigs();
-        Spells.registerEventSpells();
+        //Spells.spellsList();
+        //Spells.spellsConfigs();
+        //Spells.registerEventSpells();
         SpellsRegistries.addPotionRecipes();
     }
 }

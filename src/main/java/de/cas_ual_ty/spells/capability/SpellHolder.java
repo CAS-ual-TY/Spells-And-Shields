@@ -2,9 +2,10 @@ package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
-import de.cas_ual_ty.spells.spell.IEquipSpell;
-import de.cas_ual_ty.spells.spell.ISpell;
+import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
@@ -15,6 +16,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public class SpellHolder implements ISpellHolder
 {
@@ -22,12 +24,12 @@ public class SpellHolder implements ISpellHolder
     
     public static final String EMPTY_SLOT = "";
     
-    protected final ISpell[] slots;
+    protected final NewSpell[] slots;
     protected final Player player;
     
     public SpellHolder(Player player)
     {
-        slots = new ISpell[SPELL_SLOTS];
+        slots = new NewSpell[SPELL_SLOTS];
         this.player = player;
     }
     
@@ -38,22 +40,22 @@ public class SpellHolder implements ISpellHolder
     }
     
     @Override
-    public ISpell getSpell(int slot)
+    public NewSpell getSpell(int slot)
     {
         return slots[slot];
     }
     
     @Override
-    public void setSpell(int slot, @Nullable ISpell spell)
+    public void setSpell(int slot, @Nullable NewSpell spell)
     {
-        if(slots[slot] instanceof IEquipSpell equipSpell)
+        if(slots[slot] != null)
         {
-            equipSpell.onUnequip(this, slot);
+            slots[slot].activate(this, BuiltinActivations.ON_UNEQUIP.activation);
         }
         
-        if(spell instanceof IEquipSpell equipSpell)
+        if(spell != null)
         {
-            equipSpell.onEquip(this, slot);
+            spell.activate(this, BuiltinActivations.ON_EQUIP.activation);
         }
         
         slots[slot] = spell;
@@ -65,7 +67,7 @@ public class SpellHolder implements ISpellHolder
         return player;
     }
     
-    public int getAmountSpellEquipped(ISpell spell)
+    public int getAmountSpellEquipped(NewSpell spell)
     {
         int amount = 0;
         
@@ -90,20 +92,23 @@ public class SpellHolder implements ISpellHolder
     
     public SpellsSyncMessage makeSyncMessage()
     {
-        return new SpellsSyncMessage(player.getId(), slots);
+        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        return new SpellsSyncMessage(player.getId(), Arrays.stream(slots).map(s -> s != null ? registry.getKey(s) : null).toArray(ResourceLocation[]::new));
     }
     
     @Override
     public ListTag serializeNBT()
     {
+        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        
         ListTag tag = new ListTag();
         for(int i = 0; i < SPELL_SLOTS; ++i)
         {
-            ISpell spell = this.getSpell(i);
+            NewSpell spell = this.getSpell(i);
             
             if(spell != null)
             {
-                tag.add(i, StringTag.valueOf(SpellsUtil.getSpellKey(spell).toString()));
+                tag.add(i, StringTag.valueOf(registry.getKey(spell).toString()));
             }
             else
             {
@@ -116,6 +121,8 @@ public class SpellHolder implements ISpellHolder
     @Override
     public void deserializeNBT(ListTag tag)
     {
+        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        
         for(int i = 0; i < SPELL_SLOTS && i < tag.size(); ++i)
         {
             if(tag.get(i).getId() != Tag.TAG_STRING)
@@ -127,7 +134,7 @@ public class SpellHolder implements ISpellHolder
             
             if(!key.equals(EMPTY_SLOT))
             {
-                slots[i] = SpellsUtil.getSpell(new ResourceLocation(key));
+                slots[i] = registry.get(new ResourceLocation(key));
             }
         }
     }

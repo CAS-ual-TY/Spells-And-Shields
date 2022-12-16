@@ -3,9 +3,10 @@ package de.cas_ual_ty.spells.client.progression;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
-import de.cas_ual_ty.spells.spell.ISpell;
-import de.cas_ual_ty.spells.spell.base.SpellIcon;
+import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -19,9 +20,6 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntConsumer;
-
-import static de.cas_ual_ty.spells.client.progression.SpellNodeWidget.SPELL_HEIGHT;
-import static de.cas_ual_ty.spells.client.progression.SpellNodeWidget.SPELL_WIDTH;
 
 public class SpellSlotWidget extends Button
 {
@@ -67,21 +65,12 @@ public class SpellSlotWidget extends Button
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
-                ISpell spell = spellHolder.getSpell(slot);
+                NewSpell spell = spellHolder.getSpell(slot);
                 
                 if(spell != null)
                 {
-                    int offX = (SpellNodeWidget.FRAME_WIDTH - SpellNodeWidget.SPELL_WIDTH) / 2;
-                    int offY = (SpellNodeWidget.FRAME_HEIGHT - SpellNodeWidget.SPELL_HEIGHT) / 2;
-                    
                     SpellIcon icon = spell.getIcon();
-                    RenderSystem.setShaderTexture(0, icon.getTexture());
-                    
-                    int offX2 = (SPELL_WIDTH - icon.getWidth()) / 2;
-                    int offY2 = (SPELL_HEIGHT - icon.getHeight()) / 2;
-                    
-                    // render spell icon
-                    blit(poseStack, x + offX + offX2, y + offY + offY2, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
+                    SpellIconRegistry.render(icon, poseStack, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, x, y, deltaTick);
                 }
             });
         }
@@ -112,7 +101,7 @@ public class SpellSlotWidget extends Button
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
-                ISpell spell = spellHolder.getSpell(slot);
+                NewSpell spell = spellHolder.getSpell(slot);
                 
                 if(spell != null)
                 {

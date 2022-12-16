@@ -1,14 +1,16 @@
 package de.cas_ual_ty.spells.progression;
 
+import com.mojang.datafixers.util.Pair;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
-import de.cas_ual_ty.spells.spell.ISpell;
+import de.cas_ual_ty.spells.spell.NewSpell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,6 +26,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SpellProgressionMenu extends AbstractContainerMenu
 {
@@ -33,9 +36,9 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     public final Player player;
     
     public List<SpellTree> spellTrees;
-    public HashMap<ISpell, SpellStatus> spellProgression;
+    public HashMap<NewSpell, SpellStatus> spellProgression;
     
-    public SpellProgressionMenu(int id, Inventory inventory, ContainerLevelAccess containerLevelAccess, List<SpellTree> spellTrees, HashMap<ISpell, SpellStatus> spellProgression)
+    public SpellProgressionMenu(int id, Inventory inventory, ContainerLevelAccess containerLevelAccess, List<SpellTree> spellTrees, HashMap<NewSpell, SpellStatus> spellProgression)
     {
         super(SpellsRegistries.SPELL_PROGRESSION_MENU.get(), id);
         this.access = containerLevelAccess;
@@ -45,14 +48,22 @@ public class SpellProgressionMenu extends AbstractContainerMenu
         this.spellProgression = spellProgression;
     }
     
-    public void buySpellRequest(int id, ISpell spell, ResourceLocation treeId)
+    public void buySpellRequest(int id, ResourceLocation spellId, ResourceLocation treeId)
     {
-        if(this.player instanceof ServerPlayer player)
+        if(spellId != null && this.player instanceof ServerPlayer player)
         {
             SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
             {
                 access.execute((level, blockPos) ->
                 {
+                    Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.level);
+                    NewSpell spell = registry.get(spellId);
+                    
+                    if(spell == null)
+                    {
+                        return;
+                    }
+                    
                     if(ProgressionHelper.tryBuySpell(spellProgressionHolder, this, id, spell, treeId))
                     {
                         spellProgressionHolder.setSpellStatus(spell, SpellStatus.LEARNED);
@@ -62,20 +73,23 @@ public class SpellProgressionMenu extends AbstractContainerMenu
                     this.spellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
                     this.spellProgression = spellProgressionHolder.getProgression();
                     
-                    SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SpellProgressionSyncMessage(blockPos, spellTrees, spellProgression));
+                    SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SpellProgressionSyncMessage(blockPos, spellTrees, spellProgression.entrySet().stream().map(e -> Pair.of(registry.getKey(e.getKey()), e.getValue())).collect(Collectors.toList()), level));
                 });
             });
         }
     }
     
-    public void equipSpellRequest(ISpell spell, int slot, ResourceLocation treeId)
+    public void equipSpellRequest(ResourceLocation spellId, int slot, ResourceLocation treeId)
     {
-        if(this.player instanceof ServerPlayer player)
+        if(spellId != null && this.player instanceof ServerPlayer player)
         {
             SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
             {
                 SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
                 {
+                    Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.level);
+                    NewSpell spell = registry.get(spellId);
+                    
                     if(spell == null)
                     {
                         spellHolder.setSpell(slot, null);
@@ -108,7 +122,11 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     
     public static SpellProgressionMenu construct(int id, Inventory inventory, FriendlyByteBuf extraData)
     {
+        // client side construction
         SpellProgressionSyncMessage msg = SpellProgressionSyncMessage.decode(extraData);
-        return new SpellProgressionMenu(id, inventory, ContainerLevelAccess.create(inventory.player.level, msg.blockPos()), msg.spellTrees(), msg.map());
+        Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(SpellsUtil.getClientLevel());
+        HashMap<NewSpell, SpellStatus> map = new HashMap<>(msg.map().size());
+        msg.map().forEach(p -> map.put(registry.get(p.getFirst()), p.getSecond()));
+        return new SpellProgressionMenu(id, inventory, ContainerLevelAccess.create(inventory.player.level, msg.blockPos()), msg.spellTrees(), map);
     }
 }

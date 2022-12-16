@@ -1,8 +1,6 @@
 package de.cas_ual_ty.spells.network;
 
-import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
-import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,14 +8,14 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record RequestEquipSpellMessage(ISpell spell, byte slot, ResourceLocation treeId)
+public record RequestEquipSpellMessage(ResourceLocation spell, byte slot, ResourceLocation treeId)
 {
     public static void encode(RequestEquipSpellMessage msg, FriendlyByteBuf buf)
     {
         if(msg.spell() != null)
         {
             buf.writeBoolean(true);
-            buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), msg.spell());
+            buf.writeResourceLocation(msg.spell());
         }
         else
         {
@@ -30,7 +28,7 @@ public record RequestEquipSpellMessage(ISpell spell, byte slot, ResourceLocation
     
     public static RequestEquipSpellMessage decode(FriendlyByteBuf buf)
     {
-        return new RequestEquipSpellMessage(buf.readBoolean() ? buf.readRegistryId() : null, buf.readByte(), buf.readResourceLocation());
+        return new RequestEquipSpellMessage(buf.readBoolean() ? buf.readResourceLocation() : null, buf.readByte(), buf.readResourceLocation());
     }
     
     public static void handle(RequestEquipSpellMessage msg, Supplier<NetworkEvent.Context> context)

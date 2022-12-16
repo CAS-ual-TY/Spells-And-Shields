@@ -1,23 +1,22 @@
 package de.cas_ual_ty.spells.network;
 
-import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
-import de.cas_ual_ty.spells.spell.IClientSpell;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record FireClientSpellMessage(IClientSpell spell)
+public record FireClientSpellMessage(ResourceLocation spell)
 {
     public static void encode(FireClientSpellMessage msg, FriendlyByteBuf buf)
     {
-        buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), msg.spell());
+        buf.writeResourceLocation(msg.spell());
     }
     
     public static FireClientSpellMessage decode(FriendlyByteBuf buf)
     {
-        return new FireClientSpellMessage(buf.readRegistryId());
+        return new FireClientSpellMessage(buf.readResourceLocation());
     }
     
     public static void handle(FireClientSpellMessage msg, Supplier<NetworkEvent.Context> context)

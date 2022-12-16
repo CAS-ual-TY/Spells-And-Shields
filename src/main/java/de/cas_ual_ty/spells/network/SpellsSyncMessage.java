@@ -1,25 +1,24 @@
 package de.cas_ual_ty.spells.network;
 
-import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
-import de.cas_ual_ty.spells.spell.ISpell;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record SpellsSyncMessage(int entityId, ISpell[] spells)
+public record SpellsSyncMessage(int entityId, ResourceLocation[] spells)
 {
     public static void encode(SpellsSyncMessage msg, FriendlyByteBuf buf)
     {
         buf.writeInt(msg.entityId());
         buf.writeByte(msg.spells().length);
-        for(ISpell spell : msg.spells())
+        for(ResourceLocation spell : msg.spells())
         {
             if(spell != null)
             {
                 buf.writeBoolean(true);
-                buf.writeRegistryId(Spells.SPELLS_REGISTRY.get(), spell);
+                buf.writeResourceLocation(spell);
             }
             else
             {
@@ -32,12 +31,12 @@ public record SpellsSyncMessage(int entityId, ISpell[] spells)
     {
         int entityId = buf.readInt();
         
-        ISpell[] spells = new ISpell[buf.readByte()];
+        ResourceLocation[] spells = new ResourceLocation[buf.readByte()];
         for(int i = 0; i < spells.length; ++i)
         {
             if(buf.readBoolean())
             {
-                spells[i] = buf.readRegistryId();
+                spells[i] = buf.readResourceLocation();
             }
             else
             {

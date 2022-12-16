@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.datagen;
 
-import de.cas_ual_ty.spells.Spells;
+import de.cas_ual_ty.spells.SpellTrees;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
@@ -12,10 +12,6 @@ import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.ItemRequirement;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
-import de.cas_ual_ty.spells.spell.ISpell;
-import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
-import de.cas_ual_ty.spells.spell.base.PermanentMobEffectSpell;
-import de.cas_ual_ty.spells.spelltree.SpellTrees;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -86,73 +82,6 @@ public class LangGen extends LanguageProvider
             add(SpellKeyBindings.key(i), "Spell Slot " + (i + 1));
         }
         
-        addSpell(Spells.FIRE_BALL, "Fire Ball", "Shoot a fire ball forward.");
-        addSpell(Spells.LEAP, "Leap", "Leap forward.");
-        addSpell(Spells.SUMMON_ANIMAL, "Summon Animal", "Create life based on the item in your hand.");
-        addSpell(Spells.BLOW_ARROW, "Blow Arrow", "Shoot a projectile from your hand without a bow.");
-        addSpell(Spells.BLAST_SMELT, "Blast Smelt", "Works like an instant blast furnace on the item in your hand.");
-        addSpell(Spells.HEALTH_BOOST, "Health Boost", "Increases your maximum health.");
-        addSpell(Spells.MANA_BOOST, "Mana Boost", "Increases your maximum mana.");
-        addSpell(Spells.WATER_LEAP, "Water Leap", "Leap forward like a dolphin (must be underwater).");
-        addSpell(Spells.AQUA_AFFINITY, "Aqua Affinity", "Mine underwater with full speed.");
-        addSpell(Spells.WATER_WHIP, "Water Whip", "Shoots water out of the water bucket in your hand. The water returns and the bucket refills if you hold it on return.");
-        addSpell(Spells.POTION_SHOT, "Potion Shot", "Shots the contents of the potion in your hand forward.");
-        addSpell(Spells.FROST_WALKER, "Frost Walker", "Walk on water by turning the blocks you walk on into ice.");
-        addSpell(Spells.JUMP, "Jump", "High jump. Be aware of fall damage.");
-        addSpell(Spells.MANA_SOLES, "Mana Soles", "Consumes mana to reduce or cancel fall damage.");
-        addSpell(Spells.FIRE_CHARGE, "Fire Charge", "Shoot a fire charge forward instantly.");
-        addSpell(Spells.PRESSURIZE, "Pressurize", "Knock back every entity around you and remove any fluid.");
-        addSpell(Spells.INSTANT_MINE, "Instant Mine", "Breaks the block you are looking at using the tool in your hand.");
-        addSpell(Spells.SPIT_METAL, "Spit Metal", "Spit a nugget that deals damage (from your hand).");
-        addSpell(Spells.FLAMETHROWER, "Flamethrower", "Breath flames from your mouth setting everything on fire.");
-        addSpell(Spells.LAVA_WALKER, "Lava Walker", "Walk on lava by turning the blocks you walk on into obsidian.");
-        addSpell(Spells.SILENCE_TARGET, "Silence Target", "Silence the target you are looking at within a certain range.");
-        addSpell(Spells.RANDOM_TELEPORT, "Random Teleport", "Randomly teleport away. This spell can fail.");
-        addSpell(Spells.FORCED_TELEPORT, "Forced Teleport", "Randomly teleports the target you are looking at away. This spell can fail.");
-        addSpell(Spells.TELEPORT, "Teleport", "Teleport to where you are looking at.");
-        addSpell(Spells.LIGHTNING_STRIKE, "Lightning Strike", "Summon a lightning strike where you are looking at. The target must see skylight.");
-        addSpell(Spells.DRAIN_FLAME, "Drain Flame", "Drain fire to convert it into mana regeneration. The fire must be infinite (eg. on top of Netherrack) for this to work.");
-        addSpell(Spells.GROWTH, "Growth", "Apply the effect of Bonemeal to plants around you.");
-        addSpell(Spells.GHAST, "Ghast", "Shoot a fire charge forward, like a Ghast.");
-        addSpell(Spells.ENDER_ARMY, "Ender Army", "Make all Endermen close to the target you are looking at attack said target.");
-        
-        addSpell(Spells.PERMANENT_REPLENISHMENT, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_REPLENISHMENT, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        
-        addSpell(Spells.PERMANENT_SPEED, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_JUMP_BOOST, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_DOLPHINS_GRACE, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_WATER_BREATHING, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_SLOW_FALLING, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_HASTE, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_REGENERATION, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_FIRE_RESISTANCE, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_NIGHT_VISION, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_STRENGTH, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_RESISTANCE, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_INVISIBILITY, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_GLOWING, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_LUCK, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_CONDUIT_POWER, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        addSpell(Spells.PERMANENT_MAGIC_IMMUNE, PERMANENT_EFFECT_NAME, PERMANENT_EFFECT_DESC);
-        
-        addSpell(Spells.TEMPORARY_SPEED, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_JUMP_BOOST, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_DOLPHINS_GRACE, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_WATER_BREATHING, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_SLOW_FALLING, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_HASTE, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_REGENERATION, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_FIRE_RESISTANCE, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_NIGHT_VISION, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_STRENGTH, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_RESISTANCE, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_INVISIBILITY, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_GLOWING, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_LUCK, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_CONDUIT_POWER, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        addSpell(Spells.TEMPORARY_MAGIC_IMMUNE, TEMPORARY_EFFECT_NAME, TEMPORARY_EFFECT_DESC);
-        
         addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");
         addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, AdvancementRequirement.ERROR_SUFFIX, "Unknown Advancement (config error): %s");
@@ -188,11 +117,6 @@ public class LangGen extends LanguageProvider
         add(SpellCommand.SPELLS_SLOT_CLEAR_SINGLE, "Cleared active spells of %s");
         add(SpellCommand.SPELLS_SLOT_CLEAR_MULTIPLE, "Cleared active spells of %s players");
         
-        add(MultiIngredientSpell.KEY_REQUIRED_HAND, "Requirement (Hand):");
-        add(MultiIngredientSpell.KEY_REQUIRED_INVENTORY, "Requirement (Inventory):");
-        add(MultiIngredientSpell.KEY_INGREDIENT, "%s");
-        add(MultiIngredientSpell.KEY_INGREDIENT_MULTIPLE, "%sx %s");
-        add(PermanentMobEffectSpell.KEY_WHEN_APPLIED, "When Applied:");
         add(SpellProgressionScreen.KEY_LEARN, "Learn");
         add(SpellProgressionScreen.KEY_EQUIP, "Equip");
         add(SpellProgressionScreen.KEY_UNAVAILABLE, "Unavailable");
@@ -226,12 +150,6 @@ public class LangGen extends LanguageProvider
         add(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), key.get()), "Splash Potion of " + name);
         add(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), key.get()), "Lingering Potion of " + name);
         add(PotionUtils.setPotion(new ItemStack(Items.TIPPED_ARROW), key.get()), "Arrow of " + name);
-    }
-    
-    public void addSpell(Supplier<? extends ISpell> key, String name, String desc)
-    {
-        add(key.get().getNameKey(), name);
-        add(key.get().getDescKey(), desc);
     }
     
     public void addRequirement(Supplier<? extends RequirementType<?>> requirement, String desc)

@@ -2,7 +2,8 @@ package de.cas_ual_ty.spells.spelltree;
 
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.requirement.Requirement;
-import de.cas_ual_ty.spells.spell.ISpell;
+import de.cas_ual_ty.spells.spell.NewSpell;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class SpellNode
 {
-    protected final ISpell spell;
+    protected final Holder<NewSpell> spell;
     protected int levelCost;
     protected List<Requirement> requirements;
     
@@ -21,7 +22,7 @@ public class SpellNode
     
     protected int id;
     
-    public SpellNode(ISpell spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
+    public SpellNode(Holder<NewSpell> spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
     {
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
@@ -30,7 +31,7 @@ public class SpellNode
         this.id = 0;
     }
     
-    public SpellNode(ISpell spell, int levelCost, List<Requirement> requirements, int id)
+    public SpellNode(Holder<NewSpell> spell, int levelCost, List<Requirement> requirements, int id)
     {
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
@@ -39,12 +40,12 @@ public class SpellNode
         this.id = id;
     }
     
-    public SpellNode(ISpell spell, int levelCost, List<Requirement> requirements)
+    public SpellNode(Holder<NewSpell> spell, int levelCost, List<Requirement> requirements)
     {
         this(spell, levelCost, requirements, -1);
     }
     
-    public ISpell getSpell()
+    public Holder<NewSpell> getSpell()
     {
         return spell;
     }
@@ -74,6 +75,11 @@ public class SpellNode
         this.requirements = requirements;
     }
     
+    public NewSpell getSpellDirect()
+    {
+        return spell.get();
+    }
+    
     public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         return requirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
@@ -92,7 +98,7 @@ public class SpellNode
     public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         List<Component> tooltips = new LinkedList<>();
-        tooltips.add(spell.getSpellName());
+        tooltips.add(getSpellDirect().getTitle());
         requirements.forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access)));
         return tooltips;
     }

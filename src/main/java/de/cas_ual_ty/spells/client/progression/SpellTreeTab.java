@@ -5,8 +5,9 @@ import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
+import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.base.SpellIcon;
+import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.client.Minecraft;
@@ -51,7 +52,7 @@ public class SpellTreeTab extends GuiComponent
         this.spellNode = spellTree.getRoot();
         this.icon = spellTree.getIcon();
         
-        spellTree.forEach(spellNode -> this.addNode(spellNode, mainScreen.getMenu().spellProgression.getOrDefault(spellNode.getSpell(), SpellStatus.LOCKED)));
+        spellTree.forEach(spellNode -> this.addNode(spellNode, mainScreen.getMenu().spellProgression.getOrDefault(spellNode.getSpellDirect(), SpellStatus.LOCKED)));
         this.root = this.widgets.get(spellTree.getRoot());
         fixPositions();
         
@@ -145,15 +146,12 @@ public class SpellTreeTab extends GuiComponent
         blit(poseStack, x + 32 * index, y - 28, i, j, 28, 32);
     }
     
-    public void drawIcon(PoseStack poseStack, int x, int y)
+    public void drawIcon(PoseStack poseStack, int x, int y, float deltaTick)
     {
-        RenderSystem.setShaderTexture(0, icon.getTexture());
-        int offX = (SpellNodeWidget.SPELL_WIDTH - icon.getWidth()) / 2;
-        int offY = (SpellNodeWidget.SPELL_HEIGHT - icon.getHeight()) / 2;
-        blit(poseStack, x + 32 * index + 5 + offX, y - 28 + 9 + offY, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
+        SpellIconRegistry.render(icon, poseStack, SpellNodeWidget.SPELL_WIDTH, SpellNodeWidget.SPELL_HEIGHT, x + 32 * index + 5, y - 28 + 9, deltaTick);
     }
     
-    public void drawContents(PoseStack poseStack)
+    public void drawContents(PoseStack poseStack, float deltaTick)
     {
         poseStack.pushPose();
         poseStack.translate(0D, 0D, 950D);
@@ -195,7 +193,7 @@ public class SpellTreeTab extends GuiComponent
             this.root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFF036A96 + 0x00202020, s -> s.parent.spellStatus.isAvailable());
             this.root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFFB98F2C + 0x00202020, s -> s.parent.spellStatus.isAvailable() && s.spellStatus.isAvailable());
             
-            this.root.draw(poseStack, scrollX, scrollY);
+            this.root.draw(poseStack, scrollX, scrollY, deltaTick);
         }
         
         // DEBUGGING scrollX scrollY minX maxX minY maxY
@@ -220,7 +218,7 @@ public class SpellTreeTab extends GuiComponent
         poseStack.popPose();
     }
     
-    public void drawTooltips(PoseStack poseStack, int mouseX, int mouseY, int offX, int offY)
+    public void drawTooltips(PoseStack poseStack, int mouseX, int mouseY, int offX, int offY, float deltaTick)
     {
         poseStack.pushPose();
         poseStack.translate(0D, 0D, -200D);
@@ -239,7 +237,7 @@ public class SpellTreeTab extends GuiComponent
                 if(w.isMouseOver(scrollX, scrollY, mouseX, mouseY))
                 {
                     found = true;
-                    w.drawHover(poseStack, scrollX, scrollY, offX, offY);
+                    w.drawHover(poseStack, scrollX, scrollY, offX, offY, deltaTick);
                     break;
                 }
             }

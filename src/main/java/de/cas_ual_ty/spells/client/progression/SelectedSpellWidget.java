@@ -2,9 +2,10 @@ package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.ISpell;
-import de.cas_ual_ty.spells.spell.base.SpellIcon;
+import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.client.Minecraft;
@@ -49,13 +50,13 @@ public class SelectedSpellWidget extends GuiComponent
         this.font = Minecraft.getInstance().font;
     }
     
-    public void setContents(SpellNode spell, Map<ISpell, SpellStatus> progression, SpellStatus spellStatus, FormattedCharSequence title)
+    public void setContents(SpellNode spell, Map<NewSpell, SpellStatus> progression, SpellStatus spellStatus, FormattedCharSequence title)
     {
         this.spell = spell;
         this.spellStatus = spellStatus;
         this.title = title;
         
-        this.spellTexture = spell.getSpell().getIcon();
+        this.spellTexture = spell.getSpellDirect().getIcon();
         
         if(spellStatus == SpellStatus.FORGOTTEN)
         {
@@ -98,12 +99,7 @@ public class SelectedSpellWidget extends GuiComponent
             this.blit(poseStack, this.x + TITLE_PADDING_LEFT, this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
             this.font.drawShadow(poseStack, title, (float) (this.x + TITLE_X), (float) (this.y + TITLE_Y), 0xFFFFFFFF);
             
-            RenderSystem.setShaderTexture(0, spellTexture.getTexture());
-            RenderSystem.enableBlend();
-            int offX = (SPELL_WIDTH - spellTexture.getWidth()) / 2;
-            int offY = (SPELL_HEIGHT - spellTexture.getHeight()) / 2;
-            blit(poseStack, this.x + SpellNodeWidget.FRAME_OFF_X + offX, this.y + SpellNodeWidget.FRAME_OFF_Y + offY, spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getU(), spellTexture.getV(), spellTexture.getWidth(), spellTexture.getHeight(), spellTexture.getTextureWidth(), spellTexture.getTextureHeight());
-            RenderSystem.disableBlend();
+            SpellIconRegistry.render(spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, this.x + SpellNodeWidget.FRAME_OFF_X, this.y + FRAME_OFF_Y, deltaTick);
         }
     }
     
@@ -111,7 +107,7 @@ public class SelectedSpellWidget extends GuiComponent
     {
         if(active && mouseX >= this.x && mouseX < this.x + this.w && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
         {
-            ISpell spell = this.spell.getSpell();
+            NewSpell spell = this.spell.getSpellDirect();
             
             if(spell != null)
             {

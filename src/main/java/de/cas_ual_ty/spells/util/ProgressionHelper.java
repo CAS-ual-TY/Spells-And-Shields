@@ -1,13 +1,13 @@
 package de.cas_ual_ty.spells.util;
 
+import de.cas_ual_ty.spells.SpellTrees;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.requirement.WrappedRequirement;
-import de.cas_ual_ty.spells.spell.ISpell;
+import de.cas_ual_ty.spells.spell.NewSpell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
-import de.cas_ual_ty.spells.spelltree.SpellTrees;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -45,7 +45,7 @@ public class ProgressionHelper
             // add all active or previously bought spells
             stripped.forEach(spellNode ->
             {
-                if(spellProgressionHolder.getSpellStatus(spellNode.getSpell()).isVisible())
+                if(spellProgressionHolder.getSpellStatus(spellNode.getSpellDirect()).isVisible())
                 {
                     visibleNodes.add(spellNode);
                 }
@@ -125,13 +125,13 @@ public class ProgressionHelper
         return availableSpellTrees;
     }
     
-    public static boolean isFullyLinked(SpellNode spellNode, Map<ISpell, SpellStatus> progression)
+    public static boolean isFullyLinked(SpellNode spellNode, Map<NewSpell, SpellStatus> progression)
     {
         SpellNode parent = spellNode;
         
         while((parent = parent.getParent()) != null)
         {
-            if(!progression.getOrDefault(parent.getSpell(), SpellStatus.LOCKED).isAvailable())
+            if(!progression.getOrDefault(parent.getSpellDirect(), SpellStatus.LOCKED).isAvailable())
             {
                 return false;
             }
@@ -140,7 +140,7 @@ public class ProgressionHelper
         return true;
     }
     
-    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, int id, ISpell spell, ResourceLocation treeId)
+    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, int id, NewSpell spell, ResourceLocation treeId)
     {
         Player player = menu.player;
         
@@ -148,11 +148,11 @@ public class ProgressionHelper
         
         Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level);
         
-        menu.spellTrees.stream().filter(tree -> tree.getId(registry).equals(treeId)).findFirst().ifPresent(spellTree ->
+        menu.spellTrees.stream().filter(tree -> tree.getClientId().equals(treeId)).findFirst().ifPresent(spellTree ->
         {
             SpellNode spellNode = spellTree.findNode(id);
             
-            if(spellNode.getSpell() == spell && spellNode.canLearn(spellProgressionHolder, menu.access))
+            if(spellNode.getSpellDirect() == spell && spellNode.canLearn(spellProgressionHolder, menu.access))
             {
                 found.set(true);
                 

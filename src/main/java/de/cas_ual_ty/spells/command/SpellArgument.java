@@ -7,25 +7,28 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import de.cas_ual_ty.spells.spell.ISpell;
-import de.cas_ual_ty.spells.util.SpellsUtil;
+import de.cas_ual_ty.spells.NewSpells;
+import de.cas_ual_ty.spells.spell.NewSpell;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class SpellArgument implements ArgumentType<ISpell>
+public class SpellArgument implements ArgumentType<NewSpell>
 {
     public static final SimpleCommandExceptionType UNKNOWN_SPELL = new SimpleCommandExceptionType(Component.translatable("argument.spell.id.invalid"));
     
-    //private final HolderLookup<ISpell> spells;
+    private final HolderLookup<NewSpell> spells;
     
     public SpellArgument(CommandBuildContext cbx)
     {
-        //TODO use this implementation if it gets fixed / you find the fix
-        //spells = cbx.holderLookup(SpellsRegistries.SPELLS_REGISTRY.get().getRegistryKey());
+        spells = cbx.holderLookup(NewSpells.SPELLS_REGISTRY_KEY);
     }
     
     public static SpellArgument spell(CommandBuildContext cbx)
@@ -34,20 +37,12 @@ public class SpellArgument implements ArgumentType<ISpell>
     }
     
     @Override
-    public ISpell parse(StringReader reader) throws CommandSyntaxException
+    public NewSpell parse(StringReader reader) throws CommandSyntaxException
     {
         ResourceLocation resourceLocation = ResourceLocation.read(reader);
-        //Optional<Holder<ISpell>> spell = spells.get(ResourceKey.create(SpellsRegistries.SPELLS_REGISTRY.get().getRegistryKey(), resourceLocation));
-        ISpell spell = SpellsUtil.getSpell(resourceLocation);
+        Optional<Holder<NewSpell>> spell = spells.get(ResourceKey.create(NewSpells.SPELLS_REGISTRY_KEY, resourceLocation));
         
-        //if(spell.isEmpty())
-        if(spell == null)
-        {
-            throw UNKNOWN_SPELL.create();
-        }
-        
-        //return spell.get().get();
-        return spell;
+        return spell.orElseThrow(UNKNOWN_SPELL::create).get();
     }
     
     @Override
@@ -55,9 +50,9 @@ public class SpellArgument implements ArgumentType<ISpell>
     {
         String s = builder.getRemaining();
         
-        SpellsUtil.forEachSpell((key, spell) ->
+        spells.listElements().forEach(resourceKey ->
         {
-            String spellStr = key.toString();
+            String spellStr = resourceKey.location().toString();
             
             if(spellStr.startsWith(s))
             {
@@ -68,8 +63,8 @@ public class SpellArgument implements ArgumentType<ISpell>
         return builder.buildFuture();
     }
     
-    public static ISpell getSpell(CommandContext<CommandSourceStack> context, String argument)
+    public static NewSpell getSpell(CommandContext<CommandSourceStack> context, String argument)
     {
-        return context.getArgument(argument, ISpell.class);
+        return context.getArgument(argument, NewSpell.class);
     }
 }

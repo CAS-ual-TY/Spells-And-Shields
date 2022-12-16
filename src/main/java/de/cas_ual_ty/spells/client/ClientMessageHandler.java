@@ -7,10 +7,16 @@ import de.cas_ual_ty.spells.network.FireClientSpellMessage;
 import de.cas_ual_ty.spells.network.ManaSyncMessage;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
+import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.spell.NewSpell;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+
+import java.util.HashMap;
 
 public class ClientMessageHandler
 {
@@ -43,11 +49,13 @@ public class ClientMessageHandler
         
         if(level != null && level.getEntity(msg.entityId()) instanceof Player player)
         {
+            Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(player.level);
+            
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
                 for(int i = 0; i < spellHolder.getSlots() && i < msg.spells().length; ++i)
                 {
-                    spellHolder.setSpell(i, msg.spells()[i]);
+                    spellHolder.setSpell(i, registry.get(msg.spells()[i]));
                 }
             });
         }
@@ -57,8 +65,12 @@ public class ClientMessageHandler
     {
         if(Minecraft.getInstance().screen instanceof SpellProgressionScreen screen)
         {
+            Registry<NewSpell> registry = SpellsUtil.getSpellRegistry(screen.getMenu().player.level);
+            HashMap<NewSpell, SpellStatus> map = new HashMap<>(msg.map().size());
+            msg.map().forEach(pair -> map.put(registry.get(pair.getFirst()), pair.getSecond()));
+            
             screen.getMenu().spellTrees = msg.spellTrees();
-            screen.getMenu().spellProgression = msg.map();
+            screen.getMenu().spellProgression = map;
             screen.spellTreesUpdated();
         }
     }
@@ -67,7 +79,7 @@ public class ClientMessageHandler
     {
         SpellsClientUtil.getClientManaHolder().ifPresent(manaHolder ->
         {
-            msg.spell().performOnClient(manaHolder);
+            //msg.spell().performOnClient(manaHolder);
         });
     }
 }
