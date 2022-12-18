@@ -39,7 +39,7 @@ public class Spell
     
     public Spell(ResourceLocation icon, Component title, float manaCost)
     {
-        this(new LinkedList<>(), new DefaultSpellIcon(SpellIconTypes.DEFAULT_SPELL_ICON.get(), icon), title, new LinkedList<>(), manaCost);
+        this(new LinkedList<>(), new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), icon), title, new LinkedList<>(), manaCost);
     }
     
     public Spell(String modId, String icon, String titleKey, float manaCost)

@@ -83,13 +83,13 @@ public class LangGen extends LanguageProvider
             add(SpellKeyBindings.key(i), "Spell Slot " + (i + 1));
         }
         
-        addRequirement(RequirementTypes.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
-        addRequirement(RequirementTypes.ADVANCEMENT_REQUIREMENT, "Advancement: %s");
-        addRequirement(RequirementTypes.ADVANCEMENT_REQUIREMENT, AdvancementRequirement.ERROR_SUFFIX, "Unknown Advancement (config error): %s");
-        addRequirement(RequirementTypes.ITEM_REQUIREMENT, "%s (Not Consumed)");
-        addRequirement(RequirementTypes.ITEM_REQUIREMENT, ItemRequirement.CONSUMED_SUFFIX, "%s (Consumed)");
-        addRequirement(RequirementTypes.ITEM_REQUIREMENT, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");
-        addRequirement(RequirementTypes.ITEM_REQUIREMENT, ItemRequirement.MULTIPLE_CONSUMED_SUFFIX, "%sx %s (Consumed)");
+        addRequirement(RequirementTypes.BOOKSHELVES, "%s/%s Bookshelves");
+        addRequirement(RequirementTypes.ADVANCEMENT, "Advancement: %s");
+        addRequirement(RequirementTypes.ADVANCEMENT, AdvancementRequirement.ERROR_SUFFIX, "Unknown Advancement (config error): %s");
+        addRequirement(RequirementTypes.ITEM, "%s (Not Consumed)");
+        addRequirement(RequirementTypes.ITEM, ItemRequirement.CONSUMED_SUFFIX, "%s (Consumed)");
+        addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");
+        addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_CONSUMED_SUFFIX, "%sx %s (Consumed)");
         
         add(SpellTrees.KEY_NETHER, "Nether");
         add(SpellTrees.KEY_OCEAN, "Ocean");

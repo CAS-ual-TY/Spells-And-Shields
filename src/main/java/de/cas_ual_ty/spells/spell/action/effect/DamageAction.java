@@ -20,7 +20,7 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 SpellAction.makeActivation(),
                 AffectTypeAction.makeTargetsCodec(),
-                CtxVarTypes.DOUBLE_CTX_VAR.get().refCodec().fieldOf("damage").forGetter(DamageAction::getDamage)
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("damage").forGetter(DamageAction::getDamage)
         ).apply(instance, (activation, targets, damage) -> new DamageAction(type, activation, targets, damage)));
     }
     
@@ -33,13 +33,13 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
     
     public DamageAction(SpellActionType<?> type, String activation, String targets, CtxVarRef<Double> damage)
     {
-        super(type, activation, targets, TargetTypes.LIVING_ENTITY_TARGET.get());
+        super(type, activation, targets, TargetTypes.LIVING_ENTITY.get());
         this.damage = damage;
     }
     
     public DamageAction(SpellActionType<?> type, BuiltinActivations activation, BuiltinTargetGroups targets, double damage)
     {
-        this(type, activation.activation, targets.targetGroup, CtxVarTypes.DOUBLE_CTX_VAR.get().ref(damage));
+        this(type, activation.activation, targets.targetGroup, CtxVarTypes.DOUBLE.get().ref(damage));
     }
     
     public CtxVarRef<Double> getDamage()

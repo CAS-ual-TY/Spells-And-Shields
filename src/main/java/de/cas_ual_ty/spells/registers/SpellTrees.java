@@ -163,16 +163,16 @@ public class SpellTrees
     
     public static Requirement bookshelves(int bookshelves)
     {
-        return new BookshelvesRequirement(RequirementTypes.BOOKSHELVES_REQUIREMENT.get(), bookshelves);
+        return new BookshelvesRequirement(RequirementTypes.BOOKSHELVES.get(), bookshelves);
     }
     
     public static Requirement advancement(String advancementRL)
     {
-        return new AdvancementRequirement(RequirementTypes.ADVANCEMENT_REQUIREMENT.get(), new ResourceLocation(advancementRL));
+        return new AdvancementRequirement(RequirementTypes.ADVANCEMENT.get(), new ResourceLocation(advancementRL));
     }
     
     public static Requirement item(Item item, int count, boolean consume)
     {
-        return new ItemRequirement(RequirementTypes.ITEM_REQUIREMENT.get(), new ItemStack(item, count), consume);
+        return new ItemRequirement(RequirementTypes.ITEM.get(), new ItemStack(item, count), consume);
     }
 }

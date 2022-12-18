@@ -47,7 +47,7 @@ public class LookAtAction extends SpellAction
     {
         TargetGroup source = ctx.getTargetGroup(src);
         
-        source.forEachType(TargetTypes.ENTITY_TARGET.get(), (entityTarget) ->
+        source.forEachType(TargetTypes.ENTITY.get(), (entityTarget) ->
         {
             HitResult hitResult = SpellsUtil.rayTrace(entityTarget.getLevel(), entityTarget.getEntity(), range, e -> true, bbInflation, block, fluid);
             

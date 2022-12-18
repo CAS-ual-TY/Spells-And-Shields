@@ -23,25 +23,25 @@ public abstract class Target
     {
         if(entity instanceof Player player)
         {
-            return new PlayerTarget(TargetTypes.PLAYER_TARGET.get(), player);
+            return new PlayerTarget(TargetTypes.PLAYER.get(), player);
         }
         else if(entity instanceof LivingEntity livingEntity)
         {
-            return new LivingEntityTarget(TargetTypes.LIVING_ENTITY_TARGET.get(), livingEntity);
+            return new LivingEntityTarget(TargetTypes.LIVING_ENTITY.get(), livingEntity);
         }
         else
         {
-            return new EntityTarget(TargetTypes.ENTITY_TARGET.get(), entity);
+            return new EntityTarget(TargetTypes.ENTITY.get(), entity);
         }
     }
     
     public static StaticTarget of(Level level, BlockPos blockPos)
     {
-        return new StaticTarget(TargetTypes.STATIC_TARGET.get(), level, blockPos);
+        return new StaticTarget(TargetTypes.STATIC.get(), level, blockPos);
     }
     
     public static StaticTarget of(Level level, Vec3 position)
     {
-        return new StaticTarget(TargetTypes.STATIC_TARGET.get(), level, position);
+        return new StaticTarget(TargetTypes.STATIC.get(), level, position);
     }
 }

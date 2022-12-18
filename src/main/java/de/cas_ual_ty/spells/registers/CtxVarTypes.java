@@ -14,8 +14,9 @@ public class CtxVarTypes
 {
     public static Supplier<IForgeRegistry<CtxVarType<?>>> REGISTRY;
     private static final DeferredRegister<CtxVarType<?>> DEFERRED_REGISTER = DeferredRegister.create(new ResourceLocation(MOD_ID, "context_variables"), MOD_ID);
-    public static final RegistryObject<CtxVarType<Integer>> INT_CTX_VAR = DEFERRED_REGISTER.register("int", () -> new CtxVarType<>(Codec.INT));
-    public static final RegistryObject<CtxVarType<Double>> DOUBLE_CTX_VAR = DEFERRED_REGISTER.register("double", () -> new CtxVarType<>(Codec.DOUBLE));
+    
+    public static final RegistryObject<CtxVarType<Integer>> INT = DEFERRED_REGISTER.register("int", () -> new CtxVarType<>(Codec.INT));
+    public static final RegistryObject<CtxVarType<Double>> DOUBLE = DEFERRED_REGISTER.register("double", () -> new CtxVarType<>(Codec.DOUBLE));
     
     public static void register()
     {

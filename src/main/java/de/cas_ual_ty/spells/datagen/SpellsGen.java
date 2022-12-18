@@ -60,7 +60,7 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.literal("You damage yourself using it"))
                 .addTooltip(Component.translatable("translated.description.key.line1"))
                 .addTooltip(Component.translatable("translated.description.key.line2"))
-                .addAction(new DamageAction(SpellActionTypes.DAMAGE_ACTION.get(), BuiltinActivations.ACTIVE, BuiltinTargetGroups.OWNER, 5D))
+                .addAction(new DamageAction(SpellActionTypes.DAMAGE.get(), BuiltinActivations.ACTIVE, BuiltinTargetGroups.OWNER, 5D))
         );
     }
     

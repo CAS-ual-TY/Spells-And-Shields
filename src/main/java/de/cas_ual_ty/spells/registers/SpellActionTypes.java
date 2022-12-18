@@ -14,7 +14,8 @@ public class SpellActionTypes
 {
     public static Supplier<IForgeRegistry<SpellActionType<?>>> REGISTRY;
     private static final DeferredRegister<SpellActionType<?>> DEFERRED_REGISTER = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_actions"), MOD_ID);
-    public static final RegistryObject<SpellActionType<DamageAction>> DAMAGE_ACTION = DEFERRED_REGISTER.register("damage", () -> new SpellActionType<>(DamageAction::new, DamageAction::makeCodec));
+    
+    public static final RegistryObject<SpellActionType<DamageAction>> DAMAGE = DEFERRED_REGISTER.register("damage", () -> new SpellActionType<>(DamageAction::new, DamageAction::makeCodec));
     
     public static void register()
     {

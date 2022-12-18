@@ -109,7 +109,7 @@ public class WrappedRequirement extends Requirement
     
     public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        WrappedRequirement w = new WrappedRequirement(RequirementTypes.WRAPPED_REQUIREMENT.get(), requirement);
+        WrappedRequirement w = new WrappedRequirement(RequirementTypes.WRAPPED.get(), requirement);
         w.decide(spellProgressionHolder, access);
         return w;
     }
