@@ -1,17 +1,18 @@
 package de.cas_ual_ty.spells.capability;
 
-import com.mojang.serialization.DataResult;
+import de.cas_ual_ty.spells.SpellTrees;
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
-import de.cas_ual_ty.spells.spell.variable.CtxVar;
-import de.cas_ual_ty.spells.util.SpellsCodecs;
-import de.cas_ual_ty.spells.util.SpellsUtil;
-import net.minecraft.core.Holder;
+import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -20,8 +21,6 @@ import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class SpellHolder implements ISpellHolder
 {
@@ -98,29 +97,23 @@ public class SpellHolder implements ISpellHolder
     
     public SpellsSyncMessage makeSyncMessage()
     {
-        Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        Registry<Spell> registry = Spells.getRegistry(player.getLevel());
         return new SpellsSyncMessage(player.getId(), Arrays.stream(slots).map(s -> s != null ? registry.getKey(s.getSpell().get()) : null).toArray(ResourceLocation[]::new));
     }
     
     @Override
     public ListTag serializeNBT()
     {
-        Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        Registry<Spell> registry = Spells.getRegistry(player.getLevel());
         
         ListTag list = new ListTag();
         for(int i = 0; i < SPELL_SLOTS; ++i)
         {
             CompoundTag tag = new CompoundTag();
             
-            SpellInstance spell = this.getSpell(i);
-            if(spell != null)
+            if(slots[i] != null)
             {
-                tag.put("spell", StringTag.valueOf(registry.getKey(spell.getSpell().get()).toString()));
-                SpellsCodecs.CTX_VAR.listOf().encodeStart(NbtOps.INSTANCE, spell.getVariables()).result().ifPresent(vars -> tag.put("variables", vars));
-            }
-            else
-            {
-                tag.put("spell", StringTag.valueOf(EMPTY_SLOT));
+                slots[i].getNodeId().toNbt(tag);
             }
             
             list.add(i, tag);
@@ -131,31 +124,24 @@ public class SpellHolder implements ISpellHolder
     @Override
     public void deserializeNBT(ListTag tag)
     {
-        Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        Registry<SpellTree> registry = SpellTrees.getRegistry(player.getLevel());
+        
+        if(tag.getElementType() != Tag.TAG_COMPOUND)
+        {
+            return;
+        }
         
         for(int i = 0; i < SPELL_SLOTS && i < tag.size(); ++i)
         {
-            if(tag.get(i).getId() != Tag.TAG_COMPOUND)
+            SpellNodeId nodeId = SpellNodeId.fromNbt(tag.getCompound(i));
+            
+            if(nodeId == null)
             {
-                continue;
+                slots[i] = null;
             }
-            
-            CompoundTag compoundTag = tag.getCompound(i);
-            String key = compoundTag.getString("spell");
-            
-            if(!key.equals(EMPTY_SLOT))
+            else
             {
-                Spell spell = registry.get(new ResourceLocation(key));
-                
-                if(spell == null)
-                {
-                    continue;
-                }
-                
-                DataResult<List<CtxVar<?>>> vars = SpellsCodecs.CTX_VAR.listOf().parse(NbtOps.INSTANCE, compoundTag.get("variables"));
-                SpellInstance spellInstance = new SpellInstance(Holder.direct(spell), vars.result().orElse(new LinkedList<>()));
-                
-                slots[i] = spellInstance;
+                slots[i] = nodeId.getSpellInstance(registry);
             }
         }
     }

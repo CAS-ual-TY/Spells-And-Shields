@@ -1,17 +1,12 @@
 package de.cas_ual_ty.spells.util;
 
 import com.google.common.collect.ImmutableList;
-import de.cas_ual_ty.spells.Spells;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
-import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,7 +14,6 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,11 +21,8 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class SpellsUtil
@@ -118,42 +109,6 @@ public class SpellsUtil
         }
         
         return currentEntity == null ? null : new EntityHitResult(currentEntity);
-    }
-    
-    public static Registry<Spell> getSpellRegistry(LevelAccessor level)
-    {
-        return level.registryAccess().registryOrThrow(Spells.SPELLS_REGISTRY_KEY);
-    }
-    
-    public static void forEachSpell(Registry<Spell> registry, BiConsumer<ResourceLocation, Spell> consumer)
-    {
-        registry.entrySet().forEach(e -> consumer.accept(e.getKey().location(), e.getValue()));
-    }
-    
-    public static int getSpellsAmount(Registry<Spell> registry)
-    {
-        return registry.size();
-    }
-    
-    public static UUID generateUUIDFromName(String purpose, String name)
-    {
-        // prefixing with very specific string to make sure this does not clash in case another mod does the same
-        return UUID.nameUUIDFromBytes((SpellsAndShields.MOD_ID + "_" + purpose + "_" + name).getBytes(StandardCharsets.UTF_8));
-    }
-    
-    public static UUID generateUUIDForTree(String name)
-    {
-        return generateUUIDFromName("tree", name);
-    }
-    
-    public static UUID generateUUIDForSlotAttribute(Attribute attribute, int slot)
-    {
-        return generateUUIDFromName("slot_" + slot, ForgeRegistries.ATTRIBUTES.getKey(attribute).toString());
-    }
-    
-    public static UUID generateUUIDForClassAttribute(Attribute attribute, String className)
-    {
-        return generateUUIDFromName("class_" + className, ForgeRegistries.ATTRIBUTES.getKey(attribute).toString());
     }
     
     public static void addPotionRecipes(Potion base, Potion p, @Nullable Potion strongP, @Nullable Potion longP, Item ingredient, @Nullable Potion badP, @Nullable Potion badStrongP, @Nullable Potion badLongP, @Nullable Item badIngredient)

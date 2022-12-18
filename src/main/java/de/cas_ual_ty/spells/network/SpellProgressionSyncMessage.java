@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.network;
 
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
@@ -27,7 +28,7 @@ public record SpellProgressionSyncMessage(BlockPos blockPos, List<SpellTree> spe
         buf.writeInt(msg.spellTrees().size());
         for(SpellTree spellTree : msg.spellTrees())
         {
-            SpellTreeSerializer.encodeTree(spellTree, SpellsUtil.getSpellRegistry(msg.level()), buf);
+            SpellTreeSerializer.encodeTree(spellTree, Spells.getRegistry(msg.level()), buf);
         }
         
         buf.writeInt(msg.map().size());
@@ -49,7 +50,7 @@ public record SpellProgressionSyncMessage(BlockPos blockPos, List<SpellTree> spe
         
         for(int i = 0; i < size; ++i)
         {
-            spellTrees.add(SpellTreeSerializer.decodeTree(SpellsUtil.getSpellRegistry(level), buf));
+            spellTrees.add(SpellTreeSerializer.decodeTree(Spells.getRegistry(level), buf));
         }
         
         size = buf.readInt();

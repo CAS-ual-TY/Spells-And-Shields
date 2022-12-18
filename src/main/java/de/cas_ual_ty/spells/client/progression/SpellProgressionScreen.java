@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
@@ -99,7 +100,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         imageHeight = GUI_HEIGHT;
         tabPage = 0;
         this.spellProgressionHolder = SpellProgressionHolder.getSpellProgressionHolder(menu.player).orElse(null);
-        spellRegistry = SpellsUtil.getSpellRegistry(SpellsUtil.getClientLevel());
+        spellRegistry = Spells.getRegistry(SpellsUtil.getClientLevel());
     }
     
     public void spellTreesUpdated()

@@ -10,7 +10,6 @@ import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
-import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -49,7 +48,7 @@ public class ClientMessageHandler
         
         if(level != null && level.getEntity(msg.entityId()) instanceof Player player)
         {
-            Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.level);
+            Registry<Spell> registry = Spells.getRegistry(player.level);
             
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {

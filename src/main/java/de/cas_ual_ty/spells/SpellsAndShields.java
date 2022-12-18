@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells;
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.network.*;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
-import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -41,7 +40,6 @@ public class SpellsAndShields
         SpellTrees.register();
         SpellsRegistries.register();
         
-        SpellsFileUtil.getOrCreateConfigDir();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common" + ".toml");
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

@@ -1,8 +1,8 @@
 package de.cas_ual_ty.spells.spell.base;
 
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.spell.Spell;
-import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -138,7 +138,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         buf.writeBoolean(exist);
         if(exist)
         {
-            buf.writeResourceLocation(SpellsUtil.getSpellRegistry(level).getKey(spell));
+            buf.writeResourceLocation(Spells.getRegistry(level).getKey(spell));
         }
     }
     
@@ -149,7 +149,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         
         if(exist)
         {
-            this.spell = SpellsUtil.getSpellRegistry(level).get(buf.readResourceLocation());
+            this.spell = Spells.getRegistry(level).get(buf.readResourceLocation());
         }
     }
     
@@ -161,7 +161,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         
         if(spell != null)
         {
-            nbt.putString("Spell", SpellsUtil.getSpellRegistry(level).getKey(spell).toString());
+            nbt.putString("Spell", Spells.getRegistry(level).getKey(spell).toString());
         }
         else
         {
@@ -178,7 +178,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         if(nbt.contains("Spell", StringTag.TAG_STRING))
         {
             String key = nbt.getString("Spell");
-            this.spell = SpellsUtil.getSpellRegistry(level).get(new ResourceLocation(key));
+            this.spell = Spells.getRegistry(level).get(new ResourceLocation(key));
         }
         
         if(spell == null)

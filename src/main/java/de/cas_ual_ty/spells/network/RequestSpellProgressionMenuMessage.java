@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.network;
 
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
@@ -56,36 +57,29 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                 {
                     access.execute((level, blockPos) ->
                     {
-                        try
+                        List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
+                        HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
+                        
+                        Registry<Spell> registry = Spells.getRegistry(level);
+                        
+                        NetworkHooks.openScreen(player, new MenuProvider()
                         {
-                            List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
-                            HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
-                            
-                            Registry<Spell> registry = SpellsUtil.getSpellRegistry(level);
-                            
-                            NetworkHooks.openScreen(player, new MenuProvider()
+                            @Override
+                            public Component getDisplayName()
                             {
-                                @Override
-                                public Component getDisplayName()
-                                {
-                                    return SpellProgressionMenu.TITLE;
-                                }
-                                
-                                @Override
-                                public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
-                                {
-                                    return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
-                                }
-                            }, buf ->
+                                return SpellProgressionMenu.TITLE;
+                            }
+                            
+                            @Override
+                            public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
                             {
-                                SpellProgressionSyncMessage data = new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression, level);
-                                SpellProgressionSyncMessage.encode(data, buf);
-                            });
-                        }
-                        catch(Exception e)
+                                return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
+                            }
+                        }, buf ->
                         {
-                            e.printStackTrace();
-                        }
+                            SpellProgressionSyncMessage data = new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression, level);
+                            SpellProgressionSyncMessage.encode(data, buf);
+                        });
                     });
                 });
             }

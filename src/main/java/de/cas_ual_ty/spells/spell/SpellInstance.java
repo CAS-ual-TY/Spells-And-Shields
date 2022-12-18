@@ -52,6 +52,11 @@ public class SpellInstance
         return variables;
     }
     
+    public SpellNodeId getNodeId()
+    {
+        return nodeId;
+    }
+    
     public void activate(SpellHolder spellHolder)
     {
         activate(spellHolder, BuiltinActivations.ACTIVE.activation);

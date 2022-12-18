@@ -148,7 +148,7 @@ public class ProgressionHelper
         {
             SpellNode spellNode = spellTree.findNode(nodeId.nodeId());
             
-            if(spellNode.canLearn(spellProgressionHolder, menu.access))
+            if(spellNode != null && spellNode.canLearn(spellProgressionHolder, menu.access))
             {
                 found.set(true);
                 

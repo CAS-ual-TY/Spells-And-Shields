@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -156,6 +157,7 @@ public class SpellTree
         forEach(spellNode -> spellNode.setId(spellTreeId, i.getAndIncrement()));
     }
     
+    @Nullable
     public SpellNode findNode(int id)
     {
         Stack<SpellNode> stack = new Stack<>();

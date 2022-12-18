@@ -5,7 +5,7 @@ import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.NewRegistryEvent;
@@ -18,7 +18,7 @@ public class Spells
     private static Supplier<IForgeRegistry<Spell>> SPELLS_REGISTRY;
     public static ResourceKey<Registry<Spell>> SPELLS_REGISTRY_KEY;
     
-    public static Registry<Spell> getRegistry2(Level level)
+    public static Registry<Spell> getRegistry(LevelAccessor level)
     {
         return level.registryAccess().registryOrThrow(SPELLS_REGISTRY_KEY);
     }

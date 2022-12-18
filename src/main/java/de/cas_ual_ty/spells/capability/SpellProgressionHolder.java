@@ -1,9 +1,9 @@
 package de.cas_ual_ty.spells.capability;
 
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
-import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -49,7 +49,7 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
     @Override
     public ListTag serializeNBT()
     {
-        Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        Registry<Spell> registry = Spells.getRegistry(player.getLevel());
         
         ListTag list = new ListTag();
         
@@ -74,7 +74,7 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
             return;
         }
         
-        Registry<Spell> registry = SpellsUtil.getSpellRegistry(player.getLevel());
+        Registry<Spell> registry = Spells.getRegistry(player.getLevel());
         
         for(int i = 0; i < nbt.size(); ++i)
         {
