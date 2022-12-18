@@ -1,11 +1,11 @@
 package de.cas_ual_ty.spells.progression;
 
-import de.cas_ual_ty.spells.SpellTrees;
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
+import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
@@ -38,7 +38,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     
     public SpellProgressionMenu(int id, Inventory inventory, ContainerLevelAccess containerLevelAccess, List<SpellTree> spellTrees, HashMap<SpellNodeId, SpellStatus> spellProgression)
     {
-        super(SpellsRegistries.SPELL_PROGRESSION_MENU.get(), id);
+        super(BuiltinRegistries.SPELL_PROGRESSION_MENU.get(), id);
         this.access = containerLevelAccess;
         this.player = inventory.player;
         

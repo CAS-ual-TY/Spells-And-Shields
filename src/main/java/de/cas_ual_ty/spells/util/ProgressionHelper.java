@@ -1,9 +1,9 @@
 package de.cas_ual_ty.spells.util;
 
-import de.cas_ual_ty.spells.SpellTrees;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.requirement.WrappedRequirement;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;

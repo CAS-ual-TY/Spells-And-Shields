@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.util;
 
-import de.cas_ual_ty.spells.Spells;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
 import de.cas_ual_ty.spells.spell.Spell;
@@ -74,7 +74,7 @@ public class SpellTreeSerializer
     {
         ResourceLocation id = buf.readResourceLocation();
         Component title = buf.readComponent();
-        Holder<Spell> icon = registry.getHolderOrThrow(ResourceKey.create(Spells.SPELLS_REGISTRY_KEY, buf.readResourceLocation()));
+        Holder<Spell> icon = registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, buf.readResourceLocation()));
         List<Requirement> requirements = decodeRequirements(buf);
         
         SpellTree.Builder builder = SpellTree.builder(title, decodeNode(registry, buf));
@@ -115,7 +115,7 @@ public class SpellTreeSerializer
     
     public static SpellNode decodeNode(Registry<Spell> registry, FriendlyByteBuf buf)
     {
-        Holder<Spell> spell = registry.getHolderOrThrow(ResourceKey.create(Spells.SPELLS_REGISTRY_KEY, buf.readResourceLocation()));
+        Holder<Spell> spell = registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, buf.readResourceLocation()));
         int levelCost = buf.readInt();
         List<Requirement> requirements = decodeRequirements(buf);
         SpellNodeId id = new SpellNodeId(buf.readResourceLocation(), buf.readShort());

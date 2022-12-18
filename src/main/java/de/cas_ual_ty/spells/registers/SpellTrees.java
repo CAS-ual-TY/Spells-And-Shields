@@ -1,5 +1,6 @@
-package de.cas_ual_ty.spells;
+package de.cas_ual_ty.spells.registers;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
 import de.cas_ual_ty.spells.requirement.ItemRequirement;
@@ -26,12 +27,12 @@ import java.util.function.Supplier;
 
 public class SpellTrees
 {
-    private static Supplier<IForgeRegistry<SpellTree>> SPELL_TREES_REGISTRY;
-    public static ResourceKey<Registry<SpellTree>> SPELL_TREES_REGISTRY_KEY;
+    private static Supplier<IForgeRegistry<SpellTree>> REGISTRY;
+    public static ResourceKey<Registry<SpellTree>> REGISTRY_KEY;
     
     public static Registry<SpellTree> getRegistry(LevelAccessor level)
     {
-        return level.registryAccess().registryOrThrow(SPELL_TREES_REGISTRY_KEY);
+        return level.registryAccess().registryOrThrow(REGISTRY_KEY);
     }
     
     public static final String KEY_NETHER = "spell_tree." + SpellsAndShields.MOD_ID + ".nether";
@@ -48,8 +49,8 @@ public class SpellTrees
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        SPELL_TREES_REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).dataPackRegistry(SpellsCodecs.SPELL_TREE_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees"))
-                .onCreate((registry, stage) -> SPELL_TREES_REGISTRY_KEY = registry.getRegistryKey())
+        REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).dataPackRegistry(SpellsCodecs.SPELL_TREE_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees"))
+                .onCreate((registry, stage) -> REGISTRY_KEY = registry.getRegistryKey())
         );
     }
     
@@ -162,16 +163,16 @@ public class SpellTrees
     
     public static Requirement bookshelves(int bookshelves)
     {
-        return new BookshelvesRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT.get(), bookshelves);
+        return new BookshelvesRequirement(RequirementTypes.BOOKSHELVES_REQUIREMENT.get(), bookshelves);
     }
     
     public static Requirement advancement(String advancementRL)
     {
-        return new AdvancementRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT.get(), new ResourceLocation(advancementRL));
+        return new AdvancementRequirement(RequirementTypes.ADVANCEMENT_REQUIREMENT.get(), new ResourceLocation(advancementRL));
     }
     
     public static Requirement item(Item item, int count, boolean consume)
     {
-        return new ItemRequirement(SpellsRegistries.ITEM_REQUIREMENT.get(), new ItemStack(item, count), consume);
+        return new ItemRequirement(RequirementTypes.ITEM_REQUIREMENT.get(), new ItemStack(item, count), consume);
     }
 }

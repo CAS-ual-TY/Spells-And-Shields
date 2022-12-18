@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import de.cas_ual_ty.spells.SpellTrees;
+import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -28,7 +28,7 @@ public class SpellTreeArgument implements ArgumentType<SpellTree>
     
     public SpellTreeArgument(CommandBuildContext cbx)
     {
-        spellTrees = cbx.holderLookup(SpellTrees.SPELL_TREES_REGISTRY_KEY);
+        spellTrees = cbx.holderLookup(SpellTrees.REGISTRY_KEY);
     }
     
     public static SpellTreeArgument spellTree(CommandBuildContext cbx)
@@ -40,7 +40,7 @@ public class SpellTreeArgument implements ArgumentType<SpellTree>
     public SpellTree parse(StringReader reader) throws CommandSyntaxException
     {
         ResourceLocation resourceLocation = ResourceLocation.read(reader);
-        Optional<Holder<SpellTree>> spell = spellTrees.get(ResourceKey.create(SpellTrees.SPELL_TREES_REGISTRY_KEY, resourceLocation));
+        Optional<Holder<SpellTree>> spell = spellTrees.get(ResourceKey.create(SpellTrees.REGISTRY_KEY, resourceLocation));
         
         return spell.orElseThrow(UNKNOWN_SPELL_TREE::create).get();
     }

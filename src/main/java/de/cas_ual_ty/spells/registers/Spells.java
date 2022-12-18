@@ -1,5 +1,6 @@
-package de.cas_ual_ty.spells;
+package de.cas_ual_ty.spells.registers;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Registry;
@@ -15,12 +16,12 @@ import java.util.function.Supplier;
 
 public class Spells
 {
-    private static Supplier<IForgeRegistry<Spell>> SPELLS_REGISTRY;
-    public static ResourceKey<Registry<Spell>> SPELLS_REGISTRY_KEY;
+    private static Supplier<IForgeRegistry<Spell>> REGISTRY;
+    public static ResourceKey<Registry<Spell>> REGISTRY_KEY;
     
     public static Registry<Spell> getRegistry(LevelAccessor level)
     {
-        return level.registryAccess().registryOrThrow(SPELLS_REGISTRY_KEY);
+        return level.registryAccess().registryOrThrow(REGISTRY_KEY);
     }
     
     public static final ResourceLocation TEST = new ResourceLocation(SpellsAndShields.MOD_ID, "test");
@@ -33,8 +34,8 @@ public class Spells
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        SPELLS_REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).dataPackRegistry(SpellsCodecs.SPELL_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spells"))
-                .onCreate((registry, stage) -> SPELLS_REGISTRY_KEY = registry.getRegistryKey())
+        REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).dataPackRegistry(SpellsCodecs.SPELL_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spells"))
+                .onCreate((registry, stage) -> REGISTRY_KEY = registry.getRegistryKey())
         );
     }
     

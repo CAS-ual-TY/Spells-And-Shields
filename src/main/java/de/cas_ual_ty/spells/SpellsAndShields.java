@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells;
 
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.network.*;
+import de.cas_ual_ty.spells.registers.*;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,17 +36,19 @@ public class SpellsAndShields
     {
         SpellsCodecs.makeCodecs();
         
-        //Spells.register();
+        BuiltinRegistries.register();
+        CtxVarTypes.register();
+        RequirementTypes.register();
+        SpellActionTypes.register();
+        SpellIconTypes.register();
         Spells.register();
         SpellTrees.register();
-        SpellsRegistries.register();
+        TargetTypes.register();
         
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common" + ".toml");
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        
-        //Spells.registerEvents();
-        SpellsRegistries.registerEvents();
+        BuiltinRegistries.registerEvents();
         SpellsCapabilities.registerEvents();
         
         CHANNEL.registerMessage(0, ManaSyncMessage.class, ManaSyncMessage::encode, ManaSyncMessage::decode, ManaSyncMessage::handle);
@@ -62,9 +65,6 @@ public class SpellsAndShields
     
     private void setup(FMLCommonSetupEvent event)
     {
-        //Spells.spellsList();
-        //Spells.spellsConfigs();
-        //Spells.registerEventSpells();
-        SpellsRegistries.addPotionRecipes();
+        BuiltinRegistries.addPotionRecipes();
     }
 }

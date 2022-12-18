@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.spell.base;
 
-import de.cas_ual_ty.spells.Spells;
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -112,7 +112,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
             Vec3 position = source.getEyePosition();
             Vec3 direction = source.getViewVector(1F).normalize();
             
-            SpellProjectile projectile = new SpellProjectile(SpellsRegistries.SPELL_PROJECTILE.get(), level, spell);
+            SpellProjectile projectile = new SpellProjectile(BuiltinRegistries.SPELL_PROJECTILE.get(), level, spell);
             
             projectile.setOwner(source);
             projectile.moveTo(position.x, position.y, position.z, source.getXRot(), source.getYRot());

@@ -4,8 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
-import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
+import de.cas_ual_ty.spells.registers.RequirementTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -109,7 +109,7 @@ public class WrappedRequirement extends Requirement
     
     public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        WrappedRequirement w = new WrappedRequirement(SpellsRegistries.WRAPPED_REQUIREMENT.get(), requirement);
+        WrappedRequirement w = new WrappedRequirement(RequirementTypes.WRAPPED_REQUIREMENT.get(), requirement);
         w.decide(spellProgressionHolder, access);
         return w;
     }

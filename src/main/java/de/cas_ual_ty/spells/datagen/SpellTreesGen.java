@@ -2,8 +2,8 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-import de.cas_ual_ty.spells.SpellTrees;
-import de.cas_ual_ty.spells.Spells;
+import de.cas_ual_ty.spells.registers.SpellTrees;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
@@ -43,7 +43,7 @@ public class SpellTreesGen implements DataProvider
         this.registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
         
         spellTrees = new HashMap<>();
-        registry = registryOps.registry(Spells.SPELLS_REGISTRY_KEY).orElseThrow();
+        registry = registryOps.registry(Spells.REGISTRY_KEY).orElseThrow();
     }
     
     public void addSpellTree(String key, SpellTree spellTree)
@@ -76,7 +76,7 @@ public class SpellTreesGen implements DataProvider
     public void run(CachedOutput pOutput) throws IOException
     {
         addSpellTrees();
-        JsonCodecProvider<SpellTree> provider = JsonCodecProvider.forDatapackRegistry(gen, exFileHelper, modId, registryOps, SpellTrees.SPELL_TREES_REGISTRY_KEY, spellTrees);
+        JsonCodecProvider<SpellTree> provider = JsonCodecProvider.forDatapackRegistry(gen, exFileHelper, modId, registryOps, SpellTrees.REGISTRY_KEY, spellTrees);
         provider.run(pOutput);
     }
     

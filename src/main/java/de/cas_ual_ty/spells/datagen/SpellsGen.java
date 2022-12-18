@@ -2,8 +2,8 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-import de.cas_ual_ty.spells.Spells;
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.effect.DamageAction;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
@@ -60,7 +60,7 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.literal("You damage yourself using it"))
                 .addTooltip(Component.translatable("translated.description.key.line1"))
                 .addTooltip(Component.translatable("translated.description.key.line2"))
-                .addAction(new DamageAction(SpellsRegistries.DAMAGE_ACTION.get(), BuiltinActivations.ACTIVE, BuiltinTargetGroups.OWNER, 5D))
+                .addAction(new DamageAction(SpellActionTypes.DAMAGE_ACTION.get(), BuiltinActivations.ACTIVE, BuiltinTargetGroups.OWNER, 5D))
         );
     }
     
@@ -68,7 +68,7 @@ public class SpellsGen implements DataProvider
     public void run(CachedOutput pOutput) throws IOException
     {
         addSpells();
-        JsonCodecProvider<Spell> provider = JsonCodecProvider.forDatapackRegistry(gen, exFileHelper, modId, registryOps, Spells.SPELLS_REGISTRY_KEY, spells);
+        JsonCodecProvider<Spell> provider = JsonCodecProvider.forDatapackRegistry(gen, exFileHelper, modId, registryOps, Spells.REGISTRY_KEY, spells);
         provider.run(pOutput);
     }
     

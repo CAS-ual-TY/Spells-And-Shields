@@ -1,13 +1,14 @@
 package de.cas_ual_ty.spells.datagen;
 
-import de.cas_ual_ty.spells.SpellTrees;
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
 import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
+import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.RequirementTypes;
+import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.ItemRequirement;
 import de.cas_ual_ty.spells.requirement.Requirement;
@@ -39,42 +40,42 @@ public class LangGen extends LanguageProvider
     @Override
     protected void addTranslations()
     {
-        addAttribute(SpellsRegistries.MAX_MANA_ATTRIBUTE, "Max Mana");
-        addAttribute(SpellsRegistries.MANA_REGENERATION_ATTRIBUTE, "Mana Regeneration");
+        addAttribute(BuiltinRegistries.MAX_MANA_ATTRIBUTE, "Max Mana");
+        addAttribute(BuiltinRegistries.MANA_REGENERATION_ATTRIBUTE, "Mana Regeneration");
         
         // support JEI Enchantment Info
         // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
-        add("enchantment." + SpellsAndShields.MOD_ID + ".type." + SpellsRegistries.SHIELD_ENCHANTMENT_CATEGORY.name().toLowerCase(), "shields");
-        add("enchantment." + SpellsAndShields.MOD_ID + ".type." + SpellsRegistries.SWORD_OR_AXE_ENCHANTMENT_CATEGORY.name().toLowerCase(), "axes, swords");
+        add("enchantment." + SpellsAndShields.MOD_ID + ".type." + BuiltinRegistries.SHIELD_ENCHANTMENT_CATEGORY.name().toLowerCase(), "shields");
+        add("enchantment." + SpellsAndShields.MOD_ID + ".type." + BuiltinRegistries.SWORD_OR_AXE_ENCHANTMENT_CATEGORY.name().toLowerCase(), "axes, swords");
         
-        addEnchantment(SpellsRegistries.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection", "Reduces magic damage.");
-        addEnchantment(SpellsRegistries.MANA_BLADE_ENCHANTMENT, "Mana Blade", "Consumes mana to increase damage.");
-        addEnchantment(SpellsRegistries.MANA_SHIELD_ENCHANTMENT, "Mana Shield", "WIP"); //TODO mana shield ench description
-        addEnchantment(SpellsRegistries.MAX_MANA_ENCHANTMENT, "Maximum Mana", "Increases your maximum mana while worn. More potent on chestplates and leggings than helmets and boots.");
-        addEnchantment(SpellsRegistries.MANA_REGENERATION_ENCHANTMENT, "Mana Regeneration", "Increases your mana regeneration while worn. More potent on chestplates and leggings than helmets and boots.");
+        addEnchantment(BuiltinRegistries.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection", "Reduces magic damage.");
+        addEnchantment(BuiltinRegistries.MANA_BLADE_ENCHANTMENT, "Mana Blade", "Consumes mana to increase damage.");
+        addEnchantment(BuiltinRegistries.MANA_SHIELD_ENCHANTMENT, "Mana Shield", "WIP"); //TODO mana shield ench description
+        addEnchantment(BuiltinRegistries.MAX_MANA_ENCHANTMENT, "Maximum Mana", "Increases your maximum mana while worn. More potent on chestplates and leggings than helmets and boots.");
+        addEnchantment(BuiltinRegistries.MANA_REGENERATION_ENCHANTMENT, "Mana Regeneration", "Increases your mana regeneration while worn. More potent on chestplates and leggings than helmets and boots.");
         
-        addEffect(SpellsRegistries.INSTANT_MANA_EFFECT, "Instant Mana", "Replenishes mana; higher levels increase the effect potency.");
-        addEffect(SpellsRegistries.MANA_BOMB_EFFECT, "Mana Bomb", "Burns mana; higher levels increase the effect potency.");
-        addEffect(SpellsRegistries.REPLENISHMENT_EFFECT, "Replenishment", "Replenishes mana over time; higher levels make mana be replenished quicker.");
-        addEffect(SpellsRegistries.LEAKING_MOB_EFFECT, "Leaking", "Burns mana over time; higher levels burn more mana.");
-        addEffect(SpellsRegistries.MANA_BOOST_EFFECT, "Mana Boost", "Increases maximum mana; higher levels give more additional mana bottles.");
-        addEffect(SpellsRegistries.EXTRA_MANA_EFFECT, "Extra Mana", "Adds burnable mana bottles (which can't be replenished); higher levels give more extra mana.");
-        addEffect(SpellsRegistries.SILENCE_EFFECT, "Silence", "No spells can be used while this effect is active.");
-        addEffect(SpellsRegistries.MAGIC_IMMUNE_EFFECT, "Magic Immune", "Makes you ignore any magic damage.");
+        addEffect(BuiltinRegistries.INSTANT_MANA_EFFECT, "Instant Mana", "Replenishes mana; higher levels increase the effect potency.");
+        addEffect(BuiltinRegistries.MANA_BOMB_EFFECT, "Mana Bomb", "Burns mana; higher levels increase the effect potency.");
+        addEffect(BuiltinRegistries.REPLENISHMENT_EFFECT, "Replenishment", "Replenishes mana over time; higher levels make mana be replenished quicker.");
+        addEffect(BuiltinRegistries.LEAKING_MOB_EFFECT, "Leaking", "Burns mana over time; higher levels burn more mana.");
+        addEffect(BuiltinRegistries.MANA_BOOST_EFFECT, "Mana Boost", "Increases maximum mana; higher levels give more additional mana bottles.");
+        addEffect(BuiltinRegistries.EXTRA_MANA_EFFECT, "Extra Mana", "Adds burnable mana bottles (which can't be replenished); higher levels give more extra mana.");
+        addEffect(BuiltinRegistries.SILENCE_EFFECT, "Silence", "No spells can be used while this effect is active.");
+        addEffect(BuiltinRegistries.MAGIC_IMMUNE_EFFECT, "Magic Immune", "Makes you ignore any magic damage.");
         
-        addPotion(SpellsRegistries.INSTANT_MANA, "Instant Mana");
-        addPotion(SpellsRegistries.STRONG_INSTANT_MANA, "Instant Mana");
+        addPotion(BuiltinRegistries.INSTANT_MANA, "Instant Mana");
+        addPotion(BuiltinRegistries.STRONG_INSTANT_MANA, "Instant Mana");
         
-        addPotion(SpellsRegistries.MANA_BOMB, "Mana Bomb");
-        addPotion(SpellsRegistries.STRONG_MANA_BOMB, "Mana Bomb");
+        addPotion(BuiltinRegistries.MANA_BOMB, "Mana Bomb");
+        addPotion(BuiltinRegistries.STRONG_MANA_BOMB, "Mana Bomb");
         
-        addPotion(SpellsRegistries.REPLENISHMENT, "Replenishment");
-        addPotion(SpellsRegistries.LONG_REPLENISHMENT, "Replenishment");
-        addPotion(SpellsRegistries.STRONG_REPLENISHMENT, "Replenishment");
+        addPotion(BuiltinRegistries.REPLENISHMENT, "Replenishment");
+        addPotion(BuiltinRegistries.LONG_REPLENISHMENT, "Replenishment");
+        addPotion(BuiltinRegistries.STRONG_REPLENISHMENT, "Replenishment");
         
-        addPotion(SpellsRegistries.LEAKING, "Leaking");
-        addPotion(SpellsRegistries.LONG_LEAKING, "Leaking");
-        addPotion(SpellsRegistries.STRONG_LEAKING, "Leaking");
+        addPotion(BuiltinRegistries.LEAKING, "Leaking");
+        addPotion(BuiltinRegistries.LONG_LEAKING, "Leaking");
+        addPotion(BuiltinRegistries.STRONG_LEAKING, "Leaking");
         
         add(SpellKeyBindings.CATEGORY, "Spells & Shields");
         for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)
@@ -82,13 +83,13 @@ public class LangGen extends LanguageProvider
             add(SpellKeyBindings.key(i), "Spell Slot " + (i + 1));
         }
         
-        addRequirement(SpellsRegistries.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
-        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, "Advancement: %s");
-        addRequirement(SpellsRegistries.ADVANCEMENT_REQUIREMENT, AdvancementRequirement.ERROR_SUFFIX, "Unknown Advancement (config error): %s");
-        addRequirement(SpellsRegistries.ITEM_REQUIREMENT, "%s (Not Consumed)");
-        addRequirement(SpellsRegistries.ITEM_REQUIREMENT, ItemRequirement.CONSUMED_SUFFIX, "%s (Consumed)");
-        addRequirement(SpellsRegistries.ITEM_REQUIREMENT, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");
-        addRequirement(SpellsRegistries.ITEM_REQUIREMENT, ItemRequirement.MULTIPLE_CONSUMED_SUFFIX, "%sx %s (Consumed)");
+        addRequirement(RequirementTypes.BOOKSHELVES_REQUIREMENT, "%s/%s Bookshelves");
+        addRequirement(RequirementTypes.ADVANCEMENT_REQUIREMENT, "Advancement: %s");
+        addRequirement(RequirementTypes.ADVANCEMENT_REQUIREMENT, AdvancementRequirement.ERROR_SUFFIX, "Unknown Advancement (config error): %s");
+        addRequirement(RequirementTypes.ITEM_REQUIREMENT, "%s (Not Consumed)");
+        addRequirement(RequirementTypes.ITEM_REQUIREMENT, ItemRequirement.CONSUMED_SUFFIX, "%s (Consumed)");
+        addRequirement(RequirementTypes.ITEM_REQUIREMENT, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");
+        addRequirement(RequirementTypes.ITEM_REQUIREMENT, ItemRequirement.MULTIPLE_CONSUMED_SUFFIX, "%sx %s (Consumed)");
         
         add(SpellTrees.KEY_NETHER, "Nether");
         add(SpellTrees.KEY_OCEAN, "Ocean");

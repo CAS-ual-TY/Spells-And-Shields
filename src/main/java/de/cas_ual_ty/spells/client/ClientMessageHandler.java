@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.client;
 
-import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
@@ -8,6 +7,7 @@ import de.cas_ual_ty.spells.network.FireClientSpellMessage;
 import de.cas_ual_ty.spells.network.ManaSyncMessage;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import net.minecraft.client.Minecraft;
@@ -54,7 +54,7 @@ public class ClientMessageHandler
             {
                 for(int i = 0; i < spellHolder.getSlots() && i < msg.spells().length; ++i)
                 {
-                    spellHolder.setSpell(i, new SpellInstance(registry.getHolderOrThrow(ResourceKey.create(Spells.SPELLS_REGISTRY_KEY, msg.spells()[i]))));
+                    spellHolder.setSpell(i, new SpellInstance(registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, msg.spells()[i]))));
                 }
             });
         }

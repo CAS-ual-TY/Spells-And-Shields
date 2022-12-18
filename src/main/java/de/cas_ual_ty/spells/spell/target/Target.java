@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.spell.target;
 
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.registers.TargetTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,25 +23,25 @@ public abstract class Target
     {
         if(entity instanceof Player player)
         {
-            return new PlayerTarget(SpellsRegistries.PLAYER_TARGET.get(), player);
+            return new PlayerTarget(TargetTypes.PLAYER_TARGET.get(), player);
         }
         else if(entity instanceof LivingEntity livingEntity)
         {
-            return new LivingEntityTarget(SpellsRegistries.LIVING_ENTITY_TARGET.get(), livingEntity);
+            return new LivingEntityTarget(TargetTypes.LIVING_ENTITY_TARGET.get(), livingEntity);
         }
         else
         {
-            return new EntityTarget(SpellsRegistries.ENTITY_TARGET.get(), entity);
+            return new EntityTarget(TargetTypes.ENTITY_TARGET.get(), entity);
         }
     }
     
     public static StaticTarget of(Level level, BlockPos blockPos)
     {
-        return new StaticTarget(SpellsRegistries.STATIC_TARGET.get(), level, blockPos);
+        return new StaticTarget(TargetTypes.STATIC_TARGET.get(), level, blockPos);
     }
     
     public static StaticTarget of(Level level, Vec3 position)
     {
-        return new StaticTarget(SpellsRegistries.STATIC_TARGET.get(), level, position);
+        return new StaticTarget(TargetTypes.STATIC_TARGET.get(), level, position);
     }
 }

@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellInteractButton;
@@ -12,6 +11,8 @@ import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
 import de.cas_ual_ty.spells.client.progression.SpellSlotWidget;
 import de.cas_ual_ty.spells.network.RequestSpellProgressionMenuMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
+import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import de.cas_ual_ty.spells.util.ManaTooltipComponent;
@@ -65,13 +66,13 @@ public class SpellsClientUtil
     
     private static void clientSetup(FMLClientSetupEvent event)
     {
-        MenuScreens.register(SpellsRegistries.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
-        SpellIconRegistry.register(SpellsRegistries.DEFAULT_SPELL_ICON.get(), SpellIconRegistry.DEFAULT_RENDERER);
+        MenuScreens.register(BuiltinRegistries.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
+        SpellIconRegistry.register(SpellIconTypes.DEFAULT_SPELL_ICON.get(), SpellIconRegistry.DEFAULT_RENDERER);
     }
     
     private static void entityRenderers(EntityRenderersEvent.RegisterRenderers event)
     {
-        event.registerEntityRenderer(SpellsRegistries.SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
+        event.registerEntityRenderer(BuiltinRegistries.SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
         {
             @Override
             public ResourceLocation getTextureLocation(SpellProjectile pEntity)
@@ -79,7 +80,7 @@ public class SpellsClientUtil
                 return null;
             }
         });
-        event.registerEntityRenderer(SpellsRegistries.HOMING_SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
+        event.registerEntityRenderer(BuiltinRegistries.HOMING_SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
         {
             @Override
             public ResourceLocation getTextureLocation(HomingSpellProjectile pEntity)

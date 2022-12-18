@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.spell.base;
 
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -100,7 +100,7 @@ public class HomingSpellProjectile extends SpellProjectile
     {
         if(source.level instanceof ServerLevel level)
         {
-            HomingSpellProjectile projectile = new HomingSpellProjectile(SpellsRegistries.HOMING_SPELL_PROJECTILE.get(), level, spell);
+            HomingSpellProjectile projectile = new HomingSpellProjectile(BuiltinRegistries.HOMING_SPELL_PROJECTILE.get(), level, spell);
             projectile.setOwnerAndTarget(source, target);
             
             projectile.moveTo(position.x, position.y, position.z, source.getXRot(), source.getYRot());

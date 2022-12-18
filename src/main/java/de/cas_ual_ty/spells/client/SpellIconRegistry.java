@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SizedSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class SpellIconRegistry
 {
-    private static final DefaultSpellIcon ERROR_FALLBACK = new DefaultSpellIcon(SpellsRegistries.DEFAULT_SPELL_ICON.get(), new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/default_fallback.png"));
+    private static final DefaultSpellIcon ERROR_FALLBACK = new DefaultSpellIcon(SpellIconTypes.DEFAULT_SPELL_ICON.get(), new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/default_fallback.png"));
     
     public static final SpellIconRenderer<DefaultSpellIcon> DEFAULT_RENDERER = (icon, poseStack, width, height, x, y, partialTicks) -> {
         RenderSystem.setShaderTexture(0, icon.getTexture());

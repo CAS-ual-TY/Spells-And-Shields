@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.capability;
 
-import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.core.Registry;

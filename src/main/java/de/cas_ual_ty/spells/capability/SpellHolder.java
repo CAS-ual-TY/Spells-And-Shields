@@ -1,9 +1,9 @@
 package de.cas_ual_ty.spells.capability;
 
-import de.cas_ual_ty.spells.SpellTrees;
-import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
+import de.cas_ual_ty.spells.registers.SpellTrees;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;

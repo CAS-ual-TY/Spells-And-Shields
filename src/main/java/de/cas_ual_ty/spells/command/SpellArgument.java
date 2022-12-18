@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import de.cas_ual_ty.spells.Spells;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -28,7 +28,7 @@ public class SpellArgument implements ArgumentType<Spell>
     
     public SpellArgument(CommandBuildContext cbx)
     {
-        spells = cbx.holderLookup(Spells.SPELLS_REGISTRY_KEY);
+        spells = cbx.holderLookup(Spells.REGISTRY_KEY);
     }
     
     public static SpellArgument spell(CommandBuildContext cbx)
@@ -40,7 +40,7 @@ public class SpellArgument implements ArgumentType<Spell>
     public Spell parse(StringReader reader) throws CommandSyntaxException
     {
         ResourceLocation resourceLocation = ResourceLocation.read(reader);
-        Optional<Holder<Spell>> spell = spells.get(ResourceKey.create(Spells.SPELLS_REGISTRY_KEY, resourceLocation));
+        Optional<Holder<Spell>> spell = spells.get(ResourceKey.create(Spells.REGISTRY_KEY, resourceLocation));
         
         return spell.orElseThrow(UNKNOWN_SPELL::create).get();
     }

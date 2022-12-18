@@ -1,6 +1,5 @@
-package de.cas_ual_ty.spells;
+package de.cas_ual_ty.spells.registers;
 
-import com.mojang.serialization.Codec;
 import de.cas_ual_ty.spells.command.SpellArgument;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.command.SpellTreeArgument;
@@ -10,20 +9,13 @@ import de.cas_ual_ty.spells.effect.ManaMobEffect;
 import de.cas_ual_ty.spells.effect.SimpleEffect;
 import de.cas_ual_ty.spells.enchantment.*;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
-import de.cas_ual_ty.spells.requirement.*;
-import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.action.effect.DamageAction;
 import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
-import de.cas_ual_ty.spells.spell.icon.*;
-import de.cas_ual_ty.spells.spell.target.*;
-import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -48,46 +40,14 @@ import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.IContainerFactory;
-import net.minecraftforge.registries.*;
-
-import java.util.function.Supplier;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
-public class SpellsRegistries
+public class BuiltinRegistries
 {
-    public static Supplier<IForgeRegistry<RequirementType<?>>> REQUIREMENTS_REGISTRY;
-    private static final DeferredRegister<RequirementType<?>> REQUIREMENTS = DeferredRegister.create(new ResourceLocation(MOD_ID, "requirements"), MOD_ID);
-    public static final RegistryObject<RequirementType<WrappedRequirement>> WRAPPED_REQUIREMENT = REQUIREMENTS.register("client_wrap", () -> new RequirementType<>(WrappedRequirement::new, (type) -> WrappedRequirement.CODEC));
-    public static final RegistryObject<RequirementType<BookshelvesRequirement>> BOOKSHELVES_REQUIREMENT = REQUIREMENTS.register("bookshelves", () -> new RequirementType<>(BookshelvesRequirement::new, BookshelvesRequirement::makeCodec));
-    public static final RegistryObject<RequirementType<AdvancementRequirement>> ADVANCEMENT_REQUIREMENT = REQUIREMENTS.register("advancement", () -> new RequirementType<>(AdvancementRequirement::new, AdvancementRequirement::makeCodec));
-    public static final RegistryObject<RequirementType<ItemRequirement>> ITEM_REQUIREMENT = REQUIREMENTS.register("item", () -> new RequirementType<>(ItemRequirement::new, ItemRequirement::makeCodec));
-    
-    public static Supplier<IForgeRegistry<ITargetType<?>>> TARGETS_REGISTRY;
-    private static final DeferredRegister<ITargetType<?>> TARGETS = DeferredRegister.create(new ResourceLocation(MOD_ID, "targets"), MOD_ID);
-    public static final RegistryObject<ITargetType<EntityTarget>> ENTITY_TARGET = TARGETS.register("entity", () -> (t -> t instanceof EntityTarget));
-    public static final RegistryObject<ITargetType<LivingEntityTarget>> LIVING_ENTITY_TARGET = TARGETS.register("living_entity", () -> (t -> t instanceof LivingEntityTarget));
-    public static final RegistryObject<ITargetType<PlayerTarget>> PLAYER_TARGET = TARGETS.register("player", () -> (t -> t instanceof PlayerTarget));
-    public static final RegistryObject<ITargetType<ItemTarget>> ITEM_TARGET = TARGETS.register("item", () -> (t -> t instanceof ItemTarget));
-    public static final RegistryObject<ITargetType<PositionTarget>> POSITION_TARGET = TARGETS.register("position", () -> (t -> t instanceof PositionTarget));
-    public static final RegistryObject<ITargetType<StaticTarget>> STATIC_TARGET = TARGETS.register("static", () -> (t -> t instanceof StaticTarget));
-    
-    public static Supplier<IForgeRegistry<SpellActionType<?>>> SPELL_ACTIONS_REGISTRY;
-    private static final DeferredRegister<SpellActionType<?>> SPELL_ACTIONS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_actions"), MOD_ID);
-    public static final RegistryObject<SpellActionType<DamageAction>> DAMAGE_ACTION = SPELL_ACTIONS.register("damage", () -> new SpellActionType<>(DamageAction::new, DamageAction::makeCodec));
-    
-    public static Supplier<IForgeRegistry<CtxVarType<?>>> CTX_VARS_REGISTRY;
-    private static final DeferredRegister<CtxVarType<?>> CTX_VARS = DeferredRegister.create(new ResourceLocation(MOD_ID, "context_variables"), MOD_ID);
-    public static final RegistryObject<CtxVarType<Integer>> INT_CTX_VAR = CTX_VARS.register("int", () -> new CtxVarType<>(Codec.INT));
-    public static final RegistryObject<CtxVarType<Double>> DOUBLE_CTX_VAR = CTX_VARS.register("double", () -> new CtxVarType<>(Codec.DOUBLE));
-    
-    public static Supplier<IForgeRegistry<SpellIconType<?>>> SPELL_ICONS_REGISTRY;
-    private static final DeferredRegister<SpellIconType<?>> SPELL_ICONS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_icons"), MOD_ID);
-    public static final RegistryObject<SpellIconType<DefaultSpellIcon>> DEFAULT_SPELL_ICON = SPELL_ICONS.register("default", () -> new SpellIconType<>(DefaultSpellIcon::new, DefaultSpellIcon::makeCodec));
-    public static final RegistryObject<SpellIconType<SizedSpellIcon>> SIZED_SPELL_ICON = SPELL_ICONS.register("sized", () -> new SpellIconType<>(SizedSpellIcon::new, SizedSpellIcon::makeCodec));
-    public static final RegistryObject<SpellIconType<AdvancedSpellIcon>> ADVANCED_SPELL_ICON = SPELL_ICONS.register("advanced", () -> new SpellIconType<>(AdvancedSpellIcon::new, AdvancedSpellIcon::makeCodec));
-    public static final RegistryObject<SpellIconType<ItemSpellIcon>> ITEM_SPELL_ICON = SPELL_ICONS.register("item", () -> new SpellIconType<>(ItemSpellIcon::new, ItemSpellIcon::makeCodec));
-    
     private static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
     public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20D, 0D, 1024D).setSyncable(true));
     public static final RegistryObject<RangedAttribute> MANA_REGENERATION_ATTRIBUTE = ATTRIBUTES.register("generic.mana_regeneration", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.mana_regen", 1D, 0D, 50D).setSyncable(true));
@@ -137,12 +97,6 @@ public class SpellsRegistries
     
     public static void register()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsRegistries::newRegistry);
-        REQUIREMENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        TARGETS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        SPELL_ACTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        CTX_VARS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        SPELL_ICONS.register(FMLJavaModLoadingContext.get().getModEventBus());
         MOB_EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         POTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -152,26 +106,17 @@ public class SpellsRegistries
         ARGUMENT_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
     
-    private static void newRegistry(NewRegistryEvent event)
-    {
-        REQUIREMENTS_REGISTRY = event.create(new RegistryBuilder<RequirementType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
-        TARGETS_REGISTRY = event.create(new RegistryBuilder<ITargetType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "targets")));
-        SPELL_ACTIONS_REGISTRY = event.create(new RegistryBuilder<SpellActionType<?>>().setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spell_actions")));
-        CTX_VARS_REGISTRY = event.create(new RegistryBuilder<CtxVarType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "context_variables")));
-        SPELL_ICONS_REGISTRY = event.create(new RegistryBuilder<SpellIconType<?>>().setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spell_icons")));
-    }
-    
     public static void addPotionRecipes()
     {
-        SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.INSTANT_MANA.get(), SpellsRegistries.STRONG_INSTANT_MANA.get(), null, Items.TUBE_CORAL, SpellsRegistries.MANA_BOMB.get(), SpellsRegistries.STRONG_MANA_BOMB.get(), null, Items.FERMENTED_SPIDER_EYE);
-        SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.REPLENISHMENT.get(), SpellsRegistries.STRONG_REPLENISHMENT.get(), SpellsRegistries.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
-        SpellsUtil.addPotionRecipes(Potions.AWKWARD, SpellsRegistries.LEAKING.get(), SpellsRegistries.STRONG_LEAKING.get(), SpellsRegistries.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltinRegistries.INSTANT_MANA.get(), BuiltinRegistries.STRONG_INSTANT_MANA.get(), null, Items.TUBE_CORAL, BuiltinRegistries.MANA_BOMB.get(), BuiltinRegistries.STRONG_MANA_BOMB.get(), null, Items.FERMENTED_SPIDER_EYE);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltinRegistries.REPLENISHMENT.get(), BuiltinRegistries.STRONG_REPLENISHMENT.get(), BuiltinRegistries.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltinRegistries.LEAKING.get(), BuiltinRegistries.STRONG_LEAKING.get(), BuiltinRegistries.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
     }
     
     private static void entityAttributeModification(EntityAttributeModificationEvent event)
     {
-        event.add(EntityType.PLAYER, SpellsRegistries.MAX_MANA_ATTRIBUTE.get());
-        event.add(EntityType.PLAYER, SpellsRegistries.MANA_REGENERATION_ATTRIBUTE.get());
+        event.add(EntityType.PLAYER, BuiltinRegistries.MAX_MANA_ATTRIBUTE.get());
+        event.add(EntityType.PLAYER, BuiltinRegistries.MANA_REGENERATION_ATTRIBUTE.get());
     }
     
     private static void registerCommands(RegisterCommandsEvent event)
@@ -181,7 +126,7 @@ public class SpellsRegistries
     
     private static void livingHurt(LivingHurtEvent event)
     {
-        if(!event.getEntity().level.isClientSide && event.getSource().isMagic() && !event.getSource().isBypassInvul() && event.getEntity().hasEffect(SpellsRegistries.MAGIC_IMMUNE_EFFECT.get()))
+        if(!event.getEntity().level.isClientSide && event.getSource().isMagic() && !event.getSource().isBypassInvul() && event.getEntity().hasEffect(BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get()))
         {
             event.setCanceled(true);
         }
@@ -189,8 +134,8 @@ public class SpellsRegistries
     
     public static void registerEvents()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsRegistries::entityAttributeModification);
-        MinecraftForge.EVENT_BUS.addListener(SpellsRegistries::registerCommands);
-        MinecraftForge.EVENT_BUS.addListener(SpellsRegistries::livingHurt);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(BuiltinRegistries::entityAttributeModification);
+        MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::registerCommands);
+        MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::livingHurt);
     }
 }

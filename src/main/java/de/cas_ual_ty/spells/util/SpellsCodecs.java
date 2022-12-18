@@ -7,9 +7,7 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cas_ual_ty.spells.SpellTrees;
-import de.cas_ual_ty.spells.Spells;
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.registers.*;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
 import de.cas_ual_ty.spells.spell.Spell;
@@ -58,14 +56,14 @@ public class SpellsCodecs
     
     public static void makeCodecs()
     {
-        SPELL = ExtraCodecs.lazyInitializedCodec(() -> RegistryFileCodec.create(Spells.SPELLS_REGISTRY_KEY, ExtraCodecs.lazyInitializedCodec(() -> SPELL_CONTENTS), false));
-        SPELL_TREE = ExtraCodecs.lazyInitializedCodec(() -> RegistryFixedCodec.create(SpellTrees.SPELL_TREES_REGISTRY_KEY));
+        SPELL = ExtraCodecs.lazyInitializedCodec(() -> RegistryFileCodec.create(Spells.REGISTRY_KEY, ExtraCodecs.lazyInitializedCodec(() -> SPELL_CONTENTS), false));
+        SPELL_TREE = ExtraCodecs.lazyInitializedCodec(() -> RegistryFixedCodec.create(SpellTrees.REGISTRY_KEY));
         
-        REQUIREMENT_TYPE = ExtraCodecs.lazyInitializedCodec(() -> SpellsRegistries.REQUIREMENTS_REGISTRY.get().getCodec());
-        CTX_VAR_TYPE = ExtraCodecs.lazyInitializedCodec(() -> SpellsRegistries.CTX_VARS_REGISTRY.get().getCodec());
-        SPELL_ACTION_TYPE = ExtraCodecs.lazyInitializedCodec(() -> SpellsRegistries.SPELL_ACTIONS_REGISTRY.get().getCodec());
-        SPELL_ICON_TYPE = ExtraCodecs.lazyInitializedCodec(() -> SpellsRegistries.SPELL_ICONS_REGISTRY.get().getCodec());
-        TARGET_TYPE = ExtraCodecs.lazyInitializedCodec(() -> SpellsRegistries.TARGETS_REGISTRY.get().getCodec());
+        REQUIREMENT_TYPE = ExtraCodecs.lazyInitializedCodec(() -> RequirementTypes.REGISTRY.get().getCodec());
+        CTX_VAR_TYPE = ExtraCodecs.lazyInitializedCodec(() -> CtxVarTypes.REGISTRY.get().getCodec());
+        SPELL_ACTION_TYPE = ExtraCodecs.lazyInitializedCodec(() -> SpellActionTypes.REGISTRY.get().getCodec());
+        SPELL_ICON_TYPE = ExtraCodecs.lazyInitializedCodec(() -> SpellIconTypes.REGISTRY.get().getCodec());
+        TARGET_TYPE = ExtraCodecs.lazyInitializedCodec(() -> TargetTypes.REGISTRY.get().getCodec());
         
         REQUIREMENT = ExtraCodecs.lazyInitializedCodec(() -> REQUIREMENT_TYPE.dispatch("type", Requirement::getType, RequirementType::getCodec));
         SPELL_ACTION = ExtraCodecs.lazyInitializedCodec(() -> SPELL_ACTION_TYPE.dispatch("type", SpellAction::getType, SpellActionType::getCodec));

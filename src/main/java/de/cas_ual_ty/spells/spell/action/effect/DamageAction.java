@@ -2,7 +2,8 @@ package de.cas_ual_ty.spells.spell.action.effect;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
@@ -19,7 +20,7 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 SpellAction.makeActivation(),
                 AffectTypeAction.makeTargetsCodec(),
-                SpellsRegistries.DOUBLE_CTX_VAR.get().refCodec().fieldOf("damage").forGetter(DamageAction::getDamage)
+                CtxVarTypes.DOUBLE_CTX_VAR.get().refCodec().fieldOf("damage").forGetter(DamageAction::getDamage)
         ).apply(instance, (activation, targets, damage) -> new DamageAction(type, activation, targets, damage)));
     }
     
@@ -32,13 +33,13 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
     
     public DamageAction(SpellActionType<?> type, String activation, String targets, CtxVarRef<Double> damage)
     {
-        super(type, activation, targets, SpellsRegistries.LIVING_ENTITY_TARGET.get());
+        super(type, activation, targets, TargetTypes.LIVING_ENTITY_TARGET.get());
         this.damage = damage;
     }
     
     public DamageAction(SpellActionType<?> type, BuiltinActivations activation, BuiltinTargetGroups targets, double damage)
     {
-        this(type, activation.activation, targets.targetGroup, SpellsRegistries.DOUBLE_CTX_VAR.get().ref(damage));
+        this(type, activation.activation, targets.targetGroup, CtxVarTypes.DOUBLE_CTX_VAR.get().ref(damage));
     }
     
     public CtxVarRef<Double> getDamage()

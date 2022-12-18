@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.spell.action.target;
 
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -47,7 +47,7 @@ public class LookAtAction extends SpellAction
     {
         TargetGroup source = ctx.getTargetGroup(src);
         
-        source.forEachType(SpellsRegistries.ENTITY_TARGET.get(), (entityTarget) ->
+        source.forEachType(TargetTypes.ENTITY_TARGET.get(), (entityTarget) ->
         {
             HitResult hitResult = SpellsUtil.rayTrace(entityTarget.getLevel(), entityTarget.getEntity(), range, e -> true, bbInflation, block, fluid);
             

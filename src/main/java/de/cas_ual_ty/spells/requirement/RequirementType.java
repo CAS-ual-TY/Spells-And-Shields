@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.requirement;
 
 import com.mojang.serialization.Codec;
-import de.cas_ual_ty.spells.SpellsRegistries;
+import de.cas_ual_ty.spells.registers.RequirementTypes;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.function.Function;
@@ -29,7 +29,7 @@ public class RequirementType<R extends Requirement>
     
     public static void writeToBuf(FriendlyByteBuf buf, Requirement requirement)
     {
-        buf.writeRegistryId(SpellsRegistries.REQUIREMENTS_REGISTRY.get(), requirement.getType());
+        buf.writeRegistryId(RequirementTypes.REGISTRY.get(), requirement.getType());
         requirement.writeToBuf(buf);
     }
     
