@@ -58,4 +58,10 @@ public record SpellNodeId(ResourceLocation treeId, int nodeId)
         int nodeId = buf.readShort();
         return new SpellNodeId(treeId, nodeId);
     }
+    
+    @Override
+    public String toString()
+    {
+        return treeId + "/" + nodeId;
+    }
 }

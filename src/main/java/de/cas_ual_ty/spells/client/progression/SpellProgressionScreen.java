@@ -431,7 +431,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, WINDOW_LOCATION);
         this.blit(poseStack, offX, offY, 0, 0, GUI_WIDTH, GUI_HEIGHT);
-        if(this.tabs.size() > 1)
+        if(this.tabs.size() > 0)
         {
             RenderSystem.setShaderTexture(0, TABS_LOCATION);
             
@@ -480,7 +480,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             b.renderToolTip(poseStack, mouseX, mouseY);
         }
         
-        if(this.tabs.size() > 1)
+        if(this.tabs.size() > 0)
         {
             for(SpellTreeTab tab : this.tabs.values())
             {

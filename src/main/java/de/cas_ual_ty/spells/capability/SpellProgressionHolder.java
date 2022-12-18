@@ -16,7 +16,6 @@ import java.util.Map;
 
 public class SpellProgressionHolder implements ISpellProgressionHolder
 {
-    public static final String KEY_SPELL = "spell";
     public static final String KEY_SPELL_STATUS = "spell_status";
     
     protected final Player player;
@@ -80,7 +79,7 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
         {
             CompoundTag tag = nbt.getCompound(i);
             
-            if(tag.contains(KEY_SPELL) && tag.contains(KEY_SPELL_STATUS) && tag.get(KEY_SPELL).getId() == Tag.TAG_STRING && tag.get(KEY_SPELL_STATUS).getId() == Tag.TAG_BYTE)
+            if(tag.contains(KEY_SPELL_STATUS) && tag.get(KEY_SPELL_STATUS).getId() == Tag.TAG_BYTE)
             {
                 SpellNodeId spellNodeId = SpellNodeId.fromNbt(tag);
                 byte ordinal = tag.getByte(KEY_SPELL_STATUS);

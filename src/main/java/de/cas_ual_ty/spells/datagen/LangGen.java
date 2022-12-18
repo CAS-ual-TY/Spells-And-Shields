@@ -9,6 +9,7 @@ import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.RequirementTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
 import de.cas_ual_ty.spells.requirement.ItemRequirement;
 import de.cas_ual_ty.spells.requirement.Requirement;
@@ -91,12 +92,6 @@ public class LangGen extends LanguageProvider
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_CONSUMED_SUFFIX, "%sx %s (Consumed)");
         
-        add(SpellTrees.KEY_NETHER, "Nether");
-        add(SpellTrees.KEY_OCEAN, "Ocean");
-        add(SpellTrees.KEY_MINING, "Mining");
-        add(SpellTrees.KEY_MOVEMENT, "Movement");
-        add(SpellTrees.KEY_END, "End");
-        
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
         add(SpellCommand.SPELLS_PROGRESSION_LEARN_SINGLE, "Spell '%s' has been learned by %s");
@@ -130,6 +125,14 @@ public class LangGen extends LanguageProvider
         add(SpellProgressionScreen.KEY_EQUIP, "Equip");
         add(SpellProgressionScreen.KEY_UNAVAILABLE, "Unavailable");
         add(SpellProgressionScreen.KEY_CHOOSE_SLOT, "Choose a Slot");
+        
+        add(SpellTrees.KEY_NETHER, "Nether");
+        add(SpellTrees.KEY_OCEAN, "Ocean");
+        add(SpellTrees.KEY_MINING, "Mining");
+        add(SpellTrees.KEY_MOVEMENT, "Movement");
+        add(SpellTrees.KEY_END, "End");
+        
+        add(Spells.KEY_TEST, "Test Spell");
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)

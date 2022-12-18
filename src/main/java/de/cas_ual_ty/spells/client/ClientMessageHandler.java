@@ -54,7 +54,14 @@ public class ClientMessageHandler
             {
                 for(int i = 0; i < spellHolder.getSlots() && i < msg.spells().length; ++i)
                 {
-                    spellHolder.setSpell(i, new SpellInstance(registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, msg.spells()[i]))));
+                    if(msg.spells()[i] != null)
+                    {
+                        spellHolder.setSpell(i, new SpellInstance(registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, msg.spells()[i]))));
+                    }
+                    else
+                    {
+                        spellHolder.setSpell(i, null);
+                    }
                 }
             });
         }

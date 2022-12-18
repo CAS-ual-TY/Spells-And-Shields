@@ -27,21 +27,24 @@ public class SpellInstance
         this.variables = variables;
         nodeId = null;
         
-        int i = 0;
-        for(SpellAction action : spell.get().getSpellActions())
+        if(spell.isBound())
         {
-            for(CtxVarRef<?> v : action.getAllCtxVarRefs())
+            int i = 0;
+            for(SpellAction action : spell.get().getSpellActions())
             {
-                if(v instanceof CtxVarRef.CtxVarDyn<?> v1)
+                for(CtxVarRef<?> v : action.getAllCtxVarRefs())
                 {
-                    if(variables.stream().noneMatch(v2 -> v1.getName().equals(v2.getName()) && v1.getType() == v2.getType()))
+                    if(v instanceof CtxVarRef.CtxVarDyn<?> v1)
                     {
-                        throw new IllegalStateException("Action at index %s references the variable '%s' that is not registered".formatted(i, v1.getNameWithFixes()));
+                        if(variables.stream().noneMatch(v2 -> v1.getName().equals(v2.getName()) && v1.getType() == v2.getType()))
+                        {
+                            throw new IllegalStateException("Action at index %s references the variable '%s' that is not registered".formatted(i, v1.getNameWithFixes()));
+                        }
                     }
                 }
+                
+                i++;
             }
-            
-            i++;
         }
     }
     
