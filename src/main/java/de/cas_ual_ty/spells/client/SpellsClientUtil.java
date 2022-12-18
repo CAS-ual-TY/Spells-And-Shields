@@ -68,6 +68,9 @@ public class SpellsClientUtil
     {
         MenuScreens.register(BuiltinRegistries.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
         SpellIconRegistry.register(SpellIconTypes.DEFAULT.get(), SpellIconRegistry.DEFAULT_RENDERER);
+        SpellIconRegistry.register(SpellIconTypes.SIZED.get(), SpellIconRegistry.SIZED_RENDERER);
+        SpellIconRegistry.register(SpellIconTypes.ADVANCED.get(), SpellIconRegistry.ADVANCED_RENDERER);
+        SpellIconRegistry.register(SpellIconTypes.ITEM.get(), SpellIconRegistry.ITEM_RENDERER);
     }
     
     private static void entityRenderers(EntityRenderersEvent.RegisterRenderers event)

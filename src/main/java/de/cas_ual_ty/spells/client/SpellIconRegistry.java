@@ -4,10 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
-import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
-import de.cas_ual_ty.spells.spell.icon.SizedSpellIcon;
-import de.cas_ual_ty.spells.spell.icon.SpellIcon;
-import de.cas_ual_ty.spells.spell.icon.SpellIconType;
+import de.cas_ual_ty.spells.spell.icon.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 
@@ -33,6 +31,21 @@ public class SpellIconRegistry
         int offX = (width - icon.getSize()) / 2;
         int offY = (height - icon.getSize()) / 2;
         GuiComponent.blit(poseStack, x + offX, y + offY, icon.getSize(), icon.getSize(), 0, 0, icon.getSize(), icon.getSize(), icon.getSize(), icon.getSize());
+        RenderSystem.disableBlend();
+    };
+    
+    public static final SpellIconRenderer<ItemSpellIcon> ITEM_RENDERER = (icon, poseStack, width, height, x, y, partialTicks) -> {
+        RenderSystem.enableBlend();
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(icon.getItem(), x + width / 2, y + width / 2);
+        RenderSystem.disableBlend();
+    };
+    
+    public static final SpellIconRenderer<AdvancedSpellIcon> ADVANCED_RENDERER = (icon, poseStack, width, height, x, y, partialTicks) -> {
+        RenderSystem.setShaderTexture(0, icon.getTexture());
+        RenderSystem.enableBlend();
+        int offX = (width - icon.getWidth()) / 2;
+        int offY = (height - icon.getHeight()) / 2;
+        GuiComponent.blit(poseStack, x + offX, y + offY, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
         RenderSystem.disableBlend();
     };
     
