@@ -116,7 +116,7 @@ public class SpellContext
         return Optional.empty();
     }
     
-    public <T> boolean setCtxVar(CtxVarType<T> type, String name, T value)
+    public <T> boolean initCtxVar(CtxVarType<T> type, String name, T value)
     {
         CtxVar<?> ctxVar = ctxVars.get(name);
         
@@ -126,6 +126,12 @@ public class SpellContext
         }
         
         return false;
+    }
+    
+    public <T> boolean initCtxVar(CtxVar<T> variable)
+    {
+        ctxVars.put(variable.getName(), variable.copy());
+        return true;
     }
     
     public void terminate()

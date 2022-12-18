@@ -41,7 +41,7 @@ public abstract class CtxVarRef<I>
             {
                 if(value instanceof CtxVarDyn<I> dyn)
                 {
-                    return ops.createString(VAR_PREFIX + dyn.getName() + VAR_SUFFIX);
+                    return ops.createString(dyn.getNameWithFixes());
                 }
                 else if(value instanceof CtxVarImm<I> imm)
                 {
@@ -109,6 +109,11 @@ public abstract class CtxVarRef<I>
         public String getName()
         {
             return name;
+        }
+        
+        public String getNameWithFixes()
+        {
+            return VAR_PREFIX + name + VAR_SUFFIX;
         }
         
         @Override

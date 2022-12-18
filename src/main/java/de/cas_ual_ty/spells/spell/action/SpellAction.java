@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.spell.action;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
-import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import de.cas_ual_ty.spells.spell.variable.CtxVarRef;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public abstract class SpellAction
         return activation;
     }
     
-    public List<CtxVarType<?>> getAllCtxVarRefs()
+    public List<CtxVarRef<?>> getAllCtxVarRefs()
     {
         return List.of();
     }

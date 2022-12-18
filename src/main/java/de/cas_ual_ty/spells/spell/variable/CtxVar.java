@@ -56,4 +56,9 @@ public class CtxVar<T>
     {
         return this.type.tryGetAs(type, this);
     }
+    
+    public CtxVar<T> copy()
+    {
+        return new CtxVar<>(type, name, value);
+    }
 }
