@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
-import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -65,11 +65,11 @@ public class SpellSlotWidget extends Button
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
-                Spell spell = spellHolder.getSpell(slot);
+                SpellInstance spell = spellHolder.getSpell(slot);
                 
-                if(spell != null)
+                if(spell != null && spell.getSpell() != null)
                 {
-                    SpellIcon icon = spell.getIcon();
+                    SpellIcon icon = spell.getSpell().get().getIcon();
                     SpellIconRegistry.render(icon, poseStack, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, x, y, deltaTick);
                 }
             });
@@ -101,17 +101,17 @@ public class SpellSlotWidget extends Button
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
-                Spell spell = spellHolder.getSpell(slot);
+                SpellInstance spell = spellHolder.getSpell(slot);
                 
-                if(spell != null)
+                if(spell != null && spell.getSpell() != null)
                 {
                     RenderSystem.enableDepthTest();
                     poseStack.pushPose();
                     poseStack.translate(0, 0, 10D);
                     
                     Component keyBindTooltip = SpellKeyBindings.getBaseTooltip().append(": ").append(SpellKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
-                    List<Component> tooltip = spell.getTooltip(keyBindTooltip);
-                    Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
+                    List<Component> tooltip = spell.getSpell().get().getTooltip(keyBindTooltip);
+                    Optional<TooltipComponent> tooltipComponent = spell.getSpell().get().getTooltipComponent();
                     
                     screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);
                     

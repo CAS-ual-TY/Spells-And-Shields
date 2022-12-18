@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
+import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -50,7 +51,7 @@ public class SelectedSpellWidget extends GuiComponent
         this.font = Minecraft.getInstance().font;
     }
     
-    public void setContents(SpellNode spell, Map<Spell, SpellStatus> progression, SpellStatus spellStatus, FormattedCharSequence title)
+    public void setContents(SpellNode spell, Map<SpellNodeId, SpellStatus> progression, SpellStatus spellStatus, FormattedCharSequence title)
     {
         this.spell = spell;
         this.spellStatus = spellStatus;

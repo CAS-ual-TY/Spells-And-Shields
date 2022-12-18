@@ -10,7 +10,8 @@
         "bookshelves": 28
       }
     ],
-    "spell": "spells_and_shields:test"
+    "spell": "spells_and_shields:test",
+    "variables": []
   },
   "title": {
     "text": "Debug Tree"

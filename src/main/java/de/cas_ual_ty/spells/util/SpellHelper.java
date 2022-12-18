@@ -4,7 +4,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsRegistries;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.network.FireSpellMessage;
-import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.SpellInstance;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.PacketDistributor;
@@ -21,7 +21,7 @@ public class SpellHelper
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
-                Spell spell = spellHolder.getSpell(slot);
+                SpellInstance spell = spellHolder.getSpell(slot);
                 
                 if(spell != null)
                 {

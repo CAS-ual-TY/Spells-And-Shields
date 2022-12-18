@@ -1,13 +1,26 @@
 package de.cas_ual_ty.spells.spell.action.effect;
 
-import de.cas_ual_ty.spells.spell.action.BaseSpellAction;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.Target;
+import de.cas_ual_ty.spells.util.SpellsCodecs;
 
-public abstract class AffectTypeAction<T extends Target> extends BaseSpellAction
+public abstract class AffectTypeAction<T extends Target> extends SpellAction
 {
+    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, String> makeTargetsCodec()
+    {
+        return Codec.STRING.fieldOf("targets").forGetter(AffectTypeAction::getTargets);
+    }
+    
+    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, ITargetType<?>> makeTargetTypeCodec()
+    {
+        return SpellsCodecs.TARGET_TYPE.fieldOf("targetType").forGetter(AffectTypeAction::getTargetType);
+    }
+    
     protected String targets;
     protected ITargetType<T> targetType;
     

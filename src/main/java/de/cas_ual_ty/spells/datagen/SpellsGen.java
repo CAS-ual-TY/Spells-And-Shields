@@ -55,12 +55,12 @@ public class SpellsGen implements DataProvider
     
     protected void addSpells()
     {
-        addSpell(Spells.TEST, new Spell(modId, "textures/spell/default_fallback.png", Spells.KEY_TEST, 2F)
+        addSpell(Spells.TEST, new Spell(modId, "default_fallback", Spells.KEY_TEST, 2F)
                 .addTooltip(Component.literal("Description here // this is a debug spell"))
                 .addTooltip(Component.literal("You damage yourself using it"))
                 .addTooltip(Component.translatable("translated.description.key.line1"))
                 .addTooltip(Component.translatable("translated.description.key.line2"))
-                .addAction(new DamageAction(SpellsRegistries.DAMAGE_ACTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, 5D))
+                .addAction(new DamageAction(SpellsRegistries.DAMAGE_ACTION.get(), BuiltinActivations.ACTIVE, BuiltinTargetGroups.OWNER, 5D))
         );
     }
     

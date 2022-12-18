@@ -33,7 +33,9 @@ public class Spells
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        SPELLS_REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).dataPackRegistry(SpellsCodecs.SPELL_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spells")).onCreate((registry, stage) -> SPELLS_REGISTRY_KEY = registry.getRegistryKey()));
+        SPELLS_REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).dataPackRegistry(SpellsCodecs.SPELL_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spells"))
+                .onCreate((registry, stage) -> SPELLS_REGISTRY_KEY = registry.getRegistryKey())
+        );
     }
     
     public static String key(ResourceLocation rl)

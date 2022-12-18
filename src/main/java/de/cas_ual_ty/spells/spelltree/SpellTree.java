@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spelltree;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -83,15 +84,13 @@ public class SpellTree
         return requirements;
     }
     
-    public ResourceLocation getClientId()
+    public ResourceLocation getId()
     {
-        // used temporarily on client side for synced trees
         return id;
     }
     
     public SpellTree setId(ResourceLocation id)
     {
-        // used temporarily on client side for synced trees
         this.id = id;
         return this;
     }
@@ -149,11 +148,12 @@ public class SpellTree
         }
     }
     
-    public SpellTree assignNodeIds()
+    public void assignNodeIds(ResourceLocation spellTreeId)
     {
+        setId(spellTreeId);
+        
         AtomicInteger i = new AtomicInteger(0);
-        forEach(spellNode -> spellNode.setId(i.getAndIncrement()));
-        return this;
+        forEach(spellNode -> spellNode.setId(spellTreeId, i.getAndIncrement()));
     }
     
     public SpellNode findNode(int id)
@@ -165,7 +165,7 @@ public class SpellTree
         {
             SpellNode node = stack.pop();
             
-            if(node.getId() == id)
+            if(node.getId().nodeId() == id)
             {
                 return node;
             }
@@ -194,14 +194,9 @@ public class SpellTree
         }
     }
     
-    protected SpellTree copy() // deep copy
+    public SpellTree copy() // deep copy
     {
-        return new SpellTree(innerDeepCopy(root), title, icon, requirements);
-    }
-    
-    public SpellTree copyWithId(Registry<SpellTree> registry) // deep copy
-    {
-        return copy().setId(getId(registry));
+        return new SpellTree(innerDeepCopy(root), title, icon, requirements).setId(id);
     }
     
     private SpellNode innerDeepCopy(SpellNode original)
@@ -259,7 +254,7 @@ public class SpellTree
         
         private Builder(Component title, Holder<Spell> root, int levelCost, List<Requirement> requirements)
         {
-            this(title, new SpellNode(root, levelCost, requirements));
+            this(title, new SpellNode(new SpellInstance(root), levelCost, requirements));
         }
         
         public Builder requirement(Requirement requirement)
@@ -270,7 +265,7 @@ public class SpellTree
         
         public Builder add(Holder<Spell> spell, int levelCost, Requirement... requirements)
         {
-            return add(new SpellNode(spell, levelCost, List.of(requirements)));
+            return add(new SpellNode(new SpellInstance(spell), levelCost, List.of(requirements)));
         }
         
         public Builder add(SpellNode spellNode)
@@ -294,7 +289,7 @@ public class SpellTree
         
         public SpellTree finish()
         {
-            return new SpellTree(root, title, icon != null ? icon : root.getSpell(), treeRequirements);
+            return new SpellTree(root, title, icon != null ? icon : root.getSpellInstance().getSpell(), treeRequirements);
         }
     }
 }

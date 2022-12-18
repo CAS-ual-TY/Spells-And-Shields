@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.client;
 
+import de.cas_ual_ty.spells.Spells;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
@@ -7,16 +8,15 @@ import de.cas_ual_ty.spells.network.FireClientSpellMessage;
 import de.cas_ual_ty.spells.network.ManaSyncMessage;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
-import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
-import java.util.HashMap;
 
 public class ClientMessageHandler
 {
@@ -55,7 +55,7 @@ public class ClientMessageHandler
             {
                 for(int i = 0; i < spellHolder.getSlots() && i < msg.spells().length; ++i)
                 {
-                    spellHolder.setSpell(i, registry.get(msg.spells()[i]));
+                    spellHolder.setSpell(i, new SpellInstance(registry.getHolderOrThrow(ResourceKey.create(Spells.SPELLS_REGISTRY_KEY, msg.spells()[i]))));
                 }
             });
         }
@@ -65,12 +65,8 @@ public class ClientMessageHandler
     {
         if(Minecraft.getInstance().screen instanceof SpellProgressionScreen screen)
         {
-            Registry<Spell> registry = SpellsUtil.getSpellRegistry(screen.getMenu().player.level);
-            HashMap<Spell, SpellStatus> map = new HashMap<>(msg.map().size());
-            msg.map().forEach(pair -> map.put(registry.get(pair.getFirst()), pair.getSecond()));
-            
             screen.getMenu().spellTrees = msg.spellTrees();
-            screen.getMenu().spellProgression = map;
+            screen.getMenu().spellProgression = msg.map();
             screen.spellTreesUpdated();
         }
     }

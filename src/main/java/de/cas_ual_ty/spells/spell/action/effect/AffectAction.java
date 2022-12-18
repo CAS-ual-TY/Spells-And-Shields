@@ -1,11 +1,11 @@
 package de.cas_ual_ty.spells.spell.action.effect;
 
-import de.cas_ual_ty.spells.spell.action.BaseSpellAction;
+import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.target.Target;
 
-public abstract class AffectAction extends BaseSpellAction
+public abstract class AffectAction extends SpellAction
 {
     protected String targets;
     

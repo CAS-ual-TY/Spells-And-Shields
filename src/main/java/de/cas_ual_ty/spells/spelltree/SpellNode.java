@@ -3,8 +3,9 @@ package de.cas_ual_ty.spells.spelltree;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.Spell;
-import net.minecraft.core.Holder;
+import de.cas_ual_ty.spells.spell.SpellInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import javax.annotation.Nullable;
@@ -13,25 +14,25 @@ import java.util.List;
 
 public class SpellNode
 {
-    protected final Holder<Spell> spell;
+    protected final SpellInstance spell;
     protected int levelCost;
     protected List<Requirement> requirements;
     
     protected SpellNode parent;
     protected List<SpellNode> children;
     
-    protected int id;
+    protected SpellNodeId id;
     
-    public SpellNode(Holder<Spell> spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
+    public SpellNode(SpellInstance spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
     {
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
         this.requirements = requirements;
         this.children = children;
-        this.id = 0;
+        this.id = null;
     }
     
-    public SpellNode(Holder<Spell> spell, int levelCost, List<Requirement> requirements, int id)
+    public SpellNode(SpellInstance spell, int levelCost, List<Requirement> requirements, SpellNodeId id)
     {
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
@@ -40,12 +41,12 @@ public class SpellNode
         this.id = id;
     }
     
-    public SpellNode(Holder<Spell> spell, int levelCost, List<Requirement> requirements)
+    public SpellNode(SpellInstance spell, int levelCost, List<Requirement> requirements)
     {
-        this(spell, levelCost, requirements, -1);
+        this(spell, levelCost, requirements, (SpellNodeId) null);
     }
     
-    public Holder<Spell> getSpell()
+    public SpellInstance getSpellInstance()
     {
         return spell;
     }
@@ -77,7 +78,7 @@ public class SpellNode
     
     public Spell getSpellDirect()
     {
-        return spell.get();
+        return spell.getSpell().get();
     }
     
     public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
@@ -115,7 +116,7 @@ public class SpellNode
     
     public SpellNode copy()
     {
-        return new SpellNode(spell, levelCost, requirements);
+        return new SpellNode(spell.copy(), levelCost, requirements, id);
     }
     
     @Nullable
@@ -129,13 +130,14 @@ public class SpellNode
         return children;
     }
     
-    public int getId()
+    public SpellNodeId getId()
     {
         return id;
     }
     
-    public void setId(int id)
+    public void setId(ResourceLocation sourceTree, int id)
     {
-        this.id = id;
+        this.id = new SpellNodeId(sourceTree, id);
+        this.spell.initId(this.id);
     }
 }

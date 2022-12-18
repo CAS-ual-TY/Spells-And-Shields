@@ -1,34 +1,25 @@
 package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
+import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record RequestEquipSpellMessage(ResourceLocation spell, byte slot, ResourceLocation treeId)
+public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId)
 {
     public static void encode(RequestEquipSpellMessage msg, FriendlyByteBuf buf)
     {
-        if(msg.spell() != null)
-        {
-            buf.writeBoolean(true);
-            buf.writeResourceLocation(msg.spell());
-        }
-        else
-        {
-            buf.writeBoolean(false);
-        }
-        
         buf.writeByte(msg.slot());
-        buf.writeResourceLocation(msg.treeId());
+        buf.writeResourceLocation(msg.nodeId().treeId());
+        buf.writeShort(msg.nodeId().nodeId());
     }
     
     public static RequestEquipSpellMessage decode(FriendlyByteBuf buf)
     {
-        return new RequestEquipSpellMessage(buf.readBoolean() ? buf.readResourceLocation() : null, buf.readByte(), buf.readResourceLocation());
+        return new RequestEquipSpellMessage(buf.readByte(), new SpellNodeId(buf.readResourceLocation(), buf.readShort()));
     }
     
     public static void handle(RequestEquipSpellMessage msg, Supplier<NetworkEvent.Context> context)
@@ -44,7 +35,7 @@ public record RequestEquipSpellMessage(ResourceLocation spell, byte slot, Resour
             
             if(player.containerMenu instanceof SpellProgressionMenu menu)
             {
-                menu.equipSpellRequest(msg.spell(), msg.slot(), msg.treeId());
+                menu.equipSpellRequest(msg.slot(), msg.nodeId());
             }
         });
         

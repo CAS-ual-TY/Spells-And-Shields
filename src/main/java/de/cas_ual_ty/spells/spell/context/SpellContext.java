@@ -1,7 +1,9 @@
 package de.cas_ual_ty.spells.spell.context;
 
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.SpellInstance;
+import de.cas_ual_ty.spells.spell.variable.CtxVar;
+import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -11,19 +13,21 @@ public class SpellContext
 {
     public final Level level;
     public final SpellHolder spellHolder;
-    public final Spell spell;
+    public final SpellInstance spell;
     
     protected List<String> activationsList;
     protected Map<String, TargetGroup> targetGroups;
+    protected Map<String, CtxVar<?>> ctxVars;
     protected boolean terminated;
     
-    public SpellContext(Level level, SpellHolder spellHolder, Spell spell)
+    public SpellContext(Level level, SpellHolder spellHolder, SpellInstance spell)
     {
         this.level = level;
         this.spellHolder = spellHolder;
         this.spell = spell;
         activationsList = new ArrayList<>();
         targetGroups = new HashMap<>();
+        ctxVars = new HashMap<>();
         terminated = false;
     }
     
@@ -98,6 +102,30 @@ public class SpellContext
         {
             consumer.accept(tg);
         }
+    }
+    
+    public <T> Optional<T> getCtxVar(CtxVarType<T> type, String name)
+    {
+        CtxVar<?> ctxVar = ctxVars.get(name);
+        
+        if(ctxVar != null)
+        {
+            return ctxVar.tryGetAs(type);
+        }
+        
+        return Optional.empty();
+    }
+    
+    public <T> boolean setCtxVar(CtxVarType<T> type, String name, T value)
+    {
+        CtxVar<?> ctxVar = ctxVars.get(name);
+        
+        if(ctxVar != null)
+        {
+            return ctxVar.trySet(type, value);
+        }
+        
+        return false;
     }
     
     public void terminate()

@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.spell.action.target;
 
 import de.cas_ual_ty.spells.SpellsRegistries;
-import de.cas_ual_ty.spells.spell.action.BaseSpellAction;
+import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
-public class LookAtAction extends BaseSpellAction
+public class LookAtAction extends SpellAction
 {
     protected String src;
     protected double range;

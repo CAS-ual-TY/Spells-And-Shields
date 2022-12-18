@@ -1,7 +1,7 @@
 {
   "icon": {
     "type": "spells_and_shields:default",
-    "texture": "spells_and_shields:textures/spell/textures/spell/default_fallback.png.png"
+    "texture": "spells_and_shields:textures/spell/default_fallback.png"
   },
   "mana_cost": 2.0,
   "spell_actions": [

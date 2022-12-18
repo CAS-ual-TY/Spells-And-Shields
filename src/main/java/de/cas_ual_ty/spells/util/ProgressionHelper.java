@@ -5,15 +5,14 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.requirement.WrappedRequirement;
-import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
+import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -22,12 +21,14 @@ import java.util.stream.Collectors;
 
 public class ProgressionHelper
 {
-    public static List<SpellTree> stripSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, Registry<SpellTree> registry, List<SpellTree> allAvailableSkillTrees)
+    public static List<SpellTree> stripSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, Registry<SpellTree> registry)
     {
         List<SpellTree> strippedSkillTrees = new LinkedList<>();
         
-        for(SpellTree spellTree0 : allAvailableSkillTrees)
+        for(Map.Entry<ResourceKey<SpellTree>, SpellTree> entry : registry.entrySet())
         {
+            SpellTree spellTree0 = entry.getValue();
+            
             if(spellTree0.getRoot() == null)
             {
                 continue;
@@ -38,14 +39,14 @@ public class ProgressionHelper
                 continue;
             }
             
-            SpellTree stripped = spellTree0.copyWithId(registry);
+            SpellTree stripped = spellTree0.copy();
             
             List<SpellNode> visibleNodes = new LinkedList<>();
             
             // add all active or previously bought spells
             stripped.forEach(spellNode ->
             {
-                if(spellProgressionHolder.getSpellStatus(spellNode.getSpellDirect()).isVisible())
+                if(spellProgressionHolder.getSpellStatus(spellNode.getId()).isVisible())
                 {
                     visibleNodes.add(spellNode);
                 }
@@ -117,21 +118,16 @@ public class ProgressionHelper
     public static List<SpellTree> getStrippedSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level);
-        ArrayList<SpellTree> allAvailableSkillTrees = new ArrayList<>(registry.size());
-        registry.forEach(allAvailableSkillTrees::add);
-        
-        List<SpellTree> availableSpellTrees = stripSpellTrees(spellProgressionHolder, access, registry, allAvailableSkillTrees);
-        availableSpellTrees.forEach(SpellTree::assignNodeIds);
-        return availableSpellTrees;
+        return stripSpellTrees(spellProgressionHolder, access, registry);
     }
     
-    public static boolean isFullyLinked(SpellNode spellNode, Map<Spell, SpellStatus> progression)
+    public static boolean isFullyLinked(SpellNode spellNode, Map<SpellNodeId, SpellStatus> progression)
     {
         SpellNode parent = spellNode;
         
         while((parent = parent.getParent()) != null)
         {
-            if(!progression.getOrDefault(parent.getSpellDirect(), SpellStatus.LOCKED).isAvailable())
+            if(!progression.getOrDefault(parent.getId(), SpellStatus.LOCKED).isAvailable())
             {
                 return false;
             }
@@ -140,7 +136,7 @@ public class ProgressionHelper
         return true;
     }
     
-    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, int id, Spell spell, ResourceLocation treeId)
+    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, SpellNodeId nodeId)
     {
         Player player = menu.player;
         
@@ -148,11 +144,11 @@ public class ProgressionHelper
         
         Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level);
         
-        menu.spellTrees.stream().filter(tree -> tree.getClientId().equals(treeId)).findFirst().ifPresent(spellTree ->
+        menu.spellTrees.stream().filter(tree -> tree.getId().equals(nodeId.treeId())).findFirst().ifPresent(spellTree ->
         {
-            SpellNode spellNode = spellTree.findNode(id);
+            SpellNode spellNode = spellTree.findNode(nodeId.nodeId());
             
-            if(spellNode.getSpellDirect() == spell && spellNode.canLearn(spellProgressionHolder, menu.access))
+            if(spellNode.canLearn(spellProgressionHolder, menu.access))
             {
                 found.set(true);
                 

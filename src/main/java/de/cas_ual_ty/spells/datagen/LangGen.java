@@ -98,22 +98,30 @@ public class LangGen extends LanguageProvider
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         
-        add(SpellCommand.SPELLS_PROGRESSION_LEARN_SINGLE, "%s has been learned by %s");
-        add(SpellCommand.SPELLS_PROGRESSION_LEARN_MULTIPLE, "%s has been learned by %s players");
-        add(SpellCommand.SPELLS_PROGRESSION_LEARN_ALL_SINGLE, "%s spells have been learned by %s");
-        add(SpellCommand.SPELLS_PROGRESSION_LEARN_ALL_SINGLE_FAILED, "%s already learned all spells");
-        add(SpellCommand.SPELLS_PROGRESSION_LEARN_ALL_MULTIPLE, "All %s habe been learned by %s players");
-        add(SpellCommand.SPELLS_PROGRESSION_FORGET_SINGLE, "%s has been forgotten by %s");
-        add(SpellCommand.SPELLS_PROGRESSION_FORGET_MULTIPLE, "%s has been forgotten by %s players");
-        add(SpellCommand.SPELLS_PROGRESSION_FORGET_ALL_SINGLE, "%s spells have been forgotten by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_LEARN_SINGLE, "Spell '%s' has been learned by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_LEARN_SINGLE_FAILED, "Spell '%s' was already learned by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_LEARN_MULTIPLE, "Spell '%s' has been learned by %s players");
+        add(SpellCommand.SPELLS_PROGRESSION_LEARN_TREE_SINGLE, "Spell tree '%s' has been learned by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_LEARN_TREE_SINGLE_FAILED, "Spell tree '%s' was already learned by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_LEARN_TREE_MULTIPLE, "Spell tree '%s' has been learned by %s players");
+        add(SpellCommand.SPELLS_PROGRESSION_LEARN_ALL_SINGLE, "All %s unlearned spells in %s spell trees have been learned by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_LEARN_ALL_SINGLE_FAILED, "%s already learned all %s spells in %s spell trees");
+        add(SpellCommand.SPELLS_PROGRESSION_LEARN_ALL_MULTIPLE, "All %s spells in %s spell trees have been learned by %s players");
+        add(SpellCommand.SPELLS_PROGRESSION_FORGET_SINGLE, "Spell '%s' has been forgotten by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_FORGET_SINGLE_FAILED, "Spell '%s' was already forgotten by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_FORGET_MULTIPLE, "Spell '%s' has been forgotten by %s players");
+        add(SpellCommand.SPELLS_PROGRESSION_FORGET_TREE_SINGLE, "Spell tree '%s' was forgotten by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_FORGET_TREE_SINGLE_FAILED, "Not a single spell in spell tree '%s' was learned by %s");
+        add(SpellCommand.SPELLS_PROGRESSION_FORGET_TREE_MULTIPLE, "Spell tree 's%' have been forgotten by %s players");
+        add(SpellCommand.SPELLS_PROGRESSION_FORGET_ALL_SINGLE, "All %s learned spells in %s spell trees have been forgotten by %s");
         add(SpellCommand.SPELLS_PROGRESSION_FORGET_ALL_SINGLE_FAILED, "%s has never learned a single spell");
         add(SpellCommand.SPELLS_PROGRESSION_FORGET_ALL_MULTIPLE, "All %s spells have been forgotten by %s players");
         add(SpellCommand.SPELLS_PROGRESSION_RESET_SINGLE, "Cleared all learned spells of %s");
         add(SpellCommand.SPELLS_PROGRESSION_RESET_MULTIPLE, "Cleared all learned spells of %s players");
         add(SpellCommand.SPELLS_SLOT_REMOVE_SINGLE, "Cleared active spell in slot %s of %s");
         add(SpellCommand.SPELLS_SLOT_REMOVE_MULTIPLE, "Cleared active spell in slot %s of %s players");
-        add(SpellCommand.SPELLS_SLOT_SET_SINGLE, "Set active spell in slot %s of %s to %s");
-        add(SpellCommand.SPELLS_SLOT_SET_MULTIPLE, "Set active spell in slot %s of %s players to %s");
+        add(SpellCommand.SPELLS_SLOT_SET_SINGLE, "Set active spell in slot %s of %s to '%s'");
+        add(SpellCommand.SPELLS_SLOT_SET_MULTIPLE, "Set active spell in slot %s of %s players to '%s'");
         add(SpellCommand.SPELLS_SLOT_CLEAR_SINGLE, "Cleared active spells of %s");
         add(SpellCommand.SPELLS_SLOT_CLEAR_MULTIPLE, "Cleared active spells of %s players");
         

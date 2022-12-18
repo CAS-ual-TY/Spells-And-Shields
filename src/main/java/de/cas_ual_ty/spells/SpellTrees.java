@@ -14,7 +14,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.NewRegistryEvent;
@@ -27,7 +29,7 @@ public class SpellTrees
     private static Supplier<IForgeRegistry<SpellTree>> SPELL_TREES_REGISTRY;
     public static ResourceKey<Registry<SpellTree>> SPELL_TREES_REGISTRY_KEY;
     
-    public static Registry<SpellTree> getRegistry(Level level)
+    public static Registry<SpellTree> getRegistry(LevelAccessor level)
     {
         return level.registryAccess().registryOrThrow(SPELL_TREES_REGISTRY_KEY);
     }
@@ -41,11 +43,25 @@ public class SpellTrees
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellTrees::newRegistry);
+        MinecraftForge.EVENT_BUS.addListener(SpellTrees::levelLoad);
     }
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        SPELL_TREES_REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).dataPackRegistry(SpellsCodecs.SPELL_TREE_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees")).onCreate((registry, stage) -> SPELL_TREES_REGISTRY_KEY = registry.getRegistryKey()));
+        SPELL_TREES_REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).dataPackRegistry(SpellsCodecs.SPELL_TREE_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees"))
+                .onCreate((registry, stage) -> SPELL_TREES_REGISTRY_KEY = registry.getRegistryKey())
+        );
+    }
+    
+    private static void levelLoad(LevelEvent.Load event)
+    {
+        if(event.getLevel().isClientSide())
+        {
+            return;
+        }
+        
+        Registry<SpellTree> registry = getRegistry(event.getLevel());
+        registry.forEach(spellTree -> spellTree.assignNodeIds(registry.getKey(spellTree)));
     }
     
     public static SpellTree debugTree(Holder<Spell> debugSpell)

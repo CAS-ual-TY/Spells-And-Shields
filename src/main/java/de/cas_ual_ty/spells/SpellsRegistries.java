@@ -1,7 +1,9 @@
 package de.cas_ual_ty.spells;
 
+import com.mojang.serialization.Codec;
 import de.cas_ual_ty.spells.command.SpellArgument;
 import de.cas_ual_ty.spells.command.SpellCommand;
+import de.cas_ual_ty.spells.command.SpellTreeArgument;
 import de.cas_ual_ty.spells.effect.ExtraManaMobEffect;
 import de.cas_ual_ty.spells.effect.InstantManaMobEffect;
 import de.cas_ual_ty.spells.effect.ManaMobEffect;
@@ -15,6 +17,7 @@ import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import de.cas_ual_ty.spells.spell.icon.*;
 import de.cas_ual_ty.spells.spell.target.*;
+import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -73,6 +76,11 @@ public class SpellsRegistries
     private static final DeferredRegister<SpellActionType<?>> SPELL_ACTIONS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_actions"), MOD_ID);
     public static final RegistryObject<SpellActionType<DamageAction>> DAMAGE_ACTION = SPELL_ACTIONS.register("damage", () -> new SpellActionType<>(DamageAction::new, DamageAction::makeCodec));
     
+    public static Supplier<IForgeRegistry<CtxVarType<?>>> CTX_VARS_REGISTRY;
+    private static final DeferredRegister<CtxVarType<?>> CTX_VARS = DeferredRegister.create(new ResourceLocation(MOD_ID, "context_variables"), MOD_ID);
+    public static final RegistryObject<CtxVarType<Integer>> INT_CTX_VAR = CTX_VARS.register("int", () -> new CtxVarType<>(Codec.INT));
+    public static final RegistryObject<CtxVarType<Double>> DOUBLE_CTX_VAR = CTX_VARS.register("double", () -> new CtxVarType<>(Codec.DOUBLE));
+    
     public static Supplier<IForgeRegistry<SpellIconType<?>>> SPELL_ICONS_REGISTRY;
     private static final DeferredRegister<SpellIconType<?>> SPELL_ICONS = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_icons"), MOD_ID);
     public static final RegistryObject<SpellIconType<DefaultSpellIcon>> DEFAULT_SPELL_ICON = SPELL_ICONS.register("default", () -> new SpellIconType<>(DefaultSpellIcon::new, DefaultSpellIcon::makeCodec));
@@ -125,6 +133,7 @@ public class SpellsRegistries
     
     private static final DeferredRegister<ArgumentTypeInfo<?, ?>> ARGUMENT_TYPES = DeferredRegister.create(Registry.COMMAND_ARGUMENT_TYPE_REGISTRY, MOD_ID);
     public static final RegistryObject<ArgumentTypeInfo<?, ?>> SPELL_ARGUMENT_TYPE = ARGUMENT_TYPES.register("spell", () -> ArgumentTypeInfos.registerByClass(SpellArgument.class, SingletonArgumentInfo.contextAware(SpellArgument::spell)));
+    public static final RegistryObject<ArgumentTypeInfo<?, ?>> SPELL_TREE_ARGUMENT_TYPE = ARGUMENT_TYPES.register("spell_tree", () -> ArgumentTypeInfos.registerByClass(SpellTreeArgument.class, SingletonArgumentInfo.contextAware(SpellTreeArgument::spellTree)));
     
     public static void register()
     {
@@ -132,6 +141,7 @@ public class SpellsRegistries
         REQUIREMENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         TARGETS.register(FMLJavaModLoadingContext.get().getModEventBus());
         SPELL_ACTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        CTX_VARS.register(FMLJavaModLoadingContext.get().getModEventBus());
         SPELL_ICONS.register(FMLJavaModLoadingContext.get().getModEventBus());
         MOB_EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         POTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -147,6 +157,7 @@ public class SpellsRegistries
         REQUIREMENTS_REGISTRY = event.create(new RegistryBuilder<RequirementType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
         TARGETS_REGISTRY = event.create(new RegistryBuilder<ITargetType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "targets")));
         SPELL_ACTIONS_REGISTRY = event.create(new RegistryBuilder<SpellActionType<?>>().setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spell_actions")));
+        CTX_VARS_REGISTRY = event.create(new RegistryBuilder<CtxVarType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "context_variables")));
         SPELL_ICONS_REGISTRY = event.create(new RegistryBuilder<SpellIconType<?>>().setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spell_icons")));
     }
     

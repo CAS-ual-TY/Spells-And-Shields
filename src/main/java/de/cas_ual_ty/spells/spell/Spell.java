@@ -1,14 +1,10 @@
 package de.cas_ual_ty.spells.spell;
 
 import de.cas_ual_ty.spells.SpellsRegistries;
-import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
-import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
-import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
-import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -107,19 +103,6 @@ public class Spell
     public Optional<TooltipComponent> getTooltipComponent()
     {
         return tooltipComponent;
-    }
-    
-    public void activate(SpellHolder spellHolder)
-    {
-        activate(spellHolder, BuiltinActivations.ACTIVE.activation);
-    }
-    
-    public void activate(SpellHolder spellHolder, String activation)
-    {
-        SpellContext ctx = new SpellContext(spellHolder.getPlayer().level, spellHolder, this);
-        ctx.activate(activation);
-        ctx.getOrCreateTargetGroup(BuiltinTargetGroups.OWNER.targetGroup).addTargets(Target.of(spellHolder.getPlayer()));
-        run(ctx);
     }
     
     public void run(SpellContext ctx)

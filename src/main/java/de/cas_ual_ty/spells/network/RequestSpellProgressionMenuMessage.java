@@ -1,10 +1,10 @@
 package de.cas_ual_ty.spells.network;
 
-import com.mojang.datafixers.util.Pair;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
@@ -24,7 +24,6 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public record RequestSpellProgressionMenuMessage(BlockPos pos)
 {
@@ -57,29 +56,36 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                 {
                     access.execute((level, blockPos) ->
                     {
-                        List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
-                        HashMap<Spell, SpellStatus> progression = spellProgressionHolder.getProgression();
-                        
-                        Registry<Spell> registry = SpellsUtil.getSpellRegistry(level);
-                        
-                        NetworkHooks.openScreen(player, new MenuProvider()
+                        try
                         {
-                            @Override
-                            public Component getDisplayName()
-                            {
-                                return SpellProgressionMenu.TITLE;
-                            }
+                            List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
+                            HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
                             
-                            @Override
-                            public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
+                            Registry<Spell> registry = SpellsUtil.getSpellRegistry(level);
+                            
+                            NetworkHooks.openScreen(player, new MenuProvider()
                             {
-                                return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
-                            }
-                        }, buf ->
+                                @Override
+                                public Component getDisplayName()
+                                {
+                                    return SpellProgressionMenu.TITLE;
+                                }
+                                
+                                @Override
+                                public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
+                                {
+                                    return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
+                                }
+                            }, buf ->
+                            {
+                                SpellProgressionSyncMessage data = new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression, level);
+                                SpellProgressionSyncMessage.encode(data, buf);
+                            });
+                        }
+                        catch(Exception e)
                         {
-                            SpellProgressionSyncMessage data = new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression.entrySet().stream().map(e -> Pair.of(registry.getKey(e.getKey()), e.getValue())).collect(Collectors.toList()), level);
-                            SpellProgressionSyncMessage.encode(data, buf);
-                        });
+                            e.printStackTrace();
+                        }
                     });
                 });
             }

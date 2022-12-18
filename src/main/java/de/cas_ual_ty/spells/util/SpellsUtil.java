@@ -19,6 +19,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.api.distmarker.Dist;
@@ -119,7 +120,7 @@ public class SpellsUtil
         return currentEntity == null ? null : new EntityHitResult(currentEntity);
     }
     
-    public static Registry<Spell> getSpellRegistry(Level level)
+    public static Registry<Spell> getSpellRegistry(LevelAccessor level)
     {
         return level.registryAccess().registryOrThrow(Spells.SPELLS_REGISTRY_KEY);
     }
