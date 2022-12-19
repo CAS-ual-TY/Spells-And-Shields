@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.registers;
 import com.mojang.serialization.Codec;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 
@@ -17,6 +18,7 @@ public class CtxVarTypes
     
     public static final RegistryObject<CtxVarType<Integer>> INT = DEFERRED_REGISTER.register("int", () -> new CtxVarType<>(Codec.INT));
     public static final RegistryObject<CtxVarType<Double>> DOUBLE = DEFERRED_REGISTER.register("double", () -> new CtxVarType<>(Codec.DOUBLE));
+    public static final RegistryObject<CtxVarType<Vec3>> VEC3 = DEFERRED_REGISTER.register("vec3", () -> new CtxVarType<>(Vec3.CODEC));
     
     public static void register()
     {

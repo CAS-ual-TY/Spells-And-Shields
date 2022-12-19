@@ -18,8 +18,8 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
     public static Codec<DamageAction> makeCodec(SpellActionType<DamageAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.makeActivation(),
-                AffectTypeAction.makeTargetsCodec(),
+                SpellAction.activationCodec(),
+                AffectTypeAction.targetsCodec(),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf("damage").forGetter(DamageAction::getDamage)
         ).apply(instance, (activation, targets, damage) -> new DamageAction(type, activation, targets, damage)));
     }

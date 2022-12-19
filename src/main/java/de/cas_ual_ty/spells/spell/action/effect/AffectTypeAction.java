@@ -11,12 +11,12 @@ import de.cas_ual_ty.spells.util.SpellsCodecs;
 
 public abstract class AffectTypeAction<T extends Target> extends SpellAction
 {
-    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, String> makeTargetsCodec()
+    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, String> targetsCodec()
     {
         return Codec.STRING.fieldOf("targets").forGetter(AffectTypeAction::getTargets);
     }
     
-    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, ITargetType<?>> makeTargetTypeCodec()
+    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, ITargetType<?>> targetTypeCodec()
     {
         return SpellsCodecs.TARGET_TYPE.fieldOf("targetType").forGetter(AffectTypeAction::getTargetType);
     }

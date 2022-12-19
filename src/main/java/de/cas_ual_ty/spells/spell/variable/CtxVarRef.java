@@ -121,5 +121,10 @@ public abstract class CtxVarRef<I>
         {
             return ctx.getCtxVar(getType(), name);
         }
+        
+        public boolean setValue(SpellContext ctx, T value)
+        {
+            return ctx.setCtxVar(this.getType(), this.getName(), value);
+        }
     }
 }

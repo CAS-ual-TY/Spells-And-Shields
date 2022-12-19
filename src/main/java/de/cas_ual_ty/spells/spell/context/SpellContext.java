@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.world.level.Level;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -104,9 +105,15 @@ public class SpellContext
         }
     }
     
+    @Nullable
+    public CtxVar<?> getCtxVar(String name)
+    {
+        return ctxVars.get(name);
+    }
+    
     public <T> Optional<T> getCtxVar(CtxVarType<T> type, String name)
     {
-        CtxVar<?> ctxVar = ctxVars.get(name);
+        CtxVar<?> ctxVar = getCtxVar(name);
         
         if(ctxVar != null)
         {
@@ -116,7 +123,7 @@ public class SpellContext
         return Optional.empty();
     }
     
-    public <T> boolean initCtxVar(CtxVarType<T> type, String name, T value)
+    public <T> boolean setCtxVar(CtxVarType<T> type, String name, T value)
     {
         CtxVar<?> ctxVar = ctxVars.get(name);
         

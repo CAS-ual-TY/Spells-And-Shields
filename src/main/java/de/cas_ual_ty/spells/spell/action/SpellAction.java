@@ -15,7 +15,7 @@ public abstract class SpellAction
         return SpellsCodecs.SPELL_ACTION_TYPE.fieldOf("type").forGetter(SpellAction::getType);
     }
     
-    public static <T extends SpellAction> RecordCodecBuilder<T, String> makeActivation()
+    public static <T extends SpellAction> RecordCodecBuilder<T, String> activationCodec()
     {
         return Codec.STRING.fieldOf("activation").forGetter(SpellAction::getActivation);
     }

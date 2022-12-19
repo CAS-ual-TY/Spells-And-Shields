@@ -59,6 +59,11 @@ public class CtxVarType<T>
         return false;
     }
     
+    public <U> boolean canConvertTo(CtxVarType<U> typeTo)
+    {
+        return typeTo == this || converters.containsKey(typeTo);
+    }
+    
     public <U> Optional<U> tryGetAs(CtxVarType<U> typeTo, CtxVar<T> ctxVar)
     {
         if(typeTo == ctxVar.getType())
