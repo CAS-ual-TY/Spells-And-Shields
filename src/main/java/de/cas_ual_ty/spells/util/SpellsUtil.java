@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.util;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Codec;
 import de.cas_ual_ty.spells.SpellsConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -23,6 +24,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class SpellsUtil
@@ -169,5 +171,15 @@ public class SpellsUtil
     public static Level getClientLevel()
     {
         return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().level);
+    }
+    
+    public static <E extends Enum<E>> Codec<E> namedEnumCodec(Function<String, E> stringToEnum)
+    {
+        return Codec.STRING.xmap(stringToEnum, Enum::name);
+    }
+    
+    public static <E extends Enum<E>> Codec<E> idEnumCodec(Function<Integer, E> idToEnum)
+    {
+        return Codec.INT.xmap(idToEnum, Enum::ordinal);
     }
 }

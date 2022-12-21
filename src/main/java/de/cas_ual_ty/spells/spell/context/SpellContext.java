@@ -108,7 +108,7 @@ public class SpellContext
     @Nullable
     public CtxVar<?> getCtxVar(String name)
     {
-        return ctxVars.get(name);
+        return name.isEmpty() ? null : ctxVars.get(name);
     }
     
     public <T> Optional<T> getCtxVar(CtxVarType<T> type, String name)
@@ -125,7 +125,7 @@ public class SpellContext
     
     public <T> boolean setCtxVar(CtxVarType<T> type, String name, T value)
     {
-        CtxVar<?> ctxVar = ctxVars.get(name);
+        CtxVar<?> ctxVar = getCtxVar(name);
         
         if(ctxVar != null)
         {

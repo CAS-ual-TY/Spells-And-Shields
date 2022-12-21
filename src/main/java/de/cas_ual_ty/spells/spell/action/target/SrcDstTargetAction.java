@@ -1,11 +1,19 @@
 package de.cas_ual_ty.spells.spell.action.target;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
+import de.cas_ual_ty.spells.spell.action.effect.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 
 public abstract class SrcDstTargetAction extends DstTargetAction
 {
+    public static <T extends SrcDstTargetAction> RecordCodecBuilder<T, String> srcCodec()
+    {
+        return Codec.STRING.fieldOf("source").forGetter(SrcDstTargetAction::getSrc);
+    }
+    
     protected String src;
     
     public SrcDstTargetAction(SpellActionType<?> type)

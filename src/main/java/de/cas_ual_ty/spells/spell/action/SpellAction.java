@@ -3,10 +3,7 @@ package de.cas_ual_ty.spells.spell.action;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
-import de.cas_ual_ty.spells.spell.variable.CtxVarRef;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
-
-import java.util.List;
 
 public abstract class SpellAction
 {
@@ -43,11 +40,6 @@ public abstract class SpellAction
     public String getActivation()
     {
         return activation;
-    }
-    
-    public List<CtxVarRef<?>> getAllCtxVarRefs()
-    {
-        return List.of();
     }
     
     public void doAction(SpellContext ctx)

@@ -27,7 +27,7 @@ public class CtxVarTypes
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CtxVarTypes::newRegistry);
         DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
-    
+        
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CtxVarTypes::setup);
     }
     

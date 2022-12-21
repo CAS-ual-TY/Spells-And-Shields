@@ -9,7 +9,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 
 public abstract class DstTargetAction extends SpellAction
 {
-    public <T extends DstTargetAction> RecordCodecBuilder<T, String> makeDstCodec()
+    public static <T extends DstTargetAction> RecordCodecBuilder<T, String> dstCodec()
     {
         return Codec.STRING.fieldOf("destination").forGetter(DstTargetAction::getDst);
     }

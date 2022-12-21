@@ -2,20 +2,18 @@ package de.cas_ual_ty.spells.registers;
 
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.effect.DamageAction;
+import de.cas_ual_ty.spells.spell.action.target.CopyTargetsAction;
+import de.cas_ual_ty.spells.spell.action.target.LookAtTargetAction;
+import de.cas_ual_ty.spells.spell.action.target.PickTargetAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedUnaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.SimpleUnaryVarAction;
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 
-import java.math.RoundingMode;
 import java.util.function.Supplier;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
@@ -29,6 +27,9 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<DamageAction>> DAMAGE = DEFERRED_REGISTER.register("damage", () -> new SpellActionType<>(DamageAction::new, DamageAction::makeCodec));
     
     //target
+    public static final RegistryObject<SpellActionType<CopyTargetsAction>> COPY_TARGETS = DEFERRED_REGISTER.register("copy_targets", () -> new SpellActionType<>(CopyTargetsAction::new, CopyTargetsAction::makeCodec));
+    public static final RegistryObject<SpellActionType<PickTargetAction>> PICK_TARGET = DEFERRED_REGISTER.register("pick_target", () -> new SpellActionType<>(PickTargetAction::new, PickTargetAction::makeCodec2));
+    public static final RegistryObject<SpellActionType<LookAtTargetAction>> LOOK_AT_TARGET = DEFERRED_REGISTER.register("look_at_target", () -> new SpellActionType<>(LookAtTargetAction::new, LookAtTargetAction::makeCodec));
     
     //variable / mapped binary
     public static final MappedBinaryVarAction.BinaryOperatorMap ADD_MAP = new MappedBinaryVarAction.BinaryOperatorMap();
@@ -57,9 +58,9 @@ public class SpellActionTypes
     //variable / simple unary
     public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Vec3, Double>>> LENGTH = DEFERRED_REGISTER.register("length", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.VEC3, CtxVarTypes.DOUBLE, x -> x.length()));
     public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Vec3, Vec3>>> NORMALIZE = DEFERRED_REGISTER.register("normalize", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.VEC3, CtxVarTypes.VEC3, x -> x.normalize()));
-    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Double, Integer>>> ROUND = DEFERRED_REGISTER.register("round", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.DOUBLE, CtxVarTypes.INT, x -> (int)Math.round(x)));
-    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Double, Integer>>> FLOOR = DEFERRED_REGISTER.register("floor", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.DOUBLE, CtxVarTypes.INT, x -> (int)Math.floor(x)));
-    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Double, Integer>>> CEIL = DEFERRED_REGISTER.register("ceil", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.DOUBLE, CtxVarTypes.INT, x -> (int)Math.ceil(x)));
+    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Double, Integer>>> ROUND = DEFERRED_REGISTER.register("round", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.DOUBLE, CtxVarTypes.INT, x -> (int) Math.round(x)));
+    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Double, Integer>>> FLOOR = DEFERRED_REGISTER.register("floor", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.DOUBLE, CtxVarTypes.INT, x -> (int) Math.floor(x)));
+    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Double, Integer>>> CEIL = DEFERRED_REGISTER.register("ceil", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.DOUBLE, CtxVarTypes.INT, x -> (int) Math.ceil(x)));
     
     public static void register()
     {
@@ -87,25 +88,25 @@ public class SpellActionTypes
         MUL_MAP.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> x * y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x * y)
                 .register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.VEC3.get(), (x, y) -> x.scale(y));
-    
+        
         DIV_MAP.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> y == 0 ? 0 : x / y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> y == 0 ? 0 : x / y)
                 .register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.VEC3.get(), (x, y) -> y == 0 ? Vec3.ZERO : x.scale(x.length() / y));
-    
+        
         MIN_MAP.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> Math.min(x, y))
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> Math.min(x, y));
-    
+        
         MAX_MAP.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> Math.max(x, y))
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> Math.max(x, y));
-    
+        
         SQRT_MAP.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.sqrt(Math.abs(x)));
-    
+        
         X_MAP.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.x())
                 .register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), (x) -> x.getX());
-    
+        
         Y_MAP.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.y())
                 .register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), (x) -> x.getY());
-    
+        
         Z_MAP.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.z())
                 .register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), (x) -> x.getZ());
     }

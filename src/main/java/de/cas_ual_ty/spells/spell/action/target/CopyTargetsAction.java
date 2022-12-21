@@ -1,11 +1,22 @@
 package de.cas_ual_ty.spells.spell.action.target;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 
 public class CopyTargetsAction extends SrcDstTargetAction
 {
+    public static Codec<CopyTargetsAction> makeCodec(SpellActionType<CopyTargetsAction> type)
+    {
+        return RecordCodecBuilder.create(instance -> instance.group(
+                activationCodec(),
+                dstCodec(),
+                srcCodec()
+        ).apply(instance, (activation, dst, src) -> new CopyTargetsAction(type, activation, dst, src)));
+    }
+    
     public CopyTargetsAction(SpellActionType<?> type)
     {
         super(type);

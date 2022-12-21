@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.effect;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
+import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.Target;
 
 public abstract class AffectAction extends SpellAction
@@ -28,8 +29,8 @@ public abstract class AffectAction extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
-        ctx.forTargetGroup(targets, targetGroup -> targetGroup.forEachTarget(t -> affectTarget(ctx, t)));
+        ctx.forTargetGroup(targets, targetGroup -> targetGroup.forEachTarget(t -> affectTarget(ctx, targetGroup, t)));
     }
     
-    public abstract void affectTarget(SpellContext ctx, Target t);
+    public abstract void affectTarget(SpellContext ctx, TargetGroup group, Target t);
 }
