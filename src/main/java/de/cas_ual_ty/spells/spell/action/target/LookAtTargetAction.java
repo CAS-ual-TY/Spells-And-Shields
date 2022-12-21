@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.spell.action.target;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.effect.AffectSingleTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -31,7 +30,7 @@ public class LookAtTargetAction extends AffectSingleTypeAction<EntityTarget>
                 Codec.STRING.fieldOf("missDestination").forGetter(LookAtTargetAction::getMissDest),
                 Codec.STRING.fieldOf("entityDestination").forGetter(LookAtTargetAction::getEntityDest),
                 Codec.STRING.fieldOf("entityClipDestination").forGetter(LookAtTargetAction::getEntityClipDest)
-                ).apply(instance, (activation, targets, range, bbInflation, block, fluid, blockDest, missDest, entityDest, entityClipDest) -> new LookAtTargetAction(type, activation, targets, range, bbInflation, block, fluid, blockDest, missDest, entityDest, entityClipDest)));
+        ).apply(instance, (activation, targets, range, bbInflation, block, fluid, blockDest, missDest, entityDest, entityClipDest) -> new LookAtTargetAction(type, activation, targets, range, bbInflation, block, fluid, blockDest, missDest, entityDest, entityClipDest)));
     }
     
     protected double range;
@@ -111,7 +110,7 @@ public class LookAtTargetAction extends AffectSingleTypeAction<EntityTarget>
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, EntityTarget entityTarget)
     {
         HitResult hitResult = SpellsUtil.rayTrace(entityTarget.getLevel(), entityTarget.getEntity(), range, e -> true, bbInflation, block, fluid);
-    
+        
         if(hitResult.getType() == HitResult.Type.BLOCK)
         {
             ctx.getOrCreateTargetGroup(blockDest).addTargets(Target.of(entityTarget.getLevel(), hitResult.getLocation()));
