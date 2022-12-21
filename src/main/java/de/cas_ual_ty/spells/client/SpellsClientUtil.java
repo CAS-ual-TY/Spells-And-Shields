@@ -27,6 +27,8 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
@@ -227,5 +229,15 @@ public class SpellsClientUtil
         {
             return LazyOptional.empty();
         }
+    }
+    
+    public static Level getClientLevel()
+    {
+        return Minecraft.getInstance().level;
+    }
+    
+    public static Player getClientPlayer()
+    {
+        return Minecraft.getInstance().player;
     }
 }

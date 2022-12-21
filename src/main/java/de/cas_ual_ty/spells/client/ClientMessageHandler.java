@@ -3,8 +3,8 @@ package de.cas_ual_ty.spells.client;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
-import de.cas_ual_ty.spells.network.FireClientSpellMessage;
 import de.cas_ual_ty.spells.network.ManaSyncMessage;
+import de.cas_ual_ty.spells.network.RunActionOnClientMessage;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
 import de.cas_ual_ty.spells.registers.Spells;
@@ -77,11 +77,11 @@ public class ClientMessageHandler
         }
     }
     
-    public static void handleFireSpell(FireClientSpellMessage msg)
+    public static void handleSpellAction(RunActionOnClientMessage msg)
     {
-        SpellsClientUtil.getClientManaHolder().ifPresent(manaHolder ->
+        if(msg.action() != null)
         {
-            //msg.spell().performOnClient(manaHolder);
-        });
+            msg.action().execute(SpellsClientUtil.getClientLevel(), SpellsClientUtil.getClientPlayer());
+        }
     }
 }

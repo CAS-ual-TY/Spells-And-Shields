@@ -58,7 +58,7 @@ public class SpellsAndShields
         CHANNEL.registerMessage(4, SpellProgressionSyncMessage.class, SpellProgressionSyncMessage::encode, SpellProgressionSyncMessage::decode, SpellProgressionSyncMessage::handle);
         CHANNEL.registerMessage(5, RequestLearnSpellMessage.class, RequestLearnSpellMessage::encode, RequestLearnSpellMessage::decode, RequestLearnSpellMessage::handle);
         CHANNEL.registerMessage(6, RequestEquipSpellMessage.class, RequestEquipSpellMessage::encode, RequestEquipSpellMessage::decode, RequestEquipSpellMessage::handle);
-        CHANNEL.registerMessage(7, FireClientSpellMessage.class, FireClientSpellMessage::encode, FireClientSpellMessage::decode, FireClientSpellMessage::handle);
+        CHANNEL.registerMessage(7, RunActionOnClientMessage.class, RunActionOnClientMessage::encode, RunActionOnClientMessage::decode, RunActionOnClientMessage::handle);
         
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> de.cas_ual_ty.spells.client.SpellsClientUtil::onModConstruct);
     }

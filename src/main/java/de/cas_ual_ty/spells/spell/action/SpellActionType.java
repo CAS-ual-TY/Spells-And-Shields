@@ -6,8 +6,8 @@ import java.util.function.Function;
 
 public class SpellActionType<A extends SpellAction>
 {
-    private Function<SpellActionType<A>, A> constructor;
-    private Codec<A> codec;
+    protected Function<SpellActionType<A>, A> constructor;
+    protected Codec<A> codec;
     
     public SpellActionType(Function<SpellActionType<A>, A> constructor, Function<SpellActionType<A>, Codec<A>> codec)
     {

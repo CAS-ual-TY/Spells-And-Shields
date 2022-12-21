@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.util;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import de.cas_ual_ty.spells.SpellsConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -170,7 +169,7 @@ public class SpellsUtil
     
     public static Level getClientLevel()
     {
-        return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().level);
+        return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> de.cas_ual_ty.spells.client.SpellsClientUtil.getClientLevel());
     }
     
     public static <E extends Enum<E>> Codec<E> namedEnumCodec(Function<String, E> stringToEnum)
