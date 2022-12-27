@@ -7,14 +7,11 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class MappedBinaryVarAction extends BinaryVarAction
 {
@@ -43,65 +40,46 @@ public class MappedBinaryVarAction extends BinaryVarAction
     }
     
     @Override
-    protected <T, U, V> void tryCalculate(SpellContext ctx, CtxVar<T> operant1, CtxVar<U> operant2, CtxVar<V> result)
+    protected <T, U, V> void tryCalculate(SpellContext ctx, CtxVar<T> operant1, CtxVar<U> operant2, BiConsumer<CtxVarType<V>, V> result)
     {
         map.applyAndSet(operant1, operant2, result);
     }
     
     public static class BinaryOperatorMap
     {
-        private Map<CtxVarType<?>, List<BinaryOperatorMapEntry<?, ?, ?>>> map;
+        private List<BinaryOperatorMapEntry<?, ?, ?>> map;
         
         public BinaryOperatorMap()
         {
-            map = new HashMap<>();
+            map = new LinkedList<>();
         }
         
         public <T, U, V> BinaryOperatorMap register(CtxVarType<T> operant1, CtxVarType<U> operant2, CtxVarType<V> result, BiFunction<T, U, V> function)
         {
-            List<BinaryOperatorMapEntry<?, ?, V>> list = getList(result);
             BinaryOperatorMapEntry<T, U, V> entry = new BinaryOperatorMapEntry<>(operant1, operant2, result, function);
-            
-            if(list != null)
-            {
-                list.add(entry);
-            }
-            else
-            {
-                map.put(result, new LinkedList<>(List.of(entry)));
-            }
-            
+            map.add(entry);
             return this;
         }
         
-        public <V> BinaryOperatorMapEntry<?, ?, V> getEntry(CtxVarType<?> operant1, CtxVarType<?> operant2, CtxVarType<V> result)
+        public BinaryOperatorMapEntry<?, ?, ?> getEntry(CtxVarType<?> operant1, CtxVarType<?> operant2)
         {
-            List<BinaryOperatorMapEntry<?, ?, V>> list = getList(result);
+            BinaryOperatorMapEntry<?, ?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2)).findFirst()
+                    .orElse(map.stream().filter(e -> e.areTypesDirectlyApplicable(operant2, operant1)).findFirst().orElse(null));
             
-            if(list != null)
+            if(entry != null)
             {
-                BinaryOperatorMapEntry<?, ?, V> entry = list.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2, result)).findFirst()
-                        .orElse(list.stream().filter(e -> e.areTypesDirectlyApplicable(operant2, operant1, result)).findFirst().orElse(null));
-                
-                if(entry != null)
-                {
-                    return entry;
-                }
-                else
-                {
-                    return list.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2, result)).findFirst()
-                            .orElse(list.stream().filter(e -> e.areTypesIndirectlyApplicable(operant2, operant1, result)).findFirst().orElse(null));
-                }
+                return entry;
             }
             else
             {
-                return null;
+                return map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2)).findFirst()
+                        .orElse(map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant2, operant1)).findFirst().orElse(null));
             }
         }
         
-        public <V> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, CtxVar<V> result)
+        public <V> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, BiConsumer<CtxVarType<V>, V> result)
         {
-            BinaryOperatorMapEntry<?, ?, V> entry = getEntry(operant1.getType(), operant2.getType(), result.getType());
+            BinaryOperatorMapEntry<?, ?, ?> entry = getEntry(operant1.getType(), operant2.getType());
             
             if(entry != null)
             {
@@ -112,41 +90,22 @@ public class MappedBinaryVarAction extends BinaryVarAction
                 return false;
             }
         }
-        
-        public <V> List<BinaryOperatorMapEntry<?, ?, V>> getList(CtxVarType<V> result)
-        {
-            List<BinaryOperatorMapEntry<?, ?, ?>> list = map.get(result);
-            
-            if(list != null)
-            {
-                return list.stream().map(e -> (BinaryOperatorMapEntry<?, ?, V>) e).collect(Collectors.toList());
-            }
-            else
-            {
-                return null;
-            }
-        }
     }
     
     public static record BinaryOperatorMapEntry<T, U, V>(CtxVarType<T> operant1, CtxVarType<U> operant2,
                                                          CtxVarType<V> result, BiFunction<T, U, V> function)
     {
-        public boolean areTypesIndirectlyApplicable(CtxVarType<?> operant1, CtxVarType<?> operant2, CtxVarType<V> result)
+        public boolean areTypesIndirectlyApplicable(CtxVarType<?> operant1, CtxVarType<?> operant2)
         {
-            return operant1.canConvertTo(this.operant1) && operant2.canConvertTo(operant2) && result == this.result;
+            return operant1.canConvertTo(this.operant1) && operant2.canConvertTo(operant2);
         }
         
-        public boolean areTypesDirectlyApplicable(CtxVarType<?> operant1, CtxVarType<?> operant2, CtxVarType<V> result)
+        public boolean areTypesDirectlyApplicable(CtxVarType<?> operant1, CtxVarType<?> operant2)
         {
-            return operant1 == this.operant1 && operant2 == this.operant2 && result == this.result;
+            return operant1 == this.operant1 && operant2 == this.operant2;
         }
         
-        public boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, CtxVar<V> result)
-        {
-            return applyAndSet(operant1, operant2, result::setValue);
-        }
-        
-        public boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, Consumer<V> result)
+        public <X> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, BiConsumer<CtxVarType<X>, X> result)
         {
             AtomicBoolean success = new AtomicBoolean(false);
             
@@ -154,7 +113,7 @@ public class MappedBinaryVarAction extends BinaryVarAction
             {
                 operant2.tryGetAs(this.operant2).ifPresent(op2 ->
                 {
-                    result.accept(this.function.apply(op1, op2));
+                    result.accept((CtxVarType<X>) this.result(), (X) this.function.apply(op1, op2));
                     success.set(true);
                 });
             });

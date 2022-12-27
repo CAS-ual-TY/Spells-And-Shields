@@ -85,8 +85,13 @@ public class CtxVarType<T>
         return CtxVarRef.makeCodec(this);
     }
     
-    public CtxVarRef<T> ref(T value)
+    public CtxVarRef<T> refImm(T value)
     {
         return new CtxVarRef.CtxVarImm<>(this, value);
+    }
+    
+    public CtxVarRef<T> refDyn(String name)
+    {
+        return new CtxVarRef.CtxVarDyn<>(this, name);
     }
 }

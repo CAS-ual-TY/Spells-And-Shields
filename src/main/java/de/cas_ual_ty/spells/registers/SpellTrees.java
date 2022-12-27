@@ -23,6 +23,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class SpellTrees
@@ -65,9 +66,10 @@ public class SpellTrees
         registry.forEach(spellTree -> spellTree.assignNodeIds(registry.getKey(spellTree)));
     }
     
-    public static SpellTree debugTree(Holder<Spell> debugSpell)
+    public static SpellTree debugTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        return SpellTree.builder(Component.literal("Debug Tree"), debugSpell, 15, bookshelves(28))
+        return SpellTree.builder(Component.literal("Debug Tree"), spellGetter.apply(Spells.TEST), 15, bookshelves(28))
+                .add(spellGetter.apply(Spells.LEAP), 10)
                 .finish();
     }
     

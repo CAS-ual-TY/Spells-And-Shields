@@ -1,12 +1,15 @@
 package de.cas_ual_ty.spells.spell.context;
 
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -131,8 +134,11 @@ public class SpellContext
         {
             return ctxVar.trySet(type, value);
         }
-        
-        return false;
+        else
+        {
+            initCtxVar(new CtxVar<>(type, name, value));
+            return true;
+        }
     }
     
     public <T> boolean initCtxVar(CtxVar<T> variable)
@@ -149,5 +155,24 @@ public class SpellContext
     public boolean isTerminated()
     {
         return terminated;
+    }
+    
+    public void debugCtxVars(PrintStream out)
+    {
+        out.println("Context variables:");
+        for(CtxVar<?> v : ctxVars.values())
+        {
+            out.println("  " + CtxVarTypes.REGISTRY.get().getKey(v.getType()) + " " + v.getName() + " / " + v.getValue().toString());
+        }
+    }
+    
+    public void debugTargetGroups(PrintStream out)
+    {
+        out.println("Target groups:");
+        for(Map.Entry<String, TargetGroup> entry : targetGroups.entrySet())
+        {
+            out.println("  " + entry.getKey() + " / " + entry.getValue().getTargets().size() + ":");
+            entry.getValue().forEachTarget(target -> out.println("    - " + TargetTypes.REGISTRY.get().getKey(target.type)));
+        }
     }
 }

@@ -83,6 +83,7 @@
   "requirement.spells_and_shields.item.consumed": "%s (Consumed)",
   "requirement.spells_and_shields.item.consumed.multiple": "%sx %s (Consumed)",
   "requirement.spells_and_shields.item.multiple": "%sx %s (Not Consumed)",
+  "spell.spells_and_shields.leap": "Leap",
   "spell.spells_and_shields.test": "Test Spell",
   "spell_progression.choose": "Choose a Slot",
   "spell_progression.equip": "Equip",

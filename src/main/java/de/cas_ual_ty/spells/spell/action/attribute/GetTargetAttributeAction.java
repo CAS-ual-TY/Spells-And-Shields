@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.action.variable;
+package de.cas_ual_ty.spells.spell.action.attribute;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
+import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
@@ -72,6 +73,7 @@ public class SpellInstance
         SpellContext ctx = new SpellContext(spellHolder.getPlayer().level, spellHolder, this);
         ctx.activate(activation);
         ctx.getOrCreateTargetGroup(BuiltinTargetGroups.OWNER.targetGroup).addTargets(Target.of(spellHolder.getPlayer()));
+        ctx.initCtxVar(new CtxVar<>(BuiltinVariables.MANA_COST.type.get(), BuiltinVariables.MANA_COST.name, (double) spell.get().getManaCost()));
         variables.forEach(ctx::initCtxVar);
         return ctx;
     }

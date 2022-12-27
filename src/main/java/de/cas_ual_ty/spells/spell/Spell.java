@@ -110,6 +110,12 @@ public class Spell
         for(SpellAction spellAction : spellActions)
         {
             spellAction.doAction(ctx);
+            
+            /*
+            System.out.println(SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
+            ctx.debugCtxVars(System.out);
+            ctx.debugTargetGroups(System.out);
+            */
         }
     }
 }

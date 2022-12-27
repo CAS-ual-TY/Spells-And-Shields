@@ -24,8 +24,11 @@ public class Spells
         return level.registryAccess().registryOrThrow(REGISTRY_KEY);
     }
     
-    public static final ResourceLocation TEST = new ResourceLocation(SpellsAndShields.MOD_ID, "test");
+    public static final ResourceLocation TEST = rl("test");
     public static final String KEY_TEST = key(TEST);
+    
+    public static final ResourceLocation LEAP = rl("leap");
+    public static final String KEY_LEAP = key(LEAP);
     
     public static void register()
     {
@@ -37,6 +40,11 @@ public class Spells
         REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).dataPackRegistry(SpellsCodecs.SPELL_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spells"))
                 .onCreate((registry, stage) -> REGISTRY_KEY = registry.getRegistryKey())
         );
+    }
+    
+    private static ResourceLocation rl(String path)
+    {
+        return new ResourceLocation(SpellsAndShields.MOD_ID, path);
     }
     
     public static String key(ResourceLocation rl)

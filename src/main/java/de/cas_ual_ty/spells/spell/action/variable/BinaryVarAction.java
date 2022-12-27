@@ -6,6 +6,9 @@ import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
+import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+
+import java.util.function.BiConsumer;
 
 public abstract class BinaryVarAction extends SpellAction
 {
@@ -73,15 +76,8 @@ public abstract class BinaryVarAction extends SpellAction
             return;
         }
         
-        CtxVar<?> result = ctx.getCtxVar(this.result);
-        
-        if(result == null)
-        {
-            return;
-        }
-        
-        tryCalculate(ctx, operant1, operant2, result);
+        tryCalculate(ctx, operant1, operant2, (type, value) -> ctx.setCtxVar(type, result, value));
     }
     
-    protected abstract <T, U, V> void tryCalculate(SpellContext ctx, CtxVar<T> operant1, CtxVar<U> operant2, CtxVar<V> result);
+    protected abstract <T, U, V> void tryCalculate(SpellContext ctx, CtxVar<T> operant1, CtxVar<U> operant2, BiConsumer<CtxVarType<V>, V> result);
 }

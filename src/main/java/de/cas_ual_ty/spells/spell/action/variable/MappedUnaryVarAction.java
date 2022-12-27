@@ -7,14 +7,11 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class MappedUnaryVarAction extends UnaryVarAction
 {
@@ -42,63 +39,44 @@ public class MappedUnaryVarAction extends UnaryVarAction
     }
     
     @Override
-    protected <T, U> void tryCalculate(SpellContext ctx, CtxVar<T> operant, CtxVar<U> result)
+    protected <T, U> void tryCalculate(SpellContext ctx, CtxVar<T> operant, BiConsumer<CtxVarType<U>, U> result)
     {
         map.applyAndSet(operant, result);
     }
     
     public static class UnaryOperatorMap
     {
-        private Map<CtxVarType<?>, List<UnaryOperatorMapEntry<?, ?>>> map;
+        private List<UnaryOperatorMapEntry<?, ?>> map;
         
         public UnaryOperatorMap()
         {
-            map = new HashMap<>();
+            map = new LinkedList<>();
         }
         
         public <T, U> UnaryOperatorMap register(CtxVarType<T> operant, CtxVarType<U> result, Function<T, U> function)
         {
-            List<UnaryOperatorMapEntry<?, U>> list = getList(result);
             UnaryOperatorMapEntry<T, U> entry = new UnaryOperatorMapEntry<>(operant, result, function);
-            
-            if(list != null)
-            {
-                list.add(entry);
-            }
-            else
-            {
-                map.put(result, new LinkedList<>(List.of(entry)));
-            }
-            
+            map.add(entry);
             return this;
         }
         
-        public <U> UnaryOperatorMapEntry<?, U> getEntry(CtxVarType<?> operant, CtxVarType<U> result)
+        public UnaryOperatorMapEntry<?, ?> getEntry(CtxVarType<?> operant)
         {
-            List<UnaryOperatorMapEntry<?, U>> list = getList(result);
+            UnaryOperatorMapEntry<?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant)).findFirst().orElse(null);
             
-            if(list != null)
+            if(entry != null)
             {
-                UnaryOperatorMapEntry<?, U> entry = list.stream().filter(e -> e.areTypesDirectlyApplicable(operant, result)).findFirst().orElse(null);
-                
-                if(entry != null)
-                {
-                    return entry;
-                }
-                else
-                {
-                    return list.stream().filter(e -> e.areTypesIndirectlyApplicable(operant, result)).findFirst().orElse(null);
-                }
+                return entry;
             }
             else
             {
-                return null;
+                return map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant)).findFirst().orElse(null);
             }
         }
         
-        public <T, U> boolean applyAndSet(CtxVar<?> operant, CtxVar<U> result)
+        public <T, U> boolean applyAndSet(CtxVar<?> operant, BiConsumer<CtxVarType<U>, U> result)
         {
-            UnaryOperatorMapEntry<?, U> entry = getEntry(operant.getType(), result.getType());
+            UnaryOperatorMapEntry<?, ?> entry = getEntry(operant.getType());
             
             if(entry != null)
             {
@@ -109,47 +87,28 @@ public class MappedUnaryVarAction extends UnaryVarAction
                 return false;
             }
         }
-        
-        public <U> List<UnaryOperatorMapEntry<?, U>> getList(CtxVarType<U> result)
-        {
-            List<UnaryOperatorMapEntry<?, ?>> list = map.get(result);
-            
-            if(list != null)
-            {
-                return list.stream().map(e -> (UnaryOperatorMapEntry<?, U>) e).collect(Collectors.toList());
-            }
-            else
-            {
-                return null;
-            }
-        }
     }
     
     public static record UnaryOperatorMapEntry<T, U>(CtxVarType<T> operant, CtxVarType<U> result,
                                                      Function<T, U> function)
     {
-        public boolean areTypesIndirectlyApplicable(CtxVarType<?> operant, CtxVarType<U> result)
+        public boolean areTypesIndirectlyApplicable(CtxVarType<?> operant)
         {
-            return operant.canConvertTo(this.operant) && result == this.result;
+            return operant.canConvertTo(this.operant);
         }
         
-        public boolean areTypesDirectlyApplicable(CtxVarType<?> operant, CtxVarType<U> result)
+        public boolean areTypesDirectlyApplicable(CtxVarType<?> operant)
         {
-            return operant == this.operant && result == this.result;
+            return operant == this.operant;
         }
         
-        public boolean applyAndSet(CtxVar<?> operant, CtxVar<U> result)
-        {
-            return applyAndSet(operant, result::setValue);
-        }
-        
-        public boolean applyAndSet(CtxVar<?> operant, Consumer<U> result)
+        public <X> boolean applyAndSet(CtxVar<?> operant, BiConsumer<CtxVarType<X>, X> result)
         {
             AtomicBoolean success = new AtomicBoolean(false);
             
             operant.tryGetAs(this.operant).ifPresent(op ->
             {
-                result.accept(this.function.apply(op));
+                result.accept((CtxVarType<X>) this.result(), (X) this.function.apply(op));
                 success.set(true);
             });
             

@@ -58,7 +58,7 @@ public class SpellTreesGen implements DataProvider
     
     public void addSpellTrees()
     {
-        addSpellTree("debug", SpellTrees.debugTree(spellRef(Spells.TEST)));
+        addSpellTree("debug", SpellTrees.debugTree(this::spellRef));
         
         /*addSpellTree("nether", SpellTrees.fireTree());
         addSpellTree("ocean", SpellTrees.waterTree());

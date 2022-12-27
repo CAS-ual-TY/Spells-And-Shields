@@ -2,7 +2,15 @@
   "icon": "spells_and_shields:test",
   "requirements": [],
   "root": {
-    "children": [],
+    "children": [
+      {
+        "children": [],
+        "level_cost": 10,
+        "requirements": [],
+        "spell": "spells_and_shields:leap",
+        "variables": []
+      }
+    ],
     "level_cost": 15,
     "requirements": [
       {
