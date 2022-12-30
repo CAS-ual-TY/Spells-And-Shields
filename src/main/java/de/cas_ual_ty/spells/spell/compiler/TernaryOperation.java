@@ -36,8 +36,7 @@ public class TernaryOperation
     
     public Entry<?, ?, ?, ?> getEntry(CtxVarType<?> operant1, CtxVarType<?> operant2, CtxVarType<?> operant3)
     {
-        Entry<?, ?, ?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2, operant3)).findFirst()
-                .orElse(map.stream().filter(e -> e.areTypesDirectlyApplicable(operant2, operant1, operant3)).findFirst().orElse(null));
+        Entry<?, ?, ?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2, operant3)).findFirst().orElse(null);
         
         if(entry != null)
         {
@@ -45,8 +44,7 @@ public class TernaryOperation
         }
         else
         {
-            return map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2, operant3)).findFirst()
-                    .orElse(map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant2, operant1, operant3)).findFirst().orElse(null));
+            return map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2, operant3)).findFirst().orElse(null);
         }
     }
     
