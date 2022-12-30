@@ -111,7 +111,7 @@ public class SpellHolder implements ISpellHolder
         {
             CompoundTag tag = new CompoundTag();
             
-            if(slots[i] != null)
+            if(slots[i] != null && slots[i].getNodeId() != null)
             {
                 slots[i].getNodeId().toNbt(tag);
             }
