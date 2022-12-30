@@ -3,6 +3,8 @@ package de.cas_ual_ty.spells;
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.network.*;
 import de.cas_ual_ty.spells.registers.*;
+import de.cas_ual_ty.spells.spell.compiler.BinaryOperation;
+import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -66,5 +68,8 @@ public class SpellsAndShields
     private void setup(FMLCommonSetupEvent event)
     {
         BuiltinRegistries.addPotionRecipes();
+        
+        UnaryOperation.registerToCompiler();
+        BinaryOperation.registerToCompiler();
     }
 }

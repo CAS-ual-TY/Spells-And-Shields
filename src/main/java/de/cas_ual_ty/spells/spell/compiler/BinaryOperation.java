@@ -1,4 +1,7 @@
-package de.cas_ual_ty.spells.spell.variable;
+package de.cas_ual_ty.spells.spell.compiler;
+
+import de.cas_ual_ty.spells.spell.variable.CtxVar;
+import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +11,21 @@ import java.util.function.BiFunction;
 
 public class BinaryOperation
 {
+    // compiler built-in
+    public static final BinaryOperation ADD = new BinaryOperation();
+    public static final BinaryOperation SUB = new BinaryOperation();
+    public static final BinaryOperation MUL = new BinaryOperation();
+    public static final BinaryOperation DIV = new BinaryOperation();
+    
+    public static final BinaryOperation MIN = new BinaryOperation();
+    public static final BinaryOperation MAX = new BinaryOperation();
+    
+    public static void registerToCompiler()
+    {
+        Compiler.registerBinaryFunction("min", MIN);
+        Compiler.registerBinaryFunction("max", MAX);
+    }
+    
     private List<Entry<?, ?, ?>> map;
     
     public BinaryOperation()

@@ -1,4 +1,7 @@
-package de.cas_ual_ty.spells.spell.variable;
+package de.cas_ual_ty.spells.spell.compiler;
+
+import de.cas_ual_ty.spells.spell.variable.CtxVar;
+import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +11,22 @@ import java.util.function.Function;
 
 public class UnaryOperation
 {
+    // compiler built-in
+    public static final UnaryOperation NEGATE = new UnaryOperation();
+    
+    public static final UnaryOperation SQRT = new UnaryOperation();
+    public static final UnaryOperation GET_X = new UnaryOperation();
+    public static final UnaryOperation GET_Y = new UnaryOperation();
+    public static final UnaryOperation GET_Z = new UnaryOperation();
+    
+    public static void registerToCompiler()
+    {
+        Compiler.registerUnaryFunction("sqrt", SQRT);
+        Compiler.registerUnaryFunction("get_x", GET_X);
+        Compiler.registerUnaryFunction("get_y", GET_Y);
+        Compiler.registerUnaryFunction("get_z", GET_Z);
+    }
+    
     private List<Entry<?, ?>> map;
     
     public UnaryOperation()
