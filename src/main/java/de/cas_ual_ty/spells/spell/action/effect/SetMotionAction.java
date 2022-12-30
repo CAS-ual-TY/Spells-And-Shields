@@ -10,7 +10,7 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
-import de.cas_ual_ty.spells.spell.variable.CtxVarRef;
+import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -30,14 +30,14 @@ public class SetMotionAction extends AffectSingleTypeAction<EntityTarget>
         ).apply(instance, (activation, targets, motion) -> new SetMotionAction(type, activation, targets, motion)));
     }
     
-    protected CtxVarRef<Vec3> motion;
+    protected DynamicCtxVar<Vec3> motion;
     
     public SetMotionAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public SetMotionAction(SpellActionType<?> type, String activation, String targets, CtxVarRef<Vec3> motion)
+    public SetMotionAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Vec3> motion)
     {
         super(type, activation, targets);
         this.motion = motion;
@@ -49,7 +49,7 @@ public class SetMotionAction extends AffectSingleTypeAction<EntityTarget>
         return TargetTypes.ENTITY.get();
     }
     
-    public CtxVarRef<Vec3> getMotion()
+    public DynamicCtxVar<Vec3> getMotion()
     {
         return motion;
     }

@@ -114,6 +114,12 @@ public class SpellContext
         return name.isEmpty() ? null : ctxVars.get(name);
     }
     
+    public <T> boolean initCtxVar(CtxVar<T> variable)
+    {
+        ctxVars.put(variable.getName(), variable.copy());
+        return true;
+    }
+    
     public <T> Optional<T> getCtxVar(CtxVarType<T> type, String name)
     {
         CtxVar<?> ctxVar = getCtxVar(name);
@@ -139,12 +145,6 @@ public class SpellContext
             initCtxVar(new CtxVar<>(type, name, value));
             return true;
         }
-    }
-    
-    public <T> boolean initCtxVar(CtxVar<T> variable)
-    {
-        ctxVars.put(variable.getName(), variable.copy());
-        return true;
     }
     
     public void terminate()

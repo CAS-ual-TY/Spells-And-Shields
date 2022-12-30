@@ -8,6 +8,8 @@ import de.cas_ual_ty.spells.spell.action.target.CopyTargetsAction;
 import de.cas_ual_ty.spells.spell.action.target.LookAtTargetAction;
 import de.cas_ual_ty.spells.spell.action.target.PickTargetAction;
 import de.cas_ual_ty.spells.spell.action.variable.*;
+import de.cas_ual_ty.spells.spell.variable.BinaryOperation;
+import de.cas_ual_ty.spells.spell.variable.UnaryOperation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
@@ -44,12 +46,12 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MakeVectorAction>> MAKE_VEC3 = DEFERRED_REGISTER.register("make_vec3", () -> new SpellActionType<>(MakeVectorAction::new, MakeVectorAction::makeCodec));
     
     //variable / mapped binary
-    public static final MappedBinaryVarAction.BinaryOperatorMap ADD_MAP = new MappedBinaryVarAction.BinaryOperatorMap();
-    public static final MappedBinaryVarAction.BinaryOperatorMap SUB_MAP = new MappedBinaryVarAction.BinaryOperatorMap();
-    public static final MappedBinaryVarAction.BinaryOperatorMap MUL_MAP = new MappedBinaryVarAction.BinaryOperatorMap();
-    public static final MappedBinaryVarAction.BinaryOperatorMap DIV_MAP = new MappedBinaryVarAction.BinaryOperatorMap();
-    public static final MappedBinaryVarAction.BinaryOperatorMap MIN_MAP = new MappedBinaryVarAction.BinaryOperatorMap();
-    public static final MappedBinaryVarAction.BinaryOperatorMap MAX_MAP = new MappedBinaryVarAction.BinaryOperatorMap();
+    public static final BinaryOperation ADD_MAP = new BinaryOperation();
+    public static final BinaryOperation SUB_MAP = new BinaryOperation();
+    public static final BinaryOperation MUL_MAP = new BinaryOperation();
+    public static final BinaryOperation DIV_MAP = new BinaryOperation();
+    public static final BinaryOperation MIN_MAP = new BinaryOperation();
+    public static final BinaryOperation MAX_MAP = new BinaryOperation();
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> ADD = DEFERRED_REGISTER.register("add", () -> MappedBinaryVarAction.makeType(ADD_MAP));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> SUB = DEFERRED_REGISTER.register("sub", () -> MappedBinaryVarAction.makeType(SUB_MAP));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> MUL = DEFERRED_REGISTER.register("mul", () -> MappedBinaryVarAction.makeType(MUL_MAP));
@@ -61,10 +63,10 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<SimpleBinaryVarAction<Vec3, Double, Vec3>>> SCALE = DEFERRED_REGISTER.register("scale", () -> SimpleBinaryVarAction.makeType(CtxVarTypes.VEC3, CtxVarTypes.DOUBLE, CtxVarTypes.VEC3, (x, y) -> x.scale(y)));
     
     //variable / mapped unary
-    public static final MappedUnaryVarAction.UnaryOperatorMap SQRT_MAP = new MappedUnaryVarAction.UnaryOperatorMap();
-    public static final MappedUnaryVarAction.UnaryOperatorMap X_MAP = new MappedUnaryVarAction.UnaryOperatorMap();
-    public static final MappedUnaryVarAction.UnaryOperatorMap Y_MAP = new MappedUnaryVarAction.UnaryOperatorMap();
-    public static final MappedUnaryVarAction.UnaryOperatorMap Z_MAP = new MappedUnaryVarAction.UnaryOperatorMap();
+    public static final UnaryOperation SQRT_MAP = new UnaryOperation();
+    public static final UnaryOperation X_MAP = new UnaryOperation();
+    public static final UnaryOperation Y_MAP = new UnaryOperation();
+    public static final UnaryOperation Z_MAP = new UnaryOperation();
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> SQRT = DEFERRED_REGISTER.register("sqrt", () -> MappedUnaryVarAction.makeType(SQRT_MAP));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> X = DEFERRED_REGISTER.register("x", () -> MappedUnaryVarAction.makeType(X_MAP));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> Y = DEFERRED_REGISTER.register("y", () -> MappedUnaryVarAction.makeType(Y_MAP));

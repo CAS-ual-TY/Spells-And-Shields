@@ -12,7 +12,7 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
-import de.cas_ual_ty.spells.spell.variable.CtxVarRef;
+import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import net.minecraft.world.damagesource.DamageSource;
 
 public class DamageAction extends AffectTypeAction<LivingEntityTarget>
@@ -26,14 +26,14 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, targets, damage) -> new DamageAction(type, activation, targets, damage)));
     }
     
-    protected CtxVarRef<Double> damage;
+    protected DynamicCtxVar<Double> damage;
     
     public DamageAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public DamageAction(SpellActionType<?> type, String activation, String targets, CtxVarRef<Double> damage)
+    public DamageAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> damage)
     {
         super(type, activation, targets);
         this.damage = damage;
@@ -50,7 +50,7 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
         return TargetTypes.LIVING_ENTITY.get();
     }
     
-    public CtxVarRef<Double> getDamage()
+    public DynamicCtxVar<Double> getDamage()
     {
         return damage;
     }

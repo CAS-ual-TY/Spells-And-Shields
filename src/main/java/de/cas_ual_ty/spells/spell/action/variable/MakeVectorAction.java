@@ -6,7 +6,7 @@ import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
-import de.cas_ual_ty.spells.spell.variable.CtxVarRef;
+import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import net.minecraft.world.phys.Vec3;
 
 public class MakeVectorAction extends SpellAction
@@ -22,9 +22,9 @@ public class MakeVectorAction extends SpellAction
         ).apply(instance, (activation, x, y, z, result) -> new MakeVectorAction(type, activation, x, y, z, result)));
     }
     
-    protected CtxVarRef<Double> x;
-    protected CtxVarRef<Double> y;
-    protected CtxVarRef<Double> z;
+    protected DynamicCtxVar<Double> x;
+    protected DynamicCtxVar<Double> y;
+    protected DynamicCtxVar<Double> z;
     protected String result;
     
     public MakeVectorAction(SpellActionType<?> type)
@@ -32,7 +32,7 @@ public class MakeVectorAction extends SpellAction
         super(type);
     }
     
-    public MakeVectorAction(SpellActionType<?> type, String activation, CtxVarRef<Double> x, CtxVarRef<Double> y, CtxVarRef<Double> z, String result)
+    public MakeVectorAction(SpellActionType<?> type, String activation, DynamicCtxVar<Double> x, DynamicCtxVar<Double> y, DynamicCtxVar<Double> z, String result)
     {
         super(type, activation);
         this.x = x;
@@ -41,17 +41,17 @@ public class MakeVectorAction extends SpellAction
         this.result = result;
     }
     
-    public CtxVarRef<Double> getX()
+    public DynamicCtxVar<Double> getX()
     {
         return x;
     }
     
-    public CtxVarRef<Double> getY()
+    public DynamicCtxVar<Double> getY()
     {
         return y;
     }
     
-    public CtxVarRef<Double> getZ()
+    public DynamicCtxVar<Double> getZ()
     {
         return z;
     }

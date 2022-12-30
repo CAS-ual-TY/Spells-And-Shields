@@ -14,6 +14,7 @@ import de.cas_ual_ty.spells.spell.action.effect.SetMotionAction;
 import de.cas_ual_ty.spells.spell.action.variable.*;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
+import de.cas_ual_ty.spells.spell.variable.Compiler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -69,6 +70,12 @@ public class SpellsGen implements DataProvider
                 .addAction(new DamageAction(SpellActionTypes.DAMAGE.get(), BuiltinActivations.ACTIVE, BuiltinTargetGroups.OWNER, 5D))
         );
         
+        addSpell(Spells.TEST2, new Spell(modId, "default_fallback", Spells.KEY_TEST2, 2F)
+                .addAction(new PutVarAction<>(SpellActionTypes.PUT_DOUBLE.get(), BuiltinActivations.ACTIVE.activation, CtxVarTypes.DOUBLE.get().refImm(1D), "var1", CtxVarTypes.DOUBLE.get()))
+                .addAction(new PutVarAction<>(SpellActionTypes.PUT_INT.get(), BuiltinActivations.ACTIVE.activation, CtxVarTypes.INT.get().refImm(2), "var2", CtxVarTypes.INT.get()))
+                .addAction(new DamageAction(SpellActionTypes.DAMAGE.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, Compiler.compile("var1+var2", CtxVarTypes.DOUBLE.get())))
+        );
+        
         addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 2.5F)
                 .addAction(new CheckBurnManaAction(SpellActionTypes.CHECK_BURN_MANA.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().refDyn("mana_cost")))
                 // vector <- look
@@ -102,6 +109,7 @@ public class SpellsGen implements DataProvider
                 .addAction(new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup))
                 .addAction(new SetMotionAction(SpellActionTypes.SET_MOTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.VEC3.get().refDyn("vector6")))
         );
+        
     }
     
     @Override

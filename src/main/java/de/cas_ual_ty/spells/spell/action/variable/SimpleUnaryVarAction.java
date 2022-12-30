@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import de.cas_ual_ty.spells.spell.variable.UnaryOperation;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -13,7 +14,7 @@ import java.util.function.Supplier;
 
 public class SimpleUnaryVarAction<X, Y> extends UnaryVarAction
 {
-    public static <X, Y> Codec<SimpleUnaryVarAction<X, Y>> makeCodec(SpellActionType<SimpleUnaryVarAction<X, Y>> type, Supplier<MappedUnaryVarAction.UnaryOperatorMapEntry<X, Y>> function)
+    public static <X, Y> Codec<SimpleUnaryVarAction<X, Y>> makeCodec(SpellActionType<SimpleUnaryVarAction<X, Y>> type, Supplier<UnaryOperation.Entry<X, Y>> function)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
@@ -22,15 +23,15 @@ public class SimpleUnaryVarAction<X, Y> extends UnaryVarAction
         ).apply(instance, (activation, operant, result) -> new SimpleUnaryVarAction<>(type, activation, operant, result, function)));
     }
     
-    protected MappedUnaryVarAction.UnaryOperatorMapEntry<X, Y> function;
+    protected UnaryOperation.Entry<X, Y> function;
     
-    public SimpleUnaryVarAction(SpellActionType<?> type, Supplier<MappedUnaryVarAction.UnaryOperatorMapEntry<X, Y>> function)
+    public SimpleUnaryVarAction(SpellActionType<?> type, Supplier<UnaryOperation.Entry<X, Y>> function)
     {
         super(type);
         this.function = function.get();
     }
     
-    public SimpleUnaryVarAction(SpellActionType<?> type, String activation, String operant, String result, Supplier<MappedUnaryVarAction.UnaryOperatorMapEntry<X, Y>> function)
+    public SimpleUnaryVarAction(SpellActionType<?> type, String activation, String operant, String result, Supplier<UnaryOperation.Entry<X, Y>> function)
     {
         super(type, activation, operant, result);
         this.function = function.get();
@@ -47,10 +48,10 @@ public class SimpleUnaryVarAction<X, Y> extends UnaryVarAction
     
     public static <X, Y> SpellActionType<SimpleUnaryVarAction<X, Y>> makeType(Supplier<CtxVarType<X>> operant, Supplier<CtxVarType<Y>> result, Function<X, Y> function)
     {
-        return makeType(() -> new MappedUnaryVarAction.UnaryOperatorMapEntry<>(operant.get(), result.get(), function));
+        return makeType(() -> new UnaryOperation.Entry<>(operant.get(), result.get(), function));
     }
     
-    public static <X, Y> SpellActionType<SimpleUnaryVarAction<X, Y>> makeType(Supplier<MappedUnaryVarAction.UnaryOperatorMapEntry<X, Y>> function)
+    public static <X, Y> SpellActionType<SimpleUnaryVarAction<X, Y>> makeType(Supplier<UnaryOperation.Entry<X, Y>> function)
     {
         return new SpellActionType<>((type) -> new SimpleUnaryVarAction<>(type, function), (type) -> makeCodec(type, function));
     }

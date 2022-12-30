@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.spell.variable;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class CtxVar<T>
@@ -49,12 +50,24 @@ public class CtxVar<T>
     
     public <U> boolean trySet(CtxVarType<U> type, U value)
     {
-        return this.type.trySet(type, value, this);
+        if(type.canConvertTo(this.type))
+        {
+            setValue(type.convertTo(this.type, value));
+            return true;
+        }
+        
+        return false;
     }
     
     public <U> Optional<U> tryGetAs(CtxVarType<U> type)
     {
-        return this.type.tryGetAs(type, this);
+        return Optional.ofNullable(this.type.convertTo(type, this.value));
+    }
+    
+    @Nullable
+    public <U> U tryConvertTo(CtxVarType<U> type)
+    {
+        return this.type.convertTo(type, this.value);
     }
     
     public CtxVar<T> copy()

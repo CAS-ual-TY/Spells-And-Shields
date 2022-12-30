@@ -3,9 +3,9 @@ package de.cas_ual_ty.spells.spell.variable;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
 public class CtxVarType<T>
@@ -41,22 +41,21 @@ public class CtxVarType<T>
         return immCodec;
     }
     
-    public <U> boolean trySet(CtxVarType<U> typeFrom, U value, CtxVar<T> ctxVar)
+    @Nullable
+    public <U> U convertTo(CtxVarType<U> typeTo, T value)
     {
-        if(typeFrom == ctxVar.getType())
+        if(typeTo == this)
         {
-            ctxVar.setValue((T) value);
-            return true;
+            return (U) value;
         }
         
-        Function<U, T> converter = (Function<U, T>) typeFrom.converters.get(this);
+        Function<T, U> converter = (Function<T, U>) converters.get(typeTo);
         if(converter != null)
         {
-            ctxVar.setValue(converter.apply(value));
-            return true;
+            return converter.apply(value);
         }
         
-        return false;
+        return null;
     }
     
     public <U> boolean canConvertTo(CtxVarType<U> typeTo)
@@ -64,34 +63,18 @@ public class CtxVarType<T>
         return typeTo == this || converters.containsKey(typeTo);
     }
     
-    public <U> Optional<U> tryGetAs(CtxVarType<U> typeTo, CtxVar<T> ctxVar)
+    public Codec<DynamicCtxVar<T>> refCodec()
     {
-        if(typeTo == ctxVar.getType())
-        {
-            return (Optional<U>) ctxVar.getOptional();
-        }
-        
-        Function<T, U> converter = (Function<T, U>) converters.get(typeTo);
-        if(converter != null)
-        {
-            return Optional.of(converter.apply(ctxVar.getValue()));
-        }
-        
-        return Optional.empty();
+        return DynamicCtxVar.makeCodec(this);
     }
     
-    public Codec<CtxVarRef<T>> refCodec()
+    public DynamicCtxVar<T> refImm(T value)
     {
-        return CtxVarRef.makeCodec(this);
+        return new ImmediateCtxVar<>(this, value);
     }
     
-    public CtxVarRef<T> refImm(T value)
+    public DynamicCtxVar<T> refDyn(String name)
     {
-        return new CtxVarRef.CtxVarImm<>(this, value);
-    }
-    
-    public CtxVarRef<T> refDyn(String name)
-    {
-        return new CtxVarRef.CtxVarDyn<>(this, name);
+        return new ReferencedCtxVar<>(this, name, (ctx) -> ctx.getCtxVar(this, name));
     }
 }

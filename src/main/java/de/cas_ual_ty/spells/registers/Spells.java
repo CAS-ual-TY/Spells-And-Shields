@@ -27,6 +27,9 @@ public class Spells
     public static final ResourceLocation TEST = rl("test");
     public static final String KEY_TEST = key(TEST);
     
+    public static final ResourceLocation TEST2 = rl("test2");
+    public static final String KEY_TEST2 = key(TEST2);
+    
     public static final ResourceLocation LEAP = rl("leap");
     public static final String KEY_LEAP = key(LEAP);
     

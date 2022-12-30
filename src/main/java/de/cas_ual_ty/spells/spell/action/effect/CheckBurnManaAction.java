@@ -13,7 +13,7 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
-import de.cas_ual_ty.spells.spell.variable.CtxVarRef;
+import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 
 public class CheckBurnManaAction extends AffectSingleTypeAction<PlayerTarget>
 {
@@ -26,14 +26,14 @@ public class CheckBurnManaAction extends AffectSingleTypeAction<PlayerTarget>
         ).apply(instance, (activation, targets, amount) -> new CheckBurnManaAction(type, activation, targets, amount)));
     }
     
-    protected CtxVarRef<Double> amount;
+    protected DynamicCtxVar<Double> amount;
     
     public CheckBurnManaAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public CheckBurnManaAction(SpellActionType<?> type, String activation, String targets, CtxVarRef<Double> amount)
+    public CheckBurnManaAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> amount)
     {
         super(type, activation, targets);
         this.amount = amount;
@@ -50,7 +50,7 @@ public class CheckBurnManaAction extends AffectSingleTypeAction<PlayerTarget>
         return TargetTypes.PLAYER.get();
     }
     
-    public CtxVarRef<Double> getAmount()
+    public DynamicCtxVar<Double> getAmount()
     {
         return amount;
     }

@@ -5,8 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
-import de.cas_ual_ty.spells.spell.variable.CtxVarRef;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 
 import java.util.function.Supplier;
 
@@ -21,7 +21,7 @@ public class PutVarAction<T> extends SpellAction
         ).apply(instance, (activation, src, dst) -> new PutVarAction<>(type, activation, src, dst, varType)));
     }
     
-    protected CtxVarRef<T> src;
+    protected DynamicCtxVar<T> src;
     protected String dst;
     
     protected CtxVarType<T> varType;
@@ -32,7 +32,7 @@ public class PutVarAction<T> extends SpellAction
         this.varType = varType;
     }
     
-    public PutVarAction(SpellActionType<?> type, String activation, CtxVarRef<T> src, String dst, CtxVarType<T> varType)
+    public PutVarAction(SpellActionType<?> type, String activation, DynamicCtxVar<T> src, String dst, CtxVarType<T> varType)
     {
         super(type, activation);
         this.src = src;
@@ -40,7 +40,7 @@ public class PutVarAction<T> extends SpellAction
         this.varType = varType;
     }
     
-    public CtxVarRef<T> getSrc()
+    public DynamicCtxVar<T> getSrc()
     {
         return src;
     }

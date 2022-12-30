@@ -7,6 +7,7 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.*;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
@@ -27,6 +28,10 @@ import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.ExtraCodecs;
+
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SpellsCodecs
 {
@@ -53,6 +58,9 @@ public class SpellsCodecs
     public static Codec<SpellInstance> SPELL_INSTANCE;
     
     public static Codec<Component> COMPONENT; // json only, no NBT support
+    
+    public static Codec<Integer> STRING_INT_CODEC;
+    public static Codec<Double> STRING_DOUBLE_CODEC;
     
     public static void makeCodecs()
     {
@@ -123,5 +131,37 @@ public class SpellsCodecs
                 return ops.empty();
             }
         });
+        
+        STRING_INT_CODEC = makeStringCodec(Pattern.compile("^\s*(?<value>[0-9]+)\s*$"), matcher -> Integer.valueOf(matcher.group("value")), Object::toString);
+        STRING_DOUBLE_CODEC = makeStringCodec(Pattern.compile("^\s*(?<value>[0-9]+\\.[0-9]*)\s*$"), matcher -> Double.valueOf(matcher.group("value")), Object::toString);
+    }
+    
+    private static <T> Codec<T> makeStringCodec(Pattern pattern, Function<Matcher, T> fromString, Function<T, String> toString)
+    {
+        return new PrimitiveCodec<T>()
+        {
+            @Override
+            public <T1> DataResult<T> read(DynamicOps<T1> ops, T1 input)
+            {
+                String string = ops.getStringValue(input).getOrThrow(false, SpellsAndShields.LOGGER::error);
+                
+                Matcher matcher = pattern.matcher(string);
+                
+                if(matcher.matches())
+                {
+                    return DataResult.success(fromString.apply(matcher));
+                }
+                else
+                {
+                    return DataResult.error("Not a string!");
+                }
+            }
+            
+            @Override
+            public <T1> T1 write(DynamicOps<T1> ops, T value)
+            {
+                return ops.createString(toString.apply(value));
+            }
+        };
     }
 }
