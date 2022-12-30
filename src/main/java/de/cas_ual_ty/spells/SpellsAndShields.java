@@ -4,6 +4,7 @@ import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.network.*;
 import de.cas_ual_ty.spells.registers.*;
 import de.cas_ual_ty.spells.spell.compiler.BinaryOperation;
+import de.cas_ual_ty.spells.spell.compiler.TernaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.resources.ResourceLocation;
@@ -71,5 +72,6 @@ public class SpellsAndShields
         
         UnaryOperation.registerToCompiler();
         BinaryOperation.registerToCompiler();
+        TernaryOperation.registerToCompiler();
     }
 }

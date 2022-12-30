@@ -13,6 +13,7 @@ public class Compiler
 {
     private static Map<String, UnaryOperation> UNARY_FUNCTIONS = new HashMap<>();
     private static Map<String, BinaryOperation> BINARY_FUNCTIONS = new HashMap<>();
+    private static Map<String, TernaryOperation> TERNARY_FUNCTIONS = new HashMap<>();
     
     public static void registerUnaryFunction(String name, UnaryOperation op)
     {
@@ -22,6 +23,11 @@ public class Compiler
     public static void registerBinaryFunction(String name, BinaryOperation op)
     {
         BINARY_FUNCTIONS.put(name, op);
+    }
+    
+    public static void registerTernaryFunction(String name, TernaryOperation op)
+    {
+        TERNARY_FUNCTIONS.put(name, op);
     }
     
     private static int position;
@@ -111,7 +117,7 @@ public class Compiler
         };
     }
     
-    private static Part makeBinaryFunc(BinaryOperation op, Part operant1, Part operant2)
+    private static Part makeTernaryFunc(BinaryOperation op, Part operant1, Part operant2)
     {
         return (ctx) ->
         {
@@ -125,6 +131,31 @@ public class Compiler
                 optional2.ifPresent(op2 ->
                 {
                     op.applyAndSet(op1, op2, (type, value) -> newVar.set(new CtxVar<>(type, null, value)));
+                });
+            });
+            
+            return Optional.ofNullable(newVar.get());
+        };
+    }
+    
+    private static Part makeTernaryFunc(TernaryOperation op, Part operant1, Part operant2, Part operant3)
+    {
+        return (ctx) ->
+        {
+            Optional<CtxVar<?>> optional1 = operant1.getValue(ctx);
+            Optional<CtxVar<?>> optional2 = operant2.getValue(ctx);
+            Optional<CtxVar<?>> optional3 = operant3.getValue(ctx);
+            
+            AtomicReference<CtxVar<?>> newVar = new AtomicReference<>(null);
+            
+            optional1.ifPresent(op1 ->
+            {
+                optional2.ifPresent(op2 ->
+                {
+                    optional3.ifPresent(op3 ->
+                    {
+                        op.applyAndSet(op1, op2, op3, (type, value) -> newVar.set(new CtxVar<>(type, null, value)));
+                    });
                 });
             });
             
@@ -200,7 +231,15 @@ public class Compiler
                         BinaryOperation op = BINARY_FUNCTIONS.get(name);
                         if(op != null)
                         {
-                            ref = makeBinaryFunc(op, arguments.get(0), arguments.get(1));
+                            ref = makeTernaryFunc(op, arguments.get(0), arguments.get(1));
+                        }
+                    }
+                    else if(arguments.size() == 3)
+                    {
+                        TernaryOperation op = TERNARY_FUNCTIONS.get(name);
+                        if(op != null)
+                        {
+                            ref = makeTernaryFunc(op, arguments.get(0), arguments.get(1), arguments.get(2));
                         }
                     }
                     
@@ -242,11 +281,11 @@ public class Compiler
             
             if(sign == '*')
             {
-                currentOp = makeBinaryFunc(BinaryOperation.MUL, currentOp, op2);
+                currentOp = makeTernaryFunc(BinaryOperation.MUL, currentOp, op2);
             }
             else
             {
-                currentOp = makeBinaryFunc(BinaryOperation.DIV, currentOp, op2);
+                currentOp = makeTernaryFunc(BinaryOperation.DIV, currentOp, op2);
             }
         }
         
@@ -267,11 +306,11 @@ public class Compiler
             
             if(sign == '+')
             {
-                currentOp = makeBinaryFunc(BinaryOperation.ADD, currentOp, op2);
+                currentOp = makeTernaryFunc(BinaryOperation.ADD, currentOp, op2);
             }
             else
             {
-                currentOp = makeBinaryFunc(BinaryOperation.SUB, currentOp, op2);
+                currentOp = makeTernaryFunc(BinaryOperation.SUB, currentOp, op2);
             }
         }
         
