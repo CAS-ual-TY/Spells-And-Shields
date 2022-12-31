@@ -115,6 +115,8 @@ public class Compiler
         
         if(getChar() == '.')
         {
+            nextChar();
+            
             floatingPoint = true;
             
             while(Character.isDigit(getChar()))
@@ -130,11 +132,13 @@ public class Compiler
         
         if(floatingPoint)
         {
-            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.DOUBLE.get(), null, Double.valueOf(s.substring(start, position))));
+            double value = Double.parseDouble(s.substring(start, position));
+            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.DOUBLE.get(), null, value));
         }
         else
         {
-            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.INT.get(), null, Integer.valueOf(s.substring(start, position))));
+            int value = Integer.parseInt(s.substring(start, position));
+            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.INT.get(), null, value));
         }
     }
     
@@ -278,6 +282,10 @@ public class Compiler
             {
                 throw makeException("Expected ')'");
             }
+        }
+        else if(Character.isDigit(getChar()))
+        {
+            ref = readImmediate();
         }
         else
         {
