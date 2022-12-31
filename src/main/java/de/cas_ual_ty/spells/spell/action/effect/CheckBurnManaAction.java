@@ -58,19 +58,22 @@ public class CheckBurnManaAction extends AffectSingleTypeAction<PlayerTarget>
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget target)
     {
-        amount.getValue(ctx).ifPresent(amount ->
+        if(!target.getPlayer().isCreative())
         {
-            ManaHolder.getManaHolder(target.getPlayer()).ifPresent(manaHolder ->
+            amount.getValue(ctx).ifPresent(amount ->
             {
-                if(manaHolder.getMana() >= amount)
+                ManaHolder.getManaHolder(target.getPlayer()).ifPresent(manaHolder ->
                 {
-                    manaHolder.burn(amount.floatValue());
-                }
-                else
-                {
-                    ctx.deactivate(activation);
-                }
+                    if(manaHolder.getMana() >= amount)
+                    {
+                        manaHolder.burn(amount.floatValue());
+                    }
+                    else
+                    {
+                        ctx.deactivate(activation);
+                    }
+                });
             });
-        });
+        }
     }
 }

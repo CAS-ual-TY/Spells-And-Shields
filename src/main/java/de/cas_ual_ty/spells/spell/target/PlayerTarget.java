@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.spell.target;
 
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 public class PlayerTarget extends LivingEntityTarget
@@ -13,7 +12,7 @@ public class PlayerTarget extends LivingEntityTarget
         this.player = player;
     }
     
-    public LivingEntity getPlayer()
+    public Player getPlayer()
     {
         return player;
     }
