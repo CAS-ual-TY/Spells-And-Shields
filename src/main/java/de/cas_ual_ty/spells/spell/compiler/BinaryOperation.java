@@ -1,5 +1,8 @@
 package de.cas_ual_ty.spells.spell.compiler;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
@@ -12,13 +15,13 @@ import java.util.function.BiFunction;
 public class BinaryOperation
 {
     // compiler built-in
-    public static final BinaryOperation ADD = new BinaryOperation();
-    public static final BinaryOperation SUB = new BinaryOperation();
-    public static final BinaryOperation MUL = new BinaryOperation();
-    public static final BinaryOperation DIV = new BinaryOperation();
+    public static final BinaryOperation ADD = new BinaryOperation("+");
+    public static final BinaryOperation SUB = new BinaryOperation("-");
+    public static final BinaryOperation MUL = new BinaryOperation("*");
+    public static final BinaryOperation DIV = new BinaryOperation("/");
     
-    public static final BinaryOperation MIN = new BinaryOperation();
-    public static final BinaryOperation MAX = new BinaryOperation();
+    public static final BinaryOperation MIN = new BinaryOperation("min");
+    public static final BinaryOperation MAX = new BinaryOperation("max");
     
     public static void registerToCompiler()
     {
@@ -26,10 +29,12 @@ public class BinaryOperation
         Compiler.registerBinaryFunction("max", MAX);
     }
     
+    public final String name;
     private List<Entry<?, ?, ?>> map;
     
-    public BinaryOperation()
+    public BinaryOperation(String name)
     {
+        this.name = name;
         map = new LinkedList<>();
     }
     
@@ -45,15 +50,18 @@ public class BinaryOperation
         Entry<?, ?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2)).findFirst()
                 .orElse(map.stream().filter(e -> e.areTypesDirectlyApplicable(operant2, operant1)).findFirst().orElse(null));
         
-        if(entry != null)
+        if(entry == null)
         {
-            return entry;
-        }
-        else
-        {
-            return map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2)).findFirst()
+            entry = map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2)).findFirst()
                     .orElse(map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant2, operant1)).findFirst().orElse(null));
         }
+        
+        if(entry == null && SpellsConfig.DEBUG_SPELLS.get())
+        {
+            SpellsAndShields.LOGGER.info("Can not execute binary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.get().getKey(operant1) + ", " + CtxVarTypes.REGISTRY.get().getKey(operant2));
+        }
+        
+        return entry;
     }
     
     public <V> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, BiConsumer<CtxVarType<V>, V> result)

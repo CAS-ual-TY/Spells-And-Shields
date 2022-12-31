@@ -63,15 +63,15 @@ public class SpellsAndShields
         CHANNEL.registerMessage(6, RequestEquipSpellMessage.class, RequestEquipSpellMessage::encode, RequestEquipSpellMessage::decode, RequestEquipSpellMessage::handle);
         CHANNEL.registerMessage(7, RunActionOnClientMessage.class, RunActionOnClientMessage::encode, RunActionOnClientMessage::decode, RunActionOnClientMessage::handle);
         
+        UnaryOperation.registerToCompiler();
+        BinaryOperation.registerToCompiler();
+        TernaryOperation.registerToCompiler();
+        
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> de.cas_ual_ty.spells.client.SpellsClientUtil::onModConstruct);
     }
     
     private void setup(FMLCommonSetupEvent event)
     {
         BuiltinRegistries.addPotionRecipes();
-        
-        UnaryOperation.registerToCompiler();
-        BinaryOperation.registerToCompiler();
-        TernaryOperation.registerToCompiler();
     }
 }

@@ -1,6 +1,8 @@
 package de.cas_ual_ty.spells.spell.compiler;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
@@ -60,7 +62,7 @@ public class Compiler
     
     private static InlineCompilationException makeException(String msg)
     {
-        return new InlineCompilationException("Can not compile \"" + s + "\" at index " + position + " " + msg);
+        return new InlineCompilationException("Can not compile \"" + s + "\" at index " + position + ": " + msg);
     }
     
     private static void nextChar()
@@ -100,6 +102,42 @@ public class Compiler
         return s.substring(start, position);
     }
     
+    private static Part readImmediate()
+    {
+        boolean floatingPoint = false;
+        
+        int start = position;
+        
+        while(Character.isDigit(getChar()))
+        {
+            nextChar();
+        }
+        
+        if(getChar() == '.')
+        {
+            floatingPoint = true;
+            
+            while(Character.isDigit(getChar()))
+            {
+                nextChar();
+            }
+        }
+        
+        if(position == start)
+        {
+            throw makeException("Expected identifier.");
+        }
+        
+        if(floatingPoint)
+        {
+            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.DOUBLE.get(), null, Double.valueOf(s.substring(start, position))));
+        }
+        else
+        {
+            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.INT.get(), null, Integer.valueOf(s.substring(start, position))));
+        }
+    }
+    
     private static Part makeUnaryFunc(UnaryOperation op, Part operant1)
     {
         return (ctx) ->
@@ -113,11 +151,24 @@ public class Compiler
                 op.applyAndSet(op1, (type, value) -> newVar.set(new CtxVar<>(type, null, value)));
             });
             
+            if((optional1.isEmpty() || newVar.get() == null) && SpellsConfig.DEBUG_SPELLS.get())
+            {
+                SpellsAndShields.LOGGER.info("Error executing compiled unary operation \"" + op.name + "\":");
+                if(optional1.isEmpty())
+                {
+                    SpellsAndShields.LOGGER.info("Operant 1 does not exist.");
+                }
+                if(newVar.get() == null)
+                {
+                    SpellsAndShields.LOGGER.info("Result does not exist.");
+                }
+            }
+            
             return Optional.ofNullable(newVar.get());
         };
     }
     
-    private static Part makeTernaryFunc(BinaryOperation op, Part operant1, Part operant2)
+    private static Part makeBinaryFunc(BinaryOperation op, Part operant1, Part operant2)
     {
         return (ctx) ->
         {
@@ -133,6 +184,23 @@ public class Compiler
                     op.applyAndSet(op1, op2, (type, value) -> newVar.set(new CtxVar<>(type, null, value)));
                 });
             });
+            
+            if((optional1.isEmpty() || optional2.isEmpty() || newVar.get() == null) && SpellsConfig.DEBUG_SPELLS.get())
+            {
+                SpellsAndShields.LOGGER.info("Error executing compiled binary operation \"" + op.name + "\":");
+                if(optional1.isEmpty())
+                {
+                    SpellsAndShields.LOGGER.info("Operant 1 does not exist.");
+                }
+                if(optional2.isEmpty())
+                {
+                    SpellsAndShields.LOGGER.info("Operant 2 does not exist.");
+                }
+                if(newVar.get() == null)
+                {
+                    SpellsAndShields.LOGGER.info("Result does not exist.");
+                }
+            }
             
             return Optional.ofNullable(newVar.get());
         };
@@ -159,14 +227,29 @@ public class Compiler
                 });
             });
             
+            if((optional1.isEmpty() || optional2.isEmpty() || optional3.isEmpty() || newVar.get() == null) && SpellsConfig.DEBUG_SPELLS.get())
+            {
+                SpellsAndShields.LOGGER.info("Error executing compiled ternary operation \"" + op.name + "\":");
+                if(optional1.isEmpty())
+                {
+                    SpellsAndShields.LOGGER.info("Operant 1 does not exist.");
+                }
+                if(optional2.isEmpty())
+                {
+                    SpellsAndShields.LOGGER.info("Operant 2 does not exist.");
+                }
+                if(optional3.isEmpty())
+                {
+                    SpellsAndShields.LOGGER.info("Operant 3 does not exist.");
+                }
+                if(newVar.get() == null)
+                {
+                    SpellsAndShields.LOGGER.info("Result does not exist.");
+                }
+            }
+            
             return Optional.ofNullable(newVar.get());
         };
-    }
-    
-    private static Part compileRef()
-    {
-        String name = readName();
-        return (ctx) -> Optional.ofNullable(ctx.getCtxVar(name));
     }
     
     private static Part compileFactor()
@@ -231,7 +314,7 @@ public class Compiler
                         BinaryOperation op = BINARY_FUNCTIONS.get(name);
                         if(op != null)
                         {
-                            ref = makeTernaryFunc(op, arguments.get(0), arguments.get(1));
+                            ref = makeBinaryFunc(op, arguments.get(0), arguments.get(1));
                         }
                     }
                     else if(arguments.size() == 3)
@@ -281,11 +364,11 @@ public class Compiler
             
             if(sign == '*')
             {
-                currentOp = makeTernaryFunc(BinaryOperation.MUL, currentOp, op2);
+                currentOp = makeBinaryFunc(BinaryOperation.MUL, currentOp, op2);
             }
             else
             {
-                currentOp = makeTernaryFunc(BinaryOperation.DIV, currentOp, op2);
+                currentOp = makeBinaryFunc(BinaryOperation.DIV, currentOp, op2);
             }
         }
         
@@ -306,11 +389,11 @@ public class Compiler
             
             if(sign == '+')
             {
-                currentOp = makeTernaryFunc(BinaryOperation.ADD, currentOp, op2);
+                currentOp = makeBinaryFunc(BinaryOperation.ADD, currentOp, op2);
             }
             else
             {
-                currentOp = makeTernaryFunc(BinaryOperation.SUB, currentOp, op2);
+                currentOp = makeBinaryFunc(BinaryOperation.SUB, currentOp, op2);
             }
         }
         

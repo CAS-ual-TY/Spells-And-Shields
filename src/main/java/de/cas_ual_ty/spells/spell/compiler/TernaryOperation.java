@@ -1,5 +1,8 @@
 package de.cas_ual_ty.spells.spell.compiler;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
@@ -11,8 +14,8 @@ import java.util.function.BiConsumer;
 public class TernaryOperation
 {
     // compiler built-in
-    public static final TernaryOperation VEC3 = new TernaryOperation();
-    public static final TernaryOperation BLOCK_POS = new TernaryOperation();
+    public static final TernaryOperation VEC3 = new TernaryOperation("vec3");
+    public static final TernaryOperation BLOCK_POS = new TernaryOperation("block_pos");
     
     public static void registerToCompiler()
     {
@@ -20,10 +23,12 @@ public class TernaryOperation
         Compiler.registerTernaryFunction("block_pos", BLOCK_POS);
     }
     
+    public final String name;
     private List<Entry<?, ?, ?, ?>> map;
     
-    public TernaryOperation()
+    public TernaryOperation(String name)
     {
+        this.name = name;
         map = new LinkedList<>();
     }
     
@@ -38,14 +43,17 @@ public class TernaryOperation
     {
         Entry<?, ?, ?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2, operant3)).findFirst().orElse(null);
         
-        if(entry != null)
+        if(entry == null)
         {
-            return entry;
+            entry = map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2, operant3)).findFirst().orElse(null);
         }
-        else
+        
+        if(entry == null && SpellsConfig.DEBUG_SPELLS.get())
         {
-            return map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2, operant3)).findFirst().orElse(null);
+            SpellsAndShields.LOGGER.info("Can not execute ternary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.get().getKey(operant1) + ", " + CtxVarTypes.REGISTRY.get().getKey(operant2) + ", " + CtxVarTypes.REGISTRY.get().getKey(operant3));
         }
+        
+        return entry;
     }
     
     public <V> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, CtxVar<?> operant3, BiConsumer<CtxVarType<V>, V> result)

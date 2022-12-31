@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.spell.context;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
@@ -9,7 +10,6 @@ import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.io.PrintStream;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -157,22 +157,22 @@ public class SpellContext
         return terminated;
     }
     
-    public void debugCtxVars(PrintStream out)
+    public void debugCtxVars()
     {
-        out.println("Context variables:");
+        SpellsAndShields.LOGGER.info("  Context variables:");
         for(CtxVar<?> v : ctxVars.values())
         {
-            out.println("  " + CtxVarTypes.REGISTRY.get().getKey(v.getType()) + " " + v.getName() + " / " + v.getValue().toString());
+            SpellsAndShields.LOGGER.info("   - " + CtxVarTypes.REGISTRY.get().getKey(v.getType()) + " " + v.getName() + " / " + v.getValue().toString());
         }
     }
     
-    public void debugTargetGroups(PrintStream out)
+    public void debugTargetGroups()
     {
-        out.println("Target groups:");
+        SpellsAndShields.LOGGER.info("  Target groups:");
         for(Map.Entry<String, TargetGroup> entry : targetGroups.entrySet())
         {
-            out.println("  " + entry.getKey() + " / " + entry.getValue().getTargets().size() + ":");
-            entry.getValue().forEachTarget(target -> out.println("    - " + TargetTypes.REGISTRY.get().getKey(target.type)));
+            SpellsAndShields.LOGGER.info("    " + entry.getKey() + " / " + entry.getValue().getTargets().size() + ":");
+            entry.getValue().forEachTarget(target -> SpellsAndShields.LOGGER.info("      - " + TargetTypes.REGISTRY.get().getKey(target.type)));
         }
     }
 }

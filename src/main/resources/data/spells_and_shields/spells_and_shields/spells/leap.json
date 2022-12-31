@@ -12,99 +12,29 @@
       "targets": "owner"
     },
     {
-      "type": "spells_and_shields:get_position_direction",
-      "activation": "active",
-      "direction": "vector",
-      "position": "",
-      "targets": "owner"
-    },
-    {
-      "type": "spells_and_shields:y",
-      "activation": "active",
-      "operant1": "vector",
-      "result": "y"
-    },
-    {
-      "type": "spells_and_shields:put_double",
-      "activation": "active",
-      "destination": "neg",
-      "source": -1.0
-    },
-    {
-      "type": "spells_and_shields:mul",
-      "activation": "active",
-      "operant1": "y",
-      "operant2": "neg",
-      "result": "y2"
-    },
-    {
-      "type": "spells_and_shields:make_vec3",
-      "activation": "active",
-      "result": "vector2",
-      "x": 0.0,
-      "y": "<<y2>>",
-      "z": 0.0
-    },
-    {
-      "type": "spells_and_shields:add",
-      "activation": "active",
-      "operant1": "vector",
-      "operant2": "vector2",
-      "result": "vector3"
-    },
-    {
-      "type": "spells_and_shields:normalize",
-      "activation": "active",
-      "operant1": "vector3",
-      "result": "vector3n"
-    },
-    {
       "type": "spells_and_shields:put_double",
       "activation": "active",
       "destination": "speed",
       "source": 2.5
     },
     {
-      "type": "spells_and_shields:scale",
+      "type": "spells_and_shields:get_position_direction",
       "activation": "active",
-      "operant1": "vector3n",
-      "operant2": "speed",
-      "result": "vector4"
+      "direction": "look",
+      "position": "",
+      "targets": "owner"
     },
     {
-      "type": "spells_and_shields:put_double",
+      "type": "spells_and_shields:y",
       "activation": "active",
-      "destination": "half",
-      "source": 0.5
+      "operant1": "look",
+      "result": "y"
     },
     {
-      "type": "spells_and_shields:add",
+      "type": "spells_and_shields:put_vec3",
       "activation": "active",
-      "operant1": "y",
-      "operant2": "half",
-      "result": "y3"
-    },
-    {
-      "type": "spells_and_shields:max",
-      "activation": "active",
-      "operant1": "y3",
-      "operant2": "half",
-      "result": "y4"
-    },
-    {
-      "type": "spells_and_shields:make_vec3",
-      "activation": "active",
-      "result": "vector5",
-      "x": 0.0,
-      "y": "<<y4>>",
-      "z": 0.0
-    },
-    {
-      "type": "spells_and_shields:add",
-      "activation": "active",
-      "operant1": "vector4",
-      "operant2": "vector5",
-      "result": "vector6"
+      "destination": "direction",
+      "source": "<<(normalize(look)+vec3(0,-y,0))*speed>>"
     },
     {
       "type": "spells_and_shields:reset_fall_distance",
@@ -114,7 +44,7 @@
     {
       "type": "spells_and_shields:set_motion",
       "activation": "active",
-      "motion": "<<vector6>>",
+      "motion": "<<vec3(get_x(direction),max(0.5,y+0.5),get_z(direction))>>",
       "targets": "owner"
     }
   ],

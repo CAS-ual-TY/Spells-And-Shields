@@ -58,17 +58,17 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<SimpleBinaryVarAction<Vec3, Double, Vec3>>> SCALE = DEFERRED_REGISTER.register("scale", () -> SimpleBinaryVarAction.makeType(CtxVarTypes.VEC3, CtxVarTypes.DOUBLE, CtxVarTypes.VEC3, (x, y) -> x.scale(y)));
     
     //variable / mapped unary
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> ROUND = DEFERRED_REGISTER.register("round", () -> MappedUnaryVarAction.makeType(UnaryOperation.ROUND));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> FLOOR = DEFERRED_REGISTER.register("floor", () -> MappedUnaryVarAction.makeType(UnaryOperation.FLOOR));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> CEIL = DEFERRED_REGISTER.register("ceil", () -> MappedUnaryVarAction.makeType(UnaryOperation.CEIL));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> SQRT = DEFERRED_REGISTER.register("sqrt", () -> MappedUnaryVarAction.makeType(UnaryOperation.SQRT));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_X = DEFERRED_REGISTER.register("x", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_X));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_Y = DEFERRED_REGISTER.register("y", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_Y));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_Z = DEFERRED_REGISTER.register("z", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_Z));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> LENGTH = DEFERRED_REGISTER.register("length", () -> MappedUnaryVarAction.makeType(UnaryOperation.LENGTH));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NORMALIZE = DEFERRED_REGISTER.register("normalized", () -> MappedUnaryVarAction.makeType(UnaryOperation.NORMALIZE));
     
     //variable / simple unary
-    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Vec3, Double>>> LENGTH = DEFERRED_REGISTER.register("length", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.VEC3, CtxVarTypes.DOUBLE, x -> x.length()));
-    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Vec3, Vec3>>> NORMALIZE = DEFERRED_REGISTER.register("normalize", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.VEC3, CtxVarTypes.VEC3, x -> x.normalize()));
-    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Double, Integer>>> ROUND = DEFERRED_REGISTER.register("round", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.DOUBLE, CtxVarTypes.INT, x -> (int) Math.round(x)));
-    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Double, Integer>>> FLOOR = DEFERRED_REGISTER.register("floor", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.DOUBLE, CtxVarTypes.INT, x -> (int) Math.floor(x)));
-    public static final RegistryObject<SpellActionType<SimpleUnaryVarAction<Double, Integer>>> CEIL = DEFERRED_REGISTER.register("ceil", () -> SimpleUnaryVarAction.makeType(CtxVarTypes.DOUBLE, CtxVarTypes.INT, x -> (int) Math.ceil(x)));
     
     //attribute
     public static final RegistryObject<SpellActionType<GetEntityPositionDirectionAction>> GET_POSITION_DIRECTION = DEFERRED_REGISTER.register("get_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionAction::new, GetEntityPositionDirectionAction::makeCodec));
@@ -92,6 +92,10 @@ public class SpellActionTypes
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> -x)
                 .register(CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), (x) -> x.reverse());
         
+        UnaryOperation.ROUND.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.INT.get(), (x) -> (int) Math.round(x));
+        UnaryOperation.FLOOR.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.INT.get(), (x) -> (int) Math.floor(x));
+        UnaryOperation.CEIL.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.INT.get(), (x) -> (int) Math.ceil(x));
+        
         UnaryOperation.SQRT.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.sqrt(Math.abs(x)));
         
         UnaryOperation.GET_X.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.x())
@@ -102,6 +106,10 @@ public class SpellActionTypes
         
         UnaryOperation.GET_Z.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.z())
                 .register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), (x) -> x.getZ());
+        
+        UnaryOperation.LENGTH.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.length());
+        
+        UnaryOperation.NORMALIZE.register(CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), (x) -> x.normalize());
         
         BinaryOperation.ADD.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> x + y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x + y)

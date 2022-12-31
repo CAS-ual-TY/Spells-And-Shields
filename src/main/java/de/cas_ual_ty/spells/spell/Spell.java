@@ -1,6 +1,10 @@
 package de.cas_ual_ty.spells.spell;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
@@ -107,15 +111,29 @@ public class Spell
     
     public void run(SpellContext ctx)
     {
+        if(SpellsConfig.DEBUG_SPELLS.get())
+        {
+            SpellsAndShields.LOGGER.info("Running spell " + Spells.getRegistry(ctx.getLevel()).getKey(this));
+            SpellsAndShields.LOGGER.info("Initial state:");
+            ctx.debugCtxVars();
+            ctx.debugTargetGroups();
+        }
+        
         for(SpellAction spellAction : spellActions)
         {
+            if(SpellsConfig.DEBUG_SPELLS.get())
+            {
+                SpellsAndShields.LOGGER.info("Starting action " + SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
+            }
+            
             spellAction.doAction(ctx);
             
-            /*
-            System.out.println(SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
-            ctx.debugCtxVars(System.out);
-            ctx.debugTargetGroups(System.out);
-            */
+            if(SpellsConfig.DEBUG_SPELLS.get())
+            {
+                SpellsAndShields.LOGGER.info("Finish action " + SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
+                ctx.debugCtxVars();
+                ctx.debugTargetGroups();
+            }
         }
     }
 }

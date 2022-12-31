@@ -1,5 +1,8 @@
 package de.cas_ual_ty.spells.spell.compiler;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
@@ -12,25 +15,37 @@ import java.util.function.Function;
 public class UnaryOperation
 {
     // compiler built-in
-    public static final UnaryOperation NEGATE = new UnaryOperation();
+    public static final UnaryOperation NEGATE = new UnaryOperation("-");
     
-    public static final UnaryOperation SQRT = new UnaryOperation();
-    public static final UnaryOperation GET_X = new UnaryOperation();
-    public static final UnaryOperation GET_Y = new UnaryOperation();
-    public static final UnaryOperation GET_Z = new UnaryOperation();
+    public static final UnaryOperation ROUND = new UnaryOperation("round");
+    public static final UnaryOperation FLOOR = new UnaryOperation("floor");
+    public static final UnaryOperation CEIL = new UnaryOperation("ceil");
+    public static final UnaryOperation SQRT = new UnaryOperation("sqrt");
+    public static final UnaryOperation GET_X = new UnaryOperation("get_x");
+    public static final UnaryOperation GET_Y = new UnaryOperation("get_y");
+    public static final UnaryOperation GET_Z = new UnaryOperation("get_z");
+    public static final UnaryOperation LENGTH = new UnaryOperation("length");
+    public static final UnaryOperation NORMALIZE = new UnaryOperation("normalize");
     
     public static void registerToCompiler()
     {
+        Compiler.registerUnaryFunction("round", ROUND);
+        Compiler.registerUnaryFunction("floor", FLOOR);
+        Compiler.registerUnaryFunction("ceil", CEIL);
         Compiler.registerUnaryFunction("sqrt", SQRT);
         Compiler.registerUnaryFunction("get_x", GET_X);
         Compiler.registerUnaryFunction("get_y", GET_Y);
         Compiler.registerUnaryFunction("get_z", GET_Z);
+        Compiler.registerUnaryFunction("length", LENGTH);
+        Compiler.registerUnaryFunction("normalize", NORMALIZE);
     }
     
+    public final String name;
     private List<Entry<?, ?>> map;
     
-    public UnaryOperation()
+    public UnaryOperation(String name)
     {
+        this.name = name;
         map = new LinkedList<>();
     }
     
@@ -45,14 +60,17 @@ public class UnaryOperation
     {
         Entry<?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant)).findFirst().orElse(null);
         
-        if(entry != null)
+        if(entry == null)
         {
-            return entry;
+            entry = map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant)).findFirst().orElse(null);
         }
-        else
+        
+        if(entry == null && SpellsConfig.DEBUG_SPELLS.get())
         {
-            return map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant)).findFirst().orElse(null);
+            SpellsAndShields.LOGGER.info("Can not execute unary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.get().getKey(operant));
         }
+        
+        return entry;
     }
     
     public <T, U> boolean applyAndSet(CtxVar<?> operant, BiConsumer<CtxVarType<U>, U> result)
