@@ -599,9 +599,36 @@ public class Compiler
         return currentOp;
     }
     
+    private static Part compileConditional()
+    {
+        Part conditional = compileOr();
+        
+        if(getChar() == '?')
+        {
+            nextCharSkipSpaces();
+            
+            Part op1 = compileOr();
+            
+            if(getChar() == ':')
+            {
+                nextChar();
+            }
+            else
+            {
+                throw makeException("Expected ':'");
+            }
+    
+            Part op2 = compileOr();
+    
+            return makeTernaryFunc(TernaryOperation.CONDITIONAL, conditional, op1, op2);
+        }
+        
+        return conditional;
+    }
+    
     private static Part compileExpression()
     {
-        return compileOr();
+        return compileConditional();
     }
     
     private static Part compile()

@@ -14,6 +14,7 @@ import java.util.function.BiConsumer;
 public class TernaryOperation
 {
     // compiler built-in
+    public static final TernaryOperation CONDITIONAL = new TernaryOperation("?:");
     public static final TernaryOperation VEC3 = new TernaryOperation("vec3");
     public static final TernaryOperation BLOCK_POS = new TernaryOperation("block_pos");
     
