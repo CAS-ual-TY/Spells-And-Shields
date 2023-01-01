@@ -54,7 +54,6 @@ public class SpellsCodecs
     
     public static Codec<Spell> SPELL_CONTENTS;
     
-    public static Codec<CtxVar<?>> CONTEXT_VARIABLE;
     public static Codec<SpellInstance> SPELL_INSTANCE;
     
     public static Codec<Component> COMPONENT; // json only, no NBT support
@@ -98,12 +97,13 @@ public class SpellsCodecs
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("icon").forGetter(Spell::getIcon),
                 COMPONENT.fieldOf("title").forGetter(Spell::getTitle),
                 COMPONENT.listOf().fieldOf("tooltip").forGetter(Spell::getTooltip),
-                Codec.FLOAT.fieldOf("mana_cost").forGetter(Spell::getManaCost)
+                Codec.FLOAT.fieldOf("mana_cost").forGetter(Spell::getManaCost),
+                CTX_VAR.listOf().fieldOf("variables").forGetter(Spell::getParameters)
         ).apply(instance, Spell::new)));
         
         SPELL_INSTANCE = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 SPELL.fieldOf("spell").forGetter(SpellInstance::getSpell),
-                CONTEXT_VARIABLE.listOf().fieldOf("variables").forGetter(SpellInstance::getVariables)
+                CTX_VAR.listOf().fieldOf("variables").forGetter(SpellInstance::getVariables)
         ).apply(instance, SpellInstance::new)));
         
         COMPONENT = ExtraCodecs.lazyInitializedCodec(() -> new PrimitiveCodec<>()

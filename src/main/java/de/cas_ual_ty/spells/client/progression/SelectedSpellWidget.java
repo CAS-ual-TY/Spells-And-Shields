@@ -116,7 +116,7 @@ public class SelectedSpellWidget extends GuiComponent
                 poseStack.pushPose();
                 poseStack.translate(0, 0, 400D);
                 
-                List<Component> tooltip = spell.getTooltip(null);
+                List<Component> tooltip = spell.makeTooltipList(null);
                 Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
                 
                 screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);

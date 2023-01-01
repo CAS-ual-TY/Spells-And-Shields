@@ -10,12 +10,11 @@ import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAct
 import de.cas_ual_ty.spells.spell.action.effect.CheckBurnManaAction;
 import de.cas_ual_ty.spells.spell.action.effect.ResetFallDistanceAction;
 import de.cas_ual_ty.spells.spell.action.effect.SetMotionAction;
-import de.cas_ual_ty.spells.spell.action.variable.MappedUnaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
-import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
+import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -64,17 +63,14 @@ public class SpellsGen implements DataProvider
     protected void addSpells()
     {
         addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 2.5F)
+                .addParameter(new CtxVar<>(CtxVarTypes.DOUBLE.get(), "speed", 2.5))
                 .addAction(new CheckBurnManaAction(SpellActionTypes.CHECK_BURN_MANA.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().refDyn("mana_cost")))
-                // speed <- 2.5
-                .addAction(new PutVarAction<>(SpellActionTypes.PUT_DOUBLE.get(), BuiltinActivations.ACTIVE.activation, CtxVarTypes.DOUBLE.get().refImm(2.5), "speed", CtxVarTypes.DOUBLE.get()))
+                .addAction(new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup))
                 // look <- look vector
                 .addAction(new GetEntityPositionDirectionAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "", "look"))
-                // y <- vector.y = look.y
-                .addAction(new MappedUnaryVarAction(SpellActionTypes.GET_Y.get(), BuiltinActivations.ACTIVE.activation, "look", "y", UnaryOperation.GET_Y))
                 // lookn <- normalize(look)
-                .addAction(new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), BuiltinActivations.ACTIVE.activation, Compiler.compile("(normalize(look)+vec3(0,-y,0))*speed", CtxVarTypes.VEC3.get()), "direction", CtxVarTypes.VEC3.get()))
-                .addAction(new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup))
-                .addAction(new SetMotionAction(SpellActionTypes.SET_MOTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, Compiler.compile("vec3(get_x(direction),max(0.5,y+0.5),get_z(direction))", CtxVarTypes.VEC3.get())))
+                .addAction(new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), BuiltinActivations.ACTIVE.activation, Compiler.compile("(normalize(look)+vec3(0,-get_y(look),0))*speed", CtxVarTypes.VEC3.get()), "direction", CtxVarTypes.VEC3.get()))
+                .addAction(new SetMotionAction(SpellActionTypes.SET_MOTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, Compiler.compile("vec3(get_x(direction),max(0.5,get_y(look)+0.5),get_z(direction))", CtxVarTypes.VEC3.get())))
                 .addTooltip(Component.translatable(Spells.KEY_LEAP_DESC))
         );
     }

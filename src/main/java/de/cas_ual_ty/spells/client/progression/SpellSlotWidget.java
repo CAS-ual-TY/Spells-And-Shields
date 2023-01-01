@@ -110,7 +110,7 @@ public class SpellSlotWidget extends Button
                     poseStack.translate(0, 0, 10D);
                     
                     Component keyBindTooltip = SpellKeyBindings.getBaseTooltip().append(": ").append(SpellKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
-                    List<Component> tooltip = spell.getSpell().get().getTooltip(keyBindTooltip);
+                    List<Component> tooltip = spell.getSpell().get().makeTooltipList(keyBindTooltip);
                     Optional<TooltipComponent> tooltipComponent = spell.getSpell().get().getTooltipComponent();
                     
                     screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);

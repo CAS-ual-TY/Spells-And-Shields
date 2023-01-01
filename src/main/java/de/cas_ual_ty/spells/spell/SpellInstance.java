@@ -74,6 +74,7 @@ public class SpellInstance
         ctx.activate(activation);
         ctx.getOrCreateTargetGroup(BuiltinTargetGroups.OWNER.targetGroup).addTargets(Target.of(spellHolder.getPlayer()));
         ctx.initCtxVar(new CtxVar<>(BuiltinVariables.MANA_COST.type.get(), BuiltinVariables.MANA_COST.name, (double) spell.get().getManaCost()));
+        spell.get().getParameters().forEach(ctx::initCtxVar);
         variables.forEach(ctx::initCtxVar);
         return ctx;
     }
