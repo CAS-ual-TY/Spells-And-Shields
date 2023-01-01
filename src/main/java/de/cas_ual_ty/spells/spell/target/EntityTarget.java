@@ -22,7 +22,7 @@ public class EntityTarget extends PositionTarget
     @Override
     public Vec3 getPosition()
     {
-        return entity.getEyePosition();
+        return entity.position();
     }
     
     @Override
