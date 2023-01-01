@@ -7,21 +7,21 @@ import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
-import de.cas_ual_ty.spells.spell.action.effect.CheckBurnManaAction;
-import de.cas_ual_ty.spells.spell.action.effect.ResetFallDistanceAction;
-import de.cas_ual_ty.spells.spell.action.effect.SetMotionAction;
+import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.JsonCodecProvider;
 
@@ -69,6 +69,8 @@ public class SpellsGen implements DataProvider
                 .addAction(new GetEntityPositionDirectionAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "", "look"))
                 .addAction(new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), BuiltinActivations.ACTIVE.activation, Compiler.compileString(" (normalize(look + vec3(0, -get_y(look), 0))) * speed ", CtxVarTypes.VEC3.get()), "direction", CtxVarTypes.VEC3.get()))
                 .addAction(new SetMotionAction(SpellActionTypes.SET_MOTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, Compiler.compileString(" vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) ", CtxVarTypes.VEC3.get())))
+                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, ParticleTypes.POOF, CtxVarTypes.INT.get().refImm(4), CtxVarTypes.DOUBLE.get().refImm(0.1)))
+                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
                 .addTooltip(Component.translatable(Spells.KEY_LEAP_DESC))
         );
     }

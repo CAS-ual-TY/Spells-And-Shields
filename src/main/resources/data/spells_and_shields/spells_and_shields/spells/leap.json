@@ -34,6 +34,24 @@
       "activation": "active",
       "motion": "<< vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) >>",
       "targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "active",
+      "count": 4,
+      "particle": {
+        "type": "minecraft:poof"
+      },
+      "spread": 0.1,
+      "targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "active",
+      "pitch": 1.0,
+      "sound_event": "minecraft:entity.ender_dragon.flap",
+      "targets": "owner",
+      "volume": 1.0
     }
   ],
   "title": {
