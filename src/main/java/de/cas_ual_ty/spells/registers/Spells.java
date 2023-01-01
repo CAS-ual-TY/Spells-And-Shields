@@ -24,17 +24,9 @@ public class Spells
         return level.registryAccess().registryOrThrow(REGISTRY_KEY);
     }
     
-    public static final ResourceLocation TEST = rl("test");
-    public static final String KEY_TEST = key(TEST);
-    
-    public static final ResourceLocation TEST2 = rl("test2");
-    public static final String KEY_TEST2 = key(TEST2);
-    
-    public static final ResourceLocation TEST3 = rl("test3");
-    public static final String KEY_TEST3 = key(TEST3);
-    
     public static final ResourceLocation LEAP = rl("leap");
     public static final String KEY_LEAP = key(LEAP);
+    public static final String KEY_LEAP_DESC = descKey(LEAP);
     
     public static void register()
     {
@@ -53,8 +45,23 @@ public class Spells
         return new ResourceLocation(SpellsAndShields.MOD_ID, path);
     }
     
+    public static String key(ResourceLocation rl, String suffix)
+    {
+        return "spell." + rl.getNamespace() + "." + rl.getPath() + (!suffix.isEmpty() ? "." + suffix : "");
+    }
+    
     public static String key(ResourceLocation rl)
     {
-        return "spell." + rl.getNamespace() + "." + rl.getPath();
+        return key(rl, "");
+    }
+    
+    public static String descKey(ResourceLocation rl)
+    {
+        return key(rl, "desc");
+    }
+    
+    public static String descKey(ResourceLocation rl, int index)
+    {
+        return key(rl, "desc_" + index);
     }
 }

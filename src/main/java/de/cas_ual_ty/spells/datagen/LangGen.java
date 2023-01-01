@@ -132,8 +132,8 @@ public class LangGen extends LanguageProvider
         add(SpellTrees.KEY_MOVEMENT, "Movement");
         add(SpellTrees.KEY_END, "End");
         
-        add(Spells.KEY_TEST, "Test Spell");
         add(Spells.KEY_LEAP, "Leap");
+        add(Spells.KEY_LEAP_DESC, "Leap forward.");
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)

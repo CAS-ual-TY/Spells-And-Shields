@@ -25,7 +25,7 @@
       "targets": "owner"
     },
     {
-      "type": "spells_and_shields:y",
+      "type": "spells_and_shields:get_y",
       "activation": "active",
       "operant1": "look",
       "result": "y"
@@ -51,5 +51,9 @@
   "title": {
     "translate": "spell.spells_and_shields.leap"
   },
-  "tooltip": []
+  "tooltip": [
+    {
+      "translate": "spell.spells_and_shields.leap.desc"
+    }
+  ]
 }

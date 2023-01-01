@@ -20,6 +20,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -74,6 +75,7 @@ public class SpellsGen implements DataProvider
                 .addAction(new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), BuiltinActivations.ACTIVE.activation, Compiler.compile("(normalize(look)+vec3(0,-y,0))*speed", CtxVarTypes.VEC3.get()), "direction", CtxVarTypes.VEC3.get()))
                 .addAction(new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup))
                 .addAction(new SetMotionAction(SpellActionTypes.SET_MOTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, Compiler.compile("vec3(get_x(direction),max(0.5,y+0.5),get_z(direction))", CtxVarTypes.VEC3.get())))
+                .addTooltip(Component.translatable(Spells.KEY_LEAP_DESC))
         );
     }
     

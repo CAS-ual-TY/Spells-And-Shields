@@ -1,9 +1,11 @@
 package de.cas_ual_ty.spells.util;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.network.FireSpellMessage;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +27,18 @@ public class SpellHelper
                 
                 if(spell != null)
                 {
-                    spell.activate(spellHolder);
+                    try
+                    {
+                        spell.activate(spellHolder);
+                    }
+                    catch(Exception e)
+                    {
+                        SpellsAndShields.LOGGER.info("Error when firing spell: " + Spells.getRegistry(serverPlayer.level).getKey(spell.getSpell().get()));
+                        if(SpellsConfig.DEBUG_SPELLS.get())
+                        {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             });
         }

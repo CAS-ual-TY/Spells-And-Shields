@@ -1,5 +1,5 @@
 {
-  "icon": "spells_and_shields:test",
+  "icon": "spells_and_shields:leap",
   "requirements": [],
   "root": {
     "children": [
@@ -18,7 +18,7 @@
         "bookshelves": 28
       }
     ],
-    "spell": "spells_and_shields:test",
+    "spell": "spells_and_shields:leap",
     "variables": []
   },
   "title": {

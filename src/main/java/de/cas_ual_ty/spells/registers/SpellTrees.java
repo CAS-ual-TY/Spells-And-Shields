@@ -68,7 +68,7 @@ public class SpellTrees
     
     public static SpellTree debugTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        return SpellTree.builder(Component.literal("Debug Tree"), spellGetter.apply(Spells.TEST), 15, bookshelves(28))
+        return SpellTree.builder(Component.literal("Debug Tree"), spellGetter.apply(Spells.LEAP), 15, bookshelves(28))
                 .add(spellGetter.apply(Spells.LEAP), 10)
                 .finish();
     }

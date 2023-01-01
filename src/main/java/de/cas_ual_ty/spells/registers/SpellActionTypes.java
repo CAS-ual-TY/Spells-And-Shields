@@ -62,9 +62,9 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> FLOOR = DEFERRED_REGISTER.register("floor", () -> MappedUnaryVarAction.makeType(UnaryOperation.FLOOR));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> CEIL = DEFERRED_REGISTER.register("ceil", () -> MappedUnaryVarAction.makeType(UnaryOperation.CEIL));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> SQRT = DEFERRED_REGISTER.register("sqrt", () -> MappedUnaryVarAction.makeType(UnaryOperation.SQRT));
-    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_X = DEFERRED_REGISTER.register("x", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_X));
-    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_Y = DEFERRED_REGISTER.register("y", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_Y));
-    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_Z = DEFERRED_REGISTER.register("z", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_Z));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_X = DEFERRED_REGISTER.register("get_x", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_X));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_Y = DEFERRED_REGISTER.register("get_y", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_Y));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_Z = DEFERRED_REGISTER.register("get_z", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_Z));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> LENGTH = DEFERRED_REGISTER.register("length", () -> MappedUnaryVarAction.makeType(UnaryOperation.LENGTH));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NORMALIZE = DEFERRED_REGISTER.register("normalized", () -> MappedUnaryVarAction.makeType(UnaryOperation.NORMALIZE));
     
