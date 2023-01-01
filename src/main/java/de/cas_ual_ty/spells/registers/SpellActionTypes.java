@@ -50,6 +50,9 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<PutVarAction<Vec3>>> PUT_VEC3 = DEFERRED_REGISTER.register("put_vec3", () -> PutVarAction.makeType(CtxVarTypes.VEC3));
     public static final RegistryObject<SpellActionType<PutVarAction<BlockPos>>> PUT_BLOCK_POS = DEFERRED_REGISTER.register("put_block_pos", () -> PutVarAction.makeType(CtxVarTypes.BLOCK_POS));
     
+    //attribute
+    public static final RegistryObject<SpellActionType<GetEntityPositionDirectionAction>> GET_POSITION_DIRECTION = DEFERRED_REGISTER.register("get_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionAction::new, GetEntityPositionDirectionAction::makeCodec));
+    
     //variable / mapped unary
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NEGATE = DEFERRED_REGISTER.register("negate", () -> MappedUnaryVarAction.makeType(UnaryOperation.NEGATE));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> ROUND = DEFERRED_REGISTER.register("round", () -> MappedUnaryVarAction.makeType(UnaryOperation.ROUND));
@@ -83,9 +86,6 @@ public class SpellActionTypes
     
     //variable / simple binary
     // -/-
-    
-    //attribute
-    public static final RegistryObject<SpellActionType<GetEntityPositionDirectionAction>> GET_POSITION_DIRECTION = DEFERRED_REGISTER.register("get_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionAction::new, GetEntityPositionDirectionAction::makeCodec));
     
     public static void register()
     {
