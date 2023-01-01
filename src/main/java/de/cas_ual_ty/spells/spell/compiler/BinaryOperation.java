@@ -19,6 +19,7 @@ public class BinaryOperation
     public static final BinaryOperation SUB = new BinaryOperation("-");
     public static final BinaryOperation MUL = new BinaryOperation("*");
     public static final BinaryOperation DIV = new BinaryOperation("/");
+    public static final BinaryOperation REM = new BinaryOperation("%");
     
     public static final BinaryOperation MIN = new BinaryOperation("min");
     public static final BinaryOperation MAX = new BinaryOperation("max");
@@ -99,8 +100,13 @@ public class BinaryOperation
             {
                 operant2.tryGetAs(this.operant2).ifPresent(op2 ->
                 {
-                    result.accept((CtxVarType<X>) this.result(), (X) this.function.apply(op1, op2));
-                    success.set(true);
+                    X value = (X) this.function.apply(op1, op2);
+                    
+                    if(value != null)
+                    {
+                        result.accept((CtxVarType<X>) this.result(), value);
+                        success.set(true);
+                    }
                 });
             });
             

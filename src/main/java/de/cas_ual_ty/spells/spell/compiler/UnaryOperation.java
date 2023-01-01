@@ -105,8 +105,13 @@ public class UnaryOperation
             
             operant.tryGetAs(this.operant).ifPresent(op ->
             {
-                result.accept((CtxVarType<X>) this.result(), (X) this.function.apply(op));
-                success.set(true);
+                X value = (X) this.function.apply(op);
+                
+                if(value != null)
+                {
+                    result.accept((CtxVarType<X>) this.result(), value);
+                    success.set(true);
+                }
             });
             
             return success.get();

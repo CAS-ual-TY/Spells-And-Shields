@@ -94,8 +94,13 @@ public class TernaryOperation
                 {
                     operant3.tryGetAs(this.operant3).ifPresent(op3 ->
                     {
-                        result.accept((CtxVarType<X>) this.result(), (X) this.function.apply(op1, op2, op3));
-                        success.set(true);
+                        X value = (X) this.function.apply(op1, op2, op3);
+                        
+                        if(value != null)
+                        {
+                            result.accept((CtxVarType<X>) this.result(), value);
+                            success.set(true);
+                        }
                     });
                 });
             });
