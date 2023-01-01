@@ -617,9 +617,9 @@ public class Compiler
             {
                 throw makeException("Expected ':'");
             }
-    
+            
             Part op2 = compileOr();
-    
+            
             return makeTernaryFunc(TernaryOperation.CONDITIONAL, conditional, op1, op2);
         }
         
