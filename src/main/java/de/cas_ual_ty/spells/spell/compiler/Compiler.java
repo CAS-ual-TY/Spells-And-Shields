@@ -547,7 +547,7 @@ public class Compiler
         return currentOp;
     }
     
-    private static Part compileAnd()
+    private static Part compileConjunction()
     {
         Part currentOp = compileComparison();
         
@@ -574,9 +574,9 @@ public class Compiler
         return currentOp;
     }
     
-    private static Part compileOr()
+    private static Part compileDisjunction()
     {
-        Part currentOp = compileAnd();
+        Part currentOp = compileConjunction();
         
         while(getChar() == '|')
         {
@@ -591,7 +591,7 @@ public class Compiler
                 throw makeException("Expected '|'");
             }
             
-            Part op2 = compileAnd();
+            Part op2 = compileConjunction();
             
             currentOp = makeBinaryFunc(BinaryOperation.OR, currentOp, op2);
         }
@@ -601,13 +601,13 @@ public class Compiler
     
     private static Part compileConditional()
     {
-        Part conditional = compileOr();
+        Part conditional = compileDisjunction();
         
         if(getChar() == '?')
         {
             nextCharSkipSpaces();
             
-            Part op1 = compileOr();
+            Part op1 = compileDisjunction();
             
             if(getChar() == ':')
             {
@@ -618,7 +618,7 @@ public class Compiler
                 throw makeException("Expected ':'");
             }
             
-            Part op2 = compileOr();
+            Part op2 = compileDisjunction();
             
             return makeTernaryFunc(TernaryOperation.CONDITIONAL, conditional, op1, op2);
         }
