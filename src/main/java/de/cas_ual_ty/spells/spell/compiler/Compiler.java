@@ -1,11 +1,13 @@
 package de.cas_ual_ty.spells.spell.compiler;
 
+import com.mojang.serialization.DataResult;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.spell.variable.ReferencedCtxVar;
 
 import java.util.*;
@@ -35,7 +37,32 @@ public class Compiler
     private static int position;
     private static String s;
     
-    public static <T> ReferencedCtxVar<T> compile(String input, CtxVarType<T> type)
+    public static <T> DataResult<DynamicCtxVar<T>> compileData(String input, CtxVarType<T> type)
+    {
+        try
+        {
+            return DataResult.success(compile(input, type));
+        }
+        catch(InlineCompilationException e)
+        {
+            return DataResult.error(e.getMessage());
+        }
+    }
+    
+    public static <T> ReferencedCtxVar<T> compileString(String input, CtxVarType<T> type)
+    {
+        try
+        {
+            return compile(input, type);
+        }
+        catch(InlineCompilationException e)
+        {
+            SpellsAndShields.LOGGER.error(e.getMessage());
+            return new ReferencedCtxVar<>(type, input, (ctx) -> Optional.empty());
+        }
+    }
+    
+    private static <T> ReferencedCtxVar<T> compile(String input, CtxVarType<T> type) throws InlineCompilationException
     {
         position = 0;
         s = input;
@@ -44,7 +71,7 @@ public class Compiler
         
         try
         {
-            part = compileExpression();
+            part = compile();
         }
         catch(InlineCompilationException e)
         {
@@ -54,7 +81,7 @@ public class Compiler
         
         if(position < s.length())
         {
-            SpellsAndShields.LOGGER.warn("############## " + s.substring(position) + " /// " + position);
+            throw makeException("Expected end of string.");
         }
         
         return new ReferencedCtxVar<T>(type, input, (ctx) -> part.getValue(ctx).map(v -> v.tryConvertTo(type)));
@@ -80,6 +107,20 @@ public class Compiler
         return s.charAt(position);
     }
     
+    private static void skipSpaces()
+    {
+        while(getChar() == ' ')
+        {
+            nextChar();
+        }
+    }
+    
+    private static void nextCharSkipSpaces()
+    {
+        nextChar();
+        skipSpaces();
+    }
+    
     private static String readName()
     {
         int start = position;
@@ -99,14 +140,18 @@ public class Compiler
             throw makeException("Expected identifier.");
         }
         
-        return s.substring(start, position);
+        final int end = position;
+        
+        skipSpaces();
+        
+        return s.substring(start, end);
     }
     
     private static Part readImmediate()
     {
         boolean floatingPoint = false;
         
-        int start = position;
+        final int start = position;
         
         while(Character.isDigit(getChar()))
         {
@@ -130,14 +175,18 @@ public class Compiler
             throw makeException("Expected identifier.");
         }
         
+        final int end = position;
+        
+        skipSpaces();
+        
         if(floatingPoint)
         {
-            double value = Double.parseDouble(s.substring(start, position));
+            double value = Double.parseDouble(s.substring(start, end));
             return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.DOUBLE.get(), null, value));
         }
         else
         {
-            int value = Integer.parseInt(s.substring(start, position));
+            int value = Integer.parseInt(s.substring(start, end));
             return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.INT.get(), null, value));
         }
     }
@@ -264,19 +313,19 @@ public class Compiler
         
         if(getChar() == '-')
         {
-            nextChar();
+            nextCharSkipSpaces();
             negate = true;
         }
         
         if(getChar() == '(')
         {
-            nextChar();
+            nextCharSkipSpaces();
             
             ref = compileExpression();
             
             if(getChar() == ')')
             {
-                nextChar();
+                nextCharSkipSpaces();
             }
             else
             {
@@ -293,20 +342,20 @@ public class Compiler
             
             if(getChar() == '(')
             {
-                nextChar();
+                nextCharSkipSpaces();
                 
                 List<Part> arguments = new ArrayList<>();
                 arguments.add(compileExpression());
                 
                 while(getChar() == ',')
                 {
-                    nextChar();
+                    nextCharSkipSpaces();
                     arguments.add(compileExpression());
                 }
                 
                 if(getChar() == ')')
                 {
-                    nextChar();
+                    nextCharSkipSpaces();
                     ref = null;
                     
                     if(arguments.size() == 1)
@@ -366,7 +415,7 @@ public class Compiler
         
         while((sign = getChar()) == '*' || sign == '/')
         {
-            nextChar();
+            nextCharSkipSpaces();
             
             Part op2 = compileFactor();
             
@@ -391,7 +440,7 @@ public class Compiler
         
         while((sign = getChar()) == '+' || sign == '-')
         {
-            nextChar();
+            nextCharSkipSpaces();
             
             Part op2 = compileProduct();
             
@@ -411,6 +460,14 @@ public class Compiler
     private static Part compileExpression()
     {
         return compileSum();
+    }
+    
+    private static Part compile()
+    {
+        skipSpaces();
+        Part part = compileExpression();
+        skipSpaces();
+        return part;
     }
     
     private interface Part

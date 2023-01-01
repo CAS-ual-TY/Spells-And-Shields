@@ -27,12 +27,12 @@
       "type": "spells_and_shields:put_vec3",
       "activation": "active",
       "destination": "direction",
-      "source": "<<(normalize(look)+vec3(0,-get_y(look),0))*speed>>"
+      "source": "<< (normalize(look + vec3(0, -get_y(look), 0))) * speed >>"
     },
     {
       "type": "spells_and_shields:set_motion",
       "activation": "active",
-      "motion": "<<vec3(get_x(direction),max(0.5,get_y(look)+0.5),get_z(direction))>>",
+      "motion": "<< vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) >>",
       "targets": "owner"
     }
   ],

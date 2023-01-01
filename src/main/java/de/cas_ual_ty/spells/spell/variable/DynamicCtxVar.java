@@ -28,7 +28,7 @@ public abstract class DynamicCtxVar<I>
                     if(name.startsWith(VAR_PREFIX) && name.endsWith(VAR_SUFFIX))
                     {
                         name = name.substring(0, name.length() - VAR_SUFFIX.length()).substring(VAR_PREFIX.length());
-                        return DataResult.success(Compiler.compile(name, type));
+                        return Compiler.compileData(name, type);
                     }
                 }
                 

@@ -40,6 +40,6 @@ public class ReferencedCtxVar<T> extends DynamicCtxVar<T>
     
     public static <T> ReferencedCtxVar<T> makeExpression(CtxVarType<T> type, String str)
     {
-        return Compiler.compile(str, type);
+        return Compiler.compileString(str, type);
     }
 }
