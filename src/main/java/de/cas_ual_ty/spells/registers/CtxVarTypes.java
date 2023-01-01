@@ -22,6 +22,7 @@ public class CtxVarTypes
     public static final RegistryObject<CtxVarType<Double>> DOUBLE = DEFERRED_REGISTER.register("double", () -> new CtxVarType<>(Codec.DOUBLE));
     public static final RegistryObject<CtxVarType<Vec3>> VEC3 = DEFERRED_REGISTER.register("vec3", () -> new CtxVarType<>(Vec3.CODEC));
     public static final RegistryObject<CtxVarType<BlockPos>> BLOCK_POS = DEFERRED_REGISTER.register("block_pos", () -> new CtxVarType<>(BlockPos.CODEC));
+    public static final RegistryObject<CtxVarType<Boolean>> BOOLEAN = DEFERRED_REGISTER.register("boolean", () -> new CtxVarType<>(Codec.BOOL));
     
     public static void register()
     {

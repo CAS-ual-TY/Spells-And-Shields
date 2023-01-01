@@ -457,9 +457,151 @@ public class Compiler
         return currentOp;
     }
     
+    private static Part compileRelation()
+    {
+        Part currentOp = compileSum();
+        
+        char sign;
+        
+        while((sign = getChar()) == '>' || sign == '<')
+        {
+            nextChar();
+            
+            BinaryOperation op;
+            
+            if(sign == '>')
+            {
+                if(getChar() == '=')
+                {
+                    nextCharSkipSpaces();
+                    op = BinaryOperation.GEQ;
+                }
+                else
+                {
+                    op = BinaryOperation.GT;
+                }
+            }
+            else
+            {
+                if(getChar() == '=')
+                {
+                    nextCharSkipSpaces();
+                    op = BinaryOperation.LEQ;
+                }
+                else
+                {
+                    op = BinaryOperation.LT;
+                }
+            }
+            
+            Part op2 = compileSum();
+            
+            currentOp = makeBinaryFunc(op, currentOp, op2);
+        }
+        
+        return currentOp;
+    }
+    
+    private static Part compileComparison()
+    {
+        Part currentOp = compileRelation();
+        
+        char sign;
+        
+        while((sign = getChar()) == '=' || sign == '!')
+        {
+            nextChar();
+            
+            BinaryOperation op;
+            
+            if(sign == '=')
+            {
+                if(getChar() == '=')
+                {
+                    nextCharSkipSpaces();
+                    op = BinaryOperation.EQ;
+                }
+                else
+                {
+                    throw makeException("Expected '='");
+                }
+            }
+            else
+            {
+                if(getChar() == '=')
+                {
+                    nextCharSkipSpaces();
+                    op = BinaryOperation.NEQ;
+                }
+                else
+                {
+                    throw makeException("Expected '='");
+                }
+            }
+            
+            Part op2 = compileRelation();
+            
+            currentOp = makeBinaryFunc(op, currentOp, op2);
+        }
+        
+        return currentOp;
+    }
+    
+    private static Part compileAnd()
+    {
+        Part currentOp = compileComparison();
+        
+        char sign;
+        
+        while(getChar() == '&')
+        {
+            nextChar();
+            
+            if(getChar() == '&')
+            {
+                nextCharSkipSpaces();
+            }
+            else
+            {
+                throw makeException("Expected '&'");
+            }
+            
+            Part op2 = compileComparison();
+            
+            currentOp = makeBinaryFunc(BinaryOperation.AND, currentOp, op2);
+        }
+        
+        return currentOp;
+    }
+    
+    private static Part compileOr()
+    {
+        Part currentOp = compileAnd();
+        
+        while(getChar() == '|')
+        {
+            nextChar();
+            
+            if(getChar() == '|')
+            {
+                nextCharSkipSpaces();
+            }
+            else
+            {
+                throw makeException("Expected '|'");
+            }
+            
+            Part op2 = compileAnd();
+            
+            currentOp = makeBinaryFunc(BinaryOperation.OR, currentOp, op2);
+        }
+        
+        return currentOp;
+    }
+    
     private static Part compileExpression()
     {
-        return compileSum();
+        return compileOr();
     }
     
     private static Part compile()

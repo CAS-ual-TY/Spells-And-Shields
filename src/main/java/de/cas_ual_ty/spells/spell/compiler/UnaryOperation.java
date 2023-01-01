@@ -16,6 +16,7 @@ public class UnaryOperation
 {
     // compiler built-in
     public static final UnaryOperation NEGATE = new UnaryOperation("-");
+    public static final UnaryOperation NOT = new UnaryOperation("!");
     
     public static final UnaryOperation ROUND = new UnaryOperation("round");
     public static final UnaryOperation FLOOR = new UnaryOperation("floor");

@@ -20,6 +20,14 @@ public class BinaryOperation
     public static final BinaryOperation MUL = new BinaryOperation("*");
     public static final BinaryOperation DIV = new BinaryOperation("/");
     public static final BinaryOperation REM = new BinaryOperation("%");
+    public static final BinaryOperation EQ = new BinaryOperation("==");
+    public static final BinaryOperation NEQ = new BinaryOperation("!=");
+    public static final BinaryOperation GT = new BinaryOperation(">");
+    public static final BinaryOperation GEQ = new BinaryOperation(">=");
+    public static final BinaryOperation LT = new BinaryOperation("<");
+    public static final BinaryOperation LEQ = new BinaryOperation("<=");
+    public static final BinaryOperation AND = new BinaryOperation("&&");
+    public static final BinaryOperation OR = new BinaryOperation("||");
     
     public static final BinaryOperation MIN = new BinaryOperation("min");
     public static final BinaryOperation MAX = new BinaryOperation("max");
