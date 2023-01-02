@@ -14,6 +14,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 public class CheckBurnManaAction extends AffectSingleTypeAction<PlayerTarget>
 {
@@ -21,8 +22,8 @@ public class CheckBurnManaAction extends AffectSingleTypeAction<PlayerTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("mana_amount").forGetter(CheckBurnManaAction::getAmount)
+                AffectTypeAction.targetCodec(),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("mana_amount")).forGetter(CheckBurnManaAction::getAmount)
         ).apply(instance, (activation, targets, amount) -> new CheckBurnManaAction(type, activation, targets, amount)));
     }
     

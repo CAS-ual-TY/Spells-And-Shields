@@ -2,6 +2,8 @@ package de.cas_ual_ty.spells.spell.variable;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.util.ExtraCodecs;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -20,7 +22,7 @@ public class CtxVarType<T>
         this.immCodec = immCodec;
         this.converters = new HashMap<>();
         this.codec = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.STRING.fieldOf("name").forGetter(CtxVar::getName),
+                Codec.STRING.fieldOf(ParamNames.var("name")).forGetter(CtxVar::getName),
                 getImmCodec().fieldOf("value").forGetter(CtxVar::getValue)
         ).apply(instance, (name, value) -> new CtxVar<>(this, name, value)));
     }

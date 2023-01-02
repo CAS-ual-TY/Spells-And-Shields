@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.RunActionOnClientMessage;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
+import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -12,12 +13,12 @@ public abstract class SpellAction
 {
     public static <T extends SpellAction> RecordCodecBuilder<T, SpellActionType<?>> makeTypeCodec()
     {
-        return SpellsCodecs.SPELL_ACTION_TYPE.fieldOf("type").forGetter(SpellAction::getType);
+        return SpellsCodecs.SPELL_ACTION_TYPE.fieldOf(ParamNames.actionType()).forGetter(SpellAction::getType);
     }
     
     public static <T extends SpellAction> RecordCodecBuilder<T, String> activationCodec()
     {
-        return Codec.STRING.fieldOf("activation").forGetter(SpellAction::getActivation);
+        return Codec.STRING.fieldOf(ParamNames.activation()).forGetter(SpellAction::getActivation);
     }
     
     public final SpellActionType<?> type;

@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,8 +24,8 @@ public class SpawnParticlesAction extends AffectTypeAction<PositionTarget>
                 activationCodec(),
                 targetsCodec(),
                 ParticleTypes.CODEC.fieldOf("particle").forGetter(SpawnParticlesAction::getParticle),
-                CtxVarTypes.INT.get().refCodec().fieldOf("count").forGetter(SpawnParticlesAction::getCount),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("spread").forGetter(SpawnParticlesAction::getSpread)
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("count")).forGetter(SpawnParticlesAction::getCount),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("spread")).forGetter(SpawnParticlesAction::getSpread)
         ).apply(instance, (activation, targets, particle, count, spread) -> new SpawnParticlesAction(type, activation, targets, particle, count, spread)));
     }
     

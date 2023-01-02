@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 import java.util.function.BiConsumer;
 
@@ -14,22 +15,22 @@ public abstract class TernaryVarAction extends SpellAction
 {
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> operant1Codec()
     {
-        return Codec.STRING.fieldOf("operant1").forGetter(TernaryVarAction::getOperant1);
+        return Codec.STRING.fieldOf(ParamNames.var("operant1")).forGetter(TernaryVarAction::getOperant1);
     }
     
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> operant2Codec()
     {
-        return Codec.STRING.fieldOf("operant2").forGetter(TernaryVarAction::getOperant2);
+        return Codec.STRING.fieldOf(ParamNames.var("operant2")).forGetter(TernaryVarAction::getOperant2);
     }
     
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> operant3Codec()
     {
-        return Codec.STRING.fieldOf("operant3").forGetter(TernaryVarAction::getOperant2);
+        return Codec.STRING.fieldOf(ParamNames.var("operant3")).forGetter(TernaryVarAction::getOperant2);
     }
     
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> resultCodec()
     {
-        return Codec.STRING.fieldOf("result").forGetter(TernaryVarAction::getResult);
+        return Codec.STRING.fieldOf(ParamNames.varResult()).forGetter(TernaryVarAction::getResult);
     }
     
     protected String operant1;

@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -25,8 +26,8 @@ public class SetMotionAction extends AffectSingleTypeAction<EntityTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetsCodec(),
-                CtxVarTypes.VEC3.get().refCodec().fieldOf("motion").forGetter(SetMotionAction::getMotion)
+                targetCodec(),
+                CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("motion")).forGetter(SetMotionAction::getMotion)
         ).apply(instance, (activation, targets, motion) -> new SetMotionAction(type, activation, targets, motion)));
     }
     

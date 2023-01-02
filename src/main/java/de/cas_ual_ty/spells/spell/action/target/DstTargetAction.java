@@ -6,12 +6,13 @@ import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 public abstract class DstTargetAction extends SpellAction
 {
     public static <T extends DstTargetAction> RecordCodecBuilder<T, String> dstCodec()
     {
-        return Codec.STRING.fieldOf("destination").forGetter(DstTargetAction::getDst);
+        return Codec.STRING.fieldOf(ParamNames.multiTarget("destination")).forGetter(DstTargetAction::getDst);
     }
     
     protected String dst;

@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 import java.util.function.Supplier;
 
@@ -16,8 +17,8 @@ public class PutVarAction<T> extends SpellAction
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                varType.refCodec().fieldOf("source").forGetter(PutVarAction::getSrc),
-                Codec.STRING.fieldOf("destination").forGetter(PutVarAction::getDst)
+                varType.refCodec().fieldOf(ParamNames.param("source", varType)).forGetter(PutVarAction::getSrc),
+                Codec.STRING.fieldOf(ParamNames.varResult()).forGetter(PutVarAction::getDst)
         ).apply(instance, (activation, src, dst) -> new PutVarAction<>(type, activation, src, dst, varType)));
     }
     

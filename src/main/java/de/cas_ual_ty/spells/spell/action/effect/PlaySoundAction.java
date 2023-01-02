@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -22,8 +23,8 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
                 activationCodec(),
                 targetsCodec(),
                 SoundEvent.CODEC.fieldOf("sound_event").forGetter(PlaySoundAction::getSoundEvent),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("volume").forGetter(PlaySoundAction::getVolume),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("pitch").forGetter(PlaySoundAction::getPitch)
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("volume")).forGetter(PlaySoundAction::getVolume),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("pitch")).forGetter(PlaySoundAction::getPitch)
         ).apply(instance, (activation, targets, particle, count, spread) -> new PlaySoundAction(type, activation, targets, particle, count, spread)));
     }
     

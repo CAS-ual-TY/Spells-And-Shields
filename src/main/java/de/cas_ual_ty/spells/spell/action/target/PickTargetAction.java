@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.Target;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 public class PickTargetAction extends CopyTargetsAction
 {
@@ -15,8 +16,8 @@ public class PickTargetAction extends CopyTargetsAction
                 activationCodec(),
                 dstCodec(),
                 srcCodec(),
-                Codec.BOOL.fieldOf("remove").forGetter(PickTargetAction::getRemove),
-                Codec.BOOL.fieldOf("random").forGetter(PickTargetAction::getRandom)
+                Codec.BOOL.fieldOf(ParamNames.paramBooleanImm("remove")).forGetter(PickTargetAction::getRemove),
+                Codec.BOOL.fieldOf(ParamNames.paramBooleanImm("random")).forGetter(PickTargetAction::getRandom)
         ).apply(instance, (activation, dst, src, remove, random) -> new PickTargetAction(type, activation, dst, src, remove, random)));
     }
     

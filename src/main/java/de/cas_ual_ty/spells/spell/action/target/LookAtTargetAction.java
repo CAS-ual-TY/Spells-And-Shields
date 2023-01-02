@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.Target;
+import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.EntityHitResult;
@@ -22,14 +23,14 @@ public class LookAtTargetAction extends AffectSingleTypeAction<EntityTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 targetsCodec(),
-                Codec.DOUBLE.fieldOf("range").forGetter(LookAtTargetAction::getRange),
-                Codec.FLOAT.fieldOf("bbInflation").forGetter(LookAtTargetAction::getBbInflation),
+                Codec.DOUBLE.fieldOf(ParamNames.paramDoubleImm("range")).forGetter(LookAtTargetAction::getRange),
+                Codec.FLOAT.fieldOf(ParamNames.paramDoubleImm("bbInflation")).forGetter(LookAtTargetAction::getBbInflation),
                 SpellsUtil.namedEnumCodec(ClipContext.Block::valueOf).fieldOf("blockClipContext").forGetter(LookAtTargetAction::getBlock),
                 SpellsUtil.namedEnumCodec(ClipContext.Fluid::valueOf).fieldOf("fluidClipContext").forGetter(LookAtTargetAction::getFluid),
-                Codec.STRING.fieldOf("blockDestination").forGetter(LookAtTargetAction::getBlockDest),
-                Codec.STRING.fieldOf("missDestination").forGetter(LookAtTargetAction::getMissDest),
-                Codec.STRING.fieldOf("entityDestination").forGetter(LookAtTargetAction::getEntityDest),
-                Codec.STRING.fieldOf("entityClipDestination").forGetter(LookAtTargetAction::getEntityClipDest)
+                Codec.STRING.fieldOf(ParamNames.singleTarget("blockDestination")).forGetter(LookAtTargetAction::getBlockDest),
+                Codec.STRING.fieldOf(ParamNames.singleTarget("missDestination")).forGetter(LookAtTargetAction::getMissDest),
+                Codec.STRING.fieldOf(ParamNames.singleTarget("entityDestination")).forGetter(LookAtTargetAction::getEntityDest),
+                Codec.STRING.fieldOf(ParamNames.singleTarget("entityClipDestination")).forGetter(LookAtTargetAction::getEntityClipDest)
         ).apply(instance, (activation, targets, range, bbInflation, block, fluid, blockDest, missDest, entityDest, entityClipDest) -> new LookAtTargetAction(type, activation, targets, range, bbInflation, block, fluid, blockDest, missDest, entityDest, entityClipDest)));
     }
     

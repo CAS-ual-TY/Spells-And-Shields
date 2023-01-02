@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 import java.util.function.BiConsumer;
 
@@ -14,12 +15,12 @@ public abstract class UnaryVarAction extends SpellAction
 {
     public static <T extends UnaryVarAction> RecordCodecBuilder<T, String> operantCodec()
     {
-        return Codec.STRING.fieldOf("operant1").forGetter(UnaryVarAction::getOperant);
+        return Codec.STRING.fieldOf(ParamNames.var("operant")).forGetter(UnaryVarAction::getOperant);
     }
     
     public static <T extends UnaryVarAction> RecordCodecBuilder<T, String> resultCodec()
     {
-        return Codec.STRING.fieldOf("result").forGetter(UnaryVarAction::getResult);
+        return Codec.STRING.fieldOf(ParamNames.varResult()).forGetter(UnaryVarAction::getResult);
     }
     
     protected String operant;

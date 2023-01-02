@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,9 +18,9 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetsCodec(),
-                Codec.STRING.fieldOf("position").forGetter(GetEntityPositionDirectionAction::getPosition),
-                Codec.STRING.fieldOf("direction").forGetter(GetEntityPositionDirectionAction::getDirection)
+                targetCodec(),
+                Codec.STRING.fieldOf(ParamNames.var("position")).forGetter(GetEntityPositionDirectionAction::getPosition),
+                Codec.STRING.fieldOf(ParamNames.var("direction")).forGetter(GetEntityPositionDirectionAction::getDirection)
         ).apply(instance, (activation, targets, position, direction) -> new GetEntityPositionDirectionAction(type, activation, targets, position, direction)));
     }
     

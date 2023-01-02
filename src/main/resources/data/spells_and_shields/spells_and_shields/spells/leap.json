@@ -8,50 +8,50 @@
     {
       "type": "spells_and_shields:check_burn_mana",
       "activation": "active",
-      "mana_amount": "<<mana_cost>>",
-      "targets": "owner"
+      "p_double_mana_amount": "<<mana_cost>>",
+      "t_target": "owner"
     },
     {
       "type": "spells_and_shields:reset_fall_distance",
       "activation": "active",
-      "targets": "owner"
+      "ts_targets": "owner"
     },
     {
       "type": "spells_and_shields:get_position_direction",
       "activation": "active",
-      "direction": "look",
-      "position": "",
-      "targets": "owner"
+      "t_target": "owner",
+      "var_direction": "look",
+      "var_position": ""
     },
     {
       "type": "spells_and_shields:put_vec3",
       "activation": "active",
-      "destination": "direction",
-      "source": "<< (normalize(look + vec3(0, -get_y(look), 0))) * speed >>"
+      "p_vec3_source": "<< (normalize(look + vec3(0, -get_y(look), 0))) * speed >>",
+      "var_result": "direction"
     },
     {
       "type": "spells_and_shields:set_motion",
       "activation": "active",
-      "motion": "<< vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) >>",
-      "targets": "owner"
+      "p_vec3_motion": "<< vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) >>",
+      "t_target": "owner"
     },
     {
       "type": "spells_and_shields:spawn_particles",
       "activation": "active",
-      "count": 4,
+      "p_double_spread": 0.1,
+      "p_int_count": 4,
       "particle": {
         "type": "minecraft:poof"
       },
-      "spread": 0.1,
-      "targets": "owner"
+      "ts_targets": "owner"
     },
     {
       "type": "spells_and_shields:play_sound",
       "activation": "active",
-      "pitch": 1.0,
+      "p_double_pitch": 1.0,
+      "p_double_volume": 1.0,
       "sound_event": "minecraft:entity.ender_dragon.flap",
-      "targets": "owner",
-      "volume": 1.0
+      "ts_targets": "owner"
     }
   ],
   "title": {
@@ -65,8 +65,8 @@
   "variables": [
     {
       "type": "spells_and_shields:double",
-      "name": "speed",
-      "value": 2.5
+      "value": 2.5,
+      "var_name": "speed"
     }
   ]
 }

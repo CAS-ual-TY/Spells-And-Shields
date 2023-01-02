@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 public class BooleanActivationAction extends SpellAction
 {
@@ -14,9 +15,9 @@ public class BooleanActivationAction extends SpellAction
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf("operant").forGetter(BooleanActivationAction::getOperant),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf("activateIfTrue").forGetter(BooleanActivationAction::getActivateIfTrue),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf("deactivateIfFalse").forGetter(BooleanActivationAction::getDeactivateIfFalse)
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("input")).forGetter(BooleanActivationAction::getOperant),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("activateIfTrue")).forGetter(BooleanActivationAction::getActivateIfTrue),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("deactivateIfFalse")).forGetter(BooleanActivationAction::getDeactivateIfFalse)
         ).apply(instance, (activation, operant, activateIfTrue, deactivateIfFalse) -> new BooleanActivationAction(type, activation, operant, activateIfTrue, deactivateIfFalse)));
     }
     

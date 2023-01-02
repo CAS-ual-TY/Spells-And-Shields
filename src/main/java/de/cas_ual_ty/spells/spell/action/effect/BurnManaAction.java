@@ -14,6 +14,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.world.entity.player.Player;
 
 public class BurnManaAction extends AffectTypeAction<LivingEntityTarget>
@@ -23,7 +24,7 @@ public class BurnManaAction extends AffectTypeAction<LivingEntityTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 SpellAction.activationCodec(),
                 AffectTypeAction.targetsCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("mana_amount").forGetter(BurnManaAction::getAmount)
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("mana_amount")).forGetter(BurnManaAction::getAmount)
         ).apply(instance, (activation, targets, amount) -> new BurnManaAction(type, activation, targets, amount)));
     }
     
