@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.spell.action;
 
 import com.mojang.serialization.Codec;
-import de.cas_ual_ty.spells.spell.action.client.IClientAction;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

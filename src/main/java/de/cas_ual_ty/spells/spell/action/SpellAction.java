@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.RunActionOnClientMessage;
-import de.cas_ual_ty.spells.spell.action.client.IClientAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraftforge.network.PacketDistributor;

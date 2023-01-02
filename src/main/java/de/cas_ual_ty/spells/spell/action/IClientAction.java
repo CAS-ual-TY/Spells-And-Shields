@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.action.client;
+package de.cas_ual_ty.spells.spell.action;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
