@@ -308,6 +308,7 @@ public class Compiler
     private static Part compileFactor()
     {
         boolean negate = false;
+        boolean not = false;
         
         Part ref;
         
@@ -315,6 +316,11 @@ public class Compiler
         {
             nextCharSkipSpaces();
             negate = true;
+        }
+        else if(getChar() == '!')
+        {
+            nextCharSkipSpaces();
+            not = true;
         }
         
         if(getChar() == '(')
@@ -402,6 +408,10 @@ public class Compiler
         if(negate)
         {
             ref = makeUnaryFunc(UnaryOperation.NEGATE, ref);
+        }
+        else if(not)
+        {
+            ref = makeUnaryFunc(UnaryOperation.NOT, ref);
         }
         
         return ref;
