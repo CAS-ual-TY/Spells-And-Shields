@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.registers;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
+import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.target.CopyTargetsAction;
 import de.cas_ual_ty.spells.spell.action.target.LookAtTargetAction;
@@ -53,6 +54,9 @@ public class SpellActionTypes
     
     //attribute
     public static final RegistryObject<SpellActionType<GetEntityPositionDirectionAction>> GET_POSITION_DIRECTION = DEFERRED_REGISTER.register("get_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionAction::new, GetEntityPositionDirectionAction::makeCodec));
+    
+    //control
+    public static final RegistryObject<SpellActionType<BooleanActivationAction>> BOOLEAN_ACTIVATION = DEFERRED_REGISTER.register("boolean_activation", () -> new SpellActionType<>(BooleanActivationAction::new, BooleanActivationAction::makeCodec));
     
     //variable / mapped unary
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NEGATE = DEFERRED_REGISTER.register("negate", () -> MappedUnaryVarAction.makeType(UnaryOperation.NEGATE));

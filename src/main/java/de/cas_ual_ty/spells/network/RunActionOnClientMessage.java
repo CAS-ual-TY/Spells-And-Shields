@@ -2,9 +2,9 @@ package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
+import de.cas_ual_ty.spells.spell.action.IClientAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
-import de.cas_ual_ty.spells.spell.action.IClientAction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
