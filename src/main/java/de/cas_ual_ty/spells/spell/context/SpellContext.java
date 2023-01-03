@@ -1,12 +1,12 @@
 package de.cas_ual_ty.spells.spell.context;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -16,7 +16,8 @@ import java.util.function.Consumer;
 public class SpellContext
 {
     public final Level level;
-    public final SpellHolder spellHolder;
+    @Nullable
+    public final Player owner;
     public final SpellInstance spell;
     
     protected List<String> activationsList;
@@ -24,12 +25,12 @@ public class SpellContext
     protected Map<String, CtxVar<?>> ctxVars;
     protected boolean terminated;
     
-    public SpellContext(Level level, SpellHolder spellHolder, SpellInstance spell)
+    public SpellContext(Level level, @Nullable Player owner, SpellInstance spell)
     {
         this.level = level;
-        this.spellHolder = spellHolder;
+        this.owner = owner;
         this.spell = spell;
-        activationsList = new ArrayList<>();
+        activationsList = new LinkedList<>();
         targetGroups = new HashMap<>();
         ctxVars = new HashMap<>();
         terminated = false;
@@ -42,37 +43,43 @@ public class SpellContext
     
     public void activate(String activation)
     {
-        activationsList.add(activation);
+        if(!activation.isEmpty())
+        {
+            activationsList.add(activation);
+        }
     }
     
     public void activate(List<String> activation)
     {
-        activationsList.addAll(activation);
+        activationsList.forEach(this::activate);
     }
     
     public void activate(String... activations)
     {
-        activate(Arrays.asList(activations));
+        Arrays.stream(activations).forEach(this::activate);
     }
     
     public void deactivate(String activation)
     {
-        activationsList.remove(activation);
+        if(!activation.isEmpty())
+        {
+            activationsList.remove(activation);
+        }
     }
     
     public void deactivate(List<String> activation)
     {
-        activationsList.removeAll(activation);
+        activationsList.forEach(this::deactivate);
     }
     
     public void deactivate(String... activations)
     {
-        deactivate(Arrays.asList(activations));
+        Arrays.stream(activations).forEach(this::deactivate);
     }
     
     public boolean isActivated(String activation)
     {
-        return activationsList.stream().anyMatch(s -> s.equals(activation));
+        return activation.isEmpty() || activationsList.stream().anyMatch(s -> s.equals(activation));
     }
     
     public boolean hasTargetGroup(String id)

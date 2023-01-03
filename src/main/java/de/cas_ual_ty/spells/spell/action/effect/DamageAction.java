@@ -61,7 +61,7 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
     {
         damage.getValue(ctx).ifPresent(damage ->
         {
-            target.getLivingEntity().hurt(ctx.spellHolder != null ? DamageSource.indirectMagic(ctx.spellHolder.getPlayer(), null) : DamageSource.MAGIC, damage.floatValue());
+            target.getLivingEntity().hurt(ctx.owner != null ? DamageSource.indirectMagic(ctx.owner, null) : DamageSource.MAGIC, damage.floatValue());
         });
     }
 }

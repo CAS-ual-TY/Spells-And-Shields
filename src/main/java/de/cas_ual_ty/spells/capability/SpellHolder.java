@@ -54,12 +54,12 @@ public class SpellHolder implements ISpellHolder
     {
         if(slots[slot] != null)
         {
-            slots[slot].activate(this, BuiltinActivations.ON_UNEQUIP.activation);
+            slots[slot].run(this, BuiltinActivations.ON_UNEQUIP.activation);
         }
         
         if(spell != null)
         {
-            spell.activate(this, BuiltinActivations.ON_EQUIP.activation);
+            spell.run(this, BuiltinActivations.ON_EQUIP.activation);
         }
         
         slots[slot] = spell;

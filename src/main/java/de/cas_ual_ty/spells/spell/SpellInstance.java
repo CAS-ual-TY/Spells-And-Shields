@@ -9,9 +9,13 @@ import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SpellInstance
 {
@@ -58,24 +62,48 @@ public class SpellInstance
         return nodeId;
     }
     
-    public void activate(SpellHolder spellHolder)
+    public void run(SpellHolder spellHolder)
     {
-        activate(spellHolder, BuiltinActivations.ACTIVE.activation);
+        run(spellHolder, BuiltinActivations.ACTIVE.activation);
     }
     
-    public void activate(SpellHolder spellHolder, String activation)
+    public void run(SpellHolder spellHolder, String activation)
     {
-        this.spell.get().run(initializeContext(spellHolder, activation));
+        run(spellHolder.getPlayer(), activation);
     }
     
-    public SpellContext initializeContext(SpellHolder spellHolder, String activation)
+    public void run(Player owner, String activation)
     {
-        SpellContext ctx = new SpellContext(spellHolder.getPlayer().level, spellHolder, this);
+        run(owner.level, owner, activation);
+    }
+    
+    public void run(Level level, @Nullable Player owner, String activation)
+    {
+        run(level, owner, activation, (ctx) -> {});
+    }
+    
+    public void run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> consumer)
+    {
+        SpellContext ctx = initializeContext(level, owner, activation);
+        consumer.accept(ctx);
+        this.spell.get().run(ctx);
+    }
+    
+    public SpellContext initializeContext(Level level, @Nullable Player owner, String activation)
+    {
+        SpellContext ctx = new SpellContext(level, owner, this);
+        
         ctx.activate(activation);
-        ctx.getOrCreateTargetGroup(BuiltinTargetGroups.OWNER.targetGroup).addTargets(Target.of(spellHolder.getPlayer()));
         ctx.initCtxVar(new CtxVar<>(BuiltinVariables.MANA_COST.type.get(), BuiltinVariables.MANA_COST.name, (double) spell.get().getManaCost()));
+        
+        if(owner != null)
+        {
+            ctx.getOrCreateTargetGroup(BuiltinTargetGroups.OWNER.targetGroup).addTargets(Target.of(owner));
+        }
+        
         spell.get().getParameters().forEach(ctx::initCtxVar);
         variables.forEach(ctx::initCtxVar);
+        
         return ctx;
     }
     

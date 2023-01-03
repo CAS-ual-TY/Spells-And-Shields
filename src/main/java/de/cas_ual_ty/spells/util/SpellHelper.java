@@ -29,7 +29,7 @@ public class SpellHelper
                 {
                     try
                     {
-                        spell.activate(spellHolder);
+                        spell.run(spellHolder);
                     }
                     catch(Exception e)
                     {
