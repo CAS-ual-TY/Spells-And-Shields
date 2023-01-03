@@ -31,6 +31,8 @@ public class UnaryOperation
     public static final UnaryOperation COS = new UnaryOperation("cos");
     public static final UnaryOperation ASIN = new UnaryOperation("asin");
     public static final UnaryOperation ACOS = new UnaryOperation("acos");
+    public static final UnaryOperation TO_RADIANS = new UnaryOperation("to_radians");
+    public static final UnaryOperation TO_DEGREES = new UnaryOperation("to_degrees");
     
     public static void registerToCompiler()
     {
@@ -47,6 +49,8 @@ public class UnaryOperation
         Compiler.registerUnaryFunction("cos", COS);
         Compiler.registerUnaryFunction("asin", ASIN);
         Compiler.registerUnaryFunction("acos", ACOS);
+        Compiler.registerUnaryFunction("to_radians", TO_RADIANS);
+        Compiler.registerUnaryFunction("to_degrees", TO_DEGREES);
     }
     
     public final String name;
