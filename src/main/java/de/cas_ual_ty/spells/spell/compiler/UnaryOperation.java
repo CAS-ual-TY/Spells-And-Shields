@@ -27,6 +27,10 @@ public class UnaryOperation
     public static final UnaryOperation GET_Z = new UnaryOperation("get_z");
     public static final UnaryOperation LENGTH = new UnaryOperation("length");
     public static final UnaryOperation NORMALIZE = new UnaryOperation("normalize");
+    public static final UnaryOperation SIN = new UnaryOperation("sin");
+    public static final UnaryOperation COS = new UnaryOperation("cos");
+    public static final UnaryOperation ASIN = new UnaryOperation("asin");
+    public static final UnaryOperation ACOS = new UnaryOperation("acos");
     
     public static void registerToCompiler()
     {

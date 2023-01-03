@@ -70,6 +70,10 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> GET_Z = DEFERRED_REGISTER.register("get_z", () -> MappedUnaryVarAction.makeType(UnaryOperation.GET_Z));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> LENGTH = DEFERRED_REGISTER.register("length", () -> MappedUnaryVarAction.makeType(UnaryOperation.LENGTH));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NORMALIZE = DEFERRED_REGISTER.register("normalized", () -> MappedUnaryVarAction.makeType(UnaryOperation.NORMALIZE));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> SIN = DEFERRED_REGISTER.register("sin", () -> MappedUnaryVarAction.makeType(UnaryOperation.SIN));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> COS = DEFERRED_REGISTER.register("cos", () -> MappedUnaryVarAction.makeType(UnaryOperation.COS));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> ASIN = DEFERRED_REGISTER.register("asin", () -> MappedUnaryVarAction.makeType(UnaryOperation.ASIN));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> ACOS = DEFERRED_REGISTER.register("acos", () -> MappedUnaryVarAction.makeType(UnaryOperation.ACOS));
     
     //variable / simple unary
     // -/-
@@ -138,6 +142,11 @@ public class SpellActionTypes
         
         UnaryOperation.LENGTH.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.length());
         UnaryOperation.NORMALIZE.register(CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), (x) -> x.normalize());
+        
+        UnaryOperation.SIN.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.sin(x));
+        UnaryOperation.COS.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.cos(x));
+        UnaryOperation.ASIN.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.asin(x));
+        UnaryOperation.ACOS.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.acos(x));
         
         BinaryOperation.ADD.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> x + y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x + y)
