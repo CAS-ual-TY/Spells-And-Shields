@@ -31,6 +31,9 @@ public class BinaryOperation
     
     public static final BinaryOperation MIN = new BinaryOperation("min");
     public static final BinaryOperation MAX = new BinaryOperation("max");
+    public static final BinaryOperation MOVE_X = new BinaryOperation("move_x");
+    public static final BinaryOperation MOVE_Y = new BinaryOperation("move_y");
+    public static final BinaryOperation MOVE_Z = new BinaryOperation("move_z");
     
     public static void registerToCompiler()
     {
