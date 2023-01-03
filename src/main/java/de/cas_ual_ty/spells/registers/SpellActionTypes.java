@@ -191,7 +191,7 @@ public class SpellActionTypes
         
         BinaryOperation.OR.register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x || y);
         
-        TernaryOperation.VEC3.register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y, z) -> x ? y : z)
+        TernaryOperation.CONDITIONAL.register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y, z) -> x ? y : z)
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y, z) -> x ? y : z)
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), (x, y, z) -> x ? y : z)
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.BLOCK_POS.get(), (x, y, z) -> x ? y : z)
