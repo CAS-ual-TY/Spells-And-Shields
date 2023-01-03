@@ -5,11 +5,13 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
-import de.cas_ual_ty.spells.spell.variable.*;
+import de.cas_ual_ty.spells.spell.variable.CtxVar;
+import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.spell.variable.ReferencedCtxVar;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
 
 public class Compiler
 {

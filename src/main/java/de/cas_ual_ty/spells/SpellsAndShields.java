@@ -4,6 +4,7 @@ import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.network.*;
 import de.cas_ual_ty.spells.registers.*;
 import de.cas_ual_ty.spells.spell.compiler.BinaryOperation;
+import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.compiler.TernaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
@@ -63,6 +64,7 @@ public class SpellsAndShields
         CHANNEL.registerMessage(6, RequestEquipSpellMessage.class, RequestEquipSpellMessage::encode, RequestEquipSpellMessage::decode, RequestEquipSpellMessage::handle);
         CHANNEL.registerMessage(7, RunActionOnClientMessage.class, RunActionOnClientMessage::encode, RunActionOnClientMessage::decode, RunActionOnClientMessage::handle);
         
+        Compiler.registerSuppliersToCompiler();
         UnaryOperation.registerToCompiler();
         BinaryOperation.registerToCompiler();
         TernaryOperation.registerToCompiler();

@@ -43,6 +43,10 @@ public class UnaryOperation
         Compiler.registerUnaryFunction("get_z", GET_Z);
         Compiler.registerUnaryFunction("length", LENGTH);
         Compiler.registerUnaryFunction("normalize", NORMALIZE);
+        Compiler.registerUnaryFunction("sin", SIN);
+        Compiler.registerUnaryFunction("cos", COS);
+        Compiler.registerUnaryFunction("asin", ASIN);
+        Compiler.registerUnaryFunction("acos", ACOS);
     }
     
     public final String name;

@@ -39,6 +39,9 @@ public class BinaryOperation
     {
         Compiler.registerBinaryFunction("min", MIN);
         Compiler.registerBinaryFunction("max", MAX);
+        Compiler.registerBinaryFunction("move_x", MOVE_X);
+        Compiler.registerBinaryFunction("move_y", MOVE_Y);
+        Compiler.registerBinaryFunction("move_z", MOVE_Z);
     }
     
     public final String name;

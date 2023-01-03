@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.spell.variable;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.util.ParamNames;
-import net.minecraft.util.ExtraCodecs;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
