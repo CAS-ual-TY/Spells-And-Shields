@@ -22,6 +22,11 @@ public abstract class AffectTypeAction<T extends Target> extends SpellAction
         return Codec.STRING.fieldOf(ParamNames.singleTarget()).forGetter(AffectTypeAction::getTargets);
     }
     
+    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, String> sourceCodec()
+    {
+        return Codec.STRING.fieldOf(ParamNames.singleTarget("source")).forGetter(AffectTypeAction::getTargets);
+    }
+    
     protected String targets;
     
     public AffectTypeAction(SpellActionType<?> type)

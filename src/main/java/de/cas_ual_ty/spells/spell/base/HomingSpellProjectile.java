@@ -1,17 +1,17 @@
 package de.cas_ual_ty.spells.spell.base;
 
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
-import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.SpellInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 
 public class HomingSpellProjectile extends SpellProjectile
 {
@@ -23,9 +23,9 @@ public class HomingSpellProjectile extends SpellProjectile
         super(entityType, level);
     }
     
-    public HomingSpellProjectile(EntityType<? extends HomingSpellProjectile> entityType, Level level, Spell spell)
+    public HomingSpellProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, SpellInstance spell, int timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        super(entityType, level, spell);
+        super(pEntityType, pLevel, spell, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation);
     }
     
     public void setOwnerAndTarget(Entity owner, Entity target)
@@ -96,28 +96,24 @@ public class HomingSpellProjectile extends SpellProjectile
         }
     }
     
-    public static void home(Vec3 position, Vec3 direction, @Nullable Entity source, Entity target, Spell spell, float velocity, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
+    public static void home(Vec3 position, @Nullable Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
         if(source.level instanceof ServerLevel level)
         {
-            HomingSpellProjectile projectile = new HomingSpellProjectile(BuiltinRegistries.HOMING_SPELL_PROJECTILE.get(), level, spell);
+            Vec3 direction = target.getEyePosition().subtract(position).normalize();
+            
+            HomingSpellProjectile projectile = new HomingSpellProjectile(BuiltinRegistries.HOMING_SPELL_PROJECTILE.get(), level, spell, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation);
             projectile.setOwnerAndTarget(source, target);
             
-            projectile.moveTo(position.x, position.y, position.z, source.getXRot(), source.getYRot());
+            projectile.moveTo(position.x, position.y, position.z, 0F, 0F);
             projectile.shoot(direction.x, direction.y, direction.z, velocity, 0F);
-            level.addFreshEntity(projectile);
             
-            followUp.accept(projectile, level);
+            level.addFreshEntity(projectile);
         }
     }
     
-    public static void home(Entity source, Spell spell, float velocity, Entity target, BiConsumer<HomingSpellProjectile, ServerLevel> followUp)
+    public static void home(Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        home(source.getEyePosition(), source.getViewVector(1F).normalize(), source, target, spell, velocity, followUp);
-    }
-    
-    public static void home(Entity source, Spell spell, float velocity, Entity target)
-    {
-        home(source, spell, velocity, target, (entity, level) -> {});
+        home(source.getEyePosition(), source, target, spell, velocity, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation);
     }
 }
