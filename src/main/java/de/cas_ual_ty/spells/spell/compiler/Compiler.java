@@ -5,19 +5,28 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
-import de.cas_ual_ty.spells.spell.variable.CtxVar;
-import de.cas_ual_ty.spells.spell.variable.CtxVarType;
-import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
-import de.cas_ual_ty.spells.spell.variable.ReferencedCtxVar;
+import de.cas_ual_ty.spells.spell.variable.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 public class Compiler
 {
+    private static Map<String, CtxVar<?>> SUPPLIERS = new HashMap<>();
     private static Map<String, UnaryOperation> UNARY_FUNCTIONS = new HashMap<>();
     private static Map<String, BinaryOperation> BINARY_FUNCTIONS = new HashMap<>();
     private static Map<String, TernaryOperation> TERNARY_FUNCTIONS = new HashMap<>();
+    
+    public static <T> void registerSuppliersToCompiler()
+    {
+        registerSupplier("pi", CtxVarTypes.DOUBLE.get(), Math.PI);
+    }
+    
+    public static <T> void registerSupplier(String name, CtxVarType<T> type, T value)
+    {
+        SUPPLIERS.put(name, new CtxVar<>(type, value));
+    }
     
     public static void registerUnaryFunction(String name, UnaryOperation op)
     {
@@ -182,12 +191,12 @@ public class Compiler
         if(floatingPoint)
         {
             double value = Double.parseDouble(s.substring(start, end));
-            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.DOUBLE.get(), null, value));
+            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.DOUBLE.get(), value));
         }
         else
         {
             int value = Integer.parseInt(s.substring(start, end));
-            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.INT.get(), null, value));
+            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.INT.get(), value));
         }
     }
     
@@ -201,7 +210,7 @@ public class Compiler
             
             optional1.ifPresent(op1 ->
             {
-                op.applyAndSet(op1, (type, value) -> newVar.set(new CtxVar<>(type, null, value)));
+                op.applyAndSet(op1, (type, value) -> newVar.set(new CtxVar<>(type, value)));
             });
             
             if((optional1.isEmpty() || newVar.get() == null) && SpellsConfig.DEBUG_SPELLS.get())
@@ -234,7 +243,7 @@ public class Compiler
             {
                 optional2.ifPresent(op2 ->
                 {
-                    op.applyAndSet(op1, op2, (type, value) -> newVar.set(new CtxVar<>(type, null, value)));
+                    op.applyAndSet(op1, op2, (type, value) -> newVar.set(new CtxVar<>(type, value)));
                 });
             });
             
@@ -275,7 +284,7 @@ public class Compiler
                 {
                     optional3.ifPresent(op3 ->
                     {
-                        op.applyAndSet(op1, op2, op3, (type, value) -> newVar.set(new CtxVar<>(type, null, value)));
+                        op.applyAndSet(op1, op2, op3, (type, value) -> newVar.set(new CtxVar<>(type, value)));
                     });
                 });
             });
@@ -351,12 +360,16 @@ public class Compiler
                 nextCharSkipSpaces();
                 
                 List<Part> arguments = new ArrayList<>();
-                arguments.add(compileExpression());
                 
-                while(getChar() == ',')
+                if(getChar() != ')')
                 {
-                    nextCharSkipSpaces();
                     arguments.add(compileExpression());
+                    
+                    while(getChar() == ',')
+                    {
+                        nextCharSkipSpaces();
+                        arguments.add(compileExpression());
+                    }
                 }
                 
                 if(getChar() == ')')
@@ -364,7 +377,12 @@ public class Compiler
                     nextCharSkipSpaces();
                     ref = null;
                     
-                    if(arguments.size() == 1)
+                    if(arguments.isEmpty())
+                    {
+                        CtxVar<?> supplier = SUPPLIERS.get(name);
+                        ref = (ctx) -> Optional.ofNullable(supplier);
+                    }
+                    else if(arguments.size() == 1)
                     {
                         UnaryOperation op = UNARY_FUNCTIONS.get(name);
                         if(op != null)

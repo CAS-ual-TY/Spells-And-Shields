@@ -22,6 +22,11 @@ public class CtxVar<T>
         setValue(value);
     }
     
+    public CtxVar(CtxVarType<T> type, T value)
+    {
+        this(type, null, value);
+    }
+    
     public CtxVarType<T> getType()
     {
         return type;
