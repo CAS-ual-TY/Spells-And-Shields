@@ -49,12 +49,12 @@ public class PickTargetAction extends CopyTargetsAction
     @Override
     public void findTargets(SpellContext ctx, TargetGroup source, TargetGroup destination)
     {
-        if(source == null || source.getTargets().isEmpty())
+        if(source == null || source.isEmpty())
         {
             return;
         }
         
-        int pick = random ? ctx.level.getRandom().nextInt(source.getTargets().size()) : 0;
+        int pick = random ? ctx.level.getRandom().nextInt(source.size()) : 0;
         Target t = remove ? source.getTargets().remove(pick) : source.getTargets().get(pick);
         
         destination.addTargets(t);

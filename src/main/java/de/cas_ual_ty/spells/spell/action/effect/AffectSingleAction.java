@@ -20,7 +20,7 @@ public abstract class AffectSingleAction extends AffectAction
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, Target t)
     {
-        if(group.getTargets().size() == 1)
+        if(group.isSingleTarget())
         {
             affectSingleTarget(ctx, group, t);
         }

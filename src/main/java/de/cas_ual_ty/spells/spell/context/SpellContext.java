@@ -178,7 +178,7 @@ public class SpellContext
         SpellsAndShields.LOGGER.info("  Target groups:");
         for(Map.Entry<String, TargetGroup> entry : targetGroups.entrySet())
         {
-            SpellsAndShields.LOGGER.info("    " + entry.getKey() + " / " + entry.getValue().getTargets().size() + ":");
+            SpellsAndShields.LOGGER.info("    " + entry.getKey() + " / " + entry.getValue().size() + ":");
             entry.getValue().forEachTarget(target -> SpellsAndShields.LOGGER.info("      - " + TargetTypes.REGISTRY.get().getKey(target.type)));
         }
     }

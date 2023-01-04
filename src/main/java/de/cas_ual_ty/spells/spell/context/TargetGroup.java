@@ -55,6 +55,29 @@ public class TargetGroup
         addTargets(Arrays.asList(targets));
     }
     
+    public boolean isEmpty()
+    {
+        return targetsList.isEmpty();
+    }
+    
+    public boolean isSingleTarget()
+    {
+        return targetsList.size() == 1;
+    }
+    
+    public int size()
+    {
+        return targetsList.size();
+    }
+    
+    public void getSingleTarget(Consumer<Target> consumer)
+    {
+        if(isSingleTarget())
+        {
+            consumer.accept(targetsList.get(0));
+        }
+    }
+    
     public static TargetGroup EMPTY = new TargetGroup("")
     {
         @Override
