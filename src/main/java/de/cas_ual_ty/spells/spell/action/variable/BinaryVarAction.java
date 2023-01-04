@@ -15,12 +15,12 @@ public abstract class BinaryVarAction extends SpellAction
 {
     public static <T extends BinaryVarAction> RecordCodecBuilder<T, String> operant1Codec()
     {
-        return Codec.STRING.fieldOf(ParamNames.var("operant1")).forGetter(BinaryVarAction::getOperant1);
+        return Codec.STRING.fieldOf(ParamNames.var("operant_1")).forGetter(BinaryVarAction::getOperant1);
     }
     
     public static <T extends BinaryVarAction> RecordCodecBuilder<T, String> operant2Codec()
     {
-        return Codec.STRING.fieldOf(ParamNames.var("operant2")).forGetter(BinaryVarAction::getOperant2);
+        return Codec.STRING.fieldOf(ParamNames.var("operant_2")).forGetter(BinaryVarAction::getOperant2);
     }
     
     public static <T extends BinaryVarAction> RecordCodecBuilder<T, String> resultCodec()

@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 public class ActivateAction extends SpellAction
 {
@@ -12,7 +13,7 @@ public class ActivateAction extends SpellAction
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                Codec.STRING.fieldOf("toActivate").forGetter(ActivateAction::getToActivate)
+                Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(ActivateAction::getToActivate)
         ).apply(instance, (activation, toActivate) -> new ActivateAction(type, activation, toActivate)));
     }
     

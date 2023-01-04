@@ -32,7 +32,7 @@ public class ParamNames
     
     public static String param(String name, CtxVarType<?> type)
     {
-        return "p_" + paramImm(name, type);
+        return "d_" + paramImm(name, type);
     }
     
     public static String paramImm(String name, CtxVarType<?> type)
@@ -42,7 +42,7 @@ public class ParamNames
     
     public static String paramInt(String name)
     {
-        return "p_" + paramIntImm(name);
+        return "d_" + paramIntImm(name);
     }
     
     public static String paramIntImm(String name)
@@ -52,7 +52,7 @@ public class ParamNames
     
     public static String paramDouble(String name)
     {
-        return "p_" + paramDoubleImm(name);
+        return "d_" + paramDoubleImm(name);
     }
     
     public static String paramDoubleImm(String name)
@@ -62,7 +62,7 @@ public class ParamNames
     
     public static String paramVec3(String name)
     {
-        return "p_" + paramVec3Imm(name);
+        return "d_" + paramVec3Imm(name);
     }
     
     public static String paramVec3Imm(String name)
@@ -72,7 +72,7 @@ public class ParamNames
     
     public static String paramBlockPos(String name)
     {
-        return "p_" + paramBlockPosImm(name);
+        return "d_" + paramBlockPosImm(name);
     }
     
     public static String paramBlockPosImm(String name)
@@ -82,7 +82,7 @@ public class ParamNames
     
     public static String paramBoolean(String name)
     {
-        return "p_" + paramBooleanImm(name);
+        return "d_" + paramBooleanImm(name);
     }
     
     public static String paramBooleanImm(String name)

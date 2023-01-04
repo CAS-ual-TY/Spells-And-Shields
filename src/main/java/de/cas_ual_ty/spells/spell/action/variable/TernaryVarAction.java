@@ -15,17 +15,17 @@ public abstract class TernaryVarAction extends SpellAction
 {
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> operant1Codec()
     {
-        return Codec.STRING.fieldOf(ParamNames.var("operant1")).forGetter(TernaryVarAction::getOperant1);
+        return Codec.STRING.fieldOf(ParamNames.var("operant_1")).forGetter(TernaryVarAction::getOperant1);
     }
     
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> operant2Codec()
     {
-        return Codec.STRING.fieldOf(ParamNames.var("operant2")).forGetter(TernaryVarAction::getOperant2);
+        return Codec.STRING.fieldOf(ParamNames.var("operant_2")).forGetter(TernaryVarAction::getOperant2);
     }
     
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> operant3Codec()
     {
-        return Codec.STRING.fieldOf(ParamNames.var("operant3")).forGetter(TernaryVarAction::getOperant2);
+        return Codec.STRING.fieldOf(ParamNames.var("operant_3")).forGetter(TernaryVarAction::getOperant2);
     }
     
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> resultCodec()

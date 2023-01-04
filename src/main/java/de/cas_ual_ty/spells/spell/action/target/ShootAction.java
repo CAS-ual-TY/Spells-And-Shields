@@ -21,12 +21,12 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("velocity").forGetter(ShootAction::getVelocity),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("inaccuracy").forGetter(ShootAction::getInaccuracy),
-                CtxVarTypes.INT.get().refCodec().fieldOf("timeout").forGetter(ShootAction::getTimeout),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("blockHitActivation")).forGetter(ShootAction::getBlockHitActivation),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("entityHitActivation")).forGetter(ShootAction::getEntityHitActivation),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("timeoutActivation")).forGetter(ShootAction::getTimeoutActivation)
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDoubleImm("velocity")).forGetter(ShootAction::getVelocity),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDoubleImm("inaccuracy")).forGetter(ShootAction::getInaccuracy),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramIntImm("timeout")).forGetter(ShootAction::getTimeout),
+                Codec.STRING.fieldOf(ParamNames.interactedActivation("block_hit_activation")).forGetter(ShootAction::getBlockHitActivation),
+                Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(ShootAction::getEntityHitActivation),
+                Codec.STRING.fieldOf(ParamNames.interactedActivation("timeout_activation")).forGetter(ShootAction::getTimeoutActivation)
         ).apply(instance, (activation, targets, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation) -> new ShootAction(type, activation, targets, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation)));
     }
     

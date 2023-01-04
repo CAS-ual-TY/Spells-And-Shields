@@ -8,7 +8,7 @@
     {
       "type": "spells_and_shields:check_burn_mana",
       "activation": "active",
-      "p_double_mana_amount": "<<mana_cost>>",
+      "d_double_mana_amount": "<<mana_cost>>",
       "t_target": "owner"
     },
     {
@@ -19,27 +19,27 @@
     {
       "type": "spells_and_shields:get_position_direction",
       "activation": "active",
-      "t_target": "owner",
+      "t_source": "owner",
       "var_direction": "look",
       "var_position": ""
     },
     {
       "type": "spells_and_shields:put_vec3",
       "activation": "active",
-      "p_vec3_source": "<< (normalize(look + vec3(0, -get_y(look), 0))) * speed >>",
+      "d_vec3_source": "<< (normalize(look + vec3(0, -get_y(look), 0))) * speed >>",
       "var_result": "direction"
     },
     {
       "type": "spells_and_shields:set_motion",
       "activation": "active",
-      "p_vec3_motion": "<< vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) >>",
+      "d_vec3_motion": "<< vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) >>",
       "t_target": "owner"
     },
     {
       "type": "spells_and_shields:spawn_particles",
       "activation": "active",
-      "p_double_spread": 0.1,
-      "p_int_count": 4,
+      "d_double_spread": 0.1,
+      "d_int_count": 4,
       "particle": {
         "type": "minecraft:poof"
       },
@@ -48,8 +48,8 @@
     {
       "type": "spells_and_shields:play_sound",
       "activation": "active",
-      "p_double_pitch": 1.0,
-      "p_double_volume": 1.0,
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
       "sound_event": "minecraft:entity.ender_dragon.flap",
       "ts_targets": "owner"
     }
