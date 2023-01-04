@@ -182,4 +182,13 @@ public class SpellContext
             entry.getValue().forEachTarget(target -> SpellsAndShields.LOGGER.info("      - " + TargetTypes.REGISTRY.get().getKey(target.type)));
         }
     }
+    
+    public void debugActivations()
+    {
+        SpellsAndShields.LOGGER.info("  Activations:");
+        for(String a : activationsList)
+        {
+            SpellsAndShields.LOGGER.info("   - " + a);
+        }
+    }
 }

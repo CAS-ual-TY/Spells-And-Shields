@@ -128,9 +128,12 @@ public class Spell
         if(SpellsConfig.DEBUG_SPELLS.get())
         {
             SpellsAndShields.LOGGER.info("Running spell " + Spells.getRegistry(ctx.getLevel()).getKey(this));
+            SpellsAndShields.LOGGER.info("-".repeat(50));
             SpellsAndShields.LOGGER.info("Initial state:");
-            ctx.debugCtxVars();
+            ctx.debugActivations();
             ctx.debugTargetGroups();
+            ctx.debugCtxVars();
+            SpellsAndShields.LOGGER.info("-".repeat(50));
         }
         
         for(SpellAction spellAction : spellActions)
@@ -145,8 +148,11 @@ public class Spell
             if(SpellsConfig.DEBUG_SPELLS.get())
             {
                 SpellsAndShields.LOGGER.info("Finish action " + SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
-                ctx.debugCtxVars();
+                SpellsAndShields.LOGGER.info("-".repeat(50));
+                ctx.debugActivations();
                 ctx.debugTargetGroups();
+                ctx.debugCtxVars();
+                SpellsAndShields.LOGGER.info("-".repeat(50));
             }
         }
     }
