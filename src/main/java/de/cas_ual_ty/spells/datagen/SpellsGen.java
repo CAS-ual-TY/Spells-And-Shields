@@ -9,11 +9,14 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
 import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
+import de.cas_ual_ty.spells.spell.action.target.HomeAction;
+import de.cas_ual_ty.spells.spell.action.target.LookAtTargetAction;
 import de.cas_ual_ty.spells.spell.action.target.ShootAction;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
+import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
@@ -24,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.ClipContext;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.JsonCodecProvider;
 
@@ -91,6 +95,22 @@ public class SpellsGen implements DataProvider
                 .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.SMOKE, CtxVarTypes.INT.get().refImm(2), CtxVarTypes.DOUBLE.get().refImm(0.1)))
                 .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.FLAME, CtxVarTypes.INT.get().refImm(2), CtxVarTypes.DOUBLE.get().refImm(0.1)))
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_BALL_DESC))
+        );
+        
+        addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
+                .addParameter(new CtxVar<>(CtxVarTypes.DOUBLE.get(), "speed", 2.5))
+                .addAction(new LookAtTargetAction(SpellActionTypes.LOOK_AT_TARGET.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, 25D, 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, "looked_at_block", "looked_at_entity", "looked_at_nothing"))
+                .addAction(new SimpleManaCheck(SpellActionTypes.SIMPLE_MANA_CHECK.get(), "looked_at_entity"))
+                .addAction(new HomeAction(SpellActionTypes.HOME.get(), "looked_at_entity", BuiltinTargetGroups.OWNER.targetGroup, BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().refImm(3D), CtxVarTypes.INT.get().refImm(200), "on_block_hit", "on_entity_hit", "on_timeout"))
+                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), "looked_at_entity", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
+                .addAction(new ReplenishManaAction(SpellActionTypes.REPLENISH_MANA.get(), "on_entity_hit", BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().refDyn(BuiltinVariables.MANA_COST.name)))
+                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_entity_hit", "fx"))
+                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_block_hit", "fx"))
+                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_timeout", "fx"))
+                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
+                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.BUBBLE, CtxVarTypes.INT.get().refImm(3), CtxVarTypes.DOUBLE.get().refImm(0.2)))
+                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.POOF, CtxVarTypes.INT.get().refImm(2), CtxVarTypes.DOUBLE.get().refImm(0.2)))
+                .addTooltip(Component.translatable(Spells.KEY_TRANSFER_MANA_DESC))
         );
     }
     

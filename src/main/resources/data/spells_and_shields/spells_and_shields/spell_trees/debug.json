@@ -9,6 +9,13 @@
         "requirements": [],
         "spell": "spells_and_shields:fire_ball",
         "variables": []
+      },
+      {
+        "children": [],
+        "level_cost": 0,
+        "requirements": [],
+        "spell": "spells_and_shields:transfer_mana",
+        "variables": []
       }
     ],
     "level_cost": 15,

@@ -28,14 +28,24 @@ public class Spells
     public static final String KEY_LEAP = key(LEAP);
     public static final String KEY_LEAP_DESC = descKey(LEAP);
     
-    // TODO
+    // TODO all
     public static final ResourceLocation SUMMON_ANIMAL = rl("summon_animal");
     public static final String KEY_SUMMON_ANIMAL = key(SUMMON_ANIMAL);
     public static final String KEY_SUMMON_ANIMAL_DESC = descKey(SUMMON_ANIMAL);
     
+    // TODO ingredients, mid-flight particles
     public static final ResourceLocation FIRE_BALL = rl("fire_ball");
     public static final String KEY_FIRE_BALL = key(FIRE_BALL);
     public static final String KEY_FIRE_BALL_DESC = descKey(FIRE_BALL);
+    
+    // TODO all
+    public static final ResourceLocation BLAST_SMELT = rl("blast_smelt");
+    public static final String KEY_BLAST_SMELT = key(BLAST_SMELT);
+    public static final String KEY_BLAST_SMELT_DESC = descKey(BLAST_SMELT);
+    
+    public static final ResourceLocation TRANSFER_MANA = rl("transfer_mana");
+    public static final String KEY_TRANSFER_MANA = key(TRANSFER_MANA);
+    public static final String KEY_TRANSFER_MANA_DESC = descKey(TRANSFER_MANA);
     
     public static void register()
     {

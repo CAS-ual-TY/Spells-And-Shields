@@ -70,6 +70,8 @@ public class SpellTrees
     {
         return SpellTree.builder(Component.literal("Debug Tree"), spellGetter.apply(Spells.LEAP), 15, bookshelves(28))
                 .add(spellGetter.apply(Spells.FIRE_BALL), 10)
+                .leaf()
+                .add(spellGetter.apply(Spells.TRANSFER_MANA), 0)
                 .finish();
     }
     

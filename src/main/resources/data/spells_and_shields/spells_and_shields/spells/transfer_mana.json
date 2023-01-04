@@ -1,0 +1,108 @@
+{
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/transfer_mana.png"
+  },
+  "mana_cost": 4.0,
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:look_at_target",
+      "a_block_hit_activation": "looked_at_block",
+      "a_entity_hit_activation": "looked_at_entity",
+      "a_miss_activation": "looked_at_nothing",
+      "activation": "active",
+      "block_clip_context": "COLLIDER",
+      "double_bb_inflation": 0.5,
+      "double_range": 25.0,
+      "fluid_clip_context": "SOURCE_ONLY",
+      "t_source": "owner"
+    },
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "looked_at_entity"
+    },
+    {
+      "type": "spells_and_shields:home",
+      "a_block_hit_activation": "on_block_hit",
+      "a_entity_hit_activation": "on_entity_hit",
+      "a_timeout_activation": "on_timeout",
+      "activation": "looked_at_entity",
+      "double_velocity": 3.0,
+      "int_timeout": 200,
+      "t_source": "owner",
+      "ts_targets": "entity_hit"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "looked_at_entity",
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
+      "sound_event": "minecraft:block.bubble_column.upwards_inside",
+      "ts_targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:replenish_mana",
+      "activation": "on_entity_hit",
+      "d_double_mana_amount": "<<mana_cost>>",
+      "ts_targets": "entity_hit"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a_to_activate": "fx",
+      "activation": "on_entity_hit"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a_to_activate": "fx",
+      "activation": "on_block_hit"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a_to_activate": "fx",
+      "activation": "on_timeout"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "fx",
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
+      "sound_event": "minecraft:block.bubble_column.upwards_inside",
+      "ts_targets": "hit_position"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "fx",
+      "d_double_spread": 0.2,
+      "d_int_count": 3,
+      "particle": {
+        "type": "minecraft:bubble"
+      },
+      "ts_targets": "hit_position"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "fx",
+      "d_double_spread": 0.2,
+      "d_int_count": 2,
+      "particle": {
+        "type": "minecraft:poof"
+      },
+      "ts_targets": "hit_position"
+    }
+  ],
+  "title": {
+    "translate": "spell.spells_and_shields.transfer_mana"
+  },
+  "tooltip": [
+    {
+      "translate": "spell.spells_and_shields.transfer_mana.desc"
+    }
+  ],
+  "variables": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 2.5,
+      "var_name": "speed"
+    }
+  ]
+}
