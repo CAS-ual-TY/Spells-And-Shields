@@ -89,14 +89,14 @@ public class SpellContext
     
     public TargetGroup getTargetGroup(String id)
     {
-        return id.isEmpty() ? TargetGroup.EMPTY : targetGroups.get(id);
+        return id.isEmpty() ? TargetGroup.EMPTY : targetGroups.getOrDefault(id, TargetGroup.EMPTY);
     }
     
     public TargetGroup getOrCreateTargetGroup(String id)
     {
         TargetGroup tg = getTargetGroup(id);
         
-        if(tg == null)
+        if(!id.isEmpty() && tg == TargetGroup.EMPTY)
         {
             tg = new TargetGroup(id);
             targetGroups.put(id, tg);
