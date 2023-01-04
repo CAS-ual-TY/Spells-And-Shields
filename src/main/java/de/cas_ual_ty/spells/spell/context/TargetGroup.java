@@ -70,6 +70,11 @@ public class TargetGroup
         return targetsList.size();
     }
     
+    public void clear()
+    {
+        targetsList.clear();
+    }
+    
     public void getSingleTarget(Consumer<Target> consumer)
     {
         if(isSingleTarget())
