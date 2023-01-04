@@ -66,7 +66,7 @@ public class SpellsGen implements DataProvider
     {
         addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 2.5F)
                 .addParameter(new CtxVar<>(CtxVarTypes.DOUBLE.get(), "speed", 2.5))
-                .addAction(new CheckBurnManaAction(SpellActionTypes.CHECK_BURN_MANA.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().refDyn("mana_cost")))
+                .addAction(new SimpleManaCheck(SpellActionTypes.SIMPLE_MANA_CHECK.get(), BuiltinActivations.ACTIVE.activation))
                 .addAction(new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup))
                 .addAction(new GetEntityPositionDirectionAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "", "look"))
                 .addAction(new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), BuiltinActivations.ACTIVE.activation, Compiler.compileString(" (normalize(look + vec3(0, -get_y(look), 0))) * speed ", CtxVarTypes.VEC3.get()), "direction", CtxVarTypes.VEC3.get()))
@@ -78,7 +78,7 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.FIRE_BALL, new Spell(modId, "fire_ball", Spells.KEY_FIRE_BALL, 5F)
                 .addParameter(new CtxVar<>(CtxVarTypes.DOUBLE.get(), "speed", 2.5))
-                .addAction(new CheckBurnManaAction(SpellActionTypes.CHECK_BURN_MANA.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().refDyn("mana_cost")))
+                .addAction(new SimpleManaCheck(SpellActionTypes.SIMPLE_MANA_CHECK.get(), BuiltinActivations.ACTIVE.activation))
                 .addAction(new ShootAction(SpellActionTypes.SHOOT.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().refImm(3D), CtxVarTypes.DOUBLE.get().refImm(0D), CtxVarTypes.INT.get().refImm(200), "on_block_hit", "on_entity_hit", "on_timeout"))
                 .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
                 .addAction(new SourcedDamageAction(SpellActionTypes.SOURCED_DAMAGE.get(), "on_entity_hit", BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().refImm(2D), BuiltinTargetGroups.PROJECTILE.targetGroup))

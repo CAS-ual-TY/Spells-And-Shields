@@ -7,42 +7,34 @@ import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
+import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
-import de.cas_ual_ty.spells.util.ParamNames;
 
-public class CheckBurnManaAction extends AffectSingleTypeAction<PlayerTarget>
+public class SimpleManaCheck extends AffectSingleTypeAction<PlayerTarget>
 {
-    public static Codec<CheckBurnManaAction> makeCodec(SpellActionType<CheckBurnManaAction> type)
+    public static Codec<SimpleManaCheck> makeCodec(SpellActionType<SimpleManaCheck> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("mana_amount")).forGetter(CheckBurnManaAction::getAmount)
-        ).apply(instance, (activation, targets, amount) -> new CheckBurnManaAction(type, activation, targets, amount)));
+                SpellAction.activationCodec()
+        ).apply(instance, (activation) -> new SimpleManaCheck(type, activation)));
     }
     
     protected DynamicCtxVar<Double> amount;
     
-    public CheckBurnManaAction(SpellActionType<?> type)
+    public SimpleManaCheck(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public CheckBurnManaAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> amount)
+    public SimpleManaCheck(SpellActionType<?> type, String activation)
     {
-        super(type, activation, targets);
-        this.amount = amount;
-    }
-    
-    public CheckBurnManaAction(SpellActionType<?> type, BuiltinActivations activation, BuiltinTargetGroups targets, double amount)
-    {
-        this(type, activation.activation, targets.targetGroup, CtxVarTypes.DOUBLE.get().refImm(amount));
+        super(type, activation, BuiltinTargetGroups.OWNER.targetGroup);
+        this.amount = CtxVarTypes.DOUBLE.get().refDyn(BuiltinVariables.MANA_COST.name);
     }
     
     @Override

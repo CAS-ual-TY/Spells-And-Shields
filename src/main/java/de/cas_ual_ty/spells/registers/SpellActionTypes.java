@@ -40,7 +40,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ResetFallDistanceAction>> RESET_FALL_DISTANCE = DEFERRED_REGISTER.register("reset_fall_distance", () -> new SpellActionType<>(ResetFallDistanceAction::new, ResetFallDistanceAction::makeCodec));
     public static final RegistryObject<SpellActionType<SetMotionAction>> SET_MOTION = DEFERRED_REGISTER.register("set_motion", () -> new SyncedSpellActionType<>(SetMotionAction::new, SetMotionAction::makeCodec, SetMotionAction.ClientAction::new));
     public static final RegistryObject<SpellActionType<BurnManaAction>> BURN_MANA = DEFERRED_REGISTER.register("burn_mana", () -> new SpellActionType<>(BurnManaAction::new, BurnManaAction::makeCodec));
-    public static final RegistryObject<SpellActionType<CheckBurnManaAction>> CHECK_BURN_MANA = DEFERRED_REGISTER.register("check_burn_mana", () -> new SpellActionType<>(CheckBurnManaAction::new, CheckBurnManaAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SimpleManaCheck>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheck::new, SimpleManaCheck::makeCodec));
     public static final RegistryObject<SpellActionType<SpawnParticlesAction>> SPAWN_PARTICLES = DEFERRED_REGISTER.register("spawn_particles", () -> new SpellActionType<>(SpawnParticlesAction::new, SpawnParticlesAction::makeCodec));
     public static final RegistryObject<SpellActionType<PlaySoundAction>> PLAY_SOUND = DEFERRED_REGISTER.register("play_sound", () -> new SpellActionType<>(PlaySoundAction::new, PlaySoundAction::makeCodec));
     
