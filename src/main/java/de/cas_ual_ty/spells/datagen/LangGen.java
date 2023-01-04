@@ -134,6 +134,8 @@ public class LangGen extends LanguageProvider
         
         add(Spells.KEY_LEAP, "Leap");
         add(Spells.KEY_LEAP_DESC, "Leap forward.");
+        add(Spells.KEY_FIRE_BALL, "Fire Ball");
+        add(Spells.KEY_FIRE_BALL_DESC, "Shoot a fire ball forward.");
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)
