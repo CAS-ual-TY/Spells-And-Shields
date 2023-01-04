@@ -23,9 +23,9 @@ public class HomingSpellProjectile extends SpellProjectile
         super(entityType, level);
     }
     
-    public HomingSpellProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, SpellInstance spell, int timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public HomingSpellProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, SpellInstance spell, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        super(pEntityType, pLevel, spell, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation);
+        super(pEntityType, pLevel, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
     
     public void setOwnerAndTarget(Entity owner, Entity target)
@@ -96,13 +96,13 @@ public class HomingSpellProjectile extends SpellProjectile
         }
     }
     
-    public static void home(Vec3 position, @Nullable Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static void home(Vec3 position, @Nullable Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
         if(source.level instanceof ServerLevel level)
         {
             Vec3 direction = target.getEyePosition().subtract(position).normalize();
             
-            HomingSpellProjectile projectile = new HomingSpellProjectile(BuiltinRegistries.HOMING_SPELL_PROJECTILE.get(), level, spell, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation);
+            HomingSpellProjectile projectile = new HomingSpellProjectile(BuiltinRegistries.HOMING_SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
             projectile.setOwnerAndTarget(source, target);
             
             projectile.moveTo(position.x, position.y, position.z, 0F, 0F);
@@ -112,8 +112,8 @@ public class HomingSpellProjectile extends SpellProjectile
         }
     }
     
-    public static void home(Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static void home(Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        home(source.getEyePosition(), source, target, spell, velocity, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation);
+        home(source.getEyePosition(), source, target, spell, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
 }

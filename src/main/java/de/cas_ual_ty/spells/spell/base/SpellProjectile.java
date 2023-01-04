@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.base;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.spell.SpellInstance;
+import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.core.particles.ParticleOptions;
@@ -28,11 +29,6 @@ public class SpellProjectile extends AbstractHurtingProjectile
     
     protected int timeout;
     
-    protected String blockDest;
-    protected String blockClipDest;
-    protected String entityDest;
-    protected String entityClipDest;
-    
     protected String blockHitActivation;
     protected String entityHitActivation;
     protected String timeoutActivation;
@@ -42,24 +38,16 @@ public class SpellProjectile extends AbstractHurtingProjectile
         super(entityType, level);
         this.spell = null;
         this.timeout = -1;
-        this.blockDest = null;
-        this.blockClipDest = null;
-        this.entityDest = null;
-        this.entityClipDest = null;
         this.blockHitActivation = null;
         this.entityHitActivation = null;
         this.timeoutActivation = null;
     }
     
-    public SpellProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, SpellInstance spell, int timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public SpellProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, SpellInstance spell, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
         super(pEntityType, pLevel);
         this.spell = spell;
         this.timeout = timeout;
-        this.blockDest = blockDest;
-        this.blockClipDest = blockClipDest;
-        this.entityDest = entityDest;
-        this.entityClipDest = entityClipDest;
         this.blockHitActivation = blockHitActivation;
         this.entityHitActivation = entityHitActivation;
         this.timeoutActivation = timeoutActivation;
@@ -86,7 +74,10 @@ public class SpellProjectile extends AbstractHurtingProjectile
         {
             if(tickCount >= timeout)
             {
-                spell.run(level, getPlayerOwner(), timeoutActivation);
+                spell.run(level, getPlayerOwner(), timeoutActivation, (ctx) ->
+                {
+                    ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
+                });
                 discard();
             }
         }
@@ -99,8 +90,9 @@ public class SpellProjectile extends AbstractHurtingProjectile
         {
             spell.run(level, getPlayerOwner(), entityHitActivation, (ctx) ->
             {
-                ctx.getOrCreateTargetGroup(entityDest).addTargets(Target.of(entityHitResult.getEntity()));
-                ctx.getOrCreateTargetGroup(entityClipDest).addTargets(Target.of(level, entityHitResult.getLocation()));
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.ENTITY_HIT.targetGroup).addTargets(Target.of(entityHitResult.getEntity()));
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level, entityHitResult.getLocation()));
             });
             
             discard();
@@ -114,8 +106,9 @@ public class SpellProjectile extends AbstractHurtingProjectile
         {
             spell.run(level, getPlayerOwner(), entityHitActivation, (ctx) ->
             {
-                ctx.getOrCreateTargetGroup(blockDest).addTargets(Target.of(level, blockHitResult.getBlockPos()));
-                ctx.getOrCreateTargetGroup(blockClipDest).addTargets(Target.of(level, blockHitResult.getLocation()));
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.BLOCK_HIT.targetGroup).addTargets(Target.of(level, blockHitResult.getBlockPos()));
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level, blockHitResult.getLocation()));
             });
             
             discard();
@@ -175,10 +168,6 @@ public class SpellProjectile extends AbstractHurtingProjectile
         }
         
         nbt.putInt("Timeout", timeout);
-        nbt.putString("BlockDest", blockDest);
-        nbt.putString("BlockClipDest", blockClipDest);
-        nbt.putString("EntityDest", entityDest);
-        nbt.putString("EntityClipDest", entityClipDest);
         nbt.putString("BlockHitActivation", blockHitActivation);
         nbt.putString("EntityHitActivation", entityHitActivation);
         nbt.putString("TimeoutActivation", timeoutActivation);
@@ -206,20 +195,16 @@ public class SpellProjectile extends AbstractHurtingProjectile
         }
         
         timeout = nbt.getInt("Timeout");
-        blockDest = nbt.getString("BlockDest");
-        blockClipDest = nbt.getString("BlockClipDest");
-        entityDest = nbt.getString("EntityDest");
-        entityClipDest = nbt.getString("EntityClipDest");
         blockHitActivation = nbt.getString("BlockHitActivation");
         entityHitActivation = nbt.getString("EntityHitActivation");
         timeoutActivation = nbt.getString("TimeoutActivation");
     }
     
-    public static void shoot(Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static void shoot(Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
         if(source.level instanceof ServerLevel level)
         {
-            SpellProjectile projectile = new SpellProjectile(BuiltinRegistries.SPELL_PROJECTILE.get(), level, spell, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation);
+            SpellProjectile projectile = new SpellProjectile(BuiltinRegistries.SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
             projectile.setOwner(source);
             
             projectile.moveTo(position.x, position.y, position.z, 0F, 0F);
@@ -229,8 +214,8 @@ public class SpellProjectile extends AbstractHurtingProjectile
         }
     }
     
-    public static void shoot(Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static void shoot(Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        shoot(source.getEyePosition(), source.getLookAngle().normalize(), source, spell, velocity, inaccuracy, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation);
+        shoot(source.getEyePosition(), source.getLookAngle().normalize(), source, spell, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
 }

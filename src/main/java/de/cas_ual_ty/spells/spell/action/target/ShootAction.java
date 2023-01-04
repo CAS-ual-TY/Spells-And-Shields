@@ -24,25 +24,16 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf("velocity").forGetter(ShootAction::getVelocity),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf("inaccuracy").forGetter(ShootAction::getInaccuracy),
                 CtxVarTypes.INT.get().refCodec().fieldOf("timeout").forGetter(ShootAction::getTimeout),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("blockDestination")).forGetter(ShootAction::getBlockDest),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("blockClipDestination")).forGetter(ShootAction::getBlockClipDest),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("entityDestination")).forGetter(ShootAction::getEntityDest),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("entityClipDestination")).forGetter(ShootAction::getEntityClipDest),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("blockHitActivation")).forGetter(ShootAction::getBlockHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("entityHitActivation")).forGetter(ShootAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("timeoutActivation")).forGetter(ShootAction::getTimeoutActivation)
-        ).apply(instance, (activation, targets, velocity, inaccuracy, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation) -> new ShootAction(type, activation, targets, velocity, inaccuracy, timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation)));
+        ).apply(instance, (activation, targets, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation) -> new ShootAction(type, activation, targets, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation)));
     }
     
     protected DynamicCtxVar<Double> velocity;
     protected DynamicCtxVar<Double> inaccuracy;
     
     protected DynamicCtxVar<Integer> timeout;
-    
-    protected String blockDest;
-    protected String blockClipDest;
-    protected String entityDest;
-    protected String entityClipDest;
     
     protected String blockHitActivation;
     protected String entityHitActivation;
@@ -53,16 +44,12 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
         super(type);
     }
     
-    public ShootAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockDest, String blockClipDest, String entityDest, String entityClipDest, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public ShootAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        super(type, activation, targets);
+        super(type, activation, source);
         this.velocity = velocity;
         this.inaccuracy = inaccuracy;
         this.timeout = timeout;
-        this.blockDest = blockDest;
-        this.blockClipDest = blockClipDest;
-        this.entityDest = entityDest;
-        this.entityClipDest = entityClipDest;
         this.blockHitActivation = blockHitActivation;
         this.entityHitActivation = entityHitActivation;
         this.timeoutActivation = timeoutActivation;
@@ -81,26 +68,6 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
     public DynamicCtxVar<Integer> getTimeout()
     {
         return timeout;
-    }
-    
-    public String getBlockDest()
-    {
-        return blockDest;
-    }
-    
-    public String getBlockClipDest()
-    {
-        return blockClipDest;
-    }
-    
-    public String getEntityDest()
-    {
-        return entityDest;
-    }
-    
-    public String getEntityClipDest()
-    {
-        return entityClipDest;
     }
     
     public String getBlockHitActivation()
@@ -127,7 +94,7 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
             {
                 timeout.getValue(ctx).ifPresent(timeout ->
                 {
-                    SpellProjectile.shoot(entityTarget.getEntity(), ctx.spell, velocity.floatValue(), inaccuracy.floatValue(), timeout, blockDest, blockClipDest, entityDest, entityClipDest, blockHitActivation, entityHitActivation, timeoutActivation);
+                    SpellProjectile.shoot(entityTarget.getEntity(), ctx.spell, velocity.floatValue(), inaccuracy.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation);
                 });
             });
         });
