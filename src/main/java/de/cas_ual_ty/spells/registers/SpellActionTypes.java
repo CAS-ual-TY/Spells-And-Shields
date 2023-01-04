@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.registers;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
+import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
 import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.target.CopyTargetsAction;
@@ -35,6 +36,7 @@ public class SpellActionTypes
     
     // effects
     public static final RegistryObject<SpellActionType<DamageAction>> DAMAGE = DEFERRED_REGISTER.register("damage", () -> new SpellActionType<>(DamageAction::new, DamageAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SourcedDamageAction>> SOURCED_DAMAGE = DEFERRED_REGISTER.register("sourced_damage", () -> new SpellActionType<>(SourcedDamageAction::new, SourcedDamageAction::makeCodec));
     public static final RegistryObject<SpellActionType<ResetFallDistanceAction>> RESET_FALL_DISTANCE = DEFERRED_REGISTER.register("reset_fall_distance", () -> new SpellActionType<>(ResetFallDistanceAction::new, ResetFallDistanceAction::makeCodec));
     public static final RegistryObject<SpellActionType<SetMotionAction>> SET_MOTION = DEFERRED_REGISTER.register("set_motion", () -> new SyncedSpellActionType<>(SetMotionAction::new, SetMotionAction::makeCodec, SetMotionAction.ClientAction::new));
     public static final RegistryObject<SpellActionType<BurnManaAction>> BURN_MANA = DEFERRED_REGISTER.register("burn_mana", () -> new SpellActionType<>(BurnManaAction::new, BurnManaAction::makeCodec));
@@ -59,6 +61,7 @@ public class SpellActionTypes
     
     //control
     public static final RegistryObject<SpellActionType<BooleanActivationAction>> BOOLEAN_ACTIVATION = DEFERRED_REGISTER.register("boolean_activation", () -> new SpellActionType<>(BooleanActivationAction::new, BooleanActivationAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ActivateAction>> ACTIVATE = DEFERRED_REGISTER.register("activate", () -> new SpellActionType<>(ActivateAction::new, ActivateAction::makeCodec));
     
     //variable / mapped unary
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NEGATE = DEFERRED_REGISTER.register("negate", () -> MappedUnaryVarAction.makeType(UnaryOperation.NEGATE));
