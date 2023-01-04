@@ -6,10 +6,7 @@ import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAct
 import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
 import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
-import de.cas_ual_ty.spells.spell.action.target.CopyTargetsAction;
-import de.cas_ual_ty.spells.spell.action.target.LookAtTargetAction;
-import de.cas_ual_ty.spells.spell.action.target.PickTargetAction;
-import de.cas_ual_ty.spells.spell.action.target.ShootAction;
+import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedTernaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedUnaryVarAction;
@@ -50,6 +47,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<PickTargetAction>> PICK_TARGET = DEFERRED_REGISTER.register("pick_target", () -> new SpellActionType<>(PickTargetAction::new, PickTargetAction::makeCodec2));
     public static final RegistryObject<SpellActionType<LookAtTargetAction>> LOOK_AT_TARGET = DEFERRED_REGISTER.register("look_at_target", () -> new SpellActionType<>(LookAtTargetAction::new, LookAtTargetAction::makeCodec));
     public static final RegistryObject<SpellActionType<ShootAction>> SHOOT = DEFERRED_REGISTER.register("shoot", () -> new SpellActionType<>(ShootAction::new, ShootAction::makeCodec));
+    public static final RegistryObject<SpellActionType<HomeAction>> HOME = DEFERRED_REGISTER.register("home", () -> new SpellActionType<>(HomeAction::new, HomeAction::makeCodec));
     
     //variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
