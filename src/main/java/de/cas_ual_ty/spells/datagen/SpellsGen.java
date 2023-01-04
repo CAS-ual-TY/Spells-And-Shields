@@ -7,7 +7,9 @@ import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
+import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
+import de.cas_ual_ty.spells.spell.action.target.ShootAction;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
@@ -72,6 +74,23 @@ public class SpellsGen implements DataProvider
                 .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, ParticleTypes.POOF, CtxVarTypes.INT.get().refImm(4), CtxVarTypes.DOUBLE.get().refImm(0.1)))
                 .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
                 .addTooltip(Component.translatable(Spells.KEY_LEAP_DESC))
+        );
+        
+        addSpell(Spells.FIRE_BALL, new Spell(modId, "fire_ball", Spells.KEY_FIRE_BALL, 5F)
+                .addParameter(new CtxVar<>(CtxVarTypes.DOUBLE.get(), "speed", 2.5))
+                .addAction(new CheckBurnManaAction(SpellActionTypes.CHECK_BURN_MANA.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().refDyn("mana_cost")))
+                .addAction(new ShootAction(SpellActionTypes.SHOOT.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().refImm(3D), CtxVarTypes.DOUBLE.get().refImm(0D), CtxVarTypes.INT.get().refImm(200), "on_block_hit", "on_entity_hit", "on_timeout"))
+                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
+                .addAction(new SourcedDamageAction(SpellActionTypes.SOURCED_DAMAGE.get(), "on_entity_hit", BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().refImm(2D), BuiltinTargetGroups.PROJECTILE.targetGroup))
+                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_entity_hit", "fx"))
+                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_block_hit", "fx"))
+                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_timeout", "fx"))
+                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, SoundEvents.BLAZE_SHOOT, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
+                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.LARGE_SMOKE, CtxVarTypes.INT.get().refImm(3), CtxVarTypes.DOUBLE.get().refImm(0.2)))
+                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.LAVA, CtxVarTypes.INT.get().refImm(1), CtxVarTypes.DOUBLE.get().refImm(0.2)))
+                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.SMOKE, CtxVarTypes.INT.get().refImm(2), CtxVarTypes.DOUBLE.get().refImm(0.1)))
+                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.FLAME, CtxVarTypes.INT.get().refImm(2), CtxVarTypes.DOUBLE.get().refImm(0.1)))
+                .addTooltip(Component.translatable(Spells.KEY_FIRE_BALL_DESC))
         );
     }
     

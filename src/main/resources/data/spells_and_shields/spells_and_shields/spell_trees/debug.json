@@ -7,7 +7,7 @@
         "children": [],
         "level_cost": 10,
         "requirements": [],
-        "spell": "spells_and_shields:leap",
+        "spell": "spells_and_shields:fire_ball",
         "variables": []
       }
     ],

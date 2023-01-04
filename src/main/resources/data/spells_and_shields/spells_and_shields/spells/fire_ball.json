@@ -1,0 +1,119 @@
+{
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/fire_ball.png"
+  },
+  "mana_cost": 5.0,
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:check_burn_mana",
+      "activation": "active",
+      "p_double_mana_amount": "<<mana_cost>>",
+      "t_target": "owner"
+    },
+    {
+      "type": "spells_and_shields:shoot",
+      "a_blockHitActivation": "on_block_hit",
+      "a_entityHitActivation": "on_entity_hit",
+      "a_timeoutActivation": "on_timeout",
+      "activation": "active",
+      "inaccuracy": 0.0,
+      "t_source": "owner",
+      "timeout": 200,
+      "velocity": 3.0
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "active",
+      "p_double_pitch": 1.0,
+      "p_double_volume": 1.0,
+      "sound_event": "minecraft:entity.blaze.shoot",
+      "ts_targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:sourced_damage",
+      "activation": "on_entity_hit",
+      "p_double_damage": 2.0,
+      "t_source": "projectile",
+      "ts_targets": "entity_hit"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "activation": "on_entity_hit",
+      "toActivate": "fx"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "activation": "on_block_hit",
+      "toActivate": "fx"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "activation": "on_timeout",
+      "toActivate": "fx"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "fx",
+      "p_double_pitch": 1.0,
+      "p_double_volume": 1.0,
+      "sound_event": "minecraft:entity.blaze.shoot",
+      "ts_targets": "hit_position"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "fx",
+      "p_double_spread": 0.2,
+      "p_int_count": 3,
+      "particle": {
+        "type": "minecraft:large_smoke"
+      },
+      "ts_targets": "hit_position"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "fx",
+      "p_double_spread": 0.2,
+      "p_int_count": 1,
+      "particle": {
+        "type": "minecraft:lava"
+      },
+      "ts_targets": "hit_position"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "fx",
+      "p_double_spread": 0.1,
+      "p_int_count": 2,
+      "particle": {
+        "type": "minecraft:smoke"
+      },
+      "ts_targets": "hit_position"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "fx",
+      "p_double_spread": 0.1,
+      "p_int_count": 2,
+      "particle": {
+        "type": "minecraft:flame"
+      },
+      "ts_targets": "hit_position"
+    }
+  ],
+  "title": {
+    "translate": "spell.spells_and_shields.fire_ball"
+  },
+  "tooltip": [
+    {
+      "translate": "spell.spells_and_shields.fire_ball.desc"
+    }
+  ],
+  "variables": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 2.5,
+      "var_name": "speed"
+    }
+  ]
+}

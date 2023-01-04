@@ -69,7 +69,7 @@ public class SpellTrees
     public static SpellTree debugTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.literal("Debug Tree"), spellGetter.apply(Spells.LEAP), 15, bookshelves(28))
-                .add(spellGetter.apply(Spells.LEAP), 10)
+                .add(spellGetter.apply(Spells.FIRE_BALL), 10)
                 .finish();
     }
     

@@ -28,6 +28,15 @@ public class Spells
     public static final String KEY_LEAP = key(LEAP);
     public static final String KEY_LEAP_DESC = descKey(LEAP);
     
+    // TODO
+    public static final ResourceLocation SUMMON_ANIMAL = rl("summon_animal");
+    public static final String KEY_SUMMON_ANIMAL = key(SUMMON_ANIMAL);
+    public static final String KEY_SUMMON_ANIMAL_DESC = descKey(SUMMON_ANIMAL);
+    
+    public static final ResourceLocation FIRE_BALL = rl("fire_ball");
+    public static final String KEY_FIRE_BALL = key(FIRE_BALL);
+    public static final String KEY_FIRE_BALL_DESC = descKey(FIRE_BALL);
+    
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Spells::newRegistry);
