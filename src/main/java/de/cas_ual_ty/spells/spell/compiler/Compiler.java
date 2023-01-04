@@ -12,22 +12,23 @@ import de.cas_ual_ty.spells.spell.variable.ReferencedCtxVar;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 public class Compiler
 {
-    private static Map<String, CtxVar<?>> SUPPLIERS = new HashMap<>();
+    private static Map<String, Supplier<CtxVar<?>>> SUPPLIERS = new HashMap<>();
     private static Map<String, UnaryOperation> UNARY_FUNCTIONS = new HashMap<>();
     private static Map<String, BinaryOperation> BINARY_FUNCTIONS = new HashMap<>();
     private static Map<String, TernaryOperation> TERNARY_FUNCTIONS = new HashMap<>();
     
     public static <T> void registerSuppliersToCompiler()
     {
-        registerSupplier("pi", CtxVarTypes.DOUBLE.get(), Math.PI);
+        registerSupplier("pi", CtxVarTypes.DOUBLE, Math.PI);
     }
     
-    public static <T> void registerSupplier(String name, CtxVarType<T> type, T value)
+    public static <T> void registerSupplier(String name, Supplier<CtxVarType<T>> type, T value)
     {
-        SUPPLIERS.put(name, new CtxVar<>(type, value));
+        SUPPLIERS.put(name, () -> new CtxVar<>(type.get(), value));
     }
     
     public static void registerUnaryFunction(String name, UnaryOperation op)
@@ -381,8 +382,8 @@ public class Compiler
                     
                     if(arguments.isEmpty())
                     {
-                        CtxVar<?> supplier = SUPPLIERS.get(name);
-                        ref = (ctx) -> Optional.ofNullable(supplier);
+                        Supplier<CtxVar<?>> supplier = SUPPLIERS.get(name);
+                        ref = (ctx) -> Optional.ofNullable(supplier).map(Supplier::get);
                     }
                     else if(arguments.size() == 1)
                     {
