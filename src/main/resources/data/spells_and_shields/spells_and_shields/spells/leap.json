@@ -6,10 +6,8 @@
   "mana_cost": 2.5,
   "spell_actions": [
     {
-      "type": "spells_and_shields:check_burn_mana",
-      "activation": "active",
-      "d_double_mana_amount": "<<mana_cost>>",
-      "t_target": "owner"
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active"
     },
     {
       "type": "spells_and_shields:reset_fall_distance",
