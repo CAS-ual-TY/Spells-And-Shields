@@ -6,7 +6,10 @@ import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAct
 import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
 import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
 import de.cas_ual_ty.spells.spell.action.control.DeactivateAction;
+import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheck;
 import de.cas_ual_ty.spells.spell.action.effect.*;
+import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
+import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
