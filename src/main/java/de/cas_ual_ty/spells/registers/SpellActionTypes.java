@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
 import de.cas_ual_ty.spells.spell.action.control.DeactivateAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.target.*;
+import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedTernaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedUnaryVarAction;
@@ -50,6 +51,9 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<LookAtTargetAction>> LOOK_AT_TARGET = DEFERRED_REGISTER.register("look_at_target", () -> new SpellActionType<>(LookAtTargetAction::new, LookAtTargetAction::makeCodec));
     public static final RegistryObject<SpellActionType<ShootAction>> SHOOT = DEFERRED_REGISTER.register("shoot", () -> new SpellActionType<>(ShootAction::new, ShootAction::makeCodec));
     public static final RegistryObject<SpellActionType<HomeAction>> HOME = DEFERRED_REGISTER.register("home", () -> new SpellActionType<>(HomeAction::new, HomeAction::makeCodec));
+    
+    //target filter
+    public static final RegistryObject<SpellActionType<TypeFilterAction>> TYPE_FILTER = DEFERRED_REGISTER.register("type_filter", () -> new SpellActionType<>(TypeFilterAction::new, TypeFilterAction::makeCodec));
     
     //variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
