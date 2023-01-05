@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.action.target;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
@@ -14,6 +15,11 @@ public class ClearTargetsAction extends DstTargetAction
                 activationCodec(),
                 dstCodec()
         ).apply(instance, (activation, dst) -> new ClearTargetsAction(type, activation, dst)));
+    }
+    
+    public static ClearTargetsAction make(String activation, String dst)
+    {
+        return new ClearTargetsAction(SpellActionTypes.CLEAR_TARGETS.get(), activation, dst);
     }
     
     public ClearTargetsAction(SpellActionType<?> type)

@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.action.target;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.effect.AffectSingleTypeAction;
@@ -33,6 +34,11 @@ public class LookAtTargetAction extends AffectSingleTypeAction<EntityTarget>
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(LookAtTargetAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("miss_activation")).forGetter(LookAtTargetAction::getMissActivation)
         ).apply(instance, (activation, targets, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation) -> new LookAtTargetAction(type, activation, targets, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation)));
+    }
+    
+    public static LookAtTargetAction make(String activation, String targets, double range, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid, String blockHitActivation, String entityHitActivation, String missActivation)
+    {
+        return new LookAtTargetAction(SpellActionTypes.LOOK_AT_TARGET.get(), activation, targets, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation);
     }
     
     protected double range;

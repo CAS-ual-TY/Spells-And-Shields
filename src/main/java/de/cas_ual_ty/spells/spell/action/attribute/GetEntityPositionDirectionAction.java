@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.attribute;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
@@ -23,6 +24,11 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("position")).forGetter(GetEntityPositionDirectionAction::getPosition),
                 Codec.STRING.fieldOf(ParamNames.var("direction")).forGetter(GetEntityPositionDirectionAction::getDirection)
         ).apply(instance, (activation, targets, position, direction) -> new GetEntityPositionDirectionAction(type, activation, targets, position, direction)));
+    }
+    
+    public static GetEntityPositionDirectionAction make(String activation, String targets, String position, String direction)
+    {
+        return new GetEntityPositionDirectionAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), activation, targets, position, direction);
     }
     
     protected String position;

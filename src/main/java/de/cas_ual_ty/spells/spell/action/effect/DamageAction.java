@@ -3,11 +3,10 @@ package de.cas_ual_ty.spells.spell.action.effect;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
-import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
@@ -27,6 +26,11 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, targets, damage) -> new DamageAction(type, activation, targets, damage)));
     }
     
+    public static DamageAction create(String activation, String targets, DynamicCtxVar<Double> damage)
+    {
+        return new DamageAction(SpellActionTypes.DAMAGE.get(), activation, targets, damage);
+    }
+    
     protected DynamicCtxVar<Double> damage;
     
     public DamageAction(SpellActionType<?> type)
@@ -38,11 +42,6 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
     {
         super(type, activation, targets);
         this.damage = damage;
-    }
-    
-    public DamageAction(SpellActionType<?> type, BuiltinActivations activation, BuiltinTargetGroups targets, double damage)
-    {
-        this(type, activation.activation, targets.targetGroup, CtxVarTypes.DOUBLE.get().refImm(damage));
     }
     
     @Override

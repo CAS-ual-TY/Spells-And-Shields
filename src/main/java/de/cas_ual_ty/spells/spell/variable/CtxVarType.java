@@ -69,12 +69,12 @@ public class CtxVarType<T>
         return DynamicCtxVar.makeCodec(this);
     }
     
-    public DynamicCtxVar<T> refImm(T value)
+    public DynamicCtxVar<T> immediate(T value)
     {
         return new ImmediateCtxVar<>(this, value);
     }
     
-    public DynamicCtxVar<T> refDyn(String name)
+    public DynamicCtxVar<T> reference(String name)
     {
         return new ReferencedCtxVar<>(this, name, (ctx) -> ctx.getCtxVar(this, name));
     }

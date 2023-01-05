@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.action.control;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -15,6 +16,11 @@ public class DeactivateAction extends SpellAction
                 activationCodec(),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("to_deactivate")).forGetter(DeactivateAction::getToDeactivate)
         ).apply(instance, (activation, toActivate) -> new DeactivateAction(type, activation, toActivate)));
+    }
+    
+    public static DeactivateAction make(String activation, String toDeactivate)
+    {
+        return new DeactivateAction(SpellActionTypes.DEACTIVATE.get(), activation, toDeactivate);
     }
     
     protected String toDeactivate;

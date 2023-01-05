@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.effect;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -27,6 +28,11 @@ public class SpawnParticlesAction extends AffectTypeAction<PositionTarget>
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("count")).forGetter(SpawnParticlesAction::getCount),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("spread")).forGetter(SpawnParticlesAction::getSpread)
         ).apply(instance, (activation, targets, particle, count, spread) -> new SpawnParticlesAction(type, activation, targets, particle, count, spread)));
+    }
+    
+    public static SpawnParticlesAction make(String activation, String targets, ParticleOptions particle, DynamicCtxVar<Integer> count, DynamicCtxVar<Double> spread)
+    {
+        return new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), activation, targets, particle, count, spread);
     }
     
     protected ParticleOptions particle;

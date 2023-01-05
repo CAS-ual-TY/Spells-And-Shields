@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.effect;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
@@ -24,6 +25,11 @@ public class SourcedDamageAction extends AffectTypeAction<LivingEntityTarget>
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("damage")).forGetter(SourcedDamageAction::getDamage),
                 Codec.STRING.fieldOf(ParamNames.singleTarget("source")).forGetter(SourcedDamageAction::getSource)
         ).apply(instance, (activation, targets, damage, source) -> new SourcedDamageAction(type, activation, targets, damage, source)));
+    }
+    
+    public static SourcedDamageAction make(String activation, String targets, DynamicCtxVar<Double> damage, String source)
+    {
+        return new SourcedDamageAction(SpellActionTypes.SOURCED_DAMAGE.get(), activation, targets, damage, source);
     }
     
     protected DynamicCtxVar<Double> damage;

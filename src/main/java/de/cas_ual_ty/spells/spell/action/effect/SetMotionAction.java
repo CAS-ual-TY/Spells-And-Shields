@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.effect;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.IClientAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
@@ -29,6 +30,11 @@ public class SetMotionAction extends AffectSingleTypeAction<EntityTarget>
                 targetCodec(),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("motion")).forGetter(SetMotionAction::getMotion)
         ).apply(instance, (activation, targets, motion) -> new SetMotionAction(type, activation, targets, motion)));
+    }
+    
+    public static SetMotionAction make(String activation, String targets, DynamicCtxVar<Vec3> motion)
+    {
+        return new SetMotionAction(SpellActionTypes.SET_MOTION.get(), activation, targets, motion);
     }
     
     protected DynamicCtxVar<Vec3> motion;

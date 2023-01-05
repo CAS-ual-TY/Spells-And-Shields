@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.target;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.effect.AffectSingleTypeAction;
@@ -28,6 +29,11 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(ShootAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("timeout_activation")).forGetter(ShootAction::getTimeoutActivation)
         ).apply(instance, (activation, targets, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation) -> new ShootAction(type, activation, targets, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation)));
+    }
+    
+    public static ShootAction make(String activation, String source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    {
+        return new ShootAction(SpellActionTypes.SHOOT.get(), activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
     
     protected DynamicCtxVar<Double> velocity;

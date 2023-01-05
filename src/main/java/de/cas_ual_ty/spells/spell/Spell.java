@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
+import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -70,6 +71,11 @@ public class Spell
     {
         parameters.add(ctxVar);
         return this;
+    }
+    
+    public <T> Spell addParameter(CtxVarType<T> type, String name, T value)
+    {
+        return addParameter(new CtxVar<>(type, name, value));
     }
     
     public List<SpellAction> getSpellActions()

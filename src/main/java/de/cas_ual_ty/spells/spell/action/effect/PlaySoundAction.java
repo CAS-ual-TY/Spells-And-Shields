@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.effect;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -26,6 +27,11 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("volume")).forGetter(PlaySoundAction::getVolume),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("pitch")).forGetter(PlaySoundAction::getPitch)
         ).apply(instance, (activation, targets, particle, count, spread) -> new PlaySoundAction(type, activation, targets, particle, count, spread)));
+    }
+    
+    public static PlaySoundAction make(String activation, String targets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
+    {
+        return new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), activation, targets, soundEvent, volume, pitch);
     }
     
     protected SoundEvent soundEvent;

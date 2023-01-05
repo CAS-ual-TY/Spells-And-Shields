@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.action.target.filter;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -20,6 +21,11 @@ public class TypeFilterAction extends FilterTargetsAction
                 srcCodec(),
                 TargetTypes.REGISTRY.get().getCodec().fieldOf("target_type").forGetter(TypeFilterAction::getTargetType)
         ).apply(instance, (activation, dst, src, targetType) -> new TypeFilterAction(type, activation, dst, src, () -> targetType)));
+    }
+    
+    public static TypeFilterAction make(String activation, String dst, String src, Supplier<ITargetType<?>> targetType)
+    {
+        return new TypeFilterAction(SpellActionTypes.TYPE_FILTER.get(), activation, dst, src, targetType);
     }
     
     protected Supplier<ITargetType<?>> targetType;

@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.target;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.effect.AffectSingleTypeAction;
@@ -28,6 +29,11 @@ public class HomeAction extends AffectSingleTypeAction<EntityTarget>
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(HomeAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("timeout_activation")).forGetter(HomeAction::getTimeoutActivation)
         ).apply(instance, (activation, targets, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation) -> new HomeAction(type, activation, targets, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation)));
+    }
+    
+    public static HomeAction make(String activation, String source, String target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    {
+        return new HomeAction(SpellActionTypes.HOME.get(), activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
     
     protected String target;

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
@@ -24,6 +25,11 @@ public class SimpleManaCheck extends AffectSingleTypeAction<PlayerTarget>
         ).apply(instance, (activation) -> new SimpleManaCheck(type, activation)));
     }
     
+    public static SimpleManaCheck make(String activation)
+    {
+        return new SimpleManaCheck(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation);
+    }
+    
     protected DynamicCtxVar<Double> amount;
     
     public SimpleManaCheck(SpellActionType<?> type)
@@ -34,7 +40,7 @@ public class SimpleManaCheck extends AffectSingleTypeAction<PlayerTarget>
     public SimpleManaCheck(SpellActionType<?> type, String activation)
     {
         super(type, activation, BuiltinTargetGroups.OWNER.targetGroup);
-        this.amount = CtxVarTypes.DOUBLE.get().refDyn(BuiltinVariables.MANA_COST.name);
+        this.amount = CtxVarTypes.DOUBLE.get().reference(BuiltinVariables.MANA_COST.name);
     }
     
     @Override

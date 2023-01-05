@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.datagen;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
-import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
@@ -17,7 +16,6 @@ import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
-import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.CachedOutput;
@@ -69,47 +67,47 @@ public class SpellsGen implements DataProvider
     protected void addSpells()
     {
         addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 2.5F)
-                .addParameter(new CtxVar<>(CtxVarTypes.DOUBLE.get(), "speed", 2.5))
-                .addAction(new SimpleManaCheck(SpellActionTypes.SIMPLE_MANA_CHECK.get(), BuiltinActivations.ACTIVE.activation))
-                .addAction(new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup))
-                .addAction(new GetEntityPositionDirectionAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "", "look"))
-                .addAction(new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), BuiltinActivations.ACTIVE.activation, Compiler.compileString(" (normalize(look + vec3(0, -get_y(look), 0))) * speed ", CtxVarTypes.VEC3.get()), "direction", CtxVarTypes.VEC3.get()))
-                .addAction(new SetMotionAction(SpellActionTypes.SET_MOTION.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, Compiler.compileString(" vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) ", CtxVarTypes.VEC3.get())))
-                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, ParticleTypes.POOF, CtxVarTypes.INT.get().refImm(4), CtxVarTypes.DOUBLE.get().refImm(0.1)))
-                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
+                .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
+                .addAction(SimpleManaCheck.make(BuiltinActivations.ACTIVE.activation))
+                .addAction(ResetFallDistanceAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup))
+                .addAction(GetEntityPositionDirectionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "", "look"))
+                .addAction(PutVarAction.makeVec3(BuiltinActivations.ACTIVE.activation, " (normalize(look + vec3(0, -get_y(look), 0))) * speed ", "direction"))
+                .addAction(SetMotionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, Compiler.compileString(" vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) ", CtxVarTypes.VEC3.get())))
+                .addAction(SpawnParticlesAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, ParticleTypes.POOF, CtxVarTypes.INT.get().immediate(4), CtxVarTypes.DOUBLE.get().immediate(0.1)))
+                .addAction(PlaySoundAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
                 .addTooltip(Component.translatable(Spells.KEY_LEAP_DESC))
         );
         
         addSpell(Spells.FIRE_BALL, new Spell(modId, "fire_ball", Spells.KEY_FIRE_BALL, 5F)
-                .addParameter(new CtxVar<>(CtxVarTypes.DOUBLE.get(), "speed", 2.5))
-                .addAction(new SimpleManaCheck(SpellActionTypes.SIMPLE_MANA_CHECK.get(), BuiltinActivations.ACTIVE.activation))
-                .addAction(new ShootAction(SpellActionTypes.SHOOT.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().refImm(3D), CtxVarTypes.DOUBLE.get().refImm(0D), CtxVarTypes.INT.get().refImm(200), "on_block_hit", "on_entity_hit", "on_timeout"))
-                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
-                .addAction(new SourcedDamageAction(SpellActionTypes.SOURCED_DAMAGE.get(), "on_entity_hit", BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().refImm(2D), BuiltinTargetGroups.PROJECTILE.targetGroup))
-                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_entity_hit", "fx"))
-                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_block_hit", "fx"))
-                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_timeout", "fx"))
-                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, SoundEvents.BLAZE_SHOOT, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
-                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.LARGE_SMOKE, CtxVarTypes.INT.get().refImm(3), CtxVarTypes.DOUBLE.get().refImm(0.2)))
-                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.LAVA, CtxVarTypes.INT.get().refImm(1), CtxVarTypes.DOUBLE.get().refImm(0.2)))
-                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.SMOKE, CtxVarTypes.INT.get().refImm(2), CtxVarTypes.DOUBLE.get().refImm(0.1)))
-                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.FLAME, CtxVarTypes.INT.get().refImm(2), CtxVarTypes.DOUBLE.get().refImm(0.1)))
+                .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
+                .addAction(SimpleManaCheck.make(BuiltinActivations.ACTIVE.activation))
+                .addAction(ShootAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().immediate(3D), CtxVarTypes.DOUBLE.get().immediate(0D), CtxVarTypes.INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout"))
+                .addAction(PlaySoundAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
+                .addAction(SourcedDamageAction.make("on_entity_hit", BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().immediate(2D), BuiltinTargetGroups.PROJECTILE.targetGroup))
+                .addAction(ActivateAction.make("on_entity_hit", "fx"))
+                .addAction(ActivateAction.make("on_block_hit", "fx"))
+                .addAction(ActivateAction.make("on_timeout", "fx"))
+                .addAction(PlaySoundAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, SoundEvents.BLAZE_SHOOT, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
+                .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.LARGE_SMOKE, CtxVarTypes.INT.get().immediate(3), CtxVarTypes.DOUBLE.get().immediate(0.2)))
+                .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.LAVA, CtxVarTypes.INT.get().immediate(1), CtxVarTypes.DOUBLE.get().immediate(0.2)))
+                .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.SMOKE, CtxVarTypes.INT.get().immediate(2), CtxVarTypes.DOUBLE.get().immediate(0.1)))
+                .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.FLAME, CtxVarTypes.INT.get().immediate(2), CtxVarTypes.DOUBLE.get().immediate(0.1)))
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_BALL_DESC))
         );
         
         addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
-                .addParameter(new CtxVar<>(CtxVarTypes.DOUBLE.get(), "speed", 2.5))
-                .addAction(new LookAtTargetAction(SpellActionTypes.LOOK_AT_TARGET.get(), BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, 25D, 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, "looked_at_block", "looked_at_entity", "looked_at_nothing"))
-                .addAction(new SimpleManaCheck(SpellActionTypes.SIMPLE_MANA_CHECK.get(), "looked_at_entity"))
-                .addAction(new HomeAction(SpellActionTypes.HOME.get(), "looked_at_entity", BuiltinTargetGroups.OWNER.targetGroup, BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().refImm(3D), CtxVarTypes.INT.get().refImm(200), "on_block_hit", "on_entity_hit", "on_timeout"))
-                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), "looked_at_entity", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
-                .addAction(new ReplenishManaAction(SpellActionTypes.REPLENISH_MANA.get(), "on_entity_hit", BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().refDyn(BuiltinVariables.MANA_COST.name)))
-                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_entity_hit", "fx"))
-                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_block_hit", "fx"))
-                .addAction(new ActivateAction(SpellActionTypes.ACTIVATE.get(), "on_timeout", "fx"))
-                .addAction(new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, CtxVarTypes.DOUBLE.get().refImm(1D), CtxVarTypes.DOUBLE.get().refImm(1D)))
-                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.BUBBLE, CtxVarTypes.INT.get().refImm(3), CtxVarTypes.DOUBLE.get().refImm(0.2)))
-                .addAction(new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), "fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.POOF, CtxVarTypes.INT.get().refImm(2), CtxVarTypes.DOUBLE.get().refImm(0.2)))
+                .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
+                .addAction(LookAtTargetAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, 25D, 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, "looked_at_block", "looked_at_entity", "looked_at_nothing"))
+                .addAction(SimpleManaCheck.make("looked_at_entity"))
+                .addAction(HomeAction.make("looked_at_entity", BuiltinTargetGroups.OWNER.targetGroup, BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().immediate(3D), CtxVarTypes.INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout"))
+                .addAction(PlaySoundAction.make("looked_at_entity", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
+                .addAction(ReplenishManaAction.make("on_entity_hit", BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().reference(BuiltinVariables.MANA_COST.name)))
+                .addAction(ActivateAction.make("on_entity_hit", "fx"))
+                .addAction(ActivateAction.make("on_block_hit", "fx"))
+                .addAction(ActivateAction.make("on_timeout", "fx"))
+                .addAction(PlaySoundAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
+                .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.BUBBLE, CtxVarTypes.INT.get().immediate(3), CtxVarTypes.DOUBLE.get().immediate(0.2)))
+                .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.POOF, CtxVarTypes.INT.get().immediate(2), CtxVarTypes.DOUBLE.get().immediate(0.2)))
                 .addTooltip(Component.translatable(Spells.KEY_TRANSFER_MANA_DESC))
         );
     }

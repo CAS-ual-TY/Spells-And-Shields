@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.action.target;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
@@ -19,6 +20,11 @@ public class PickTargetAction extends CopyTargetsAction
                 Codec.BOOL.fieldOf(ParamNames.paramBooleanImm("remove")).forGetter(PickTargetAction::getRemove),
                 Codec.BOOL.fieldOf(ParamNames.paramBooleanImm("random")).forGetter(PickTargetAction::getRandom)
         ).apply(instance, (activation, dst, src, remove, random) -> new PickTargetAction(type, activation, dst, src, remove, random)));
+    }
+    
+    public static PickTargetAction make(String activation, String dst, String src, boolean remove, boolean random)
+    {
+        return new PickTargetAction(SpellActionTypes.PICK_TARGET.get(), activation, dst, src, remove, random);
     }
     
     protected boolean remove;

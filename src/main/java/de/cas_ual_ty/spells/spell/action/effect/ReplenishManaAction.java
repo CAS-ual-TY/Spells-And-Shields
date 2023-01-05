@@ -4,11 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
-import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
@@ -28,6 +27,11 @@ public class ReplenishManaAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, targets, amount) -> new ReplenishManaAction(type, activation, targets, amount)));
     }
     
+    public static ReplenishManaAction make(String activation, String targets, DynamicCtxVar<Double> amount)
+    {
+        return new ReplenishManaAction(SpellActionTypes.REPLENISH_MANA.get(), activation, targets, amount);
+    }
+    
     protected DynamicCtxVar<Double> amount;
     
     public ReplenishManaAction(SpellActionType<?> type)
@@ -39,11 +43,6 @@ public class ReplenishManaAction extends AffectTypeAction<LivingEntityTarget>
     {
         super(type, activation, targets);
         this.amount = amount;
-    }
-    
-    public ReplenishManaAction(SpellActionType<?> type, BuiltinActivations activation, BuiltinTargetGroups targets, double amount)
-    {
-        this(type, activation.activation, targets.targetGroup, CtxVarTypes.DOUBLE.get().refImm(amount));
     }
     
     @Override
