@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
+import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.util.ParamNames;
 
 import java.util.LinkedList;
@@ -19,7 +20,7 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
-                Codec.STRING.fieldOf(ParamNames.var("position")).forGetter(GetEntityPositionDirectionAction::getPosition),
+                Codec.STRING.fieldOf(ParamNames.multiTarget("position")).forGetter(GetEntityPositionDirectionAction::getPosition),
                 Codec.STRING.fieldOf(ParamNames.var("direction")).forGetter(GetEntityPositionDirectionAction::getDirection)
         ).apply(instance, (activation, targets, position, direction) -> new GetEntityPositionDirectionAction(type, activation, targets, position, direction)));
     }
@@ -27,12 +28,14 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
     protected String position;
     protected String direction;
     
-    protected List<TargetAttribute<EntityTarget, ?>> attributes;
+    protected List<TargetAttribute<EntityTarget, ?>> targetAttributes;
+    protected List<VariableAttribute<EntityTarget, ?>> variableAttributes;
     
     public GetEntityPositionDirectionAction(SpellActionType<?> type)
     {
         super(type);
-        attributes = new LinkedList<>();
+        targetAttributes = new LinkedList<>();
+        variableAttributes = new LinkedList<>();
     }
     
     public GetEntityPositionDirectionAction(SpellActionType<?> type, String activation, String targets, String position, String direction)
@@ -41,16 +44,17 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
         this.position = position;
         this.direction = direction;
         
-        attributes = new LinkedList<>();
+        targetAttributes = new LinkedList<>();
+        variableAttributes = new LinkedList<>();
         
         if(!position.isEmpty())
         {
-            attributes.add(new TargetAttribute<>(e -> e.getEntity().position(), CtxVarTypes.VEC3.get(), position));
+            targetAttributes.add(new TargetAttribute<>(e -> Target.of(e.getLevel(), e.getEntity().position()), position));
         }
         
         if(!direction.isEmpty())
         {
-            attributes.add(new TargetAttribute<>(e -> e.getEntity().getLookAngle().normalize(), CtxVarTypes.VEC3.get(), direction));
+            variableAttributes.add(new VariableAttribute<>(e -> e.getEntity().getLookAngle().normalize(), CtxVarTypes.VEC3.get(), direction));
         }
     }
     
@@ -61,9 +65,15 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
     }
     
     @Override
-    public List<TargetAttribute<EntityTarget, ?>> getAttributes()
+    public List<TargetAttribute<EntityTarget, ?>> getTargetAttributes()
     {
-        return attributes;
+        return targetAttributes;
+    }
+    
+    @Override
+    public List<VariableAttribute<EntityTarget, ?>> getVariableAttributes()
+    {
+        return variableAttributes;
     }
     
     public String getPosition()

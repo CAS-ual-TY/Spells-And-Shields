@@ -18,8 +18,8 @@
       "type": "spells_and_shields:get_position_direction",
       "activation": "active",
       "t_source": "owner",
-      "var_direction": "look",
-      "var_position": ""
+      "ts_position": "",
+      "var_direction": "look"
     },
     {
       "type": "spells_and_shields:put_vec3",

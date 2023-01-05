@@ -22,23 +22,38 @@ public abstract class GetTargetAttributeAction<T extends Target> extends AffectS
         super(type, activation, targets);
     }
     
-    public abstract List<TargetAttribute<T, ?>> getAttributes();
+    public abstract List<TargetAttribute<T, ?>> getTargetAttributes();
+    
+    public abstract List<VariableAttribute<T, ?>> getVariableAttributes();
     
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, T t)
     {
-        for(TargetAttribute<T, ?> attribute : getAttributes())
+        for(TargetAttribute<T, ?> attribute : getTargetAttributes())
+        {
+            attribute.apply(ctx, t);
+        }
+        
+        for(VariableAttribute<T, ?> attribute : getVariableAttributes())
         {
             attribute.apply(ctx, t);
         }
     }
     
-    public static record TargetAttribute<T extends Target, C>(Function<T, C> getter, CtxVarType<C> varType,
-                                                              String varName)
+    public static record VariableAttribute<T extends Target, C>(Function<T, C> getter, CtxVarType<C> varType,
+                                                                String varName)
     {
         public void apply(SpellContext ctx, T t)
         {
             ctx.setCtxVar(varType, varName, getter().apply(t));
+        }
+    }
+    
+    public static record TargetAttribute<T extends Target, C extends Target>(Function<T, C> getter, String targetGroup)
+    {
+        public void apply(SpellContext ctx, T t)
+        {
+            ctx.getOrCreateTargetGroup(targetGroup).addTargets(getter.apply(t));
         }
     }
 }
