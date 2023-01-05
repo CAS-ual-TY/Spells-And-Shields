@@ -6,6 +6,16 @@
   "mana_cost": 5.0,
   "spell_actions": [
     {
+      "type": "spells_and_shields:simple_item_check",
+      "activation": "active",
+      "item": {
+        "Count": 1,
+        "id": "minecraft:blaze_powder"
+      },
+      "must_be_in_hand": true,
+      "t_target": "owner"
+    },
+    {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active"
     },

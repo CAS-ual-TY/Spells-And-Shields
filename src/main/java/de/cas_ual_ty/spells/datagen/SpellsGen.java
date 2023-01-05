@@ -7,10 +7,14 @@ import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
 import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
-import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheck;
-import de.cas_ual_ty.spells.spell.action.effect.*;
+import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheckAction;
+import de.cas_ual_ty.spells.spell.action.effect.ReplenishManaAction;
+import de.cas_ual_ty.spells.spell.action.effect.ResetFallDistanceAction;
+import de.cas_ual_ty.spells.spell.action.effect.SetMotionAction;
+import de.cas_ual_ty.spells.spell.action.effect.SourcedDamageAction;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
+import de.cas_ual_ty.spells.spell.action.item.SimpleItemCheckAction;
 import de.cas_ual_ty.spells.spell.action.target.HomeAction;
 import de.cas_ual_ty.spells.spell.action.target.LookAtTargetAction;
 import de.cas_ual_ty.spells.spell.action.target.ShootAction;
@@ -28,6 +32,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.JsonCodecProvider;
@@ -71,7 +77,7 @@ public class SpellsGen implements DataProvider
     {
         addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 2.5F)
                 .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
-                .addAction(SimpleManaCheck.make(BuiltinActivations.ACTIVE.activation))
+                .addAction(SimpleManaCheckAction.make(BuiltinActivations.ACTIVE.activation))
                 .addAction(ResetFallDistanceAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup))
                 .addAction(GetEntityPositionDirectionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "", "look"))
                 .addAction(PutVarAction.makeVec3(BuiltinActivations.ACTIVE.activation, " (normalize(look + vec3(0, -get_y(look), 0))) * speed ", "direction"))
@@ -83,7 +89,8 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.FIRE_BALL, new Spell(modId, "fire_ball", Spells.KEY_FIRE_BALL, 5F)
                 .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
-                .addAction(SimpleManaCheck.make(BuiltinActivations.ACTIVE.activation))
+                .addAction(SimpleItemCheckAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.BOOLEAN.get().immediate(true), new ItemStack(Items.BLAZE_POWDER)))
+                .addAction(SimpleManaCheckAction.make(BuiltinActivations.ACTIVE.activation))
                 .addAction(ShootAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.DOUBLE.get().immediate(3D), CtxVarTypes.DOUBLE.get().immediate(0D), CtxVarTypes.INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout"))
                 .addAction(PlaySoundAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
                 .addAction(SourcedDamageAction.make("on_entity_hit", BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().immediate(2D), BuiltinTargetGroups.PROJECTILE.targetGroup))
@@ -101,7 +108,7 @@ public class SpellsGen implements DataProvider
         addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
                 .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
                 .addAction(LookAtTargetAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, 25D, 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, "looked_at_block", "looked_at_entity", "looked_at_nothing"))
-                .addAction(SimpleManaCheck.make("looked_at_entity"))
+                .addAction(SimpleManaCheckAction.make("looked_at_entity"))
                 .addAction(HomeAction.make("looked_at_entity", BuiltinTargetGroups.OWNER.targetGroup, BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().immediate(3D), CtxVarTypes.INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout"))
                 .addAction(PlaySoundAction.make("looked_at_entity", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
                 .addAction(ReplenishManaAction.make("on_entity_hit", BuiltinTargetGroups.ENTITY_HIT.targetGroup, CtxVarTypes.DOUBLE.get().reference(BuiltinVariables.MANA_COST.name)))

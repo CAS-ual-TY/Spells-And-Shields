@@ -6,10 +6,11 @@ import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAct
 import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
 import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
 import de.cas_ual_ty.spells.spell.action.control.DeactivateAction;
-import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheck;
+import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
+import de.cas_ual_ty.spells.spell.action.item.SimpleItemCheckAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
@@ -43,7 +44,6 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<SetMotionAction>> SET_MOTION = DEFERRED_REGISTER.register("set_motion", () -> new SyncedSpellActionType<>(SetMotionAction::new, SetMotionAction::makeCodec, SetMotionAction.ClientAction::new));
     public static final RegistryObject<SpellActionType<BurnManaAction>> BURN_MANA = DEFERRED_REGISTER.register("burn_mana", () -> new SpellActionType<>(BurnManaAction::new, BurnManaAction::makeCodec));
     public static final RegistryObject<SpellActionType<ReplenishManaAction>> REPLENISH_MANA = DEFERRED_REGISTER.register("replenish_mana", () -> new SpellActionType<>(ReplenishManaAction::new, ReplenishManaAction::makeCodec));
-    public static final RegistryObject<SpellActionType<SimpleManaCheck>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheck::new, SimpleManaCheck::makeCodec));
     public static final RegistryObject<SpellActionType<SpawnParticlesAction>> SPAWN_PARTICLES = DEFERRED_REGISTER.register("spawn_particles", () -> new SpellActionType<>(SpawnParticlesAction::new, SpawnParticlesAction::makeCodec));
     public static final RegistryObject<SpellActionType<PlaySoundAction>> PLAY_SOUND = DEFERRED_REGISTER.register("play_sound", () -> new SpellActionType<>(PlaySoundAction::new, PlaySoundAction::makeCodec));
     
@@ -65,6 +65,8 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<BooleanActivationAction>> BOOLEAN_ACTIVATION = DEFERRED_REGISTER.register("boolean_activation", () -> new SpellActionType<>(BooleanActivationAction::new, BooleanActivationAction::makeCodec));
     public static final RegistryObject<SpellActionType<ActivateAction>> ACTIVATE = DEFERRED_REGISTER.register("activate", () -> new SpellActionType<>(ActivateAction::new, ActivateAction::makeCodec));
     public static final RegistryObject<SpellActionType<DeactivateAction>> DEACTIVATE = DEFERRED_REGISTER.register("deactivate", () -> new SpellActionType<>(DeactivateAction::new, DeactivateAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SimpleManaCheckAction>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheckAction::new, SimpleManaCheckAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SimpleItemCheckAction>> SIMPLE_ITEM_CHECK = DEFERRED_REGISTER.register("simple_item_check", () -> new SpellActionType<>(SimpleItemCheckAction::new, SimpleItemCheckAction::makeCodec));
     
     //variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
