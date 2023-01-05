@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.action.effect;
+package de.cas_ual_ty.spells.spell.action.control;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
+import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;

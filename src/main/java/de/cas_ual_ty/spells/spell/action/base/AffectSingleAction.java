@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.action.effect;
+package de.cas_ual_ty.spells.spell.action.base;
 
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
