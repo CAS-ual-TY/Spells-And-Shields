@@ -15,12 +15,14 @@ public class BooleanActivationAction extends SpellAction
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
+                Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(BooleanActivationAction::getToActivate),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("input")).forGetter(BooleanActivationAction::getOperant),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("activate_if_true")).forGetter(BooleanActivationAction::getActivateIfTrue),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("deactivate_if_false")).forGetter(BooleanActivationAction::getDeactivateIfFalse)
-        ).apply(instance, (activation, operant, activateIfTrue, deactivateIfFalse) -> new BooleanActivationAction(type, activation, operant, activateIfTrue, deactivateIfFalse)));
+        ).apply(instance, (activation, toActivate, operant, activateIfTrue, deactivateIfFalse) -> new BooleanActivationAction(type, activation, toActivate, operant, activateIfTrue, deactivateIfFalse)));
     }
     
+    protected String toActivate;
     protected DynamicCtxVar<Boolean> operant;
     protected DynamicCtxVar<Boolean> activateIfTrue;
     protected DynamicCtxVar<Boolean> deactivateIfFalse;
@@ -30,12 +32,18 @@ public class BooleanActivationAction extends SpellAction
         super(type);
     }
     
-    public BooleanActivationAction(SpellActionType<?> type, String activation, DynamicCtxVar<Boolean> operant, DynamicCtxVar<Boolean> activateIfTrue, DynamicCtxVar<Boolean> deactivateIfFalse)
+    public BooleanActivationAction(SpellActionType<?> type, String activation, String toActivate, DynamicCtxVar<Boolean> operant, DynamicCtxVar<Boolean> activateIfTrue, DynamicCtxVar<Boolean> deactivateIfFalse)
     {
         super(type, activation);
+        this.toActivate = toActivate;
         this.operant = operant;
         this.activateIfTrue = activateIfTrue;
         this.deactivateIfFalse = deactivateIfFalse;
+    }
+    
+    public String getToActivate()
+    {
+        return toActivate;
     }
     
     public DynamicCtxVar<Boolean> getOperant()
@@ -64,7 +72,7 @@ public class BooleanActivationAction extends SpellAction
                 {
                     if(activate)
                     {
-                        ctx.activate(activation);
+                        ctx.activate(toActivate);
                     }
                 });
             }
@@ -74,7 +82,7 @@ public class BooleanActivationAction extends SpellAction
                 {
                     if(deactivate)
                     {
-                        ctx.deactivate(activation);
+                        ctx.deactivate(toActivate);
                     }
                 });
             }
