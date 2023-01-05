@@ -18,7 +18,7 @@
       "type": "spells_and_shields:get_position_direction",
       "activation": "active",
       "t_source": "owner",
-      "ts_position": "",
+      "td_position": "",
       "var_direction": "look"
     },
     {

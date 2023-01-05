@@ -109,4 +109,9 @@ public class ParamNames
     {
         return "t_" + name;
     }
+    
+    public static String destinationTarget(String name)
+    {
+        return "td_" + name;
+    }
 }

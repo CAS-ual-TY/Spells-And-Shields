@@ -20,7 +20,7 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
-                Codec.STRING.fieldOf(ParamNames.multiTarget("position")).forGetter(GetEntityPositionDirectionAction::getPosition),
+                Codec.STRING.fieldOf(ParamNames.destinationTarget("position")).forGetter(GetEntityPositionDirectionAction::getPosition),
                 Codec.STRING.fieldOf(ParamNames.var("direction")).forGetter(GetEntityPositionDirectionAction::getDirection)
         ).apply(instance, (activation, targets, position, direction) -> new GetEntityPositionDirectionAction(type, activation, targets, position, direction)));
     }
