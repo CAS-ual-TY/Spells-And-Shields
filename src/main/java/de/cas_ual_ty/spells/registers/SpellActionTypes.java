@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
+import de.cas_ual_ty.spells.spell.action.item.DamageItemAction;
 import de.cas_ual_ty.spells.spell.action.item.SimpleItemCheckAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.target.filter.ItemFilterAction;
@@ -62,6 +63,9 @@ public class SpellActionTypes
     
     //attribute
     public static final RegistryObject<SpellActionType<GetEntityPositionDirectionAction>> GET_POSITION_DIRECTION = DEFERRED_REGISTER.register("get_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionAction::new, GetEntityPositionDirectionAction::makeCodec));
+    
+    //item
+    public static final RegistryObject<SpellActionType<DamageItemAction>> DAMAGE_ITEM = DEFERRED_REGISTER.register("damage_item", () -> new SpellActionType<>(DamageItemAction::new, DamageItemAction::makeCodec));
     
     //control
     public static final RegistryObject<SpellActionType<BooleanActivationAction>> BOOLEAN_ACTIVATION = DEFERRED_REGISTER.register("boolean_activation", () -> new SpellActionType<>(BooleanActivationAction::new, BooleanActivationAction::makeCodec));
