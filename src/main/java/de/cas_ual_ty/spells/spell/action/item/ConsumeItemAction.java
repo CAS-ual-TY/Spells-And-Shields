@@ -13,46 +13,45 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DamageItemAction extends AffectSingleTypeAction<ItemTarget>
+public class ConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
 {
-    public static Codec<DamageItemAction> makeCodec(SpellActionType<DamageItemAction> type)
+    public static Codec<ConsumeItemAction> makeCodec(SpellActionType<ConsumeItemAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 targetCodec(),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(DamageItemAction::getDamage),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("user")).forGetter(DamageItemAction::getUser)
-        ).apply(instance, (activation, target, damage, user) -> new DamageItemAction(type, activation, target, damage, user)));
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(ConsumeItemAction::getAmount),
+                Codec.STRING.fieldOf(ParamNames.singleTarget("user")).forGetter(ConsumeItemAction::getUser)
+        ).apply(instance, (activation, target, amount, user) -> new ConsumeItemAction(type, activation, target, amount, user)));
     }
     
-    public static DamageItemAction make(String activation, String target, DynamicCtxVar<Integer> damage, String user)
+    public static ConsumeItemAction make(String activation, String target, DynamicCtxVar<Integer> damage, String user)
     {
-        return new DamageItemAction(SpellActionTypes.DAMAGE_ITEM.get(), activation, target, damage, user);
+        return new ConsumeItemAction(SpellActionTypes.CONSUME_ITEM.get(), activation, target, damage, user);
     }
     
-    protected DynamicCtxVar<Integer> damage;
+    protected DynamicCtxVar<Integer> amount;
     protected String user;
     
-    public DamageItemAction(SpellActionType<?> type)
+    public ConsumeItemAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public DamageItemAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> damage, String user)
+    public ConsumeItemAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> amount, String user)
     {
         super(type, activation, targets);
-        this.damage = damage;
+        this.amount = amount;
         this.user = user;
     }
     
-    public DynamicCtxVar<Integer> getDamage()
+    public DynamicCtxVar<Integer> getAmount()
     {
-        return damage;
+        return amount;
     }
     
     public String getUser()
@@ -63,7 +62,7 @@ public class DamageItemAction extends AffectSingleTypeAction<ItemTarget>
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, ItemTarget itemTarget)
     {
-        damage.getValue(ctx).ifPresent(damage ->
+        amount.getValue(ctx).ifPresent(amount ->
         {
             TargetGroup userGroup = ctx.getTargetGroup(user);
             AtomicBoolean done = new AtomicBoolean(false);
@@ -76,7 +75,7 @@ public class DamageItemAction extends AffectSingleTypeAction<ItemTarget>
                     {
                         if(!player.isCreative())
                         {
-                            itemTarget.getItem().hurt(damage, SpellsUtil.RANDOM, player);
+                            itemTarget.getItem().shrink(amount);
                         }
                         
                         done.set(true);
@@ -86,10 +85,9 @@ public class DamageItemAction extends AffectSingleTypeAction<ItemTarget>
             
             if(!done.get())
             {
-                itemTarget.getItem().hurt(damage, SpellsUtil.RANDOM, null);
+                itemTarget.getItem().shrink(amount);
             }
         });
-        
     }
     
     @Override
