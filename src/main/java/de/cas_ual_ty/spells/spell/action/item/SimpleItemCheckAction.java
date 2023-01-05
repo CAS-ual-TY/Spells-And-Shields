@@ -12,6 +12,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,7 +23,7 @@ public class SimpleItemCheckAction extends AffectTypeAction<PlayerTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 targetCodec(),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf("must_be_in_hand").forGetter(SimpleItemCheckAction::getMustBeInHand),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(SimpleItemCheckAction::getMustBeInHand),
                 ItemStack.CODEC.fieldOf("item").forGetter(SimpleItemCheckAction::getItem)
         ).apply(instance, (activation, target, mustBeInHand, item) -> new SimpleItemCheckAction(type, activation, target, mustBeInHand, item)));
     }

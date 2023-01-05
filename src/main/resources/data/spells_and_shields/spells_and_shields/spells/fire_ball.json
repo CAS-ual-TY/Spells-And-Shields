@@ -8,11 +8,11 @@
     {
       "type": "spells_and_shields:simple_item_check",
       "activation": "active",
+      "d_boolean_must_be_in_hand": true,
       "item": {
         "Count": 1,
         "id": "minecraft:blaze_powder"
       },
-      "must_be_in_hand": true,
       "t_target": "owner"
     },
     {
