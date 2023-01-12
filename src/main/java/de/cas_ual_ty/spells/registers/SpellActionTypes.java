@@ -3,10 +3,7 @@ package de.cas_ual_ty.spells.registers;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
-import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
-import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
-import de.cas_ual_ty.spells.spell.action.control.DeactivateAction;
-import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheckAction;
+import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
@@ -75,6 +72,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<DeactivateAction>> DEACTIVATE = DEFERRED_REGISTER.register("deactivate", () -> new SpellActionType<>(DeactivateAction::new, DeactivateAction::makeCodec));
     public static final RegistryObject<SpellActionType<SimpleManaCheckAction>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheckAction::new, SimpleManaCheckAction::makeCodec));
     public static final RegistryObject<SpellActionType<SimpleItemCheckAction>> SIMPLE_ITEM_CHECK = DEFERRED_REGISTER.register("simple_item_check", () -> new SpellActionType<>(SimpleItemCheckAction::new, SimpleItemCheckAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ItemEqualsActivationAction>> ITEM_EQUALS_ACTIVATION = DEFERRED_REGISTER.register("item_equals_activation", () -> new SpellActionType<>(ItemEqualsActivationAction::new, ItemEqualsActivationAction::makeCodec));
     
     //variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
