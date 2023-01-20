@@ -160,6 +160,11 @@ public class Spell
                 ctx.debugCtxVars();
                 SpellsAndShields.LOGGER.info("-".repeat(50));
             }
+    
+            if(ctx.isTerminated())
+            {
+                break;
+            }
         }
     }
 }
