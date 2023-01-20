@@ -21,7 +21,7 @@ public class ItemEqualsActivationAction extends AffectSingleTypeAction<ItemTarge
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 targetCodec(),
-                Codec.STRING.fieldOf("to_activate").forGetter(ItemEqualsActivationAction::getToActivate),
+                Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(ItemEqualsActivationAction::getToActivate),
                 ItemStack.CODEC.fieldOf("item").forGetter(ItemEqualsActivationAction::getItem),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("ignore_tag")).forGetter(ItemEqualsActivationAction::getIgnoreTag),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_count")).forGetter(ItemEqualsActivationAction::getMinimumCount),

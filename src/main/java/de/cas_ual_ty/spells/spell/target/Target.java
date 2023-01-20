@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -43,5 +44,10 @@ public abstract class Target
     public static StaticTarget of(Level level, Vec3 position)
     {
         return new StaticTarget(TargetTypes.STATIC.get(), level, position);
+    }
+    
+    public static ItemTarget of(Level level, ItemStack item)
+    {
+        return new ItemTarget(TargetTypes.ITEM.get(), level, item);
     }
 }
