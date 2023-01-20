@@ -13,30 +13,30 @@ import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.util.ParamNames;
 
-public class MainhandItemTargetAction extends AffectSingleTypeAction<PlayerTarget>
+public class OffhandItemTargetAction extends AffectSingleTypeAction<PlayerTarget>
 {
-    public static Codec<MainhandItemTargetAction> makeCodec(SpellActionType<MainhandItemTargetAction> type)
+    public static Codec<OffhandItemTargetAction> makeCodec(SpellActionType<OffhandItemTargetAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
-                Codec.STRING.fieldOf(ParamNames.destinationTarget("item")).forGetter(MainhandItemTargetAction::getDst)
-        ).apply(instance, (activation, source, dst) -> new MainhandItemTargetAction(type, activation, source, dst)));
+                Codec.STRING.fieldOf(ParamNames.destinationTarget("item")).forGetter(OffhandItemTargetAction::getDst)
+        ).apply(instance, (activation, source, dst) -> new OffhandItemTargetAction(type, activation, source, dst)));
     }
     
-    public static MainhandItemTargetAction make(String activation, String targets, String dst)
+    public static OffhandItemTargetAction make(String activation, String targets, String dst)
     {
-        return new MainhandItemTargetAction(SpellActionTypes.MAINHAND_ITEM_TARGET.get(), activation, targets, dst);
+        return new OffhandItemTargetAction(SpellActionTypes.OFFHAND_ITEM_TARGET.get(), activation, targets, dst);
     }
     
     protected String dst;
     
-    public MainhandItemTargetAction(SpellActionType<?> type)
+    public OffhandItemTargetAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public MainhandItemTargetAction(SpellActionType<?> type, String activation, String targets, String dst)
+    public OffhandItemTargetAction(SpellActionType<?> type, String activation, String targets, String dst)
     {
         super(type, activation, targets);
         this.dst = dst;
@@ -50,7 +50,7 @@ public class MainhandItemTargetAction extends AffectSingleTypeAction<PlayerTarge
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
-        ctx.getOrCreateTargetGroup(dst).addTargets(Target.of(playerTarget.getLevel(), playerTarget.getPlayer().getMainHandItem()));
+        ctx.getOrCreateTargetGroup(dst).addTargets(Target.of(playerTarget.getLevel(), playerTarget.getPlayer().getOffhandItem()));
     }
     
     @Override
