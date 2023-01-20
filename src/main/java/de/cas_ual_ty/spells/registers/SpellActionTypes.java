@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.ConsumeItemAction;
 import de.cas_ual_ty.spells.spell.action.item.DamageItemAction;
 import de.cas_ual_ty.spells.spell.action.item.SimpleItemCheckAction;
+import de.cas_ual_ty.spells.spell.action.item.TryDamageItemAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.target.filter.ItemFilterAction;
 import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
@@ -66,6 +67,7 @@ public class SpellActionTypes
     
     //item
     public static final RegistryObject<SpellActionType<DamageItemAction>> DAMAGE_ITEM = DEFERRED_REGISTER.register("damage_item", () -> new SpellActionType<>(DamageItemAction::new, DamageItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<TryDamageItemAction>> TRY_DAMAGE_ITEM = DEFERRED_REGISTER.register("try_damage_item", () -> new SpellActionType<>(TryDamageItemAction::new, TryDamageItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<ConsumeItemAction>> CONSUME_ITEM = DEFERRED_REGISTER.register("consume_item", () -> new SpellActionType<>(ConsumeItemAction::new, ConsumeItemAction::makeCodec));
     
     //control
