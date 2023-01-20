@@ -13,49 +13,48 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
+public class TryConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
 {
-    public static Codec<TryDamageItemAction> makeCodec(SpellActionType<TryDamageItemAction> type)
+    public static Codec<TryConsumeItemAction> makeCodec(SpellActionType<TryConsumeItemAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 targetCodec(),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(TryDamageItemAction::getDamage),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("user")).forGetter(TryDamageItemAction::getUser),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("success")).forGetter(TryDamageItemAction::getSuccess)
-        ).apply(instance, (activation, target, damage, user, success) -> new TryDamageItemAction(type, activation, target, damage, user, success)));
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(TryConsumeItemAction::getAmount),
+                Codec.STRING.fieldOf(ParamNames.singleTarget("user")).forGetter(TryConsumeItemAction::getUser),
+                Codec.STRING.fieldOf(ParamNames.interactedActivation("success")).forGetter(TryConsumeItemAction::getSuccess)
+        ).apply(instance, (activation, target, amount, user, success) -> new TryConsumeItemAction(type, activation, target, amount, user, success)));
     }
     
-    public static TryDamageItemAction make(String activation, String target, DynamicCtxVar<Integer> damage, String user, String success)
+    public static TryConsumeItemAction make(String activation, String target, DynamicCtxVar<Integer> damage, String user, String success)
     {
-        return new TryDamageItemAction(SpellActionTypes.TRY_DAMAGE_ITEM.get(), activation, target, damage, user, success);
+        return new TryConsumeItemAction(SpellActionTypes.TRY_CONSUME_ITEM.get(), activation, target, damage, user, success);
     }
     
-    protected DynamicCtxVar<Integer> damage;
+    protected DynamicCtxVar<Integer> amount;
     protected String user;
     protected String success;
     
-    public TryDamageItemAction(SpellActionType<?> type)
+    public TryConsumeItemAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public TryDamageItemAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> damage, String user, String success)
+    public TryConsumeItemAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> amount, String user, String success)
     {
         super(type, activation, targets);
-        this.damage = damage;
+        this.amount = amount;
         this.user = user;
         this.success = success;
     }
     
-    public DynamicCtxVar<Integer> getDamage()
+    public DynamicCtxVar<Integer> getAmount()
     {
-        return damage;
+        return amount;
     }
     
     public String getUser()
@@ -71,9 +70,9 @@ public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, ItemTarget itemTarget)
     {
-        damage.getValue(ctx).ifPresent(damage ->
+        amount.getValue(ctx).ifPresent(amount ->
         {
-            if(itemTarget.getItem().getMaxDamage() - itemTarget.getItem().getDamageValue() < damage)
+            if(itemTarget.getItem().getCount() < amount)
             {
                 return;
             }
@@ -91,7 +90,7 @@ public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
                     {
                         if(!player.isCreative())
                         {
-                            itemTarget.getItem().hurt(damage, SpellsUtil.RANDOM, player);
+                            itemTarget.getItem().shrink(amount);
                         }
                         
                         done.set(true);
@@ -101,10 +100,9 @@ public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
             
             if(!done.get())
             {
-                itemTarget.getItem().hurt(damage, SpellsUtil.RANDOM, null);
+                itemTarget.getItem().shrink(amount);
             }
         });
-        
     }
     
     @Override
