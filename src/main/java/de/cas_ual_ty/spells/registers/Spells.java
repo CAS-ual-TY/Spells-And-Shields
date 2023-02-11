@@ -28,7 +28,6 @@ public class Spells
     public static final String KEY_LEAP = key(LEAP);
     public static final String KEY_LEAP_DESC = descKey(LEAP);
     
-    // TODO all
     public static final ResourceLocation SUMMON_ANIMAL = rl("summon_animal");
     public static final String KEY_SUMMON_ANIMAL = key(SUMMON_ANIMAL);
     public static final String KEY_SUMMON_ANIMAL_DESC = descKey(SUMMON_ANIMAL);

@@ -134,6 +134,8 @@ public class LangGen extends LanguageProvider
         
         add(Spells.KEY_LEAP, "Leap");
         add(Spells.KEY_LEAP_DESC, "Leap forward.");
+        add(Spells.KEY_SUMMON_ANIMAL, "Summon Animal");
+        add(Spells.KEY_SUMMON_ANIMAL_DESC, "Create life based on the item in your hand.");
         add(Spells.KEY_FIRE_BALL, "Fire Ball");
         add(Spells.KEY_FIRE_BALL_DESC, "Shoot a fire ball forward.");
     }

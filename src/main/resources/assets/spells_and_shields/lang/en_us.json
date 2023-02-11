@@ -87,6 +87,8 @@
   "spell.spells_and_shields.fire_ball.desc": "Shoot a fire ball forward.",
   "spell.spells_and_shields.leap": "Leap",
   "spell.spells_and_shields.leap.desc": "Leap forward.",
+  "spell.spells_and_shields.summon_animal": "Summon Animal",
+  "spell.spells_and_shields.summon_animal.desc": "Create life based on the item in your hand.",
   "spell_progression.choose": "Choose a Slot",
   "spell_progression.equip": "Equip",
   "spell_progression.learn": "Learn",
