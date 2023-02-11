@@ -11,6 +11,8 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
@@ -109,16 +111,21 @@ public class SpawnEntityAction extends SpellAction
                     {
                         entity.setPos(position.getPosition());
                         
-                        //TODO
-                        //entity.setXRot(direction.something);
-                        //entity.setYRot(direction.something);
+                        // doesnt quite work
+                        entity.setYRot((float) (Mth.atan2(direction.x, direction.z) * (double) (180F / (float) Math.PI)));
+                        entity.setXRot((float) (Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI)));
                         
                         entity.setDeltaMovement(motion);
                         
                         CompoundTag tag = entity.saveWithoutId(new CompoundTag());
                         for(String key : this.tag.getAllKeys())
                         {
-                            tag.put(key, this.tag.get(key));
+                            Tag t = this.tag.get(key);
+                            
+                            if(t != null)
+                            {
+                                tag.put(key, t);
+                            }
                         }
                         
                         entity.load(tag);
