@@ -27,7 +27,7 @@ public class GetEntityTagAction extends GetTargetAttributeAction<EntityTarget>
     
     public static GetEntityTagAction make(String activation, String target, String compoundTag)
     {
-        return new GetEntityTagAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), activation, target, compoundTag);
+        return new GetEntityTagAction(SpellActionTypes.GET_ENTITY_TAG.get(), activation, target, compoundTag);
     }
     
     protected String compoundTag;

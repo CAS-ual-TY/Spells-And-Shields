@@ -26,7 +26,7 @@ public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
     
     public static GetItemTagAction make(String activation, String target, String compoundTag)
     {
-        return new GetItemTagAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), activation, target, compoundTag);
+        return new GetItemTagAction(SpellActionTypes.GET_ITEM_TAG.get(), activation, target, compoundTag);
     }
     
     protected String compoundTag;
