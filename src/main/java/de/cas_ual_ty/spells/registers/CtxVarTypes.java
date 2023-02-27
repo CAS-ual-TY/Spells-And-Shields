@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.registers;
 import com.mojang.serialization.Codec;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -23,6 +24,7 @@ public class CtxVarTypes
     public static final RegistryObject<CtxVarType<Vec3>> VEC3 = DEFERRED_REGISTER.register("vec3", () -> new CtxVarType<>(Vec3.CODEC));
     public static final RegistryObject<CtxVarType<BlockPos>> BLOCK_POS = DEFERRED_REGISTER.register("block_pos", () -> new CtxVarType<>(BlockPos.CODEC));
     public static final RegistryObject<CtxVarType<Boolean>> BOOLEAN = DEFERRED_REGISTER.register("boolean", () -> new CtxVarType<>(Codec.BOOL));
+    public static final RegistryObject<CtxVarType<String>> STRING = DEFERRED_REGISTER.register("string", () -> new CtxVarType<>(Codec.STRING));
     
     public static void register()
     {
