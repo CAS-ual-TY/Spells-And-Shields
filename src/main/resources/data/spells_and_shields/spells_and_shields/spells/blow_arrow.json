@@ -1,0 +1,75 @@
+{
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/blow_arrow.png"
+  },
+  "mana_cost": 5.0,
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "active",
+      "d_tag_source": {
+        "crit": 1,
+        "pickup": 1
+      },
+      "var_result": "tag"
+    },
+    {
+      "type": "spells_and_shields:get_entity_position_direction",
+      "activation": "active",
+      "t_source": "owner",
+      "td_position": "",
+      "var_direction": "direction"
+    },
+    {
+      "type": "spells_and_shields:get_entity_eye_position",
+      "activation": "active",
+      "t_source": "owner",
+      "td_eye_position": "position"
+    },
+    {
+      "type": "spells_and_shields:mainhand_item_target",
+      "activation": "active",
+      "t_source": "owner",
+      "td_item": "item"
+    },
+    {
+      "type": "spells_and_shields:item_equals_activation",
+      "a_to_activate": "normal",
+      "activation": "active",
+      "d_boolean_ignore_tag": true,
+      "d_int_minimum_count": 1,
+      "d_int_minimum_durability": -1,
+      "item": {
+        "Count": 1,
+        "id": "minecraft:arrow"
+      },
+      "t_target": "item"
+    },
+    {
+      "type": "spells_and_shields:spawn_entity",
+      "activation": "normal",
+      "d_vec3_direction": "<<direction>>",
+      "d_vec3_motion": "<< 3 * direction >>",
+      "entity_type": "minecraft:arrow",
+      "t_entity": "arrow",
+      "t_position": "position",
+      "tag": "<<tag>>"
+    },
+    {
+      "type": "spells_and_shields:get_entity_tag",
+      "activation": "normal",
+      "t_source": "arrow",
+      "var_compound_tag": "etag"
+    }
+  ],
+  "title": {
+    "translate": "spell.spells_and_shields.blow_arrow"
+  },
+  "tooltip": [],
+  "variables": []
+}

@@ -5,6 +5,7 @@ import com.mojang.serialization.JsonOps;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.action.attribute.GetEntityEyePositionAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityTagAction;
 import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
@@ -145,6 +146,20 @@ public class SpellsGen implements DataProvider
                 .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.BUBBLE, CtxVarTypes.INT.get().immediate(3), CtxVarTypes.DOUBLE.get().immediate(0.2)))
                 .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.POOF, CtxVarTypes.INT.get().immediate(2), CtxVarTypes.DOUBLE.get().immediate(0.2)))
                 .addTooltip(Component.translatable(Spells.KEY_TRANSFER_MANA_DESC))
+        );
+        
+        CompoundTag tag = new CompoundTag();
+        tag.putBoolean("crit", true);
+        tag.putInt("pickup", 1);
+        addSpell(Spells.BLOW_ARROW, new Spell(modId, "blow_arrow", Spells.KEY_BLOW_ARROW, 5F)
+                .addAction(SimpleManaCheckAction.make(BuiltinActivations.ACTIVE.activation))
+                .addAction(PutVarAction.makeCompoundTag(BuiltinActivations.ACTIVE.activation, tag, "tag"))
+                .addAction(GetEntityPositionDirectionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "", "direction"))
+                .addAction(GetEntityEyePositionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "position"))
+                .addAction(MainhandItemTargetAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "item"))
+                .addAction(ItemEqualsActivationAction.make(BuiltinActivations.ACTIVE.activation, "item", "normal", new ItemStack(Items.ARROW), CtxVarTypes.BOOLEAN.get().immediate(true), CtxVarTypes.INT.get().immediate(1), CtxVarTypes.INT.get().immediate(-1)))
+                .addAction(SpawnEntityAction.make("normal", "arrow", EntityType.ARROW, "position", CtxVarTypes.VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.COMPOUND_TAG.get().reference("tag")))
+                .addAction(GetEntityTagAction.make("normal", "arrow", "etag"))
         );
     }
     
