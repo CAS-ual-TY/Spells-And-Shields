@@ -86,6 +86,27 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
                 .addTooltip(Component.translatable(Spells.KEY_LEAP_DESC))
         );
+    
+        CompoundTag childTag = new CompoundTag();
+        childTag.putInt("Age", -24000);
+        addSpell(Spells.SUMMON_ANIMAL, new Spell(modId, "summon_animal", Spells.KEY_SUMMON_ANIMAL, 4F)
+                .addAction(GetEntityPositionDirectionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "position", "direction"))
+                .addAction(SimpleManaCheckAction.make(BuiltinActivations.ACTIVE.activation))
+                .addAction(SpawnParticlesAction.make(BuiltinActivations.ACTIVE.activation, "position", ParticleTypes.EXPLOSION, CtxVarTypes.INT.get().immediate(3), CtxVarTypes.DOUBLE.get().immediate(0.4)))
+                .addAction(ActivateAction.make(BuiltinActivations.ACTIVE.activation, "cow"))
+                .addAction(SimpleItemCheckAction.make("cow", BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.BOOLEAN.get().immediate(true), new ItemStack(Items.BEEF, 8)))
+                .addAction(SpawnEntityAction.make("cow", "baby", EntityType.COW, "position", Compiler.compileString(" -direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.VEC3.get().immediate(Vec3.ZERO), childTag))
+                .addAction(ActivateAction.make(BuiltinActivations.ACTIVE.activation, "chicken"))
+                .addAction(SimpleItemCheckAction.make("chicken", BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.BOOLEAN.get().immediate(true), new ItemStack(Items.CHICKEN, 8)))
+                .addAction(SpawnEntityAction.make("chicken", "baby", EntityType.CHICKEN, "position", Compiler.compileString(" -direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.VEC3.get().immediate(Vec3.ZERO), childTag))
+                .addAction(ActivateAction.make(BuiltinActivations.ACTIVE.activation, "pig"))
+                .addAction(SimpleItemCheckAction.make("pig", BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.BOOLEAN.get().immediate(true), new ItemStack(Items.PORKCHOP, 8)))
+                .addAction(SpawnEntityAction.make("pig", "baby", EntityType.PIG, "position", Compiler.compileString(" -direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.VEC3.get().immediate(Vec3.ZERO), childTag))
+                .addAction(ActivateAction.make(BuiltinActivations.ACTIVE.activation, "sheep"))
+                .addAction(SimpleItemCheckAction.make("sheep", BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.BOOLEAN.get().immediate(true), new ItemStack(Items.MUTTON, 8)))
+                .addAction(SpawnEntityAction.make("sheep", "baby", EntityType.SHEEP, "position", Compiler.compileString(" -direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.VEC3.get().immediate(Vec3.ZERO), childTag))
+                .addTooltip(Component.translatable(Spells.KEY_SUMMON_ANIMAL_DESC))
+        );
         
         addSpell(Spells.FIRE_BALL, new Spell(modId, "fire_ball", Spells.KEY_FIRE_BALL, 5F)
                 .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
@@ -105,6 +126,8 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_BALL_DESC))
         );
         
+        //TODO Blast Smelt
+        
         addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
                 .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
                 .addAction(LookAtTargetAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, 25D, 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, "looked_at_block", "looked_at_entity", "looked_at_nothing"))
@@ -119,28 +142,6 @@ public class SpellsGen implements DataProvider
                 .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.BUBBLE, CtxVarTypes.INT.get().immediate(3), CtxVarTypes.DOUBLE.get().immediate(0.2)))
                 .addAction(SpawnParticlesAction.make("fx", BuiltinTargetGroups.HIT_POSITION.targetGroup, ParticleTypes.POOF, CtxVarTypes.INT.get().immediate(2), CtxVarTypes.DOUBLE.get().immediate(0.2)))
                 .addTooltip(Component.translatable(Spells.KEY_TRANSFER_MANA_DESC))
-        );
-        
-        CompoundTag childTag = new CompoundTag();
-        childTag.putInt("Age", -24000);
-        
-        addSpell(Spells.SUMMON_ANIMAL, new Spell(modId, "summon_animal", Spells.KEY_SUMMON_ANIMAL, 4F)
-                .addAction(GetEntityPositionDirectionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "position", "direction"))
-                .addAction(SimpleManaCheckAction.make(BuiltinActivations.ACTIVE.activation))
-                .addAction(SpawnParticlesAction.make(BuiltinActivations.ACTIVE.activation, "position", ParticleTypes.EXPLOSION, CtxVarTypes.INT.get().immediate(3), CtxVarTypes.DOUBLE.get().immediate(0.4)))
-                .addAction(ActivateAction.make(BuiltinActivations.ACTIVE.activation, "cow"))
-                .addAction(SimpleItemCheckAction.make("cow", BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.BOOLEAN.get().immediate(true), new ItemStack(Items.BEEF, 8)))
-                .addAction(SpawnEntityAction.make("cow", "baby", EntityType.COW, "position", Compiler.compileString(" -direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.VEC3.get().immediate(Vec3.ZERO), childTag))
-                .addAction(ActivateAction.make(BuiltinActivations.ACTIVE.activation, "chicken"))
-                .addAction(SimpleItemCheckAction.make("chicken", BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.BOOLEAN.get().immediate(true), new ItemStack(Items.CHICKEN, 8)))
-                .addAction(SpawnEntityAction.make("chicken", "baby", EntityType.CHICKEN, "position", Compiler.compileString(" -direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.VEC3.get().immediate(Vec3.ZERO), childTag))
-                .addAction(ActivateAction.make(BuiltinActivations.ACTIVE.activation, "pig"))
-                .addAction(SimpleItemCheckAction.make("pig", BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.BOOLEAN.get().immediate(true), new ItemStack(Items.PORKCHOP, 8)))
-                .addAction(SpawnEntityAction.make("pig", "baby", EntityType.PIG, "position", Compiler.compileString(" -direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.VEC3.get().immediate(Vec3.ZERO), childTag))
-                .addAction(ActivateAction.make(BuiltinActivations.ACTIVE.activation, "sheep"))
-                .addAction(SimpleItemCheckAction.make("sheep", BuiltinTargetGroups.OWNER.targetGroup, CtxVarTypes.BOOLEAN.get().immediate(true), new ItemStack(Items.MUTTON, 8)))
-                .addAction(SpawnEntityAction.make("sheep", "baby", EntityType.SHEEP, "position", Compiler.compileString(" -direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.VEC3.get().immediate(Vec3.ZERO), childTag))
-                .addTooltip(Component.translatable(Spells.KEY_SUMMON_ANIMAL_DESC))
         );
     }
     
