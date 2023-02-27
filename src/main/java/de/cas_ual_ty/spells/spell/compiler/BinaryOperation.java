@@ -70,7 +70,7 @@ public class BinaryOperation
         return this;
     }
     
-    public Entry<?, ?, ?> getEntry(CtxVarType<?> operant1, CtxVarType<?> operant2)
+    public Entry<?, ?, ?> getEntry(CtxVarType<?> operant1, CtxVarType<?> operant2, AtomicBoolean reversed)
     {
         Entry<?, ?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2)).findFirst()
                 .orElse(map.stream().filter(e -> e.areTypesDirectlyApplicable(operant2, operant1)).findFirst().orElse(null));
@@ -79,6 +79,11 @@ public class BinaryOperation
         {
             entry = map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2)).findFirst()
                     .orElse(map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant2, operant1)).findFirst().orElse(null));
+            
+            if(entry != null)
+            {
+                reversed.set(true);
+            }
         }
         
         if(entry == null && SpellsConfig.DEBUG_SPELLS.get())
@@ -91,11 +96,13 @@ public class BinaryOperation
     
     public <V> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, BiConsumer<CtxVarType<V>, V> result)
     {
-        Entry<?, ?, ?> entry = getEntry(operant1.getType(), operant2.getType());
+        AtomicBoolean reversed = new AtomicBoolean(false);
+        
+        Entry<?, ?, ?> entry = getEntry(operant1.getType(), operant2.getType(), reversed);
         
         if(entry != null)
         {
-            return entry.applyAndSet(operant1, operant2, result);
+            return reversed.get() ? entry.applyAndSet(operant2, operant1, result) : entry.applyAndSet(operant1, operant2, result);
         }
         else
         {
