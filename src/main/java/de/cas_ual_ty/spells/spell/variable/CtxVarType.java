@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.variable;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.util.ParamNames;
 
 import javax.annotation.Nullable;
@@ -77,5 +78,11 @@ public class CtxVarType<T>
     public DynamicCtxVar<T> reference(String name)
     {
         return new ReferencedCtxVar<>(this, name, (ctx) -> ctx.getCtxVar(this, name));
+    }
+    
+    @Override
+    public String toString()
+    {
+        return CtxVarTypes.REGISTRY.get().getKey(this).toString();
     }
 }
