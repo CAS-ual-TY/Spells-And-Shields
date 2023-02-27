@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
+import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -84,7 +85,7 @@ public class ItemEqualsActivationAction extends AffectSingleTypeAction<ItemTarge
     @Override
     public ITargetType<ItemTarget> getAffectedType()
     {
-        return null;
+        return TargetTypes.ITEM.get();
     }
     
     @Override
@@ -101,17 +102,17 @@ public class ItemEqualsActivationAction extends AffectSingleTypeAction<ItemTarge
                         return;
                     }
                     
-                    if(minimumCount >= 0 && itemTarget.getItem().getCount() >= minimumCount)
+                    if(minimumCount >= 0 && itemTarget.getItem().getCount() < minimumCount)
                     {
                         return;
                     }
                     
-                    if(minimumDurability >= 0 && itemTarget.getItem().getMaxDamage() - itemTarget.getItem().getDamageValue() >= minimumDurability)
+                    if(minimumDurability >= 0 && itemTarget.getItem().getMaxDamage() - itemTarget.getItem().getDamageValue() < minimumDurability)
                     {
                         return;
                     }
                     
-                    if(ignoreTag && !ItemStack.tagMatches(item, itemTarget.getItem()))
+                    if(!ignoreTag && !ItemStack.tagMatches(item, itemTarget.getItem()))
                     {
                         return;
                     }
