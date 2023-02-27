@@ -122,16 +122,21 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> MOVE_X = DEFERRED_REGISTER.register("move_x", () -> MappedBinaryVarAction.makeType(BinaryOperation.MOVE_X));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> MOVE_Y = DEFERRED_REGISTER.register("move_y", () -> MappedBinaryVarAction.makeType(BinaryOperation.MOVE_Y));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> MOVE_Z = DEFERRED_REGISTER.register("move_z", () -> MappedBinaryVarAction.makeType(BinaryOperation.MOVE_Z));
-    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_INT = DEFERRED_REGISTER.register("get_int", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_INT));
-    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_DOUBLE = DEFERRED_REGISTER.register("get_double", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_DOUBLE));
-    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_BOOLEAN = DEFERRED_REGISTER.register("get_boolean", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_BOOLEAN));
-    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_COMPOUND_TAG = DEFERRED_REGISTER.register("get_compound_tag", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_COMPOUND_TAG));
-    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_STRING = DEFERRED_REGISTER.register("get_string", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_STRING));
+    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_INT = DEFERRED_REGISTER.register("get_nbt_int", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_INT));
+    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_DOUBLE = DEFERRED_REGISTER.register("get_nbt_double", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_DOUBLE));
+    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_BOOLEAN = DEFERRED_REGISTER.register("get_nbt_boolean", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_BOOLEAN));
+    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_COMPOUND_TAG = DEFERRED_REGISTER.register("get_nbt_compound_tag", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_COMPOUND_TAG));
+    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_STRING = DEFERRED_REGISTER.register("get_nbt_string", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_STRING));
     
-    //variable / mapped binary
+    //variable / mapped ternary
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> CONDITIONAL = DEFERRED_REGISTER.register("conditional", () -> MappedTernaryVarAction.makeType(TernaryOperation.CONDITIONAL));
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> VEC3 = DEFERRED_REGISTER.register("vec3", () -> MappedTernaryVarAction.makeType(TernaryOperation.VEC3));
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> BLOCK_POS = DEFERRED_REGISTER.register("block_pos", () -> MappedTernaryVarAction.makeType(TernaryOperation.BLOCK_POS));
+    public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_INT = DEFERRED_REGISTER.register("put_nbt_int", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_INT));
+    public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_DOUBLE = DEFERRED_REGISTER.register("put_nbt_double", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_DOUBLE));
+    public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_BOOLEAN = DEFERRED_REGISTER.register("put_nbt_boolean", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_BOOLEAN));
+    public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_COMPOUND_TAG = DEFERRED_REGISTER.register("put_nbt_compound_tag", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_COMPOUND_TAG));
+    public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_STRING = DEFERRED_REGISTER.register("put_nbt_string", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_STRING));
     
     //variable / simple unary
     // -/-
@@ -230,11 +235,11 @@ public class SpellActionTypes
         BinaryOperation.MOVE_Y.register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y) -> x.above(y));
         BinaryOperation.MOVE_Z.register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y) -> x.south(y));
         
-        BinaryOperation.GET_INT.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.INT.get(), (x, y) -> x.getInt(y));
-        BinaryOperation.GET_DOUBLE.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x.getDouble(y));
-        BinaryOperation.GET_BOOLEAN.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.getBoolean(y));
-        BinaryOperation.GET_COMPOUND_TAG.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y) -> x.getCompound(y));
-        BinaryOperation.GET_STRING.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x, y) -> x.getString(y));
+        BinaryOperation.GET_NBT_INT.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.INT.get(), (x, y) -> x.getInt(y));
+        BinaryOperation.GET_NBT_DOUBLE.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x.getDouble(y));
+        BinaryOperation.GET_NBT_BOOLEAN.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.getBoolean(y));
+        BinaryOperation.GET_NBT_COMPOUND_TAG.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y) -> x.getCompound(y));
+        BinaryOperation.GET_NBT_STRING.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x, y) -> x.getString(y));
         
         TernaryOperation.CONDITIONAL.register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y, z) -> x ? y : z)
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y, z) -> x ? y : z)
@@ -244,5 +249,26 @@ public class SpellActionTypes
         
         TernaryOperation.VEC3.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.VEC3.get(), (x, y, z) -> new Vec3(x, y, z));
         TernaryOperation.BLOCK_POS.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y, z) -> new BlockPos(x, y, z));
+        
+        TernaryOperation.PUT_NBT_INT.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.INT.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y, z) -> {
+            x.putInt(y, z);
+            return x;
+        });
+        TernaryOperation.PUT_NBT_DOUBLE.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y, z) -> {
+            x.putDouble(y, z);
+            return x;
+        });
+        TernaryOperation.PUT_NBT_BOOLEAN.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y, z) -> {
+            x.putBoolean(y, z);
+            return x;
+        });
+        TernaryOperation.PUT_NBT_COMPOUND_TAG.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y, z) -> {
+            x.put(y, z);
+            return x;
+        });
+        TernaryOperation.PUT_NBT_STRING.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y, z) -> {
+            x.putString(y, z);
+            return x;
+        });
     }
 }

@@ -18,11 +18,21 @@ public class TernaryOperation
     
     public static final TernaryOperation VEC3 = new TernaryOperation("vec3");
     public static final TernaryOperation BLOCK_POS = new TernaryOperation("block_pos");
+    public static final TernaryOperation PUT_NBT_INT = new TernaryOperation("put_nbt_int");
+    public static final TernaryOperation PUT_NBT_DOUBLE = new TernaryOperation("put_nbt_double");
+    public static final TernaryOperation PUT_NBT_BOOLEAN = new TernaryOperation("put_nbt_boolean");
+    public static final TernaryOperation PUT_NBT_COMPOUND_TAG = new TernaryOperation("put_nbt_compound_tag");
+    public static final TernaryOperation PUT_NBT_STRING = new TernaryOperation("put_nbt_string");
     
     public static void registerToCompiler()
     {
         Compiler.registerTernaryFunction("vec3", VEC3);
         Compiler.registerTernaryFunction("block_pos", BLOCK_POS);
+        Compiler.registerTernaryFunction("put_nbt_int", PUT_NBT_INT);
+        Compiler.registerTernaryFunction("put_nbt_double", PUT_NBT_DOUBLE);
+        Compiler.registerTernaryFunction("put_nbt_boolean", PUT_NBT_BOOLEAN);
+        Compiler.registerTernaryFunction("put_nbt_compound_tag", PUT_NBT_COMPOUND_TAG);
+        Compiler.registerTernaryFunction("put_nbt_string", PUT_NBT_STRING);
     }
     
     public final String name;
