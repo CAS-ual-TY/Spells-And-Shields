@@ -15,7 +15,7 @@
       "ts_targets": "owner"
     },
     {
-      "type": "spells_and_shields:get_position_direction",
+      "type": "spells_and_shields:get_entity_position_direction",
       "activation": "active",
       "t_source": "owner",
       "td_position": "",

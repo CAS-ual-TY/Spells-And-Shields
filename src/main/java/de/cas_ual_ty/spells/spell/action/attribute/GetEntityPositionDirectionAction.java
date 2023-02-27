@@ -28,7 +28,7 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
     
     public static GetEntityPositionDirectionAction make(String activation, String target, String position, String direction)
     {
-        return new GetEntityPositionDirectionAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), activation, target, position, direction);
+        return new GetEntityPositionDirectionAction(SpellActionTypes.GET_ENTITY_POSITION_DIRECTION.get(), activation, target, position, direction);
     }
     
     protected String position;

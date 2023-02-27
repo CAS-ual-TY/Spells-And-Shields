@@ -6,10 +6,10 @@
   "mana_cost": 4.0,
   "spell_actions": [
     {
-      "type": "spells_and_shields:get_position_direction",
+      "type": "spells_and_shields:get_entity_position_direction",
       "activation": "active",
       "t_source": "owner",
-      "td_position": "position",
+      "td_position": "",
       "var_direction": "direction"
     },
     {
@@ -24,7 +24,7 @@
       "particle": {
         "type": "minecraft:explosion"
       },
-      "ts_targets": "position"
+      "ts_targets": "owner"
     },
     {
       "type": "spells_and_shields:activate",
@@ -52,7 +52,7 @@
       ],
       "entity_type": "minecraft:cow",
       "t_entity": "baby",
-      "t_position": "position",
+      "t_position": "owner",
       "tag": {
         "Age": -24000
       }
@@ -83,7 +83,7 @@
       ],
       "entity_type": "minecraft:chicken",
       "t_entity": "baby",
-      "t_position": "position",
+      "t_position": "owner",
       "tag": {
         "Age": -24000
       }
@@ -114,7 +114,7 @@
       ],
       "entity_type": "minecraft:pig",
       "t_entity": "baby",
-      "t_position": "position",
+      "t_position": "owner",
       "tag": {
         "Age": -24000
       }
@@ -145,7 +145,7 @@
       ],
       "entity_type": "minecraft:sheep",
       "t_entity": "baby",
-      "t_position": "position",
+      "t_position": "owner",
       "tag": {
         "Age": -24000
       }
