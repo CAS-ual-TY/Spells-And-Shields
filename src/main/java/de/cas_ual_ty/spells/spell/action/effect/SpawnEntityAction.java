@@ -97,11 +97,11 @@ public class SpawnEntityAction extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
-        if(entityType != EntityType.PLAYER)
+        if(entityType != EntityType.PLAYER && entityType != null)
         {
             ctx.getTargetGroup(this.position).getSingleTarget(target ->
             {
-                TargetTypes.STATIC.get().ifType(target, position ->
+                TargetTypes.POSITION.get().ifType(target, position ->
                 {
                     Vec3 direction = this.direction.getValue(ctx).orElse(Vec3.ZERO);
                     Vec3 motion = this.motion.getValue(ctx).orElse(Vec3.ZERO);
