@@ -67,22 +67,52 @@ public class SimpleItemCheckAction extends AffectTypeAction<PlayerTarget>
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
-        Player player = playerTarget.getPlayer();
-        
-        if(player.isCreative())
+        mustBeInHand.getValue(ctx).ifPresent(mustBeInHand ->
         {
-            return;
-        }
-        
-        for(ItemStack itemStack : player.getHandSlots())
-        {
-            if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+            Player player = playerTarget.getPlayer();
+            
+            if(mustBeInHand)
             {
-                itemStack.shrink(item.getCount());
-                return;
+                for(ItemStack itemStack : player.getHandSlots())
+                {
+                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+                    {
+                        if(!player.isCreative())
+                        {
+                            itemStack.shrink(item.getCount());
+                        }
+                        
+                        return;
+                    }
+                }
+                
+                ctx.deactivate(activation);
             }
-        }
-        
-        ctx.deactivate(activation);
+            else
+            {
+                if(player.isCreative())
+                {
+                    return;
+                }
+                
+                for(ItemStack itemStack : player.getInventory().items)
+                {
+                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+                    {
+                        itemStack.shrink(item.getCount());
+                        return;
+                    }
+                }
+                
+                ItemStack itemStack = player.getOffhandItem();
+                if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+                {
+                    itemStack.shrink(item.getCount());
+                    return;
+                }
+                
+                ctx.deactivate(activation);
+            }
+        });
     }
 }
