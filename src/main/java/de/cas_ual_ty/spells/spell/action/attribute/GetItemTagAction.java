@@ -6,10 +6,8 @@ import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
-import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.util.ParamNames;
 
 import java.util.LinkedList;

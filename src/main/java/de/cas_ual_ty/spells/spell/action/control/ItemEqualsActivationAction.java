@@ -101,12 +101,12 @@ public class ItemEqualsActivationAction extends AffectSingleTypeAction<ItemTarge
                         return;
                     }
                     
-                    if(itemTarget.getItem().getCount() <= minimumCount)
+                    if(minimumCount >= 0 && itemTarget.getItem().getCount() >= minimumCount)
                     {
                         return;
                     }
                     
-                    if(itemTarget.getItem().getMaxDamage() - itemTarget.getItem().getDamageValue() <= minimumDurability)
+                    if(minimumDurability >= 0 && itemTarget.getItem().getMaxDamage() - itemTarget.getItem().getDamageValue() >= minimumDurability)
                     {
                         return;
                     }
