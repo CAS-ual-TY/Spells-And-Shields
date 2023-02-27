@@ -12,6 +12,7 @@ import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Supplier;
@@ -100,6 +101,21 @@ public class PutVarAction<T> extends SpellAction
     public static PutVarAction<Boolean> makeBoolean(String activation, boolean value, String dst)
     {
         return new PutVarAction<>(SpellActionTypes.PUT_BOOLEAN.get(), activation, CtxVarTypes.BOOLEAN.get().immediate(value), dst, CtxVarTypes.BOOLEAN.get());
+    }
+    
+    public static PutVarAction<CompoundTag> makeCompoundTag(String activation, DynamicCtxVar<CompoundTag> src, String dst)
+    {
+        return new PutVarAction<>(SpellActionTypes.PUT_COMPOUND_TAG.get(), activation, src, dst, CtxVarTypes.COMPOUND_TAG.get());
+    }
+    
+    public static PutVarAction<CompoundTag> makeCompoundTag(String activation, String src, String dst)
+    {
+        return new PutVarAction<>(SpellActionTypes.PUT_COMPOUND_TAG.get(), activation, Compiler.compileString(src, CtxVarTypes.COMPOUND_TAG.get()), dst, CtxVarTypes.COMPOUND_TAG.get());
+    }
+    
+    public static PutVarAction<CompoundTag> makeCompoundTag(String activation, CompoundTag value, String dst)
+    {
+        return new PutVarAction<>(SpellActionTypes.PUT_COMPOUND_TAG.get(), activation, CtxVarTypes.COMPOUND_TAG.get().immediate(value), dst, CtxVarTypes.COMPOUND_TAG.get());
     }
     
     protected DynamicCtxVar<T> src;
