@@ -29,11 +29,11 @@ public class SpawnEntityAction extends SpellAction
                 Codec.STRING.fieldOf(ParamNames.singleTarget("position")).forGetter(SpawnEntityAction::getPosition),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("direction")).forGetter(SpawnEntityAction::getDirection),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("motion")).forGetter(SpawnEntityAction::getMotion),
-                CompoundTag.CODEC.fieldOf("tag").forGetter(SpawnEntityAction::getTag)
+                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf("tag").forGetter(SpawnEntityAction::getTag)
         ).apply(instance, (activation, entity, entityType, position, direction, motion, tag) -> new SpawnEntityAction(type, activation, entity, entityType, position, direction, motion, tag)));
     }
     
-    public static SpawnEntityAction make(String activation, String entity, EntityType<?> entityType, String position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, CompoundTag tag)
+    public static SpawnEntityAction make(String activation, String entity, EntityType<?> entityType, String position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, DynamicCtxVar<CompoundTag> tag)
     {
         return new SpawnEntityAction(SpellActionTypes.SPAWN_ENTITY.get(), activation, entity, entityType, position, direction, motion, tag);
     }
@@ -46,14 +46,14 @@ public class SpawnEntityAction extends SpellAction
     protected String position;
     protected DynamicCtxVar<Vec3> direction;
     protected DynamicCtxVar<Vec3> motion;
-    protected CompoundTag tag;
+    protected DynamicCtxVar<CompoundTag> tag;
     
     public SpawnEntityAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public SpawnEntityAction(SpellActionType<?> type, String activation, String entity, EntityType<?> entityType, String position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, CompoundTag tag)
+    public SpawnEntityAction(SpellActionType<?> type, String activation, String entity, EntityType<?> entityType, String position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, DynamicCtxVar<CompoundTag> tag)
     {
         super(type, activation);
         this.entity = entity;
@@ -89,7 +89,7 @@ public class SpawnEntityAction extends SpellAction
         return motion;
     }
     
-    public CompoundTag getTag()
+    public DynamicCtxVar<CompoundTag> getTag()
     {
         return tag;
     }
@@ -117,18 +117,22 @@ public class SpawnEntityAction extends SpellAction
                         
                         entity.setDeltaMovement(motion);
                         
-                        CompoundTag tag = entity.saveWithoutId(new CompoundTag());
-                        for(String key : this.tag.getAllKeys())
+                        this.tag.getValue(ctx).ifPresent(tag0 ->
                         {
-                            Tag t = this.tag.get(key);
-                            
-                            if(t != null)
+                            CompoundTag tag = entity.saveWithoutId(new CompoundTag());
+                            for(String key : tag0.getAllKeys())
                             {
-                                tag.put(key, t);
+                                Tag t = tag0.get(key);
+                                
+                                if(t != null)
+                                {
+                                    tag.put(key, t);
+                                }
                             }
-                        }
+                            
+                            entity.load(tag);
+                        });
                         
-                        entity.load(tag);
                         ctx.getLevel().addFreshEntity(entity);
                     }
                 });
