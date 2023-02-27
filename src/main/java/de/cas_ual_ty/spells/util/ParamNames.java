@@ -90,6 +90,26 @@ public class ParamNames
         return "boolean_" + name;
     }
     
+    public static String paramCompoundTag(String name)
+    {
+        return "d_" + paramCompoundTagImm(name);
+    }
+    
+    public static String paramCompoundTagImm(String name)
+    {
+        return "compound_tag_" + name;
+    }
+    
+    public static String paramStringTag(String name)
+    {
+        return "d_" + paramStringImm(name);
+    }
+    
+    public static String paramStringImm(String name)
+    {
+        return "string_" + name;
+    }
+    
     public static String multiTarget()
     {
         return multiTarget("targets");
