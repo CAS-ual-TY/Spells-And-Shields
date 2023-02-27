@@ -23,12 +23,12 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
                 sourceCodec(),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("position")).forGetter(GetEntityPositionDirectionAction::getPosition),
                 Codec.STRING.fieldOf(ParamNames.var("direction")).forGetter(GetEntityPositionDirectionAction::getDirection)
-        ).apply(instance, (activation, targets, position, direction) -> new GetEntityPositionDirectionAction(type, activation, targets, position, direction)));
+        ).apply(instance, (activation, target, position, direction) -> new GetEntityPositionDirectionAction(type, activation, target, position, direction)));
     }
     
-    public static GetEntityPositionDirectionAction make(String activation, String targets, String position, String direction)
+    public static GetEntityPositionDirectionAction make(String activation, String target, String position, String direction)
     {
-        return new GetEntityPositionDirectionAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), activation, targets, position, direction);
+        return new GetEntityPositionDirectionAction(SpellActionTypes.GET_POSITION_DIRECTION.get(), activation, target, position, direction);
     }
     
     protected String position;
@@ -44,9 +44,9 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
         variableAttributes = new LinkedList<>();
     }
     
-    public GetEntityPositionDirectionAction(SpellActionType<?> type, String activation, String targets, String position, String direction)
+    public GetEntityPositionDirectionAction(SpellActionType<?> type, String activation, String target, String position, String direction)
     {
-        super(type, activation, targets);
+        super(type, activation, target);
         this.position = position;
         this.direction = direction;
         
