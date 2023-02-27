@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.registers;
 
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
+import de.cas_ual_ty.spells.spell.action.attribute.GetEntityEyePositionAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityTagAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetItemTagAction;
