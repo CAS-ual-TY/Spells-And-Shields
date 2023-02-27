@@ -34,6 +34,11 @@ public class BinaryOperation
     public static final BinaryOperation MOVE_X = new BinaryOperation("move_x");
     public static final BinaryOperation MOVE_Y = new BinaryOperation("move_y");
     public static final BinaryOperation MOVE_Z = new BinaryOperation("move_z");
+    public static final BinaryOperation GET_INT = new BinaryOperation("get_int");
+    public static final BinaryOperation GET_DOUBLE = new BinaryOperation("get_double");
+    public static final BinaryOperation GET_BOOLEAN = new BinaryOperation("get_boolean");
+    public static final BinaryOperation GET_COMPOUND_TAG = new BinaryOperation("get_compound_tag");
+    public static final BinaryOperation GET_STRING = new BinaryOperation("get_string");
     
     public static void registerToCompiler()
     {
@@ -42,6 +47,11 @@ public class BinaryOperation
         Compiler.registerBinaryFunction("move_x", MOVE_X);
         Compiler.registerBinaryFunction("move_y", MOVE_Y);
         Compiler.registerBinaryFunction("move_z", MOVE_Z);
+        Compiler.registerBinaryFunction("get_int", GET_INT);
+        Compiler.registerBinaryFunction("get_double", GET_DOUBLE);
+        Compiler.registerBinaryFunction("get_boolean", GET_BOOLEAN);
+        Compiler.registerBinaryFunction("get_compound_tag", GET_COMPOUND_TAG);
+        Compiler.registerBinaryFunction("get_string", GET_STRING);
     }
     
     public final String name;
