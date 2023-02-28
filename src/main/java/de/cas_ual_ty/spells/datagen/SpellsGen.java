@@ -185,7 +185,7 @@ public class SpellsGen implements DataProvider
                 .addAction(ItemEqualsActivationAction.make(BuiltinActivations.ACTIVE.activation, "item", "shoot", new ItemStack(Items.ARROW), CtxVarTypes.BOOLEAN.get().immediate(true), CtxVarTypes.INT.get().immediate(1), CtxVarTypes.INT.get().immediate(-1)))
                 .addAction(ItemEqualsActivationAction.make(BuiltinActivations.ACTIVE.activation, "item", "potion", new ItemStack(Items.TIPPED_ARROW), CtxVarTypes.BOOLEAN.get().immediate(true), CtxVarTypes.INT.get().immediate(1), CtxVarTypes.INT.get().immediate(-1)))
                 .addAction(GetItemTagAction.make("potion", "item", "potion_tag"))
-                .addAction(PutVarAction.makeCompoundTag("potion", Compiler.compileString(" put_nbt_string(tag, 'Potion', get_nbt_string(potion_tag, 'potion')) ", CtxVarTypes.COMPOUND_TAG.get()), "tag"))
+                .addAction(PutVarAction.makeCompoundTag("potion", Compiler.compileString(" put_nbt_string(tag, 'Potion', get_nbt_string(potion_tag, 'Potion')) ", CtxVarTypes.COMPOUND_TAG.get()), "tag"))
                 .addAction(ActivateAction.make("potion", "shoot"))
                 .addAction(SpawnEntityAction.make("shoot", "arrow", EntityType.ARROW, "position", CtxVarTypes.VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ARROW_SHOOT, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))

@@ -72,7 +72,7 @@
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "potion",
-      "d_tag_source": "<< put_nbt_string(tag, 'Potion', get_nbt_string(potion_tag, 'potion')) >>",
+      "d_tag_source": "<< put_nbt_string(tag, 'Potion', get_nbt_string(potion_tag, 'Potion')) >>",
       "var_result": "tag"
     },
     {
