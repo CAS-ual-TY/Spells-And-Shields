@@ -203,6 +203,38 @@ public class Compiler
         }
     }
     
+    private static Part readString()
+    {
+        if(getChar() != '\'')
+        {
+            throw makeException("Expected string to start with '''.");
+        }
+        
+        nextChar();
+        
+        StringBuilder s = new StringBuilder();
+        
+        char c;
+        while((c = getChar()) != '\'' && position < Compiler.s.length())
+        {
+            s.append(c);
+            nextChar();
+        }
+        
+        if(c == '\'')
+        {
+            nextChar();
+        }
+        else
+        {
+            throw makeException("Expected string to end with '''.");
+        }
+        
+        skipSpaces();
+        
+        return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.STRING.get(), s.toString()));
+    }
+    
     private static Part makeUnaryFunc(UnaryOperation op, Part operant1)
     {
         return (ctx) ->
@@ -353,6 +385,10 @@ public class Compiler
         else if(Character.isDigit(getChar()))
         {
             ref = readImmediate();
+        }
+        else if(getChar() == '\'')
+        {
+            ref = readString();
         }
         else
         {
