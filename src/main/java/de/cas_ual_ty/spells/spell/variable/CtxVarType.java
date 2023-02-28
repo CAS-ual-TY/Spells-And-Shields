@@ -12,13 +12,15 @@ import java.util.function.Function;
 
 public class CtxVarType<T>
 {
+    private Function<T, T> copyFunc;
     private Codec<T> immCodec;
     private Codec<CtxVar<T>> codec;
     
     private Map<CtxVarType<?>, Function<T, ?>> converters;
     
-    public CtxVarType(Codec<T> immCodec)
+    public CtxVarType(Function<T, T> copyFunc, Codec<T> immCodec)
     {
+        this.copyFunc = copyFunc;
         this.immCodec = immCodec;
         this.converters = new HashMap<>();
         this.codec = RecordCodecBuilder.create(instance -> instance.group(
@@ -31,6 +33,11 @@ public class CtxVarType<T>
     {
         converters.put(typeTo, converter);
         return this;
+    }
+    
+    public T copy(T t)
+    {
+        return copyFunc.apply(t);
     }
     
     public Codec<CtxVar<T>> getCodec()

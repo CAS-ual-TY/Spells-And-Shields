@@ -19,13 +19,13 @@ public class CtxVarTypes
     public static Supplier<IForgeRegistry<CtxVarType<?>>> REGISTRY;
     private static final DeferredRegister<CtxVarType<?>> DEFERRED_REGISTER = DeferredRegister.create(new ResourceLocation(MOD_ID, "context_variables"), MOD_ID);
     
-    public static final RegistryObject<CtxVarType<Integer>> INT = DEFERRED_REGISTER.register("int", () -> new CtxVarType<>(Codec.INT));
-    public static final RegistryObject<CtxVarType<Double>> DOUBLE = DEFERRED_REGISTER.register("double", () -> new CtxVarType<>(Codec.DOUBLE));
-    public static final RegistryObject<CtxVarType<Vec3>> VEC3 = DEFERRED_REGISTER.register("vec3", () -> new CtxVarType<>(Vec3.CODEC));
-    public static final RegistryObject<CtxVarType<BlockPos>> BLOCK_POS = DEFERRED_REGISTER.register("block_pos", () -> new CtxVarType<>(BlockPos.CODEC));
-    public static final RegistryObject<CtxVarType<Boolean>> BOOLEAN = DEFERRED_REGISTER.register("boolean", () -> new CtxVarType<>(Codec.BOOL));
-    public static final RegistryObject<CtxVarType<CompoundTag>> COMPOUND_TAG = DEFERRED_REGISTER.register("tag", () -> new CtxVarType<>(CompoundTag.CODEC));
-    public static final RegistryObject<CtxVarType<String>> STRING = DEFERRED_REGISTER.register("string", () -> new CtxVarType<>(Codec.STRING));
+    public static final RegistryObject<CtxVarType<Integer>> INT = DEFERRED_REGISTER.register("int", () -> new CtxVarType<>(Integer::intValue, Codec.INT));
+    public static final RegistryObject<CtxVarType<Double>> DOUBLE = DEFERRED_REGISTER.register("double", () -> new CtxVarType<>(Double::doubleValue, Codec.DOUBLE));
+    public static final RegistryObject<CtxVarType<Vec3>> VEC3 = DEFERRED_REGISTER.register("vec3", () -> new CtxVarType<>(vec3 -> vec3, Vec3.CODEC));
+    public static final RegistryObject<CtxVarType<BlockPos>> BLOCK_POS = DEFERRED_REGISTER.register("block_pos", () -> new CtxVarType<>(blockPos -> blockPos, BlockPos.CODEC));
+    public static final RegistryObject<CtxVarType<Boolean>> BOOLEAN = DEFERRED_REGISTER.register("boolean", () -> new CtxVarType<>(Boolean::booleanValue, Codec.BOOL));
+    public static final RegistryObject<CtxVarType<CompoundTag>> COMPOUND_TAG = DEFERRED_REGISTER.register("tag", () -> new CtxVarType<>(CompoundTag::copy, CompoundTag.CODEC));
+    public static final RegistryObject<CtxVarType<String>> STRING = DEFERRED_REGISTER.register("string", () -> new CtxVarType<>(s -> s, Codec.STRING));
     
     public static void register()
     {

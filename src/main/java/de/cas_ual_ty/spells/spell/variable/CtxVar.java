@@ -39,7 +39,7 @@ public class CtxVar<T>
     
     public T getValue()
     {
-        return value;
+        return type.copy(value);
     }
     
     public Optional<T> getOptional()

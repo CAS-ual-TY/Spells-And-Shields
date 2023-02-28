@@ -118,6 +118,21 @@ public class PutVarAction<T> extends SpellAction
         return new PutVarAction<>(SpellActionTypes.PUT_COMPOUND_TAG.get(), activation, CtxVarTypes.COMPOUND_TAG.get().immediate(value), dst, CtxVarTypes.COMPOUND_TAG.get());
     }
     
+    public static PutVarAction<String> makeString(String activation, DynamicCtxVar<String> src, String dst)
+    {
+        return new PutVarAction<>(SpellActionTypes.PUT_STRING.get(), activation, src, dst, CtxVarTypes.STRING.get());
+    }
+    
+    public static PutVarAction<String> makeStringMoveVar(String activation, String src, String dst)
+    {
+        return new PutVarAction<>(SpellActionTypes.PUT_STRING.get(), activation, Compiler.compileString(src, CtxVarTypes.STRING.get()), dst, CtxVarTypes.STRING.get());
+    }
+    
+    public static PutVarAction<String> makeString(String activation, String value, String dst)
+    {
+        return new PutVarAction<>(SpellActionTypes.PUT_STRING.get(), activation, CtxVarTypes.STRING.get().immediate(value), dst, CtxVarTypes.STRING.get());
+    }
+    
     protected DynamicCtxVar<T> src;
     protected String dst;
     
@@ -152,7 +167,7 @@ public class PutVarAction<T> extends SpellAction
     {
         src.getValue(ctx).ifPresent(value ->
         {
-            ctx.setCtxVar(varType, dst, value);
+            ctx.setCtxVar(varType, dst, varType.copy(value));
         });
     }
     
