@@ -7,7 +7,7 @@ import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityEyePositionAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
-import de.cas_ual_ty.spells.spell.action.attribute.GetEntityTagAction;
+import de.cas_ual_ty.spells.spell.action.attribute.GetItemTagAction;
 import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
 import de.cas_ual_ty.spells.spell.action.control.ItemEqualsActivationAction;
 import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheckAction;
@@ -157,9 +157,16 @@ public class SpellsGen implements DataProvider
                 .addAction(GetEntityPositionDirectionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "", "direction"))
                 .addAction(GetEntityEyePositionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "position"))
                 .addAction(MainhandItemTargetAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "item"))
-                .addAction(ItemEqualsActivationAction.make(BuiltinActivations.ACTIVE.activation, "item", "normal", new ItemStack(Items.ARROW), CtxVarTypes.BOOLEAN.get().immediate(true), CtxVarTypes.INT.get().immediate(1), CtxVarTypes.INT.get().immediate(-1)))
-                .addAction(SpawnEntityAction.make("normal", "arrow", EntityType.ARROW, "position", CtxVarTypes.VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.COMPOUND_TAG.get().reference("tag")))
-                .addAction(GetEntityTagAction.make("normal", "arrow", "etag"))
+                .addAction(ItemEqualsActivationAction.make(BuiltinActivations.ACTIVE.activation, "item", "shoot", new ItemStack(Items.ARROW), CtxVarTypes.BOOLEAN.get().immediate(true), CtxVarTypes.INT.get().immediate(1), CtxVarTypes.INT.get().immediate(-1)))
+                .addAction(ItemEqualsActivationAction.make(BuiltinActivations.ACTIVE.activation, "item", "potion", new ItemStack(Items.TIPPED_ARROW), CtxVarTypes.BOOLEAN.get().immediate(true), CtxVarTypes.INT.get().immediate(1), CtxVarTypes.INT.get().immediate(-1)))
+                .addAction(GetItemTagAction.make("potion", "item", "potion_tag"))
+                .addAction(PutVarAction.makeCompoundTag("potion", Compiler.compileString(" put_nbt_string(tag, 'Potion', get_nbt_string(potion_tag, 'potion')) ", CtxVarTypes.COMPOUND_TAG.get()), "tag"))
+                .addAction(ActivateAction.make("potion", "shoot"))
+                .addAction(SpawnEntityAction.make("shoot", "arrow", EntityType.ARROW, "position", CtxVarTypes.VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.COMPOUND_TAG.get().reference("tag")))
+                .addAction(PlaySoundAction.make("shoot", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ARROW_SHOOT, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
+                .addAction(ItemEqualsActivationAction.make(BuiltinActivations.ACTIVE.activation, "item", "spectral", new ItemStack(Items.SPECTRAL_ARROW), CtxVarTypes.BOOLEAN.get().immediate(true), CtxVarTypes.INT.get().immediate(1), CtxVarTypes.INT.get().immediate(-1)))
+                .addAction(SpawnEntityAction.make("spectral", "arrow", EntityType.SPECTRAL_ARROW, "position", CtxVarTypes.VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.COMPOUND_TAG.get().reference("tag")))
+                .addAction(PlaySoundAction.make("spectral", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ARROW_SHOOT, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
         );
     }
     

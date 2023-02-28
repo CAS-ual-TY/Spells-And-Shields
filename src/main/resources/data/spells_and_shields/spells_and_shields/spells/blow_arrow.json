@@ -39,7 +39,7 @@
     },
     {
       "type": "spells_and_shields:item_equals_activation",
-      "a_to_activate": "normal",
+      "a_to_activate": "shoot",
       "activation": "active",
       "d_boolean_ignore_tag": true,
       "d_int_minimum_count": 1,
@@ -51,8 +51,38 @@
       "t_target": "item"
     },
     {
+      "type": "spells_and_shields:item_equals_activation",
+      "a_to_activate": "potion",
+      "activation": "active",
+      "d_boolean_ignore_tag": true,
+      "d_int_minimum_count": 1,
+      "d_int_minimum_durability": -1,
+      "item": {
+        "Count": 1,
+        "id": "minecraft:tipped_arrow"
+      },
+      "t_target": "item"
+    },
+    {
+      "type": "spells_and_shields:get_item_tag",
+      "activation": "potion",
+      "t_source": "item",
+      "var_compound_tag": "potion_tag"
+    },
+    {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "potion",
+      "d_tag_source": "<< put_nbt_string(tag, 'Potion', get_nbt_string(potion_tag, 'potion')) >>",
+      "var_result": "tag"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a_to_activate": "shoot",
+      "activation": "potion"
+    },
+    {
       "type": "spells_and_shields:spawn_entity",
-      "activation": "normal",
+      "activation": "shoot",
       "d_vec3_direction": "<<direction>>",
       "d_vec3_motion": "<< 3 * direction >>",
       "entity_type": "minecraft:arrow",
@@ -61,10 +91,43 @@
       "tag": "<<tag>>"
     },
     {
-      "type": "spells_and_shields:get_entity_tag",
-      "activation": "normal",
-      "t_source": "arrow",
-      "var_compound_tag": "etag"
+      "type": "spells_and_shields:play_sound",
+      "activation": "shoot",
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
+      "sound_event": "minecraft:entity.arrow.shoot",
+      "ts_targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:item_equals_activation",
+      "a_to_activate": "spectral",
+      "activation": "active",
+      "d_boolean_ignore_tag": true,
+      "d_int_minimum_count": 1,
+      "d_int_minimum_durability": -1,
+      "item": {
+        "Count": 1,
+        "id": "minecraft:spectral_arrow"
+      },
+      "t_target": "item"
+    },
+    {
+      "type": "spells_and_shields:spawn_entity",
+      "activation": "spectral",
+      "d_vec3_direction": "<<direction>>",
+      "d_vec3_motion": "<< 3 * direction >>",
+      "entity_type": "minecraft:spectral_arrow",
+      "t_entity": "arrow",
+      "t_position": "position",
+      "tag": "<<tag>>"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "spectral",
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
+      "sound_event": "minecraft:entity.arrow.shoot",
+      "ts_targets": "owner"
     }
   ],
   "title": {
