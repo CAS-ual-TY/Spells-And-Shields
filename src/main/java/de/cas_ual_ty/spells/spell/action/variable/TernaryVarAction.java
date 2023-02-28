@@ -25,7 +25,7 @@ public abstract class TernaryVarAction extends SpellAction
     
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> operant3Codec()
     {
-        return Codec.STRING.fieldOf(ParamNames.var("operant_3")).forGetter(TernaryVarAction::getOperant2);
+        return Codec.STRING.fieldOf(ParamNames.var("operant_3")).forGetter(TernaryVarAction::getOperant3);
     }
     
     public static <T extends TernaryVarAction> RecordCodecBuilder<T, String> resultCodec()
