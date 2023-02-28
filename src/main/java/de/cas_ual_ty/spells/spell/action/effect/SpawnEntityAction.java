@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
+import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.nbt.CompoundTag;
@@ -134,6 +135,7 @@ public class SpawnEntityAction extends SpellAction
                         });
                         
                         ctx.getLevel().addFreshEntity(entity);
+                        ctx.getOrCreateTargetGroup(this.entity).addTargets(Target.of(entity));
                     }
                 });
             });
