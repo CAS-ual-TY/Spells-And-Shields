@@ -1,0 +1,22 @@
+{
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/pressurize.png"
+  },
+  "mana_cost": 0.0,
+  "spell_actions": [],
+  "title": {
+    "translate": "spell.spells_and_shields.pressurize"
+  },
+  "tooltip": [
+    {
+      "translate": "spell.spells_and_shields.pressurize.desc"
+    },
+    {
+      "color": "red",
+      "italic": true,
+      "text": "In Development"
+    }
+  ],
+  "variables": []
+}

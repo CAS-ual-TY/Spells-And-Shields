@@ -143,6 +143,56 @@ public class LangGen extends LanguageProvider
         //add(Spells.KEY_TRANSFER_MANA_DESC, "."); TODO transfer mana desc
         add(Spells.KEY_BLOW_ARROW, "Blow Arrow");
         add(Spells.KEY_BLOW_ARROW_DESC, "Shoot a projectile from your hand without a bow.");
+        add(Spells.KEY_BLAST_SMELT, "Blast Smelt");
+        add(Spells.KEY_BLAST_SMELT_DESC, "Works like an instant blast furnace on the item in your hand.");
+        add(Spells.KEY_HEALTH_BOOST, "Health Boost");
+        add(Spells.KEY_HEALTH_BOOST_DESC, "Increases your maximum health.");
+        add(Spells.KEY_MANA_BOOST, "Mana Boost");
+        add(Spells.KEY_MANA_BOOST_DESC, "Increases your maximum mana.");
+        add(Spells.KEY_WATER_LEAP, "Water Leap");
+        add(Spells.KEY_WATER_LEAP_DESC, "Leap forward like a dolphin (must be underwater).");
+        add(Spells.KEY_AQUA_AFFINITY, "Aqua Affinity");
+        add(Spells.KEY_AQUA_AFFINITY_DESC, "Mine underwater with full speed.");
+        add(Spells.KEY_WATER_WHIP, "Water Whip");
+        add(Spells.KEY_WATER_WHIP_DESC, "Shoots water out of the water bucket in your hand. The water returns and the bucket refills if you hold it on return");
+        add(Spells.KEY_POTION_SHOT, "Potion Shot");
+        add(Spells.KEY_POTION_SHOT_DESC, "Shoots the contents of the potion in your hand forward.");
+        add(Spells.KEY_FROST_WALKER, "Frost Walker");
+        add(Spells.KEY_FROST_WALKER_DESC, "Walk on water by turning the blocks you walk on into ice.");
+        add(Spells.KEY_JUMP, "Jump");
+        add(Spells.KEY_JUMP_DESC, "High jump. Be aware of fall damage.");
+        add(Spells.KEY_MANA_SOLES, "Mana Soles");
+        add(Spells.KEY_MANA_SOLES_DESC, "Consumes mana to reduce or cancel fall damage.");
+        add(Spells.KEY_FIRE_CHARGE, "Fire Charge");
+        add(Spells.KEY_FIRE_CHARGE_DESC, "Shoot a fire charge forward instantly.");
+        add(Spells.KEY_PRESSURIZE, "Pressurize");
+        add(Spells.KEY_PRESSURIZE_DESC, "Knock back every entity around you and remove any fluid.");
+        add(Spells.KEY_INSTANT_MINE, "Instant Mine");
+        add(Spells.KEY_INSTANT_MINE_DESC, "Breaks the block you are looking at using the tool in your hand.");
+        add(Spells.KEY_SPIT_METAL, "Spit Metal");
+        add(Spells.KEY_SPIT_METAL_DESC, "Spit a nugget that deals damage (from your hand).");
+        add(Spells.KEY_FLAMETHROWER, "Flamethrower");
+        add(Spells.KEY_FLAMETHROWER_DESC, "Breath flames from your mouth setting everything on fire.");
+        add(Spells.KEY_LAVA_WALKER, "Lava Walker");
+        add(Spells.KEY_LAVA_WALKER_DESC, "Walk on lava by turning the blocks you walk on into obsidian.");
+        add(Spells.KEY_SILENCE_TARGET, "Blow Arrow");
+        add(Spells.KEY_SILENCE_TARGET_DESC, "Silence the target you are looking at within a certain range.");
+        add(Spells.KEY_RANDOM_TELEPORT, "Random Teleport");
+        add(Spells.KEY_RANDOM_TELEPORT_DESC, "Randomly teleport away. This spell can fail.");
+        add(Spells.KEY_FORCED_TELEPORT, "Forced Teleport");
+        add(Spells.KEY_FORCED_TELEPORT_DESC, "Randomly teleport the target you are looking at away. This spell can fail.");
+        add(Spells.KEY_TELEPORT, "Teleport");
+        add(Spells.KEY_TELEPORT_DESC, "Teleport to where you are looking at.");
+        add(Spells.KEY_LIGHTNING_STRIKE, "Lightning Strike");
+        add(Spells.KEY_LIGHTNING_STRIKE_DESC, "Summon a lightning strike where you are looking at. The target must see skylight.");
+        add(Spells.KEY_DRAIN_FLAME, "Drain Flame");
+        add(Spells.KEY_DRAIN_FLAME_DESC, "Drain fire to convert it into mana regeneration. The fire must be infinite (eg. on top of Netherrack) for this to work.");
+        add(Spells.KEY_GROWTH, "Growth");
+        add(Spells.KEY_GROWTH_DESC, "Apply the effect of Bonemeal to plants around you.");
+        add(Spells.KEY_GHAST, "Ghast");
+        add(Spells.KEY_GHAST_DESC, "Shoot a fire charge forward, like a Ghast.");
+        add(Spells.KEY_ENDER_ARMY, "Ender Army.");
+        add(Spells.KEY_ENDER_ARMY_DESC, "Make all Endermen close to the target you are looking at attack said target.");
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)

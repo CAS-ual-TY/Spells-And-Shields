@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.LevelEvent;
@@ -69,101 +70,104 @@ public class SpellTrees
     public static SpellTree debugTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.literal("Debug Tree"), spellGetter.apply(Spells.LEAP), 15, bookshelves(28))
-                .add(spellGetter.apply(Spells.FIRE_BALL), 10)
+                .add(spellGetter.apply(Spells.SUMMON_ANIMAL), 0)
+                .leaf()
+                .add(spellGetter.apply(Spells.FIRE_BALL), 0)
                 .leaf()
                 .add(spellGetter.apply(Spells.TRANSFER_MANA), 0)
-                .finish();
-    }
-    
-    /*
-    public static SpellTree fireTree()
-    {
-        return SpellTree.builder(Component.translatable(KEY_NETHER), Spells.FIRE_BALL, 15, bookshelves(28))
-                .icon(Spells.TEMPORARY_FIRE_RESISTANCE.get())
-                .add(Spells.LAVA_WALKER, 20, bookshelves(19))
-                .add(Spells.TEMPORARY_FIRE_RESISTANCE, 30, bookshelves(30))
                 .leaf()
-                .add(Spells.DRAIN_FLAME, 20, bookshelves(20))
-                .leaf()
-                .leaf()
-                .add(Spells.GHAST, 10, bookshelves(20), item(Items.GHAST_TEAR, 1, true))
-                .add(Spells.FLAMETHROWER, 20, bookshelves(24))
-                .finish();
-    }
-    
-    public static SpellTree waterTree()
-    {
-        return SpellTree.builder(Component.translatable(KEY_OCEAN), Spells.TEMPORARY_WATER_BREATHING, 10)
-                .icon(Spells.TEMPORARY_DOLPHINS_GRACE.get())
-                .add(Spells.TEMPORARY_REGENERATION, 20, bookshelves(20))
-                .add(Spells.GROWTH, 20, bookshelves(20))
-                .leaf()
-                .add(Spells.AQUA_AFFINITY, 20, bookshelves(20))
-                .leaf()
-                .leaf()
-                .add(Spells.WATER_LEAP, 5, bookshelves(10))
-                .add(Spells.TEMPORARY_DOLPHINS_GRACE, 30, bookshelves(30))
-                .leaf()
-                .add(Spells.FROST_WALKER, 10, bookshelves(14))
-                .leaf()
-                .leaf()
-                .add(Spells.WATER_WHIP, 10, bookshelves(10))
-                .add(Spells.POTION_SHOT, 10, bookshelves(10))
-                .leaf()
-                .leaf()
-                .add(Spells.LIGHTNING_STRIKE, 25, bookshelves(24), advancement("adventure/lightning_rod_with_villager_no_fire"))
+                .add(spellGetter.apply(Spells.BLOW_ARROW), 0)
                 .leaf()
                 .finish();
     }
     
-    public static SpellTree earthTree()
+    public static SpellTree fireTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        return SpellTree.builder(Component.translatable(KEY_MINING), Spells.BLAST_SMELT, 5, bookshelves(8))
-                .icon(Spells.TEMPORARY_HASTE.get())
-                .add(Spells.SILENCE_TARGET, 25, bookshelves(26))
-                .add(Spells.TEMPORARY_MAGIC_IMMUNE, 25, bookshelves(26))
+        return SpellTree.builder(Component.translatable(KEY_NETHER), spellGetter.apply(Spells.FIRE_BALL), 15, bookshelves(28))
+                .icon(spellGetter.apply(Spells.DUMMY)) //TODO TEMPORARY_FIRE_RESISTANCE
+                .add(spellGetter.apply(Spells.LAVA_WALKER), 20, bookshelves(19))
+                .add(spellGetter.apply(Spells.DUMMY), 30, bookshelves(30)) //TODO TEMPORARY_FIRE_RESISTANCE
+                .leaf()
+                .add(spellGetter.apply(Spells.DRAIN_FLAME), 20, bookshelves(20))
                 .leaf()
                 .leaf()
-                .add(Spells.INSTANT_MINE, 15, bookshelves(18))
-                .add(Spells.TEMPORARY_HASTE, 25, bookshelves(24))
-                .leaf()
-                .leaf()
-                .add(Spells.SPIT_METAL, 10, bookshelves(12))
+                .add(spellGetter.apply(Spells.GHAST), 10, bookshelves(20), item(Items.GHAST_TEAR, 1, true))
+                .add(spellGetter.apply(Spells.FLAMETHROWER), 20, bookshelves(24))
                 .finish();
     }
     
-    public static SpellTree airTree()
+    public static SpellTree waterTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        return SpellTree.builder(Component.translatable(KEY_MOVEMENT), Spells.TEMPORARY_JUMP_BOOST, 15, bookshelves(12))
-                .icon(Spells.TEMPORARY_JUMP_BOOST.get())
-                .add(Spells.LEAP, 10, bookshelves(14))
-                .add(Spells.TEMPORARY_SPEED, 20, bookshelves(20))
+        return SpellTree.builder(Component.translatable(KEY_OCEAN), spellGetter.apply(Spells.DUMMY), 10) //TODO TEMPORARY_WATER_BREATHING
+                .icon(spellGetter.apply(Spells.DUMMY)) //TODO TEMPORARY_DOLPHINS_GRACE
+                .add(spellGetter.apply(Spells.DUMMY), 20, bookshelves(20)) //TODO TEMPORARY_REGENERATION
+                .add(spellGetter.apply(Spells.GROWTH), 20, bookshelves(20))
                 .leaf()
-                .add(Spells.JUMP, 14, bookshelves(14))
-                .leaf()
-                .add(Spells.MANA_SOLES, 15, bookshelves(12))
-                .add(Spells.TEMPORARY_SLOW_FALLING, 15, bookshelves(16))
+                .add(spellGetter.apply(Spells.AQUA_AFFINITY), 20, bookshelves(20))
                 .leaf()
                 .leaf()
-                .add(Spells.BLOW_ARROW, 10, bookshelves(16))
-                .add(Spells.PRESSURIZE, 20, bookshelves(18))
+                .add(spellGetter.apply(Spells.WATER_LEAP), 5, bookshelves(10))
+                .add(spellGetter.apply(Spells.DUMMY), 30, bookshelves(30)) //TODO TEMPORARY_DOLPHINS_GRACE
+                .leaf()
+                .add(spellGetter.apply(Spells.FROST_WALKER), 10, bookshelves(14))
+                .leaf()
+                .leaf()
+                .add(spellGetter.apply(Spells.WATER_WHIP), 10, bookshelves(10))
+                .add(spellGetter.apply(Spells.POTION_SHOT), 10, bookshelves(10))
+                .leaf()
+                .leaf()
+                .add(spellGetter.apply(Spells.LIGHTNING_STRIKE), 25, bookshelves(24), advancement("adventure/lightning_rod_with_villager_no_fire"))
+                .leaf()
+                .finish();
+    }
+    
+    public static SpellTree earthTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
+    {
+        return SpellTree.builder(Component.translatable(KEY_MINING), spellGetter.apply(Spells.BLAST_SMELT), 5, bookshelves(8))
+                .icon(spellGetter.apply(Spells.DUMMY)) //TODO TEMPORARY_HASTE
+                .add(spellGetter.apply(Spells.SILENCE_TARGET), 25, bookshelves(26))
+                .add(spellGetter.apply(Spells.DUMMY), 25, bookshelves(26)) //TODO TEMPORARY_MAGIC_IMMUNE
+                .leaf()
+                .leaf()
+                .add(spellGetter.apply(Spells.INSTANT_MINE), 15, bookshelves(18))
+                .add(spellGetter.apply(Spells.DUMMY), 25, bookshelves(24)) //TODO TEMPORARY_HASTE
+                .leaf()
+                .leaf()
+                .add(spellGetter.apply(Spells.SPIT_METAL), 10, bookshelves(12))
+                .finish();
+    }
+    
+    public static SpellTree airTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
+    {
+        return SpellTree.builder(Component.translatable(KEY_MOVEMENT), spellGetter.apply(Spells.DUMMY), 15, bookshelves(12)) //TODO TEMPORARY_JUMP_BOOST
+                .icon(spellGetter.apply(Spells.DUMMY)) //TODO TEMPORARY_JUMP_BOOST
+                .add(spellGetter.apply(Spells.LEAP), 10, bookshelves(14))
+                .add(spellGetter.apply(Spells.DUMMY), 20, bookshelves(20)) //TODO TEMPORARY_SPEED
+                .leaf()
+                .add(spellGetter.apply(Spells.JUMP), 14, bookshelves(14))
+                .leaf()
+                .add(spellGetter.apply(Spells.MANA_SOLES), 15, bookshelves(12))
+                .add(spellGetter.apply(Spells.DUMMY), 15, bookshelves(16)) //TODO TEMPORARY_SLOW_FALLING
+                .leaf()
+                .leaf()
+                .add(spellGetter.apply(Spells.BLOW_ARROW), 10, bookshelves(16))
+                .add(spellGetter.apply(Spells.PRESSURIZE), 20, bookshelves(18))
                 .leaf()
                 .leaf()
                 .finish();
     }
     
-    public static SpellTree enderTree()
+    public static SpellTree enderTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        return SpellTree.builder(Component.translatable(KEY_END), Spells.RANDOM_TELEPORT, 20, bookshelves(28))
-                .icon(Spells.TELEPORT.get())
+        return SpellTree.builder(Component.translatable(KEY_END), spellGetter.apply(Spells.RANDOM_TELEPORT), 20, bookshelves(28))
+                .icon(spellGetter.apply(Spells.TELEPORT))
                 .requirement(advancement("end/root"))
-                .add(Spells.FORCED_TELEPORT.get(), 30, bookshelves(28))
+                .add(spellGetter.apply(Spells.FORCED_TELEPORT), 30, bookshelves(28))
                 .leaf()
-                .add(Spells.TELEPORT.get(), 30, bookshelves(28), advancement("end/respawn_dragon"))
-                .add(Spells.ENDER_ARMY.get(), 50, bookshelves(30), item(Items.DRAGON_EGG, 1, false))
+                .add(spellGetter.apply(Spells.TELEPORT), 30, bookshelves(28), advancement("end/respawn_dragon"))
+                .add(spellGetter.apply(Spells.ENDER_ARMY), 50, bookshelves(30), item(Items.DRAGON_EGG, 1, false))
                 .finish();
     }
-    */
     
     public static Requirement bookshelves(int bookshelves)
     {

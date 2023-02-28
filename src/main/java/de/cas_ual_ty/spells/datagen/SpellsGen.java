@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.datagen;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityEyePositionAction;
@@ -24,6 +25,9 @@ import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
+import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
+import de.cas_ual_ty.spells.spell.icon.SpellIcon;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.CachedOutput;
@@ -67,6 +71,24 @@ public class SpellsGen implements DataProvider
         spells = new HashMap<>();
     }
     
+    public void dummy(ResourceLocation rl)
+    {
+        dummy(rl, Spells.key(rl), Spells.descKey(rl));
+    }
+    
+    public void dummy(ResourceLocation rl, String key, String descKey)
+    {
+        dummy(rl, key, descKey, new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(modId, "textures/spell/" + rl.getPath() + ".png")));
+    }
+    
+    public void dummy(ResourceLocation rl, String key, String descKey, SpellIcon icon)
+    {
+        addSpell(rl, new Spell(icon, Component.translatable(key), 0F)
+                .addTooltip(Component.translatable(descKey))
+                .addTooltip(Component.literal("In Development").withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC))
+        );
+    }
+    
     public void addSpell(String key, Spell spell)
     {
         addSpell(new ResourceLocation(modId, key), spell);
@@ -79,6 +101,8 @@ public class SpellsGen implements DataProvider
     
     protected void addSpells()
     {
+        dummy(Spells.DUMMY);
+        
         addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 2.5F)
                 .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
                 .addAction(SimpleManaCheckAction.make(BuiltinActivations.ACTIVE.activation))
@@ -131,6 +155,7 @@ public class SpellsGen implements DataProvider
         );
         
         //TODO Blast Smelt
+        dummy(Spells.BLAST_SMELT);
         
         addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
                 .addParameter(CtxVarTypes.DOUBLE.get(), "speed", 2.5)
@@ -167,7 +192,33 @@ public class SpellsGen implements DataProvider
                 .addAction(ItemEqualsActivationAction.make(BuiltinActivations.ACTIVE.activation, "item", "spectral", new ItemStack(Items.SPECTRAL_ARROW), CtxVarTypes.BOOLEAN.get().immediate(true), CtxVarTypes.INT.get().immediate(1), CtxVarTypes.INT.get().immediate(-1)))
                 .addAction(SpawnEntityAction.make("spectral", "arrow", EntityType.SPECTRAL_ARROW, "position", CtxVarTypes.VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("spectral", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ARROW_SHOOT, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
+                .addTooltip(Component.translatable(Spells.KEY_BLOW_ARROW_DESC))
         );
+        
+        dummy(Spells.HEALTH_BOOST);
+        dummy(Spells.MANA_BOOST);
+        dummy(Spells.WATER_LEAP);
+        dummy(Spells.AQUA_AFFINITY);
+        dummy(Spells.WATER_WHIP);
+        dummy(Spells.POTION_SHOT);
+        dummy(Spells.FROST_WALKER);
+        dummy(Spells.JUMP);
+        dummy(Spells.MANA_SOLES);
+        dummy(Spells.FIRE_CHARGE);
+        dummy(Spells.PRESSURIZE);
+        dummy(Spells.INSTANT_MINE);
+        dummy(Spells.SPIT_METAL);
+        dummy(Spells.FLAMETHROWER);
+        dummy(Spells.LAVA_WALKER);
+        dummy(Spells.SILENCE_TARGET);
+        dummy(Spells.RANDOM_TELEPORT);
+        dummy(Spells.FORCED_TELEPORT);
+        dummy(Spells.TELEPORT);
+        dummy(Spells.LIGHTNING_STRIKE);
+        dummy(Spells.DRAIN_FLAME);
+        dummy(Spells.GROWTH);
+        dummy(Spells.GHAST);
+        dummy(Spells.ENDER_ARMY);
     }
     
     @Override

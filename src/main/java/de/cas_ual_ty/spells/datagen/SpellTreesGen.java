@@ -59,12 +59,11 @@ public class SpellTreesGen implements DataProvider
     public void addSpellTrees()
     {
         addSpellTree("debug", SpellTrees.debugTree(this::spellRef));
-        
-        /*addSpellTree("nether", SpellTrees.fireTree());
-        addSpellTree("ocean", SpellTrees.waterTree());
-        addSpellTree("mining", SpellTrees.earthTree());
-        addSpellTree("movement", SpellTrees.airTree());
-        addSpellTree("end", SpellTrees.enderTree());*/
+        addSpellTree("nether", SpellTrees.fireTree(this::spellRef));
+        addSpellTree("ocean", SpellTrees.waterTree(this::spellRef));
+        addSpellTree("mining", SpellTrees.earthTree(this::spellRef));
+        addSpellTree("movement", SpellTrees.airTree(this::spellRef));
+        addSpellTree("end", SpellTrees.enderTree(this::spellRef));
     }
     
     protected Holder<Spell> spellRef(ResourceLocation spell)

@@ -1,0 +1,22 @@
+{
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/water_leap.png"
+  },
+  "mana_cost": 0.0,
+  "spell_actions": [],
+  "title": {
+    "translate": "spell.spells_and_shields.water_leap"
+  },
+  "tooltip": [
+    {
+      "translate": "spell.spells_and_shields.water_leap.desc"
+    },
+    {
+      "color": "red",
+      "italic": true,
+      "text": "In Development"
+    }
+  ],
+  "variables": []
+}

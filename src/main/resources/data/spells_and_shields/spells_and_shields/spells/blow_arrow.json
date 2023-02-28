@@ -133,6 +133,10 @@
   "title": {
     "translate": "spell.spells_and_shields.blow_arrow"
   },
-  "tooltip": [],
+  "tooltip": [
+    {
+      "translate": "spell.spells_and_shields.blow_arrow.desc"
+    }
+  ],
   "variables": []
 }

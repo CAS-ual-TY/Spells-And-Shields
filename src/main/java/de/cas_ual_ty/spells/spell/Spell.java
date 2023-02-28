@@ -45,9 +45,14 @@ public class Spell
         tooltipComponent = manaCost != 0 ? Optional.of(new ManaTooltipComponent(manaCost)) : Optional.empty();
     }
     
+    public Spell(SpellIcon icon, Component title, float manaCost)
+    {
+        this(new LinkedList<>(), icon, title, new LinkedList<>(), manaCost, new LinkedList<>());
+    }
+    
     public Spell(ResourceLocation icon, Component title, float manaCost)
     {
-        this(new LinkedList<>(), new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), icon), title, new LinkedList<>(), manaCost, new LinkedList<>());
+        this(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), icon), title, manaCost);
     }
     
     public Spell(String modId, String icon, String titleKey, float manaCost)

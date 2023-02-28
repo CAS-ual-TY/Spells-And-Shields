@@ -1,0 +1,107 @@
+{
+  "icon": "spells_and_shields:dummy",
+  "requirements": [],
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [],
+            "level_cost": 20,
+            "requirements": [
+              {
+                "type": "spells_and_shields:bookshelves",
+                "bookshelves": 20
+              }
+            ],
+            "spell": "spells_and_shields:dummy",
+            "variables": []
+          },
+          {
+            "children": [],
+            "level_cost": 14,
+            "requirements": [
+              {
+                "type": "spells_and_shields:bookshelves",
+                "bookshelves": 14
+              }
+            ],
+            "spell": "spells_and_shields:jump",
+            "variables": []
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "level_cost": 15,
+                "requirements": [
+                  {
+                    "type": "spells_and_shields:bookshelves",
+                    "bookshelves": 16
+                  }
+                ],
+                "spell": "spells_and_shields:dummy",
+                "variables": []
+              }
+            ],
+            "level_cost": 15,
+            "requirements": [
+              {
+                "type": "spells_and_shields:bookshelves",
+                "bookshelves": 12
+              }
+            ],
+            "spell": "spells_and_shields:mana_soles",
+            "variables": []
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "level_cost": 20,
+                "requirements": [
+                  {
+                    "type": "spells_and_shields:bookshelves",
+                    "bookshelves": 18
+                  }
+                ],
+                "spell": "spells_and_shields:pressurize",
+                "variables": []
+              }
+            ],
+            "level_cost": 10,
+            "requirements": [
+              {
+                "type": "spells_and_shields:bookshelves",
+                "bookshelves": 16
+              }
+            ],
+            "spell": "spells_and_shields:blow_arrow",
+            "variables": []
+          }
+        ],
+        "level_cost": 10,
+        "requirements": [
+          {
+            "type": "spells_and_shields:bookshelves",
+            "bookshelves": 14
+          }
+        ],
+        "spell": "spells_and_shields:leap",
+        "variables": []
+      }
+    ],
+    "level_cost": 15,
+    "requirements": [
+      {
+        "type": "spells_and_shields:bookshelves",
+        "bookshelves": 12
+      }
+    ],
+    "spell": "spells_and_shields:dummy",
+    "variables": []
+  },
+  "title": {
+    "translate": "spell_tree.spells_and_shields.movement"
+  }
+}
