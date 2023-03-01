@@ -5,11 +5,13 @@ import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -39,13 +41,13 @@ public class FireChargeSpell extends BaseIngredientsSpell
     public void perform(ManaHolder manaHolder)
     {
         Level level = manaHolder.getPlayer().level;
+        LivingEntity entity = manaHolder.getPlayer();
         
-        Fireball fireball = new LargeFireball(EntityType.FIREBALL, level);
-        fireball.setPos(manaHolder.getPlayer().getEyePosition()
-                .add(manaHolder.getPlayer().getViewVector(1F).scale(2D))
-                .add(manaHolder.getPlayer().getDeltaMovement()));
-        fireball.shootFromRotation(manaHolder.getPlayer(), manaHolder.getPlayer().getXRot(), manaHolder.getPlayer().getYRot(), 0F, 3F, 1F);
-        fireball.setOwner(manaHolder.getPlayer());
+        Vec3 view = entity.getViewVector(1F).scale(2D);
+        Fireball fireball = new LargeFireball(level, entity, view.x, view.y, view.z, 1);
+        fireball.setPos(entity.getEyePosition()
+                .add(view)
+                .add(entity.getDeltaMovement()));
         
         level.playSound(null, manaHolder.getPlayer(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1F, 1F);
         
