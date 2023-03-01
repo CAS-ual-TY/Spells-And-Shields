@@ -4,7 +4,6 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.entity.projectile.LargeFireball;
