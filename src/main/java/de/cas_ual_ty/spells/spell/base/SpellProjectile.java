@@ -62,7 +62,7 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         
         if(spell != null)
         {
-            spell.projectileHit(this);
+                spell.projectileTick(this);
             
             if(this.tickCount >= spell.getProjectileTimeout() && !this.level.isClientSide)
             {

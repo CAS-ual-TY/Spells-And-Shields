@@ -16,7 +16,7 @@ import java.util.function.BiConsumer;
 public interface IProjectileSpell extends ISpell
 {
     // performed on both sides
-    default void projectileHit(SpellProjectile entity)
+    default void projectileTick(SpellProjectile entity)
     {
     
     }

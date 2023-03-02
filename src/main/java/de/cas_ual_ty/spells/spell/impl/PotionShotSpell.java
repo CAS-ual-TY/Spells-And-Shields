@@ -86,7 +86,7 @@ public class PotionShotSpell extends HandIngredientSpell implements IProjectileS
     }
     
     @Override
-    public void projectileHit(SpellProjectile entity)
+    public void projectileTick(SpellProjectile entity)
     {
     
     }

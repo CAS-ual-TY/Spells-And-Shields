@@ -87,7 +87,7 @@ public class DrainFlameSpell extends BaseIngredientsSpell implements IProjectile
     }
     
     @Override
-    public void projectileHit(SpellProjectile entity)
+    public void projectileTick(SpellProjectile entity)
     {
         Vec3 pos = entity.position();
         Random random = new Random();

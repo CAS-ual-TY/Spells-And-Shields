@@ -30,7 +30,7 @@ public class TransferManaSpell extends BaseIngredientsSpell implements IProjecti
     }
     
     @Override
-    public void projectileHit(SpellProjectile entity)
+    public void projectileTick(SpellProjectile entity)
     {
         if(entity.level.isClientSide)
         {

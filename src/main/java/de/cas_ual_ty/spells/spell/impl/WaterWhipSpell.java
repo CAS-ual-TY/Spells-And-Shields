@@ -65,7 +65,7 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     }
     
     @Override
-    public void projectileHit(SpellProjectile entity)
+    public void projectileTick(SpellProjectile entity)
     {
         if(entity.level.isClientSide)
         {

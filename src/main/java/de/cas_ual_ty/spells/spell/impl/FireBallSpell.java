@@ -55,7 +55,7 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
     }
     
     @Override
-    public void projectileHit(SpellProjectile entity)
+    public void projectileTick(SpellProjectile entity)
     {
         if(entity.level.isClientSide)
         {
