@@ -71,7 +71,6 @@ public class SummonAnimalSpell extends HandIngredientSpell
         
         if(ingredient == null || ingredient.entity() == null)
         {
-            // TODO debug log: error
             return;
         }
         

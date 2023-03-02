@@ -20,12 +20,8 @@ public class SpellArgument implements ArgumentType<ISpell>
 {
     public static final SimpleCommandExceptionType UNKNOWN_SPELL = new SimpleCommandExceptionType(Component.translatable("argument.spell.id.invalid"));
     
-    //private final HolderLookup<ISpell> spells;
-    
     public SpellArgument(CommandBuildContext cbx)
     {
-        //TODO use this implementation if it gets fixed / you find the fix
-        //spells = cbx.holderLookup(SpellsRegistries.SPELLS_REGISTRY.get().getRegistryKey());
     }
     
     public static SpellArgument spell(CommandBuildContext cbx)
@@ -37,16 +33,13 @@ public class SpellArgument implements ArgumentType<ISpell>
     public ISpell parse(StringReader reader) throws CommandSyntaxException
     {
         ResourceLocation resourceLocation = ResourceLocation.read(reader);
-        //Optional<Holder<ISpell>> spell = spells.get(ResourceKey.create(SpellsRegistries.SPELLS_REGISTRY.get().getRegistryKey(), resourceLocation));
         ISpell spell = SpellsUtil.getSpell(resourceLocation);
         
-        //if(spell.isEmpty())
         if(spell == null)
         {
             throw UNKNOWN_SPELL.create();
         }
         
-        //return spell.get().get();
         return spell;
     }
     
