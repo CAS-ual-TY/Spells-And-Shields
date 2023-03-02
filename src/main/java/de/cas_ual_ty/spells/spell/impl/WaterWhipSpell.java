@@ -67,6 +67,8 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     @Override
     public void projectileTick(SpellProjectile entity)
     {
+        IReturnProjectileSpell.super.projectileTick(entity);
+        
         if(entity.level.isClientSide)
         {
             Vec3 position = entity.position();
@@ -96,7 +98,7 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     {
         if(entityHitResult.getEntity() instanceof LivingEntity hit)
         {
-            hit.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), 10F);
+            hit.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), damage);
         }
         
         entity.discard();

@@ -40,6 +40,15 @@ public interface IReturnProjectileSpell extends IProjectileSpell
     }
     
     @Override
+    default void projectileTick(SpellProjectile entity)
+    {
+        if(entity.getOwner() != null && entity.getOwner().getEyePosition().distanceToSqr(entity.position()) <= 2 && entity.getSpellDataTag().getString(KEY_DIRECTION).equals(RETURN))
+        {
+            onEntityHitReturn(entity, new EntityHitResult(entity.getOwner()));
+        }
+    }
+    
+    @Override
     default void projectileHitEntity(SpellProjectile entity, EntityHitResult entityHitResult)
     {
         String direction = entity.getSpellDataTag().getString(KEY_DIRECTION);
