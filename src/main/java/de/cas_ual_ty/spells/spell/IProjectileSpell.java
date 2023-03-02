@@ -16,19 +16,19 @@ import java.util.function.BiConsumer;
 public interface IProjectileSpell extends ISpell
 {
     // performed on both sides
-    default void tick(SpellProjectile entity)
+    default void projectileTick(SpellProjectile entity)
     {
     
     }
     
     // performed on both sides
-    default void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
+    default void projectileHitEntity(SpellProjectile entity, EntityHitResult entityHitResult)
     {
         entity.discard();
     }
     
     // performed on both sides
-    default void onBlockHit(SpellProjectile entity, BlockHitResult blockHitResult)
+    default void projectileHitBlock(SpellProjectile entity, BlockHitResult blockHitResult)
     {
         BlockState blockstate = entity.level.getBlockState(blockHitResult.getBlockPos());
         blockstate.onProjectileHit(entity.level, blockstate, blockHitResult, entity);

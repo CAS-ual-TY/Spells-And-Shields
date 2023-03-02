@@ -62,7 +62,10 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
         
         if(spell != null)
         {
-            spell.tick(this);
+            if(!this.isRemoved())
+            {
+                spell.projectileTick(this);
+            }
             
             if(this.tickCount >= spell.getTimeout() && !this.level.isClientSide)
             {
@@ -81,18 +84,28 @@ public class SpellProjectile extends AbstractHurtingProjectile implements IEntit
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult)
     {
+        if(isRemoved())
+        {
+            return;
+        }
+        
         if(spell != null)
         {
-            spell.onEntityHit(this, entityHitResult);
+            spell.projectileHitEntity(this, entityHitResult);
         }
     }
     
     @Override
     protected void onHitBlock(BlockHitResult blockHitResult)
     {
+        if(isRemoved())
+        {
+            return;
+        }
+        
         if(spell != null)
         {
-            spell.onBlockHit(this, blockHitResult);
+            spell.projectileHitBlock(this, blockHitResult);
         }
     }
     

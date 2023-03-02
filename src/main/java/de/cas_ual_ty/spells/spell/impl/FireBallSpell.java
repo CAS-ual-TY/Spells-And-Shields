@@ -55,7 +55,7 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
     }
     
     @Override
-    public void tick(SpellProjectile entity)
+    public void projectileTick(SpellProjectile entity)
     {
         if(entity.level.isClientSide)
         {
@@ -97,7 +97,7 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
     }
     
     @Override
-    public void onEntityHit(SpellProjectile entity, EntityHitResult entityHitResult)
+    public void projectileHitEntity(SpellProjectile entity, EntityHitResult entityHitResult)
     {
         Entity hit = entityHitResult.getEntity();
         if(hit instanceof LivingEntity livingEntity)
@@ -105,7 +105,7 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
             livingEntity.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), damage);
             livingEntity.setSecondsOnFire(fireSeconds);
         }
-        IProjectileSpell.super.onEntityHit(entity, entityHitResult);
+        IProjectileSpell.super.projectileHitEntity(entity, entityHitResult);
     }
     
     @Override

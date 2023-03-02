@@ -32,7 +32,7 @@ public class StealFireResistanceSpell extends Spell implements IReturnProjectile
     }
     
     @Override
-    public void tick(SpellProjectile entity)
+    public void projectileTick(SpellProjectile entity)
     {
         if(entity.level.isClientSide)
         {

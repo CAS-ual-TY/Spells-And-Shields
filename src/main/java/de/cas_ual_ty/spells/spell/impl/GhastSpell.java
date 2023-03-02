@@ -7,13 +7,13 @@ import de.cas_ual_ty.spells.spell.ITickedDataSpell;
 import de.cas_ual_ty.spells.spell.base.BaseIngredientsSpell;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.List;
@@ -90,12 +90,11 @@ public class GhastSpell extends BaseIngredientsSpell implements ITickedDataSpell
         }
         else if(tickTime == 20)
         {
-            Fireball fireball = new LargeFireball(EntityType.FIREBALL, level);
+            Vec3 view = entity.getViewVector(1F).scale(2D);
+            Fireball fireball = new LargeFireball(level, entity, view.x, view.y, view.z, 1);
             fireball.setPos(entity.getEyePosition()
-                    .add(entity.getViewVector(1F).scale(2D))
+                    .add(view)
                     .add(entity.getDeltaMovement()));
-            fireball.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0F, 3F, 1F);
-            fireball.setOwner(entity);
             
             level.playSound(null, entity, SoundEvents.GHAST_SHOOT, SoundSource.PLAYERS, 1F, 1F);
             

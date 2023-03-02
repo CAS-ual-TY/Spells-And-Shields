@@ -98,8 +98,6 @@ public class SpellsCapabilities
                 {
                     current.deserializeNBT(original.serializeNBT());
                 });
-                
-                // TODO sync
             });
         }
         else

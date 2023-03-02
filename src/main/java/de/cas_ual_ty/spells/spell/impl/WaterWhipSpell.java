@@ -65,8 +65,10 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     }
     
     @Override
-    public void tick(SpellProjectile entity)
+    public void projectileTick(SpellProjectile entity)
     {
+        IReturnProjectileSpell.super.projectileTick(entity);
+        
         if(entity.level.isClientSide)
         {
             Vec3 position = entity.position();
