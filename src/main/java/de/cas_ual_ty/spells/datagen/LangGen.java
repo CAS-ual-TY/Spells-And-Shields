@@ -16,7 +16,7 @@ import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.MultiIngredientSpell;
 import de.cas_ual_ty.spells.spell.base.PermanentMobEffectSpell;
 import de.cas_ual_ty.spells.spelltree.SpellTrees;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
@@ -30,9 +30,9 @@ import java.util.function.Supplier;
 
 public class LangGen extends LanguageProvider
 {
-    public LangGen(DataGenerator dataGen, String locale)
+    public LangGen(PackOutput output, String locale)
     {
-        super(dataGen, SpellsAndShields.MOD_ID, locale);
+        super(output, SpellsAndShields.MOD_ID, locale);
     }
     
     public static final String PERMANENT_EFFECT_NAME = "%s";

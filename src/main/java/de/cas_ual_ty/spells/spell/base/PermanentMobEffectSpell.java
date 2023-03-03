@@ -69,11 +69,7 @@ public class PermanentMobEffectSpell extends PassiveSpell implements ITickSpell,
             return;
         }
         
-        if(spellHolder.getPlayer().level.isClientSide && activeEffect.isNoCounter())
-        {
-            activeEffect.setNoCounter(false);
-        }
-        else if(activeEffect.getDuration() <= duration + 1 &&
+        if(activeEffect.getDuration() <= duration + 1 &&
                 activeEffect.getAmplifier() == amplifier &&
                 activeEffect.isAmbient() == ambient &&
                 activeEffect.getEffect() == mobEffect)
@@ -87,14 +83,7 @@ public class PermanentMobEffectSpell extends PassiveSpell implements ITickSpell,
     {
         MobEffectInstance activeEffect = spellHolder.getPlayer().getEffect(this.mobEffect);
         
-        if(spellHolder.getPlayer().level.isClientSide)
-        {
-            if(activeEffect != null && !activeEffect.isNoCounter())
-            {
-                activeEffect.setNoCounter(true);
-            }
-        }
-        else
+        if(!spellHolder.getPlayer().level.isClientSide)
         {
             MobEffectInstance newEffect = new MobEffectInstance(mobEffect, duration + 1, amplifier, ambient, visible, showIcon);
             

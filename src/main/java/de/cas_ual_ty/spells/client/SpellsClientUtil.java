@@ -176,8 +176,7 @@ public class SpellsClientUtil
                         x -= 77;
                     }
                     
-                    int slot = i;
-                    SpellSlotWidget s = new SpellSlotWidget(x, y, i, (j) -> {}, (b, pS, mX, mY) -> SpellSlotWidget.spellSlotToolTip(screen, pS, mX, mY, slot))
+                    SpellSlotWidget s = new SpellSlotWidget(x, y, i, (j) -> {})
                     {
                         @Override
                         public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick)
@@ -200,9 +199,10 @@ public class SpellsClientUtil
         {
             for(SpellSlotWidget s : spellSlotWidgets)
             {
-                RenderSystem.disableDepthTest();
-                s.renderToolTip(event.getPoseStack(), event.getMouseX(), event.getMouseY());
-                RenderSystem.enableDepthTest();
+                if(s.isMouseOver(event.getMouseX(), event.getMouseY()))
+                {
+                    SpellSlotWidget.spellSlotToolTip(screen, event.getPoseStack(), event.getMouseX(), event.getMouseY(), s.slot);
+                }
             }
         }
     }

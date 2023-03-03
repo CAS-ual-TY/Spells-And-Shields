@@ -27,11 +27,11 @@ public class SpellSlotWidget extends Button
 {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
     
-    protected final int slot;
+    public final int slot;
     
-    public SpellSlotWidget(int x, int y, int slot, IntConsumer onPress, OnTooltip tooltip)
+    public SpellSlotWidget(int x, int y, int slot, IntConsumer onPress)
     {
-        super(x, y, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, Component.empty(), (b) -> onPress.accept(slot), tooltip);
+        super(x, y, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, Component.empty(), (b) -> onPress.accept(slot), DEFAULT_NARRATION);
         this.slot = slot;
     }
     
@@ -42,12 +42,12 @@ public class SpellSlotWidget extends Button
         if(!active || isMouseOver(mouseX, mouseY))
         {
             // gold frame
-            this.blit(poseStack, x, y, 2 * SpellNodeWidget.FRAME_WIDTH, 128 + SpellNodeWidget.FRAME_HEIGHT, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            this.blit(poseStack, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128 + SpellNodeWidget.FRAME_HEIGHT, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
         else
         {
             // white frame
-            this.blit(poseStack, x, y, 2 * SpellNodeWidget.FRAME_WIDTH, 128, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            this.blit(poseStack, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
     }
     
@@ -81,7 +81,7 @@ public class SpellSlotWidget extends Button
                     int offY2 = (SPELL_HEIGHT - icon.getHeight()) / 2;
                     
                     // render spell icon
-                    blit(poseStack, x + offX + offX2, y + offY + offY2, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
+                    blit(poseStack, getX() + offX + offX2, getY() + offY + offY2, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
                 }
             });
         }
@@ -92,16 +92,13 @@ public class SpellSlotWidget extends Button
     @Override
     public boolean isMouseOver(double mouseX, double mouseY)
     {
-        return this.visible && mouseX >= (double) this.x && mouseY >= (double) this.y && mouseX < (double) (this.x + this.width) && mouseY < (double) (this.y + this.height);
+        return this.visible && mouseX >= (double) this.getX() && mouseY >= (double) this.getY() && mouseX < (double) (this.getX() + this.width) && mouseY < (double) (this.getY() + this.height);
     }
     
     @Override
-    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY)
+    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick)
     {
-        if(this.visible && this.isMouseOver(mouseX, mouseY))
-        {
-            super.renderToolTip(poseStack, mouseX, mouseY);
-        }
+        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
     }
     
     public static void spellSlotToolTip(Screen screen, PoseStack poseStack, int mouseX, int mouseY, int slot)

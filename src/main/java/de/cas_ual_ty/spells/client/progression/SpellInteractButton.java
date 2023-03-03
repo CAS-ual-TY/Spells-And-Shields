@@ -13,15 +13,10 @@ public class SpellInteractButton extends Button
 {
     public final int v;
     
-    public SpellInteractButton(int x, int y, int width, int height, Component component, OnPress onPress, int v, OnTooltip tooltip)
-    {
-        super(x, y, width, height, component, onPress, tooltip);
-        this.v = v;
-    }
-    
     public SpellInteractButton(int x, int y, int width, int height, Component component, OnPress onPress, int v)
     {
-        this(x, y, width, height, component, onPress, v, NO_TOOLTIP);
+        super(x, y, width, height, component, onPress, DEFAULT_NARRATION);
+        this.v = v;
     }
     
     @Override
@@ -35,8 +30,8 @@ public class SpellInteractButton extends Button
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.blit(poseStack, this.x, this.y, 0, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
-        this.blit(poseStack, this.x + this.width / 2, this.y, 200 - this.width / 2, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
+        this.blit(poseStack, this.getX(), this.getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
+        this.blit(poseStack, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
         this.renderBg(poseStack, minecraft, mouseX, mouseY);
         Font font = minecraft.font;
         this.renderTitle(poseStack, mouseX, mouseY, deltaTick, font);
@@ -45,18 +40,12 @@ public class SpellInteractButton extends Button
     public void renderTitle(PoseStack poseStack, int mouseX, int mouseY, float deltaTick, Font font)
     {
         int color = getFGColor();
-        drawCenteredString(poseStack, font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, color | Mth.ceil(this.alpha * 255F) << 24);
+        drawCenteredString(poseStack, font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, color | Mth.ceil(this.alpha * 255F) << 24);
     }
     
     @Override
     public boolean isMouseOver(double mouseX, double mouseY)
     {
-        return this.visible && mouseX >= (double) this.x && mouseY >= (double) this.y && mouseX < (double) (this.x + this.width) && mouseY < (double) (this.y + this.height);
-    }
-    
-    @Override
-    public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY)
-    {
-        super.renderToolTip(pPoseStack, pMouseX, pMouseY);
+        return this.visible && mouseX >= (double) this.getX() && mouseY >= (double) this.getY() && mouseX < (double) (this.getX() + this.width) && mouseY < (double) (this.getY() + this.height);
     }
 }
