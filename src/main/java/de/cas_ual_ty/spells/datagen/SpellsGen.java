@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityEyePositionAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
+import de.cas_ual_ty.spells.spell.action.attribute.GetEntityUUIDAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetItemTagAction;
 import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
 import de.cas_ual_ty.spells.spell.action.control.ItemEqualsActivationAction;
@@ -180,6 +181,8 @@ public class SpellsGen implements DataProvider
         addSpell(Spells.BLOW_ARROW, new Spell(modId, "blow_arrow", Spells.KEY_BLOW_ARROW, 5F)
                 .addAction(SimpleManaCheckAction.make(BuiltinActivations.ACTIVE.activation))
                 .addAction(PutVarAction.makeCompoundTag(BuiltinActivations.ACTIVE.activation, tag, "tag"))
+                .addAction(GetEntityUUIDAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "uuid"))
+                .addAction(PutVarAction.makeCompoundTag(BuiltinActivations.ACTIVE.activation, Compiler.compileString(" put_nbt_uuid(tag, 'Owner', uuid) ", CtxVarTypes.COMPOUND_TAG.get()), "tag"))
                 .addAction(GetEntityPositionDirectionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "", "direction"))
                 .addAction(GetEntityEyePositionAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "position"))
                 .addAction(MainhandItemTargetAction.make(BuiltinActivations.ACTIVE.activation, BuiltinTargetGroups.OWNER.targetGroup, "item"))

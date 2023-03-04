@@ -19,6 +19,18 @@
       "var_result": "tag"
     },
     {
+      "type": "spells_and_shields:get_entity_uuid",
+      "activation": "active",
+      "t_source": "owner",
+      "var_uuid": "uuid"
+    },
+    {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "active",
+      "d_tag_source": "<< put_nbt_uuid(tag, 'Owner', uuid) >>",
+      "var_result": "tag"
+    },
+    {
       "type": "spells_and_shields:get_entity_position_direction",
       "activation": "active",
       "t_source": "owner",
