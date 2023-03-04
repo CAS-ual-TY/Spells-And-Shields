@@ -100,7 +100,7 @@ public class ParamNames
         return "compound_tag_" + name;
     }
     
-    public static String paramStringTag(String name)
+    public static String paramString(String name)
     {
         return "d_" + paramStringImm(name);
     }

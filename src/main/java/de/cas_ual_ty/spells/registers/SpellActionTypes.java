@@ -58,6 +58,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<HomeAction>> HOME = DEFERRED_REGISTER.register("home", () -> new SpellActionType<>(HomeAction::new, HomeAction::makeCodec));
     public static final RegistryObject<SpellActionType<MainhandItemTargetAction>> MAINHAND_ITEM_TARGET = DEFERRED_REGISTER.register("mainhand_item_target", () -> new SpellActionType<>(MainhandItemTargetAction::new, MainhandItemTargetAction::makeCodec));
     public static final RegistryObject<SpellActionType<OffhandItemTargetAction>> OFFHAND_ITEM_TARGET = DEFERRED_REGISTER.register("offhand_item_target", () -> new SpellActionType<>(OffhandItemTargetAction::new, OffhandItemTargetAction::makeCodec));
+    public static final RegistryObject<SpellActionType<UUIDPlayerTargetAction>> UUID_PLAYER_TARGET = DEFERRED_REGISTER.register("uuid_player_target", () -> new SpellActionType<>(UUIDPlayerTargetAction::new, UUIDPlayerTargetAction::makeCodec));
     
     //target filter
     public static final RegistryObject<SpellActionType<TypeFilterAction>> TYPE_FILTER = DEFERRED_REGISTER.register("type_filter", () -> new SpellActionType<>(TypeFilterAction::new, TypeFilterAction::makeCodec));
