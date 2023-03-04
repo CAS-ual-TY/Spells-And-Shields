@@ -39,9 +39,6 @@ public class SpawnEntityAction extends SpellAction
         return new SpawnEntityAction(SpellActionTypes.SPAWN_ENTITY.get(), activation, entity, entityType, position, direction, motion, tag);
     }
     
-    //TODO maybe allow setting the nbt tag, then load from it, then set pos/dir/mot
-    // this allows entity based customization
-    
     protected String entity;
     protected EntityType<? extends Entity> entityType;
     protected String position;
