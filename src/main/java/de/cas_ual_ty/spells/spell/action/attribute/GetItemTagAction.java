@@ -10,9 +10,6 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.util.ParamNames;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
 {
     public static Codec<GetItemTagAction> makeCodec(SpellActionType<GetItemTagAction> type)
@@ -31,14 +28,9 @@ public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
     
     protected String compoundTag;
     
-    protected List<TargetAttribute<ItemTarget, ?>> targetAttributes;
-    protected List<VariableAttribute<ItemTarget, ?>> variableAttributes;
-    
     public GetItemTagAction(SpellActionType<?> type)
     {
         super(type);
-        targetAttributes = new LinkedList<>();
-        variableAttributes = new LinkedList<>();
     }
     
     public GetItemTagAction(SpellActionType<?> type, String activation, String target, String compoundTag)
@@ -46,12 +38,9 @@ public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
         super(type, activation, target);
         this.compoundTag = compoundTag;
         
-        targetAttributes = new LinkedList<>();
-        variableAttributes = new LinkedList<>();
-        
         if(!compoundTag.isEmpty())
         {
-            variableAttributes.add(new VariableAttribute<>(i -> i.getItem().getOrCreateTag(), CtxVarTypes.COMPOUND_TAG.get(), compoundTag));
+            addVariableAttribute(i -> i.getItem().getOrCreateTag(), CtxVarTypes.COMPOUND_TAG.get(), compoundTag);
         }
     }
     
@@ -59,18 +48,6 @@ public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
     public ITargetType<ItemTarget> getAffectedType()
     {
         return TargetTypes.ITEM.get();
-    }
-    
-    @Override
-    public List<TargetAttribute<ItemTarget, ?>> getTargetAttributes()
-    {
-        return targetAttributes;
-    }
-    
-    @Override
-    public List<VariableAttribute<ItemTarget, ?>> getVariableAttributes()
-    {
-        return variableAttributes;
     }
     
     public String getCompoundTag()

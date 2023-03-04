@@ -11,9 +11,6 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.util.ParamNames;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<EntityTarget>
 {
     public static Codec<GetEntityPositionDirectionAction> makeCodec(SpellActionType<GetEntityPositionDirectionAction> type)
@@ -34,14 +31,9 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
     protected String position;
     protected String direction;
     
-    protected List<TargetAttribute<EntityTarget, ?>> targetAttributes;
-    protected List<VariableAttribute<EntityTarget, ?>> variableAttributes;
-    
     public GetEntityPositionDirectionAction(SpellActionType<?> type)
     {
         super(type);
-        targetAttributes = new LinkedList<>();
-        variableAttributes = new LinkedList<>();
     }
     
     public GetEntityPositionDirectionAction(SpellActionType<?> type, String activation, String target, String position, String direction)
@@ -50,17 +42,14 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
         this.position = position;
         this.direction = direction;
         
-        targetAttributes = new LinkedList<>();
-        variableAttributes = new LinkedList<>();
-        
         if(!position.isEmpty())
         {
-            targetAttributes.add(new TargetAttribute<>(e -> Target.of(e.getLevel(), e.getEntity().position()), position));
+            addTargetAttribute(e -> Target.of(e.getLevel(), e.getEntity().position()), position);
         }
         
         if(!direction.isEmpty())
         {
-            variableAttributes.add(new VariableAttribute<>(e -> e.getEntity().getLookAngle().normalize(), CtxVarTypes.VEC3.get(), direction));
+            addVariableAttribute(e -> e.getEntity().getLookAngle().normalize(), CtxVarTypes.VEC3.get(), direction);
         }
     }
     
@@ -68,18 +57,6 @@ public class GetEntityPositionDirectionAction extends GetTargetAttributeAction<E
     public ITargetType<EntityTarget> getAffectedType()
     {
         return TargetTypes.ENTITY.get();
-    }
-    
-    @Override
-    public List<TargetAttribute<EntityTarget, ?>> getTargetAttributes()
-    {
-        return targetAttributes;
-    }
-    
-    @Override
-    public List<VariableAttribute<EntityTarget, ?>> getVariableAttributes()
-    {
-        return variableAttributes;
     }
     
     public String getPosition()

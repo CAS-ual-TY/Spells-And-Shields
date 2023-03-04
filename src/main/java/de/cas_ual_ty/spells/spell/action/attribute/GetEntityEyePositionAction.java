@@ -10,9 +10,6 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.util.ParamNames;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class GetEntityEyePositionAction extends GetTargetAttributeAction<EntityTarget>
 {
     public static Codec<GetEntityEyePositionAction> makeCodec(SpellActionType<GetEntityEyePositionAction> type)
@@ -31,14 +28,9 @@ public class GetEntityEyePositionAction extends GetTargetAttributeAction<EntityT
     
     protected String eyePosition;
     
-    protected List<TargetAttribute<EntityTarget, ?>> targetAttributes;
-    protected List<VariableAttribute<EntityTarget, ?>> variableAttributes;
-    
     public GetEntityEyePositionAction(SpellActionType<?> type)
     {
         super(type);
-        targetAttributes = new LinkedList<>();
-        variableAttributes = new LinkedList<>();
     }
     
     public GetEntityEyePositionAction(SpellActionType<?> type, String activation, String target, String eyePosition)
@@ -46,12 +38,9 @@ public class GetEntityEyePositionAction extends GetTargetAttributeAction<EntityT
         super(type, activation, target);
         this.eyePosition = eyePosition;
         
-        targetAttributes = new LinkedList<>();
-        variableAttributes = new LinkedList<>();
-        
         if(!eyePosition.isEmpty())
         {
-            targetAttributes.add(new TargetAttribute<>(e -> Target.of(e.getLevel(), e.getEntity().getEyePosition()), eyePosition));
+            addTargetAttribute(e -> Target.of(e.getLevel(), e.getEntity().getEyePosition()), eyePosition);
         }
     }
     
@@ -59,18 +48,6 @@ public class GetEntityEyePositionAction extends GetTargetAttributeAction<EntityT
     public ITargetType<EntityTarget> getAffectedType()
     {
         return TargetTypes.ENTITY.get();
-    }
-    
-    @Override
-    public List<TargetAttribute<EntityTarget, ?>> getTargetAttributes()
-    {
-        return targetAttributes;
-    }
-    
-    @Override
-    public List<VariableAttribute<EntityTarget, ?>> getVariableAttributes()
-    {
-        return variableAttributes;
     }
     
     public String getEyePosition()

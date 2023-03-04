@@ -10,9 +10,6 @@ import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.util.ParamNames;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class GetEntityUUIDAction extends GetTargetAttributeAction<EntityTarget>
 {
     public static Codec<GetEntityUUIDAction> makeCodec(SpellActionType<GetEntityUUIDAction> type)
@@ -31,14 +28,9 @@ public class GetEntityUUIDAction extends GetTargetAttributeAction<EntityTarget>
     
     protected String uuid;
     
-    protected List<TargetAttribute<EntityTarget, ?>> targetAttributes;
-    protected List<VariableAttribute<EntityTarget, ?>> variableAttributes;
-    
     public GetEntityUUIDAction(SpellActionType<?> type)
     {
         super(type);
-        targetAttributes = new LinkedList<>();
-        variableAttributes = new LinkedList<>();
     }
     
     public GetEntityUUIDAction(SpellActionType<?> type, String activation, String target, String uuid)
@@ -46,12 +38,9 @@ public class GetEntityUUIDAction extends GetTargetAttributeAction<EntityTarget>
         super(type, activation, target);
         this.uuid = uuid;
         
-        targetAttributes = new LinkedList<>();
-        variableAttributes = new LinkedList<>();
-        
         if(!uuid.isEmpty())
         {
-            variableAttributes.add(new VariableAttribute<>(e -> e.getEntity().getStringUUID(), CtxVarTypes.STRING.get(), uuid));
+            addVariableAttribute(e -> e.getEntity().getStringUUID(), CtxVarTypes.STRING.get(), uuid);
         }
     }
     
@@ -59,18 +48,6 @@ public class GetEntityUUIDAction extends GetTargetAttributeAction<EntityTarget>
     public ITargetType<EntityTarget> getAffectedType()
     {
         return TargetTypes.ENTITY.get();
-    }
-    
-    @Override
-    public List<TargetAttribute<EntityTarget, ?>> getTargetAttributes()
-    {
-        return targetAttributes;
-    }
-    
-    @Override
-    public List<VariableAttribute<EntityTarget, ?>> getVariableAttributes()
-    {
-        return variableAttributes;
     }
     
     public String getUuid()
