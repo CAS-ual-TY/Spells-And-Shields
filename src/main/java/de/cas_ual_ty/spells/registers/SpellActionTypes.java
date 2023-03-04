@@ -30,6 +30,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
@@ -133,6 +134,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_BOOLEAN = DEFERRED_REGISTER.register("get_nbt_boolean", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_BOOLEAN));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_COMPOUND_TAG = DEFERRED_REGISTER.register("get_nbt_compound_tag", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_COMPOUND_TAG));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_STRING = DEFERRED_REGISTER.register("get_nbt_string", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_STRING));
+    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_UUID = DEFERRED_REGISTER.register("get_nbt_uuid", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_UUID));
     
     //variable / mapped ternary
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> CONDITIONAL = DEFERRED_REGISTER.register("conditional", () -> MappedTernaryVarAction.makeType(TernaryOperation.CONDITIONAL));
@@ -143,6 +145,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_BOOLEAN = DEFERRED_REGISTER.register("put_nbt_boolean", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_BOOLEAN));
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_COMPOUND_TAG = DEFERRED_REGISTER.register("put_nbt_compound_tag", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_COMPOUND_TAG));
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_STRING = DEFERRED_REGISTER.register("put_nbt_string", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_STRING));
+    public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_UUID = DEFERRED_REGISTER.register("put_nbt_uuid", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_UUID));
     
     //variable / simple unary
     // -/-
@@ -247,6 +250,7 @@ public class SpellActionTypes
         BinaryOperation.GET_NBT_BOOLEAN.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.getBoolean(y));
         BinaryOperation.GET_NBT_COMPOUND_TAG.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y) -> x.getCompound(y));
         BinaryOperation.GET_NBT_STRING.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x, y) -> x.getString(y));
+        BinaryOperation.GET_NBT_UUID.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x, y) -> x.getUUID(y).toString());
         
         TernaryOperation.CONDITIONAL.register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y, z) -> x ? y : z)
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y, z) -> x ? y : z)
@@ -276,6 +280,17 @@ public class SpellActionTypes
         TernaryOperation.PUT_NBT_STRING.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y, z) -> {
             x.putString(y, z);
             return x;
+        });
+        TernaryOperation.PUT_NBT_UUID.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y, z) -> {
+            try
+            {
+                x.putUUID(y, UUID.fromString(z));
+                return x;
+            }
+            catch(IllegalArgumentException e)
+            {
+                return null;
+            }
         });
     }
 }
