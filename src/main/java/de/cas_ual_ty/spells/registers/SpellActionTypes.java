@@ -2,10 +2,7 @@ package de.cas_ual_ty.spells.registers;
 
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
-import de.cas_ual_ty.spells.spell.action.attribute.GetEntityEyePositionAction;
-import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionAction;
-import de.cas_ual_ty.spells.spell.action.attribute.GetEntityTagAction;
-import de.cas_ual_ty.spells.spell.action.attribute.GetItemTagAction;
+import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
@@ -70,6 +67,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<GetEntityEyePositionAction>> GET_ENTITY_EYE_POSITION = DEFERRED_REGISTER.register("get_entity_eye_position", () -> new SpellActionType<>(GetEntityEyePositionAction::new, GetEntityEyePositionAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetItemTagAction>> GET_ITEM_TAG = DEFERRED_REGISTER.register("get_item_tag", () -> new SpellActionType<>(GetItemTagAction::new, GetItemTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityTagAction>> GET_ENTITY_TAG = DEFERRED_REGISTER.register("get_entity_tag", () -> new SpellActionType<>(GetEntityTagAction::new, GetEntityTagAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetEntityUUIDAction>> GET_ENTITY_UUID = DEFERRED_REGISTER.register("get_entity_uuid", () -> new SpellActionType<>(GetEntityUUIDAction::new, GetEntityUUIDAction::makeCodec));
     
     //item
     public static final RegistryObject<SpellActionType<DamageItemAction>> DAMAGE_ITEM = DEFERRED_REGISTER.register("damage_item", () -> new SpellActionType<>(DamageItemAction::new, DamageItemAction::makeCodec));
