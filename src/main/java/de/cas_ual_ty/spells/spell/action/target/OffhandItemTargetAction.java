@@ -24,9 +24,9 @@ public class OffhandItemTargetAction extends AffectSingleTypeAction<PlayerTarget
         ).apply(instance, (activation, source, dst) -> new OffhandItemTargetAction(type, activation, source, dst)));
     }
     
-    public static OffhandItemTargetAction make(String activation, String targets, String dst)
+    public static OffhandItemTargetAction make(String activation, String target, String dst)
     {
-        return new OffhandItemTargetAction(SpellActionTypes.OFFHAND_ITEM_TARGET.get(), activation, targets, dst);
+        return new OffhandItemTargetAction(SpellActionTypes.OFFHAND_ITEM_TARGET.get(), activation, target, dst);
     }
     
     protected String dst;
@@ -36,9 +36,9 @@ public class OffhandItemTargetAction extends AffectSingleTypeAction<PlayerTarget
         super(type);
     }
     
-    public OffhandItemTargetAction(SpellActionType<?> type, String activation, String targets, String dst)
+    public OffhandItemTargetAction(SpellActionType<?> type, String activation, String target, String dst)
     {
-        super(type, activation, targets);
+        super(type, activation, target);
         this.dst = dst;
     }
     

@@ -24,9 +24,9 @@ public class MainhandItemTargetAction extends AffectSingleTypeAction<PlayerTarge
         ).apply(instance, (activation, source, dst) -> new MainhandItemTargetAction(type, activation, source, dst)));
     }
     
-    public static MainhandItemTargetAction make(String activation, String targets, String dst)
+    public static MainhandItemTargetAction make(String activation, String target, String dst)
     {
-        return new MainhandItemTargetAction(SpellActionTypes.MAINHAND_ITEM_TARGET.get(), activation, targets, dst);
+        return new MainhandItemTargetAction(SpellActionTypes.MAINHAND_ITEM_TARGET.get(), activation, target, dst);
     }
     
     protected String dst;
@@ -36,9 +36,9 @@ public class MainhandItemTargetAction extends AffectSingleTypeAction<PlayerTarge
         super(type);
     }
     
-    public MainhandItemTargetAction(SpellActionType<?> type, String activation, String targets, String dst)
+    public MainhandItemTargetAction(SpellActionType<?> type, String activation, String target, String dst)
     {
-        super(type, activation, targets);
+        super(type, activation, target);
         this.dst = dst;
     }
     
