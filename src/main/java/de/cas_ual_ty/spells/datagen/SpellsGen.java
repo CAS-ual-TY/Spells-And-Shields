@@ -15,6 +15,7 @@ import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
+import de.cas_ual_ty.spells.spell.action.item.ConsumeItemAction;
 import de.cas_ual_ty.spells.spell.action.item.SimpleItemCheckAction;
 import de.cas_ual_ty.spells.spell.action.target.HomeAction;
 import de.cas_ual_ty.spells.spell.action.target.LookAtTargetAction;
@@ -189,9 +190,11 @@ public class SpellsGen implements DataProvider
                 .addAction(ActivateAction.make("potion", "shoot"))
                 .addAction(SpawnEntityAction.make("shoot", "arrow", EntityType.ARROW, "position", CtxVarTypes.VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ARROW_SHOOT, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
+                .addAction(ConsumeItemAction.make("shoot", "item", CtxVarTypes.INT.get().immediate(1), BuiltinTargetGroups.OWNER.targetGroup))
                 .addAction(ItemEqualsActivationAction.make(BuiltinActivations.ACTIVE.activation, "item", "spectral", new ItemStack(Items.SPECTRAL_ARROW), CtxVarTypes.BOOLEAN.get().immediate(true), CtxVarTypes.INT.get().immediate(1), CtxVarTypes.INT.get().immediate(-1)))
                 .addAction(SpawnEntityAction.make("spectral", "arrow", EntityType.SPECTRAL_ARROW, "position", CtxVarTypes.VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", CtxVarTypes.VEC3.get()), CtxVarTypes.COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("spectral", BuiltinTargetGroups.OWNER.targetGroup, SoundEvents.ARROW_SHOOT, CtxVarTypes.DOUBLE.get().immediate(1D), CtxVarTypes.DOUBLE.get().immediate(1D)))
+                .addAction(ConsumeItemAction.make("spectral", "item", CtxVarTypes.INT.get().immediate(1), BuiltinTargetGroups.OWNER.targetGroup))
                 .addTooltip(Component.translatable(Spells.KEY_BLOW_ARROW_DESC))
         );
         

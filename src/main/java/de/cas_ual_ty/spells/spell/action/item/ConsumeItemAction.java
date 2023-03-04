@@ -29,9 +29,9 @@ public class ConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
         ).apply(instance, (activation, target, amount, user) -> new ConsumeItemAction(type, activation, target, amount, user)));
     }
     
-    public static ConsumeItemAction make(String activation, String target, DynamicCtxVar<Integer> damage, String user)
+    public static ConsumeItemAction make(String activation, String target, DynamicCtxVar<Integer> amount, String user)
     {
-        return new ConsumeItemAction(SpellActionTypes.CONSUME_ITEM.get(), activation, target, damage, user);
+        return new ConsumeItemAction(SpellActionTypes.CONSUME_ITEM.get(), activation, target, amount, user);
     }
     
     protected DynamicCtxVar<Integer> amount;

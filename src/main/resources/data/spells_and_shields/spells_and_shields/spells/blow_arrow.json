@@ -99,6 +99,13 @@
       "ts_targets": "owner"
     },
     {
+      "type": "spells_and_shields:consume_item",
+      "activation": "shoot",
+      "d_int_amount": 1,
+      "t_target": "item",
+      "t_user": "owner"
+    },
+    {
       "type": "spells_and_shields:item_equals_activation",
       "a_to_activate": "spectral",
       "activation": "active",
@@ -128,6 +135,13 @@
       "d_double_volume": 1.0,
       "sound_event": "minecraft:entity.arrow.shoot",
       "ts_targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:consume_item",
+      "activation": "spectral",
+      "d_int_amount": 1,
+      "t_target": "item",
+      "t_user": "owner"
     }
   ],
   "title": {
