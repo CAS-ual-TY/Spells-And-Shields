@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.base;
+package de.cas_ual_ty.spells.spell.projectile;
 
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.SpellTrees;
@@ -200,7 +200,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
         timeoutActivation = nbt.getString("TimeoutActivation");
     }
     
-    public static void shoot(Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static SpellProjectile shoot(Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
         if(source.level instanceof ServerLevel level)
         {
@@ -211,11 +211,15 @@ public class SpellProjectile extends AbstractHurtingProjectile
             projectile.shoot(direction.x, direction.y, direction.z, velocity, inaccuracy);
             
             level.addFreshEntity(projectile);
+            
+            return projectile;
         }
+        
+        return null;
     }
     
-    public static void shoot(Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static SpellProjectile shoot(Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        shoot(source.getEyePosition(), source.getLookAngle().normalize(), source, spell, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+        return shoot(source.getEyePosition(), source.getLookAngle().normalize(), source, spell, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
 }

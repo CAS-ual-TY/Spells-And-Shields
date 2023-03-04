@@ -7,13 +7,15 @@ import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
-import de.cas_ual_ty.spells.spell.base.HomingSpellProjectile;
+import de.cas_ual_ty.spells.spell.projectile.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
+import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.world.entity.Entity;
 
 public class HomeAction extends AffectSingleTypeAction<EntityTarget>
 {
@@ -27,13 +29,14 @@ public class HomeAction extends AffectSingleTypeAction<EntityTarget>
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramIntImm("timeout")).forGetter(HomeAction::getTimeout),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("block_hit_activation")).forGetter(HomeAction::getBlockHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(HomeAction::getEntityHitActivation),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("timeout_activation")).forGetter(HomeAction::getTimeoutActivation)
-        ).apply(instance, (activation, targets, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation) -> new HomeAction(type, activation, targets, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation)));
+                Codec.STRING.fieldOf(ParamNames.interactedActivation("timeout_activation")).forGetter(HomeAction::getTimeoutActivation),
+                Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(HomeAction::getProjectileDestination)
+        ).apply(instance, (activation, targets, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination) -> new HomeAction(type, activation, targets, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination)));
     }
     
-    public static HomeAction make(String activation, String source, String target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static HomeAction make(String activation, String source, String target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)
     {
-        return new HomeAction(SpellActionTypes.HOME.get(), activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+        return new HomeAction(SpellActionTypes.HOME.get(), activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination);
     }
     
     protected String target;
@@ -44,13 +47,14 @@ public class HomeAction extends AffectSingleTypeAction<EntityTarget>
     protected String blockHitActivation;
     protected String entityHitActivation;
     protected String timeoutActivation;
+    protected String projectileDestination;
     
     public HomeAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public HomeAction(SpellActionType<?> type, String activation, String source, String target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public HomeAction(SpellActionType<?> type, String activation, String source, String target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)
     {
         super(type, activation, source);
         this.target = target;
@@ -59,6 +63,7 @@ public class HomeAction extends AffectSingleTypeAction<EntityTarget>
         this.blockHitActivation = blockHitActivation;
         this.entityHitActivation = entityHitActivation;
         this.timeoutActivation = timeoutActivation;
+        this.projectileDestination = projectileDestination;
     }
     
     public String getTarget()
@@ -91,6 +96,11 @@ public class HomeAction extends AffectSingleTypeAction<EntityTarget>
         return timeoutActivation;
     }
     
+    public String getProjectileDestination()
+    {
+        return projectileDestination;
+    }
+    
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, EntityTarget entityTarget)
     {
@@ -102,7 +112,11 @@ public class HomeAction extends AffectSingleTypeAction<EntityTarget>
                 {
                     TargetTypes.ENTITY.get().ifType(target1, target ->
                     {
-                        HomingSpellProjectile.home(entityTarget.getEntity(), target.getEntity(), ctx.spell, velocity.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+                        Entity e = HomingSpellProjectile.home(entityTarget.getEntity(), target.getEntity(), ctx.spell, velocity.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+                        if(e != null)
+                        {
+                            ctx.getOrCreateTargetGroup(projectileDestination).addTargets(Target.of(e));
+                        }
                     });
                 });
             });

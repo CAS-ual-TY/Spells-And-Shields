@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.base;
+package de.cas_ual_ty.spells.spell.projectile;
 
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.spell.SpellInstance;
@@ -96,7 +96,7 @@ public class HomingSpellProjectile extends SpellProjectile
         }
     }
     
-    public static void home(Vec3 position, @Nullable Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static HomingSpellProjectile home(Vec3 position, @Nullable Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
         if(source.level instanceof ServerLevel level)
         {
@@ -109,11 +109,15 @@ public class HomingSpellProjectile extends SpellProjectile
             projectile.shoot(direction.x, direction.y, direction.z, velocity, 0F);
             
             level.addFreshEntity(projectile);
+            
+            return projectile;
         }
+        
+        return null;
     }
     
-    public static void home(Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static HomingSpellProjectile home(Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        home(source.getEyePosition(), source, target, spell, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+        return home(source.getEyePosition(), source, target, spell, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
 }
