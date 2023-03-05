@@ -71,6 +71,7 @@ public class Spells
     public static final String KEY_AQUA_AFFINITY = key(AQUA_AFFINITY);
     public static final String KEY_AQUA_AFFINITY_DESC = descKey(AQUA_AFFINITY);
     
+    //TODO fx, sound, test, return homing spell
     public static final ResourceLocation WATER_WHIP = rl("water_whip");
     public static final String KEY_WATER_WHIP = key(WATER_WHIP);
     public static final String KEY_WATER_WHIP_DESC = descKey(WATER_WHIP);

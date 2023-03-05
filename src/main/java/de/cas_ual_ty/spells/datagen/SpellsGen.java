@@ -202,7 +202,29 @@ public class SpellsGen implements DataProvider
         dummy(Spells.MANA_BOOST);
         dummy(Spells.WATER_LEAP);
         dummy(Spells.AQUA_AFFINITY);
-        dummy(Spells.WATER_WHIP);
+        
+        //TODO fx, sound, test
+        addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
+                .addParameter(DOUBLE.get(), "damage", 10.0)
+                .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
+                .addAction(ItemEqualsActivationAction.make(ACTIVE.activation, "item", "shoot", new ItemStack(Items.WATER_BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
+                .addAction(ActivateAction.make(ACTIVE.activation, "offhand"))
+                .addAction(DeactivateAction.make("shoot", "offhand"))
+                .addAction(SimpleItemCheckAction.make("offhand", OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.WATER_BUCKET)))
+                .addAction(OffhandItemTargetAction.make("offhand", OWNER.targetGroup, "item"))
+                .addAction(ItemEqualsActivationAction.make("offhand", "item", "shoot", new ItemStack(Items.WATER_BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
+                .addAction(GetItemAttributesAction.make("shoot", "item", "amount", "damage", "item_tag"))
+                .addAction(OverrideItemAction.make("shoot", "item", INT.get().reference("amount"), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), Items.BUCKET))
+                .addAction(GetEntityUUIDAction.make("shoot", OWNER.targetGroup, "uuid"))
+                .addAction(PutVarAction.makeCompoundTag("shoot", new CompoundTag(), "tag"))
+                .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(tag, 'Owner', uuid) ", COMPOUND_TAG.get()), "tag"))
+                .addAction(ShootAction.make("shoot", OWNER.targetGroup, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(0D), INT.get().immediate(100), "return", "on_entity_hit", "return", "projectile"))
+                .addAction(ApplyEntityTagAction.make("shoot", "projectile", COMPOUND_TAG.get().reference("tag")))
+                .addAction(DamageAction.make("on_entity_hit", ENTITY_HIT.targetGroup, DOUBLE.get().immediate(10D)))
+                .addAction(ActivateAction.make("on_entity_hit", "return"))
+                .addTooltip(Component.translatable(Spells.KEY_BLOW_ARROW_DESC))
+        );
+        
         dummy(Spells.POTION_SHOT);
         dummy(Spells.FROST_WALKER);
         dummy(Spells.JUMP);
