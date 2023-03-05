@@ -12,6 +12,7 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.world.InteractionHand;
 
 public class OffhandItemTargetAction extends AffectSingleTypeAction<PlayerTarget>
 {
@@ -50,7 +51,7 @@ public class OffhandItemTargetAction extends AffectSingleTypeAction<PlayerTarget
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
-        ctx.getOrCreateTargetGroup(dst).addTargets(Target.of(playerTarget.getLevel(), playerTarget.getPlayer().getOffhandItem()));
+        ctx.getOrCreateTargetGroup(dst).addTargets(Target.of(playerTarget.getLevel(), playerTarget.getPlayer().getOffhandItem(), item -> playerTarget.getPlayer().setItemInHand(InteractionHand.OFF_HAND, item)));
     }
     
     @Override

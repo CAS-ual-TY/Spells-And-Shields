@@ -9,6 +9,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.function.Consumer;
+
 public abstract class Target
 {
     public final ITargetType<?> type;
@@ -46,8 +48,8 @@ public abstract class Target
         return new StaticTarget(TargetTypes.STATIC.get(), level, position);
     }
     
-    public static ItemTarget of(Level level, ItemStack item)
+    public static ItemTarget of(Level level, ItemStack item, Consumer<ItemStack> setter)
     {
-        return new ItemTarget(TargetTypes.ITEM.get(), level, item);
+        return new ItemTarget(TargetTypes.ITEM.get(), level, item, setter);
     }
 }

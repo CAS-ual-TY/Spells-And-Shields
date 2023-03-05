@@ -78,6 +78,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ConsumeItemAction>> CONSUME_ITEM = DEFERRED_REGISTER.register("consume_item", () -> new SpellActionType<>(ConsumeItemAction::new, ConsumeItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<TryConsumeItemAction>> TRY_CONSUME_ITEM = DEFERRED_REGISTER.register("try_consume_item", () -> new SpellActionType<>(TryConsumeItemAction::new, TryConsumeItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<ModifyItemAction>> MODIFY_ITEM = DEFERRED_REGISTER.register("modify_item", () -> new SpellActionType<>(ModifyItemAction::new, ModifyItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<OverrideItemAction>> OVERRIDE_ITEM = DEFERRED_REGISTER.register("override_item", () -> new SpellActionType<>(OverrideItemAction::new, OverrideItemAction::makeCodec));
     
     //control
     public static final RegistryObject<SpellActionType<TerminateAction>> TERMINATE = DEFERRED_REGISTER.register("terminate", () -> new SpellActionType<>(TerminateAction::new, TerminateAction::makeCodec));
