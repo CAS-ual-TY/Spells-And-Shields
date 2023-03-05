@@ -28,7 +28,8 @@
       "double_inaccuracy": 0.0,
       "double_velocity": 3.0,
       "int_timeout": 200,
-      "t_source": "owner"
+      "t_source": "owner",
+      "td_projectile": ""
     },
     {
       "type": "spells_and_shields:play_sound",

@@ -30,6 +30,7 @@
       "double_velocity": 3.0,
       "int_timeout": 200,
       "t_source": "owner",
+      "td_projectile": "",
       "ts_targets": "entity_hit"
     },
     {
