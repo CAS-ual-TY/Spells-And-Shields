@@ -88,6 +88,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<SimpleManaCheckAction>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheckAction::new, SimpleManaCheckAction::makeCodec));
     public static final RegistryObject<SpellActionType<SimpleItemCheckAction>> SIMPLE_ITEM_CHECK = DEFERRED_REGISTER.register("simple_item_check", () -> new SpellActionType<>(SimpleItemCheckAction::new, SimpleItemCheckAction::makeCodec));
     public static final RegistryObject<SpellActionType<ItemEqualsActivationAction>> ITEM_EQUALS_ACTIVATION = DEFERRED_REGISTER.register("item_equals_activation", () -> new SpellActionType<>(ItemEqualsActivationAction::new, ItemEqualsActivationAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ItemTagEqualsActivationAction>> ITEM_TAG_EQUALS_ACTIVATION = DEFERRED_REGISTER.register("item_tag_equals_activation", () -> new SpellActionType<>(ItemTagEqualsActivationAction::new, ItemTagEqualsActivationAction::makeCodec));
     
     //variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
