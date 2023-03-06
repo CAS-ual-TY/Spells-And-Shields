@@ -12,7 +12,12 @@ public abstract class DstTargetAction extends SpellAction
 {
     public static <T extends DstTargetAction> RecordCodecBuilder<T, String> dstCodec()
     {
-        return Codec.STRING.fieldOf(ParamNames.destinationTarget("destination")).forGetter(DstTargetAction::getDst);
+        return dstCodec("destination");
+    }
+    
+    public static <T extends DstTargetAction> RecordCodecBuilder<T, String> dstCodec(String key)
+    {
+        return Codec.STRING.fieldOf(ParamNames.destinationTarget(key)).forGetter(DstTargetAction::getDst);
     }
     
     protected String dst;
