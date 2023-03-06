@@ -59,7 +59,11 @@ public abstract class GetTargetAttributeAction<T extends Target> extends AffectS
     {
         public void apply(SpellContext ctx, T t)
         {
-            ctx.getOrCreateTargetGroup(targetGroup).addTargets(getter.apply(t));
+            C c = getter.apply(t);
+            if(c != null)
+            {
+                ctx.getOrCreateTargetGroup(targetGroup).addTargets(c);
+            }
         }
     }
     
@@ -68,7 +72,11 @@ public abstract class GetTargetAttributeAction<T extends Target> extends AffectS
     {
         public void apply(SpellContext ctx, T t)
         {
-            ctx.setCtxVar(varType, varName, getter().apply(t));
+            C c = getter.apply(t);
+            if(c != null)
+            {
+                ctx.setCtxVar(varType, varName, c);
+            }
         }
     }
 }
