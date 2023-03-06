@@ -67,20 +67,6 @@ public class SpellTrees
         registry.forEach(spellTree -> spellTree.assignNodeIds(registry.getKey(spellTree)));
     }
     
-    public static SpellTree debugTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
-    {
-        return SpellTree.builder(Component.literal("Debug Tree"), spellGetter.apply(Spells.LEAP), 15, bookshelves(28))
-                .add(spellGetter.apply(Spells.SUMMON_ANIMAL), 0)
-                .leaf()
-                .add(spellGetter.apply(Spells.FIRE_BALL), 0)
-                .leaf()
-                .add(spellGetter.apply(Spells.TRANSFER_MANA), 0)
-                .leaf()
-                .add(spellGetter.apply(Spells.BLOW_ARROW), 0)
-                .leaf()
-                .finish();
-    }
-    
     public static SpellTree fireTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_NETHER), spellGetter.apply(Spells.FIRE_BALL), 15, bookshelves(28))
