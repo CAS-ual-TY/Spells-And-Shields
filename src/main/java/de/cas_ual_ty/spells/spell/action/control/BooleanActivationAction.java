@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.control;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -20,6 +21,11 @@ public class BooleanActivationAction extends SpellAction
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("activate_if_true")).forGetter(BooleanActivationAction::getActivateIfTrue),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("deactivate_if_false")).forGetter(BooleanActivationAction::getDeactivateIfFalse)
         ).apply(instance, (activation, toActivate, operant, activateIfTrue, deactivateIfFalse) -> new BooleanActivationAction(type, activation, toActivate, operant, activateIfTrue, deactivateIfFalse)));
+    }
+    
+    public static BooleanActivationAction make(String activation, String toActivate, DynamicCtxVar<Boolean> operant, DynamicCtxVar<Boolean> activateIfTrue, DynamicCtxVar<Boolean> deactivateIfFalse)
+    {
+        return new BooleanActivationAction(SpellActionTypes.BOOLEAN_ACTIVATION.get(), activation, toActivate, operant, activateIfTrue, deactivateIfFalse);
     }
     
     protected String toActivate;
