@@ -48,13 +48,10 @@ public abstract class SpellAction
     
     public void doAction(SpellContext ctx)
     {
-        if(doActivate(ctx))
-        {
-            wasActivated(ctx);
-        }
+        wasActivated(ctx);
     }
     
-    protected boolean doActivate(SpellContext ctx)
+    public boolean doActivate(SpellContext ctx)
     {
         return activation.isEmpty() || ctx.isActivated(activation);
     }
