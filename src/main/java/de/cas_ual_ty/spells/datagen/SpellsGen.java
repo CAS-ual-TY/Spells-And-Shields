@@ -4,19 +4,19 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.registers.Spells;
+import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
-import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
-import de.cas_ual_ty.spells.spell.action.control.DeactivateAction;
-import de.cas_ual_ty.spells.spell.action.control.ItemEqualsActivationAction;
-import de.cas_ual_ty.spells.spell.action.control.SimpleManaCheckAction;
+import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.ConsumeItemAction;
+import de.cas_ual_ty.spells.spell.action.item.GiveItemAction;
 import de.cas_ual_ty.spells.spell.action.item.OverrideItemAction;
 import de.cas_ual_ty.spells.spell.action.item.SimpleItemCheckAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
+import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
@@ -210,19 +210,42 @@ public class SpellsGen implements DataProvider
                 .addAction(ItemEqualsActivationAction.make(ACTIVE.activation, "item", "shoot", new ItemStack(Items.WATER_BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
                 .addAction(ActivateAction.make(ACTIVE.activation, "offhand"))
                 .addAction(DeactivateAction.make("shoot", "offhand"))
-                .addAction(SimpleItemCheckAction.make("offhand", OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.WATER_BUCKET)))
+                .addAction(ClearTargetsAction.make("offhand", "item"))
                 .addAction(OffhandItemTargetAction.make("offhand", OWNER.targetGroup, "item"))
                 .addAction(ItemEqualsActivationAction.make("offhand", "item", "shoot", new ItemStack(Items.WATER_BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
                 .addAction(GetItemAttributesAction.make("shoot", "item", "amount", "damage", "item_tag"))
-                .addAction(OverrideItemAction.make("shoot", "item", INT.get().reference("amount"), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), Items.BUCKET))
-                .addAction(GetEntityUUIDAction.make("shoot", OWNER.targetGroup, "uuid"))
+                .addAction(OverrideItemAction.make("shoot", "item", INT.get().reference("amount"), INT.get().reference("damage"), COMPOUND_TAG.get().reference("item_tag"), Items.BUCKET))
+                .addAction(GetEntityUUIDAction.make("shoot", OWNER.targetGroup, "owner_uuid_return"))
                 .addAction(PutVarAction.makeCompoundTag("shoot", new CompoundTag(), "tag"))
-                .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(tag, 'Owner', uuid) ", COMPOUND_TAG.get()), "tag"))
-                .addAction(ShootAction.make("shoot", OWNER.targetGroup, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(0D), INT.get().immediate(100), "return", "on_entity_hit", "return", "projectile"))
-                .addAction(ApplyEntityTagAction.make("shoot", "projectile", COMPOUND_TAG.get().reference("tag")))
+                .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(tag, 'owner_uuid_return', owner_uuid_return) ", COMPOUND_TAG.get()), "tag"))
+                .addAction(ShootAction.make("shoot", OWNER.targetGroup, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(0D), INT.get().immediate(100), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
+                .addAction(ApplyEntityExtraTagAction.make("shoot", "projectile", COMPOUND_TAG.get().reference("tag")))
+                .addAction(PlaySoundAction.make("shoot", OWNER.targetGroup, SoundEvents.BUCKET_EMPTY, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(DamageAction.make("on_entity_hit", ENTITY_HIT.targetGroup, DOUBLE.get().immediate(10D)))
+                .addAction(CopyTargetsAction.make("on_entity_hit", "position", HIT_POSITION.targetGroup))
                 .addAction(ActivateAction.make("on_entity_hit", "return"))
-                .addTooltip(Component.translatable(Spells.KEY_BLOW_ARROW_DESC))
+                .addAction(CopyTargetsAction.make("on_block_hit", "position", HIT_POSITION.targetGroup))
+                .addAction(ActivateAction.make("on_block_hit", "return"))
+                .addAction(CopyTargetsAction.make("on_timeout", "position", PROJECTILE.targetGroup))
+                .addAction(ActivateAction.make("on_timeout", "return"))
+                .addAction(GetEntityExtraTagAction.make("return", PROJECTILE.targetGroup, "tag"))
+                .addAction(UUIDPlayerTargetAction.make("return", "return_target", Compiler.compileString(" get_nbt_uuid(tag, 'owner_uuid_return') ", STRING.get())))
+                .addAction(HomeAction.make("return", "position", "return_target", DOUBLE.get().immediate(1D), INT.get().immediate(100), "dummy_block_hit", "on_entity_hit_return", "dummy_timeout", "projectile"))
+                .addAction(TypeFilterAction.make("on_entity_hit_return", "return_player", ENTITY_HIT.targetGroup, TargetTypes.PLAYER::get))
+                .addAction(GetTargetGroupSizeAction.make("on_entity_hit_return", "return_player", "count"))
+                .addAction(BooleanActivationAction.make("on_entity_hit_return", "refill", Compiler.compileString(" count == 1 ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(MainhandItemTargetAction.make("refill", "return_player", "item"))
+                .addAction(ItemEqualsActivationAction.make("refill", "item", "do_refill", new ItemStack(Items.BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
+                .addAction(ActivateAction.make("refill", "refill_offhand"))
+                .addAction(DeactivateAction.make("do_refill", "refill_offhand"))
+                .addAction(ClearTargetsAction.make("refill_offhand", "item"))
+                .addAction(OffhandItemTargetAction.make("refill_offhand", "return_player", "item"))
+                .addAction(ItemEqualsActivationAction.make("refill_offhand", "item", "do_refill", new ItemStack(Items.BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
+                .addAction(GetItemAttributesAction.make("do_refill", "item", "amount", "damage", "item_tag"))
+                .addAction(OverrideItemAction.make("do_refill", "item", INT.get().immediate(1), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), Items.WATER_BUCKET))
+                .addAction(GiveItemAction.make("do_refill", "item", Compiler.compileString(" amount - 1 ", INT.get()), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), Items.BUCKET))
+                .addAction(PlaySoundAction.make("do_refill", OWNER.targetGroup, SoundEvents.BUCKET_FILL, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addTooltip(Component.translatable(Spells.KEY_WATER_WHIP_DESC))
         );
         
         dummy(Spells.POTION_SHOT);
