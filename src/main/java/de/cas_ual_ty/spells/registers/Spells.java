@@ -50,7 +50,6 @@ public class Spells
     public static final String KEY_TRANSFER_MANA = key(TRANSFER_MANA);
     public static final String KEY_TRANSFER_MANA_DESC = descKey(TRANSFER_MANA);
     
-    //TODO set owner uuid in arrow nbt
     public static final ResourceLocation BLOW_ARROW = rl("blow_arrow");
     public static final String KEY_BLOW_ARROW = key(BLOW_ARROW);
     public static final String KEY_BLOW_ARROW_DESC = descKey(BLOW_ARROW);
@@ -71,7 +70,7 @@ public class Spells
     public static final String KEY_AQUA_AFFINITY = key(AQUA_AFFINITY);
     public static final String KEY_AQUA_AFFINITY_DESC = descKey(AQUA_AFFINITY);
     
-    //TODO fx, sound, test, return homing spell
+    //TODO fx
     public static final ResourceLocation WATER_WHIP = rl("water_whip");
     public static final String KEY_WATER_WHIP = key(WATER_WHIP);
     public static final String KEY_WATER_WHIP_DESC = descKey(WATER_WHIP);

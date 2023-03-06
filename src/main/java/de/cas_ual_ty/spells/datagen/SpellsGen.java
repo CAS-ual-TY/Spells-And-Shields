@@ -203,7 +203,7 @@ public class SpellsGen implements DataProvider
         dummy(Spells.WATER_LEAP);
         dummy(Spells.AQUA_AFFINITY);
         
-        //TODO fx, sound, test
+        //TODO fx, test
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
                 .addParameter(DOUBLE.get(), "damage", 10.0)
                 .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
