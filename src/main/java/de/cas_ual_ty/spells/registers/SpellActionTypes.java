@@ -73,6 +73,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<GetEntityTagAction>> GET_ENTITY_TAG = DEFERRED_REGISTER.register("get_entity_tag", () -> new SpellActionType<>(GetEntityTagAction::new, GetEntityTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityUUIDAction>> GET_ENTITY_UUID = DEFERRED_REGISTER.register("get_entity_uuid", () -> new SpellActionType<>(GetEntityUUIDAction::new, GetEntityUUIDAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetItemAttributesAction>> GET_ITEM_ATTRIBUTES = DEFERRED_REGISTER.register("get_item_attributes", () -> new SpellActionType<>(GetItemAttributesAction::new, GetItemAttributesAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetEntityExtraTagAction>> GET_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("get_entity_extra_tag", () -> new SpellActionType<>(GetEntityExtraTagAction::new, GetEntityExtraTagAction::makeCodec));
     
     //item
     public static final RegistryObject<SpellActionType<DamageItemAction>> DAMAGE_ITEM = DEFERRED_REGISTER.register("damage_item", () -> new SpellActionType<>(DamageItemAction::new, DamageItemAction::makeCodec));
