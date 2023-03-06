@@ -89,6 +89,11 @@ public class OverrideItemAction extends AffectSingleTypeAction<ItemTarget>
             }
         });
         
+        if(newStack.isEmpty())
+        {
+            return;
+        }
+        
         damage.getValue(ctx).ifPresent(damage ->
         {
             if(damage >= 0)
