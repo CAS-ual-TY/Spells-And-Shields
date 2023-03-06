@@ -58,7 +58,7 @@ public class UUIDPlayerTargetAction extends DstTargetAction
             {
                 UUID uuid = UUID.fromString(uuidS);
                 Player e = ctx.level.getPlayerByUUID(uuid);
-                if(e != null)
+                if(e != null && e.level == ctx.level)
                 {
                     destination.addTargets(Target.of(e));
                 }
