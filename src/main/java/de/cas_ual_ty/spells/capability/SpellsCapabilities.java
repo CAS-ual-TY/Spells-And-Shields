@@ -26,12 +26,14 @@ public class SpellsCapabilities
     public static Capability<IManaHolder> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static Capability<ISpellHolder> SPELLS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static Capability<ISpellProgressionHolder> SPELL_PROGRESSION_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<IExtraTagHolder> EXTRA_TAG_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     
     private static void registerCapabilities(RegisterCapabilitiesEvent event)
     {
         event.register(IManaHolder.class);
         event.register(ISpellHolder.class);
         event.register(ISpellProgressionHolder.class);
+        event.register(IExtraTagHolder.class);
     }
     
     private static void attachCapabilities(AttachCapabilitiesEvent<Entity> event)
@@ -47,6 +49,9 @@ public class SpellsCapabilities
             SpellProgressionHolder spellProgressionHolder = new SpellProgressionHolder(player);
             attachCapability(event, spellProgressionHolder, SPELL_PROGRESSION_CAPABILITY, "spell_progression_holder");
         }
+        
+        ExtraTagHolder extraTagHolder = new ExtraTagHolder();
+        attachCapability(event, extraTagHolder, EXTRA_TAG_CAPABILITY, "extra_tag_holder");
     }
     
     private static <T extends Tag, C extends INBTSerializable<T>> void attachCapability(AttachCapabilitiesEvent<?> event, C capData, Capability<C> capability, String name)
