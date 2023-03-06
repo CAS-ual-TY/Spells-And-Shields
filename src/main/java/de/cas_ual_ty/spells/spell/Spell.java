@@ -149,27 +149,37 @@ public class Spell
         
         for(SpellAction spellAction : spellActions)
         {
-            if(SpellsConfig.DEBUG_SPELLS.get())
+            if(spellAction.doActivate(ctx))
             {
-                SpellsAndShields.LOGGER.info("Starting action " + SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
+                if(SpellsConfig.DEBUG_SPELLS.get())
+                {
+                    SpellsAndShields.LOGGER.info("Starting action " + SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
+                }
+                
+                spellAction.doAction(ctx);
+                
+                if(SpellsConfig.DEBUG_SPELLS.get())
+                {
+                    SpellsAndShields.LOGGER.info("Finish action " + SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
+                    SpellsAndShields.LOGGER.info("-".repeat(50));
+                    ctx.debugActivations();
+                    ctx.debugTargetGroups();
+                    ctx.debugCtxVars();
+                    SpellsAndShields.LOGGER.info("-".repeat(50));
+                }
+                
+                if(ctx.isTerminated())
+                {
+                    break;
+                }
             }
-            
-            spellAction.doAction(ctx);
-            
-            if(SpellsConfig.DEBUG_SPELLS.get())
-            {
-                SpellsAndShields.LOGGER.info("Finish action " + SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
-                SpellsAndShields.LOGGER.info("-".repeat(50));
-                ctx.debugActivations();
-                ctx.debugTargetGroups();
-                ctx.debugCtxVars();
-                SpellsAndShields.LOGGER.info("-".repeat(50));
-            }
-            
-            if(ctx.isTerminated())
-            {
-                break;
-            }
+        }
+        
+        if(SpellsConfig.DEBUG_SPELLS.get())
+        {
+            SpellsAndShields.LOGGER.info("Finished running spell " + Spells.getRegistry(ctx.getLevel()).getKey(this));
+            SpellsAndShields.LOGGER.info("-".repeat(50));
+            SpellsAndShields.LOGGER.info("-".repeat(50));
         }
     }
 }
