@@ -10,14 +10,13 @@ import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.projectile.HomingSpellProjectile;
-import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
+import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-import net.minecraft.world.entity.Entity;
 
-public class HomeAction extends AffectSingleTypeAction<EntityTarget>
+public class HomeAction extends AffectSingleTypeAction<PositionTarget>
 {
     public static Codec<HomeAction> makeCodec(SpellActionType<HomeAction> type)
     {
@@ -102,7 +101,7 @@ public class HomeAction extends AffectSingleTypeAction<EntityTarget>
     }
     
     @Override
-    public void affectSingleTarget(SpellContext ctx, TargetGroup group, EntityTarget entityTarget)
+    public void affectSingleTarget(SpellContext ctx, TargetGroup group, PositionTarget source1)
     {
         velocity.getValue(ctx).ifPresent(velocity ->
         {
@@ -112,10 +111,14 @@ public class HomeAction extends AffectSingleTypeAction<EntityTarget>
                 {
                     TargetTypes.ENTITY.get().ifType(target1, target ->
                     {
-                        Entity e = HomingSpellProjectile.home(entityTarget.getEntity(), target.getEntity(), ctx.spell, velocity.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+                        HomingSpellProjectile e = HomingSpellProjectile.home(ctx.level, source1.getPosition(), null, target.getEntity(), ctx.spell, velocity.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation);
                         if(e != null)
                         {
                             ctx.getOrCreateTargetGroup(projectileDestination).addTargets(Target.of(e));
+                            TargetTypes.ENTITY.get().ifType(source1, source ->
+                            {
+                                e.setOwner(source.getEntity());
+                            });
                         }
                     });
                 });
@@ -124,8 +127,8 @@ public class HomeAction extends AffectSingleTypeAction<EntityTarget>
     }
     
     @Override
-    public ITargetType<EntityTarget> getAffectedType()
+    public ITargetType<PositionTarget> getAffectedType()
     {
-        return TargetTypes.ENTITY.get();
+        return TargetTypes.POSITION.get();
     }
 }

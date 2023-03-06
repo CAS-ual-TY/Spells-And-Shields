@@ -96,9 +96,9 @@ public class HomingSpellProjectile extends SpellProjectile
         }
     }
     
-    public static HomingSpellProjectile home(Vec3 position, @Nullable Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static HomingSpellProjectile home(Level level0, Vec3 position, @Nullable Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        if(source.level instanceof ServerLevel level)
+        if(level0 instanceof ServerLevel level)
         {
             Vec3 direction = target.getEyePosition().subtract(position).normalize();
             
@@ -118,6 +118,6 @@ public class HomingSpellProjectile extends SpellProjectile
     
     public static HomingSpellProjectile home(Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        return home(source.getEyePosition(), source, target, spell, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+        return home(source.level, source.getEyePosition(), source, target, spell, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
 }
