@@ -104,7 +104,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
     {
         if(spell != null && !level.isClientSide())
         {
-            spell.run(level, getPlayerOwner(), entityHitActivation, (ctx) ->
+            spell.run(level, getPlayerOwner(), blockHitActivation, (ctx) ->
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.BLOCK_HIT.targetGroup).addTargets(Target.of(level, blockHitResult.getBlockPos()));
