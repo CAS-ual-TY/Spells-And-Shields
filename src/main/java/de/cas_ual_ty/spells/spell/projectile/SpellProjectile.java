@@ -92,7 +92,9 @@ public class SpellProjectile extends AbstractHurtingProjectile
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.ENTITY_HIT.targetGroup).addTargets(Target.of(entityHitResult.getEntity()));
-                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level, entityHitResult.getLocation()));
+                
+                Vec3 clip = entityHitResult.getEntity().getBoundingBox().clip(position().subtract(getDeltaMovement()), position().add(getDeltaMovement())).orElse(entityHitResult.getEntity().getEyePosition());
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level, clip));
             });
             
             discard();
