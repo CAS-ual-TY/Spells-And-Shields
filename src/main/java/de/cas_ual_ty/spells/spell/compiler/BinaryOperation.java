@@ -40,6 +40,7 @@ public class BinaryOperation
     public static final BinaryOperation GET_NBT_COMPOUND_TAG = new BinaryOperation("get_nbt_compound_tag");
     public static final BinaryOperation GET_NBT_STRING = new BinaryOperation("get_nbt_string");
     public static final BinaryOperation GET_NBT_UUID = new BinaryOperation("get_nbt_uuid");
+    public static final BinaryOperation GET_NBT_VEC3 = new BinaryOperation("get_nbt_vec3");
     
     public static void registerToCompiler()
     {
@@ -54,6 +55,7 @@ public class BinaryOperation
         Compiler.registerBinaryFunction("get_nbt_compound_tag", GET_NBT_COMPOUND_TAG);
         Compiler.registerBinaryFunction("get_nbt_string", GET_NBT_STRING);
         Compiler.registerBinaryFunction("get_nbt_uuid", GET_NBT_UUID);
+        Compiler.registerBinaryFunction("get_nbt_vec3", GET_NBT_VEC3);
     }
     
     public final String name;
