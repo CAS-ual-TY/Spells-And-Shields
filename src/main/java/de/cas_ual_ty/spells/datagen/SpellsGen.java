@@ -206,6 +206,7 @@ public class SpellsGen implements DataProvider
         //TODO fx, test
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
                 .addParameter(DOUBLE.get(), "damage", 10.0)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
                 .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
                 .addAction(ItemEqualsActivationAction.make(ACTIVE.activation, "item", "shoot", new ItemStack(Items.WATER_BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
                 .addAction(ActivateAction.make(ACTIVE.activation, "offhand"))

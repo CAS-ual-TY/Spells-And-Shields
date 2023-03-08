@@ -6,6 +6,10 @@
   "mana_cost": 5.0,
   "spell_actions": [
     {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active"
+    },
+    {
       "type": "spells_and_shields:mainhand_item_target",
       "activation": "active",
       "t_source": "owner",
