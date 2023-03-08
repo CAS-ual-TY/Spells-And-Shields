@@ -251,7 +251,18 @@ public class SpellsGen implements DataProvider
         
         dummy(Spells.POTION_SHOT);
         dummy(Spells.FROST_WALKER);
-        dummy(Spells.JUMP);
+    
+        addSpell(Spells.JUMP, new Spell(modId, "jump", Spells.KEY_JUMP, 5F)
+                .addParameter(DOUBLE.get(), "speed", 1.5)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(ResetFallDistanceAction.make(ACTIVE.activation, OWNER.targetGroup))
+                .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "", "motion"))
+                .addAction(SetMotionAction.make(ACTIVE.activation, OWNER.targetGroup, Compiler.compileString(" vec3(0, get_y(motion) + speed, 0) ", VEC3.get())))
+                .addAction(SpawnParticlesAction.make(ACTIVE.activation, OWNER.targetGroup, ParticleTypes.POOF, INT.get().immediate(4), DOUBLE.get().immediate(0.1)))
+                .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addTooltip(Component.translatable(Spells.KEY_JUMP_DESC))
+        );
+        
         dummy(Spells.MANA_SOLES);
         dummy(Spells.FIRE_CHARGE);
         dummy(Spells.PRESSURIZE);

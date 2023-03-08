@@ -3,20 +3,63 @@
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/jump.png"
   },
-  "mana_cost": 0.0,
-  "spell_actions": [],
+  "mana_cost": 5.0,
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:reset_fall_distance",
+      "activation": "active",
+      "ts_targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:get_entity_position_direction",
+      "activation": "active",
+      "t_source": "owner",
+      "td_position": "",
+      "var_direction": "",
+      "var_motion": "motion"
+    },
+    {
+      "type": "spells_and_shields:set_motion",
+      "activation": "active",
+      "d_vec3_motion": "<< vec3(0, get_y(motion) + speed, 0) >>",
+      "t_target": "owner"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "active",
+      "d_double_spread": 0.1,
+      "d_int_count": 4,
+      "particle": {
+        "type": "minecraft:poof"
+      },
+      "ts_targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "active",
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
+      "sound_event": "minecraft:entity.ender_dragon.flap",
+      "ts_targets": "owner"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.jump"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.jump.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ],
-  "variables": []
+  "variables": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 1.5,
+      "var_name": "speed"
+    }
+  ]
 }
