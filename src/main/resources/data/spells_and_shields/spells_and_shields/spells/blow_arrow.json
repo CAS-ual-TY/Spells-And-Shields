@@ -35,7 +35,8 @@
       "activation": "active",
       "t_source": "owner",
       "td_position": "",
-      "var_direction": "direction"
+      "var_direction": "direction",
+      "var_motion": ""
     },
     {
       "type": "spells_and_shields:get_entity_eye_position",

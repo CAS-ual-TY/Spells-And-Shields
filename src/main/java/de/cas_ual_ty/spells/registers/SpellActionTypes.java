@@ -68,7 +68,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ItemFilterAction>> ITEM_FILTER = DEFERRED_REGISTER.register("item_filter", () -> new SpellActionType<>(ItemFilterAction::new, ItemFilterAction::makeCodec));
     
     //attribute
-    public static final RegistryObject<SpellActionType<GetEntityPositionDirectionAction>> GET_ENTITY_POSITION_DIRECTION = DEFERRED_REGISTER.register("get_entity_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionAction::new, GetEntityPositionDirectionAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetEntityPositionDirectionMotionAction>> GET_ENTITY_POSITION_DIRECTION_MOTION = DEFERRED_REGISTER.register("get_entity_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionMotionAction::new, GetEntityPositionDirectionMotionAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityEyePositionAction>> GET_ENTITY_EYE_POSITION = DEFERRED_REGISTER.register("get_entity_eye_position", () -> new SpellActionType<>(GetEntityEyePositionAction::new, GetEntityEyePositionAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetItemTagAction>> GET_ITEM_TAG = DEFERRED_REGISTER.register("get_item_tag", () -> new SpellActionType<>(GetItemTagAction::new, GetItemTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityTagAction>> GET_ENTITY_TAG = DEFERRED_REGISTER.register("get_entity_tag", () -> new SpellActionType<>(GetEntityTagAction::new, GetEntityTagAction::makeCodec));

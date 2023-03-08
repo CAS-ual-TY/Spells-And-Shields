@@ -106,7 +106,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(DOUBLE.get(), "speed", 2.5)
                 .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
                 .addAction(ResetFallDistanceAction.make(ACTIVE.activation, OWNER.targetGroup))
-                .addAction(GetEntityPositionDirectionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "look"))
+                .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "look", ""))
                 .addAction(PutVarAction.makeVec3(ACTIVE.activation, " (normalize(look + vec3(0, -get_y(look), 0))) * speed ", "direction"))
                 .addAction(SetMotionAction.make(ACTIVE.activation, OWNER.targetGroup, Compiler.compileString(" vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) ", VEC3.get())))
                 .addAction(SpawnParticlesAction.make(ACTIVE.activation, OWNER.targetGroup, ParticleTypes.POOF, INT.get().immediate(4), DOUBLE.get().immediate(0.1)))
@@ -117,7 +117,7 @@ public class SpellsGen implements DataProvider
         CompoundTag childTag = new CompoundTag();
         childTag.putInt("Age", -24000);
         addSpell(Spells.SUMMON_ANIMAL, new Spell(modId, "summon_animal", Spells.KEY_SUMMON_ANIMAL, 4F)
-                .addAction(GetEntityPositionDirectionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "direction"))
+                .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "direction", ""))
                 .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
                 .addAction(SpawnParticlesAction.make(ACTIVE.activation, OWNER.targetGroup, ParticleTypes.EXPLOSION, INT.get().immediate(3), DOUBLE.get().immediate(0.4)))
                 .addAction(ActivateAction.make(ACTIVE.activation, "cow"))
@@ -180,7 +180,7 @@ public class SpellsGen implements DataProvider
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, tag, "tag"))
                 .addAction(GetEntityUUIDAction.make(ACTIVE.activation, OWNER.targetGroup, "uuid"))
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, Compiler.compileString(" put_nbt_uuid(tag, 'Owner', uuid) ", COMPOUND_TAG.get()), "tag"))
-                .addAction(GetEntityPositionDirectionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "direction"))
+                .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "direction", ""))
                 .addAction(GetEntityEyePositionAction.make(ACTIVE.activation, OWNER.targetGroup, "position"))
                 .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
                 .addAction(ItemEqualsActivationAction.make(ACTIVE.activation, "item", "shoot", new ItemStack(Items.ARROW), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))

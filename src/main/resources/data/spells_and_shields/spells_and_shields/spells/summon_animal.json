@@ -10,7 +10,8 @@
       "activation": "active",
       "t_source": "owner",
       "td_position": "",
-      "var_direction": "direction"
+      "var_direction": "direction",
+      "var_motion": ""
     },
     {
       "type": "spells_and_shields:simple_mana_check",

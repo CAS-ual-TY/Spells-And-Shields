@@ -19,7 +19,8 @@
       "activation": "active",
       "t_source": "owner",
       "td_position": "",
-      "var_direction": "look"
+      "var_direction": "look",
+      "var_motion": ""
     },
     {
       "type": "spells_and_shields:put_vec3",
