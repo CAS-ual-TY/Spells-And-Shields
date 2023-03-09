@@ -36,7 +36,7 @@ public class SpellIconRegistry
     
     public static final SpellIconRenderer<ItemSpellIcon> ITEM_RENDERER = (icon, poseStack, width, height, x, y, partialTicks) -> {
         RenderSystem.enableBlend();
-        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(icon.getItem(), x + width / 2, y + width / 2);
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(icon.getItem(), x + (width - 16) / 2, y + (width - 16) / 2);
         RenderSystem.disableBlend();
     };
     
