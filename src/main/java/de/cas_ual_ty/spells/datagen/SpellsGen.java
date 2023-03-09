@@ -251,7 +251,7 @@ public class SpellsGen implements DataProvider
         
         dummy(Spells.POTION_SHOT);
         dummy(Spells.FROST_WALKER);
-    
+        
         addSpell(Spells.JUMP, new Spell(modId, "jump", Spells.KEY_JUMP, 5F)
                 .addParameter(DOUBLE.get(), "speed", 1.5)
                 .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
