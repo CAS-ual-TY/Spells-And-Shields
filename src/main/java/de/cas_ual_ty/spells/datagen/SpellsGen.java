@@ -20,6 +20,7 @@ import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
+import de.cas_ual_ty.spells.spell.icon.ItemSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
@@ -264,7 +265,21 @@ public class SpellsGen implements DataProvider
         );
         
         dummy(Spells.MANA_SOLES);
-        dummy(Spells.FIRE_CHARGE);
+        
+        addSpell(Spells.FIRE_CHARGE, new Spell(new ItemSpellIcon(SpellIconTypes.ITEM.get(), new ItemStack(Items.FIRE_CHARGE)), Spells.KEY_FIRE_CHARGE, 5F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(SimpleItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.FIRE_CHARGE)))
+                .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, tag, "tag"))
+                .addAction(GetEntityUUIDAction.make(ACTIVE.activation, OWNER.targetGroup, "uuid"))
+                .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "direction", ""))
+                .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, Compiler.compileString(" put_nbt_uuid(tag, 'Owner', uuid) ", COMPOUND_TAG.get()), "tag"))
+                .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, Compiler.compileString(" put_nbt_vec3(tag, 'power', direction * 2.0 * 0.1) ", COMPOUND_TAG.get()), "tag"))
+                .addAction(GetEntityEyePositionAction.make(ACTIVE.activation, OWNER.targetGroup, "position"))
+                .addAction(SpawnEntityAction.make(ACTIVE.activation, "fire_charge", EntityType.FIREBALL, "position", VEC3.get().reference("direction"), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().reference("tag")))
+                .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addTooltip(Component.translatable(Spells.KEY_FIRE_CHARGE_DESC))
+        );
+        
         dummy(Spells.PRESSURIZE);
         dummy(Spells.INSTANT_MINE);
         dummy(Spells.SPIT_METAL);

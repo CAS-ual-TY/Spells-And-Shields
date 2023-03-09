@@ -50,6 +50,11 @@ public class Spell
         this(new LinkedList<>(), icon, title, new LinkedList<>(), manaCost, new LinkedList<>());
     }
     
+    public Spell(SpellIcon icon, String titleKey, float manaCost)
+    {
+        this(icon, Component.translatable(titleKey), manaCost);
+    }
+    
     public Spell(ResourceLocation icon, Component title, float manaCost)
     {
         this(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), icon), title, manaCost);
