@@ -92,12 +92,12 @@ public class TernaryOperation
     {
         public boolean areTypesIndirectlyApplicable(CtxVarType<?> operant1, CtxVarType<?> operant2, CtxVarType<?> operant3)
         {
-            return operant1.canConvertTo(this.operant1) && operant2.canConvertTo(this.operant2);
+            return operant1.canConvertTo(this.operant1) && operant2.canConvertTo(this.operant2) && operant3.canConvertTo(this.operant3);
         }
         
         public boolean areTypesDirectlyApplicable(CtxVarType<?> operant1, CtxVarType<?> operant2, CtxVarType<?> operant3)
         {
-            return operant1 == this.operant1 && operant2 == this.operant2;
+            return operant1 == this.operant1 && operant2 == this.operant2 && operant3 == this.operant3;
         }
         
         public <X> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, CtxVar<?> operant3, BiConsumer<CtxVarType<X>, X> result)
