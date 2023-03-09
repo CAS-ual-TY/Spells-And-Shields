@@ -76,17 +76,29 @@ public class BinaryOperation
     
     public Entry<?, ?, ?> getEntry(CtxVarType<?> operant1, CtxVarType<?> operant2, AtomicBoolean reversed)
     {
-        Entry<?, ?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2)).findFirst()
-                .orElse(map.stream().filter(e -> e.areTypesDirectlyApplicable(operant2, operant1)).findFirst().orElse(null));
+        Entry<?, ?, ?> entry = entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2)).findFirst().orElse(null);
         
         if(entry == null)
         {
-            entry = map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2)).findFirst()
-                    .orElse(map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant2, operant1)).findFirst().orElse(null));
+            entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant2, operant1)).findFirst().orElse(null);
             
             if(entry != null)
             {
                 reversed.set(true);
+            }
+            else
+            {
+                entry = map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2)).findFirst().orElse(null);
+                
+                if(entry == null)
+                {
+                    entry = map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant2, operant1)).findFirst().orElse(null);
+                    
+                    if(entry != null)
+                    {
+                        reversed.set(true);
+                    }
+                }
             }
         }
         
