@@ -27,6 +27,7 @@ public class SpellsCapabilities
     public static Capability<ISpellHolder> SPELLS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static Capability<ISpellProgressionHolder> SPELL_PROGRESSION_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static Capability<IExtraTagHolder> EXTRA_TAG_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<IDelayedSpellHolder> DELAYED_SPELL_HOLDER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     
     private static void registerCapabilities(RegisterCapabilitiesEvent event)
     {
@@ -34,6 +35,7 @@ public class SpellsCapabilities
         event.register(ISpellHolder.class);
         event.register(ISpellProgressionHolder.class);
         event.register(IExtraTagHolder.class);
+        event.register(IDelayedSpellHolder.class);
     }
     
     private static void attachCapabilities(AttachCapabilitiesEvent<Entity> event)
@@ -52,6 +54,9 @@ public class SpellsCapabilities
         
         ExtraTagHolder extraTagHolder = new ExtraTagHolder();
         attachCapability(event, extraTagHolder, EXTRA_TAG_CAPABILITY, "extra_tag_holder");
+        
+        DelayedSpellHolder delayedSpellHolder = new DelayedSpellHolder(event.getObject());
+        attachCapability(event, delayedSpellHolder, DELAYED_SPELL_HOLDER_CAPABILITY, "delayed_spell_holder");
     }
     
     private static <T extends Tag, C extends INBTSerializable<T>> void attachCapability(AttachCapabilitiesEvent<?> event, C capData, Capability<C> capability, String name)

@@ -6,7 +6,8 @@ public enum BuiltinTargetGroups
     PROJECTILE("projectile"),
     ENTITY_HIT("entity_hit"),
     BLOCK_HIT("block_hit"),
-    HIT_POSITION("hit_position");
+    HIT_POSITION("hit_position"),
+    HOLDER("holder");
     
     public final String targetGroup;
     

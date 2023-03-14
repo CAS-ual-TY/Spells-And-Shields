@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.spell;
 
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
@@ -94,7 +95,7 @@ public class SpellInstance
         SpellContext ctx = new SpellContext(level, owner, this);
         
         ctx.activate(activation);
-        ctx.initCtxVar(new CtxVar<>(BuiltinVariables.MANA_COST.type.get(), BuiltinVariables.MANA_COST.name, (double) spell.get().getManaCost()));
+        ctx.initCtxVar(new CtxVar<>(CtxVarTypes.DOUBLE.get(), BuiltinVariables.MANA_COST.name, (double) spell.get().getManaCost()));
         
         if(owner != null)
         {
