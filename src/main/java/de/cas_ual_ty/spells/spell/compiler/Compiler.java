@@ -24,6 +24,10 @@ public class Compiler
     public static <T> void registerSuppliersToCompiler()
     {
         registerSupplier("pi", CtxVarTypes.DOUBLE, () -> Math.PI);
+        
+        double sqrt2 = Math.sqrt(2D);
+        registerSupplier("sqrt2", CtxVarTypes.DOUBLE, () -> sqrt2);
+        
         Random random = new Random();
         registerSupplier("randomInt", CtxVarTypes.INT, random::nextInt);
         registerSupplier("randomDouble", CtxVarTypes.DOUBLE, random::nextDouble);
