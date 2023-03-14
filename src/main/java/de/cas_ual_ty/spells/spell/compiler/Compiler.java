@@ -23,12 +23,15 @@ public class Compiler
     
     public static <T> void registerSuppliersToCompiler()
     {
-        registerSupplier("pi", CtxVarTypes.DOUBLE, Math.PI);
+        registerSupplier("pi", CtxVarTypes.DOUBLE, () -> Math.PI);
+        Random random = new Random();
+        registerSupplier("randomInt", CtxVarTypes.INT, random::nextInt);
+        registerSupplier("randomDouble", CtxVarTypes.DOUBLE, random::nextDouble);
     }
     
-    public static <T> void registerSupplier(String name, Supplier<CtxVarType<T>> type, T value)
+    public static <T> void registerSupplier(String name, Supplier<CtxVarType<T>> type, Supplier<T> value)
     {
-        SUPPLIERS.put(name, () -> new CtxVar<>(type.get(), value));
+        SUPPLIERS.put(name, () -> new CtxVar<>(type.get(), value.get()));
     }
     
     public static void registerUnaryFunction(String name, UnaryOperation op)
