@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.util;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -22,8 +23,10 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -183,5 +186,11 @@ public class SpellsUtil
     public static <E extends Enum<E>> Codec<E> idEnumCodec(Function<Integer, E> idToEnum)
     {
         return Codec.INT.xmap(idToEnum, Enum::ordinal);
+    }
+    
+    public static UUID generateUUIDFromName(String name)
+    {
+        // prefixing to make sure this does not clash in case another mod does the same
+        return UUID.nameUUIDFromBytes((SpellsAndShields.MOD_ID + "_" + name).getBytes(StandardCharsets.UTF_8));
     }
 }

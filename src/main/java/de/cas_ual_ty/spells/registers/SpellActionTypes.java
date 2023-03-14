@@ -18,6 +18,7 @@ import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.BinaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.TernaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
@@ -123,6 +124,9 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> COS = DEFERRED_REGISTER.register("cos", () -> MappedUnaryVarAction.makeType(UnaryOperation.COS));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> ASIN = DEFERRED_REGISTER.register("asin", () -> MappedUnaryVarAction.makeType(UnaryOperation.ASIN));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> ACOS = DEFERRED_REGISTER.register("acos", () -> MappedUnaryVarAction.makeType(UnaryOperation.ACOS));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> TO_RADIANS = DEFERRED_REGISTER.register("to_radians", () -> MappedUnaryVarAction.makeType(UnaryOperation.TO_RADIANS));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> TO_DEGREES = DEFERRED_REGISTER.register("to_degrees", () -> MappedUnaryVarAction.makeType(UnaryOperation.TO_DEGREES));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> UUID_FROM_STRING = DEFERRED_REGISTER.register("uuid_from_string", () -> MappedUnaryVarAction.makeType(UnaryOperation.UUID_FROM_STRING));
     
     //variable / mapped binary
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> ADD = DEFERRED_REGISTER.register("add", () -> MappedBinaryVarAction.makeType(BinaryOperation.ADD));
@@ -212,6 +216,8 @@ public class SpellActionTypes
         UnaryOperation.ACOS.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.acos(x));
         UnaryOperation.TO_RADIANS.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.toRadians(x));
         UnaryOperation.TO_DEGREES.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.toDegrees(x));
+        
+        UnaryOperation.UUID_FROM_STRING.register(CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x) -> SpellsUtil.generateUUIDFromName(x).toString());
         
         BinaryOperation.ADD.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> x + y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x + y)

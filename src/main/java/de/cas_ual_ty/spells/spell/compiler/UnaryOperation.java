@@ -33,6 +33,7 @@ public class UnaryOperation
     public static final UnaryOperation ACOS = new UnaryOperation("acos");
     public static final UnaryOperation TO_RADIANS = new UnaryOperation("to_radians");
     public static final UnaryOperation TO_DEGREES = new UnaryOperation("to_degrees");
+    public static final UnaryOperation UUID_FROM_STRING = new UnaryOperation("uuid_from_string");
     
     public static void registerToCompiler()
     {
@@ -51,6 +52,7 @@ public class UnaryOperation
         Compiler.registerUnaryFunction("acos", ACOS);
         Compiler.registerUnaryFunction("to_radians", TO_RADIANS);
         Compiler.registerUnaryFunction("to_degrees", TO_DEGREES);
+        Compiler.registerUnaryFunction("uuid_from_string", UUID_FROM_STRING);
     }
     
     public final String name;
