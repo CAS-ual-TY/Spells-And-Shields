@@ -31,6 +31,7 @@ public class Compiler
         Random random = new Random();
         registerSupplier("randomInt", CtxVarTypes.INT, random::nextInt);
         registerSupplier("randomDouble", CtxVarTypes.DOUBLE, random::nextDouble);
+        registerSupplier("randomUUID", CtxVarTypes.STRING, () -> UUID.randomUUID().toString());
     }
     
     public static <T> void registerSupplier(String name, Supplier<CtxVarType<T>> type, Supplier<T> value)
