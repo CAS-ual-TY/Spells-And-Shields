@@ -56,6 +56,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ApplyEntityTagAction>> APPLY_ENTITY_TAG = DEFERRED_REGISTER.register("apply_entity_tag", () -> new SpellActionType<>(ApplyEntityTagAction::new, ApplyEntityTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<ApplyEntityExtraTagAction>> APPLY_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("apply_entity_extra_tag", () -> new SpellActionType<>(ApplyEntityExtraTagAction::new, ApplyEntityExtraTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetTargetGroupSizeAction>> GET_TARGET_GROUP_SIZE = DEFERRED_REGISTER.register("get_target_group_size", () -> new SpellActionType<>(GetTargetGroupSizeAction::new, GetTargetGroupSizeAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ApplyPotionEffectAction>> APPLY_POTION_EFFECT = DEFERRED_REGISTER.register("apply_potion_effect", () -> new SpellActionType<>(ApplyPotionEffectAction::new, ApplyPotionEffectAction::makeCodec));
     
     //target
     public static final RegistryObject<SpellActionType<CopyTargetsAction>> COPY_TARGETS = DEFERRED_REGISTER.register("copy_targets", () -> new SpellActionType<>(CopyTargetsAction::new, CopyTargetsAction::makeCodec));
