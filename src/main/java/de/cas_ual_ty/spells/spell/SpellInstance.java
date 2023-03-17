@@ -1,8 +1,6 @@
 package de.cas_ual_ty.spells.spell;
 
-import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
-import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -61,16 +59,6 @@ public class SpellInstance
     public SpellNodeId getNodeId()
     {
         return nodeId;
-    }
-    
-    public void run(SpellHolder spellHolder)
-    {
-        run(spellHolder, BuiltinActivations.ACTIVE.activation);
-    }
-    
-    public void run(SpellHolder spellHolder, String activation)
-    {
-        run(spellHolder.getPlayer(), activation);
     }
     
     public void run(Player owner, String activation)

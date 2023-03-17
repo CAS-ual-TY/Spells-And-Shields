@@ -5,8 +5,11 @@ import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.network.FireSpellMessage;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.SpellInstance;
+import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
+import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.PacketDistributor;
@@ -29,7 +32,7 @@ public class SpellHelper
                 {
                     try
                     {
-                        spell.run(spellHolder);
+                        spell.run(spellHolder.getPlayer().level, spellHolder.getPlayer(), BuiltinActivations.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
                     }
                     catch(Exception e)
                     {
