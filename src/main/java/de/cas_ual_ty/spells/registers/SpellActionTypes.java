@@ -4,6 +4,8 @@ import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
+import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
+import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
@@ -98,6 +100,10 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ItemEqualsActivationAction>> ITEM_EQUALS_ACTIVATION = DEFERRED_REGISTER.register("item_equals_activation", () -> new SpellActionType<>(ItemEqualsActivationAction::new, ItemEqualsActivationAction::makeCodec));
     public static final RegistryObject<SpellActionType<ItemTagEqualsActivationAction>> ITEM_TAG_EQUALS_ACTIVATION = DEFERRED_REGISTER.register("item_tag_equals_activation", () -> new SpellActionType<>(ItemTagEqualsActivationAction::new, ItemTagEqualsActivationAction::makeCodec));
     public static final RegistryObject<SpellActionType<SimpleItemTagCheckAction>> SIMPLE_ITEM_TAG_CHECK = DEFERRED_REGISTER.register("simple_item_tag_check", () -> new SpellActionType<>(SimpleItemTagCheckAction::new, SimpleItemTagCheckAction::makeCodec));
+    
+    //delayed
+    public static final RegistryObject<SpellActionType<AddDelayedSpellAction>> ADD_DELAYED_SPELL = DEFERRED_REGISTER.register("add_delayed_spell", () -> new SpellActionType<>(AddDelayedSpellAction::new, AddDelayedSpellAction::makeCodec));
+    public static final RegistryObject<SpellActionType<RemoveDelayedSpellAction>> REMOVE_DELAYED_SPELL = DEFERRED_REGISTER.register("remove_delayed_spell", () -> new SpellActionType<>(RemoveDelayedSpellAction::new, RemoveDelayedSpellAction::makeCodec));
     
     //variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));

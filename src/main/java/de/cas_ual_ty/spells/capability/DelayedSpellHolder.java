@@ -14,6 +14,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class DelayedSpellHolder implements IDelayedSpellHolder
@@ -98,7 +99,12 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
     @Override
     public void deserializeNBT(ListTag nbt)
     {
-        nbt.stream().filter(t -> t instanceof CompoundTag).forEach(tag -> spells.add(new DelayedSpell((CompoundTag) tag)));
+        nbt.stream()
+                .filter(t -> t instanceof CompoundTag)
+                .map(t -> (CompoundTag)t)
+                .map(DelayedSpell::new)
+                .filter(s -> s.spell != null)
+                .forEach(spells::add);
     }
     
     public static class DelayedSpell
