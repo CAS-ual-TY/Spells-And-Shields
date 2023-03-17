@@ -61,7 +61,7 @@ public class SpellHolder implements ISpellHolder
         
         if(spell != null)
         {
-            slots[slot].run(player.level, player, BuiltinActivations.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+            spell.run(player.level, player, BuiltinActivations.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
         }
         
         slots[slot] = spell;
