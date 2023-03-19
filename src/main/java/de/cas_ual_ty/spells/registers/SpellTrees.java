@@ -128,7 +128,7 @@ public class SpellTrees
         return SpellTree.builder(Component.translatable(KEY_MOVEMENT), spellGetter.apply(Spells.DUMMY), 15, bookshelves(12)) //TODO TEMPORARY_JUMP_BOOST
                 .icon(spellGetter.apply(Spells.DUMMY)) //TODO TEMPORARY_JUMP_BOOST
                 .add(spellGetter.apply(Spells.LEAP), 10, bookshelves(14))
-                .add(spellGetter.apply(Spells.DUMMY), 20, bookshelves(20)) //TODO TEMPORARY_SPEED
+                .add(spellGetter.apply(Spells.TOGGLE_SPEED), 20, bookshelves(20))
                 .leaf()
                 .add(spellGetter.apply(Spells.JUMP), 14, bookshelves(14))
                 .leaf()

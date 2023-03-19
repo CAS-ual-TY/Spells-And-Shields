@@ -14,7 +14,7 @@
                 "bookshelves": 20
               }
             ],
-            "spell": "spells_and_shields:dummy",
+            "spell": "spells_and_shields:toggle_speed",
             "variables": []
           },
           {

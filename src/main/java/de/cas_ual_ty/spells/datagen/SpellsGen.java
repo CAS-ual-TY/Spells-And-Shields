@@ -8,6 +8,9 @@ import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
+import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
+import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
+import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
@@ -33,6 +36,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -40,6 +45,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.JsonCodecProvider;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -97,6 +103,35 @@ public class SpellsGen implements DataProvider
     public void addSpell(ResourceLocation key, Spell spell)
     {
         spells.put(key, spell);
+    }
+    
+    public void addToggleEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
+    {
+        ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
+        String uuidCode = " uuid_from_string('temporary' + '" + mobEffectRL.getPath() + "') ";
+        addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation("textures/mob_effect/" + mobEffectRL.getPath() + ".png")), key, manaCost)
+                .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
+                .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
+                .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
+                
+                .addAction(CheckHasDelayedSpellAction.make(ACTIVE.activation, "player", Compiler.compileString(uuidCode, STRING.get()), "remove"))
+                .addAction(ActivateAction.make(ACTIVE.activation, "apply"))
+                .addAction(DeactivateAction.make("remove", "apply"))
+                .addAction(ActivateAction.make(ON_UNEQUIP.activation, "remove"))
+                
+                .addAction(RemoveDelayedSpellAction.make("remove", "player", Compiler.compileString(uuidCode, STRING.get()), BOOLEAN.get().immediate(false)))
+                
+                .addAction(SimpleManaCheckAction.make("apply", "player"))
+                .addAction(ActivateAction.make("apply", "renew"))
+                .addAction(ApplyPotionEffectAction.make("apply", "player", mobEffect, INT.get().reference("duration"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().immediate(50), Compiler.compileString(uuidCode, STRING.get())))
+                .addParameter(INT.get(), "duration", duration)
+                .addParameter(INT.get(), "amplifier", amplifier)
+                .addParameter(BOOLEAN.get(), "ambient", false)
+                .addParameter(BOOLEAN.get(), "visible", false)
+                .addParameter(BOOLEAN.get(), "show_icon", true)
+                .addTooltip(Component.translatable(descKey))
+        );
     }
     
     protected void addSpells()
@@ -294,6 +329,8 @@ public class SpellsGen implements DataProvider
         dummy(Spells.GROWTH);
         dummy(Spells.GHAST);
         dummy(Spells.ENDER_ARMY);
+        
+        addToggleEffectSpell(Spells.TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 2F, 50, 0);
     }
     
     @Override

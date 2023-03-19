@@ -193,6 +193,8 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_GHAST_DESC, "Shoot a fire charge forward, like a Ghast.");
         add(Spells.KEY_ENDER_ARMY, "Ender Army.");
         add(Spells.KEY_ENDER_ARMY_DESC, "Make all Endermen close to the target you are looking at attack said target.");
+        add(Spells.KEY_TOGGLE_SPEED, "Toggle Speed");
+        //add(Spells.KEY_TOGGLE_SPEED_DESC, ""); TODO
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)

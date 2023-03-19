@@ -137,6 +137,7 @@
   "spell.spells_and_shields.summon_animal.desc": "Create life based on the item in your hand.",
   "spell.spells_and_shields.teleport": "Teleport",
   "spell.spells_and_shields.teleport.desc": "Teleport to where you are looking at.",
+  "spell.spells_and_shields.toggle_speed": "Toggle Speed",
   "spell.spells_and_shields.transfer_mana": "Transfer Mana",
   "spell.spells_and_shields.water_leap": "Water Leap",
   "spell.spells_and_shields.water_leap.desc": "Leap forward like a dolphin (must be underwater).",

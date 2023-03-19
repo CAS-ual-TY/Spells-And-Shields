@@ -151,6 +151,18 @@ public class Spells
     public static final String KEY_ENDER_ARMY = key(ENDER_ARMY);
     public static final String KEY_ENDER_ARMY_DESC = descKey(ENDER_ARMY);
     
+    public static final ResourceLocation PERMANENT_SPEED = rl("permanent_speed");
+    public static final String KEY_PERMANENT_SPEED = key(PERMANENT_SPEED);
+    public static final String KEY_PERMANENT_SPEED_DESC = descKey(PERMANENT_SPEED);
+    
+    public static final ResourceLocation TEMPORARY_SPEED = rl("temporary_speed");
+    public static final String KEY_TEMPORARY_SPEED = key(TEMPORARY_SPEED);
+    public static final String KEY_TEMPORARY_SPEED_DESC = descKey(TEMPORARY_SPEED);
+    
+    public static final ResourceLocation TOGGLE_SPEED = rl("toggle_speed");
+    public static final String KEY_TOGGLE_SPEED = key(TOGGLE_SPEED);
+    public static final String KEY_TOGGLE_SPEED_DESC = descKey(TOGGLE_SPEED);
+    
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Spells::newRegistry);
