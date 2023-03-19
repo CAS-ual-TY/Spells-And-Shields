@@ -12,14 +12,14 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.util.LazyOptional;
 
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 public class DelayedSpellHolder implements IDelayedSpellHolder
 {
     public final Entity holder;
-    private List<DelayedSpell> spells;
+    private LinkedList<DelayedSpell> spells;
     
     public DelayedSpellHolder(Entity holder)
     {
@@ -60,17 +60,35 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
             return false;
         }
         
-        return spells.stream().filter(s -> uuid.equals(s.uuid)).findAny().map(s ->
+        Iterator<DelayedSpell> iterator = spells.iterator();
+        
+        while(iterator.hasNext())
         {
-            activate(s);
-            return true;
-        }).orElse(false);
+            DelayedSpell spell = iterator.next();
+            
+            if(uuid.equals(spell.uuid))
+            {
+                iterator.remove();
+                
+                if(forceActivate)
+                {
+                    activate(spell);
+                }
+                
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     @Override
     public void tick()
     {
-        spells.removeIf(s ->
+        LinkedList<DelayedSpell> theSpells = spells;
+        spells = new LinkedList<>();
+        
+        theSpells.removeIf(s ->
         {
             if(s.tick())
             {
@@ -79,6 +97,11 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
             }
             return false;
         });
+        
+        while(!theSpells.isEmpty())
+        {
+            spells.addFirst(theSpells.removeLast());
+        }
     }
     
     @Override
