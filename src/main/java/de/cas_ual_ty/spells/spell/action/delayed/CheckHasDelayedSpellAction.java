@@ -84,7 +84,10 @@ public class CheckHasDelayedSpellAction extends AffectTypeAction<EntityTarget>
                     }
                 }).ifPresent(uuid1 ->
                 {
-                    ctx.activate(toActivate);
+                    if(holder.hasDelayedSpell(uuid1))
+                    {
+                        ctx.activate(toActivate);
+                    }
                 });
             });
         }
