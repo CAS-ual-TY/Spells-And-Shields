@@ -42,8 +42,11 @@ public class CtxVarTypes
     
     private static void setup(FMLCommonSetupEvent event)
     {
+        DOUBLE.get().addConverter(STRING.get(), double0 -> double0.toString());
         INT.get().addConverter(DOUBLE.get(), integer -> integer.doubleValue());
+        INT.get().addConverter(STRING.get(), integer -> integer.toString());
         VEC3.get().addConverter(BLOCK_POS.get(), vec3 -> new BlockPos(vec3));
         BLOCK_POS.get().addConverter(VEC3.get(), blockPos -> Vec3.atCenterOf(blockPos));
+        BOOLEAN.get().addConverter(STRING.get(), bool -> bool.toString());
     }
 }
