@@ -9,7 +9,6 @@ import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
-import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
@@ -22,13 +21,14 @@ public class SimpleManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
     public static Codec<SimpleManaCheckAction> makeCodec(SpellActionType<SimpleManaCheckAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec()
-        ).apply(instance, (activation) -> new SimpleManaCheckAction(type, activation)));
+                SpellAction.activationCodec(),
+                targetCodec()
+        ).apply(instance, (activation, target) -> new SimpleManaCheckAction(type, activation, target)));
     }
     
-    public static SimpleManaCheckAction make(String activation)
+    public static SimpleManaCheckAction make(String activation, String target)
     {
-        return new SimpleManaCheckAction(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation);
+        return new SimpleManaCheckAction(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation, target);
     }
     
     protected DynamicCtxVar<Double> amount;
@@ -38,9 +38,9 @@ public class SimpleManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
         super(type);
     }
     
-    public SimpleManaCheckAction(SpellActionType<?> type, String activation)
+    public SimpleManaCheckAction(SpellActionType<?> type, String activation, String target)
     {
-        super(type, activation, BuiltinTargetGroups.OWNER.targetGroup);
+        super(type, activation, target);
         this.amount = CtxVarTypes.DOUBLE.get().reference(BuiltinVariables.MANA_COST.name);
     }
     

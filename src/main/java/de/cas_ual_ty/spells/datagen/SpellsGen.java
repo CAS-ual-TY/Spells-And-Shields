@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.cas_ual_ty.spells.registers.CtxVarTypes.*;
-import static de.cas_ual_ty.spells.spell.context.BuiltinActivations.ACTIVE;
+import static de.cas_ual_ty.spells.spell.context.BuiltinActivations.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.MANA_COST;
 
@@ -105,7 +105,7 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 2.5F)
                 .addParameter(DOUBLE.get(), "speed", 2.5)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(ResetFallDistanceAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "look", ""))
                 .addAction(PutVarAction.makeVec3(ACTIVE.activation, " (normalize(look + vec3(0, -get_y(look), 0))) * speed ", "direction"))
@@ -119,7 +119,7 @@ public class SpellsGen implements DataProvider
         childTag.putInt("Age", -24000);
         addSpell(Spells.SUMMON_ANIMAL, new Spell(modId, "summon_animal", Spells.KEY_SUMMON_ANIMAL, 4F)
                 .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "direction", ""))
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(SpawnParticlesAction.make(ACTIVE.activation, OWNER.targetGroup, ParticleTypes.EXPLOSION, INT.get().immediate(3), DOUBLE.get().immediate(0.4)))
                 .addAction(ActivateAction.make(ACTIVE.activation, "cow"))
                 .addAction(SimpleItemCheckAction.make("cow", OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.BEEF, 8)))
@@ -139,7 +139,7 @@ public class SpellsGen implements DataProvider
         addSpell(Spells.FIRE_BALL, new Spell(modId, "fire_ball", Spells.KEY_FIRE_BALL, 5F)
                 .addParameter(DOUBLE.get(), "speed", 2.5)
                 .addAction(SimpleItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.BLAZE_POWDER)))
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(ShootAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().immediate(3D), DOUBLE.get().immediate(0D), INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", ""))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(SourcedDamageAction.make("on_entity_hit", ENTITY_HIT.targetGroup, DOUBLE.get().immediate(2D), PROJECTILE.targetGroup))
@@ -160,7 +160,7 @@ public class SpellsGen implements DataProvider
         addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
                 .addParameter(DOUBLE.get(), "speed", 2.5)
                 .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, 25D, 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, "looked_at_block", "looked_at_entity", "looked_at_nothing"))
-                .addAction(SimpleManaCheckAction.make("looked_at_entity"))
+                .addAction(SimpleManaCheckAction.make("looked_at_entity", OWNER.targetGroup))
                 .addAction(HomeAction.make("looked_at_entity", OWNER.targetGroup, ENTITY_HIT.targetGroup, DOUBLE.get().immediate(3D), INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", ""))
                 .addAction(PlaySoundAction.make("looked_at_entity", OWNER.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(ReplenishManaAction.make("on_entity_hit", ENTITY_HIT.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
@@ -177,7 +177,7 @@ public class SpellsGen implements DataProvider
         tag.putBoolean("crit", true);
         tag.putInt("pickup", 1);
         addSpell(Spells.BLOW_ARROW, new Spell(modId, "blow_arrow", Spells.KEY_BLOW_ARROW, 5F)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, tag, "tag"))
                 .addAction(GetEntityUUIDAction.make(ACTIVE.activation, OWNER.targetGroup, "uuid"))
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, Compiler.compileString(" put_nbt_uuid(tag, 'Owner', uuid) ", COMPOUND_TAG.get()), "tag"))
@@ -207,7 +207,7 @@ public class SpellsGen implements DataProvider
         //TODO fx, test
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
                 .addParameter(DOUBLE.get(), "damage", 10.0)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
                 .addAction(ItemEqualsActivationAction.make(ACTIVE.activation, "item", "shoot", new ItemStack(Items.WATER_BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
                 .addAction(ActivateAction.make(ACTIVE.activation, "offhand"))
@@ -255,7 +255,7 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.JUMP, new Spell(modId, "jump", Spells.KEY_JUMP, 5F)
                 .addParameter(DOUBLE.get(), "speed", 1.5)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(ResetFallDistanceAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "", "motion"))
                 .addAction(SetMotionAction.make(ACTIVE.activation, OWNER.targetGroup, Compiler.compileString(" vec3(0, get_y(motion) + speed, 0) ", VEC3.get())))
@@ -267,7 +267,7 @@ public class SpellsGen implements DataProvider
         dummy(Spells.MANA_SOLES);
         
         addSpell(Spells.FIRE_CHARGE, new Spell(new ItemSpellIcon(SpellIconTypes.ITEM.get(), new ItemStack(Items.FIRE_CHARGE)), Spells.KEY_FIRE_CHARGE, 5F)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(SimpleItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.FIRE_CHARGE)))
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, tag, "tag"))
                 .addAction(GetEntityUUIDAction.make(ACTIVE.activation, OWNER.targetGroup, "uuid"))

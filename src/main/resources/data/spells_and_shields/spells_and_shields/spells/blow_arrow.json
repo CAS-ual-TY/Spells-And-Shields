@@ -7,7 +7,8 @@
   "spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
-      "activation": "active"
+      "activation": "active",
+      "t_target": "owner"
     },
     {
       "type": "spells_and_shields:put_compound_tag",
