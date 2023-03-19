@@ -5,6 +5,7 @@ import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
+import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
@@ -105,6 +106,7 @@ public class SpellActionTypes
     //delayed
     public static final RegistryObject<SpellActionType<AddDelayedSpellAction>> ADD_DELAYED_SPELL = DEFERRED_REGISTER.register("add_delayed_spell", () -> new SpellActionType<>(AddDelayedSpellAction::new, AddDelayedSpellAction::makeCodec));
     public static final RegistryObject<SpellActionType<RemoveDelayedSpellAction>> REMOVE_DELAYED_SPELL = DEFERRED_REGISTER.register("remove_delayed_spell", () -> new SpellActionType<>(RemoveDelayedSpellAction::new, RemoveDelayedSpellAction::makeCodec));
+    public static final RegistryObject<SpellActionType<CheckHasDelayedSpellAction>> CHECK_HAS_DELAYED_SPELL = DEFERRED_REGISTER.register("check_has_delayed_spell", () -> new SpellActionType<>(CheckHasDelayedSpellAction::new, CheckHasDelayedSpellAction::makeCodec));
     
     //variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
