@@ -73,6 +73,19 @@ public class SpellHolder implements ISpellHolder
         return player;
     }
     
+    public void activateAll(String activation)
+    {
+        for(int i = 0; i < getSlots(); i++)
+        {
+            SpellInstance s = getSpell(i);
+            if(s != null)
+            {
+                final int slot = i;
+                s.run(player.level, player, BuiltinActivations.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+            }
+        }
+    }
+    
     public int getAmountSpellEquipped(Spell spell)
     {
         int amount = 0;

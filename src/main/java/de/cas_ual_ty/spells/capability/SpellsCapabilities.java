@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.capability;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
@@ -124,6 +125,14 @@ public class SpellsCapabilities
                 
                 current.sendSync();
             });
+            
+            ExtraTagHolder.getHolder(event.getEntity()).ifPresent(current ->
+            {
+                ExtraTagHolder.getHolder(event.getOriginal()).ifPresent(original ->
+                {
+                    current.deserializeNBT(original.serializeNBT());
+                });
+            });
         }
         else
         {
@@ -146,6 +155,16 @@ public class SpellsCapabilities
                 }
             });
             
+            ManaHolder.getManaHolder(event.getEntity()).ifPresent(manaHolder ->
+            {
+                if(SpellsConfig.RESPAWN_WITH_FULL_MANA.get())
+                {
+                    manaHolder.replenish(manaHolder.getMana());
+                }
+                
+                manaHolder.sendSync();
+            });
+            
             if(!SpellsConfig.CLEAR_SLOTS_ON_DEATH.get() && !SpellsConfig.FORGET_SPELLS_ON_DEATH.get())
             {
                 SpellHolder.getSpellHolder(event.getEntity()).ifPresent(current ->
@@ -156,18 +175,9 @@ public class SpellsCapabilities
                     });
                     
                     current.sendSync();
+                    current.activateAll(BuiltinActivations.ON_EQUIP.activation);
                 });
             }
-            
-            ManaHolder.getManaHolder(event.getEntity()).ifPresent(manaHolder ->
-            {
-                if(SpellsConfig.RESPAWN_WITH_FULL_MANA.get())
-                {
-                    manaHolder.replenish(manaHolder.getMana());
-                }
-                
-                manaHolder.sendSync();
-            });
         }
         
         event.getOriginal().invalidateCaps();
