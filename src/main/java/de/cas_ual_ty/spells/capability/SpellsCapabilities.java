@@ -218,6 +218,8 @@ public class SpellsCapabilities
         if(event.phase == TickEvent.Phase.END && !event.player.level.isClientSide)
         {
             ManaHolder.getManaHolder(event.player).ifPresent(ManaHolder::tick);
+            // TODO FIXME tick for other entity types as well
+            DelayedSpellHolder.getHolder(event.player).ifPresent(DelayedSpellHolder::tick);
         }
     }
     
