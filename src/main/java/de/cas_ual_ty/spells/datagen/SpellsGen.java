@@ -105,16 +105,42 @@ public class SpellsGen implements DataProvider
         spells.put(key, spell);
     }
     
-    public void addToggleEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
+    public void addPermanentEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, int duration, int amplifier)
     {
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('permanent' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
+        addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation("textures/mob_effect/" + mobEffectRL.getPath() + ".png")), key, 0F)
+                .addAction(CopyTargetsAction.make(ON_EQUIP.activation, "player", OWNER.targetGroup))
+                .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
+                .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
+                .addAction(PutVarAction.makeString(ON_EQUIP.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
+                .addAction(PutVarAction.makeString(ON_UNEQUIP.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
+                .addAction(PutVarAction.makeStringMoveVar("apply", DELAY_UUID.name, "uuid"))
+                .addAction(ActivateAction.make(ON_EQUIP.activation, "apply"))
+                .addAction(ActivateAction.make(ON_UNEQUIP.activation, "remove"))
+                .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), BOOLEAN.get().immediate(false)))
+                .addAction(ActivateAction.make("apply", "renew"))
+                .addAction(ApplyPotionEffectAction.make("apply", "player", mobEffect, INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("duration"), STRING.get().reference("uuid"), COMPOUND_TAG.get().immediate(new CompoundTag())))
+                .addParameter(INT.get(), "duration", duration)
+                .addParameter(INT.get(), "amplifier", amplifier)
+                .addParameter(BOOLEAN.get(), "ambient", false)
+                .addParameter(BOOLEAN.get(), "visible", false)
+                .addParameter(BOOLEAN.get(), "show_icon", true)
+                .addTooltip(Component.translatable(descKey))
+        );
+    }
+    
+    public void addToggleEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
+    {
+        ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
+        String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
         addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation("textures/mob_effect/" + mobEffectRL.getPath() + ".png")), key, manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
+                .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
                 .addAction(PutVarAction.makeString(ACTIVE.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
                 .addAction(PutVarAction.makeString(ON_UNEQUIP.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
-                .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
                 .addAction(PutVarAction.makeStringMoveVar("apply", DELAY_UUID.name, "uuid"))
                 .addAction(CheckHasDelayedSpellAction.make(ACTIVE.activation, "player", STRING.get().reference("uuid"), "remove"))
                 .addAction(ActivateAction.make(ACTIVE.activation, "apply"))
@@ -331,6 +357,7 @@ public class SpellsGen implements DataProvider
         dummy(Spells.ENDER_ARMY);
         
         addToggleEffectSpell(Spells.TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 2F, 50, 0);
+        addPermanentEffectSpell(Spells.PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 50, 0);
     }
     
     @Override

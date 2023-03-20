@@ -3,11 +3,11 @@
     "type": "spells_and_shields:default",
     "texture": "minecraft:textures/mob_effect/speed.png"
   },
-  "mana_cost": 2.0,
+  "mana_cost": 0.0,
   "spell_actions": [
     {
       "type": "spells_and_shields:copy_targets",
-      "activation": "active",
+      "activation": "on_equip",
       "td_destination": "player",
       "ts_source": "owner"
     },
@@ -25,14 +25,14 @@
     },
     {
       "type": "spells_and_shields:put_string",
-      "activation": "active",
-      "d_string_source": "<< uuid_from_string('toggle' + 'speed' + spell_slot) >>",
+      "activation": "on_equip",
+      "d_string_source": "<< uuid_from_string('permanent' + 'speed' + spell_slot) >>",
       "var_result": "uuid"
     },
     {
       "type": "spells_and_shields:put_string",
       "activation": "on_unequip",
-      "d_string_source": "<< uuid_from_string('toggle' + 'speed' + spell_slot) >>",
+      "d_string_source": "<< uuid_from_string('permanent' + 'speed' + spell_slot) >>",
       "var_result": "uuid"
     },
     {
@@ -42,21 +42,9 @@
       "var_result": "uuid"
     },
     {
-      "type": "spells_and_shields:check_has_delayed_spell",
-      "a_to_activate": "remove",
-      "activation": "active",
-      "d_string_uuid": "<<uuid>>",
-      "ts_targets": "player"
-    },
-    {
       "type": "spells_and_shields:activate",
       "a_to_activate": "apply",
-      "activation": "active"
-    },
-    {
-      "type": "spells_and_shields:deactivate",
-      "a_to_deactivate": "apply",
-      "activation": "remove"
+      "activation": "on_equip"
     },
     {
       "type": "spells_and_shields:activate",
@@ -69,11 +57,6 @@
       "d_boolean_force_activate": false,
       "d_string_uuid": "<<uuid>>",
       "ts_targets": "player"
-    },
-    {
-      "type": "spells_and_shields:simple_mana_check",
-      "activation": "apply",
-      "t_target": "player"
     },
     {
       "type": "spells_and_shields:activate",
@@ -102,11 +85,11 @@
     }
   ],
   "title": {
-    "translate": "spell.spells_and_shields.toggle_speed"
+    "translate": "spell.spells_and_shields.permanent_speed"
   },
   "tooltip": [
     {
-      "translate": "spell.spells_and_shields.toggle_speed.desc"
+      "translate": "spell.spells_and_shields.permanent_speed.desc"
     }
   ],
   "variables": [

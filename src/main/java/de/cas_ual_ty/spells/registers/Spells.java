@@ -163,6 +163,18 @@ public class Spells
     public static final String KEY_TOGGLE_SPEED = key(TOGGLE_SPEED);
     public static final String KEY_TOGGLE_SPEED_DESC = descKey(TOGGLE_SPEED);
     
+    public static final ResourceLocation PERMANENT_REGENERATION = rl("permanent_regeneration");
+    public static final String KEY_PERMANENT_REGENERATION = key(PERMANENT_REGENERATION);
+    public static final String KEY_PERMANENT_REGENERATION_DESC = descKey(PERMANENT_REGENERATION);
+    
+    public static final ResourceLocation TEMPORARY_REGENERATION = rl("temporary_regeneration");
+    public static final String KEY_TEMPORARY_REGENERATION = key(TEMPORARY_REGENERATION);
+    public static final String KEY_TEMPORARY_REGENERATION_DESC = descKey(TEMPORARY_REGENERATION);
+    
+    public static final ResourceLocation TOGGLE_REGENERATION = rl("toggle_regeneration");
+    public static final String KEY_TOGGLE_REGENERATION = key(TOGGLE_REGENERATION);
+    public static final String KEY_TOGGLE_REGENERATION_DESC = descKey(TOGGLE_REGENERATION);
+    
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Spells::newRegistry);
