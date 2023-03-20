@@ -99,6 +99,42 @@
       "d_int_tick_time": "<<duration>>",
       "d_string_uuid": "<<uuid>>",
       "ts_targets": "player"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a_to_activate": "sound",
+      "activation": "apply"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a_to_activate": "anti_sound",
+      "activation": "apply"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a_to_deactivate": "anti_sound",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a_to_deactivate": "sound",
+      "activation": "anti_sound"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "sound",
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
+      "sound_event": "minecraft:entity.generic.drink",
+      "ts_targets": "player"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "remove",
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
+      "sound_event": "minecraft:entity.splash_potion.break",
+      "ts_targets": "player"
     }
   ],
   "title": {
