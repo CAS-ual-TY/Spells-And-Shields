@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -223,13 +224,22 @@ public class SpellsCapabilities
         }
     }
     
+    private static void levelTick(TickEvent.LevelTickEvent event)
+    {
+        if(event.phase == TickEvent.Phase.END && event.level instanceof ServerLevel level)
+        {
+            for(Entity e : level.getAllEntities())
+            {
+                DelayedSpellHolder.getHolder(e).ifPresent(DelayedSpellHolder::tick);
+            }
+        }
+    }
+    
     private static void playerTick(TickEvent.PlayerTickEvent event)
     {
         if(event.phase == TickEvent.Phase.END && !event.player.level.isClientSide)
         {
             ManaHolder.getManaHolder(event.player).ifPresent(ManaHolder::tick);
-            // TODO FIXME tick for other entity types as well
-            DelayedSpellHolder.getHolder(event.player).ifPresent(DelayedSpellHolder::tick);
         }
     }
     
@@ -242,6 +252,7 @@ public class SpellsCapabilities
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerRespawn);
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerChangedDimensions);
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::startTracking);
+        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::levelTick);
         MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerTick);
     }
 }
