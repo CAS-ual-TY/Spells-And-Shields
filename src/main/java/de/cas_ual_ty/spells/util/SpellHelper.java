@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.PacketDistributor;
@@ -36,7 +37,7 @@ public class SpellHelper
                     }
                     catch(Exception e)
                     {
-                        SpellsAndShields.LOGGER.info("Error when firing spell: " + Spells.getRegistry(serverPlayer.level).getKey(spell.getSpell().get()));
+                        SpellsAndShields.LOGGER.info("Error when firing spell: " + spell.getSpell().unwrap().map(ResourceKey::location, s -> Spells.getRegistry(serverPlayer.level).getKey(s)));
                         if(SpellsConfig.DEBUG_SPELLS.get())
                         {
                             e.printStackTrace();

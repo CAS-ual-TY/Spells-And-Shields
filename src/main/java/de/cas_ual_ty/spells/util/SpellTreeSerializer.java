@@ -63,7 +63,7 @@ public class SpellTreeSerializer
     
     private static void encodeNode(SpellNode spellNode, Registry<Spell> registry, FriendlyByteBuf buf)
     {
-        buf.writeResourceLocation(registry.getKey(spellNode.getSpellDirect()));
+        buf.writeResourceLocation(spellNode.getSpellInstance().getSpell().unwrap().map(ResourceKey::location, registry::getKey));
         buf.writeInt(spellNode.getLevelCost());
         encodeRequirements(spellNode.getRequirements(), buf);
         buf.writeResourceLocation(spellNode.getId().treeId());

@@ -107,7 +107,7 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
                                 }
                             }).orElse(null);
                             
-                            holder.addDelayedSpell(ctx.spell.getNodeId(), uuid, removeActivation, tickTime, tag);
+                            holder.addDelayedSpell(ctx.spell, uuid, removeActivation, tickTime, tag);
                         }
                     });
                 });

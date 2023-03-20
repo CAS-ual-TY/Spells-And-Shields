@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.spell;
 
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -11,6 +12,9 @@ import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -104,22 +108,30 @@ public class SpellInstance
         return new SpellInstance(spell, new LinkedList<>(variables));
     }
     
-    public void toNbt(CompoundTag nbt)
+    public void toNbt(CompoundTag nbt, Registry<Spell> spellRegistry)
     {
         if(nodeId != null)
         {
             nodeId.toNbt(nbt);
         }
+        else
+        {
+            nbt.putString("spellId", spell.unwrap().map(ResourceKey::location, spellRegistry::getKey).toString());
+        }
     }
     
     @javax.annotation.Nullable
-    public static SpellInstance fromNbt(CompoundTag nbt, Registry<SpellTree> spellTreeRegistry)
+    public static SpellInstance fromNbt(CompoundTag nbt, Registry<SpellTree> spellTreeRegistry, Registry<Spell> spellRegistry)
     {
         SpellNodeId nodeId = SpellNodeId.fromNbt(nbt);
         
         if(nodeId != null)
         {
             return nodeId.getSpellInstance(spellTreeRegistry);
+        }
+        else if(nbt.contains("spellId", Tag.TAG_STRING))
+        {
+            return new SpellInstance(spellRegistry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, new ResourceLocation(nbt.getString("spellId")))));
         }
         else
         {

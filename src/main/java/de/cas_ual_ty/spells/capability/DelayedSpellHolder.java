@@ -2,11 +2,14 @@ package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
+import de.cas_ual_ty.spells.registers.Spells;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.target.Target;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.SpellTree;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +32,7 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
     
     private void activate(DelayedSpell spell)
     {
-        SpellInstance s = spell.spell.getSpellInstance(SpellTrees.getRegistry(holder.level));
+        SpellInstance s = spell.spell;
         if(s != null)
         {
             s.run(holder.level, null, spell.activation, ctx ->
@@ -47,7 +50,7 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
     }
     
     @Override
-    public void addDelayedSpell(SpellNodeId spell, UUID uuid, String activation, int tickTime, CompoundTag tag)
+    public void addDelayedSpell(SpellInstance spell, UUID uuid, String activation, int tickTime, CompoundTag tag)
     {
         spells.add(new DelayedSpell(spell, uuid, activation, tickTime, tag));
     }
@@ -119,25 +122,27 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
     @Override
     public ListTag serializeNBT()
     {
+        Registry<Spell> spellRegistry = Spells.getRegistry(holder.level);
         ListTag tag = new ListTag();
-        spells.stream().map(DelayedSpell::serializeNBT).forEach(tag::add);
+        spells.stream().map(ds -> ds.serializeNBT(spellRegistry)).forEach(tag::add);
         return tag;
     }
     
     @Override
     public void deserializeNBT(ListTag nbt)
     {
+        Registry<SpellTree> spellTreeRegistry = SpellTrees.getRegistry(holder.level);
+        Registry<Spell> spellRegistry = Spells.getRegistry(holder.level);
         nbt.stream()
                 .filter(t -> t instanceof CompoundTag)
-                .map(t -> (CompoundTag) t)
-                .map(DelayedSpell::new)
+                .map(t -> new DelayedSpell((CompoundTag) t, spellTreeRegistry, spellRegistry))
                 .filter(s -> s.spell != null)
                 .forEach(spells::add);
     }
     
     public static class DelayedSpell
     {
-        public final SpellNodeId spell;
+        public final SpellInstance spell;
         public final UUID uuid;
         public final String activation;
         public final int tickTime;
@@ -145,7 +150,7 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
         
         private int time;
         
-        public DelayedSpell(SpellNodeId spell, UUID uuid, String activation, int tickTime, CompoundTag tag)
+        public DelayedSpell(SpellInstance spell, UUID uuid, String activation, int tickTime, CompoundTag tag)
         {
             this.spell = spell;
             this.uuid = uuid;
@@ -155,9 +160,9 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
             this.time = 0;
         }
         
-        public DelayedSpell(CompoundTag tag)
+        public DelayedSpell(CompoundTag tag, Registry<SpellTree> spellTreeRegistry, Registry<Spell> spellRegistry)
         {
-            this.spell = SpellNodeId.fromNbt(tag);
+            this.spell = SpellInstance.fromNbt(tag, spellTreeRegistry, spellRegistry);
             
             if(tag.hasUUID("uuid"))
             {
@@ -176,6 +181,11 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
         
         public boolean tick()
         {
+            if(!spell.getSpell().isBound())
+            {
+                return false;
+            }
+            
             return ++time >= tickTime;
         }
         
@@ -184,10 +194,11 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
             return time;
         }
         
-        public CompoundTag serializeNBT()
+        public CompoundTag serializeNBT(Registry<Spell> spellRegistry)
         {
             CompoundTag tag = new CompoundTag();
-            spell.toNbt(tag);
+            
+            spell.toNbt(tag, spellRegistry);
             
             if(uuid != null)
             {

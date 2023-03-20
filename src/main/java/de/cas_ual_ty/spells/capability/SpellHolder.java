@@ -14,6 +14,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -53,14 +54,17 @@ public class SpellHolder implements ISpellHolder
     @Override
     public void setSpell(int slot, @Nullable SpellInstance spell)
     {
-        if(slots[slot] != null)
+        if(!player.level.isClientSide)
         {
-            slots[slot].run(player.level, player, BuiltinActivations.ON_UNEQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
-        }
-        
-        if(spell != null)
-        {
-            spell.run(player.level, player, BuiltinActivations.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+            if(slots[slot] != null)
+            {
+                slots[slot].run(player.level, player, BuiltinActivations.ON_UNEQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+            }
+            
+            if(spell != null)
+            {
+                spell.run(player.level, player, BuiltinActivations.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+            }
         }
         
         slots[slot] = spell;
@@ -112,13 +116,13 @@ public class SpellHolder implements ISpellHolder
     public SpellsSyncMessage makeSyncMessage()
     {
         Registry<Spell> registry = Spells.getRegistry(player.getLevel());
-        return new SpellsSyncMessage(player.getId(), Arrays.stream(slots).map(s -> s != null ? registry.getKey(s.getSpell().get()) : null).toArray(ResourceLocation[]::new));
+        return new SpellsSyncMessage(player.getId(), Arrays.stream(slots).map(s -> s != null ? s.getSpell().unwrap().map(ResourceKey::location, registry::getKey) : null).toArray(ResourceLocation[]::new));
     }
     
     @Override
     public ListTag serializeNBT()
     {
-        Registry<Spell> registry = Spells.getRegistry(player.getLevel());
+        Registry<Spell> spellRegistry = Spells.getRegistry(player.getLevel());
         
         ListTag list = new ListTag();
         for(int i = 0; i < SPELL_SLOTS; ++i)
@@ -127,7 +131,7 @@ public class SpellHolder implements ISpellHolder
             
             if(slots[i] != null)
             {
-                slots[i].toNbt(tag);
+                slots[i].toNbt(tag, spellRegistry);
             }
             
             list.add(i, tag);
@@ -138,7 +142,8 @@ public class SpellHolder implements ISpellHolder
     @Override
     public void deserializeNBT(ListTag tag)
     {
-        Registry<SpellTree> registry = SpellTrees.getRegistry(player.getLevel());
+        Registry<SpellTree> spellTreeRegistry = SpellTrees.getRegistry(player.getLevel());
+        Registry<Spell> spellRegistry = Spells.getRegistry(player.getLevel());
         
         if(tag.getElementType() != Tag.TAG_COMPOUND)
         {
@@ -147,7 +152,7 @@ public class SpellHolder implements ISpellHolder
         
         for(int i = 0; i < SPELL_SLOTS && i < tag.size(); ++i)
         {
-            slots[i] = SpellInstance.fromNbt(tag.getCompound(i), registry);
+            slots[i] = SpellInstance.fromNbt(tag.getCompound(i), spellTreeRegistry, spellRegistry);
         }
     }
     
