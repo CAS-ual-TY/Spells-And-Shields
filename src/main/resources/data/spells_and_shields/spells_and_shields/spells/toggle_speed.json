@@ -18,16 +18,34 @@
       "ts_source": "owner"
     },
     {
+      "type": "spells_and_shields:put_string",
+      "activation": "active",
+      "d_string_source": "<< uuid_from_string('permanent' + 'speed' + spell_slot) >>",
+      "var_result": "uuid"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "on_unequip",
+      "d_string_source": "<< uuid_from_string('permanent' + 'speed' + spell_slot) >>",
+      "var_result": "uuid"
+    },
+    {
       "type": "spells_and_shields:copy_targets",
       "activation": "apply",
       "td_destination": "player",
       "ts_source": "holder"
     },
     {
+      "type": "spells_and_shields:put_string",
+      "activation": "apply",
+      "d_string_source": "<<delay_uuid>>",
+      "var_result": "uuid"
+    },
+    {
       "type": "spells_and_shields:check_has_delayed_spell",
       "a_to_activate": "remove",
       "activation": "active",
-      "d_string_uuid": "<< uuid_from_string('temporary' + 'speed') >>",
+      "d_string_uuid": "<<uuid>>",
       "ts_targets": "player"
     },
     {
@@ -49,7 +67,7 @@
       "type": "spells_and_shields:remove_delayed_spell",
       "activation": "remove",
       "d_boolean_force_activate": false,
-      "d_string_uuid": "<< uuid_from_string('temporary' + 'speed') >>",
+      "d_string_uuid": "<<uuid>>",
       "ts_targets": "player"
     },
     {
@@ -69,7 +87,7 @@
       "d_boolean_showIcon": "<<show_icon>>",
       "d_boolean_visible": "<<visible>>",
       "d_int_amplifier": "<<amplifier>>",
-      "d_int_duration": "<<duration>>",
+      "d_int_duration": "<<duration+1>>",
       "mob_effect": "minecraft:speed",
       "ts_targets": "player"
     },
@@ -77,8 +95,9 @@
       "type": "spells_and_shields:add_delayed_spell",
       "a_on_remove": "apply",
       "activation": "renew",
-      "d_int_tick_time": 50,
-      "d_string_uuid": "<< uuid_from_string('temporary' + 'speed') >>",
+      "d_compound_tag_extra_data": {},
+      "d_int_tick_time": "<<duration>>",
+      "d_string_uuid": "<< uuid_from_string('permanent' + 'speed' + spell_slot) >>",
       "ts_targets": "player"
     }
   ],

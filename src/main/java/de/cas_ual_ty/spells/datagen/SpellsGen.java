@@ -54,7 +54,7 @@ import java.util.Map;
 import static de.cas_ual_ty.spells.registers.CtxVarTypes.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinActivations.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups.*;
-import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.MANA_COST;
+import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.*;
 
 public class SpellsGen implements DataProvider
 {
@@ -108,23 +108,23 @@ public class SpellsGen implements DataProvider
     public void addToggleEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
     {
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
-        String uuidCode = " uuid_from_string('temporary' + '" + mobEffectRL.getPath() + "') ";
+        String uuidCode = " uuid_from_string('permanent' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
         addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation("textures/mob_effect/" + mobEffectRL.getPath() + ".png")), key, manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
+                .addAction(PutVarAction.makeString(ACTIVE.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
+                .addAction(PutVarAction.makeString(ON_UNEQUIP.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
-                
-                .addAction(CheckHasDelayedSpellAction.make(ACTIVE.activation, "player", Compiler.compileString(uuidCode, STRING.get()), "remove"))
+                .addAction(PutVarAction.makeStringMoveVar("apply", DELAY_UUID.name, "uuid"))
+                .addAction(CheckHasDelayedSpellAction.make(ACTIVE.activation, "player", STRING.get().reference("uuid"), "remove"))
                 .addAction(ActivateAction.make(ACTIVE.activation, "apply"))
                 .addAction(DeactivateAction.make("remove", "apply"))
                 .addAction(ActivateAction.make(ON_UNEQUIP.activation, "remove"))
-                
-                .addAction(RemoveDelayedSpellAction.make("remove", "player", Compiler.compileString(uuidCode, STRING.get()), BOOLEAN.get().immediate(false)))
-                
+                .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), BOOLEAN.get().immediate(false)))
                 .addAction(SimpleManaCheckAction.make("apply", "player"))
                 .addAction(ActivateAction.make("apply", "renew"))
-                .addAction(ApplyPotionEffectAction.make("apply", "player", mobEffect, INT.get().reference("duration"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().immediate(50), Compiler.compileString(uuidCode, STRING.get())))
+                .addAction(ApplyPotionEffectAction.make("apply", "player", mobEffect, INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("duration"), Compiler.compileString(uuidCode, STRING.get()), COMPOUND_TAG.get().immediate(new CompoundTag())))
                 .addParameter(INT.get(), "duration", duration)
                 .addParameter(INT.get(), "amplifier", amplifier)
                 .addParameter(BOOLEAN.get(), "ambient", false)

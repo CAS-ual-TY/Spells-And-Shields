@@ -36,14 +36,20 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HOLDER.targetGroup).addTargets(Target.of(holder));
                 ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.DELAY_TIME.name, spell.getTime());
+                ctx.setCtxVar(CtxVarTypes.COMPOUND_TAG.get(), BuiltinVariables.DELAY_TAG.name, spell.tag);
+                
+                if(spell.uuid != null)
+                {
+                    ctx.setCtxVar(CtxVarTypes.STRING.get(), BuiltinVariables.DELAY_UUID.name, spell.uuid.toString());
+                }
             });
         }
     }
     
     @Override
-    public void addDelayedSpell(SpellNodeId spell, UUID uuid, String activation, int tickTime)
+    public void addDelayedSpell(SpellNodeId spell, UUID uuid, String activation, int tickTime, CompoundTag tag)
     {
-        spells.add(new DelayedSpell(spell, uuid, activation, tickTime));
+        spells.add(new DelayedSpell(spell, uuid, activation, tickTime, tag));
     }
     
     @Override
@@ -135,15 +141,17 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
         public final UUID uuid;
         public final String activation;
         public final int tickTime;
+        public final CompoundTag tag;
         
         private int time;
         
-        public DelayedSpell(SpellNodeId spell, UUID uuid, String activation, int tickTime)
+        public DelayedSpell(SpellNodeId spell, UUID uuid, String activation, int tickTime, CompoundTag tag)
         {
             this.spell = spell;
             this.uuid = uuid;
             this.activation = activation;
             this.tickTime = tickTime;
+            this.tag = tag;
             this.time = 0;
         }
         
@@ -163,6 +171,7 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
             activation = tag.getString("activation");
             tickTime = tag.getInt("maxTime");
             time = tag.getInt("time");
+            this.tag = tag.getCompound("tag");
         }
         
         public boolean tick()
@@ -188,6 +197,7 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
             tag.putString("activation", activation);
             tag.putInt("maxTime", tickTime);
             tag.putInt("time", time);
+            tag.put("tag", this.tag);
             return tag;
         }
     }

@@ -14,6 +14,7 @@ import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.UUID;
 
@@ -26,30 +27,33 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
                 targetsCodec(),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("on_remove")).forGetter(AddDelayedSpellAction::getRemoveActivation),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("tick_time")).forGetter(AddDelayedSpellAction::getTickTime),
-                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddDelayedSpellAction::getUuid)
-        ).apply(instance, (activation, targets, removeActivation, tickTime, uuid) -> new AddDelayedSpellAction(type, activation, targets, removeActivation, tickTime, uuid)));
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddDelayedSpellAction::getUuid),
+                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("extra_data")).forGetter(AddDelayedSpellAction::getTag)
+        ).apply(instance, (activation, targets, removeActivation, tickTime, uuid, tag) -> new AddDelayedSpellAction(type, activation, targets, removeActivation, tickTime, uuid, tag)));
     }
     
-    public static AddDelayedSpellAction make(String activation, String targets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid)
+    public static AddDelayedSpellAction make(String activation, String targets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag)
     {
-        return new AddDelayedSpellAction(SpellActionTypes.ADD_DELAYED_SPELL.get(), activation, targets, removeActivation, tickTime, uuid);
+        return new AddDelayedSpellAction(SpellActionTypes.ADD_DELAYED_SPELL.get(), activation, targets, removeActivation, tickTime, uuid, tag);
     }
     
     protected String removeActivation;
     protected DynamicCtxVar<Integer> tickTime;
     protected DynamicCtxVar<String> uuid;
+    protected DynamicCtxVar<CompoundTag> tag;
     
     public AddDelayedSpellAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public AddDelayedSpellAction(SpellActionType<?> type, String activation, String targets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid)
+    public AddDelayedSpellAction(SpellActionType<?> type, String activation, String targets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag)
     {
         super(type, activation, targets);
         this.removeActivation = removeActivation;
         this.tickTime = tickTime;
         this.uuid = uuid;
+        this.tag = tag;
     }
     
     public String getRemoveActivation()
@@ -67,6 +71,11 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
         return uuid;
     }
     
+    public DynamicCtxVar<CompoundTag> getTag()
+    {
+        return tag;
+    }
+    
     @Override
     public ITargetType<EntityTarget> getAffectedType()
     {
@@ -82,22 +91,25 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
             {
                 tickTime.getValue(ctx).ifPresent(tickTime ->
                 {
-                    if(tickTime > 0)
+                    tag.getValue(ctx).ifPresent(tag ->
                     {
-                        UUID uuid = this.uuid.getValue(ctx).map(s ->
+                        if(tickTime > 0)
                         {
-                            try
+                            UUID uuid = this.uuid.getValue(ctx).map(s ->
                             {
-                                return UUID.fromString(s);
-                            }
-                            catch(IllegalArgumentException e)
-                            {
-                                return null;
-                            }
-                        }).orElse(null);
-                        
-                        holder.addDelayedSpell(ctx.spell.getNodeId(), uuid, removeActivation, tickTime);
-                    }
+                                try
+                                {
+                                    return UUID.fromString(s);
+                                }
+                                catch(IllegalArgumentException e)
+                                {
+                                    return null;
+                                }
+                            }).orElse(null);
+                            
+                            holder.addDelayedSpell(ctx.spell.getNodeId(), uuid, removeActivation, tickTime, tag);
+                        }
+                    });
                 });
             });
         }
