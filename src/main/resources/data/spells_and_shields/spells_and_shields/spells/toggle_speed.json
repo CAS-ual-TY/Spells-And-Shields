@@ -97,7 +97,7 @@
       "activation": "renew",
       "d_compound_tag_extra_data": {},
       "d_int_tick_time": "<<duration>>",
-      "d_string_uuid": "<< uuid_from_string('permanent' + 'speed' + spell_slot) >>",
+      "d_string_uuid": "<<uuid>>",
       "ts_targets": "player"
     }
   ],

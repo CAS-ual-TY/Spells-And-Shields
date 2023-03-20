@@ -124,7 +124,7 @@ public class SpellsGen implements DataProvider
                 .addAction(SimpleManaCheckAction.make("apply", "player"))
                 .addAction(ActivateAction.make("apply", "renew"))
                 .addAction(ApplyPotionEffectAction.make("apply", "player", mobEffect, INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("duration"), Compiler.compileString(uuidCode, STRING.get()), COMPOUND_TAG.get().immediate(new CompoundTag())))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("duration"), STRING.get().reference("uuid"), COMPOUND_TAG.get().immediate(new CompoundTag())))
                 .addParameter(INT.get(), "duration", duration)
                 .addParameter(INT.get(), "amplifier", amplifier)
                 .addParameter(BOOLEAN.get(), "ambient", false)
