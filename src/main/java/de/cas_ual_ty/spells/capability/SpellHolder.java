@@ -9,7 +9,6 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -126,9 +125,9 @@ public class SpellHolder implements ISpellHolder
         {
             CompoundTag tag = new CompoundTag();
             
-            if(slots[i] != null && slots[i].getNodeId() != null)
+            if(slots[i] != null)
             {
-                slots[i].getNodeId().toNbt(tag);
+                slots[i].toNbt(tag);
             }
             
             list.add(i, tag);
@@ -148,16 +147,7 @@ public class SpellHolder implements ISpellHolder
         
         for(int i = 0; i < SPELL_SLOTS && i < tag.size(); ++i)
         {
-            SpellNodeId nodeId = SpellNodeId.fromNbt(tag.getCompound(i));
-            
-            if(nodeId == null)
-            {
-                slots[i] = null;
-            }
-            else
-            {
-                slots[i] = nodeId.getSpellInstance(registry);
-            }
+            slots[i] = SpellInstance.fromNbt(tag.getCompound(i), registry);
         }
     }
     

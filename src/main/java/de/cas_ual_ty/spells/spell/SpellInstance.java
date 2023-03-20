@@ -7,7 +7,10 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -99,5 +102,28 @@ public class SpellInstance
     public SpellInstance copy()
     {
         return new SpellInstance(spell, new LinkedList<>(variables));
+    }
+    
+    public void toNbt(CompoundTag nbt)
+    {
+        if(nodeId != null)
+        {
+            nodeId.toNbt(nbt);
+        }
+    }
+    
+    @javax.annotation.Nullable
+    public static SpellInstance fromNbt(CompoundTag nbt, Registry<SpellTree> spellTreeRegistry)
+    {
+        SpellNodeId nodeId = SpellNodeId.fromNbt(nbt);
+        
+        if(nodeId != null)
+        {
+            return nodeId.getSpellInstance(spellTreeRegistry);
+        }
+        else
+        {
+            return null;
+        }
     }
 }
