@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.registers.TargetTypes;
@@ -352,7 +353,7 @@ public class SpellsGen implements DataProvider
         dummy(Spells.SPIT_METAL);
         dummy(Spells.FLAMETHROWER);
         dummy(Spells.LAVA_WALKER);
-        dummy(Spells.SILENCE_TARGET);
+        dummy(Spells.SILENCE_TARGET, Spells.KEY_SILENCE_TARGET, Spells.KEY_SILENCE_TARGET_DESC, new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")));
         dummy(Spells.RANDOM_TELEPORT);
         dummy(Spells.FORCED_TELEPORT);
         dummy(Spells.TELEPORT);

@@ -1,7 +1,7 @@
 {
   "icon": {
     "type": "spells_and_shields:default",
-    "texture": "spells_and_shields:textures/spell/silence_target.png"
+    "texture": "spells_and_shields:textures/mob_effect/silence.png"
   },
   "mana_cost": 0.0,
   "spell_actions": [],

@@ -175,7 +175,7 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_FLAMETHROWER_DESC, "Breath flames from your mouth setting everything on fire.");
         add(Spells.KEY_LAVA_WALKER, "Lava Walker");
         add(Spells.KEY_LAVA_WALKER_DESC, "Walk on lava by turning the blocks you walk on into obsidian.");
-        add(Spells.KEY_SILENCE_TARGET, "Blow Arrow");
+        add(Spells.KEY_SILENCE_TARGET, "Silence");
         add(Spells.KEY_SILENCE_TARGET_DESC, "Silence the target you are looking at within a certain range.");
         add(Spells.KEY_RANDOM_TELEPORT, "Random Teleport");
         add(Spells.KEY_RANDOM_TELEPORT_DESC, "Randomly teleport away. This spell can fail.");
