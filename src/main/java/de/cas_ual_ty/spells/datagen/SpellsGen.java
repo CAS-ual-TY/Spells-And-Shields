@@ -111,7 +111,7 @@ public class SpellsGen implements DataProvider
     public void addPermanentEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, int duration, int amplifier)
     {
         MutableComponent component = mobEffect.getDisplayName().copy();
-        if (amplifier > 0)
+        if(amplifier > 0)
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
@@ -148,7 +148,7 @@ public class SpellsGen implements DataProvider
     public void addToggleEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
     {
         MutableComponent component = mobEffect.getDisplayName().copy();
-        if (amplifier > 0)
+        if(amplifier > 0)
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
