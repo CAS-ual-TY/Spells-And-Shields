@@ -1,7 +1,10 @@
 {
   "icon": {
-    "type": "spells_and_shields:default",
-    "texture": "spells_and_shields:textures/spell/aqua_affinity.png"
+    "type": "spells_and_shields:item",
+    "item": {
+      "Count": 1,
+      "id": "minecraft:enchanted_book"
+    }
   },
   "mana_cost": 0.0,
   "spell_actions": [],

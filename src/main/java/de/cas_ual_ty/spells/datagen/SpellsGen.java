@@ -289,7 +289,7 @@ public class SpellsGen implements DataProvider
         dummy(Spells.HEALTH_BOOST);
         dummy(Spells.MANA_BOOST);
         dummy(Spells.WATER_LEAP);
-        dummy(Spells.AQUA_AFFINITY);
+        dummy(Spells.AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY_DESC, new ItemSpellIcon(SpellIconTypes.ITEM.get(), new ItemStack(Items.ENCHANTED_BOOK)));
         
         //TODO fx, test
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
