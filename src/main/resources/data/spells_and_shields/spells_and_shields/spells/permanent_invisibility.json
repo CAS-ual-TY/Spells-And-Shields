@@ -88,7 +88,6 @@
     "translate": "spell.spells_and_shields.permanent_invisibility",
     "with": [
       {
-        "color": "blue",
         "translate": "effect.minecraft.invisibility"
       }
     ]

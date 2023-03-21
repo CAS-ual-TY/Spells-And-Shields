@@ -141,7 +141,6 @@
     "translate": "spell.spells_and_shields.toggle_night_vision",
     "with": [
       {
-        "color": "blue",
         "translate": "effect.minecraft.night_vision"
       }
     ]

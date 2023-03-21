@@ -141,7 +141,6 @@
     "translate": "spell.spells_and_shields.toggle_replenishment",
     "with": [
       {
-        "color": "blue",
         "translate": "effect.spells_and_shields.replenishment"
       }
     ]

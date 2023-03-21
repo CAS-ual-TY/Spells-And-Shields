@@ -88,7 +88,6 @@
     "translate": "spell.spells_and_shields.permanent_resistance",
     "with": [
       {
-        "color": "blue",
         "translate": "effect.minecraft.resistance"
       }
     ]

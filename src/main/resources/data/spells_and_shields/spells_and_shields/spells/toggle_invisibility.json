@@ -141,7 +141,6 @@
     "translate": "spell.spells_and_shields.toggle_invisibility",
     "with": [
       {
-        "color": "blue",
         "translate": "effect.minecraft.invisibility"
       }
     ]

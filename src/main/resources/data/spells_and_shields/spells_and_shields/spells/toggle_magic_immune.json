@@ -141,7 +141,6 @@
     "translate": "spell.spells_and_shields.toggle_magic_immune",
     "with": [
       {
-        "color": "blue",
         "translate": "effect.spells_and_shields.magic_immune"
       }
     ]

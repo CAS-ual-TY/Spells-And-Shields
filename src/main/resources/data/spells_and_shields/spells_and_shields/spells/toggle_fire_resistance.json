@@ -141,7 +141,6 @@
     "translate": "spell.spells_and_shields.toggle_fire_resistance",
     "with": [
       {
-        "color": "blue",
         "translate": "effect.minecraft.fire_resistance"
       }
     ]

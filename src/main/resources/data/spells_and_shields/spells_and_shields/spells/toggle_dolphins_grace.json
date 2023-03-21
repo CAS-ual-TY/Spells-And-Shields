@@ -141,7 +141,6 @@
     "translate": "spell.spells_and_shields.toggle_dolphins_grace",
     "with": [
       {
-        "color": "blue",
         "translate": "effect.minecraft.dolphins_grace"
       }
     ]

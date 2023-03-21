@@ -116,7 +116,6 @@ public class SpellsGen implements DataProvider
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
-        component.withStyle(mobEffect.getCategory().getTooltipFormatting());
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('permanent' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
         addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), 0F)
@@ -137,7 +136,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
-                .addTooltip(Component.translatable(descKey, component))
+                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())))
         );
     }
     
@@ -153,7 +152,6 @@ public class SpellsGen implements DataProvider
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
-        component.withStyle(mobEffect.getCategory().getTooltipFormatting());
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
         addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), manaCost)
@@ -183,7 +181,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
-                .addTooltip(Component.translatable(descKey, component))
+                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())))
         );
     }
     

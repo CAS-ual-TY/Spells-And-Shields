@@ -141,7 +141,6 @@
     "translate": "spell.spells_and_shields.toggle_slow_falling",
     "with": [
       {
-        "color": "blue",
         "translate": "effect.minecraft.slow_falling"
       }
     ]
