@@ -59,6 +59,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<GetTargetGroupSizeAction>> GET_TARGET_GROUP_SIZE = DEFERRED_REGISTER.register("get_target_group_size", () -> new SpellActionType<>(GetTargetGroupSizeAction::new, GetTargetGroupSizeAction::makeCodec));
     public static final RegistryObject<SpellActionType<ApplyPotionEffectAction>> APPLY_POTION_EFFECT = DEFERRED_REGISTER.register("apply_potion_effect", () -> new SpellActionType<>(ApplyPotionEffectAction::new, ApplyPotionEffectAction::makeCodec));
     public static final RegistryObject<SpellActionType<AddAttributeModifierAction>> ADD_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("add_attribute_modifier", () -> new SpellActionType<>(AddAttributeModifierAction::new, AddAttributeModifierAction::makeCodec));
+    public static final RegistryObject<SpellActionType<RemoveAttributeModifierAction>> REMOVE_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("remove_attribute_modifier", () -> new SpellActionType<>(RemoveAttributeModifierAction::new, RemoveAttributeModifierAction::makeCodec));
     
     //target
     public static final RegistryObject<SpellActionType<CopyTargetsAction>> COPY_TARGETS = DEFERRED_REGISTER.register("copy_targets", () -> new SpellActionType<>(CopyTargetsAction::new, CopyTargetsAction::makeCodec));
