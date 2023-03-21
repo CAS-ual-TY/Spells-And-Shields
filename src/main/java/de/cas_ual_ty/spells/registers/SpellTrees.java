@@ -70,9 +70,9 @@ public class SpellTrees
     public static SpellTree fireTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_NETHER), spellGetter.apply(Spells.FIRE_BALL), 15, bookshelves(28))
-                .icon(spellGetter.apply(Spells.DUMMY)) //TODO TEMPORARY_FIRE_RESISTANCE
+                .icon(spellGetter.apply(Spells.TOGGLE_FIRE_RESISTANCE))
                 .add(spellGetter.apply(Spells.LAVA_WALKER), 20, bookshelves(19))
-                .add(spellGetter.apply(Spells.DUMMY), 30, bookshelves(30)) //TODO TEMPORARY_FIRE_RESISTANCE
+                .add(spellGetter.apply(Spells.TOGGLE_FIRE_RESISTANCE), 30, bookshelves(30))
                 .leaf()
                 .add(spellGetter.apply(Spells.DRAIN_FLAME), 20, bookshelves(20))
                 .leaf()
@@ -84,16 +84,16 @@ public class SpellTrees
     
     public static SpellTree waterTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        return SpellTree.builder(Component.translatable(KEY_OCEAN), spellGetter.apply(Spells.DUMMY), 10) //TODO TEMPORARY_WATER_BREATHING
-                .icon(spellGetter.apply(Spells.DUMMY)) //TODO TEMPORARY_DOLPHINS_GRACE
-                .add(spellGetter.apply(Spells.DUMMY), 20, bookshelves(20)) //TODO TEMPORARY_REGENERATION
+        return SpellTree.builder(Component.translatable(KEY_OCEAN), spellGetter.apply(Spells.TOGGLE_WATER_BREATHING), 10)
+                .icon(spellGetter.apply(Spells.TOGGLE_DOLPHINS_GRACE))
+                .add(spellGetter.apply(Spells.TOGGLE_REGENERATION), 20, bookshelves(20))
                 .add(spellGetter.apply(Spells.GROWTH), 20, bookshelves(20))
                 .leaf()
                 .add(spellGetter.apply(Spells.AQUA_AFFINITY), 20, bookshelves(20))
                 .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.WATER_LEAP), 5, bookshelves(10))
-                .add(spellGetter.apply(Spells.DUMMY), 30, bookshelves(30)) //TODO TEMPORARY_DOLPHINS_GRACE
+                .add(spellGetter.apply(Spells.TOGGLE_DOLPHINS_GRACE), 30, bookshelves(30))
                 .leaf()
                 .add(spellGetter.apply(Spells.FROST_WALKER), 10, bookshelves(14))
                 .leaf()
@@ -110,13 +110,13 @@ public class SpellTrees
     public static SpellTree earthTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_MINING), spellGetter.apply(Spells.BLAST_SMELT), 5, bookshelves(8))
-                .icon(spellGetter.apply(Spells.DUMMY)) //TODO TEMPORARY_HASTE
+                .icon(spellGetter.apply(Spells.TOGGLE_HASTE))
                 .add(spellGetter.apply(Spells.SILENCE_TARGET), 25, bookshelves(26))
-                .add(spellGetter.apply(Spells.DUMMY), 25, bookshelves(26)) //TODO TEMPORARY_MAGIC_IMMUNE
+                .add(spellGetter.apply(Spells.TOGGLE_MAGIC_IMMUNE), 25, bookshelves(26))
                 .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.INSTANT_MINE), 15, bookshelves(18))
-                .add(spellGetter.apply(Spells.DUMMY), 25, bookshelves(24)) //TODO TEMPORARY_HASTE
+                .add(spellGetter.apply(Spells.TOGGLE_HASTE), 25, bookshelves(24))
                 .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.SPIT_METAL), 10, bookshelves(12))
@@ -125,15 +125,15 @@ public class SpellTrees
     
     public static SpellTree airTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        return SpellTree.builder(Component.translatable(KEY_MOVEMENT), spellGetter.apply(Spells.DUMMY), 15, bookshelves(12)) //TODO TEMPORARY_JUMP_BOOST
-                .icon(spellGetter.apply(Spells.DUMMY)) //TODO TEMPORARY_JUMP_BOOST
+        return SpellTree.builder(Component.translatable(KEY_MOVEMENT), spellGetter.apply(Spells.TOGGLE_JUMP_BOOST), 15, bookshelves(12))
+                .icon(spellGetter.apply(Spells.TOGGLE_JUMP_BOOST))
                 .add(spellGetter.apply(Spells.LEAP), 10, bookshelves(14))
                 .add(spellGetter.apply(Spells.TOGGLE_SPEED), 20, bookshelves(20))
                 .leaf()
                 .add(spellGetter.apply(Spells.JUMP), 14, bookshelves(14))
                 .leaf()
                 .add(spellGetter.apply(Spells.MANA_SOLES), 15, bookshelves(12))
-                .add(spellGetter.apply(Spells.DUMMY), 15, bookshelves(16)) //TODO TEMPORARY_SLOW_FALLING
+                .add(spellGetter.apply(Spells.TOGGLE_SLOW_FALLING), 15, bookshelves(16))
                 .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.BLOW_ARROW), 10, bookshelves(16))

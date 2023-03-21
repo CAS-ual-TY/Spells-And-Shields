@@ -1,5 +1,5 @@
 {
-  "icon": "spells_and_shields:dummy",
+  "icon": "spells_and_shields:toggle_fire_resistance",
   "requirements": [],
   "root": {
     "children": [
@@ -14,7 +14,7 @@
                 "bookshelves": 30
               }
             ],
-            "spell": "spells_and_shields:dummy",
+            "spell": "spells_and_shields:toggle_fire_resistance",
             "variables": []
           },
           {

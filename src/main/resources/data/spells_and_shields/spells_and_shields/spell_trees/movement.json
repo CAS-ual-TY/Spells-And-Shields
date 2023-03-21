@@ -1,5 +1,5 @@
 {
-  "icon": "spells_and_shields:dummy",
+  "icon": "spells_and_shields:toggle_jump_boost",
   "requirements": [],
   "root": {
     "children": [
@@ -40,7 +40,7 @@
                     "bookshelves": 16
                   }
                 ],
-                "spell": "spells_and_shields:dummy",
+                "spell": "spells_and_shields:toggle_slow_falling",
                 "variables": []
               }
             ],
@@ -98,7 +98,7 @@
         "bookshelves": 12
       }
     ],
-    "spell": "spells_and_shields:dummy",
+    "spell": "spells_and_shields:toggle_jump_boost",
     "variables": []
   },
   "title": {

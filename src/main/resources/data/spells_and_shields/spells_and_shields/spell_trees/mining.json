@@ -1,5 +1,5 @@
 {
-  "icon": "spells_and_shields:dummy",
+  "icon": "spells_and_shields:toggle_haste",
   "requirements": [],
   "root": {
     "children": [
@@ -14,7 +14,7 @@
                 "bookshelves": 26
               }
             ],
-            "spell": "spells_and_shields:dummy",
+            "spell": "spells_and_shields:toggle_magic_immune",
             "variables": []
           }
         ],
@@ -39,7 +39,7 @@
                 "bookshelves": 24
               }
             ],
-            "spell": "spells_and_shields:dummy",
+            "spell": "spells_and_shields:toggle_haste",
             "variables": []
           }
         ],

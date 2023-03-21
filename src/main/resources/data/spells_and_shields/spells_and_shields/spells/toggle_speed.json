@@ -138,11 +138,23 @@
     }
   ],
   "title": {
-    "translate": "spell.spells_and_shields.toggle_speed"
+    "translate": "spell.spells_and_shields.toggle_speed",
+    "with": [
+      {
+        "color": "blue",
+        "translate": "effect.minecraft.speed"
+      }
+    ]
   },
   "tooltip": [
     {
-      "translate": "spell.spells_and_shields.toggle_speed.desc"
+      "translate": "spell.spells_and_shields.toggle_speed.desc",
+      "with": [
+        {
+          "color": "blue",
+          "translate": "effect.minecraft.speed"
+        }
+      ]
     }
   ],
   "variables": [

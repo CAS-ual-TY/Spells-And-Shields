@@ -1,7 +1,7 @@
 {
   "icon": {
     "type": "spells_and_shields:default",
-    "texture": "minecraft:textures/mob_effect/speed.png"
+    "texture": "minecraft:textures/mob_effect/night_vision.png"
   },
   "mana_cost": 0.0,
   "spell_actions": [
@@ -26,13 +26,13 @@
     {
       "type": "spells_and_shields:put_string",
       "activation": "on_equip",
-      "d_string_source": "<< uuid_from_string('permanent' + 'speed' + spell_slot) >>",
+      "d_string_source": "<< uuid_from_string('permanent' + 'night_vision' + spell_slot) >>",
       "var_result": "uuid"
     },
     {
       "type": "spells_and_shields:put_string",
       "activation": "on_unequip",
-      "d_string_source": "<< uuid_from_string('permanent' + 'speed' + spell_slot) >>",
+      "d_string_source": "<< uuid_from_string('permanent' + 'night_vision' + spell_slot) >>",
       "var_result": "uuid"
     },
     {
@@ -71,7 +71,7 @@
       "d_boolean_visible": "<<visible>>",
       "d_int_amplifier": "<<amplifier>>",
       "d_int_duration": "<<duration+1>>",
-      "mob_effect": "minecraft:speed",
+      "mob_effect": "minecraft:night_vision",
       "ts_targets": "player"
     },
     {
@@ -85,21 +85,21 @@
     }
   ],
   "title": {
-    "translate": "spell.spells_and_shields.permanent_speed",
+    "translate": "spell.spells_and_shields.permanent_night_vision",
     "with": [
       {
         "color": "blue",
-        "translate": "effect.minecraft.speed"
+        "translate": "effect.minecraft.night_vision"
       }
     ]
   },
   "tooltip": [
     {
-      "translate": "spell.spells_and_shields.permanent_speed.desc",
+      "translate": "spell.spells_and_shields.permanent_night_vision.desc",
       "with": [
         {
           "color": "blue",
-          "translate": "effect.minecraft.speed"
+          "translate": "effect.minecraft.night_vision"
         }
       ]
     }

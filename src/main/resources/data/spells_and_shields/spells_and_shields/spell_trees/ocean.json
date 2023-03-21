@@ -1,5 +1,5 @@
 {
-  "icon": "spells_and_shields:dummy",
+  "icon": "spells_and_shields:toggle_dolphins_grace",
   "requirements": [],
   "root": {
     "children": [
@@ -37,7 +37,7 @@
             "bookshelves": 20
           }
         ],
-        "spell": "spells_and_shields:dummy",
+        "spell": "spells_and_shields:toggle_regeneration",
         "variables": []
       },
       {
@@ -51,7 +51,7 @@
                 "bookshelves": 30
               }
             ],
-            "spell": "spells_and_shields:dummy",
+            "spell": "spells_and_shields:toggle_dolphins_grace",
             "variables": []
           },
           {
@@ -121,7 +121,7 @@
     ],
     "level_cost": 10,
     "requirements": [],
-    "spell": "spells_and_shields:dummy",
+    "spell": "spells_and_shields:toggle_water_breathing",
     "variables": []
   },
   "title": {

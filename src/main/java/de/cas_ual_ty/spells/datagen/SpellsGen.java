@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.registers.Spells;
@@ -34,6 +35,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -108,9 +110,15 @@ public class SpellsGen implements DataProvider
     
     public void addPermanentEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, int duration, int amplifier)
     {
+        MutableComponent component = mobEffect.getDisplayName().copy();
+        if (amplifier > 0)
+        {
+            component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
+        }
+        component.withStyle(mobEffect.getCategory().getTooltipFormatting());
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('permanent' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
-        addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation("textures/mob_effect/" + mobEffectRL.getPath() + ".png")), key, 0F)
+        addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), 0F)
                 .addAction(CopyTargetsAction.make(ON_EQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
@@ -128,15 +136,26 @@ public class SpellsGen implements DataProvider
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
-                .addTooltip(Component.translatable(descKey))
+                .addTooltip(Component.translatable(descKey, component))
         );
+    }
+    
+    public void addTemporaryEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
+    {
+    
     }
     
     public void addToggleEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
     {
+        MutableComponent component = mobEffect.getDisplayName().copy();
+        if (amplifier > 0)
+        {
+            component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
+        }
+        component.withStyle(mobEffect.getCategory().getTooltipFormatting());
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
-        addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation("textures/mob_effect/" + mobEffectRL.getPath() + ".png")), key, manaCost)
+        addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
@@ -163,7 +182,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
-                .addTooltip(Component.translatable(descKey))
+                .addTooltip(Component.translatable(descKey, component))
         );
     }
     
@@ -363,8 +382,73 @@ public class SpellsGen implements DataProvider
         dummy(Spells.GHAST);
         dummy(Spells.ENDER_ARMY);
         
-        addToggleEffectSpell(Spells.TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 2F, 50, 0);
+        addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE_DESC, BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get(), 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE_DESC, BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get(), 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE_DESC, BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get(), 2F, 50, 0);
+        
         addPermanentEffectSpell(Spells.PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED, Spells.KEY_TOGGLE_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_JUMP_BOOST, Spells.KEY_PERMANENT_JUMP_BOOST, Spells.KEY_PERMANENT_JUMP_BOOST_DESC, MobEffects.JUMP, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_JUMP_BOOST, Spells.KEY_TOGGLE_JUMP_BOOST, Spells.KEY_TOGGLE_JUMP_BOOST_DESC, MobEffects.JUMP, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_JUMP_BOOST, Spells.KEY_TOGGLE_JUMP_BOOST, Spells.KEY_TOGGLE_JUMP_BOOST_DESC, MobEffects.JUMP, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_DOLPHINS_GRACE, Spells.KEY_PERMANENT_DOLPHINS_GRACE, Spells.KEY_PERMANENT_DOLPHINS_GRACE_DESC, MobEffects.DOLPHINS_GRACE, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_DOLPHINS_GRACE, Spells.KEY_TOGGLE_DOLPHINS_GRACE, Spells.KEY_TOGGLE_DOLPHINS_GRACE_DESC, MobEffects.DOLPHINS_GRACE, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_DOLPHINS_GRACE, Spells.KEY_TOGGLE_DOLPHINS_GRACE, Spells.KEY_TOGGLE_DOLPHINS_GRACE_DESC, MobEffects.DOLPHINS_GRACE, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_WATER_BREATHING, Spells.KEY_PERMANENT_WATER_BREATHING, Spells.KEY_PERMANENT_WATER_BREATHING_DESC, MobEffects.WATER_BREATHING, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_WATER_BREATHING, Spells.KEY_TOGGLE_WATER_BREATHING, Spells.KEY_TOGGLE_WATER_BREATHING_DESC, MobEffects.WATER_BREATHING, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_WATER_BREATHING, Spells.KEY_TOGGLE_WATER_BREATHING, Spells.KEY_TOGGLE_WATER_BREATHING_DESC, MobEffects.WATER_BREATHING, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_SLOW_FALLING, Spells.KEY_PERMANENT_SLOW_FALLING, Spells.KEY_PERMANENT_SLOW_FALLING_DESC, MobEffects.SLOW_FALLING, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_SLOW_FALLING, Spells.KEY_TOGGLE_SLOW_FALLING, Spells.KEY_TOGGLE_SLOW_FALLING_DESC, MobEffects.SLOW_FALLING, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_SLOW_FALLING, Spells.KEY_TOGGLE_SLOW_FALLING, Spells.KEY_TOGGLE_SLOW_FALLING_DESC, MobEffects.SLOW_FALLING, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_HASTE, Spells.KEY_PERMANENT_HASTE, Spells.KEY_PERMANENT_HASTE_DESC, MobEffects.DIG_SPEED, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_HASTE, Spells.KEY_TOGGLE_HASTE, Spells.KEY_TOGGLE_HASTE_DESC, MobEffects.DIG_SPEED, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_HASTE, Spells.KEY_TOGGLE_HASTE, Spells.KEY_TOGGLE_HASTE_DESC, MobEffects.DIG_SPEED, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_REGENERATION, Spells.KEY_PERMANENT_REGENERATION, Spells.KEY_PERMANENT_REGENERATION_DESC, MobEffects.REGENERATION, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_REGENERATION, Spells.KEY_TOGGLE_REGENERATION, Spells.KEY_TOGGLE_REGENERATION_DESC, MobEffects.REGENERATION, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_REGENERATION, Spells.KEY_TOGGLE_REGENERATION, Spells.KEY_TOGGLE_REGENERATION_DESC, MobEffects.REGENERATION, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_FIRE_RESISTANCE, Spells.KEY_PERMANENT_FIRE_RESISTANCE, Spells.KEY_PERMANENT_FIRE_RESISTANCE_DESC, MobEffects.FIRE_RESISTANCE, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_FIRE_RESISTANCE, Spells.KEY_TOGGLE_FIRE_RESISTANCE, Spells.KEY_TOGGLE_FIRE_RESISTANCE_DESC, MobEffects.FIRE_RESISTANCE, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_FIRE_RESISTANCE, Spells.KEY_TOGGLE_FIRE_RESISTANCE, Spells.KEY_TOGGLE_FIRE_RESISTANCE_DESC, MobEffects.FIRE_RESISTANCE, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_NIGHT_VISION, Spells.KEY_PERMANENT_NIGHT_VISION, Spells.KEY_PERMANENT_NIGHT_VISION_DESC, MobEffects.NIGHT_VISION, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_NIGHT_VISION, Spells.KEY_TOGGLE_NIGHT_VISION, Spells.KEY_TOGGLE_NIGHT_VISION_DESC, MobEffects.NIGHT_VISION, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_NIGHT_VISION, Spells.KEY_TOGGLE_NIGHT_VISION, Spells.KEY_TOGGLE_NIGHT_VISION_DESC, MobEffects.NIGHT_VISION, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_STRENGTH, Spells.KEY_PERMANENT_STRENGTH, Spells.KEY_PERMANENT_STRENGTH_DESC, MobEffects.DAMAGE_BOOST, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_STRENGTH, Spells.KEY_TOGGLE_STRENGTH, Spells.KEY_TOGGLE_STRENGTH_DESC, MobEffects.DAMAGE_BOOST, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_STRENGTH, Spells.KEY_TOGGLE_STRENGTH, Spells.KEY_TOGGLE_STRENGTH_DESC, MobEffects.DAMAGE_BOOST, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_RESISTANCE, Spells.KEY_PERMANENT_RESISTANCE, Spells.KEY_PERMANENT_RESISTANCE_DESC, MobEffects.DAMAGE_RESISTANCE, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_RESISTANCE, Spells.KEY_TOGGLE_RESISTANCE, Spells.KEY_TOGGLE_RESISTANCE_DESC, MobEffects.DAMAGE_RESISTANCE, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_RESISTANCE, Spells.KEY_TOGGLE_RESISTANCE, Spells.KEY_TOGGLE_RESISTANCE_DESC, MobEffects.DAMAGE_RESISTANCE, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_INVISIBILITY, Spells.KEY_PERMANENT_INVISIBILITY, Spells.KEY_PERMANENT_INVISIBILITY_DESC, MobEffects.INVISIBILITY, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_INVISIBILITY, Spells.KEY_TOGGLE_INVISIBILITY, Spells.KEY_TOGGLE_INVISIBILITY_DESC, MobEffects.INVISIBILITY, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_INVISIBILITY, Spells.KEY_TOGGLE_INVISIBILITY, Spells.KEY_TOGGLE_INVISIBILITY_DESC, MobEffects.INVISIBILITY, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_GLOWING, Spells.KEY_PERMANENT_GLOWING, Spells.KEY_PERMANENT_GLOWING_DESC, MobEffects.GLOWING, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_GLOWING, Spells.KEY_TOGGLE_GLOWING, Spells.KEY_TOGGLE_GLOWING_DESC, MobEffects.GLOWING, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_GLOWING, Spells.KEY_TOGGLE_GLOWING, Spells.KEY_TOGGLE_GLOWING_DESC, MobEffects.GLOWING, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_LUCK, Spells.KEY_PERMANENT_LUCK, Spells.KEY_PERMANENT_LUCK_DESC, MobEffects.LUCK, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_LUCK, Spells.KEY_TOGGLE_LUCK, Spells.KEY_TOGGLE_LUCK_DESC, MobEffects.LUCK, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_LUCK, Spells.KEY_TOGGLE_LUCK, Spells.KEY_TOGGLE_LUCK_DESC, MobEffects.LUCK, 2F, 50, 0);
+        
+        addPermanentEffectSpell(Spells.PERMANENT_CONDUIT_POWER, Spells.KEY_PERMANENT_CONDUIT_POWER, Spells.KEY_PERMANENT_CONDUIT_POWER_DESC, MobEffects.CONDUIT_POWER, 50, 0);
+        addTemporaryEffectSpell(Spells.TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER_DESC, MobEffects.CONDUIT_POWER, 2F, 50, 0);
+        addToggleEffectSpell(Spells.TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER_DESC, MobEffects.CONDUIT_POWER, 2F, 50, 0);
     }
     
     @Override

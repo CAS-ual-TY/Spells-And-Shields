@@ -151,29 +151,175 @@ public class Spells
     public static final String KEY_ENDER_ARMY = key(ENDER_ARMY);
     public static final String KEY_ENDER_ARMY_DESC = descKey(ENDER_ARMY);
     
+    public static final ResourceLocation PERMANENT_REPLENISHMENT = rl("permanent_replenishment");
+    public static final String KEY_PERMANENT_REPLENISHMENT = key(PERMANENT_REPLENISHMENT);
+    public static final String KEY_PERMANENT_REPLENISHMENT_DESC = descKey(PERMANENT_REPLENISHMENT);
+    public static final ResourceLocation TEMPORARY_REPLENISHMENT = rl("temporary_replenishment");
+    public static final String KEY_TEMPORARY_REPLENISHMENT = key(TEMPORARY_REPLENISHMENT);
+    public static final String KEY_TEMPORARY_REPLENISHMENT_DESC = descKey(TEMPORARY_REPLENISHMENT);
+    public static final ResourceLocation TOGGLE_REPLENISHMENT = rl("toggle_replenishment");
+    public static final String KEY_TOGGLE_REPLENISHMENT = key(TOGGLE_REPLENISHMENT);
+    public static final String KEY_TOGGLE_REPLENISHMENT_DESC = descKey(TOGGLE_REPLENISHMENT);
+    
+    public static final ResourceLocation PERMANENT_MAGIC_IMMUNE = rl("permanent_magic_immune");
+    public static final String KEY_PERMANENT_MAGIC_IMMUNE = key(PERMANENT_MAGIC_IMMUNE);
+    public static final String KEY_PERMANENT_MAGIC_IMMUNE_DESC = descKey(PERMANENT_MAGIC_IMMUNE);
+    public static final ResourceLocation TEMPORARY_MAGIC_IMMUNE = rl("temporary_magic_immune");
+    public static final String KEY_TEMPORARY_MAGIC_IMMUNE = key(TEMPORARY_MAGIC_IMMUNE);
+    public static final String KEY_TEMPORARY_MAGIC_IMMUNE_DESC = descKey(TEMPORARY_MAGIC_IMMUNE);
+    public static final ResourceLocation TOGGLE_MAGIC_IMMUNE = rl("toggle_magic_immune");
+    public static final String KEY_TOGGLE_MAGIC_IMMUNE = key(TOGGLE_MAGIC_IMMUNE);
+    public static final String KEY_TOGGLE_MAGIC_IMMUNE_DESC = descKey(TOGGLE_MAGIC_IMMUNE);
+    
     public static final ResourceLocation PERMANENT_SPEED = rl("permanent_speed");
     public static final String KEY_PERMANENT_SPEED = key(PERMANENT_SPEED);
     public static final String KEY_PERMANENT_SPEED_DESC = descKey(PERMANENT_SPEED);
-    
     public static final ResourceLocation TEMPORARY_SPEED = rl("temporary_speed");
     public static final String KEY_TEMPORARY_SPEED = key(TEMPORARY_SPEED);
     public static final String KEY_TEMPORARY_SPEED_DESC = descKey(TEMPORARY_SPEED);
-    
     public static final ResourceLocation TOGGLE_SPEED = rl("toggle_speed");
     public static final String KEY_TOGGLE_SPEED = key(TOGGLE_SPEED);
     public static final String KEY_TOGGLE_SPEED_DESC = descKey(TOGGLE_SPEED);
     
+    public static final ResourceLocation PERMANENT_JUMP_BOOST = rl("permanent_jump_boost");
+    public static final String KEY_PERMANENT_JUMP_BOOST = key(PERMANENT_JUMP_BOOST);
+    public static final String KEY_PERMANENT_JUMP_BOOST_DESC = descKey(PERMANENT_JUMP_BOOST);
+    public static final ResourceLocation TEMPORARY_JUMP_BOOST = rl("temporary_jump_boost");
+    public static final String KEY_TEMPORARY_JUMP_BOOST = key(TEMPORARY_JUMP_BOOST);
+    public static final String KEY_TEMPORARY_JUMP_BOOST_DESC = descKey(TEMPORARY_JUMP_BOOST);
+    public static final ResourceLocation TOGGLE_JUMP_BOOST = rl("toggle_jump_boost");
+    public static final String KEY_TOGGLE_JUMP_BOOST = key(TOGGLE_JUMP_BOOST);
+    public static final String KEY_TOGGLE_JUMP_BOOST_DESC = descKey(TOGGLE_JUMP_BOOST);
+    
+    public static final ResourceLocation PERMANENT_DOLPHINS_GRACE = rl("permanent_dolphins_grace");
+    public static final String KEY_PERMANENT_DOLPHINS_GRACE = key(PERMANENT_DOLPHINS_GRACE);
+    public static final String KEY_PERMANENT_DOLPHINS_GRACE_DESC = descKey(PERMANENT_DOLPHINS_GRACE);
+    public static final ResourceLocation TEMPORARY_DOLPHINS_GRACE = rl("temporary_dolphins_grace");
+    public static final String KEY_TEMPORARY_DOLPHINS_GRACE = key(TEMPORARY_DOLPHINS_GRACE);
+    public static final String KEY_TEMPORARY_DOLPHINS_GRACE_DESC = descKey(TEMPORARY_DOLPHINS_GRACE);
+    public static final ResourceLocation TOGGLE_DOLPHINS_GRACE = rl("toggle_dolphins_grace");
+    public static final String KEY_TOGGLE_DOLPHINS_GRACE = key(TOGGLE_DOLPHINS_GRACE);
+    public static final String KEY_TOGGLE_DOLPHINS_GRACE_DESC = descKey(TOGGLE_DOLPHINS_GRACE);
+    
+    public static final ResourceLocation PERMANENT_WATER_BREATHING = rl("permanent_water_breathing");
+    public static final String KEY_PERMANENT_WATER_BREATHING = key(PERMANENT_WATER_BREATHING);
+    public static final String KEY_PERMANENT_WATER_BREATHING_DESC = descKey(PERMANENT_WATER_BREATHING);
+    public static final ResourceLocation TEMPORARY_WATER_BREATHING = rl("temporary_water_breathing");
+    public static final String KEY_TEMPORARY_WATER_BREATHING = key(TEMPORARY_WATER_BREATHING);
+    public static final String KEY_TEMPORARY_WATER_BREATHING_DESC = descKey(TEMPORARY_WATER_BREATHING);
+    public static final ResourceLocation TOGGLE_WATER_BREATHING = rl("toggle_water_breathing");
+    public static final String KEY_TOGGLE_WATER_BREATHING = key(TOGGLE_WATER_BREATHING);
+    public static final String KEY_TOGGLE_WATER_BREATHING_DESC = descKey(TOGGLE_WATER_BREATHING);
+    
+    public static final ResourceLocation PERMANENT_SLOW_FALLING = rl("permanent_slow_falling");
+    public static final String KEY_PERMANENT_SLOW_FALLING = key(PERMANENT_SLOW_FALLING);
+    public static final String KEY_PERMANENT_SLOW_FALLING_DESC = descKey(PERMANENT_SLOW_FALLING);
+    public static final ResourceLocation TEMPORARY_SLOW_FALLING = rl("temporary_slow_falling");
+    public static final String KEY_TEMPORARY_SLOW_FALLING = key(TEMPORARY_SLOW_FALLING);
+    public static final String KEY_TEMPORARY_SLOW_FALLING_DESC = descKey(TEMPORARY_SLOW_FALLING);
+    public static final ResourceLocation TOGGLE_SLOW_FALLING = rl("toggle_slow_falling");
+    public static final String KEY_TOGGLE_SLOW_FALLING = key(TOGGLE_SLOW_FALLING);
+    public static final String KEY_TOGGLE_SLOW_FALLING_DESC = descKey(TOGGLE_SLOW_FALLING);
+    
+    public static final ResourceLocation PERMANENT_HASTE = rl("permanent_haste");
+    public static final String KEY_PERMANENT_HASTE = key(PERMANENT_HASTE);
+    public static final String KEY_PERMANENT_HASTE_DESC = descKey(PERMANENT_HASTE);
+    public static final ResourceLocation TEMPORARY_HASTE = rl("temporary_haste");
+    public static final String KEY_TEMPORARY_HASTE = key(TEMPORARY_HASTE);
+    public static final String KEY_TEMPORARY_HASTE_DESC = descKey(TEMPORARY_HASTE);
+    public static final ResourceLocation TOGGLE_HASTE = rl("toggle_haste");
+    public static final String KEY_TOGGLE_HASTE = key(TOGGLE_HASTE);
+    public static final String KEY_TOGGLE_HASTE_DESC = descKey(TOGGLE_HASTE);
+    
     public static final ResourceLocation PERMANENT_REGENERATION = rl("permanent_regeneration");
     public static final String KEY_PERMANENT_REGENERATION = key(PERMANENT_REGENERATION);
     public static final String KEY_PERMANENT_REGENERATION_DESC = descKey(PERMANENT_REGENERATION);
-    
     public static final ResourceLocation TEMPORARY_REGENERATION = rl("temporary_regeneration");
     public static final String KEY_TEMPORARY_REGENERATION = key(TEMPORARY_REGENERATION);
     public static final String KEY_TEMPORARY_REGENERATION_DESC = descKey(TEMPORARY_REGENERATION);
-    
     public static final ResourceLocation TOGGLE_REGENERATION = rl("toggle_regeneration");
     public static final String KEY_TOGGLE_REGENERATION = key(TOGGLE_REGENERATION);
     public static final String KEY_TOGGLE_REGENERATION_DESC = descKey(TOGGLE_REGENERATION);
+    
+    public static final ResourceLocation PERMANENT_FIRE_RESISTANCE = rl("permanent_fire_resistance");
+    public static final String KEY_PERMANENT_FIRE_RESISTANCE = key(PERMANENT_FIRE_RESISTANCE);
+    public static final String KEY_PERMANENT_FIRE_RESISTANCE_DESC = descKey(PERMANENT_FIRE_RESISTANCE);
+    public static final ResourceLocation TEMPORARY_FIRE_RESISTANCE = rl("temporary_fire_resistance");
+    public static final String KEY_TEMPORARY_FIRE_RESISTANCE = key(TEMPORARY_FIRE_RESISTANCE);
+    public static final String KEY_TEMPORARY_FIRE_RESISTANCE_DESC = descKey(TEMPORARY_FIRE_RESISTANCE);
+    public static final ResourceLocation TOGGLE_FIRE_RESISTANCE = rl("toggle_fire_resistance");
+    public static final String KEY_TOGGLE_FIRE_RESISTANCE = key(TOGGLE_FIRE_RESISTANCE);
+    public static final String KEY_TOGGLE_FIRE_RESISTANCE_DESC = descKey(TOGGLE_FIRE_RESISTANCE);
+    
+    public static final ResourceLocation PERMANENT_NIGHT_VISION = rl("permanent_night_vision");
+    public static final String KEY_PERMANENT_NIGHT_VISION = key(PERMANENT_NIGHT_VISION);
+    public static final String KEY_PERMANENT_NIGHT_VISION_DESC = descKey(PERMANENT_NIGHT_VISION);
+    public static final ResourceLocation TEMPORARY_NIGHT_VISION = rl("temporary_night_vision");
+    public static final String KEY_TEMPORARY_NIGHT_VISION = key(TEMPORARY_NIGHT_VISION);
+    public static final String KEY_TEMPORARY_NIGHT_VISION_DESC = descKey(TEMPORARY_NIGHT_VISION);
+    public static final ResourceLocation TOGGLE_NIGHT_VISION = rl("toggle_night_vision");
+    public static final String KEY_TOGGLE_NIGHT_VISION = key(TOGGLE_NIGHT_VISION);
+    public static final String KEY_TOGGLE_NIGHT_VISION_DESC = descKey(TOGGLE_NIGHT_VISION);
+    
+    public static final ResourceLocation PERMANENT_STRENGTH = rl("permanent_strength");
+    public static final String KEY_PERMANENT_STRENGTH = key(PERMANENT_STRENGTH);
+    public static final String KEY_PERMANENT_STRENGTH_DESC = descKey(PERMANENT_STRENGTH);
+    public static final ResourceLocation TEMPORARY_STRENGTH = rl("temporary_strength");
+    public static final String KEY_TEMPORARY_STRENGTH = key(TEMPORARY_STRENGTH);
+    public static final String KEY_TEMPORARY_STRENGTH_DESC = descKey(TEMPORARY_STRENGTH);
+    public static final ResourceLocation TOGGLE_STRENGTH = rl("toggle_strength");
+    public static final String KEY_TOGGLE_STRENGTH = key(TOGGLE_STRENGTH);
+    public static final String KEY_TOGGLE_STRENGTH_DESC = descKey(TOGGLE_STRENGTH);
+    
+    public static final ResourceLocation PERMANENT_RESISTANCE = rl("permanent_resistance");
+    public static final String KEY_PERMANENT_RESISTANCE = key(PERMANENT_RESISTANCE);
+    public static final String KEY_PERMANENT_RESISTANCE_DESC = descKey(PERMANENT_RESISTANCE);
+    public static final ResourceLocation TEMPORARY_RESISTANCE = rl("temporary_resistance");
+    public static final String KEY_TEMPORARY_RESISTANCE = key(TEMPORARY_RESISTANCE);
+    public static final String KEY_TEMPORARY_RESISTANCE_DESC = descKey(TEMPORARY_RESISTANCE);
+    public static final ResourceLocation TOGGLE_RESISTANCE = rl("toggle_resistance");
+    public static final String KEY_TOGGLE_RESISTANCE = key(TOGGLE_RESISTANCE);
+    public static final String KEY_TOGGLE_RESISTANCE_DESC = descKey(TOGGLE_RESISTANCE);
+    
+    public static final ResourceLocation PERMANENT_INVISIBILITY = rl("permanent_invisibility");
+    public static final String KEY_PERMANENT_INVISIBILITY = key(PERMANENT_INVISIBILITY);
+    public static final String KEY_PERMANENT_INVISIBILITY_DESC = descKey(PERMANENT_INVISIBILITY);
+    public static final ResourceLocation TEMPORARY_INVISIBILITY = rl("temporary_invisibility");
+    public static final String KEY_TEMPORARY_INVISIBILITY = key(TEMPORARY_INVISIBILITY);
+    public static final String KEY_TEMPORARY_INVISIBILITY_DESC = descKey(TEMPORARY_INVISIBILITY);
+    public static final ResourceLocation TOGGLE_INVISIBILITY = rl("toggle_invisibility");
+    public static final String KEY_TOGGLE_INVISIBILITY = key(TOGGLE_INVISIBILITY);
+    public static final String KEY_TOGGLE_INVISIBILITY_DESC = descKey(TOGGLE_INVISIBILITY);
+    
+    public static final ResourceLocation PERMANENT_GLOWING = rl("permanent_glowing");
+    public static final String KEY_PERMANENT_GLOWING = key(PERMANENT_GLOWING);
+    public static final String KEY_PERMANENT_GLOWING_DESC = descKey(PERMANENT_GLOWING);
+    public static final ResourceLocation TEMPORARY_GLOWING = rl("temporary_glowing");
+    public static final String KEY_TEMPORARY_GLOWING = key(TEMPORARY_GLOWING);
+    public static final String KEY_TEMPORARY_GLOWING_DESC = descKey(TEMPORARY_GLOWING);
+    public static final ResourceLocation TOGGLE_GLOWING = rl("toggle_glowing");
+    public static final String KEY_TOGGLE_GLOWING = key(TOGGLE_GLOWING);
+    public static final String KEY_TOGGLE_GLOWING_DESC = descKey(TOGGLE_GLOWING);
+    
+    public static final ResourceLocation PERMANENT_LUCK = rl("permanent_luck");
+    public static final String KEY_PERMANENT_LUCK = key(PERMANENT_LUCK);
+    public static final String KEY_PERMANENT_LUCK_DESC = descKey(PERMANENT_LUCK);
+    public static final ResourceLocation TEMPORARY_LUCK = rl("temporary_luck");
+    public static final String KEY_TEMPORARY_LUCK = key(TEMPORARY_LUCK);
+    public static final String KEY_TEMPORARY_LUCK_DESC = descKey(TEMPORARY_LUCK);
+    public static final ResourceLocation TOGGLE_LUCK = rl("toggle_luck");
+    public static final String KEY_TOGGLE_LUCK = key(TOGGLE_LUCK);
+    public static final String KEY_TOGGLE_LUCK_DESC = descKey(TOGGLE_LUCK);
+    
+    public static final ResourceLocation PERMANENT_CONDUIT_POWER = rl("permanent_conduit_power");
+    public static final String KEY_PERMANENT_CONDUIT_POWER = key(PERMANENT_CONDUIT_POWER);
+    public static final String KEY_PERMANENT_CONDUIT_POWER_DESC = descKey(PERMANENT_CONDUIT_POWER);
+    public static final ResourceLocation TEMPORARY_CONDUIT_POWER = rl("temporary_conduit_power");
+    public static final String KEY_TEMPORARY_CONDUIT_POWER = key(TEMPORARY_CONDUIT_POWER);
+    public static final String KEY_TEMPORARY_CONDUIT_POWER_DESC = descKey(TEMPORARY_CONDUIT_POWER);
+    public static final ResourceLocation TOGGLE_CONDUIT_POWER = rl("toggle_conduit_power");
+    public static final String KEY_TOGGLE_CONDUIT_POWER = key(TOGGLE_CONDUIT_POWER);
+    public static final String KEY_TOGGLE_CONDUIT_POWER_DESC = descKey(TOGGLE_CONDUIT_POWER);
     
     public static void register()
     {
