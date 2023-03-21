@@ -1,7 +1,13 @@
 {
   "icon": {
-    "type": "spells_and_shields:default",
-    "texture": "spells_and_shields:textures/spell/ghast.png"
+    "type": "spells_and_shields:advanced",
+    "height": 16,
+    "icon": "minecraft:textures/entity/ghast/ghast_shooting.png",
+    "textureHeight": 32,
+    "textureWidth": 64,
+    "u": 16,
+    "v": 16,
+    "width": 16
   },
   "mana_cost": 0.0,
   "spell_actions": [],

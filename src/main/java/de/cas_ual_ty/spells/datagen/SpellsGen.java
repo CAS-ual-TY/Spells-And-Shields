@@ -24,6 +24,7 @@ import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
+import de.cas_ual_ty.spells.spell.icon.AdvancedSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.ItemSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
@@ -379,7 +380,7 @@ public class SpellsGen implements DataProvider
         dummy(Spells.LIGHTNING_STRIKE);
         dummy(Spells.DRAIN_FLAME);
         dummy(Spells.GROWTH);
-        dummy(Spells.GHAST);
+        dummy(Spells.GHAST, Spells.KEY_GHAST, Spells.KEY_GHAST_DESC, new AdvancedSpellIcon(SpellIconTypes.ADVANCED.get(), new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32));
         dummy(Spells.ENDER_ARMY);
         
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);
