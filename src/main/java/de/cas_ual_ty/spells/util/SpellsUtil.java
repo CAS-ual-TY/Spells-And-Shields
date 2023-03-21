@@ -9,6 +9,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -192,5 +193,27 @@ public class SpellsUtil
     {
         // prefixing to make sure this does not clash in case another mod does the same
         return UUID.nameUUIDFromBytes((SpellsAndShields.MOD_ID + "_" + name).getBytes(StandardCharsets.UTF_8));
+    }
+    
+    public static String operationToString(AttributeModifier.Operation op)
+    {
+        return switch(op)
+                {
+                    case ADDITION -> "addition";
+                    case MULTIPLY_BASE -> "multiply_base";
+                    case MULTIPLY_TOTAL -> "multiply_total";
+                    default -> null;
+                };
+    }
+    
+    public static AttributeModifier.Operation operationFromString(String s)
+    {
+        return switch(s)
+                {
+                    case "addition" -> AttributeModifier.Operation.ADDITION;
+                    case "multiply_base" -> AttributeModifier.Operation.MULTIPLY_BASE;
+                    case "multiply_total" -> AttributeModifier.Operation.MULTIPLY_TOTAL;
+                    default -> null;
+                };
     }
 }
