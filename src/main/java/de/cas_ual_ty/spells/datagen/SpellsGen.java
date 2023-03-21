@@ -145,6 +145,7 @@ public class SpellsGen implements DataProvider
     
     }
     
+    //TODO fix mana cost. They should be shown /5sec
     public void addToggleEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
     {
         MutableComponent component = mobEffect.getDisplayName().copy();
