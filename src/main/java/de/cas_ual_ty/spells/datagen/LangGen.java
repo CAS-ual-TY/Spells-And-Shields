@@ -33,9 +33,9 @@ public class LangGen extends LanguageProvider
         super(dataGen, SpellsAndShields.MOD_ID, locale);
     }
     
-    public static final String PERMANENT_EFFECT_NAME = "Permanent %s";
+    public static final String PERMANENT_EFFECT_NAME = "Perm. %s";
     public static final String PERMANENT_EFFECT_DESC = "Applies the %s effect while this spell is equipped.";
-    public static final String TEMPORARY_EFFECT_NAME = "Temporary %s";
+    public static final String TEMPORARY_EFFECT_NAME = "Temp. %s";
     public static final String TEMPORARY_EFFECT_DESC = "Applies the %s effect for a short period of time.";
     public static final String TOGGLE_EFFECT_NAME = "Toggle %s";
     public static final String TOGGLE_EFFECT_DESC = "Toggles the %s effect and burns mana (per 5 seconds) while it is active.";
