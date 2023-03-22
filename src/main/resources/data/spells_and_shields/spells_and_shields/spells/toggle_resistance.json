@@ -64,6 +64,13 @@
       "activation": "on_unequip"
     },
     {
+      "type": "spells_and_shields:check_has_delayed_spell",
+      "a_to_activate": "remove_sound",
+      "activation": "remove",
+      "d_string_uuid": "<<uuid>>",
+      "ts_targets": "player"
+    },
+    {
       "type": "spells_and_shields:remove_delayed_spell",
       "activation": "remove",
       "d_boolean_force_activate": false,
@@ -130,7 +137,7 @@
     },
     {
       "type": "spells_and_shields:play_sound",
-      "activation": "remove",
+      "activation": "remove_sound",
       "d_double_pitch": 1.0,
       "d_double_volume": 1.0,
       "sound_event": "minecraft:entity.splash_potion.break",
