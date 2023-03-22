@@ -48,6 +48,24 @@
       "ts_targets": "entity_hit"
     },
     {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "on_entity_hit",
+      "d_tag_source": {},
+      "var_result": "fire_tag"
+    },
+    {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "on_entity_hit",
+      "d_tag_source": "<< put_nbt_int(fire_tag, 'Fire', fire_ticks) >>",
+      "var_result": "fire_tag"
+    },
+    {
+      "type": "spells_and_shields:apply_entity_tag",
+      "activation": "on_entity_hit",
+      "t_entity": "entity_hit",
+      "tag": "<<fire_tag>>"
+    },
+    {
       "type": "spells_and_shields:activate",
       "a_to_activate": "fx",
       "activation": "on_entity_hit"
@@ -124,6 +142,11 @@
       "type": "spells_and_shields:double",
       "value": 2.5,
       "var_name": "speed"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 40,
+      "var_name": "fire_ticks"
     }
   ]
 }
