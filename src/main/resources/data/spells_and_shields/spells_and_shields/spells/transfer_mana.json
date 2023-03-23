@@ -12,8 +12,8 @@
       "a_miss_activation": "looked_at_nothing",
       "activation": "active",
       "block_clip_context": "COLLIDER",
+      "d_double_range": "<<range>>",
       "double_bb_inflation": 0.5,
-      "double_range": 25.0,
       "fluid_clip_context": "SOURCE_ONLY",
       "t_source": "owner"
     },
@@ -105,6 +105,11 @@
       "type": "spells_and_shields:double",
       "value": 2.5,
       "var_name": "speed"
+    },
+    {
+      "type": "spells_and_shields:double",
+      "value": 25.0,
+      "var_name": "range"
     }
   ]
 }
