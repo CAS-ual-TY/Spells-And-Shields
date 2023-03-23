@@ -498,7 +498,24 @@ public class SpellsGen implements DataProvider
         dummy(Spells.LIGHTNING_STRIKE);
         dummy(Spells.DRAIN_FLAME);
         dummy(Spells.GROWTH);
-        dummy(Spells.GHAST, Spells.KEY_GHAST, Spells.KEY_GHAST_DESC, AdvancedSpellIcon.make(new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32));
+        
+        addSpell(Spells.GHAST, new Spell(AdvancedSpellIcon.make(new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32), Spells.KEY_GHAST, 4F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
+                .addAction(SimpleItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.FIRE_CHARGE)))
+                .addAction(AddDelayedSpellAction.make(ACTIVE.activation, OWNER.targetGroup, "sound", INT.get().immediate(10), STRING.get().immediate(""), COMPOUND_TAG.get().immediate(new CompoundTag())))
+                .addAction(AddDelayedSpellAction.make(ACTIVE.activation, OWNER.targetGroup, "shoot", INT.get().immediate(20), STRING.get().immediate(""), COMPOUND_TAG.get().immediate(new CompoundTag())))
+                .addAction(PlaySoundAction.make("sound", HOLDER.targetGroup, SoundEvents.GHAST_WARN, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(PutVarAction.makeCompoundTag("shoot", tag, "tag"))
+                .addAction(GetEntityUUIDAction.make("shoot", HOLDER.targetGroup, "uuid"))
+                .addAction(GetEntityPositionDirectionMotionAction.make("shoot", HOLDER.targetGroup, "", "direction", ""))
+                .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(tag, 'Owner', uuid) ", COMPOUND_TAG.get()), "tag"))
+                .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_vec3(tag, 'power', direction * 2.0 * 0.1) ", COMPOUND_TAG.get()), "tag"))
+                .addAction(GetEntityEyePositionAction.make("shoot", HOLDER.targetGroup, "position"))
+                .addAction(SpawnEntityAction.make("shoot", "fire_charge", EntityType.FIREBALL, "position", VEC3.get().reference("direction"), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().reference("tag")))
+                .addAction(PlaySoundAction.make("shoot", HOLDER.targetGroup, SoundEvents.GHAST_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addTooltip(Component.translatable(Spells.KEY_GHAST_DESC))
+        );
+        
         dummy(Spells.ENDER_ARMY);
         
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);

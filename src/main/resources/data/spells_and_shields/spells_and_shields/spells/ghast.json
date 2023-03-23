@@ -9,19 +9,119 @@
     "v": 16,
     "width": 16
   },
-  "mana_cost": 0.0,
-  "spell_actions": [],
+  "mana_cost": 4.0,
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active",
+      "t_target": "owner"
+    },
+    {
+      "type": "spells_and_shields:simple_item_check",
+      "activation": "active",
+      "d_boolean_must_be_in_hand": true,
+      "item": {
+        "Count": 1,
+        "id": "minecraft:fire_charge"
+      },
+      "t_target": "owner"
+    },
+    {
+      "type": "spells_and_shields:add_delayed_spell",
+      "a_on_remove": "sound",
+      "activation": "active",
+      "d_compound_tag_extra_data": {},
+      "d_int_tick_time": 10,
+      "d_string_uuid": "",
+      "ts_targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:add_delayed_spell",
+      "a_on_remove": "shoot",
+      "activation": "active",
+      "d_compound_tag_extra_data": {},
+      "d_int_tick_time": 20,
+      "d_string_uuid": "",
+      "ts_targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "sound",
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
+      "sound_event": "minecraft:entity.ghast.warn",
+      "ts_targets": "holder"
+    },
+    {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "shoot",
+      "d_tag_source": {
+        "crit": 1,
+        "pickup": 1
+      },
+      "var_result": "tag"
+    },
+    {
+      "type": "spells_and_shields:get_entity_uuid",
+      "activation": "shoot",
+      "t_source": "holder",
+      "var_uuid": "uuid"
+    },
+    {
+      "type": "spells_and_shields:get_entity_position_direction",
+      "activation": "shoot",
+      "t_source": "holder",
+      "td_position": "",
+      "var_direction": "direction",
+      "var_motion": ""
+    },
+    {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "shoot",
+      "d_tag_source": "<< put_nbt_uuid(tag, 'Owner', uuid) >>",
+      "var_result": "tag"
+    },
+    {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "shoot",
+      "d_tag_source": "<< put_nbt_vec3(tag, 'power', direction * 2.0 * 0.1) >>",
+      "var_result": "tag"
+    },
+    {
+      "type": "spells_and_shields:get_entity_eye_position",
+      "activation": "shoot",
+      "t_source": "holder",
+      "td_eye_position": "position"
+    },
+    {
+      "type": "spells_and_shields:spawn_entity",
+      "activation": "shoot",
+      "d_vec3_direction": "<<direction>>",
+      "d_vec3_motion": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "entity_type": "minecraft:fireball",
+      "t_entity": "fire_charge",
+      "t_position": "position",
+      "tag": "<<tag>>"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "shoot",
+      "d_double_pitch": 1.0,
+      "d_double_volume": 1.0,
+      "sound_event": "minecraft:entity.ghast.shoot",
+      "ts_targets": "holder"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.ghast"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.ghast.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ],
   "variables": []
