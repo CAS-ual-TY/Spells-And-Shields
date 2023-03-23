@@ -170,7 +170,7 @@ public class SpellsCapabilities
             {
                 if(SpellsConfig.RESPAWN_WITH_FULL_MANA.get())
                 {
-                    manaHolder.replenish(manaHolder.getMana());
+                    manaHolder.replenish(manaHolder.getMaxMana());
                 }
                 
                 manaHolder.sendSync();
