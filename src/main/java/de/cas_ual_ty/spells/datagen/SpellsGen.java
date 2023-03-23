@@ -42,6 +42,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
@@ -117,7 +119,7 @@ public class SpellsGen implements DataProvider
         }
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('permanent' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
-        addSpell(rl, new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), 0F)
+        Spell spell = new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), 0F)
                 .addAction(CopyTargetsAction.make(ON_EQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
@@ -135,8 +137,42 @@ public class SpellsGen implements DataProvider
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
-                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())))
-        );
+                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())));
+        
+        if(!mobEffect.getAttributeModifiers().isEmpty())
+        {
+            spell.addTooltip(Component.empty());
+            spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
+            
+            for(Map.Entry<Attribute, AttributeModifier> e : mobEffect.getAttributeModifiers().entrySet())
+            {
+                Attribute attribute = e.getKey();
+                AttributeModifier.Operation op = e.getValue().getOperation();
+                double value = e.getValue().getAmount();
+                
+                double d;
+                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
+                {
+                    d = value;
+                }
+                else
+                {
+                    d = value * 100;
+                }
+                
+                if(value > 0)
+                {
+                    spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
+                }
+                else if(value < 0)
+                {
+                    d *= -1D;
+                    spell.addTooltip(Component.translatable("attribute.modifier.take." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
+                }
+            }
+        }
+        
+        addSpell(rl, spell);
     }
     
     public void addTemporaryEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
@@ -154,7 +190,7 @@ public class SpellsGen implements DataProvider
         }
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
-        addSpell(rl, new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), manaCost)
+        Spell spell = new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
@@ -182,8 +218,83 @@ public class SpellsGen implements DataProvider
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
-                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())))
-        );
+                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())));
+        
+        if(!mobEffect.getAttributeModifiers().isEmpty())
+        {
+            spell.addTooltip(Component.empty());
+            spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
+            
+            for(Map.Entry<Attribute, AttributeModifier> e : mobEffect.getAttributeModifiers().entrySet())
+            {
+                Attribute attribute = e.getKey();
+                AttributeModifier.Operation op = e.getValue().getOperation();
+                double value = e.getValue().getAmount();
+                
+                double d;
+                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
+                {
+                    d = value;
+                }
+                else
+                {
+                    d = value * 100;
+                }
+                
+                if(value > 0)
+                {
+                    spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
+                }
+                else if(value < 0)
+                {
+                    d *= -1D;
+                    spell.addTooltip(Component.translatable("attribute.modifier.take." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
+                }
+            }
+        }
+        
+        addSpell(rl, spell);
+    }
+    
+    public void addAttributeSpell(ResourceLocation rl, String key, String descKey, SpellIcon spellIcon, Attribute attribute, AttributeModifier.Operation op, double value)
+    {
+        MutableComponent component = Component.translatable(attribute.getDescriptionId());
+        ResourceLocation attributeRL = ForgeRegistries.ATTRIBUTES.getKey(attribute);
+        String opString = SpellsUtil.operationToString(op);
+        
+        String uuidCode = " uuid_from_string('attribute' + '%s' + %s + %s + %s) ".formatted(attributeRL.getPath(), SPELL_SLOT.name, "operation", "value");
+        
+        Spell spell = new Spell(spellIcon, Component.translatable(key, component), 0F)
+                .addAction(AddAttributeModifierAction.make(ON_EQUIP.activation, OWNER.targetGroup, attribute, Compiler.compileString(uuidCode, STRING.get()), STRING.get().immediate(attributeRL.getPath()), DOUBLE.get().immediate(value), STRING.get().immediate(opString)))
+                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP.activation, OWNER.targetGroup, attribute, Compiler.compileString(uuidCode, STRING.get())))
+                .addParameter(DOUBLE.get(), "value", value)
+                .addParameter(STRING.get(), "operation", opString)
+                .addTooltip(Component.translatable(descKey, component.copy().withStyle(ChatFormatting.BLUE)));
+        
+        spell.addTooltip(Component.empty());
+        spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
+        
+        double d;
+        if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
+        {
+            d = value;
+        }
+        else
+        {
+            d = value * 100;
+        }
+        
+        if(value > 0)
+        {
+            spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
+        }
+        else if(value < 0)
+        {
+            d *= -1D;
+            spell.addTooltip(Component.translatable("attribute.modifier.take." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
+        }
+        
+        addSpell(rl, spell);
     }
     
     protected void addSpells()

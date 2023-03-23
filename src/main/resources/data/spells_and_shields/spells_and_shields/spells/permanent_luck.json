@@ -101,6 +101,23 @@
           "translate": "effect.minecraft.luck"
         }
       ]
+    },
+    {
+      "text": ""
+    },
+    {
+      "color": "dark_purple",
+      "translate": "potion.whenDrank"
+    },
+    {
+      "color": "blue",
+      "translate": "attribute.modifier.plus.0",
+      "with": [
+        "1",
+        {
+          "translate": "effect.minecraft.luck"
+        }
+      ]
     }
   ],
   "variables": [

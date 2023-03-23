@@ -161,6 +161,23 @@
           "translate": "effect.minecraft.haste"
         }
       ]
+    },
+    {
+      "text": ""
+    },
+    {
+      "color": "dark_purple",
+      "translate": "potion.whenDrank"
+    },
+    {
+      "color": "blue",
+      "translate": "attribute.modifier.plus.2",
+      "with": [
+        "10",
+        {
+          "translate": "effect.minecraft.haste"
+        }
+      ]
     }
   ],
   "variables": [

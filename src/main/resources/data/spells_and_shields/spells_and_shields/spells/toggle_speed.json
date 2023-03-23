@@ -161,6 +161,23 @@
           "translate": "effect.minecraft.speed"
         }
       ]
+    },
+    {
+      "text": ""
+    },
+    {
+      "color": "dark_purple",
+      "translate": "potion.whenDrank"
+    },
+    {
+      "color": "blue",
+      "translate": "attribute.modifier.plus.2",
+      "with": [
+        "20",
+        {
+          "translate": "effect.minecraft.speed"
+        }
+      ]
     }
   ],
   "variables": [

@@ -101,6 +101,13 @@
           "translate": "effect.minecraft.strength"
         }
       ]
+    },
+    {
+      "text": ""
+    },
+    {
+      "color": "dark_purple",
+      "translate": "potion.whenDrank"
     }
   ],
   "variables": [

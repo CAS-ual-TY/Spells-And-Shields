@@ -79,7 +79,7 @@ public class RemoveAttributeModifierAction extends AffectTypeAction<LivingEntity
             {
                 this.uuid.getValue(ctx).map(UUID::fromString).ifPresent(uuid ->
                 {
-                    a.removeModifier(uuid);
+                    a.removePermanentModifier(uuid);
                 });
             }
         }
