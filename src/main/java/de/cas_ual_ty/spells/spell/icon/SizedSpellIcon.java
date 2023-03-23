@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.icon;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import net.minecraft.resources.ResourceLocation;
 
 public class SizedSpellIcon extends SpellIcon
@@ -12,6 +13,11 @@ public class SizedSpellIcon extends SpellIcon
                 ResourceLocation.CODEC.fieldOf("texture").forGetter(SizedSpellIcon::getTexture),
                 Codec.INT.fieldOf("size").forGetter(SizedSpellIcon::getSize)
         ).apply(instance, (texture, size) -> new SizedSpellIcon(type, texture, size)));
+    }
+    
+    public static SizedSpellIcon make(ResourceLocation texture, int size)
+    {
+        return new SizedSpellIcon(SpellIconTypes.SIZED.get(), texture, size);
     }
     
     protected ResourceLocation texture;

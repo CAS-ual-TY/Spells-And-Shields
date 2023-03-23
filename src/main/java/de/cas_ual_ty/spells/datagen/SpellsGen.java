@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
-import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.Spell;
@@ -88,7 +87,7 @@ public class SpellsGen implements DataProvider
     
     public void dummy(ResourceLocation rl, String key, String descKey)
     {
-        dummy(rl, key, descKey, new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(modId, "textures/spell/" + rl.getPath() + ".png")));
+        dummy(rl, key, descKey, DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + rl.getPath() + ".png")));
     }
     
     public void dummy(ResourceLocation rl, String key, String descKey, SpellIcon icon)
@@ -118,7 +117,7 @@ public class SpellsGen implements DataProvider
         }
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('permanent' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
-        addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), 0F)
+        addSpell(rl, new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), 0F)
                 .addAction(CopyTargetsAction.make(ON_EQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
@@ -155,7 +154,7 @@ public class SpellsGen implements DataProvider
         }
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
-        addSpell(rl, new Spell(new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), manaCost)
+        addSpell(rl, new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
@@ -294,7 +293,7 @@ public class SpellsGen implements DataProvider
         dummy(Spells.HEALTH_BOOST);
         dummy(Spells.MANA_BOOST);
         dummy(Spells.WATER_LEAP);
-        dummy(Spells.AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY_DESC, new ItemSpellIcon(SpellIconTypes.ITEM.get(), new ItemStack(Items.ENCHANTED_BOOK)));
+        dummy(Spells.AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY_DESC, ItemSpellIcon.make(new ItemStack(Items.ENCHANTED_BOOK)));
         
         //TODO fx, test
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
@@ -358,7 +357,7 @@ public class SpellsGen implements DataProvider
         
         dummy(Spells.MANA_SOLES);
         
-        addSpell(Spells.FIRE_CHARGE, new Spell(new ItemSpellIcon(SpellIconTypes.ITEM.get(), new ItemStack(Items.FIRE_CHARGE)), Spells.KEY_FIRE_CHARGE, 5F)
+        addSpell(Spells.FIRE_CHARGE, new Spell(ItemSpellIcon.make(new ItemStack(Items.FIRE_CHARGE)), Spells.KEY_FIRE_CHARGE, 5F)
                 .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(SimpleItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.FIRE_CHARGE)))
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, tag, "tag"))
@@ -377,14 +376,14 @@ public class SpellsGen implements DataProvider
         dummy(Spells.SPIT_METAL);
         dummy(Spells.FLAMETHROWER);
         dummy(Spells.LAVA_WALKER);
-        dummy(Spells.SILENCE_TARGET, Spells.KEY_SILENCE_TARGET, Spells.KEY_SILENCE_TARGET_DESC, new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")));
+        dummy(Spells.SILENCE_TARGET, Spells.KEY_SILENCE_TARGET, Spells.KEY_SILENCE_TARGET_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")));
         dummy(Spells.RANDOM_TELEPORT);
         dummy(Spells.FORCED_TELEPORT);
         dummy(Spells.TELEPORT);
         dummy(Spells.LIGHTNING_STRIKE);
         dummy(Spells.DRAIN_FLAME);
         dummy(Spells.GROWTH);
-        dummy(Spells.GHAST, Spells.KEY_GHAST, Spells.KEY_GHAST_DESC, new AdvancedSpellIcon(SpellIconTypes.ADVANCED.get(), new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32));
+        dummy(Spells.GHAST, Spells.KEY_GHAST, Spells.KEY_GHAST_DESC, AdvancedSpellIcon.make(new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32));
         dummy(Spells.ENDER_ARMY);
         
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);

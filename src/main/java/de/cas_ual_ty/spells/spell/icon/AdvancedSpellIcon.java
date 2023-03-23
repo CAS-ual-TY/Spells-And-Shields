@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.icon;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import net.minecraft.resources.ResourceLocation;
 
 public class AdvancedSpellIcon extends SpellIcon
@@ -17,6 +18,11 @@ public class AdvancedSpellIcon extends SpellIcon
                 Codec.INT.fieldOf("textureWidth").forGetter(AdvancedSpellIcon::getTextureWidth),
                 Codec.INT.fieldOf("textureHeight").forGetter(AdvancedSpellIcon::getTextureHeight)
         ).apply(instance, (texture, u, v, width, height, textureWidth, textureHeight) -> new AdvancedSpellIcon(type, texture, u, v, width, height, textureWidth, textureHeight)));
+    }
+    
+    public static AdvancedSpellIcon make(ResourceLocation texture, int u, int v, int width, int height, int textureWidth, int textureHeight)
+    {
+        return new AdvancedSpellIcon(SpellIconTypes.ADVANCED.get(), texture, u, v, width, height, textureWidth, textureHeight);
     }
     
     protected ResourceLocation texture;
