@@ -5,7 +5,7 @@ plugins {
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
-version = '1.19.2-1.10.0-LEGACY'
+version = '1.19.2-1.10.1-LEGACY'
 group = 'de.cas_ual_ty.spells_and_shields' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'spells_and_shields'
 
