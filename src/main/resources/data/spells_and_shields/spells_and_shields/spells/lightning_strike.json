@@ -3,20 +3,89 @@
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/lightning_strike.png"
   },
-  "mana_cost": 0.0,
-  "spell_actions": [],
+  "mana_cost": 8.0,
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active",
+      "t_target": "owner"
+    },
+    {
+      "type": "spells_and_shields:simple_item_check",
+      "activation": "active",
+      "d_boolean_must_be_in_hand": true,
+      "item": {
+        "Count": 1,
+        "id": "minecraft:copper_ingot"
+      },
+      "t_target": "owner"
+    },
+    {
+      "type": "spells_and_shields:look_at_target",
+      "a_block_hit_activation": "on_block_hit",
+      "a_entity_hit_activation": "on_entity_hit",
+      "a_miss_activation": "",
+      "activation": "active",
+      "block_clip_context": "OUTLINE",
+      "d_double_range": "<<range>>",
+      "double_bb_inflation": 0.5,
+      "fluid_clip_context": "ANY",
+      "t_source": "owner"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "on_block_hit",
+      "td_destination": "position",
+      "ts_source": "block_hit"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "on_entity_hit",
+      "td_destination": "position",
+      "ts_source": "entity_hit"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a_to_activate": "on_hit",
+      "activation": "on_block_hit"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a_to_activate": "on_hit",
+      "activation": "on_entity_hit"
+    },
+    {
+      "type": "spells_and_shields:spawn_entity",
+      "activation": "on_hit",
+      "d_vec3_direction": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "d_vec3_motion": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "entity_type": "minecraft:lightning_bolt",
+      "t_entity": "",
+      "t_position": "position",
+      "tag": {}
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.lightning_strike"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.lightning_strike.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ],
-  "variables": []
+  "variables": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 20.0,
+      "var_name": "range"
+    }
+  ]
 }

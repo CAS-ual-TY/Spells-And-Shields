@@ -496,7 +496,20 @@ public class SpellsGen implements DataProvider
         dummy(Spells.RANDOM_TELEPORT);
         dummy(Spells.FORCED_TELEPORT);
         dummy(Spells.TELEPORT);
-        dummy(Spells.LIGHTNING_STRIKE);
+        
+        addSpell(Spells.LIGHTNING_STRIKE, new Spell(modId, "lightning_strike", Spells.KEY_LIGHTNING_STRIKE, 8F)
+                .addParameter(DOUBLE.get(), "range", 20D)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
+                .addAction(SimpleItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.COPPER_INGOT)))
+                .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, "on_block_hit", "on_entity_hit", ""))
+                .addAction(CopyTargetsAction.make("on_block_hit", "position", BLOCK_HIT.targetGroup))
+                .addAction(CopyTargetsAction.make("on_entity_hit", "position", ENTITY_HIT.targetGroup))
+                .addAction(ActivateAction.make("on_block_hit", "on_hit"))
+                .addAction(ActivateAction.make("on_entity_hit", "on_hit"))
+                .addAction(SpawnEntityAction.make("on_hit", "", EntityType.LIGHTNING_BOLT, "position", VEC3.get().immediate(Vec3.ZERO), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(new CompoundTag())))
+                .addTooltip(Component.translatable(Spells.KEY_LIGHTNING_STRIKE_DESC))
+        );
+        
         dummy(Spells.DRAIN_FLAME);
         dummy(Spells.GROWTH);
         
