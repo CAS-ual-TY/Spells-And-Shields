@@ -27,6 +27,7 @@ import de.cas_ual_ty.spells.spell.icon.AdvancedSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.ItemSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
@@ -44,6 +45,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
@@ -256,7 +258,7 @@ public class SpellsGen implements DataProvider
         addSpell(rl, spell);
     }
     
-    public void addAttributeSpell(ResourceLocation rl, String key, String descKey, SpellIcon spellIcon, Attribute attribute, AttributeModifier.Operation op, double value)
+    public void addPermanentAttributeSpell(ResourceLocation rl, String key, String descKey, SpellIcon spellIcon, Attribute attribute, AttributeModifier.Operation op, double value)
     {
         MutableComponent component = Component.translatable(attribute.getDescriptionId());
         ResourceLocation attributeRL = ForgeRegistries.ATTRIBUTES.getKey(attribute);
@@ -401,8 +403,10 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_BLOW_ARROW_DESC))
         );
         
-        dummy(Spells.HEALTH_BOOST);
-        dummy(Spells.MANA_BOOST);
+        addPermanentAttributeSpell(Spells.HEALTH_BOOST, Spells.KEY_HEALTH_BOOST, Spells.KEY_HEALTH_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/" + ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.HEALTH_BOOST).getPath() + ".png")), Attributes.MAX_HEALTH, AttributeModifier.Operation.ADDITION, 4D);
+        
+        addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltinRegistries.MAX_MANA_ATTRIBUTE.get(), AttributeModifier.Operation.ADDITION, 4D);
+        
         dummy(Spells.WATER_LEAP);
         dummy(Spells.AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY_DESC, ItemSpellIcon.make(new ItemStack(Items.ENCHANTED_BOOK)));
         

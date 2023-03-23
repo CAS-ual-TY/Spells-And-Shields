@@ -1,22 +1,74 @@
 {
   "icon": {
     "type": "spells_and_shields:default",
-    "texture": "spells_and_shields:textures/spell/mana_boost.png"
+    "texture": "spells_and_shields:textures/mob_effect/mana_boost.png"
   },
   "mana_cost": 0.0,
-  "spell_actions": [],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:add_attribute_modifier",
+      "activation": "on_equip",
+      "attribute": "spells_and_shields:generic.max_mana",
+      "d_boolean_amount": 4.0,
+      "d_boolean_operation": "addition",
+      "d_int_name": "generic.max_mana",
+      "d_int_uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
+      "ts_targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:remove_attribute_modifier",
+      "activation": "on_unequip",
+      "attribute": "spells_and_shields:generic.max_mana",
+      "d_int_uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
+      "ts_targets": "owner"
+    }
+  ],
   "title": {
-    "translate": "spell.spells_and_shields.mana_boost"
+    "translate": "spell.spells_and_shields.mana_boost",
+    "with": [
+      {
+        "translate": "attribute.name.generic.max_mana"
+      }
+    ]
   },
   "tooltip": [
     {
-      "translate": "spell.spells_and_shields.mana_boost.desc"
+      "translate": "spell.spells_and_shields.mana_boost.desc",
+      "with": [
+        {
+          "color": "blue",
+          "translate": "attribute.name.generic.max_mana"
+        }
+      ]
     },
     {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
+      "text": ""
+    },
+    {
+      "color": "dark_purple",
+      "translate": "potion.whenDrank"
+    },
+    {
+      "color": "blue",
+      "translate": "attribute.modifier.plus.0",
+      "with": [
+        "4",
+        {
+          "translate": "attribute.name.generic.max_mana"
+        }
+      ]
     }
   ],
-  "variables": []
+  "variables": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 4.0,
+      "var_name": "value"
+    },
+    {
+      "type": "spells_and_shields:string",
+      "value": "addition",
+      "var_name": "operation"
+    }
+  ]
 }
