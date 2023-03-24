@@ -73,7 +73,7 @@ public class SpellsRegistries
     public static final RegistryObject<ISpellDataType.SpellDataType> FLAMETHROWER_DATA = SPELL_DATA.register("flamethrower", () -> ITickedDataSpell.makeDataType(Spells.FLAMETHROWER));
     public static final RegistryObject<ISpellDataType.SpellDataType> GHAST_DATA = SPELL_DATA.register("ghast", () -> ITickedDataSpell.makeDataType(Spells.GHAST));
     
-    public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20D, 1D, 1024D).setSyncable(true));
+    public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20D, 0D, 1024D).setSyncable(true));
     public static final RegistryObject<RangedAttribute> MANA_REGENERATION_ATTRIBUTE = ATTRIBUTES.register("generic.mana_regeneration", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.mana_regen", 1D, 0D, 50D).setSyncable(true));
     
     public static final RegistryObject<Enchantment> MAGIC_PROTECTION_ENCHANTMENT = ENCHANTMENTS.register("magic_protection", () -> new MagicProtectionEnchantment(Enchantment.Rarity.UNCOMMON, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET));
