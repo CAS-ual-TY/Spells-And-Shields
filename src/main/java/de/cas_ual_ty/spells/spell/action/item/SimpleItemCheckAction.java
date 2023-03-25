@@ -6,7 +6,7 @@ import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
+import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
@@ -16,7 +16,7 @@ import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class SimpleItemCheckAction extends AffectTypeAction<PlayerTarget>
+public class SimpleItemCheckAction extends AffectSingleTypeAction<PlayerTarget>
 {
     public static Codec<SimpleItemCheckAction> makeCodec(SpellActionType<SimpleItemCheckAction> type)
     {
@@ -25,12 +25,12 @@ public class SimpleItemCheckAction extends AffectTypeAction<PlayerTarget>
                 singleTargetCodec(),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(SimpleItemCheckAction::getMustBeInHand),
                 ItemStack.CODEC.fieldOf("item").forGetter(SimpleItemCheckAction::getItem)
-        ).apply(instance, (activation, target, mustBeInHand, item) -> new SimpleItemCheckAction(type, activation, target, mustBeInHand, item)));
+        ).apply(instance, (activation, singleTarget, mustBeInHand, item) -> new SimpleItemCheckAction(type, activation, singleTarget, mustBeInHand, item)));
     }
     
-    public static SimpleItemCheckAction make(String activation, String targets, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
+    public static SimpleItemCheckAction make(String activation, String singleTarget, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
     {
-        return new SimpleItemCheckAction(SpellActionTypes.SIMPLE_ITEM_CHECK.get(), activation, targets, mustBeInHand, item);
+        return new SimpleItemCheckAction(SpellActionTypes.SIMPLE_ITEM_CHECK.get(), activation, singleTarget, mustBeInHand, item);
     }
     
     protected DynamicCtxVar<Boolean> mustBeInHand;
@@ -41,9 +41,9 @@ public class SimpleItemCheckAction extends AffectTypeAction<PlayerTarget>
         super(type);
     }
     
-    public SimpleItemCheckAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
+    public SimpleItemCheckAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
     {
-        super(type, activation, targets);
+        super(type, activation, singleTarget);
         this.mustBeInHand = mustBeInHand;
         this.item = item;
     }
@@ -65,7 +65,7 @@ public class SimpleItemCheckAction extends AffectTypeAction<PlayerTarget>
     }
     
     @Override
-    public void affectTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
+    public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
         mustBeInHand.getValue(ctx).ifPresent(mustBeInHand ->
         {
