@@ -3,7 +3,10 @@ package de.cas_ual_ty.spells.registers;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
-import de.cas_ual_ty.spells.spell.action.control.*;
+import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
+import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
+import de.cas_ual_ty.spells.spell.action.control.DeactivateAction;
+import de.cas_ual_ty.spells.spell.action.control.TerminateAction;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
@@ -11,6 +14,9 @@ import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
+import de.cas_ual_ty.spells.spell.action.mana.BurnManaAction;
+import de.cas_ual_ty.spells.spell.action.mana.ReplenishManaAction;
+import de.cas_ual_ty.spells.spell.action.mana.SimpleManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.target.filter.ItemFilterAction;
 import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
@@ -44,73 +50,77 @@ public class SpellActionTypes
     public static Supplier<IForgeRegistry<SpellActionType<?>>> REGISTRY;
     private static final DeferredRegister<SpellActionType<?>> DEFERRED_REGISTER = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_actions"), MOD_ID);
     
-    // effects
-    public static final RegistryObject<SpellActionType<DamageAction>> DAMAGE = DEFERRED_REGISTER.register("damage", () -> new SpellActionType<>(DamageAction::new, DamageAction::makeCodec));
-    public static final RegistryObject<SpellActionType<SourcedDamageAction>> SOURCED_DAMAGE = DEFERRED_REGISTER.register("sourced_damage", () -> new SpellActionType<>(SourcedDamageAction::new, SourcedDamageAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ResetFallDistanceAction>> RESET_FALL_DISTANCE = DEFERRED_REGISTER.register("reset_fall_distance", () -> new SpellActionType<>(ResetFallDistanceAction::new, ResetFallDistanceAction::makeCodec));
-    public static final RegistryObject<SpellActionType<SetMotionAction>> SET_MOTION = DEFERRED_REGISTER.register("set_motion", () -> new SyncedSpellActionType<>(SetMotionAction::new, SetMotionAction::makeCodec, SetMotionAction.ClientAction::new));
-    public static final RegistryObject<SpellActionType<BurnManaAction>> BURN_MANA = DEFERRED_REGISTER.register("burn_mana", () -> new SpellActionType<>(BurnManaAction::new, BurnManaAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ReplenishManaAction>> REPLENISH_MANA = DEFERRED_REGISTER.register("replenish_mana", () -> new SpellActionType<>(ReplenishManaAction::new, ReplenishManaAction::makeCodec));
-    public static final RegistryObject<SpellActionType<SpawnParticlesAction>> SPAWN_PARTICLES = DEFERRED_REGISTER.register("spawn_particles", () -> new SpellActionType<>(SpawnParticlesAction::new, SpawnParticlesAction::makeCodec));
-    public static final RegistryObject<SpellActionType<PlaySoundAction>> PLAY_SOUND = DEFERRED_REGISTER.register("play_sound", () -> new SpellActionType<>(PlaySoundAction::new, PlaySoundAction::makeCodec));
-    public static final RegistryObject<SpellActionType<SpawnEntityAction>> SPAWN_ENTITY = DEFERRED_REGISTER.register("spawn_entity", () -> new SpellActionType<>(SpawnEntityAction::new, SpawnEntityAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ApplyEntityTagAction>> APPLY_ENTITY_TAG = DEFERRED_REGISTER.register("apply_entity_tag", () -> new SpellActionType<>(ApplyEntityTagAction::new, ApplyEntityTagAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ApplyEntityExtraTagAction>> APPLY_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("apply_entity_extra_tag", () -> new SpellActionType<>(ApplyEntityExtraTagAction::new, ApplyEntityExtraTagAction::makeCodec));
-    public static final RegistryObject<SpellActionType<GetTargetGroupSizeAction>> GET_TARGET_GROUP_SIZE = DEFERRED_REGISTER.register("get_target_group_size", () -> new SpellActionType<>(GetTargetGroupSizeAction::new, GetTargetGroupSizeAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ApplyPotionEffectAction>> APPLY_POTION_EFFECT = DEFERRED_REGISTER.register("apply_potion_effect", () -> new SpellActionType<>(ApplyPotionEffectAction::new, ApplyPotionEffectAction::makeCodec));
-    public static final RegistryObject<SpellActionType<AddAttributeModifierAction>> ADD_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("add_attribute_modifier", () -> new SpellActionType<>(AddAttributeModifierAction::new, AddAttributeModifierAction::makeCodec));
-    public static final RegistryObject<SpellActionType<RemoveAttributeModifierAction>> REMOVE_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("remove_attribute_modifier", () -> new SpellActionType<>(RemoveAttributeModifierAction::new, RemoveAttributeModifierAction::makeCodec));
-    
-    //target
-    public static final RegistryObject<SpellActionType<CopyTargetsAction>> COPY_TARGETS = DEFERRED_REGISTER.register("copy_targets", () -> new SpellActionType<>(CopyTargetsAction::new, CopyTargetsAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ClearTargetsAction>> CLEAR_TARGETS = DEFERRED_REGISTER.register("clear_targets", () -> new SpellActionType<>(ClearTargetsAction::new, ClearTargetsAction::makeCodec));
-    public static final RegistryObject<SpellActionType<PickTargetAction>> PICK_TARGET = DEFERRED_REGISTER.register("pick_target", () -> new SpellActionType<>(PickTargetAction::new, PickTargetAction::makeCodec2));
-    public static final RegistryObject<SpellActionType<LookAtTargetAction>> LOOK_AT_TARGET = DEFERRED_REGISTER.register("look_at_target", () -> new SpellActionType<>(LookAtTargetAction::new, LookAtTargetAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ShootAction>> SHOOT = DEFERRED_REGISTER.register("shoot", () -> new SpellActionType<>(ShootAction::new, ShootAction::makeCodec));
-    public static final RegistryObject<SpellActionType<HomeAction>> HOME = DEFERRED_REGISTER.register("home", () -> new SpellActionType<>(HomeAction::new, HomeAction::makeCodec));
-    public static final RegistryObject<SpellActionType<MainhandItemTargetAction>> MAINHAND_ITEM_TARGET = DEFERRED_REGISTER.register("mainhand_item_target", () -> new SpellActionType<>(MainhandItemTargetAction::new, MainhandItemTargetAction::makeCodec));
-    public static final RegistryObject<SpellActionType<OffhandItemTargetAction>> OFFHAND_ITEM_TARGET = DEFERRED_REGISTER.register("offhand_item_target", () -> new SpellActionType<>(OffhandItemTargetAction::new, OffhandItemTargetAction::makeCodec));
-    public static final RegistryObject<SpellActionType<UUIDPlayerTargetAction>> UUID_PLAYER_TARGET = DEFERRED_REGISTER.register("uuid_player_target", () -> new SpellActionType<>(UUIDPlayerTargetAction::new, UUIDPlayerTargetAction::makeCodec));
-    
-    //target filter
-    public static final RegistryObject<SpellActionType<TypeFilterAction>> TYPE_FILTER = DEFERRED_REGISTER.register("type_filter", () -> new SpellActionType<>(TypeFilterAction::new, TypeFilterAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ItemFilterAction>> ITEM_FILTER = DEFERRED_REGISTER.register("item_filter", () -> new SpellActionType<>(ItemFilterAction::new, ItemFilterAction::makeCodec));
-    
-    //attribute
-    public static final RegistryObject<SpellActionType<GetEntityPositionDirectionMotionAction>> GET_ENTITY_POSITION_DIRECTION_MOTION = DEFERRED_REGISTER.register("get_entity_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionMotionAction::new, GetEntityPositionDirectionMotionAction::makeCodec));
+    // attribute
+    public static final RegistryObject<SpellActionType<GetEntityExtraTagAction>> GET_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("get_entity_extra_tag", () -> new SpellActionType<>(GetEntityExtraTagAction::new, GetEntityExtraTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityEyePositionAction>> GET_ENTITY_EYE_POSITION = DEFERRED_REGISTER.register("get_entity_eye_position", () -> new SpellActionType<>(GetEntityEyePositionAction::new, GetEntityEyePositionAction::makeCodec));
-    public static final RegistryObject<SpellActionType<GetItemTagAction>> GET_ITEM_TAG = DEFERRED_REGISTER.register("get_item_tag", () -> new SpellActionType<>(GetItemTagAction::new, GetItemTagAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetEntityPositionDirectionMotionAction>> GET_ENTITY_POSITION_DIRECTION_MOTION = DEFERRED_REGISTER.register("get_entity_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionMotionAction::new, GetEntityPositionDirectionMotionAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityTagAction>> GET_ENTITY_TAG = DEFERRED_REGISTER.register("get_entity_tag", () -> new SpellActionType<>(GetEntityTagAction::new, GetEntityTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityUUIDAction>> GET_ENTITY_UUID = DEFERRED_REGISTER.register("get_entity_uuid", () -> new SpellActionType<>(GetEntityUUIDAction::new, GetEntityUUIDAction::makeCodec));
-    public static final RegistryObject<SpellActionType<GetItemAttributesAction>> GET_ITEM_ATTRIBUTES = DEFERRED_REGISTER.register("get_item_attributes", () -> new SpellActionType<>(GetItemAttributesAction::new, GetItemAttributesAction::makeCodec));
-    public static final RegistryObject<SpellActionType<GetEntityExtraTagAction>> GET_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("get_entity_extra_tag", () -> new SpellActionType<>(GetEntityExtraTagAction::new, GetEntityExtraTagAction::makeCodec));
     
-    //item
-    public static final RegistryObject<SpellActionType<DamageItemAction>> DAMAGE_ITEM = DEFERRED_REGISTER.register("damage_item", () -> new SpellActionType<>(DamageItemAction::new, DamageItemAction::makeCodec));
-    public static final RegistryObject<SpellActionType<TryDamageItemAction>> TRY_DAMAGE_ITEM = DEFERRED_REGISTER.register("try_damage_item", () -> new SpellActionType<>(TryDamageItemAction::new, TryDamageItemAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ConsumeItemAction>> CONSUME_ITEM = DEFERRED_REGISTER.register("consume_item", () -> new SpellActionType<>(ConsumeItemAction::new, ConsumeItemAction::makeCodec));
-    public static final RegistryObject<SpellActionType<TryConsumeItemAction>> TRY_CONSUME_ITEM = DEFERRED_REGISTER.register("try_consume_item", () -> new SpellActionType<>(TryConsumeItemAction::new, TryConsumeItemAction::makeCodec));
-    public static final RegistryObject<SpellActionType<ModifyItemAction>> MODIFY_ITEM = DEFERRED_REGISTER.register("modify_item", () -> new SpellActionType<>(ModifyItemAction::new, ModifyItemAction::makeCodec));
-    public static final RegistryObject<SpellActionType<OverrideItemAction>> OVERRIDE_ITEM = DEFERRED_REGISTER.register("override_item", () -> new SpellActionType<>(OverrideItemAction::new, OverrideItemAction::makeCodec));
-    public static final RegistryObject<SpellActionType<GiveItemAction>> GIVE_ITEM = DEFERRED_REGISTER.register("give_item", () -> new SpellActionType<>(GiveItemAction::new, GiveItemAction::makeCodec));
-    
-    //control
-    public static final RegistryObject<SpellActionType<TerminateAction>> TERMINATE = DEFERRED_REGISTER.register("terminate", () -> new SpellActionType<>(TerminateAction::new, TerminateAction::makeCodec));
-    public static final RegistryObject<SpellActionType<BooleanActivationAction>> BOOLEAN_ACTIVATION = DEFERRED_REGISTER.register("boolean_activation", () -> new SpellActionType<>(BooleanActivationAction::new, BooleanActivationAction::makeCodec));
+    // control
     public static final RegistryObject<SpellActionType<ActivateAction>> ACTIVATE = DEFERRED_REGISTER.register("activate", () -> new SpellActionType<>(ActivateAction::new, ActivateAction::makeCodec));
+    public static final RegistryObject<SpellActionType<BooleanActivationAction>> BOOLEAN_ACTIVATION = DEFERRED_REGISTER.register("boolean_activation", () -> new SpellActionType<>(BooleanActivationAction::new, BooleanActivationAction::makeCodec));
     public static final RegistryObject<SpellActionType<DeactivateAction>> DEACTIVATE = DEFERRED_REGISTER.register("deactivate", () -> new SpellActionType<>(DeactivateAction::new, DeactivateAction::makeCodec));
-    public static final RegistryObject<SpellActionType<SimpleManaCheckAction>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheckAction::new, SimpleManaCheckAction::makeCodec));
-    public static final RegistryObject<SpellActionType<SimpleItemCheckAction>> SIMPLE_ITEM_CHECK = DEFERRED_REGISTER.register("simple_item_check", () -> new SpellActionType<>(SimpleItemCheckAction::new, SimpleItemCheckAction::makeCodec));
+    public static final RegistryObject<SpellActionType<TerminateAction>> TERMINATE = DEFERRED_REGISTER.register("terminate", () -> new SpellActionType<>(TerminateAction::new, TerminateAction::makeCodec));
+    
+    // delayed
+    public static final RegistryObject<SpellActionType<AddDelayedSpellAction>> ADD_DELAYED_SPELL = DEFERRED_REGISTER.register("add_delayed_spell", () -> new SpellActionType<>(AddDelayedSpellAction::new, AddDelayedSpellAction::makeCodec));
+    public static final RegistryObject<SpellActionType<CheckHasDelayedSpellAction>> CHECK_HAS_DELAYED_SPELL = DEFERRED_REGISTER.register("check_has_delayed_spell", () -> new SpellActionType<>(CheckHasDelayedSpellAction::new, CheckHasDelayedSpellAction::makeCodec));
+    public static final RegistryObject<SpellActionType<RemoveDelayedSpellAction>> REMOVE_DELAYED_SPELL = DEFERRED_REGISTER.register("remove_delayed_spell", () -> new SpellActionType<>(RemoveDelayedSpellAction::new, RemoveDelayedSpellAction::makeCodec));
+    
+    // effects
+    public static final RegistryObject<SpellActionType<AddAttributeModifierAction>> ADD_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("add_attribute_modifier", () -> new SpellActionType<>(AddAttributeModifierAction::new, AddAttributeModifierAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ApplyEntityExtraTagAction>> APPLY_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("apply_entity_extra_tag", () -> new SpellActionType<>(ApplyEntityExtraTagAction::new, ApplyEntityExtraTagAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ApplyEntityTagAction>> APPLY_ENTITY_TAG = DEFERRED_REGISTER.register("apply_entity_tag", () -> new SpellActionType<>(ApplyEntityTagAction::new, ApplyEntityTagAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ApplyPotionEffectAction>> APPLY_POTION_EFFECT = DEFERRED_REGISTER.register("apply_potion_effect", () -> new SpellActionType<>(ApplyPotionEffectAction::new, ApplyPotionEffectAction::makeCodec));
+    public static final RegistryObject<SpellActionType<DamageAction>> DAMAGE = DEFERRED_REGISTER.register("damage", () -> new SpellActionType<>(DamageAction::new, DamageAction::makeCodec));
+    public static final RegistryObject<SpellActionType<RemoveAttributeModifierAction>> REMOVE_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("remove_attribute_modifier", () -> new SpellActionType<>(RemoveAttributeModifierAction::new, RemoveAttributeModifierAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ResetFallDistanceAction>> RESET_FALL_DISTANCE = DEFERRED_REGISTER.register("reset_fall_distance", () -> new SpellActionType<>(ResetFallDistanceAction::new, ResetFallDistanceAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SetMotionAction>> SET_MOTION = DEFERRED_REGISTER.register("set_motion", () -> new SyncedSpellActionType<>(SetMotionAction::new, SetMotionAction::makeCodec, SetMotionAction.ClientAction::new));
+    public static final RegistryObject<SpellActionType<SourcedDamageAction>> SOURCED_DAMAGE = DEFERRED_REGISTER.register("sourced_damage", () -> new SpellActionType<>(SourcedDamageAction::new, SourcedDamageAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SpawnEntityAction>> SPAWN_ENTITY = DEFERRED_REGISTER.register("spawn_entity", () -> new SpellActionType<>(SpawnEntityAction::new, SpawnEntityAction::makeCodec));
+    
+    // fx
+    public static final RegistryObject<SpellActionType<PlaySoundAction>> PLAY_SOUND = DEFERRED_REGISTER.register("play_sound", () -> new SpellActionType<>(PlaySoundAction::new, PlaySoundAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SpawnParticlesAction>> SPAWN_PARTICLES = DEFERRED_REGISTER.register("spawn_particles", () -> new SpellActionType<>(SpawnParticlesAction::new, SpawnParticlesAction::makeCodec));
+    
+    // item
+    public static final RegistryObject<SpellActionType<ConsumeItemAction>> CONSUME_ITEM = DEFERRED_REGISTER.register("consume_item", () -> new SpellActionType<>(ConsumeItemAction::new, ConsumeItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<DamageItemAction>> DAMAGE_ITEM = DEFERRED_REGISTER.register("damage_item", () -> new SpellActionType<>(DamageItemAction::new, DamageItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetItemAttributesAction>> GET_ITEM_ATTRIBUTES = DEFERRED_REGISTER.register("get_item_attributes", () -> new SpellActionType<>(GetItemAttributesAction::new, GetItemAttributesAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetItemTagAction>> GET_ITEM_TAG = DEFERRED_REGISTER.register("get_item_tag", () -> new SpellActionType<>(GetItemTagAction::new, GetItemTagAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GiveItemAction>> GIVE_ITEM = DEFERRED_REGISTER.register("give_item", () -> new SpellActionType<>(GiveItemAction::new, GiveItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<ItemEqualsActivationAction>> ITEM_EQUALS_ACTIVATION = DEFERRED_REGISTER.register("item_equals_activation", () -> new SpellActionType<>(ItemEqualsActivationAction::new, ItemEqualsActivationAction::makeCodec));
     public static final RegistryObject<SpellActionType<ItemTagEqualsActivationAction>> ITEM_TAG_EQUALS_ACTIVATION = DEFERRED_REGISTER.register("item_tag_equals_activation", () -> new SpellActionType<>(ItemTagEqualsActivationAction::new, ItemTagEqualsActivationAction::makeCodec));
+    public static final RegistryObject<SpellActionType<MainhandItemTargetAction>> MAINHAND_ITEM_TARGET = DEFERRED_REGISTER.register("mainhand_item_target", () -> new SpellActionType<>(MainhandItemTargetAction::new, MainhandItemTargetAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ModifyItemAction>> MODIFY_ITEM = DEFERRED_REGISTER.register("modify_item", () -> new SpellActionType<>(ModifyItemAction::new, ModifyItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<OffhandItemTargetAction>> OFFHAND_ITEM_TARGET = DEFERRED_REGISTER.register("offhand_item_target", () -> new SpellActionType<>(OffhandItemTargetAction::new, OffhandItemTargetAction::makeCodec));
+    public static final RegistryObject<SpellActionType<OverrideItemAction>> OVERRIDE_ITEM = DEFERRED_REGISTER.register("override_item", () -> new SpellActionType<>(OverrideItemAction::new, OverrideItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SimpleItemCheckAction>> SIMPLE_ITEM_CHECK = DEFERRED_REGISTER.register("simple_item_check", () -> new SpellActionType<>(SimpleItemCheckAction::new, SimpleItemCheckAction::makeCodec));
     public static final RegistryObject<SpellActionType<SimpleItemTagCheckAction>> SIMPLE_ITEM_TAG_CHECK = DEFERRED_REGISTER.register("simple_item_tag_check", () -> new SpellActionType<>(SimpleItemTagCheckAction::new, SimpleItemTagCheckAction::makeCodec));
+    public static final RegistryObject<SpellActionType<TryConsumeItemAction>> TRY_CONSUME_ITEM = DEFERRED_REGISTER.register("try_consume_item", () -> new SpellActionType<>(TryConsumeItemAction::new, TryConsumeItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<TryDamageItemAction>> TRY_DAMAGE_ITEM = DEFERRED_REGISTER.register("try_damage_item", () -> new SpellActionType<>(TryDamageItemAction::new, TryDamageItemAction::makeCodec));
     
-    //delayed
-    public static final RegistryObject<SpellActionType<AddDelayedSpellAction>> ADD_DELAYED_SPELL = DEFERRED_REGISTER.register("add_delayed_spell", () -> new SpellActionType<>(AddDelayedSpellAction::new, AddDelayedSpellAction::makeCodec));
-    public static final RegistryObject<SpellActionType<RemoveDelayedSpellAction>> REMOVE_DELAYED_SPELL = DEFERRED_REGISTER.register("remove_delayed_spell", () -> new SpellActionType<>(RemoveDelayedSpellAction::new, RemoveDelayedSpellAction::makeCodec));
-    public static final RegistryObject<SpellActionType<CheckHasDelayedSpellAction>> CHECK_HAS_DELAYED_SPELL = DEFERRED_REGISTER.register("check_has_delayed_spell", () -> new SpellActionType<>(CheckHasDelayedSpellAction::new, CheckHasDelayedSpellAction::makeCodec));
+    // mana
+    public static final RegistryObject<SpellActionType<BurnManaAction>> BURN_MANA = DEFERRED_REGISTER.register("burn_mana", () -> new SpellActionType<>(BurnManaAction::new, BurnManaAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ReplenishManaAction>> REPLENISH_MANA = DEFERRED_REGISTER.register("replenish_mana", () -> new SpellActionType<>(ReplenishManaAction::new, ReplenishManaAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SimpleManaCheckAction>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheckAction::new, SimpleManaCheckAction::makeCodec));
     
-    //variable
+    // target filter
+    public static final RegistryObject<SpellActionType<ItemFilterAction>> ITEM_FILTER = DEFERRED_REGISTER.register("item_filter", () -> new SpellActionType<>(ItemFilterAction::new, ItemFilterAction::makeCodec));
+    public static final RegistryObject<SpellActionType<TypeFilterAction>> TYPE_FILTER = DEFERRED_REGISTER.register("type_filter", () -> new SpellActionType<>(TypeFilterAction::new, TypeFilterAction::makeCodec));
+    
+    // target
+    public static final RegistryObject<SpellActionType<ClearTargetsAction>> CLEAR_TARGETS = DEFERRED_REGISTER.register("clear_targets", () -> new SpellActionType<>(ClearTargetsAction::new, ClearTargetsAction::makeCodec));
+    public static final RegistryObject<SpellActionType<CopyTargetsAction>> COPY_TARGETS = DEFERRED_REGISTER.register("copy_targets", () -> new SpellActionType<>(CopyTargetsAction::new, CopyTargetsAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetTargetGroupSizeAction>> GET_TARGET_GROUP_SIZE = DEFERRED_REGISTER.register("get_target_group_size", () -> new SpellActionType<>(GetTargetGroupSizeAction::new, GetTargetGroupSizeAction::makeCodec));
+    public static final RegistryObject<SpellActionType<HomeAction>> HOME = DEFERRED_REGISTER.register("home", () -> new SpellActionType<>(HomeAction::new, HomeAction::makeCodec));
+    public static final RegistryObject<SpellActionType<LookAtTargetAction>> LOOK_AT_TARGET = DEFERRED_REGISTER.register("look_at_target", () -> new SpellActionType<>(LookAtTargetAction::new, LookAtTargetAction::makeCodec));
+    public static final RegistryObject<SpellActionType<PickTargetAction>> PICK_TARGET = DEFERRED_REGISTER.register("pick_target", () -> new SpellActionType<>(PickTargetAction::new, PickTargetAction::makeCodec2));
+    public static final RegistryObject<SpellActionType<ShootAction>> SHOOT = DEFERRED_REGISTER.register("shoot", () -> new SpellActionType<>(ShootAction::new, ShootAction::makeCodec));
+    public static final RegistryObject<SpellActionType<UUIDPlayerTargetAction>> UUID_PLAYER_TARGET = DEFERRED_REGISTER.register("uuid_player_target", () -> new SpellActionType<>(UUIDPlayerTargetAction::new, UUIDPlayerTargetAction::makeCodec));
+    
+    // variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
     public static final RegistryObject<SpellActionType<PutVarAction<Double>>> PUT_DOUBLE = DEFERRED_REGISTER.register("put_double", () -> PutVarAction.makeType(CtxVarTypes.DOUBLE));
     public static final RegistryObject<SpellActionType<PutVarAction<Vec3>>> PUT_VEC3 = DEFERRED_REGISTER.register("put_vec3", () -> PutVarAction.makeType(CtxVarTypes.VEC3));
@@ -119,7 +129,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<PutVarAction<CompoundTag>>> PUT_COMPOUND_TAG = DEFERRED_REGISTER.register("put_compound_tag", () -> PutVarAction.makeType(CtxVarTypes.COMPOUND_TAG));
     public static final RegistryObject<SpellActionType<PutVarAction<String>>> PUT_STRING = DEFERRED_REGISTER.register("put_string", () -> PutVarAction.makeType(CtxVarTypes.STRING));
     
-    //variable / mapped unary
+    // variable / mapped unary
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NEGATE = DEFERRED_REGISTER.register("negate", () -> MappedUnaryVarAction.makeType(UnaryOperation.NEGATE));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NOT = DEFERRED_REGISTER.register("not", () -> MappedUnaryVarAction.makeType(UnaryOperation.NOT));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> ROUND = DEFERRED_REGISTER.register("round", () -> MappedUnaryVarAction.makeType(UnaryOperation.ROUND));
@@ -139,7 +149,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> TO_DEGREES = DEFERRED_REGISTER.register("to_degrees", () -> MappedUnaryVarAction.makeType(UnaryOperation.TO_DEGREES));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> UUID_FROM_STRING = DEFERRED_REGISTER.register("uuid_from_string", () -> MappedUnaryVarAction.makeType(UnaryOperation.UUID_FROM_STRING));
     
-    //variable / mapped binary
+    // variable / mapped binary
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> ADD = DEFERRED_REGISTER.register("add", () -> MappedBinaryVarAction.makeType(BinaryOperation.ADD));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> SUB = DEFERRED_REGISTER.register("sub", () -> MappedBinaryVarAction.makeType(BinaryOperation.SUB));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> MUL = DEFERRED_REGISTER.register("mul", () -> MappedBinaryVarAction.makeType(BinaryOperation.MUL));
@@ -164,7 +174,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_UUID = DEFERRED_REGISTER.register("get_nbt_uuid", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_UUID));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_VEC3 = DEFERRED_REGISTER.register("get_nbt_vec3", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_VEC3));
     
-    //variable / mapped ternary
+    // variable / mapped ternary
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> CONDITIONAL = DEFERRED_REGISTER.register("conditional", () -> MappedTernaryVarAction.makeType(TernaryOperation.CONDITIONAL));
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> VEC3 = DEFERRED_REGISTER.register("vec3", () -> MappedTernaryVarAction.makeType(TernaryOperation.VEC3));
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> BLOCK_POS = DEFERRED_REGISTER.register("block_pos", () -> MappedTernaryVarAction.makeType(TernaryOperation.BLOCK_POS));
@@ -176,7 +186,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_UUID = DEFERRED_REGISTER.register("put_nbt_uuid", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_UUID));
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> PUT_NBT_VEC3 = DEFERRED_REGISTER.register("put_nbt_vec3", () -> MappedTernaryVarAction.makeType(TernaryOperation.PUT_NBT_VEC3));
     
-    //variable / simple unary
+    // variable / simple unary
     // -/-
     
     //variable / simple binary

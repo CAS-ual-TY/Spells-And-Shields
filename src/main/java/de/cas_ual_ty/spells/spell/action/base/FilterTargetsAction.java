@@ -1,7 +1,6 @@
-package de.cas_ual_ty.spells.spell.action.target.filter;
+package de.cas_ual_ty.spells.spell.action.base;
 
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.action.base.SrcDstTargetAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.Target;
