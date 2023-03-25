@@ -57,6 +57,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<GetEntityPositionDirectionMotionAction>> GET_ENTITY_POSITION_DIRECTION_MOTION = DEFERRED_REGISTER.register("get_entity_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionMotionAction::new, GetEntityPositionDirectionMotionAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityTagAction>> GET_ENTITY_TAG = DEFERRED_REGISTER.register("get_entity_tag", () -> new SpellActionType<>(GetEntityTagAction::new, GetEntityTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityUUIDAction>> GET_ENTITY_UUID = DEFERRED_REGISTER.register("get_entity_uuid", () -> new SpellActionType<>(GetEntityUUIDAction::new, GetEntityUUIDAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetIsCreativeAction>> GET_IS_CREATIVE = DEFERRED_REGISTER.register("get_is_creative", () -> new SpellActionType<>(GetIsCreativeAction::new, GetIsCreativeAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetPositionAction>> GET_POSITION = DEFERRED_REGISTER.register("get_position", () -> new SpellActionType<>(GetPositionAction::new, GetPositionAction::makeCodec));
     
     // control
