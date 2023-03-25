@@ -29,9 +29,9 @@ public class Compiler
         registerSupplier("sqrt2", CtxVarTypes.DOUBLE, () -> sqrt2);
         
         Random random = new Random();
-        registerSupplier("randomInt", CtxVarTypes.INT, random::nextInt);
-        registerSupplier("randomDouble", CtxVarTypes.DOUBLE, random::nextDouble);
-        registerSupplier("randomUUID", CtxVarTypes.STRING, () -> UUID.randomUUID().toString());
+        registerSupplier("random_int", CtxVarTypes.INT, random::nextInt);
+        registerSupplier("random_double", CtxVarTypes.DOUBLE, random::nextDouble);
+        registerSupplier("random_uuid", CtxVarTypes.STRING, () -> UUID.randomUUID().toString());
     }
     
     public static <T> void registerSupplier(String name, Supplier<CtxVarType<T>> type, Supplier<T> value)
