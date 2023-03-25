@@ -25,9 +25,9 @@ public class MainhandItemTargetAction extends AffectSingleTypeAction<PlayerTarge
         ).apply(instance, (activation, source, dst) -> new MainhandItemTargetAction(type, activation, source, dst)));
     }
     
-    public static MainhandItemTargetAction make(String activation, String target, String dst)
+    public static MainhandItemTargetAction make(String activation, String source, String dst)
     {
-        return new MainhandItemTargetAction(SpellActionTypes.MAINHAND_ITEM_TARGET.get(), activation, target, dst);
+        return new MainhandItemTargetAction(SpellActionTypes.MAINHAND_ITEM_TARGET.get(), activation, source, dst);
     }
     
     protected String dst;
@@ -37,9 +37,9 @@ public class MainhandItemTargetAction extends AffectSingleTypeAction<PlayerTarge
         super(type);
     }
     
-    public MainhandItemTargetAction(SpellActionType<?> type, String activation, String target, String dst)
+    public MainhandItemTargetAction(SpellActionType<?> type, String activation, String source, String dst)
     {
-        super(type, activation, target);
+        super(type, activation, source);
         this.dst = dst;
     }
     
@@ -51,7 +51,7 @@ public class MainhandItemTargetAction extends AffectSingleTypeAction<PlayerTarge
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
-        ctx.getOrCreateTargetGroup(dst).addTargets(Target.of(playerTarget.getLevel(), playerTarget.getPlayer().getMainHandItem(), item -> playerTarget.getPlayer().setItemInHand(InteractionHand.MAIN_HAND, item)));
+        ctx.getOrCreateTargetGroup(dst).addTargets(Target.of(playerTarget.getLevel(), playerTarget.getPlayer().getMainHandItem(), item -> playerTarget.getPlayer().setItemInHand(InteractionHand.MAIN_HAND, item), playerTarget.getPlayer().isCreative()));
     }
     
     @Override

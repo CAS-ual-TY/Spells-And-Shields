@@ -105,17 +105,17 @@
       "a_entity_hit_activation": "on_entity_hit",
       "a_timeout_activation": "on_timeout",
       "activation": "shoot",
-      "double_inaccuracy": 0.0,
-      "double_velocity": 1.0,
-      "int_timeout": 100,
+      "d_double_inaccuracy": 0.0,
+      "d_double_velocity": 1.0,
+      "d_int_timeout": 100,
       "t_source": "owner",
       "td_projectile": "projectile"
     },
     {
       "type": "spells_and_shields:apply_entity_extra_tag",
       "activation": "shoot",
-      "t_entity": "projectile",
-      "tag": "<<tag>>"
+      "d_compound_tag_tag": "<<tag>>",
+      "ts_targets": "projectile"
     },
     {
       "type": "spells_and_shields:play_sound",
@@ -182,8 +182,8 @@
       "a_entity_hit_activation": "on_entity_hit_return",
       "a_timeout_activation": "dummy_timeout",
       "activation": "return",
-      "double_velocity": 1.0,
-      "int_timeout": 100,
+      "d_double_velocity": 1.0,
+      "d_int_timeout": 100,
       "t_source": "position",
       "td_projectile": "projectile",
       "ts_targets": "return_target"
@@ -287,7 +287,7 @@
       "d_int_amount": "<< amount - 1 >>",
       "d_int_damage": "<<amount>>",
       "item": "minecraft:bucket",
-      "t_target": "item"
+      "ts_targets": "item"
     },
     {
       "type": "spells_and_shields:play_sound",

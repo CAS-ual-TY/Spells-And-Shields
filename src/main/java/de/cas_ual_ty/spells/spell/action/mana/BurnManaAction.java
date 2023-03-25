@@ -6,7 +6,6 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -22,15 +21,15 @@ public class BurnManaAction extends AffectTypeAction<LivingEntityTarget>
     public static Codec<BurnManaAction> makeCodec(SpellActionType<BurnManaAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
+                activationCodec(),
+                multiTargetsCodec(),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("mana_amount")).forGetter(BurnManaAction::getAmount)
-        ).apply(instance, (activation, targets, amount) -> new BurnManaAction(type, activation, targets, amount)));
+        ).apply(instance, (activation, multiTargets, amount) -> new BurnManaAction(type, activation, multiTargets, amount)));
     }
     
-    public static BurnManaAction make(String activation, String targets, DynamicCtxVar<Double> amount)
+    public static BurnManaAction make(String activation, String multiTargets, DynamicCtxVar<Double> amount)
     {
-        return new BurnManaAction(SpellActionTypes.BURN_MANA.get(), activation, targets, amount);
+        return new BurnManaAction(SpellActionTypes.BURN_MANA.get(), activation, multiTargets, amount);
     }
     
     protected DynamicCtxVar<Double> amount;
@@ -40,9 +39,9 @@ public class BurnManaAction extends AffectTypeAction<LivingEntityTarget>
         super(type);
     }
     
-    public BurnManaAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> amount)
+    public BurnManaAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Double> amount)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.amount = amount;
     }
     

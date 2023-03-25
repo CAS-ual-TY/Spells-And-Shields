@@ -23,17 +23,17 @@ public class ItemTagEqualsActivationAction extends AffectSingleTypeAction<ItemTa
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                singleTargetCodec(),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(ItemTagEqualsActivationAction::getToActivate),
                 TagKey.codec(ForgeRegistries.ITEMS.getRegistryKey()).fieldOf("item_tag").forGetter(ItemTagEqualsActivationAction::getItemTag),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_count")).forGetter(ItemTagEqualsActivationAction::getMinimumCount),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_durability")).forGetter(ItemTagEqualsActivationAction::getMinimumDurability)
-        ).apply(instance, (activation, target, toActivate, itemTag, minimumCount, minimumDurability) -> new ItemTagEqualsActivationAction(type, activation, target, toActivate, itemTag, minimumCount, minimumDurability)));
+        ).apply(instance, (activation, singleTarget, toActivate, itemTag, minimumCount, minimumDurability) -> new ItemTagEqualsActivationAction(type, activation, singleTarget, toActivate, itemTag, minimumCount, minimumDurability)));
     }
     
-    public static ItemTagEqualsActivationAction make(String activation, String target, String toActivate, TagKey<Item> itemTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
+    public static ItemTagEqualsActivationAction make(String activation, String singleTarget, String toActivate, TagKey<Item> itemTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
     {
-        return new ItemTagEqualsActivationAction(SpellActionTypes.ITEM_TAG_EQUALS_ACTIVATION.get(), activation, target, toActivate, itemTag, minimumCount, minimumDurability);
+        return new ItemTagEqualsActivationAction(SpellActionTypes.ITEM_TAG_EQUALS_ACTIVATION.get(), activation, singleTarget, toActivate, itemTag, minimumCount, minimumDurability);
     }
     
     protected String toActivate;
@@ -47,9 +47,9 @@ public class ItemTagEqualsActivationAction extends AffectSingleTypeAction<ItemTa
         super(type);
     }
     
-    public ItemTagEqualsActivationAction(SpellActionType<?> type, String activation, String target, String toActivate, TagKey<Item> itemTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
+    public ItemTagEqualsActivationAction(SpellActionType<?> type, String activation, String singleTarget, String toActivate, TagKey<Item> itemTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
     {
-        super(type, activation, target);
+        super(type, activation, singleTarget);
         this.toActivate = toActivate;
         this.itemTag = itemTag;
         this.minimumCount = minimumCount;

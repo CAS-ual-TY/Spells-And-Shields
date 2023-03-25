@@ -24,16 +24,16 @@ public class SpawnParticlesAction extends AffectTypeAction<PositionTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetsCodec(),
+                multiTargetsCodec(),
                 ParticleTypes.CODEC.fieldOf("particle").forGetter(SpawnParticlesAction::getParticle),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("count")).forGetter(SpawnParticlesAction::getCount),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("spread")).forGetter(SpawnParticlesAction::getSpread)
-        ).apply(instance, (activation, targets, particle, count, spread) -> new SpawnParticlesAction(type, activation, targets, particle, count, spread)));
+        ).apply(instance, (activation, multiTargets, particle, count, spread) -> new SpawnParticlesAction(type, activation, multiTargets, particle, count, spread)));
     }
     
-    public static SpawnParticlesAction make(String activation, String targets, ParticleOptions particle, DynamicCtxVar<Integer> count, DynamicCtxVar<Double> spread)
+    public static SpawnParticlesAction make(String activation, String multiTargets, ParticleOptions particle, DynamicCtxVar<Integer> count, DynamicCtxVar<Double> spread)
     {
-        return new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), activation, targets, particle, count, spread);
+        return new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), activation, multiTargets, particle, count, spread);
     }
     
     protected ParticleOptions particle;
@@ -45,9 +45,9 @@ public class SpawnParticlesAction extends AffectTypeAction<PositionTarget>
         super(type);
     }
     
-    public SpawnParticlesAction(SpellActionType<?> type, String activation, String targets, ParticleOptions particle, DynamicCtxVar<Integer> count, DynamicCtxVar<Double> spread)
+    public SpawnParticlesAction(SpellActionType<?> type, String activation, String multiTargets, ParticleOptions particle, DynamicCtxVar<Integer> count, DynamicCtxVar<Double> spread)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.particle = particle;
         this.count = count;
         this.spread = spread;

@@ -19,12 +19,12 @@ public class GetEntityEyePositionAction extends GetTargetAttributeAction<EntityT
                 activationCodec(),
                 sourceCodec(),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("eye_position")).forGetter(GetEntityEyePositionAction::getEyePosition)
-        ).apply(instance, (activation, target, eyePosition) -> new GetEntityEyePositionAction(type, activation, target, eyePosition)));
+        ).apply(instance, (activation, source, eyePosition) -> new GetEntityEyePositionAction(type, activation, source, eyePosition)));
     }
     
-    public static GetEntityEyePositionAction make(String activation, String target, String eyePosition)
+    public static GetEntityEyePositionAction make(String activation, String source, String eyePosition)
     {
-        return new GetEntityEyePositionAction(SpellActionTypes.GET_ENTITY_EYE_POSITION.get(), activation, target, eyePosition);
+        return new GetEntityEyePositionAction(SpellActionTypes.GET_ENTITY_EYE_POSITION.get(), activation, source, eyePosition);
     }
     
     protected String eyePosition;
@@ -34,9 +34,9 @@ public class GetEntityEyePositionAction extends GetTargetAttributeAction<EntityT
         super(type);
     }
     
-    public GetEntityEyePositionAction(SpellActionType<?> type, String activation, String target, String eyePosition)
+    public GetEntityEyePositionAction(SpellActionType<?> type, String activation, String source, String eyePosition)
     {
-        super(type, activation, target);
+        super(type, activation, source);
         this.eyePosition = eyePosition;
         
         if(!eyePosition.isEmpty())

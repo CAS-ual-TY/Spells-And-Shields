@@ -19,12 +19,12 @@ public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
                 activationCodec(),
                 sourceCodec(),
                 Codec.STRING.fieldOf(ParamNames.var("compound_tag")).forGetter(GetItemTagAction::getCompoundTag)
-        ).apply(instance, (activation, target, compoundTag) -> new GetItemTagAction(type, activation, target, compoundTag)));
+        ).apply(instance, (activation, source, compoundTag) -> new GetItemTagAction(type, activation, source, compoundTag)));
     }
     
-    public static GetItemTagAction make(String activation, String target, String compoundTag)
+    public static GetItemTagAction make(String activation, String source, String compoundTag)
     {
-        return new GetItemTagAction(SpellActionTypes.GET_ITEM_TAG.get(), activation, target, compoundTag);
+        return new GetItemTagAction(SpellActionTypes.GET_ITEM_TAG.get(), activation, source, compoundTag);
     }
     
     protected String compoundTag;
@@ -34,9 +34,9 @@ public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
         super(type);
     }
     
-    public GetItemTagAction(SpellActionType<?> type, String activation, String target, String compoundTag)
+    public GetItemTagAction(SpellActionType<?> type, String activation, String source, String compoundTag)
     {
-        super(type, activation, target);
+        super(type, activation, source);
         this.compoundTag = compoundTag;
         
         if(!compoundTag.isEmpty())

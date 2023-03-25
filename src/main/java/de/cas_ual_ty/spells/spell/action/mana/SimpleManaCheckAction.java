@@ -6,7 +6,6 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
@@ -21,14 +20,14 @@ public class SimpleManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
     public static Codec<SimpleManaCheckAction> makeCodec(SpellActionType<SimpleManaCheckAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                targetCodec()
-        ).apply(instance, (activation, target) -> new SimpleManaCheckAction(type, activation, target)));
+                activationCodec(),
+                singleTargetCodec()
+        ).apply(instance, (activation, singleTarget) -> new SimpleManaCheckAction(type, activation, singleTarget)));
     }
     
-    public static SimpleManaCheckAction make(String activation, String target)
+    public static SimpleManaCheckAction make(String activation, String singleTarget)
     {
-        return new SimpleManaCheckAction(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation, target);
+        return new SimpleManaCheckAction(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation, singleTarget);
     }
     
     protected DynamicCtxVar<Double> amount;
@@ -38,9 +37,9 @@ public class SimpleManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
         super(type);
     }
     
-    public SimpleManaCheckAction(SpellActionType<?> type, String activation, String target)
+    public SimpleManaCheckAction(SpellActionType<?> type, String activation, String singleTarget)
     {
-        super(type, activation, target);
+        super(type, activation, singleTarget);
         this.amount = CtxVarTypes.DOUBLE.get().reference(BuiltinVariables.MANA_COST.name);
     }
     

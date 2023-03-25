@@ -14,9 +14,6 @@ import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
-import net.minecraft.server.level.ServerPlayer;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
 {
@@ -24,20 +21,18 @@ public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                singleTargetCodec(),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(TryDamageItemAction::getDamage),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("user")).forGetter(TryDamageItemAction::getUser),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("success")).forGetter(TryDamageItemAction::getSuccess)
-        ).apply(instance, (activation, target, damage, user, success) -> new TryDamageItemAction(type, activation, target, damage, user, success)));
+        ).apply(instance, (activation, singleTarget, damage, success) -> new TryDamageItemAction(type, activation, singleTarget, damage, success)));
     }
     
-    public static TryDamageItemAction make(String activation, String target, DynamicCtxVar<Integer> damage, String user, String success)
+    public static TryDamageItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> damage, String success)
     {
-        return new TryDamageItemAction(SpellActionTypes.TRY_DAMAGE_ITEM.get(), activation, target, damage, user, success);
+        return new TryDamageItemAction(SpellActionTypes.TRY_DAMAGE_ITEM.get(), activation, singleTarget, damage, success);
     }
     
     protected DynamicCtxVar<Integer> damage;
-    protected String user;
     protected String success;
     
     public TryDamageItemAction(SpellActionType<?> type)
@@ -45,22 +40,16 @@ public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
         super(type);
     }
     
-    public TryDamageItemAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> damage, String user, String success)
+    public TryDamageItemAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Integer> damage, String success)
     {
-        super(type, activation, targets);
+        super(type, activation, singleTarget);
         this.damage = damage;
-        this.user = user;
         this.success = success;
     }
     
     public DynamicCtxVar<Integer> getDamage()
     {
         return damage;
-    }
-    
-    public String getUser()
-    {
-        return user;
     }
     
     public String getSuccess()
@@ -80,26 +69,7 @@ public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
             
             ctx.activate(success);
             
-            TargetGroup userGroup = ctx.getTargetGroup(user);
-            AtomicBoolean done = new AtomicBoolean(false);
-            
-            userGroup.getSingleTarget(t ->
-            {
-                TargetTypes.PLAYER.get().ifType(t, t1 ->
-                {
-                    if(t1.getPlayer() instanceof ServerPlayer player)
-                    {
-                        if(!player.isCreative())
-                        {
-                            itemTarget.getItem().hurt(damage, SpellsUtil.RANDOM, player);
-                        }
-                        
-                        done.set(true);
-                    }
-                });
-            });
-            
-            if(!done.get())
+            if(!itemTarget.isCreative())
             {
                 itemTarget.getItem().hurt(damage, SpellsUtil.RANDOM, null);
             }

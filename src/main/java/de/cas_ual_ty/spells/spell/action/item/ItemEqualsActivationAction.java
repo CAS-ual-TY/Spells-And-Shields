@@ -21,18 +21,18 @@ public class ItemEqualsActivationAction extends AffectSingleTypeAction<ItemTarge
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                singleTargetCodec(),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(ItemEqualsActivationAction::getToActivate),
                 ItemStack.CODEC.fieldOf("item").forGetter(ItemEqualsActivationAction::getItem),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("ignore_tag")).forGetter(ItemEqualsActivationAction::getIgnoreTag),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_count")).forGetter(ItemEqualsActivationAction::getMinimumCount),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_durability")).forGetter(ItemEqualsActivationAction::getMinimumDurability)
-        ).apply(instance, (activation, target, toActivate, item, ignoreTag, minimumCount, minimumDurability) -> new ItemEqualsActivationAction(type, activation, target, toActivate, item, ignoreTag, minimumCount, minimumDurability)));
+        ).apply(instance, (activation, singleTarget, toActivate, item, ignoreTag, minimumCount, minimumDurability) -> new ItemEqualsActivationAction(type, activation, singleTarget, toActivate, item, ignoreTag, minimumCount, minimumDurability)));
     }
     
-    public static ItemEqualsActivationAction make(String activation, String target, String toActivate, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
+    public static ItemEqualsActivationAction make(String activation, String singleTarget, String toActivate, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
     {
-        return new ItemEqualsActivationAction(SpellActionTypes.ITEM_EQUALS_ACTIVATION.get(), activation, target, toActivate, item, ignoreTag, minimumCount, minimumDurability);
+        return new ItemEqualsActivationAction(SpellActionTypes.ITEM_EQUALS_ACTIVATION.get(), activation, singleTarget, toActivate, item, ignoreTag, minimumCount, minimumDurability);
     }
     
     protected String toActivate;
@@ -47,9 +47,9 @@ public class ItemEqualsActivationAction extends AffectSingleTypeAction<ItemTarge
         super(type);
     }
     
-    public ItemEqualsActivationAction(SpellActionType<?> type, String activation, String target, String toActivate, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
+    public ItemEqualsActivationAction(SpellActionType<?> type, String activation, String singleTarget, String toActivate, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
     {
-        super(type, activation, target);
+        super(type, activation, singleTarget);
         this.toActivate = toActivate;
         this.item = item;
         this.ignoreTag = ignoreTag;

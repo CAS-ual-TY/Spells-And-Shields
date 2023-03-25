@@ -23,16 +23,16 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetsCodec(),
+                multiTargetsCodec(),
                 SoundEvent.CODEC.fieldOf("sound_event").forGetter(PlaySoundAction::getSoundEvent),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("volume")).forGetter(PlaySoundAction::getVolume),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("pitch")).forGetter(PlaySoundAction::getPitch)
-        ).apply(instance, (activation, targets, particle, count, spread) -> new PlaySoundAction(type, activation, targets, particle, count, spread)));
+        ).apply(instance, (activation, multiTargets, particle, count, spread) -> new PlaySoundAction(type, activation, multiTargets, particle, count, spread)));
     }
     
-    public static PlaySoundAction make(String activation, String targets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
+    public static PlaySoundAction make(String activation, String multiTargets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
     {
-        return new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), activation, targets, soundEvent, volume, pitch);
+        return new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), activation, multiTargets, soundEvent, volume, pitch);
     }
     
     protected SoundEvent soundEvent;
@@ -44,9 +44,9 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
         super(type);
     }
     
-    public PlaySoundAction(SpellActionType<?> type, String activation, String targets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
+    public PlaySoundAction(SpellActionType<?> type, String activation, String multiTargets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.soundEvent = soundEvent;
         this.volume = volume;
         this.pitch = pitch;

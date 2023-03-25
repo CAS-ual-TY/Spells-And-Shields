@@ -24,17 +24,17 @@ public class OverrideItemAction extends AffectSingleTypeAction<ItemTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                singleTargetCodec(),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(OverrideItemAction::getAmount),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(OverrideItemAction::getDamage),
                 CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(OverrideItemAction::getTag),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(OverrideItemAction::getItem)
-        ).apply(instance, (activation, target, amount, damage, tag, item) -> new OverrideItemAction(type, activation, target, amount, damage, tag, item)));
+        ).apply(instance, (activation, singleTarget, amount, damage, tag, item) -> new OverrideItemAction(type, activation, singleTarget, amount, damage, tag, item)));
     }
     
-    public static OverrideItemAction make(String activation, String target, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
+    public static OverrideItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
     {
-        return new OverrideItemAction(SpellActionTypes.OVERRIDE_ITEM.get(), activation, target, amount, damage, tag, item);
+        return new OverrideItemAction(SpellActionTypes.OVERRIDE_ITEM.get(), activation, singleTarget, amount, damage, tag, item);
     }
     
     protected DynamicCtxVar<Integer> amount;
@@ -47,9 +47,9 @@ public class OverrideItemAction extends AffectSingleTypeAction<ItemTarget>
         super(type);
     }
     
-    public OverrideItemAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
+    public OverrideItemAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
     {
-        super(type, activation, targets);
+        super(type, activation, singleTarget);
         this.amount = amount;
         this.damage = damage;
         this.tag = tag;

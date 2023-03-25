@@ -12,45 +12,45 @@ import de.cas_ual_ty.spells.util.ParamNames;
 
 public abstract class AffectTypeAction<T extends Target> extends SpellAction
 {
-    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, String> targetsCodec()
+    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, String> multiTargetsCodec()
     {
-        return Codec.STRING.fieldOf(ParamNames.multiTarget()).forGetter(AffectTypeAction::getTargets);
+        return Codec.STRING.fieldOf(ParamNames.multiTarget()).forGetter(AffectTypeAction::getMultiTargets);
     }
     
-    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, String> targetCodec()
+    public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, String> singleTargetCodec()
     {
-        return Codec.STRING.fieldOf(ParamNames.singleTarget()).forGetter(AffectTypeAction::getTargets);
+        return Codec.STRING.fieldOf(ParamNames.singleTarget()).forGetter(AffectTypeAction::getMultiTargets);
     }
     
     public static <T extends AffectTypeAction<?>> RecordCodecBuilder<T, String> sourceCodec()
     {
-        return Codec.STRING.fieldOf(ParamNames.singleTarget("source")).forGetter(AffectTypeAction::getTargets);
+        return Codec.STRING.fieldOf(ParamNames.singleTarget("source")).forGetter(AffectTypeAction::getMultiTargets);
     }
     
-    protected String targets;
+    protected String multiTargets;
     
     public AffectTypeAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public AffectTypeAction(SpellActionType<?> type, String activation, String targets)
+    public AffectTypeAction(SpellActionType<?> type, String activation, String multiTargets)
     {
         super(type, activation);
-        this.targets = targets;
+        this.multiTargets = multiTargets;
     }
     
     public abstract ITargetType<T> getAffectedType();
     
-    public String getTargets()
+    public String getMultiTargets()
     {
-        return targets;
+        return multiTargets;
     }
     
     @Override
     protected void wasActivated(SpellContext ctx)
     {
-        ctx.forTargetGroup(targets, targetGroup -> targetGroup.forEachType(getAffectedType(), t -> affectTarget(ctx, targetGroup, getAffectedType().asType(t))));
+        ctx.forTargetGroup(multiTargets, targetGroup -> targetGroup.forEachType(getAffectedType(), t -> affectTarget(ctx, targetGroup, getAffectedType().asType(t))));
     }
     
     public abstract void affectTarget(SpellContext ctx, TargetGroup group, T t);

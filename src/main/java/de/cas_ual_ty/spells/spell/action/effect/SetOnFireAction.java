@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -20,15 +19,15 @@ public class SetOnFireAction extends AffectTypeAction<LivingEntityTarget>
     public static Codec<SetOnFireAction> makeCodec(SpellActionType<SetOnFireAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
+                activationCodec(),
+                multiTargetsCodec(),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("fire_seconds")).forGetter(SetOnFireAction::getFireSeconds)
-        ).apply(instance, (activation, targets, fireSeconds) -> new SetOnFireAction(type, activation, targets, fireSeconds)));
+        ).apply(instance, (activation, multiTargets, fireSeconds) -> new SetOnFireAction(type, activation, multiTargets, fireSeconds)));
     }
     
-    public static SetOnFireAction make(String activation, String targets, DynamicCtxVar<Integer> fireSeconds)
+    public static SetOnFireAction make(String activation, String multiTargets, DynamicCtxVar<Integer> fireSeconds)
     {
-        return new SetOnFireAction(SpellActionTypes.SET_ON_FIRE.get(), activation, targets, fireSeconds);
+        return new SetOnFireAction(SpellActionTypes.SET_ON_FIRE.get(), activation, multiTargets, fireSeconds);
     }
     
     protected DynamicCtxVar<Integer> fireSeconds;
@@ -38,9 +37,9 @@ public class SetOnFireAction extends AffectTypeAction<LivingEntityTarget>
         super(type);
     }
     
-    public SetOnFireAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> fireSeconds)
+    public SetOnFireAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> fireSeconds)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.fireSeconds = fireSeconds;
     }
     

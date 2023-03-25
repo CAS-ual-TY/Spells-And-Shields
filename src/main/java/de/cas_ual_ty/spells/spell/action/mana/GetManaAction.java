@@ -18,14 +18,14 @@ public class GetManaAction extends GetTargetAttributeAction<LivingEntityTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                singleTargetCodec(),
                 Codec.STRING.fieldOf(ParamNames.varResult()).forGetter(GetManaAction::getMana)
-        ).apply(instance, (activation, target, mana) -> new GetManaAction(type, activation, target, mana)));
+        ).apply(instance, (activation, singleTarget, mana) -> new GetManaAction(type, activation, singleTarget, mana)));
     }
     
-    public static GetManaAction make(String activation, String target, String mana)
+    public static GetManaAction make(String activation, String singleTarget, String mana)
     {
-        return new GetManaAction(SpellActionTypes.GET_MANA.get(), activation, target, mana);
+        return new GetManaAction(SpellActionTypes.GET_MANA.get(), activation, singleTarget, mana);
     }
     
     protected String mana;
@@ -35,9 +35,9 @@ public class GetManaAction extends GetTargetAttributeAction<LivingEntityTarget>
         super(type);
     }
     
-    public GetManaAction(SpellActionType<?> type, String activation, String target, String mana)
+    public GetManaAction(SpellActionType<?> type, String activation, String singleTarget, String mana)
     {
-        super(type, activation, target);
+        super(type, activation, singleTarget);
         
         if(!mana.isEmpty())
         {

@@ -19,12 +19,12 @@ public class GetPositionAction extends GetTargetAttributeAction<PositionTarget>
                 activationCodec(),
                 sourceCodec(),
                 Codec.STRING.fieldOf(ParamNames.var("position")).forGetter(GetPositionAction::getPosition)
-        ).apply(instance, (activation, target, position) -> new GetPositionAction(type, activation, target, position)));
+        ).apply(instance, (activation, source, position) -> new GetPositionAction(type, activation, source, position)));
     }
     
-    public static GetPositionAction make(String activation, String target, String position)
+    public static GetPositionAction make(String activation, String source, String position)
     {
-        return new GetPositionAction(SpellActionTypes.GET_POSITION.get(), activation, target, position);
+        return new GetPositionAction(SpellActionTypes.GET_POSITION.get(), activation, source, position);
     }
     
     protected String position;
@@ -34,9 +34,9 @@ public class GetPositionAction extends GetTargetAttributeAction<PositionTarget>
         super(type);
     }
     
-    public GetPositionAction(SpellActionType<?> type, String activation, String target, String position)
+    public GetPositionAction(SpellActionType<?> type, String activation, String source, String position)
     {
-        super(type, activation, target);
+        super(type, activation, source);
         this.position = position;
         
         if(!position.isEmpty())

@@ -14,6 +14,7 @@ import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.UUID;
@@ -24,17 +25,17 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetsCodec(),
+                multiTargetsCodec(),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("on_remove")).forGetter(AddDelayedSpellAction::getRemoveActivation),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("tick_time")).forGetter(AddDelayedSpellAction::getTickTime),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddDelayedSpellAction::getUuid),
                 CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("extra_data")).forGetter(AddDelayedSpellAction::getTag)
-        ).apply(instance, (activation, targets, removeActivation, tickTime, uuid, tag) -> new AddDelayedSpellAction(type, activation, targets, removeActivation, tickTime, uuid, tag)));
+        ).apply(instance, (activation, multiTargets, removeActivation, tickTime, uuid, tag) -> new AddDelayedSpellAction(type, activation, multiTargets, removeActivation, tickTime, uuid, tag)));
     }
     
-    public static AddDelayedSpellAction make(String activation, String targets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag)
+    public static AddDelayedSpellAction make(String activation, String multiTargets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag)
     {
-        return new AddDelayedSpellAction(SpellActionTypes.ADD_DELAYED_SPELL.get(), activation, targets, removeActivation, tickTime, uuid, tag);
+        return new AddDelayedSpellAction(SpellActionTypes.ADD_DELAYED_SPELL.get(), activation, multiTargets, removeActivation, tickTime, uuid, tag);
     }
     
     protected String removeActivation;
@@ -47,9 +48,9 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
         super(type);
     }
     
-    public AddDelayedSpellAction(SpellActionType<?> type, String activation, String targets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag)
+    public AddDelayedSpellAction(SpellActionType<?> type, String activation, String multiTargets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.removeActivation = removeActivation;
         this.tickTime = tickTime;
         this.uuid = uuid;
@@ -95,17 +96,7 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
                     {
                         if(tickTime > 0)
                         {
-                            UUID uuid = this.uuid.getValue(ctx).map(s ->
-                            {
-                                try
-                                {
-                                    return UUID.fromString(s);
-                                }
-                                catch(IllegalArgumentException e)
-                                {
-                                    return null;
-                                }
-                            }).orElse(null);
+                            UUID uuid = this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).orElse(null);
                             
                             holder.addDelayedSpell(ctx.spell, uuid, removeActivation, tickTime, tag);
                         }

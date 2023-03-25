@@ -71,7 +71,7 @@
       "d_boolean_visible": "<<visible>>",
       "d_int_amplifier": "<<amplifier>>",
       "d_int_duration": "<<duration+1>>",
-      "mob_effect": "minecraft:invisibility",
+      "d_string_mob_effect": "minecraft:invisibility",
       "ts_targets": "player"
     },
     {

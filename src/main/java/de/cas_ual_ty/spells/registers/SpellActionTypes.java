@@ -41,7 +41,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 
 import java.util.Objects;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
@@ -344,15 +344,8 @@ public class SpellActionTypes
             return x;
         });
         TernaryOperation.PUT_NBT_UUID.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y, z) -> {
-            try
-            {
-                x.putUUID(y, UUID.fromString(z));
-                return x;
-            }
-            catch(IllegalArgumentException e)
-            {
-                return null;
-            }
+            Optional.of(SpellsUtil.uuidFromString(z)).ifPresent(uuid -> x.putUUID(y, uuid));
+            return x;
         });
         TernaryOperation.PUT_NBT_VEC3.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.VEC3.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y, z) -> {
             ListTag list = new ListTag();

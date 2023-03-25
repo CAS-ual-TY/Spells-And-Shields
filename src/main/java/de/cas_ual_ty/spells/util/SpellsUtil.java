@@ -183,9 +183,9 @@ public class SpellsUtil
         return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> de.cas_ual_ty.spells.client.SpellsClientUtil.getClientLevel());
     }
     
-    public static <E extends Enum<E>> Codec<E> namedEnumCodec(Function<String, E> stringToEnum)
+    public static <E extends Enum<E>> Codec<E> namedEnumCodec(Function<String, E> stringToEnum, Function<E, String> enumToString)
     {
-        return Codec.STRING.xmap(stringToEnum, Enum::name);
+        return Codec.STRING.xmap(stringToEnum, enumToString);
     }
     
     public static <E extends Enum<E>> Codec<E> idEnumCodec(Function<Integer, E> idToEnum)
@@ -197,6 +197,18 @@ public class SpellsUtil
     {
         // prefixing to make sure this does not clash in case another mod does the same
         return UUID.nameUUIDFromBytes((SpellsAndShields.MOD_ID + "_" + name).getBytes(StandardCharsets.UTF_8));
+    }
+    
+    public static UUID uuidFromString(String s)
+    {
+        try
+        {
+            return UUID.fromString(s);
+        }
+        catch(IllegalArgumentException e)
+        {
+            return null;
+        }
     }
     
     public static String operationToString(AttributeModifier.Operation op)
@@ -217,6 +229,54 @@ public class SpellsUtil
                     case "addition" -> AttributeModifier.Operation.ADDITION;
                     case "multiply_base" -> AttributeModifier.Operation.MULTIPLY_BASE;
                     case "multiply_total" -> AttributeModifier.Operation.MULTIPLY_TOTAL;
+                    default -> null;
+                };
+    }
+    
+    public static String blockToString(ClipContext.Block op)
+    {
+        return switch(op)
+                {
+                    case COLLIDER -> "collider";
+                    case OUTLINE -> "outline";
+                    case VISUAL -> "visual";
+                    case FALLDAMAGE_RESETTING -> "falldamage_resetting";
+                    default -> null;
+                };
+    }
+    
+    public static ClipContext.Block blockFromString(String s)
+    {
+        return switch(s)
+                {
+                    case "collider" -> ClipContext.Block.COLLIDER;
+                    case "outline" -> ClipContext.Block.OUTLINE;
+                    case "visual" -> ClipContext.Block.VISUAL;
+                    case "falldamage_resetting" -> ClipContext.Block.FALLDAMAGE_RESETTING;
+                    default -> null;
+                };
+    }
+    
+    public static String fluidToString(ClipContext.Fluid op)
+    {
+        return switch(op)
+                {
+                    case NONE -> "none";
+                    case SOURCE_ONLY -> "source_only";
+                    case ANY -> "any";
+                    case WATER -> "water";
+                    default -> null;
+                };
+    }
+    
+    public static ClipContext.Fluid fluidFromString(String s)
+    {
+        return switch(s)
+                {
+                    case "none" -> ClipContext.Fluid.NONE;
+                    case "source_only" -> ClipContext.Fluid.SOURCE_ONLY;
+                    case "any" -> ClipContext.Fluid.ANY;
+                    case "water" -> ClipContext.Fluid.WATER;
                     default -> null;
                 };
     }

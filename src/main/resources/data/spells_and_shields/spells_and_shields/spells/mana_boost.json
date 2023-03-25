@@ -18,8 +18,8 @@
     {
       "type": "spells_and_shields:remove_attribute_modifier",
       "activation": "on_unequip",
-      "attribute": "spells_and_shields:generic.max_mana",
-      "d_int_uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
+      "d_string_attribute": "spells_and_shields:generic.max_mana",
+      "d_string_uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
       "ts_targets": "owner"
     }
   ],

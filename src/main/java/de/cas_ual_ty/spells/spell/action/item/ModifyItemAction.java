@@ -22,16 +22,16 @@ public class ModifyItemAction extends AffectSingleTypeAction<ItemTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                singleTargetCodec(),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(ModifyItemAction::getAmount),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(ModifyItemAction::getDamage),
                 CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(ModifyItemAction::getTag)
-        ).apply(instance, (activation, target, amount, damage, tag) -> new ModifyItemAction(type, activation, target, amount, damage, tag)));
+        ).apply(instance, (activation, singleTarget, amount, damage, tag) -> new ModifyItemAction(type, activation, singleTarget, amount, damage, tag)));
     }
     
-    public static ModifyItemAction make(String activation, String target, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag)
+    public static ModifyItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag)
     {
-        return new ModifyItemAction(SpellActionTypes.MODIFY_ITEM.get(), activation, target, amount, damage, tag);
+        return new ModifyItemAction(SpellActionTypes.MODIFY_ITEM.get(), activation, singleTarget, amount, damage, tag);
     }
     
     protected DynamicCtxVar<Integer> amount;
@@ -43,9 +43,9 @@ public class ModifyItemAction extends AffectSingleTypeAction<ItemTarget>
         super(type);
     }
     
-    public ModifyItemAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag)
+    public ModifyItemAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag)
     {
-        super(type, activation, targets);
+        super(type, activation, singleTarget);
         this.amount = amount;
         this.damage = damage;
         this.tag = tag;

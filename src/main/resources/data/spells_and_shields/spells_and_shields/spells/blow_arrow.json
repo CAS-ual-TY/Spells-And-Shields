@@ -97,12 +97,12 @@
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "shoot",
+      "d_compound_tag_tag": "<<tag>>",
+      "d_string_entity_type": "minecraft:arrow",
       "d_vec3_direction": "<<direction>>",
       "d_vec3_motion": "<< 3 * direction >>",
-      "entity_type": "minecraft:arrow",
-      "t_entity": "arrow",
       "t_position": "position",
-      "tag": "<<tag>>"
+      "td_entity": "arrow"
     },
     {
       "type": "spells_and_shields:play_sound",
@@ -116,8 +116,7 @@
       "type": "spells_and_shields:consume_item",
       "activation": "shoot",
       "d_int_amount": 1,
-      "t_target": "item",
-      "t_user": "owner"
+      "ts_targets": "item"
     },
     {
       "type": "spells_and_shields:item_equals_activation",
@@ -135,12 +134,12 @@
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "spectral",
+      "d_compound_tag_tag": "<<tag>>",
+      "d_string_entity_type": "minecraft:spectral_arrow",
       "d_vec3_direction": "<<direction>>",
       "d_vec3_motion": "<< 3 * direction >>",
-      "entity_type": "minecraft:spectral_arrow",
-      "t_entity": "arrow",
       "t_position": "position",
-      "tag": "<<tag>>"
+      "td_entity": "arrow"
     },
     {
       "type": "spells_and_shields:play_sound",
@@ -154,8 +153,7 @@
       "type": "spells_and_shields:consume_item",
       "activation": "spectral",
       "d_int_amount": 1,
-      "t_target": "item",
-      "t_user": "owner"
+      "ts_targets": "item"
     }
   ],
   "title": {

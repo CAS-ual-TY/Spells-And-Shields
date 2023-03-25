@@ -26,12 +26,12 @@ public class SpawnEntityAction extends SpellAction
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("entity")).forGetter(SpawnEntityAction::getEntity),
-                CtxVarTypes.STRING.get().refCodec().fieldOf("entity_type").forGetter(SpawnEntityAction::getEntityType),
+                Codec.STRING.fieldOf(ParamNames.destinationTarget("entity")).forGetter(SpawnEntityAction::getEntity),
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("entity_type")).forGetter(SpawnEntityAction::getEntityType),
                 Codec.STRING.fieldOf(ParamNames.singleTarget("position")).forGetter(SpawnEntityAction::getPosition),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("direction")).forGetter(SpawnEntityAction::getDirection),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("motion")).forGetter(SpawnEntityAction::getMotion),
-                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf("tag").forGetter(SpawnEntityAction::getTag)
+                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(SpawnEntityAction::getTag)
         ).apply(instance, (activation, entity, entityType, position, direction, motion, tag) -> new SpawnEntityAction(type, activation, entity, entityType, position, direction, motion, tag)));
     }
     

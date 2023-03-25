@@ -22,7 +22,7 @@ public class SimpleItemCheckAction extends AffectTypeAction<PlayerTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                singleTargetCodec(),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(SimpleItemCheckAction::getMustBeInHand),
                 ItemStack.CODEC.fieldOf("item").forGetter(SimpleItemCheckAction::getItem)
         ).apply(instance, (activation, target, mustBeInHand, item) -> new SimpleItemCheckAction(type, activation, target, mustBeInHand, item)));

@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -20,17 +19,17 @@ public class KnockbackAction extends AffectTypeAction<LivingEntityTarget>
     public static Codec<KnockbackAction> makeCodec(SpellActionType<KnockbackAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramVec3("strength")).forGetter(KnockbackAction::getStrength),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramVec3("dx")).forGetter(KnockbackAction::getDx),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramVec3("dz")).forGetter(KnockbackAction::getDz)
-        ).apply(instance, (activation, targets, strength, dx, dz) -> new KnockbackAction(type, activation, targets, strength, dx, dz)));
+                activationCodec(),
+                multiTargetsCodec(),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("strength")).forGetter(KnockbackAction::getStrength),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("dx")).forGetter(KnockbackAction::getDx),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("dz")).forGetter(KnockbackAction::getDz)
+        ).apply(instance, (activation, multiTargets, strength, dx, dz) -> new KnockbackAction(type, activation, multiTargets, strength, dx, dz)));
     }
     
-    public static KnockbackAction make(String activation, String targets, DynamicCtxVar<Double> strength, DynamicCtxVar<Double> dx, DynamicCtxVar<Double> dz)
+    public static KnockbackAction make(String activation, String multiTargets, DynamicCtxVar<Double> strength, DynamicCtxVar<Double> dx, DynamicCtxVar<Double> dz)
     {
-        return new KnockbackAction(SpellActionTypes.KNOCKBACK.get(), activation, targets, strength, dx, dz);
+        return new KnockbackAction(SpellActionTypes.KNOCKBACK.get(), activation, multiTargets, strength, dx, dz);
     }
     
     protected DynamicCtxVar<Double> strength;
@@ -42,9 +41,9 @@ public class KnockbackAction extends AffectTypeAction<LivingEntityTarget>
         super(type);
     }
     
-    public KnockbackAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> strength, DynamicCtxVar<Double> dx, DynamicCtxVar<Double> dz)
+    public KnockbackAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Double> strength, DynamicCtxVar<Double> dx, DynamicCtxVar<Double> dz)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.strength = strength;
         this.dx = dx;
         this.dz = dz;

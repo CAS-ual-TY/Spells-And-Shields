@@ -11,10 +11,9 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-
-import java.util.UUID;
 
 public class EntityUUIDTargetAction extends DstTargetAction
 {
@@ -55,20 +54,12 @@ public class EntityUUIDTargetAction extends DstTargetAction
     {
         if(ctx.level instanceof ServerLevel level)
         {
-            uuid.getValue(ctx).ifPresent(uuidS ->
+            uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid ->
             {
-                try
+                Entity e = level.getEntity(uuid);
+                if(e != null && e.level == ctx.level)
                 {
-                    UUID uuid = UUID.fromString(uuidS);
-                    Entity e = level.getEntity(uuid);
-                    if(e != null && e.level == ctx.level)
-                    {
-                        destination.addTargets(Target.of(e));
-                    }
-                }
-                catch(IllegalArgumentException ignored)
-                {
-                
+                    destination.addTargets(Target.of(e));
                 }
             });
         }

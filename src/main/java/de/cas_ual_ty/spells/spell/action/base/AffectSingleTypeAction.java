@@ -12,9 +12,9 @@ public abstract class AffectSingleTypeAction<T extends Target> extends AffectTyp
         super(type);
     }
     
-    public AffectSingleTypeAction(SpellActionType<?> type, String activation, String target)
+    public AffectSingleTypeAction(SpellActionType<?> type, String activation, String singleTarget)
     {
-        super(type, activation, target);
+        super(type, activation, singleTarget);
     }
     
     @Override

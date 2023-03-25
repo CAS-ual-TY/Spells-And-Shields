@@ -19,12 +19,12 @@ public class GetIsCreativeAction extends GetTargetAttributeAction<PlayerTarget>
                 activationCodec(),
                 sourceCodec(),
                 Codec.STRING.fieldOf(ParamNames.var("is_creative")).forGetter(GetIsCreativeAction::getIsCreative)
-        ).apply(instance, (activation, target, isCreative) -> new GetIsCreativeAction(type, activation, target, isCreative)));
+        ).apply(instance, (activation, source, isCreative) -> new GetIsCreativeAction(type, activation, source, isCreative)));
     }
     
-    public static GetIsCreativeAction make(String activation, String target, String isCreative)
+    public static GetIsCreativeAction make(String activation, String source, String isCreative)
     {
-        return new GetIsCreativeAction(SpellActionTypes.GET_IS_CREATIVE.get(), activation, target, isCreative);
+        return new GetIsCreativeAction(SpellActionTypes.GET_IS_CREATIVE.get(), activation, source, isCreative);
     }
     
     protected String isCreative;
@@ -34,9 +34,9 @@ public class GetIsCreativeAction extends GetTargetAttributeAction<PlayerTarget>
         super(type);
     }
     
-    public GetIsCreativeAction(SpellActionType<?> type, String activation, String target, String isCreative)
+    public GetIsCreativeAction(SpellActionType<?> type, String activation, String source, String isCreative)
     {
-        super(type, activation, target);
+        super(type, activation, source);
         this.isCreative = isCreative;
         
         if(!isCreative.isEmpty())

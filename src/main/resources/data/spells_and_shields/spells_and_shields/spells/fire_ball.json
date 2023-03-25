@@ -26,9 +26,9 @@
       "a_entity_hit_activation": "on_entity_hit",
       "a_timeout_activation": "on_timeout",
       "activation": "active",
-      "double_inaccuracy": 0.0,
-      "double_velocity": 3.0,
-      "int_timeout": 200,
+      "d_double_inaccuracy": 0.0,
+      "d_double_velocity": 3.0,
+      "d_int_timeout": 200,
       "t_source": "owner",
       "td_projectile": ""
     },
@@ -44,7 +44,7 @@
       "type": "spells_and_shields:sourced_damage",
       "activation": "on_entity_hit",
       "d_double_damage": 2.0,
-      "t_source": "projectile",
+      "t_source": "entity_hit",
       "ts_targets": "entity_hit"
     },
     {

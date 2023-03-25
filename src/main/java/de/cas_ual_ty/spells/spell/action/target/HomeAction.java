@@ -24,13 +24,13 @@ public class HomeAction extends AffectSingleTypeAction<PositionTarget>
                 activationCodec(),
                 sourceCodec(),
                 Codec.STRING.fieldOf(ParamNames.multiTarget()).forGetter(HomeAction::getTarget),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDoubleImm("velocity")).forGetter(HomeAction::getVelocity),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramIntImm("timeout")).forGetter(HomeAction::getTimeout),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("velocity")).forGetter(HomeAction::getVelocity),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("timeout")).forGetter(HomeAction::getTimeout),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("block_hit_activation")).forGetter(HomeAction::getBlockHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(HomeAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("timeout_activation")).forGetter(HomeAction::getTimeoutActivation),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(HomeAction::getProjectileDestination)
-        ).apply(instance, (activation, targets, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination) -> new HomeAction(type, activation, targets, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination)));
+        ).apply(instance, (activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination) -> new HomeAction(type, activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination)));
     }
     
     public static HomeAction make(String activation, String source, String target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)

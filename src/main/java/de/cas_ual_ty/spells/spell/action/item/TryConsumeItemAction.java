@@ -13,9 +13,6 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-import net.minecraft.server.level.ServerPlayer;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TryConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
 {
@@ -23,20 +20,18 @@ public class TryConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                singleTargetCodec(),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(TryConsumeItemAction::getAmount),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("user")).forGetter(TryConsumeItemAction::getUser),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("success")).forGetter(TryConsumeItemAction::getSuccess)
-        ).apply(instance, (activation, target, amount, user, success) -> new TryConsumeItemAction(type, activation, target, amount, user, success)));
+        ).apply(instance, (activation, singleTarget, amount, success) -> new TryConsumeItemAction(type, activation, singleTarget, amount, success)));
     }
     
-    public static TryConsumeItemAction make(String activation, String target, DynamicCtxVar<Integer> damage, String user, String success)
+    public static TryConsumeItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> damage, String success)
     {
-        return new TryConsumeItemAction(SpellActionTypes.TRY_CONSUME_ITEM.get(), activation, target, damage, user, success);
+        return new TryConsumeItemAction(SpellActionTypes.TRY_CONSUME_ITEM.get(), activation, singleTarget, damage, success);
     }
     
     protected DynamicCtxVar<Integer> amount;
-    protected String user;
     protected String success;
     
     public TryConsumeItemAction(SpellActionType<?> type)
@@ -44,22 +39,16 @@ public class TryConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
         super(type);
     }
     
-    public TryConsumeItemAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> amount, String user, String success)
+    public TryConsumeItemAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Integer> amount, String success)
     {
-        super(type, activation, targets);
+        super(type, activation, singleTarget);
         this.amount = amount;
-        this.user = user;
         this.success = success;
     }
     
     public DynamicCtxVar<Integer> getAmount()
     {
         return amount;
-    }
-    
-    public String getUser()
-    {
-        return user;
     }
     
     public String getSuccess()
@@ -79,26 +68,7 @@ public class TryConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
             
             ctx.activate(success);
             
-            TargetGroup userGroup = ctx.getTargetGroup(user);
-            AtomicBoolean done = new AtomicBoolean(false);
-            
-            userGroup.getSingleTarget(t ->
-            {
-                TargetTypes.PLAYER.get().ifType(t, t1 ->
-                {
-                    if(t1.getPlayer() instanceof ServerPlayer player)
-                    {
-                        if(!player.isCreative())
-                        {
-                            itemTarget.getItem().shrink(amount);
-                        }
-                        
-                        done.set(true);
-                    }
-                });
-            });
-            
-            if(!done.get())
+            if(!itemTarget.isCreative())
             {
                 itemTarget.getItem().shrink(amount);
             }

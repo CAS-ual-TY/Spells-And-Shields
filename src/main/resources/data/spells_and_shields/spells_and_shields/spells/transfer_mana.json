@@ -11,10 +11,10 @@
       "a_entity_hit_activation": "looked_at_entity",
       "a_miss_activation": "looked_at_nothing",
       "activation": "active",
-      "block_clip_context": "COLLIDER",
+      "block_clip_context": "collider",
       "d_double_range": "<<range>>",
       "double_bb_inflation": 0.5,
-      "fluid_clip_context": "SOURCE_ONLY",
+      "fluid_clip_context": "source_only",
       "t_source": "owner"
     },
     {
@@ -28,8 +28,8 @@
       "a_entity_hit_activation": "on_entity_hit",
       "a_timeout_activation": "on_timeout",
       "activation": "looked_at_entity",
-      "double_velocity": 3.0,
-      "int_timeout": 200,
+      "d_double_velocity": 3.0,
+      "d_int_timeout": 200,
       "t_source": "owner",
       "td_projectile": "",
       "ts_targets": "entity_hit"

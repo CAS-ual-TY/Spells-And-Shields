@@ -24,14 +24,14 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDoubleImm("velocity")).forGetter(ShootAction::getVelocity),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDoubleImm("inaccuracy")).forGetter(ShootAction::getInaccuracy),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramIntImm("timeout")).forGetter(ShootAction::getTimeout),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("velocity")).forGetter(ShootAction::getVelocity),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("inaccuracy")).forGetter(ShootAction::getInaccuracy),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("timeout")).forGetter(ShootAction::getTimeout),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("block_hit_activation")).forGetter(ShootAction::getBlockHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(ShootAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("timeout_activation")).forGetter(ShootAction::getTimeoutActivation),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(ShootAction::getProjectileDestination)
-        ).apply(instance, (activation, targets, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination) -> new ShootAction(type, activation, targets, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination)));
+        ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination) -> new ShootAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination)));
     }
     
     public static ShootAction make(String activation, String source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)

@@ -30,17 +30,17 @@ public class LookAtTargetAction extends AffectSingleTypeAction<EntityTarget>
                 sourceCodec(),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("range")).forGetter(LookAtTargetAction::getRange),
                 Codec.FLOAT.fieldOf(ParamNames.paramDoubleImm("bb_inflation")).forGetter(LookAtTargetAction::getBbInflation),
-                SpellsUtil.namedEnumCodec(ClipContext.Block::valueOf).fieldOf("block_clip_context").forGetter(LookAtTargetAction::getBlock),
-                SpellsUtil.namedEnumCodec(ClipContext.Fluid::valueOf).fieldOf("fluid_clip_context").forGetter(LookAtTargetAction::getFluid),
+                SpellsUtil.namedEnumCodec(SpellsUtil::blockFromString, SpellsUtil::blockToString).fieldOf("block_clip_context").forGetter(LookAtTargetAction::getBlock),
+                SpellsUtil.namedEnumCodec(SpellsUtil::fluidFromString, SpellsUtil::fluidToString).fieldOf("fluid_clip_context").forGetter(LookAtTargetAction::getFluid),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("block_hit_activation")).forGetter(LookAtTargetAction::getBlockHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(LookAtTargetAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("miss_activation")).forGetter(LookAtTargetAction::getMissActivation)
-        ).apply(instance, (activation, targets, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation) -> new LookAtTargetAction(type, activation, targets, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation)));
+        ).apply(instance, (activation, source, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation) -> new LookAtTargetAction(type, activation, source, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation)));
     }
     
-    public static LookAtTargetAction make(String activation, String targets, DynamicCtxVar<Double> range, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid, String blockHitActivation, String entityHitActivation, String missActivation)
+    public static LookAtTargetAction make(String activation, String source, DynamicCtxVar<Double> range, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid, String blockHitActivation, String entityHitActivation, String missActivation)
     {
-        return new LookAtTargetAction(SpellActionTypes.LOOK_AT_TARGET.get(), activation, targets, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation);
+        return new LookAtTargetAction(SpellActionTypes.LOOK_AT_TARGET.get(), activation, source, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation);
     }
     
     protected DynamicCtxVar<Double> range;
@@ -57,9 +57,9 @@ public class LookAtTargetAction extends AffectSingleTypeAction<EntityTarget>
         super(type);
     }
     
-    public LookAtTargetAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> range, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid, String blockHitActivation, String entityHitActivation, String missActivation)
+    public LookAtTargetAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Double> range, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid, String blockHitActivation, String entityHitActivation, String missActivation)
     {
-        super(type, activation, targets);
+        super(type, activation, source);
         this.range = range;
         this.bbInflation = bbInflation;
         this.block = block;

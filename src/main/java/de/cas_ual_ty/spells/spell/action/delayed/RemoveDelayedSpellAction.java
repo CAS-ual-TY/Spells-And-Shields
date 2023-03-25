@@ -14,8 +14,7 @@ import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-
-import java.util.UUID;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 
 public class RemoveDelayedSpellAction extends AffectTypeAction<EntityTarget>
 {
@@ -23,15 +22,15 @@ public class RemoveDelayedSpellAction extends AffectTypeAction<EntityTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetsCodec(),
+                multiTargetsCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(RemoveDelayedSpellAction::getUuid),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("force_activate")).forGetter(RemoveDelayedSpellAction::getForceActivate)
-        ).apply(instance, (activation, targets, uuid, forceActivate) -> new RemoveDelayedSpellAction(type, activation, targets, uuid, forceActivate)));
+        ).apply(instance, (activation, multiTargets, uuid, forceActivate) -> new RemoveDelayedSpellAction(type, activation, multiTargets, uuid, forceActivate)));
     }
     
-    public static RemoveDelayedSpellAction make(String activation, String targets, DynamicCtxVar<String> uuid, DynamicCtxVar<Boolean> forceActivate)
+    public static RemoveDelayedSpellAction make(String activation, String multiTargets, DynamicCtxVar<String> uuid, DynamicCtxVar<Boolean> forceActivate)
     {
-        return new RemoveDelayedSpellAction(SpellActionTypes.REMOVE_DELAYED_SPELL.get(), activation, targets, uuid, forceActivate);
+        return new RemoveDelayedSpellAction(SpellActionTypes.REMOVE_DELAYED_SPELL.get(), activation, multiTargets, uuid, forceActivate);
     }
     
     protected DynamicCtxVar<String> uuid;
@@ -42,9 +41,9 @@ public class RemoveDelayedSpellAction extends AffectTypeAction<EntityTarget>
         super(type);
     }
     
-    public RemoveDelayedSpellAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<String> uuid, DynamicCtxVar<Boolean> forceActivate)
+    public RemoveDelayedSpellAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<String> uuid, DynamicCtxVar<Boolean> forceActivate)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.uuid = uuid;
         this.forceActivate = forceActivate;
     }
@@ -70,17 +69,7 @@ public class RemoveDelayedSpellAction extends AffectTypeAction<EntityTarget>
     {
         DelayedSpellHolder.getHolder(target.getEntity()).ifPresent(holder ->
         {
-            this.uuid.getValue(ctx).map(s ->
-            {
-                try
-                {
-                    return UUID.fromString(s);
-                }
-                catch(IllegalArgumentException e)
-                {
-                    return null;
-                }
-            }).ifPresent(uuid1 ->
+            this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid1 ->
             {
                 boolean force = forceActivate.getValue(ctx).orElse(false);
                 holder.removeDelayedSpell(uuid1, force);

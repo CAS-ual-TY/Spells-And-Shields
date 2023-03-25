@@ -67,16 +67,16 @@
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "active",
+      "d_compound_tag_tag": "<<tag>>",
+      "d_string_entity_type": "minecraft:fireball",
       "d_vec3_direction": "<<direction>>",
       "d_vec3_motion": [
         0.0,
         0.0,
         0.0
       ],
-      "entity_type": "minecraft:fireball",
-      "t_entity": "fire_charge",
       "t_position": "position",
-      "tag": "<<tag>>"
+      "td_entity": "fire_charge"
     },
     {
       "type": "spells_and_shields:play_sound",

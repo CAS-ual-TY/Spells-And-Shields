@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -23,20 +22,20 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
     public static Codec<ApplyPotionEffectAction> makeCodec(SpellActionType<ApplyPotionEffectAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
-                CtxVarTypes.STRING.get().refCodec().fieldOf("mob_effect").forGetter(ApplyPotionEffectAction::getMobEffect),
+                activationCodec(),
+                multiTargetsCodec(),
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("mob_effect")).forGetter(ApplyPotionEffectAction::getMobEffect),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("duration")).forGetter(ApplyPotionEffectAction::getDuration),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amplifier")).forGetter(ApplyPotionEffectAction::getAmplifier),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("ambient")).forGetter(ApplyPotionEffectAction::getAmbient),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("visible")).forGetter(ApplyPotionEffectAction::getVisible),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("showIcon")).forGetter(ApplyPotionEffectAction::getShowIcon)
-        ).apply(instance, (activation, targets, mobEffect, duration, amplifier, ambient, visible, showIcon) -> new ApplyPotionEffectAction(type, activation, targets, mobEffect, duration, amplifier, ambient, visible, showIcon)));
+        ).apply(instance, (activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon) -> new ApplyPotionEffectAction(type, activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon)));
     }
     
-    public static ApplyPotionEffectAction make(String activation, String targets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
+    public static ApplyPotionEffectAction make(String activation, String multiTargets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
     {
-        return new ApplyPotionEffectAction(SpellActionTypes.APPLY_POTION_EFFECT.get(), activation, targets, mobEffect, duration, amplifier, ambient, visible, showIcon);
+        return new ApplyPotionEffectAction(SpellActionTypes.APPLY_POTION_EFFECT.get(), activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon);
     }
     
     protected DynamicCtxVar<String> mobEffect;
@@ -51,9 +50,9 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
         super(type);
     }
     
-    public ApplyPotionEffectAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
+    public ApplyPotionEffectAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.mobEffect = mobEffect;
         this.duration = duration;
         this.amplifier = amplifier;

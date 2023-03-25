@@ -20,12 +20,12 @@ public class GetEntityExtraTagAction extends GetTargetAttributeAction<EntityTarg
                 activationCodec(),
                 sourceCodec(),
                 Codec.STRING.fieldOf(ParamNames.var("compound_tag")).forGetter(GetEntityExtraTagAction::getCompoundTag)
-        ).apply(instance, (activation, target, compoundTag) -> new GetEntityExtraTagAction(type, activation, target, compoundTag)));
+        ).apply(instance, (activation, source, compoundTag) -> new GetEntityExtraTagAction(type, activation, source, compoundTag)));
     }
     
-    public static GetEntityExtraTagAction make(String activation, String target, String compoundTag)
+    public static GetEntityExtraTagAction make(String activation, String source, String compoundTag)
     {
-        return new GetEntityExtraTagAction(SpellActionTypes.GET_ENTITY_EXTRA_TAG.get(), activation, target, compoundTag);
+        return new GetEntityExtraTagAction(SpellActionTypes.GET_ENTITY_EXTRA_TAG.get(), activation, source, compoundTag);
     }
     
     protected String compoundTag;
@@ -35,9 +35,9 @@ public class GetEntityExtraTagAction extends GetTargetAttributeAction<EntityTarg
         super(type);
     }
     
-    public GetEntityExtraTagAction(SpellActionType<?> type, String activation, String target, String compoundTag)
+    public GetEntityExtraTagAction(SpellActionType<?> type, String activation, String source, String compoundTag)
     {
-        super(type, activation, target);
+        super(type, activation, source);
         this.compoundTag = compoundTag;
         
         if(!compoundTag.isEmpty())

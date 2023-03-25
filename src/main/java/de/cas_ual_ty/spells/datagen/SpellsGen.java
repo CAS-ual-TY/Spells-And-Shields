@@ -272,7 +272,7 @@ public class SpellsGen implements DataProvider
         
         Spell spell = new Spell(spellIcon, Component.translatable(key, component), 0F)
                 .addAction(AddAttributeModifierAction.make(ON_EQUIP.activation, OWNER.targetGroup, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING.get()), STRING.get().immediate(attributeRL.getPath()), DOUBLE.get().immediate(value), STRING.get().immediate(opString)))
-                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP.activation, OWNER.targetGroup, attribute, Compiler.compileString(uuidCode, STRING.get())))
+                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP.activation, OWNER.targetGroup, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING.get())))
                 .addParameter(DOUBLE.get(), "value", value)
                 .addParameter(STRING.get(), "operation", opString)
                 .addTooltip(Component.translatable(descKey, component.copy().withStyle(ChatFormatting.BLUE)));
@@ -398,11 +398,11 @@ public class SpellsGen implements DataProvider
                 .addAction(ActivateAction.make("potion", "shoot"))
                 .addAction(SpawnEntityAction.make("shoot", "arrow", SpellsUtil.objectToString(EntityType.ARROW, ForgeRegistries.ENTITY_TYPES), "position", VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", VEC3.get()), COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", OWNER.targetGroup, SoundEvents.ARROW_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
-                .addAction(ConsumeItemAction.make("shoot", "item", INT.get().immediate(1), OWNER.targetGroup))
+                .addAction(ConsumeItemAction.make("shoot", "item", INT.get().immediate(1)))
                 .addAction(ItemEqualsActivationAction.make(ACTIVE.activation, "item", "spectral", new ItemStack(Items.SPECTRAL_ARROW), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
                 .addAction(SpawnEntityAction.make("spectral", "arrow", SpellsUtil.objectToString(EntityType.SPECTRAL_ARROW, ForgeRegistries.ENTITY_TYPES), "position", VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", VEC3.get()), COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("spectral", OWNER.targetGroup, SoundEvents.ARROW_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
-                .addAction(ConsumeItemAction.make("spectral", "item", INT.get().immediate(1), OWNER.targetGroup))
+                .addAction(ConsumeItemAction.make("spectral", "item", INT.get().immediate(1)))
                 .addTooltip(Component.translatable(Spells.KEY_BLOW_ARROW_DESC))
         );
         
@@ -454,7 +454,7 @@ public class SpellsGen implements DataProvider
                 .addAction(ItemEqualsActivationAction.make("refill_offhand", "item", "do_refill", new ItemStack(Items.BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
                 .addAction(GetItemAttributesAction.make("do_refill", "item", "item", "amount", "damage", "item_tag"))
                 .addAction(OverrideItemAction.make("do_refill", "item", INT.get().immediate(1), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), SpellsUtil.objectToString(Items.WATER_BUCKET, ForgeRegistries.ITEMS)))
-                .addAction(GiveItemAction.make("do_refill", "item", Compiler.compileString(" amount - 1 ", INT.get()), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), Items.BUCKET))
+                .addAction(GiveItemAction.make("do_refill", "item", Compiler.compileString(" amount - 1 ", INT.get()), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), SpellsUtil.objectToString(Items.BUCKET, ForgeRegistries.ITEMS)))
                 .addAction(PlaySoundAction.make("do_refill", OWNER.targetGroup, SoundEvents.BUCKET_FILL, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addTooltip(Component.translatable(Spells.KEY_WATER_WHIP_DESC))
         );

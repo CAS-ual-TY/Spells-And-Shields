@@ -26,10 +26,10 @@
       "a_entity_hit_activation": "on_entity_hit",
       "a_miss_activation": "",
       "activation": "active",
-      "block_clip_context": "OUTLINE",
+      "block_clip_context": "outline",
       "d_double_range": "<<range>>",
       "double_bb_inflation": 0.5,
-      "fluid_clip_context": "ANY",
+      "fluid_clip_context": "any",
       "t_source": "owner"
     },
     {
@@ -57,6 +57,8 @@
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "on_hit",
+      "d_compound_tag_tag": {},
+      "d_string_entity_type": "minecraft:lightning_bolt",
       "d_vec3_direction": [
         0.0,
         0.0,
@@ -67,10 +69,8 @@
         0.0,
         0.0
       ],
-      "entity_type": "minecraft:lightning_bolt",
-      "t_entity": "",
       "t_position": "position",
-      "tag": {}
+      "td_entity": ""
     }
   ],
   "title": {

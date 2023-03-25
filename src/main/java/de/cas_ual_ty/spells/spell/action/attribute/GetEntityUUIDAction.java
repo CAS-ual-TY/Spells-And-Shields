@@ -19,12 +19,12 @@ public class GetEntityUUIDAction extends GetTargetAttributeAction<EntityTarget>
                 activationCodec(),
                 sourceCodec(),
                 Codec.STRING.fieldOf(ParamNames.var("uuid")).forGetter(GetEntityUUIDAction::getUuid)
-        ).apply(instance, (activation, target, uuid) -> new GetEntityUUIDAction(type, activation, target, uuid)));
+        ).apply(instance, (activation, source, uuid) -> new GetEntityUUIDAction(type, activation, source, uuid)));
     }
     
-    public static GetEntityUUIDAction make(String activation, String target, String uuid)
+    public static GetEntityUUIDAction make(String activation, String source, String uuid)
     {
-        return new GetEntityUUIDAction(SpellActionTypes.GET_ENTITY_UUID.get(), activation, target, uuid);
+        return new GetEntityUUIDAction(SpellActionTypes.GET_ENTITY_UUID.get(), activation, source, uuid);
     }
     
     protected String uuid;
@@ -34,9 +34,9 @@ public class GetEntityUUIDAction extends GetTargetAttributeAction<EntityTarget>
         super(type);
     }
     
-    public GetEntityUUIDAction(SpellActionType<?> type, String activation, String target, String uuid)
+    public GetEntityUUIDAction(SpellActionType<?> type, String activation, String source, String uuid)
     {
-        super(type, activation, target);
+        super(type, activation, source);
         this.uuid = uuid;
         
         if(!uuid.isEmpty())

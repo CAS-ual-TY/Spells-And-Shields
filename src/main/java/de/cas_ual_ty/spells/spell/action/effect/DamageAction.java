@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -21,15 +20,15 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
     public static Codec<DamageAction> makeCodec(SpellActionType<DamageAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
+                activationCodec(),
+                multiTargetsCodec(),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("damage")).forGetter(DamageAction::getDamage)
-        ).apply(instance, (activation, targets, damage) -> new DamageAction(type, activation, targets, damage)));
+        ).apply(instance, (activation, multiTargets, damage) -> new DamageAction(type, activation, multiTargets, damage)));
     }
     
-    public static DamageAction make(String activation, String targets, DynamicCtxVar<Double> damage)
+    public static DamageAction make(String activation, String multiTargets, DynamicCtxVar<Double> damage)
     {
-        return new DamageAction(SpellActionTypes.DAMAGE.get(), activation, targets, damage);
+        return new DamageAction(SpellActionTypes.DAMAGE.get(), activation, multiTargets, damage);
     }
     
     protected DynamicCtxVar<Double> damage;
@@ -39,9 +38,9 @@ public class DamageAction extends AffectTypeAction<LivingEntityTarget>
         super(type);
     }
     
-    public DamageAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> damage)
+    public DamageAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Double> damage)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.damage = damage;
     }
     

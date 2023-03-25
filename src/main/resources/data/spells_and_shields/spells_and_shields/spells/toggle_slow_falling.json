@@ -46,7 +46,7 @@
       "a_to_activate": "remove",
       "activation": "active",
       "d_string_uuid": "<<uuid>>",
-      "ts_targets": "player"
+      "t_target": "player"
     },
     {
       "type": "spells_and_shields:activate",
@@ -68,7 +68,7 @@
       "a_to_activate": "remove_sound",
       "activation": "remove",
       "d_string_uuid": "<<uuid>>",
-      "ts_targets": "player"
+      "t_target": "player"
     },
     {
       "type": "spells_and_shields:remove_delayed_spell",
@@ -95,7 +95,7 @@
       "d_boolean_visible": "<<visible>>",
       "d_int_amplifier": "<<amplifier>>",
       "d_int_duration": "<<duration+1>>",
-      "mob_effect": "minecraft:slow_falling",
+      "d_string_mob_effect": "minecraft:slow_falling",
       "ts_targets": "player"
     },
     {

@@ -6,50 +6,50 @@ import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
+import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class GiveItemAction extends AffectSingleTypeAction<PlayerTarget>
+public class GiveItemAction extends AffectTypeAction<PlayerTarget>
 {
     public static Codec<GiveItemAction> makeCodec(SpellActionType<GiveItemAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                multiTargetsCodec(),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(GiveItemAction::getAmount),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(GiveItemAction::getDamage),
                 CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(GiveItemAction::getTag),
-                ForgeRegistries.ITEMS.getCodec().fieldOf("item").forGetter(GiveItemAction::getItem)
-        ).apply(instance, (activation, target, amount, damage, tag, item) -> new GiveItemAction(type, activation, target, amount, damage, tag, item)));
+                CtxVarTypes.STRING.get().refCodec().fieldOf("item").forGetter(GiveItemAction::getItem)
+        ).apply(instance, (activation, multiTargets, amount, damage, tag, item) -> new GiveItemAction(type, activation, multiTargets, amount, damage, tag, item)));
     }
     
-    public static GiveItemAction make(String activation, String target, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, Item item)
+    public static GiveItemAction make(String activation, String multiTargets, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
     {
-        return new GiveItemAction(SpellActionTypes.GIVE_ITEM.get(), activation, target, amount, damage, tag, item);
+        return new GiveItemAction(SpellActionTypes.GIVE_ITEM.get(), activation, multiTargets, amount, damage, tag, item);
     }
     
     protected DynamicCtxVar<Integer> amount;
     protected DynamicCtxVar<Integer> damage;
     protected DynamicCtxVar<CompoundTag> tag;
-    protected Item item;
+    protected DynamicCtxVar<String> item;
     
     public GiveItemAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public GiveItemAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, Item item)
+    public GiveItemAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.amount = amount;
         this.damage = damage;
         this.tag = tag;
@@ -71,40 +71,43 @@ public class GiveItemAction extends AffectSingleTypeAction<PlayerTarget>
         return tag;
     }
     
-    public Item getItem()
+    public DynamicCtxVar<String> getItem()
     {
         return item;
     }
     
     @Override
-    public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
+    public void affectTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
-        ItemStack itemStack = new ItemStack(item);
-        
-        amount.getValue(ctx).ifPresent(amount ->
+        SpellsUtil.stringToObject(ctx, item, ForgeRegistries.ITEMS).ifPresent(item ->
         {
-            if(amount >= 0)
+            ItemStack itemStack = new ItemStack(item);
+            
+            amount.getValue(ctx).ifPresent(amount ->
             {
-                itemStack.setCount(amount);
-            }
-        });
-        
-        if(itemStack.isEmpty())
-        {
-            return;
-        }
-        
-        damage.getValue(ctx).ifPresent(damage ->
-        {
-            if(damage >= 0)
+                if(amount >= 0)
+                {
+                    itemStack.setCount(amount);
+                }
+            });
+            
+            if(itemStack.isEmpty())
             {
-                itemStack.setDamageValue(damage);
+                return;
             }
+            
+            damage.getValue(ctx).ifPresent(damage ->
+            {
+                if(damage >= 0)
+                {
+                    itemStack.setDamageValue(damage);
+                }
+            });
+            
+            tag.getValue(ctx).ifPresent(itemStack::setTag);
+            
+            playerTarget.getPlayer().getInventory().add(itemStack);
         });
-        
-        tag.getValue(ctx).ifPresent(itemStack::setTag);
-        
-        playerTarget.getPlayer().getInventory().add(itemStack);
     }
     
     @Override

@@ -23,12 +23,12 @@ public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget
                 Codec.STRING.fieldOf(ParamNames.var("amount")).forGetter(GetItemAttributesAction::getAmount),
                 Codec.STRING.fieldOf(ParamNames.var("damage")).forGetter(GetItemAttributesAction::getDamage),
                 Codec.STRING.fieldOf(ParamNames.var("compound_tag")).forGetter(GetItemAttributesAction::getCompoundTag)
-        ).apply(instance, (activation, target, item, amount, damage, compoundTag) -> new GetItemAttributesAction(type, activation, target, item, amount, damage, compoundTag)));
+        ).apply(instance, (activation, source, item, amount, damage, compoundTag) -> new GetItemAttributesAction(type, activation, source, item, amount, damage, compoundTag)));
     }
     
-    public static GetItemAttributesAction make(String activation, String target, String item, String amount, String damage, String compoundTag)
+    public static GetItemAttributesAction make(String activation, String source, String item, String amount, String damage, String compoundTag)
     {
-        return new GetItemAttributesAction(SpellActionTypes.GET_ITEM_ATTRIBUTES.get(), activation, target, item, amount, damage, compoundTag);
+        return new GetItemAttributesAction(SpellActionTypes.GET_ITEM_ATTRIBUTES.get(), activation, source, item, amount, damage, compoundTag);
     }
     
     protected String item;
@@ -41,9 +41,9 @@ public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget
         super(type);
     }
     
-    public GetItemAttributesAction(SpellActionType<?> type, String activation, String item, String target, String amount, String damage, String compoundTag)
+    public GetItemAttributesAction(SpellActionType<?> type, String activation, String source, String item, String amount, String damage, String compoundTag)
     {
-        super(type, activation, target);
+        super(type, activation, source);
         this.item = item;
         this.amount = amount;
         this.damage = damage;

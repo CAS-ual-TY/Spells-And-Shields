@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -21,16 +20,16 @@ public class SourcedKnockbackAction extends AffectTypeAction<LivingEntityTarget>
     public static Codec<SourcedKnockbackAction> makeCodec(SpellActionType<SourcedKnockbackAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramVec3("strength")).forGetter(SourcedKnockbackAction::getStrength),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("source")).forGetter(SourcedKnockbackAction::getSource)
-        ).apply(instance, (activation, targets, strength, source) -> new SourcedKnockbackAction(type, activation, targets, strength, source)));
+                activationCodec(),
+                multiTargetsCodec(),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("strength")).forGetter(SourcedKnockbackAction::getStrength),
+                sourceCodec()
+        ).apply(instance, (activation, multiTargets, strength, source) -> new SourcedKnockbackAction(type, activation, multiTargets, strength, source)));
     }
     
-    public static SourcedKnockbackAction make(String activation, String targets, DynamicCtxVar<Double> strength, String source)
+    public static SourcedKnockbackAction make(String activation, String multiTargets, DynamicCtxVar<Double> strength, String source)
     {
-        return new SourcedKnockbackAction(SpellActionTypes.SOURCED_KNOCKBACK.get(), activation, targets, strength, source);
+        return new SourcedKnockbackAction(SpellActionTypes.SOURCED_KNOCKBACK.get(), activation, multiTargets, strength, source);
     }
     
     protected DynamicCtxVar<Double> strength;
@@ -41,9 +40,9 @@ public class SourcedKnockbackAction extends AffectTypeAction<LivingEntityTarget>
         super(type);
     }
     
-    public SourcedKnockbackAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> strength, String source)
+    public SourcedKnockbackAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Double> strength, String source)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.strength = strength;
         this.source = source;
     }

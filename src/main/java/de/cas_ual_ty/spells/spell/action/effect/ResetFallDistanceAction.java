@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -17,14 +16,14 @@ public class ResetFallDistanceAction extends AffectTypeAction<LivingEntityTarget
     public static Codec<ResetFallDistanceAction> makeCodec(SpellActionType<ResetFallDistanceAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec()
-        ).apply(instance, (activation, targets) -> new ResetFallDistanceAction(type, activation, targets)));
+                activationCodec(),
+                multiTargetsCodec()
+        ).apply(instance, (activation, multiTargets) -> new ResetFallDistanceAction(type, activation, multiTargets)));
     }
     
-    public static ResetFallDistanceAction make(String activation, String targets)
+    public static ResetFallDistanceAction make(String activation, String multiTargets)
     {
-        return new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), activation, targets);
+        return new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), activation, multiTargets);
     }
     
     public ResetFallDistanceAction(SpellActionType<?> type)
@@ -32,9 +31,9 @@ public class ResetFallDistanceAction extends AffectTypeAction<LivingEntityTarget
         super(type);
     }
     
-    public ResetFallDistanceAction(SpellActionType<?> type, String activation, String targets)
+    public ResetFallDistanceAction(SpellActionType<?> type, String activation, String multiTargets)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
     }
     
     @Override

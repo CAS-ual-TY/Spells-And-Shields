@@ -22,12 +22,12 @@ public class GetEntityPositionDirectionMotionAction extends GetTargetAttributeAc
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("position")).forGetter(GetEntityPositionDirectionMotionAction::getPosition),
                 Codec.STRING.fieldOf(ParamNames.var("direction")).forGetter(GetEntityPositionDirectionMotionAction::getDirection),
                 Codec.STRING.fieldOf(ParamNames.var("motion")).forGetter(GetEntityPositionDirectionMotionAction::getMotion)
-        ).apply(instance, (activation, target, position, direction, motion) -> new GetEntityPositionDirectionMotionAction(type, activation, target, position, direction, motion)));
+        ).apply(instance, (activation, source, position, direction, motion) -> new GetEntityPositionDirectionMotionAction(type, activation, source, position, direction, motion)));
     }
     
-    public static GetEntityPositionDirectionMotionAction make(String activation, String target, String position, String direction, String motion)
+    public static GetEntityPositionDirectionMotionAction make(String activation, String source, String position, String direction, String motion)
     {
-        return new GetEntityPositionDirectionMotionAction(SpellActionTypes.GET_ENTITY_POSITION_DIRECTION_MOTION.get(), activation, target, position, direction, motion);
+        return new GetEntityPositionDirectionMotionAction(SpellActionTypes.GET_ENTITY_POSITION_DIRECTION_MOTION.get(), activation, source, position, direction, motion);
     }
     
     protected String position;
@@ -39,9 +39,9 @@ public class GetEntityPositionDirectionMotionAction extends GetTargetAttributeAc
         super(type);
     }
     
-    public GetEntityPositionDirectionMotionAction(SpellActionType<?> type, String activation, String target, String position, String direction, String motion)
+    public GetEntityPositionDirectionMotionAction(SpellActionType<?> type, String activation, String source, String position, String direction, String motion)
     {
-        super(type, activation, target);
+        super(type, activation, source);
         this.position = position;
         this.direction = direction;
         this.motion = motion;

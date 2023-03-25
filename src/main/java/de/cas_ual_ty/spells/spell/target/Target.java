@@ -48,8 +48,8 @@ public abstract class Target
         return new StaticTarget(TargetTypes.STATIC.get(), level, position);
     }
     
-    public static ItemTarget of(Level level, ItemStack item, Consumer<ItemStack> setter)
+    public static ItemTarget of(Level level, ItemStack item, Consumer<ItemStack> setter, boolean isCreative)
     {
-        return new ItemTarget(TargetTypes.ITEM.get(), level, item, setter);
+        return new ItemTarget(TargetTypes.ITEM.get(), level, item, setter, isCreative);
     }
 }

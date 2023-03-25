@@ -6,7 +6,6 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -15,22 +14,21 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-import net.minecraft.world.entity.player.Player;
 
 public class ReplenishManaAction extends AffectTypeAction<LivingEntityTarget>
 {
     public static Codec<ReplenishManaAction> makeCodec(SpellActionType<ReplenishManaAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
+                activationCodec(),
+                multiTargetsCodec(),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("mana_amount")).forGetter(ReplenishManaAction::getAmount)
-        ).apply(instance, (activation, targets, amount) -> new ReplenishManaAction(type, activation, targets, amount)));
+        ).apply(instance, (activation, multiTargets, amount) -> new ReplenishManaAction(type, activation, multiTargets, amount)));
     }
     
-    public static ReplenishManaAction make(String activation, String targets, DynamicCtxVar<Double> amount)
+    public static ReplenishManaAction make(String activation, String multiTargets, DynamicCtxVar<Double> amount)
     {
-        return new ReplenishManaAction(SpellActionTypes.REPLENISH_MANA.get(), activation, targets, amount);
+        return new ReplenishManaAction(SpellActionTypes.REPLENISH_MANA.get(), activation, multiTargets, amount);
     }
     
     protected DynamicCtxVar<Double> amount;
@@ -40,9 +38,9 @@ public class ReplenishManaAction extends AffectTypeAction<LivingEntityTarget>
         super(type);
     }
     
-    public ReplenishManaAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> amount)
+    public ReplenishManaAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Double> amount)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.amount = amount;
     }
     
@@ -60,15 +58,12 @@ public class ReplenishManaAction extends AffectTypeAction<LivingEntityTarget>
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget target)
     {
-        if(!(target.getLivingEntity() instanceof Player player && player.isCreative()))
+        amount.getValue(ctx).ifPresent(amount ->
         {
-            amount.getValue(ctx).ifPresent(amount ->
+            ManaHolder.getManaHolder(target.getLivingEntity()).ifPresent(manaHolder ->
             {
-                ManaHolder.getManaHolder(target.getLivingEntity()).ifPresent(manaHolder ->
-                {
-                    manaHolder.replenish(amount.floatValue());
-                });
+                manaHolder.replenish(amount.floatValue());
             });
-        }
+        });
     }
 }

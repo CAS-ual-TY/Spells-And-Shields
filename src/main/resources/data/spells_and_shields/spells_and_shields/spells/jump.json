@@ -27,7 +27,7 @@
       "type": "spells_and_shields:set_motion",
       "activation": "active",
       "d_vec3_motion": "<< vec3(0, get_y(motion) + speed, 0) >>",
-      "t_target": "owner"
+      "ts_targets": "owner"
     },
     {
       "type": "spells_and_shields:spawn_particles",

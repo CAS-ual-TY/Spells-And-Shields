@@ -25,7 +25,7 @@ public class SimpleItemTagCheckAction extends AffectTypeAction<PlayerTarget>
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                targetCodec(),
+                singleTargetCodec(),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(SimpleItemTagCheckAction::getMustBeInHand),
                 TagKey.codec(ForgeRegistries.ITEMS.getRegistryKey()).fieldOf("item_tag").forGetter(SimpleItemTagCheckAction::getItemTag),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramBoolean("count")).forGetter(SimpleItemTagCheckAction::getCount)

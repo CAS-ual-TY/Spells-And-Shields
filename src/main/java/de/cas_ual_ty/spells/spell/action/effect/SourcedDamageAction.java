@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -21,16 +20,16 @@ public class SourcedDamageAction extends AffectTypeAction<LivingEntityTarget>
     public static Codec<SourcedDamageAction> makeCodec(SpellActionType<SourcedDamageAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
+                activationCodec(),
+                multiTargetsCodec(),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("damage")).forGetter(SourcedDamageAction::getDamage),
-                Codec.STRING.fieldOf(ParamNames.singleTarget("source")).forGetter(SourcedDamageAction::getSource)
-        ).apply(instance, (activation, targets, damage, source) -> new SourcedDamageAction(type, activation, targets, damage, source)));
+                sourceCodec()
+        ).apply(instance, (activation, multiTargets, damage, source) -> new SourcedDamageAction(type, activation, multiTargets, damage, source)));
     }
     
-    public static SourcedDamageAction make(String activation, String targets, DynamicCtxVar<Double> damage, String source)
+    public static SourcedDamageAction make(String activation, String multiTargets, DynamicCtxVar<Double> damage, String source)
     {
-        return new SourcedDamageAction(SpellActionTypes.SOURCED_DAMAGE.get(), activation, targets, damage, source);
+        return new SourcedDamageAction(SpellActionTypes.SOURCED_DAMAGE.get(), activation, multiTargets, damage, source);
     }
     
     protected DynamicCtxVar<Double> damage;
@@ -41,9 +40,9 @@ public class SourcedDamageAction extends AffectTypeAction<LivingEntityTarget>
         super(type);
     }
     
-    public SourcedDamageAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> damage, String source)
+    public SourcedDamageAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Double> damage, String source)
     {
-        super(type, activation, targets);
+        super(type, activation, multiTargets);
         this.damage = damage;
         this.source = source;
     }

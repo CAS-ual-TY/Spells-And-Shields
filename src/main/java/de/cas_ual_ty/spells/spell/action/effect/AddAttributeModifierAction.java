@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
-import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -19,15 +18,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.UUID;
-
 public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTarget>
 {
     public static Codec<AddAttributeModifierAction> makeCodec(SpellActionType<AddAttributeModifierAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                SpellAction.activationCodec(),
-                AffectTypeAction.targetsCodec(),
+                activationCodec(),
+                multiTargetsCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("attribute")).forGetter(AddAttributeModifierAction::getAttribute),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddAttributeModifierAction::getUuid),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("name")).forGetter(AddAttributeModifierAction::getName),
@@ -108,7 +105,7 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
                     {
                         operation.getValue(ctx).map(SpellsUtil::operationFromString).ifPresent(op ->
                         {
-                            this.uuid.getValue(ctx).map(UUID::fromString).ifPresentOrElse(uuid ->
+                            this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresentOrElse(uuid ->
                             {
                                 a.addPermanentModifier(new AttributeModifier(uuid, name, amount, op));
                             }, () ->
