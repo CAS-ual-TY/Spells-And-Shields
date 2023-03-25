@@ -442,7 +442,7 @@ public class SpellsGen implements DataProvider
                 .addAction(CopyTargetsAction.make("on_timeout", "position", PROJECTILE.targetGroup))
                 .addAction(ActivateAction.make("on_timeout", "return"))
                 .addAction(GetEntityExtraTagAction.make("return", PROJECTILE.targetGroup, "tag"))
-                .addAction(UUIDPlayerTargetAction.make("return", "return_target", Compiler.compileString(" get_nbt_uuid(tag, 'owner_uuid_return') ", STRING.get())))
+                .addAction(EntityUUIDTargetAction.make("return", "return_target", Compiler.compileString(" get_nbt_uuid(tag, 'owner_uuid_return') ", STRING.get())))
                 .addAction(HomeAction.make("return", "position", "return_target", DOUBLE.get().immediate(1D), INT.get().immediate(100), "dummy_block_hit", "on_entity_hit_return", "dummy_timeout", "projectile"))
                 .addAction(TypeFilterAction.make("on_entity_hit_return", "return_player", ENTITY_HIT.targetGroup, TargetTypes.PLAYER::get))
                 .addAction(GetTargetGroupSizeAction.make("on_entity_hit_return", "return_player", "count"))

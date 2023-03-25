@@ -118,12 +118,12 @@ public class SpellActionTypes
     // target
     public static final RegistryObject<SpellActionType<ClearTargetsAction>> CLEAR_TARGETS = DEFERRED_REGISTER.register("clear_targets", () -> new SpellActionType<>(ClearTargetsAction::new, ClearTargetsAction::makeCodec));
     public static final RegistryObject<SpellActionType<CopyTargetsAction>> COPY_TARGETS = DEFERRED_REGISTER.register("copy_targets", () -> new SpellActionType<>(CopyTargetsAction::new, CopyTargetsAction::makeCodec));
+    public static final RegistryObject<SpellActionType<EntityUUIDTargetAction>> ENTITY_UUID_TARGET = DEFERRED_REGISTER.register("entity_uuid_target", () -> new SpellActionType<>(EntityUUIDTargetAction::new, EntityUUIDTargetAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetTargetGroupSizeAction>> GET_TARGET_GROUP_SIZE = DEFERRED_REGISTER.register("get_target_group_size", () -> new SpellActionType<>(GetTargetGroupSizeAction::new, GetTargetGroupSizeAction::makeCodec));
     public static final RegistryObject<SpellActionType<HomeAction>> HOME = DEFERRED_REGISTER.register("home", () -> new SpellActionType<>(HomeAction::new, HomeAction::makeCodec));
     public static final RegistryObject<SpellActionType<LookAtTargetAction>> LOOK_AT_TARGET = DEFERRED_REGISTER.register("look_at_target", () -> new SpellActionType<>(LookAtTargetAction::new, LookAtTargetAction::makeCodec));
     public static final RegistryObject<SpellActionType<PickTargetAction>> PICK_TARGET = DEFERRED_REGISTER.register("pick_target", () -> new SpellActionType<>(PickTargetAction::new, PickTargetAction::makeCodec2));
     public static final RegistryObject<SpellActionType<ShootAction>> SHOOT = DEFERRED_REGISTER.register("shoot", () -> new SpellActionType<>(ShootAction::new, ShootAction::makeCodec));
-    public static final RegistryObject<SpellActionType<UUIDPlayerTargetAction>> UUID_PLAYER_TARGET = DEFERRED_REGISTER.register("uuid_player_target", () -> new SpellActionType<>(UUIDPlayerTargetAction::new, UUIDPlayerTargetAction::makeCodec));
     
     // variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
