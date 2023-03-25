@@ -14,40 +14,38 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.world.phys.Vec3;
 
-public class KnockbackAction extends AffectTypeAction<LivingEntityTarget>
+public class SourcedKnockbackAction extends AffectTypeAction<LivingEntityTarget>
 {
-    public static Codec<KnockbackAction> makeCodec(SpellActionType<KnockbackAction> type)
+    public static Codec<SourcedKnockbackAction> makeCodec(SpellActionType<SourcedKnockbackAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 SpellAction.activationCodec(),
                 AffectTypeAction.targetsCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramVec3("strength")).forGetter(KnockbackAction::getStrength),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramVec3("dx")).forGetter(KnockbackAction::getDx),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramVec3("dz")).forGetter(KnockbackAction::getDz)
-        ).apply(instance, (activation, targets, strength, dx, dz) -> new KnockbackAction(type, activation, targets, strength, dx, dz)));
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramVec3("strength")).forGetter(SourcedKnockbackAction::getStrength),
+                Codec.STRING.fieldOf(ParamNames.singleTarget("source")).forGetter(SourcedKnockbackAction::getSource)
+        ).apply(instance, (activation, targets, strength, source) -> new SourcedKnockbackAction(type, activation, targets, strength, source)));
     }
     
-    public static KnockbackAction make(String activation, String targets, DynamicCtxVar<Double> strength, DynamicCtxVar<Double> dx, DynamicCtxVar<Double> dz)
+    public static SourcedKnockbackAction make(String activation, String targets, DynamicCtxVar<Double> strength, String source)
     {
-        return new KnockbackAction(SpellActionTypes.KNOCKBACK.get(), activation, targets, strength, dx, dz);
+        return new SourcedKnockbackAction(SpellActionTypes.SOURCED_KNOCKBACK.get(), activation, targets, strength, source);
     }
     
     protected DynamicCtxVar<Double> strength;
-    protected DynamicCtxVar<Double> dx;
-    protected DynamicCtxVar<Double> dz;
+    protected String source;
     
-    public KnockbackAction(SpellActionType<?> type)
+    public SourcedKnockbackAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public KnockbackAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> strength, DynamicCtxVar<Double> dx, DynamicCtxVar<Double> dz)
+    public SourcedKnockbackAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Double> strength, String source)
     {
         super(type, activation, targets);
         this.strength = strength;
-        this.dx = dx;
-        this.dz = dz;
+        this.source = source;
     }
     
     @Override
@@ -61,14 +59,9 @@ public class KnockbackAction extends AffectTypeAction<LivingEntityTarget>
         return strength;
     }
     
-    public DynamicCtxVar<Double> getDx()
+    public String getSource()
     {
-        return dx;
-    }
-    
-    public DynamicCtxVar<Double> getDz()
-    {
-        return dz;
+        return source;
     }
     
     @Override
@@ -76,11 +69,12 @@ public class KnockbackAction extends AffectTypeAction<LivingEntityTarget>
     {
         strength.getValue(ctx).ifPresent(strength ->
         {
-            dx.getValue(ctx).ifPresent(dx ->
+            ctx.getTargetGroup(source).getSingleTarget(t ->
             {
-                dz.getValue(ctx).ifPresent(dz ->
+                TargetTypes.POSITION.get().ifType(t, source ->
                 {
-                    target.getLivingEntity().knockback(strength, dx, dz);
+                    Vec3 vec = target.getPosition().subtract(source.getPosition()).multiply(1, 0, 1);
+                    target.getLivingEntity().knockback(strength, vec.x, vec.z);
                 });
             });
         });
