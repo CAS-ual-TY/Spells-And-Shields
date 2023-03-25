@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spell.action.base.GetTargetAttributeAction;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget>
 {
@@ -18,17 +19,19 @@ public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
+                Codec.STRING.fieldOf(ParamNames.var("item")).forGetter(GetItemAttributesAction::getItem),
                 Codec.STRING.fieldOf(ParamNames.var("amount")).forGetter(GetItemAttributesAction::getAmount),
                 Codec.STRING.fieldOf(ParamNames.var("damage")).forGetter(GetItemAttributesAction::getDamage),
                 Codec.STRING.fieldOf(ParamNames.var("compound_tag")).forGetter(GetItemAttributesAction::getCompoundTag)
-        ).apply(instance, (activation, target, amount, damage, compoundTag) -> new GetItemAttributesAction(type, activation, target, amount, damage, compoundTag)));
+        ).apply(instance, (activation, target, item, amount, damage, compoundTag) -> new GetItemAttributesAction(type, activation, target, item, amount, damage, compoundTag)));
     }
     
-    public static GetItemAttributesAction make(String activation, String target, String amount, String damage, String compoundTag)
+    public static GetItemAttributesAction make(String activation, String target, String item, String amount, String damage, String compoundTag)
     {
-        return new GetItemAttributesAction(SpellActionTypes.GET_ITEM_ATTRIBUTES.get(), activation, target, amount, damage, compoundTag);
+        return new GetItemAttributesAction(SpellActionTypes.GET_ITEM_ATTRIBUTES.get(), activation, target, item, amount, damage, compoundTag);
     }
     
+    protected String item;
     protected String amount;
     protected String damage;
     protected String compoundTag;
@@ -38,12 +41,18 @@ public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget
         super(type);
     }
     
-    public GetItemAttributesAction(SpellActionType<?> type, String activation, String target, String amount, String damage, String compoundTag)
+    public GetItemAttributesAction(SpellActionType<?> type, String activation, String item, String target, String amount, String damage, String compoundTag)
     {
         super(type, activation, target);
+        this.item = item;
         this.amount = amount;
         this.damage = damage;
         this.compoundTag = compoundTag;
+        
+        if(!item.isEmpty())
+        {
+            addVariableAttribute(i -> ForgeRegistries.ITEMS.getKey(i.getItem().getItem()).toString(), CtxVarTypes.STRING.get(), amount);
+        }
         
         if(!amount.isEmpty())
         {
@@ -65,6 +74,11 @@ public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget
     public ITargetType<ItemTarget> getAffectedType()
     {
         return TargetTypes.ITEM.get();
+    }
+    
+    public String getItem()
+    {
+        return item;
     }
     
     public String getAmount()

@@ -69,7 +69,8 @@
       "t_source": "item",
       "var_amount": "amount",
       "var_compound_tag": "item_tag",
-      "var_damage": "damage"
+      "var_damage": "damage",
+      "var_item": "item"
     },
     {
       "type": "spells_and_shields:override_item",
@@ -77,7 +78,7 @@
       "d_compound_tag_tag": "<<item_tag>>",
       "d_int_amount": "<<amount>>",
       "d_int_damage": "<<damage>>",
-      "item": "minecraft:bucket",
+      "d_string_item": "minecraft:bucket",
       "t_target": "item"
     },
     {
@@ -267,7 +268,8 @@
       "t_source": "item",
       "var_amount": "amount",
       "var_compound_tag": "item_tag",
-      "var_damage": "damage"
+      "var_damage": "damage",
+      "var_item": "item"
     },
     {
       "type": "spells_and_shields:override_item",
@@ -275,7 +277,7 @@
       "d_compound_tag_tag": "<<item_tag>>",
       "d_int_amount": 1,
       "d_int_damage": "<<amount>>",
-      "item": "minecraft:water_bucket",
+      "d_string_item": "minecraft:water_bucket",
       "t_target": "item"
     },
     {

@@ -8,11 +8,11 @@
     {
       "type": "spells_and_shields:add_attribute_modifier",
       "activation": "on_equip",
-      "attribute": "minecraft:generic.max_health",
-      "d_boolean_amount": 4.0,
-      "d_boolean_operation": "addition",
-      "d_int_name": "generic.max_health",
-      "d_int_uuid": "<< uuid_from_string('attribute' + 'generic.max_health' + spell_slot + operation + value) >>",
+      "d_double_amount": 4.0,
+      "d_string_attribute": "minecraft:generic.max_health",
+      "d_string_name": "generic.max_health",
+      "d_string_operation": "addition",
+      "d_string_uuid": "<< uuid_from_string('attribute' + 'generic.max_health' + spell_slot + operation + value) >>",
       "ts_targets": "owner"
     },
     {

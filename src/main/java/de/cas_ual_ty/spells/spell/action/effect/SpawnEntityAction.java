@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
@@ -26,7 +27,7 @@ public class SpawnEntityAction extends SpellAction
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 Codec.STRING.fieldOf(ParamNames.singleTarget("entity")).forGetter(SpawnEntityAction::getEntity),
-                ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entity_type").forGetter(SpawnEntityAction::getEntityType),
+                CtxVarTypes.STRING.get().refCodec().fieldOf("entity_type").forGetter(SpawnEntityAction::getEntityType),
                 Codec.STRING.fieldOf(ParamNames.singleTarget("position")).forGetter(SpawnEntityAction::getPosition),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("direction")).forGetter(SpawnEntityAction::getDirection),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("motion")).forGetter(SpawnEntityAction::getMotion),
@@ -34,13 +35,13 @@ public class SpawnEntityAction extends SpellAction
         ).apply(instance, (activation, entity, entityType, position, direction, motion, tag) -> new SpawnEntityAction(type, activation, entity, entityType, position, direction, motion, tag)));
     }
     
-    public static SpawnEntityAction make(String activation, String entity, EntityType<?> entityType, String position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, DynamicCtxVar<CompoundTag> tag)
+    public static SpawnEntityAction make(String activation, String entity, DynamicCtxVar<String> entityType, String position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, DynamicCtxVar<CompoundTag> tag)
     {
         return new SpawnEntityAction(SpellActionTypes.SPAWN_ENTITY.get(), activation, entity, entityType, position, direction, motion, tag);
     }
     
     protected String entity;
-    protected EntityType<? extends Entity> entityType;
+    protected DynamicCtxVar<String> entityType;
     protected String position;
     protected DynamicCtxVar<Vec3> direction;
     protected DynamicCtxVar<Vec3> motion;
@@ -51,7 +52,7 @@ public class SpawnEntityAction extends SpellAction
         super(type);
     }
     
-    public SpawnEntityAction(SpellActionType<?> type, String activation, String entity, EntityType<?> entityType, String position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, DynamicCtxVar<CompoundTag> tag)
+    public SpawnEntityAction(SpellActionType<?> type, String activation, String entity, DynamicCtxVar<String> entityType, String position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, DynamicCtxVar<CompoundTag> tag)
     {
         super(type, activation);
         this.entity = entity;
@@ -67,7 +68,7 @@ public class SpawnEntityAction extends SpellAction
         return entity;
     }
     
-    public EntityType<? extends Entity> getEntityType()
+    public DynamicCtxVar<String> getEntityType()
     {
         return entityType;
     }
@@ -95,47 +96,50 @@ public class SpawnEntityAction extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
-        if(entityType != EntityType.PLAYER && entityType != null)
+        SpellsUtil.stringToObject(ctx, entityType, ForgeRegistries.ENTITY_TYPES).ifPresent(entityType ->
         {
-            ctx.getTargetGroup(this.position).getSingleTarget(target ->
+            if(entityType != EntityType.PLAYER)
             {
-                TargetTypes.POSITION.get().ifType(target, position ->
+                ctx.getTargetGroup(this.position).getSingleTarget(target ->
                 {
-                    Vec3 direction = this.direction.getValue(ctx).orElse(Vec3.ZERO);
-                    Vec3 motion = this.motion.getValue(ctx).orElse(Vec3.ZERO);
-                    Entity entity = this.entityType.create(ctx.getLevel());
-                    
-                    if(entity != null)
+                    TargetTypes.POSITION.get().ifType(target, position ->
                     {
-                        entity.setPos(position.getPosition());
+                        Vec3 direction = this.direction.getValue(ctx).orElse(Vec3.ZERO);
+                        Vec3 motion = this.motion.getValue(ctx).orElse(Vec3.ZERO);
+                        Entity entity = entityType.create(ctx.getLevel());
                         
-                        // doesnt quite work
-                        entity.setYRot((float) (Mth.atan2(direction.x, direction.z) * (double) (180F / (float) Math.PI)));
-                        entity.setXRot((float) (Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI)));
-                        
-                        entity.setDeltaMovement(motion);
-                        
-                        this.tag.getValue(ctx).ifPresent(tag0 ->
+                        if(entity != null)
                         {
-                            CompoundTag tag = entity.saveWithoutId(new CompoundTag());
-                            for(String key : tag0.getAllKeys())
-                            {
-                                Tag t = tag0.get(key);
-                                
-                                if(t != null)
-                                {
-                                    tag.put(key, t);
-                                }
-                            }
+                            entity.setPos(position.getPosition());
                             
-                            entity.load(tag);
-                        });
-                        
-                        ctx.getLevel().addFreshEntity(entity);
-                        ctx.getOrCreateTargetGroup(this.entity).addTargets(Target.of(entity));
-                    }
+                            // doesnt quite work
+                            entity.setYRot((float) (Mth.atan2(direction.x, direction.z) * (double) (180F / (float) Math.PI)));
+                            entity.setXRot((float) (Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI)));
+                            
+                            entity.setDeltaMovement(motion);
+                            
+                            this.tag.getValue(ctx).ifPresent(tag0 ->
+                            {
+                                CompoundTag tag = entity.saveWithoutId(new CompoundTag());
+                                for(String key : tag0.getAllKeys())
+                                {
+                                    Tag t = tag0.get(key);
+                                    
+                                    if(t != null)
+                                    {
+                                        tag.put(key, t);
+                                    }
+                                }
+                                
+                                entity.load(tag);
+                            });
+                            
+                            ctx.getLevel().addFreshEntity(entity);
+                            ctx.getOrCreateTargetGroup(this.entity).addTargets(Target.of(entity));
+                        }
+                    });
                 });
-            });
-        }
+            }
+        });
     }
 }

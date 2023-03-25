@@ -14,7 +14,7 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-import net.minecraft.world.effect.MobEffect;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -25,7 +25,7 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
         return RecordCodecBuilder.create(instance -> instance.group(
                 SpellAction.activationCodec(),
                 AffectTypeAction.targetsCodec(),
-                ForgeRegistries.MOB_EFFECTS.getCodec().fieldOf("mob_effect").forGetter(ApplyPotionEffectAction::getMobEffect),
+                CtxVarTypes.STRING.get().refCodec().fieldOf("mob_effect").forGetter(ApplyPotionEffectAction::getMobEffect),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("duration")).forGetter(ApplyPotionEffectAction::getDuration),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amplifier")).forGetter(ApplyPotionEffectAction::getAmplifier),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("ambient")).forGetter(ApplyPotionEffectAction::getAmbient),
@@ -34,12 +34,12 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
         ).apply(instance, (activation, targets, mobEffect, duration, amplifier, ambient, visible, showIcon) -> new ApplyPotionEffectAction(type, activation, targets, mobEffect, duration, amplifier, ambient, visible, showIcon)));
     }
     
-    public static ApplyPotionEffectAction make(String activation, String targets, MobEffect mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
+    public static ApplyPotionEffectAction make(String activation, String targets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
     {
         return new ApplyPotionEffectAction(SpellActionTypes.APPLY_POTION_EFFECT.get(), activation, targets, mobEffect, duration, amplifier, ambient, visible, showIcon);
     }
     
-    protected MobEffect mobEffect;
+    protected DynamicCtxVar<String> mobEffect;
     protected DynamicCtxVar<Integer> duration;
     protected DynamicCtxVar<Integer> amplifier;
     protected DynamicCtxVar<Boolean> ambient;
@@ -51,7 +51,7 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
         super(type);
     }
     
-    public ApplyPotionEffectAction(SpellActionType<?> type, String activation, String targets, MobEffect mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
+    public ApplyPotionEffectAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
     {
         super(type, activation, targets);
         this.mobEffect = mobEffect;
@@ -62,7 +62,7 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
         this.showIcon = showIcon;
     }
     
-    public MobEffect getMobEffect()
+    public DynamicCtxVar<String> getMobEffect()
     {
         return mobEffect;
     }
@@ -101,17 +101,20 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget target)
     {
-        duration.getValue(ctx).ifPresent(duration ->
+        SpellsUtil.stringToObject(ctx, mobEffect, ForgeRegistries.MOB_EFFECTS).ifPresent(mobEffect ->
         {
-            amplifier.getValue(ctx).ifPresent(amplifier ->
+            duration.getValue(ctx).ifPresent(duration ->
             {
-                ambient.getValue(ctx).ifPresent(ambient ->
+                amplifier.getValue(ctx).ifPresent(amplifier ->
                 {
-                    visible.getValue(ctx).ifPresent(visible ->
+                    ambient.getValue(ctx).ifPresent(ambient ->
                     {
-                        showIcon.getValue(ctx).ifPresent(showIcon ->
+                        visible.getValue(ctx).ifPresent(visible ->
                         {
-                            target.getLivingEntity().addEffect(new MobEffectInstance(mobEffect, duration, amplifier, ambient, visible, showIcon));
+                            showIcon.getValue(ctx).ifPresent(showIcon ->
+                            {
+                                target.getLivingEntity().addEffect(new MobEffectInstance(mobEffect, duration, amplifier, ambient, visible, showIcon));
+                            });
                         });
                     });
                 });

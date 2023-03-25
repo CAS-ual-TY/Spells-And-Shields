@@ -15,7 +15,6 @@ import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -29,20 +28,20 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
         return RecordCodecBuilder.create(instance -> instance.group(
                 SpellAction.activationCodec(),
                 AffectTypeAction.targetsCodec(),
-                ForgeRegistries.ATTRIBUTES.getCodec().fieldOf("attribute").forGetter(AddAttributeModifierAction::getAttribute),
-                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramInt("uuid")).forGetter(AddAttributeModifierAction::getUuid),
-                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramInt("name")).forGetter(AddAttributeModifierAction::getName),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramBoolean("amount")).forGetter(AddAttributeModifierAction::getAmount),
-                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramBoolean("operation")).forGetter(AddAttributeModifierAction::getOperation)
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("attribute")).forGetter(AddAttributeModifierAction::getAttribute),
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddAttributeModifierAction::getUuid),
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("name")).forGetter(AddAttributeModifierAction::getName),
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("amount")).forGetter(AddAttributeModifierAction::getAmount),
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("operation")).forGetter(AddAttributeModifierAction::getOperation)
         ).apply(instance, (activation, targets, attribute, uuid, name, amount, operation) -> new AddAttributeModifierAction(type, activation, targets, attribute, uuid, name, amount, operation)));
     }
     
-    public static AddAttributeModifierAction make(String activation, String targets, Attribute attribute, DynamicCtxVar<String> uuid, DynamicCtxVar<String> name, DynamicCtxVar<Double> amount, DynamicCtxVar<String> operation)
+    public static AddAttributeModifierAction make(String activation, String targets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> uuid, DynamicCtxVar<String> name, DynamicCtxVar<Double> amount, DynamicCtxVar<String> operation)
     {
         return new AddAttributeModifierAction(SpellActionTypes.ADD_ATTRIBUTE_MODIFIER.get(), activation, targets, attribute, uuid, name, amount, operation);
     }
     
-    protected Attribute attribute;
+    protected DynamicCtxVar<String> attribute;
     protected DynamicCtxVar<String> uuid;
     protected DynamicCtxVar<String> name;
     protected DynamicCtxVar<Double> amount;
@@ -53,7 +52,7 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
         super(type);
     }
     
-    public AddAttributeModifierAction(SpellActionType<?> type, String activation, String targets, Attribute attribute, DynamicCtxVar<String> uuid, DynamicCtxVar<String> name, DynamicCtxVar<Double> amount, DynamicCtxVar<String> operation)
+    public AddAttributeModifierAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> uuid, DynamicCtxVar<String> name, DynamicCtxVar<Double> amount, DynamicCtxVar<String> operation)
     {
         super(type, activation, targets);
         this.attribute = attribute;
@@ -63,7 +62,7 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
         this.operation = operation;
     }
     
-    public Attribute getAttribute()
+    public DynamicCtxVar<String> getAttribute()
     {
         return attribute;
     }
@@ -97,7 +96,7 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget target)
     {
-        if(attribute != null)
+        SpellsUtil.stringToObject(ctx, attribute, ForgeRegistries.ATTRIBUTES).ifPresent(attribute ->
         {
             AttributeInstance a = target.getLivingEntity().getAttribute(attribute);
             
@@ -120,6 +119,6 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
                     });
                 });
             }
-        }
+        });
     }
 }

@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.spell.context.SpellContext;
+import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
@@ -22,6 +25,7 @@ import net.minecraft.world.phys.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
@@ -215,5 +219,15 @@ public class SpellsUtil
                     case "multiply_total" -> AttributeModifier.Operation.MULTIPLY_TOTAL;
                     default -> null;
                 };
+    }
+    
+    public static <T> DynamicCtxVar<String> objectToString(T object, IForgeRegistry<T> registry)
+    {
+        return CtxVarTypes.STRING.get().immediate(registry.getKey(object).toString());
+    }
+    
+    public static <T> Optional<T> stringToObject(SpellContext ctx, DynamicCtxVar<String> s, IForgeRegistry<T> registry)
+    {
+        return s.getValue(ctx).map(id -> registry.getValue(new ResourceLocation(id)));
     }
 }
