@@ -2,7 +2,7 @@
   "icon": {
     "type": "spells_and_shields:advanced",
     "height": 16,
-    "icon": "minecraft:textures/entity/ghast/ghast_shooting.png",
+    "texture": "minecraft:textures/entity/ghast/ghast_shooting.png",
     "textureHeight": 32,
     "textureWidth": 64,
     "u": 16,

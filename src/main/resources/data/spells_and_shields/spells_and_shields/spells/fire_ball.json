@@ -44,7 +44,7 @@
       "type": "spells_and_shields:sourced_damage",
       "activation": "on_entity_hit",
       "d_double_damage": 2.0,
-      "t_source": "entity_hit",
+      "t_source": "projectile",
       "ts_targets": "entity_hit"
     },
     {
