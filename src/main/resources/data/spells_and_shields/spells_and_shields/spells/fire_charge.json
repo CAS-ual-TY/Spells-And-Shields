@@ -11,80 +11,80 @@
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active",
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:simple_item_check",
       "activation": "active",
-      "d_boolean_must_be_in_hand": true,
+      "d/boolean/must_be_in_hand": true,
       "item": {
         "Count": 1,
         "id": "minecraft:fire_charge"
       },
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "active",
-      "d_tag_source": {
+      "d/tag/source": {
         "crit": 1,
         "pickup": 1
       },
-      "var_result": "tag"
+      "var/result": "tag"
     },
     {
       "type": "spells_and_shields:get_entity_uuid",
       "activation": "active",
-      "t_source": "owner",
-      "var_uuid": "uuid"
+      "t/source": "owner",
+      "var/uuid": "uuid"
     },
     {
       "type": "spells_and_shields:get_entity_position_direction",
       "activation": "active",
-      "t_source": "owner",
-      "td_position": "",
-      "var_direction": "direction",
-      "var_motion": ""
+      "t/source": "owner",
+      "td/position": "",
+      "var/direction": "direction",
+      "var/motion": ""
     },
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "active",
-      "d_tag_source": "<< put_nbt_uuid(tag, 'Owner', uuid) >>",
-      "var_result": "tag"
+      "d/tag/source": "<< put_nbt_uuid(tag, 'Owner', uuid) >>",
+      "var/result": "tag"
     },
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "active",
-      "d_tag_source": "<< put_nbt_vec3(tag, 'power', direction * 2.0 * 0.1) >>",
-      "var_result": "tag"
+      "d/tag/source": "<< put_nbt_vec3(tag, 'power', direction * 2.0 * 0.1) >>",
+      "var/result": "tag"
     },
     {
       "type": "spells_and_shields:get_entity_eye_position",
       "activation": "active",
-      "t_source": "owner",
-      "td_eye_position": "position"
+      "t/source": "owner",
+      "td/eye_position": "position"
     },
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "active",
-      "d_compound_tag_tag": "<<tag>>",
-      "d_string_entity_type": "minecraft:fireball",
-      "d_vec3_direction": "<<direction>>",
-      "d_vec3_motion": [
+      "d/compound_tag/tag": "<<tag>>",
+      "d/string/entity_type": "minecraft:fireball",
+      "d/vec3/direction": "<<direction>>",
+      "d/vec3/motion": [
         0.0,
         0.0,
         0.0
       ],
-      "t_position": "position",
-      "td_entity": "fire_charge"
+      "t/position": "position",
+      "td/entity": "fire_charge"
     },
     {
       "type": "spells_and_shields:play_sound",
       "activation": "active",
-      "d_double_pitch": 1.0,
-      "d_double_volume": 1.0,
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.blaze.shoot",
-      "ts_targets": "owner"
+      "ts/targets": "owner"
     }
   ],
   "title": {

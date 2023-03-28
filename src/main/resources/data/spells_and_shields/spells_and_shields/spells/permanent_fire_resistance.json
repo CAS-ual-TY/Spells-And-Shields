@@ -8,80 +8,80 @@
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "on_equip",
-      "td_destination": "player",
-      "ts_source": "owner"
+      "td/destination": "player",
+      "ts/source": "owner"
     },
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "on_unequip",
-      "td_destination": "player",
-      "ts_source": "owner"
+      "td/destination": "player",
+      "ts/source": "owner"
     },
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "apply",
-      "td_destination": "player",
-      "ts_source": "holder"
+      "td/destination": "player",
+      "ts/source": "holder"
     },
     {
       "type": "spells_and_shields:put_string",
       "activation": "on_equip",
-      "d_string_source": "<< uuid_from_string('permanent' + 'fire_resistance' + spell_slot) >>",
-      "var_result": "uuid"
+      "d/string/source": "<< uuid_from_string('permanent' + 'fire_resistance' + spell_slot) >>",
+      "var/result": "uuid"
     },
     {
       "type": "spells_and_shields:put_string",
       "activation": "on_unequip",
-      "d_string_source": "<< uuid_from_string('permanent' + 'fire_resistance' + spell_slot) >>",
-      "var_result": "uuid"
+      "d/string/source": "<< uuid_from_string('permanent' + 'fire_resistance' + spell_slot) >>",
+      "var/result": "uuid"
     },
     {
       "type": "spells_and_shields:put_string",
       "activation": "apply",
-      "d_string_source": "<<delay_uuid>>",
-      "var_result": "uuid"
+      "d/string/source": "<<delay_uuid>>",
+      "var/result": "uuid"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "apply",
+      "a/to_activate": "apply",
       "activation": "on_equip"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "remove",
+      "a/to_activate": "remove",
       "activation": "on_unequip"
     },
     {
       "type": "spells_and_shields:remove_delayed_spell",
       "activation": "remove",
-      "d_boolean_force_activate": false,
-      "d_string_uuid": "<<uuid>>",
-      "ts_targets": "player"
+      "d/boolean/force_activate": false,
+      "d/string/uuid": "<<uuid>>",
+      "ts/targets": "player"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "renew",
+      "a/to_activate": "renew",
       "activation": "apply"
     },
     {
       "type": "spells_and_shields:apply_potion_effect",
       "activation": "apply",
-      "d_boolean_ambient": "<<ambient>>",
-      "d_boolean_showIcon": "<<show_icon>>",
-      "d_boolean_visible": "<<visible>>",
-      "d_int_amplifier": "<<amplifier>>",
-      "d_int_duration": "<<duration+1>>",
-      "d_string_mob_effect": "minecraft:fire_resistance",
-      "ts_targets": "player"
+      "d/boolean/ambient": "<<ambient>>",
+      "d/boolean/showIcon": "<<show_icon>>",
+      "d/boolean/visible": "<<visible>>",
+      "d/int/amplifier": "<<amplifier>>",
+      "d/int/duration": "<<duration+1>>",
+      "d/string/mob_effect": "minecraft:fire_resistance",
+      "ts/targets": "player"
     },
     {
       "type": "spells_and_shields:add_delayed_spell",
-      "a_on_remove": "apply",
+      "a/on_remove": "apply",
       "activation": "renew",
-      "d_compound_tag_extra_data": {},
-      "d_int_tick_time": "<<duration>>",
-      "d_string_uuid": "<<uuid>>",
-      "ts_targets": "player"
+      "d/compound_tag/extra_data": {},
+      "d/int/tick_time": "<<duration>>",
+      "d/string/uuid": "<<uuid>>",
+      "ts/targets": "player"
     }
   ],
   "title": {
@@ -107,27 +107,27 @@
     {
       "type": "spells_and_shields:int",
       "value": 50,
-      "var_name": "duration"
+      "var/name": "duration"
     },
     {
       "type": "spells_and_shields:int",
       "value": 0,
-      "var_name": "amplifier"
+      "var/name": "amplifier"
     },
     {
       "type": "spells_and_shields:boolean",
       "value": false,
-      "var_name": "ambient"
+      "var/name": "ambient"
     },
     {
       "type": "spells_and_shields:boolean",
       "value": false,
-      "var_name": "visible"
+      "var/name": "visible"
     },
     {
       "type": "spells_and_shields:boolean",
       "value": true,
-      "var_name": "show_icon"
+      "var/name": "show_icon"
     }
   ]
 }

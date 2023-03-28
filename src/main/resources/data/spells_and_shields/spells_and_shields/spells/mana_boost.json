@@ -8,19 +8,19 @@
     {
       "type": "spells_and_shields:add_attribute_modifier",
       "activation": "on_equip",
-      "d_double_amount": 4.0,
-      "d_string_attribute": "spells_and_shields:generic.max_mana",
-      "d_string_name": "generic.max_mana",
-      "d_string_operation": "addition",
-      "d_string_uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
-      "ts_targets": "owner"
+      "d/double/amount": 4.0,
+      "d/string/attribute": "spells_and_shields:generic.max_mana",
+      "d/string/name": "generic.max_mana",
+      "d/string/operation": "addition",
+      "d/string/uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
+      "ts/targets": "owner"
     },
     {
       "type": "spells_and_shields:remove_attribute_modifier",
       "activation": "on_unequip",
-      "d_string_attribute": "spells_and_shields:generic.max_mana",
-      "d_string_uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
-      "ts_targets": "owner"
+      "d/string/attribute": "spells_and_shields:generic.max_mana",
+      "d/string/uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
+      "ts/targets": "owner"
     }
   ],
   "title": {
@@ -63,12 +63,12 @@
     {
       "type": "spells_and_shields:double",
       "value": 4.0,
-      "var_name": "value"
+      "var/name": "value"
     },
     {
       "type": "spells_and_shields:string",
       "value": "addition",
-      "var_name": "operation"
+      "var/name": "operation"
     }
   ]
 }

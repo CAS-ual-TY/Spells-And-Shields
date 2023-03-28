@@ -8,69 +8,69 @@
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active",
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:simple_item_check",
       "activation": "active",
-      "d_boolean_must_be_in_hand": true,
+      "d/boolean/must_be_in_hand": true,
       "item": {
         "Count": 1,
         "id": "minecraft:copper_ingot"
       },
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:look_at_target",
-      "a_block_hit_activation": "on_block_hit",
-      "a_entity_hit_activation": "on_entity_hit",
-      "a_miss_activation": "",
+      "a/block_hit_activation": "on_block_hit",
+      "a/entity_hit_activation": "on_entity_hit",
+      "a/miss_activation": "",
       "activation": "active",
       "block_clip_context": "outline",
-      "d_double_range": "<<range>>",
-      "double_bb_inflation": 0.5,
+      "d/double/range": "<<range>>",
+      "double/bb_inflation": 0.5,
       "fluid_clip_context": "any",
-      "t_source": "owner"
+      "t/source": "owner"
     },
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "on_block_hit",
-      "td_destination": "position",
-      "ts_source": "block_hit"
+      "td/destination": "position",
+      "ts/source": "block_hit"
     },
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "on_entity_hit",
-      "td_destination": "position",
-      "ts_source": "entity_hit"
+      "td/destination": "position",
+      "ts/source": "entity_hit"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "on_hit",
+      "a/to_activate": "on_hit",
       "activation": "on_block_hit"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "on_hit",
+      "a/to_activate": "on_hit",
       "activation": "on_entity_hit"
     },
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "on_hit",
-      "d_compound_tag_tag": {},
-      "d_string_entity_type": "minecraft:lightning_bolt",
-      "d_vec3_direction": [
+      "d/compound_tag/tag": {},
+      "d/string/entity_type": "minecraft:lightning_bolt",
+      "d/vec3/direction": [
         0.0,
         0.0,
         0.0
       ],
-      "d_vec3_motion": [
+      "d/vec3/motion": [
         0.0,
         0.0,
         0.0
       ],
-      "t_position": "position",
-      "td_entity": ""
+      "t/position": "position",
+      "td/entity": ""
     }
   ],
   "title": {
@@ -85,7 +85,7 @@
     {
       "type": "spells_and_shields:double",
       "value": 20.0,
-      "var_name": "range"
+      "var/name": "range"
     }
   ]
 }

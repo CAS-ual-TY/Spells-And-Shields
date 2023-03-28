@@ -8,44 +8,44 @@
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active",
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:reset_fall_distance",
       "activation": "active",
-      "ts_targets": "owner"
+      "ts/targets": "owner"
     },
     {
       "type": "spells_and_shields:get_entity_position_direction",
       "activation": "active",
-      "t_source": "owner",
-      "td_position": "",
-      "var_direction": "",
-      "var_motion": "motion"
+      "t/source": "owner",
+      "td/position": "",
+      "var/direction": "",
+      "var/motion": "motion"
     },
     {
       "type": "spells_and_shields:set_motion",
       "activation": "active",
-      "d_vec3_motion": "<< vec3(0, get_y(motion) + speed, 0) >>",
-      "ts_targets": "owner"
+      "d/vec3/motion": "<< vec3(0, get_y(motion) + speed, 0) >>",
+      "ts/targets": "owner"
     },
     {
       "type": "spells_and_shields:spawn_particles",
       "activation": "active",
-      "d_double_spread": 0.1,
-      "d_int_count": 4,
+      "d/double/spread": 0.1,
+      "d/int/count": 4,
       "particle": {
         "type": "minecraft:poof"
       },
-      "ts_targets": "owner"
+      "ts/targets": "owner"
     },
     {
       "type": "spells_and_shields:play_sound",
       "activation": "active",
-      "d_double_pitch": 1.0,
-      "d_double_volume": 1.0,
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.ender_dragon.flap",
-      "ts_targets": "owner"
+      "ts/targets": "owner"
     }
   ],
   "title": {
@@ -60,7 +60,7 @@
     {
       "type": "spells_and_shields:double",
       "value": 1.5,
-      "var_name": "speed"
+      "var/name": "speed"
     }
   ]
 }

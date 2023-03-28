@@ -8,294 +8,294 @@
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active",
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:mainhand_item_target",
       "activation": "active",
-      "t_source": "owner",
-      "td_item": "item"
+      "t/source": "owner",
+      "td/item": "item"
     },
     {
       "type": "spells_and_shields:item_equals_activation",
-      "a_to_activate": "shoot",
+      "a/to_activate": "shoot",
       "activation": "active",
-      "d_boolean_ignore_tag": true,
-      "d_int_minimum_count": 1,
-      "d_int_minimum_durability": -1,
+      "d/boolean/ignore_tag": true,
+      "d/int/minimum_count": 1,
+      "d/int/minimum_durability": -1,
       "item": {
         "Count": 1,
         "id": "minecraft:water_bucket"
       },
-      "t_target": "item"
+      "t/target": "item"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "offhand",
+      "a/to_activate": "offhand",
       "activation": "active"
     },
     {
       "type": "spells_and_shields:deactivate",
-      "a_to_deactivate": "offhand",
+      "a/to_deactivate": "offhand",
       "activation": "shoot"
     },
     {
       "type": "spells_and_shields:clear_targets",
       "activation": "offhand",
-      "td_destination": "item"
+      "td/destination": "item"
     },
     {
       "type": "spells_and_shields:offhand_item_target",
       "activation": "offhand",
-      "t_source": "owner",
-      "td_item": "item"
+      "t/source": "owner",
+      "td/item": "item"
     },
     {
       "type": "spells_and_shields:item_equals_activation",
-      "a_to_activate": "shoot",
+      "a/to_activate": "shoot",
       "activation": "offhand",
-      "d_boolean_ignore_tag": true,
-      "d_int_minimum_count": 1,
-      "d_int_minimum_durability": -1,
+      "d/boolean/ignore_tag": true,
+      "d/int/minimum_count": 1,
+      "d/int/minimum_durability": -1,
       "item": {
         "Count": 1,
         "id": "minecraft:water_bucket"
       },
-      "t_target": "item"
+      "t/target": "item"
     },
     {
       "type": "spells_and_shields:get_item_attributes",
       "activation": "shoot",
-      "t_source": "item",
-      "var_amount": "amount",
-      "var_compound_tag": "item_tag",
-      "var_damage": "damage",
-      "var_item": "item"
+      "t/source": "item",
+      "var/amount": "amount",
+      "var/compound_tag": "item_tag",
+      "var/damage": "damage",
+      "var/item": "item"
     },
     {
       "type": "spells_and_shields:override_item",
       "activation": "shoot",
-      "d_compound_tag_tag": "<<item_tag>>",
-      "d_int_amount": "<<amount>>",
-      "d_int_damage": "<<damage>>",
-      "d_string_item": "minecraft:bucket",
-      "t_target": "item"
+      "d/compound_tag/tag": "<<item_tag>>",
+      "d/int/amount": "<<amount>>",
+      "d/int/damage": "<<damage>>",
+      "d/string/item": "minecraft:bucket",
+      "t/target": "item"
     },
     {
       "type": "spells_and_shields:get_entity_uuid",
       "activation": "shoot",
-      "t_source": "owner",
-      "var_uuid": "owner_uuid_return"
+      "t/source": "owner",
+      "var/uuid": "owner_uuid_return"
     },
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "shoot",
-      "d_tag_source": {},
-      "var_result": "tag"
+      "d/tag/source": {},
+      "var/result": "tag"
     },
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "shoot",
-      "d_tag_source": "<< put_nbt_uuid(tag, 'owner_uuid_return', owner_uuid_return) >>",
-      "var_result": "tag"
+      "d/tag/source": "<< put_nbt_uuid(tag, 'owner_uuid_return', owner_uuid_return) >>",
+      "var/result": "tag"
     },
     {
       "type": "spells_and_shields:shoot",
-      "a_block_hit_activation": "on_block_hit",
-      "a_entity_hit_activation": "on_entity_hit",
-      "a_timeout_activation": "on_timeout",
+      "a/block_hit_activation": "on_block_hit",
+      "a/entity_hit_activation": "on_entity_hit",
+      "a/timeout_activation": "on_timeout",
       "activation": "shoot",
-      "d_double_inaccuracy": 0.0,
-      "d_double_velocity": 1.0,
-      "d_int_timeout": 100,
-      "t_source": "owner",
-      "td_projectile": "projectile"
+      "d/double/inaccuracy": 0.0,
+      "d/double/velocity": 1.0,
+      "d/int/timeout": 100,
+      "t/source": "owner",
+      "td/projectile": "projectile"
     },
     {
       "type": "spells_and_shields:apply_entity_extra_tag",
       "activation": "shoot",
-      "d_compound_tag_tag": "<<tag>>",
-      "ts_targets": "projectile"
+      "d/compound_tag/tag": "<<tag>>",
+      "ts/targets": "projectile"
     },
     {
       "type": "spells_and_shields:play_sound",
       "activation": "shoot",
-      "d_double_pitch": 1.0,
-      "d_double_volume": 1.0,
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
       "sound_event": "minecraft:item.bucket.empty",
-      "ts_targets": "owner"
+      "ts/targets": "owner"
     },
     {
       "type": "spells_and_shields:damage",
       "activation": "on_entity_hit",
-      "d_double_damage": 10.0,
-      "ts_targets": "entity_hit"
+      "d/double/damage": 10.0,
+      "ts/targets": "entity_hit"
     },
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "on_entity_hit",
-      "td_destination": "position",
-      "ts_source": "hit_position"
+      "td/destination": "position",
+      "ts/source": "hit_position"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "return",
+      "a/to_activate": "return",
       "activation": "on_entity_hit"
     },
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "on_block_hit",
-      "td_destination": "position",
-      "ts_source": "hit_position"
+      "td/destination": "position",
+      "ts/source": "hit_position"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "return",
+      "a/to_activate": "return",
       "activation": "on_block_hit"
     },
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "on_timeout",
-      "td_destination": "position",
-      "ts_source": "projectile"
+      "td/destination": "position",
+      "ts/source": "projectile"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "return",
+      "a/to_activate": "return",
       "activation": "on_timeout"
     },
     {
       "type": "spells_and_shields:get_entity_extra_tag",
       "activation": "return",
-      "t_source": "projectile",
-      "var_compound_tag": "tag"
+      "t/source": "projectile",
+      "var/compound_tag": "tag"
     },
     {
       "type": "spells_and_shields:entity_uuid_target",
       "activation": "return",
-      "d_string_uuid": "<< get_nbt_uuid(tag, 'owner_uuid_return') >>",
-      "td_destination": "return_target"
+      "d/string/uuid": "<< get_nbt_uuid(tag, 'owner_uuid_return') >>",
+      "td/destination": "return_target"
     },
     {
       "type": "spells_and_shields:home",
-      "a_block_hit_activation": "dummy_block_hit",
-      "a_entity_hit_activation": "on_entity_hit_return",
-      "a_timeout_activation": "dummy_timeout",
+      "a/block_hit_activation": "dummy_block_hit",
+      "a/entity_hit_activation": "on_entity_hit_return",
+      "a/timeout_activation": "dummy_timeout",
       "activation": "return",
-      "d_double_velocity": 1.0,
-      "d_int_timeout": 100,
-      "t_source": "position",
-      "td_projectile": "projectile",
-      "ts_targets": "return_target"
+      "d/double/velocity": 1.0,
+      "d/int/timeout": 100,
+      "t/source": "position",
+      "td/projectile": "projectile",
+      "ts/targets": "return_target"
     },
     {
       "type": "spells_and_shields:type_filter",
       "activation": "on_entity_hit_return",
       "target_type": "spells_and_shields:player",
-      "td_destination": "return_player",
-      "ts_source": "entity_hit"
+      "td/destination": "return_player",
+      "ts/source": "entity_hit"
     },
     {
       "type": "spells_and_shields:get_target_group_size",
       "activation": "on_entity_hit_return",
-      "td_source": "return_player",
-      "var_result": "count"
+      "td/source": "return_player",
+      "var/result": "count"
     },
     {
       "type": "spells_and_shields:boolean_activation",
-      "a_to_activate": "refill",
+      "a/to_activate": "refill",
       "activation": "on_entity_hit_return",
-      "d_boolean_activate_if_true": true,
-      "d_boolean_deactivate_if_false": true,
-      "d_boolean_input": "<< count == 1 >>"
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": true,
+      "d/boolean/input": "<< count == 1 >>"
     },
     {
       "type": "spells_and_shields:mainhand_item_target",
       "activation": "refill",
-      "t_source": "return_player",
-      "td_item": "item"
+      "t/source": "return_player",
+      "td/item": "item"
     },
     {
       "type": "spells_and_shields:item_equals_activation",
-      "a_to_activate": "do_refill",
+      "a/to_activate": "do_refill",
       "activation": "refill",
-      "d_boolean_ignore_tag": true,
-      "d_int_minimum_count": 1,
-      "d_int_minimum_durability": -1,
+      "d/boolean/ignore_tag": true,
+      "d/int/minimum_count": 1,
+      "d/int/minimum_durability": -1,
       "item": {
         "Count": 1,
         "id": "minecraft:bucket"
       },
-      "t_target": "item"
+      "t/target": "item"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "refill_offhand",
+      "a/to_activate": "refill_offhand",
       "activation": "refill"
     },
     {
       "type": "spells_and_shields:deactivate",
-      "a_to_deactivate": "refill_offhand",
+      "a/to_deactivate": "refill_offhand",
       "activation": "do_refill"
     },
     {
       "type": "spells_and_shields:clear_targets",
       "activation": "refill_offhand",
-      "td_destination": "item"
+      "td/destination": "item"
     },
     {
       "type": "spells_and_shields:offhand_item_target",
       "activation": "refill_offhand",
-      "t_source": "return_player",
-      "td_item": "item"
+      "t/source": "return_player",
+      "td/item": "item"
     },
     {
       "type": "spells_and_shields:item_equals_activation",
-      "a_to_activate": "do_refill",
+      "a/to_activate": "do_refill",
       "activation": "refill_offhand",
-      "d_boolean_ignore_tag": true,
-      "d_int_minimum_count": 1,
-      "d_int_minimum_durability": -1,
+      "d/boolean/ignore_tag": true,
+      "d/int/minimum_count": 1,
+      "d/int/minimum_durability": -1,
       "item": {
         "Count": 1,
         "id": "minecraft:bucket"
       },
-      "t_target": "item"
+      "t/target": "item"
     },
     {
       "type": "spells_and_shields:get_item_attributes",
       "activation": "do_refill",
-      "t_source": "item",
-      "var_amount": "amount",
-      "var_compound_tag": "item_tag",
-      "var_damage": "damage",
-      "var_item": "item"
+      "t/source": "item",
+      "var/amount": "amount",
+      "var/compound_tag": "item_tag",
+      "var/damage": "damage",
+      "var/item": "item"
     },
     {
       "type": "spells_and_shields:override_item",
       "activation": "do_refill",
-      "d_compound_tag_tag": "<<item_tag>>",
-      "d_int_amount": 1,
-      "d_int_damage": "<<amount>>",
-      "d_string_item": "minecraft:water_bucket",
-      "t_target": "item"
+      "d/compound_tag/tag": "<<item_tag>>",
+      "d/int/amount": 1,
+      "d/int/damage": "<<amount>>",
+      "d/string/item": "minecraft:water_bucket",
+      "t/target": "item"
     },
     {
       "type": "spells_and_shields:give_item",
       "activation": "do_refill",
-      "d_compound_tag_tag": "<<item_tag>>",
-      "d_int_amount": "<< amount - 1 >>",
-      "d_int_damage": "<<amount>>",
+      "d/compound_tag/tag": "<<item_tag>>",
+      "d/int/amount": "<< amount - 1 >>",
+      "d/int/damage": "<<amount>>",
       "item": "minecraft:bucket",
-      "ts_targets": "item"
+      "ts/targets": "item"
     },
     {
       "type": "spells_and_shields:play_sound",
       "activation": "do_refill",
-      "d_double_pitch": 1.0,
-      "d_double_volume": 1.0,
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
       "sound_event": "minecraft:item.bucket.fill",
-      "ts_targets": "owner"
+      "ts/targets": "owner"
     }
   ],
   "title": {
@@ -310,7 +310,7 @@
     {
       "type": "spells_and_shields:double",
       "value": 10.0,
-      "var_name": "damage"
+      "var/name": "damage"
     }
   ]
 }

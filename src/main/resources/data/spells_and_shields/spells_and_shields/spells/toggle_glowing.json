@@ -8,140 +8,140 @@
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "active",
-      "td_destination": "player",
-      "ts_source": "owner"
+      "td/destination": "player",
+      "ts/source": "owner"
     },
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "on_unequip",
-      "td_destination": "player",
-      "ts_source": "owner"
+      "td/destination": "player",
+      "ts/source": "owner"
     },
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "apply",
-      "td_destination": "player",
-      "ts_source": "holder"
+      "td/destination": "player",
+      "ts/source": "holder"
     },
     {
       "type": "spells_and_shields:put_string",
       "activation": "active",
-      "d_string_source": "<< uuid_from_string('toggle' + 'glowing' + spell_slot) >>",
-      "var_result": "uuid"
+      "d/string/source": "<< uuid_from_string('toggle' + 'glowing' + spell_slot) >>",
+      "var/result": "uuid"
     },
     {
       "type": "spells_and_shields:put_string",
       "activation": "on_unequip",
-      "d_string_source": "<< uuid_from_string('toggle' + 'glowing' + spell_slot) >>",
-      "var_result": "uuid"
+      "d/string/source": "<< uuid_from_string('toggle' + 'glowing' + spell_slot) >>",
+      "var/result": "uuid"
     },
     {
       "type": "spells_and_shields:put_string",
       "activation": "apply",
-      "d_string_source": "<<delay_uuid>>",
-      "var_result": "uuid"
+      "d/string/source": "<<delay_uuid>>",
+      "var/result": "uuid"
     },
     {
       "type": "spells_and_shields:check_has_delayed_spell",
-      "a_to_activate": "remove",
+      "a/to_activate": "remove",
       "activation": "active",
-      "d_string_uuid": "<<uuid>>",
-      "t_target": "player"
+      "d/string/uuid": "<<uuid>>",
+      "t/target": "player"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "apply",
+      "a/to_activate": "apply",
       "activation": "active"
     },
     {
       "type": "spells_and_shields:deactivate",
-      "a_to_deactivate": "apply",
+      "a/to_deactivate": "apply",
       "activation": "remove"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "remove",
+      "a/to_activate": "remove",
       "activation": "on_unequip"
     },
     {
       "type": "spells_and_shields:check_has_delayed_spell",
-      "a_to_activate": "remove_sound",
+      "a/to_activate": "remove_sound",
       "activation": "remove",
-      "d_string_uuid": "<<uuid>>",
-      "t_target": "player"
+      "d/string/uuid": "<<uuid>>",
+      "t/target": "player"
     },
     {
       "type": "spells_and_shields:remove_delayed_spell",
       "activation": "remove",
-      "d_boolean_force_activate": false,
-      "d_string_uuid": "<<uuid>>",
-      "ts_targets": "player"
+      "d/boolean/force_activate": false,
+      "d/string/uuid": "<<uuid>>",
+      "ts/targets": "player"
     },
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "apply",
-      "t_target": "player"
+      "t/target": "player"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "renew",
+      "a/to_activate": "renew",
       "activation": "apply"
     },
     {
       "type": "spells_and_shields:apply_potion_effect",
       "activation": "apply",
-      "d_boolean_ambient": "<<ambient>>",
-      "d_boolean_showIcon": "<<show_icon>>",
-      "d_boolean_visible": "<<visible>>",
-      "d_int_amplifier": "<<amplifier>>",
-      "d_int_duration": "<<duration+1>>",
-      "d_string_mob_effect": "minecraft:glowing",
-      "ts_targets": "player"
+      "d/boolean/ambient": "<<ambient>>",
+      "d/boolean/showIcon": "<<show_icon>>",
+      "d/boolean/visible": "<<visible>>",
+      "d/int/amplifier": "<<amplifier>>",
+      "d/int/duration": "<<duration+1>>",
+      "d/string/mob_effect": "minecraft:glowing",
+      "ts/targets": "player"
     },
     {
       "type": "spells_and_shields:add_delayed_spell",
-      "a_on_remove": "apply",
+      "a/on_remove": "apply",
       "activation": "renew",
-      "d_compound_tag_extra_data": {},
-      "d_int_tick_time": "<<duration>>",
-      "d_string_uuid": "<<uuid>>",
-      "ts_targets": "player"
+      "d/compound_tag/extra_data": {},
+      "d/int/tick_time": "<<duration>>",
+      "d/string/uuid": "<<uuid>>",
+      "ts/targets": "player"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "sound",
+      "a/to_activate": "sound",
       "activation": "apply"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "anti_sound",
+      "a/to_activate": "anti_sound",
       "activation": "apply"
     },
     {
       "type": "spells_and_shields:deactivate",
-      "a_to_deactivate": "anti_sound",
+      "a/to_deactivate": "anti_sound",
       "activation": "active"
     },
     {
       "type": "spells_and_shields:deactivate",
-      "a_to_deactivate": "sound",
+      "a/to_deactivate": "sound",
       "activation": "anti_sound"
     },
     {
       "type": "spells_and_shields:play_sound",
       "activation": "sound",
-      "d_double_pitch": 1.0,
-      "d_double_volume": 1.0,
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.generic.drink",
-      "ts_targets": "player"
+      "ts/targets": "player"
     },
     {
       "type": "spells_and_shields:play_sound",
       "activation": "remove_sound",
-      "d_double_pitch": 1.0,
-      "d_double_volume": 1.0,
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.splash_potion.break",
-      "ts_targets": "player"
+      "ts/targets": "player"
     }
   ],
   "title": {
@@ -167,27 +167,27 @@
     {
       "type": "spells_and_shields:int",
       "value": 50,
-      "var_name": "duration"
+      "var/name": "duration"
     },
     {
       "type": "spells_and_shields:int",
       "value": 0,
-      "var_name": "amplifier"
+      "var/name": "amplifier"
     },
     {
       "type": "spells_and_shields:boolean",
       "value": false,
-      "var_name": "ambient"
+      "var/name": "ambient"
     },
     {
       "type": "spells_and_shields:boolean",
       "value": false,
-      "var_name": "visible"
+      "var/name": "visible"
     },
     {
       "type": "spells_and_shields:boolean",
       "value": true,
-      "var_name": "show_icon"
+      "var/name": "show_icon"
     }
   ]
 }

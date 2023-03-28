@@ -8,149 +8,149 @@
     {
       "type": "spells_and_shields:get_entity_position_direction",
       "activation": "active",
-      "t_source": "owner",
-      "td_position": "",
-      "var_direction": "direction",
-      "var_motion": ""
+      "t/source": "owner",
+      "td/position": "",
+      "var/direction": "direction",
+      "var/motion": ""
     },
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active",
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:spawn_particles",
       "activation": "active",
-      "d_double_spread": 0.4,
-      "d_int_count": 3,
+      "d/double/spread": 0.4,
+      "d/int/count": 3,
       "particle": {
         "type": "minecraft:explosion"
       },
-      "ts_targets": "owner"
+      "ts/targets": "owner"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "cow",
+      "a/to_activate": "cow",
       "activation": "active"
     },
     {
       "type": "spells_and_shields:simple_item_check",
       "activation": "cow",
-      "d_boolean_must_be_in_hand": true,
+      "d/boolean/must_be_in_hand": true,
       "item": {
         "Count": 8,
         "id": "minecraft:beef"
       },
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "cow",
-      "d_compound_tag_tag": {
+      "d/compound_tag/tag": {
         "Age": -24000
       },
-      "d_string_entity_type": "minecraft:cow",
-      "d_vec3_direction": "<< -direction >>",
-      "d_vec3_motion": [
+      "d/string/entity_type": "minecraft:cow",
+      "d/vec3/direction": "<< -direction >>",
+      "d/vec3/motion": [
         0.0,
         0.0,
         0.0
       ],
-      "t_position": "owner",
-      "td_entity": "baby"
+      "t/position": "owner",
+      "td/entity": "baby"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "chicken",
+      "a/to_activate": "chicken",
       "activation": "active"
     },
     {
       "type": "spells_and_shields:simple_item_check",
       "activation": "chicken",
-      "d_boolean_must_be_in_hand": true,
+      "d/boolean/must_be_in_hand": true,
       "item": {
         "Count": 8,
         "id": "minecraft:chicken"
       },
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "chicken",
-      "d_compound_tag_tag": {
+      "d/compound_tag/tag": {
         "Age": -24000
       },
-      "d_string_entity_type": "minecraft:chicken",
-      "d_vec3_direction": "<< -direction >>",
-      "d_vec3_motion": [
+      "d/string/entity_type": "minecraft:chicken",
+      "d/vec3/direction": "<< -direction >>",
+      "d/vec3/motion": [
         0.0,
         0.0,
         0.0
       ],
-      "t_position": "owner",
-      "td_entity": "baby"
+      "t/position": "owner",
+      "td/entity": "baby"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "pig",
+      "a/to_activate": "pig",
       "activation": "active"
     },
     {
       "type": "spells_and_shields:simple_item_check",
       "activation": "pig",
-      "d_boolean_must_be_in_hand": true,
+      "d/boolean/must_be_in_hand": true,
       "item": {
         "Count": 8,
         "id": "minecraft:porkchop"
       },
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "pig",
-      "d_compound_tag_tag": {
+      "d/compound_tag/tag": {
         "Age": -24000
       },
-      "d_string_entity_type": "minecraft:pig",
-      "d_vec3_direction": "<< -direction >>",
-      "d_vec3_motion": [
+      "d/string/entity_type": "minecraft:pig",
+      "d/vec3/direction": "<< -direction >>",
+      "d/vec3/motion": [
         0.0,
         0.0,
         0.0
       ],
-      "t_position": "owner",
-      "td_entity": "baby"
+      "t/position": "owner",
+      "td/entity": "baby"
     },
     {
       "type": "spells_and_shields:activate",
-      "a_to_activate": "sheep",
+      "a/to_activate": "sheep",
       "activation": "active"
     },
     {
       "type": "spells_and_shields:simple_item_check",
       "activation": "sheep",
-      "d_boolean_must_be_in_hand": true,
+      "d/boolean/must_be_in_hand": true,
       "item": {
         "Count": 8,
         "id": "minecraft:mutton"
       },
-      "t_target": "owner"
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "sheep",
-      "d_compound_tag_tag": {
+      "d/compound_tag/tag": {
         "Age": -24000
       },
-      "d_string_entity_type": "minecraft:sheep",
-      "d_vec3_direction": "<< -direction >>",
-      "d_vec3_motion": [
+      "d/string/entity_type": "minecraft:sheep",
+      "d/vec3/direction": "<< -direction >>",
+      "d/vec3/motion": [
         0.0,
         0.0,
         0.0
       ],
-      "t_position": "owner",
-      "td_entity": "baby"
+      "t/position": "owner",
+      "td/entity": "baby"
     }
   ],
   "title": {

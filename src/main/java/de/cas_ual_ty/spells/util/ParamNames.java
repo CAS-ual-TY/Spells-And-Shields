@@ -22,92 +22,92 @@ public class ParamNames
     
     public static String var(String name)
     {
-        return "var_" + name;
+        return "var/" + name;
     }
     
     public static String interactedActivation(String activation)
     {
-        return "a_" + activation;
+        return "a/" + activation;
     }
     
     public static String param(String name, CtxVarType<?> type)
     {
-        return "d_" + paramImm(name, type);
+        return "d/" + paramImm(name, type);
     }
     
     public static String paramImm(String name, CtxVarType<?> type)
     {
-        return CtxVarTypes.REGISTRY.get().getKey(type).getPath() + "_" + name;
+        return CtxVarTypes.REGISTRY.get().getKey(type).getPath() + "/" + name;
     }
     
     public static String paramInt(String name)
     {
-        return "d_" + paramIntImm(name);
+        return "d/" + paramIntImm(name);
     }
     
     public static String paramIntImm(String name)
     {
-        return "int_" + name;
+        return "int/" + name;
     }
     
     public static String paramDouble(String name)
     {
-        return "d_" + paramDoubleImm(name);
+        return "d/" + paramDoubleImm(name);
     }
     
     public static String paramDoubleImm(String name)
     {
-        return "double_" + name;
+        return "double/" + name;
     }
     
     public static String paramVec3(String name)
     {
-        return "d_" + paramVec3Imm(name);
+        return "d/" + paramVec3Imm(name);
     }
     
     public static String paramVec3Imm(String name)
     {
-        return "vec3_" + name;
+        return "vec3/" + name;
     }
     
     public static String paramBlockPos(String name)
     {
-        return "d_" + paramBlockPosImm(name);
+        return "d/" + paramBlockPosImm(name);
     }
     
     public static String paramBlockPosImm(String name)
     {
-        return "block_pos_" + name;
+        return "block_pos/" + name;
     }
     
     public static String paramBoolean(String name)
     {
-        return "d_" + paramBooleanImm(name);
+        return "d/" + paramBooleanImm(name);
     }
     
     public static String paramBooleanImm(String name)
     {
-        return "boolean_" + name;
+        return "boolean/" + name;
     }
     
     public static String paramCompoundTag(String name)
     {
-        return "d_" + paramCompoundTagImm(name);
+        return "d/" + paramCompoundTagImm(name);
     }
     
     public static String paramCompoundTagImm(String name)
     {
-        return "compound_tag_" + name;
+        return "compound_tag/" + name;
     }
     
     public static String paramString(String name)
     {
-        return "d_" + paramStringImm(name);
+        return "d/" + paramStringImm(name);
     }
     
     public static String paramStringImm(String name)
     {
-        return "string_" + name;
+        return "string/" + name;
     }
     
     public static String multiTarget()
@@ -122,16 +122,16 @@ public class ParamNames
     
     public static String multiTarget(String name)
     {
-        return "ts_" + name;
+        return "ts/" + name;
     }
     
     public static String singleTarget(String name)
     {
-        return "t_" + name;
+        return "t/" + name;
     }
     
     public static String destinationTarget(String name)
     {
-        return "td_" + name;
+        return "td/" + name;
     }
 }
