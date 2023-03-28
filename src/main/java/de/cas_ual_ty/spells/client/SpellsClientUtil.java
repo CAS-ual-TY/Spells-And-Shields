@@ -73,6 +73,7 @@ public class SpellsClientUtil
         SpellIconRegistry.register(SpellIconTypes.SIZED.get(), SpellIconRegistry.SIZED_RENDERER);
         SpellIconRegistry.register(SpellIconTypes.ADVANCED.get(), SpellIconRegistry.ADVANCED_RENDERER);
         SpellIconRegistry.register(SpellIconTypes.ITEM.get(), SpellIconRegistry.ITEM_RENDERER);
+        SpellIconRegistry.register(SpellIconTypes.LAYERED.get(), SpellIconRegistry.LAYERED_RENDERER);
     }
     
     private static void entityRenderers(EntityRenderersEvent.RegisterRenderers event)

@@ -49,6 +49,13 @@ public class SpellIconRegistry
         RenderSystem.disableBlend();
     };
     
+    public static final SpellIconRenderer<LayeredSpellIcon> LAYERED_RENDERER = (icon, poseStack, width, height, x, y, partialTicks) -> {
+        for(SpellIcon i : icon.getList())
+        {
+            render(i, poseStack, width, height, x, y, partialTicks);
+        }
+    };
+    
     public static final SpellIconRenderer<DefaultSpellIcon> ERROR_FALLBACK_RENDERER = (icon, poseStack, width, height, x, y, partialTicks) -> {
         DEFAULT_RENDERER.render(ERROR_FALLBACK, poseStack, width, height, x, y, partialTicks);
     };
