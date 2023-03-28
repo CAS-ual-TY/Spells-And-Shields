@@ -10,7 +10,7 @@ public class AdvancedSpellIcon extends SpellIcon
     public static Codec<AdvancedSpellIcon> makeCodec(SpellIconType<AdvancedSpellIcon> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("icon").forGetter(AdvancedSpellIcon::getTexture),
+                ResourceLocation.CODEC.fieldOf("texture").forGetter(AdvancedSpellIcon::getTexture),
                 Codec.INT.fieldOf("u").forGetter(AdvancedSpellIcon::getU),
                 Codec.INT.fieldOf("v").forGetter(AdvancedSpellIcon::getV),
                 Codec.INT.fieldOf("width").forGetter(AdvancedSpellIcon::getWidth),
