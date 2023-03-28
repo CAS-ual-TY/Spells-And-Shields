@@ -23,7 +23,7 @@ public class SourcedKnockbackAction extends AffectTypeAction<LivingEntityTarget>
                 activationCodec(),
                 multiTargetsCodec(),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("strength")).forGetter(SourcedKnockbackAction::getStrength),
-                sourceCodec()
+                Codec.STRING.fieldOf(ParamNames.singleTarget("source")).forGetter(SourcedKnockbackAction::getSource)
         ).apply(instance, (activation, multiTargets, strength, source) -> new SourcedKnockbackAction(type, activation, multiTargets, strength, source)));
     }
     

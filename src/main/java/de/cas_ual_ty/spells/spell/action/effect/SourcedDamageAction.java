@@ -23,7 +23,7 @@ public class SourcedDamageAction extends AffectTypeAction<LivingEntityTarget>
                 activationCodec(),
                 multiTargetsCodec(),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("damage")).forGetter(SourcedDamageAction::getDamage),
-                sourceCodec()
+                Codec.STRING.fieldOf(ParamNames.singleTarget("source")).forGetter(SourcedDamageAction::getSource)
         ).apply(instance, (activation, multiTargets, damage, source) -> new SourcedDamageAction(type, activation, multiTargets, damage, source)));
     }
     
