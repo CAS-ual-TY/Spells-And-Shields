@@ -64,7 +64,7 @@
           {
             "type": "spells_and_shields:item",
             "consume": true,
-            "itemstack": {
+            "item": {
               "Count": 1,
               "id": "minecraft:ghast_tear"
             }

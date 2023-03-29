@@ -16,7 +16,7 @@ public class ItemRequirement extends Requirement
     public static Codec<ItemRequirement> makeCodec(RequirementType<ItemRequirement> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                ItemStack.CODEC.fieldOf("itemstack").forGetter(ItemRequirement::getItemStack),
+                ItemStack.CODEC.fieldOf("item").forGetter(ItemRequirement::getItemStack),
                 Codec.BOOL.fieldOf("consume").forGetter(ItemRequirement::getConsume)
         ).apply(instance, (itemStack, consume) -> new ItemRequirement(type, itemStack, consume)));
     }

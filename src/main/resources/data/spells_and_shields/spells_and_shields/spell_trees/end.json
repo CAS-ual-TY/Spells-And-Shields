@@ -33,7 +33,7 @@
               {
                 "type": "spells_and_shields:item",
                 "consume": false,
-                "itemstack": {
+                "item": {
                   "Count": 1,
                   "id": "minecraft:dragon_egg"
                 }
