@@ -1,33 +1,34 @@
 {
   "icon": "spells_and_shields:toggle_jump_boost",
-  "requirements": [],
   "root": {
     "children": [
       {
         "children": [
           {
             "children": [],
+            "hidden_requirements": [],
             "id": 102,
-            "level_cost": 20,
-            "requirements": [
+            "learn_requirements": [
               {
                 "type": "spells_and_shields:bookshelves",
                 "bookshelves": 20
               }
             ],
+            "level_cost": 20,
             "spell": "spells_and_shields:toggle_speed",
             "variables": []
           },
           {
             "children": [],
+            "hidden_requirements": [],
             "id": 103,
-            "level_cost": 14,
-            "requirements": [
+            "learn_requirements": [
               {
                 "type": "spells_and_shields:bookshelves",
                 "bookshelves": 14
               }
             ],
+            "level_cost": 14,
             "spell": "spells_and_shields:jump",
             "variables": []
           },
@@ -35,26 +36,28 @@
             "children": [
               {
                 "children": [],
+                "hidden_requirements": [],
                 "id": 105,
-                "level_cost": 15,
-                "requirements": [
+                "learn_requirements": [
                   {
                     "type": "spells_and_shields:bookshelves",
                     "bookshelves": 16
                   }
                 ],
+                "level_cost": 15,
                 "spell": "spells_and_shields:toggle_slow_falling",
                 "variables": []
               }
             ],
+            "hidden_requirements": [],
             "id": 104,
-            "level_cost": 15,
-            "requirements": [
+            "learn_requirements": [
               {
                 "type": "spells_and_shields:bookshelves",
                 "bookshelves": 12
               }
             ],
+            "level_cost": 15,
             "spell": "spells_and_shields:mana_soles",
             "variables": []
           },
@@ -62,50 +65,54 @@
             "children": [
               {
                 "children": [],
+                "hidden_requirements": [],
                 "id": 107,
-                "level_cost": 20,
-                "requirements": [
+                "learn_requirements": [
                   {
                     "type": "spells_and_shields:bookshelves",
                     "bookshelves": 18
                   }
                 ],
+                "level_cost": 20,
                 "spell": "spells_and_shields:pressurize",
                 "variables": []
               }
             ],
+            "hidden_requirements": [],
             "id": 106,
-            "level_cost": 10,
-            "requirements": [
+            "learn_requirements": [
               {
                 "type": "spells_and_shields:bookshelves",
                 "bookshelves": 16
               }
             ],
+            "level_cost": 10,
             "spell": "spells_and_shields:blow_arrow",
             "variables": []
           }
         ],
+        "hidden_requirements": [],
         "id": 101,
-        "level_cost": 10,
-        "requirements": [
+        "learn_requirements": [
           {
             "type": "spells_and_shields:bookshelves",
             "bookshelves": 14
           }
         ],
+        "level_cost": 10,
         "spell": "spells_and_shields:leap",
         "variables": []
       }
     ],
+    "hidden_requirements": [],
     "id": 100,
-    "level_cost": 15,
-    "requirements": [
+    "learn_requirements": [
       {
         "type": "spells_and_shields:bookshelves",
         "bookshelves": 12
       }
     ],
+    "level_cost": 15,
     "spell": "spells_and_shields:toggle_jump_boost",
     "variables": []
   },

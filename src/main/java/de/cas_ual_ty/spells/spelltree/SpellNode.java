@@ -18,33 +18,45 @@ public class SpellNode
     
     protected final SpellInstance spell;
     protected int levelCost;
-    protected List<Requirement> requirements;
+    protected List<Requirement> hiddenRequirements;
+    protected List<Requirement> learnRequirements;
     
     protected SpellNode parent;
     protected List<SpellNode> children;
     
-    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
+    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, List<SpellNode> children)
     {
         this.nodeId = nodeId;
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
-        this.requirements = requirements;
+        this.hiddenRequirements = hiddenRequirements;
+        this.learnRequirements = learnRequirements;
         this.children = children;
     }
     
-    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> requirements)
+    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements)
     {
-        this(nodeId, spell, levelCost, requirements, new LinkedList<>());
+        this(nodeId, spell, levelCost, hiddenRequirements, learnRequirements, new LinkedList<>());
     }
     
-    public SpellNode(int nodeId, SpellInstance spell, int levelCost, List<Requirement> requirements)
+    public SpellNode(int nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements)
     {
-        this(new SpellNodeId(null, nodeId), spell, levelCost, requirements, new LinkedList<>());
+        this(new SpellNodeId(null, nodeId), spell, levelCost, hiddenRequirements, learnRequirements, new LinkedList<>());
     }
     
-    public SpellNode(SpellInstance spell, int levelCost, List<Requirement> requirements)
+    public SpellNode(int nodeId, SpellInstance spell)
     {
-        this(null, spell, levelCost, requirements);
+        this(new SpellNodeId(null, nodeId), spell, 0, new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
+    }
+    
+    public SpellNode(SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements)
+    {
+        this(null, spell, levelCost, hiddenRequirements, learnRequirements);
+    }
+    
+    public SpellNode(SpellInstance spell)
+    {
+        this(null, spell, 0, new LinkedList<>(), new LinkedList<>());
     }
     
     public SpellInstance getSpellInstance()
@@ -62,19 +74,34 @@ public class SpellNode
         this.levelCost = levelCost;
     }
     
-    public List<Requirement> getRequirements()
+    public List<Requirement> getHiddenRequirements()
     {
-        return requirements;
+        return hiddenRequirements;
     }
     
-    public void addRequirement(Requirement requirement)
+    public List<Requirement> getLearnRequirements()
     {
-        this.requirements.add(requirement);
+        return learnRequirements;
     }
     
-    public void setRequirements(List<Requirement> requirements)
+    public void addHiddenRequirement(Requirement requirement)
     {
-        this.requirements = requirements;
+        this.hiddenRequirements.add(requirement);
+    }
+    
+    public void addLearnRequirement(Requirement requirement)
+    {
+        this.learnRequirements.add(requirement);
+    }
+    
+    public void setHiddenRequirements(List<Requirement> requirements)
+    {
+        this.hiddenRequirements = requirements;
+    }
+    
+    public void setLearnRequirements(List<Requirement> requirements)
+    {
+        this.learnRequirements = requirements;
     }
     
     public Spell getSpellDirect()
@@ -82,26 +109,38 @@ public class SpellNode
         return spell.getSpell().get();
     }
     
-    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public boolean passesHidden(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return requirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
+        return hiddenRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
+    }
+    
+    public boolean passesLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return hiddenRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access)) && learnRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
     }
     
     public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        requirements.forEach(requirement -> requirement.onSpellLearned(spellProgressionHolder, access));
+        hiddenRequirements.forEach(requirement -> requirement.onSpellLearned(spellProgressionHolder, access));
+        learnRequirements.forEach(requirement -> requirement.onSpellLearned(spellProgressionHolder, access));
+    }
+    
+    public boolean canSee(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return spellProgressionHolder.getPlayer().isCreative() || passesHidden(spellProgressionHolder, access);
     }
     
     public boolean canLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return spellProgressionHolder.getPlayer().isCreative() || (spellProgressionHolder.getPlayer().experienceLevel >= this.levelCost && passes(spellProgressionHolder, access));
+        return spellProgressionHolder.getPlayer().isCreative() || (spellProgressionHolder.getPlayer().experienceLevel >= this.levelCost && passesLearn(spellProgressionHolder, access));
     }
     
     public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getSpellDirect().getTitle());
-        requirements.forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access)));
+        hiddenRequirements.forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access)));
+        learnRequirements.forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access)));
         return tooltips;
     }
     
@@ -117,7 +156,7 @@ public class SpellNode
     
     public SpellNode copy()
     {
-        return new SpellNode(nodeId, spell.copy(), levelCost, requirements);
+        return new SpellNode(nodeId, spell.copy(), levelCost, hiddenRequirements, learnRequirements);
     }
     
     @Nullable

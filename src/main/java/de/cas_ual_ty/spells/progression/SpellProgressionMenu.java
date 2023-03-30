@@ -110,7 +110,15 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     public static SpellProgressionMenu construct(int id, Inventory inventory, FriendlyByteBuf extraData)
     {
         // client side construction
-        SpellProgressionSyncMessage msg = SpellProgressionSyncMessage.decode(extraData);
-        return new SpellProgressionMenu(id, inventory, ContainerLevelAccess.create(inventory.player.level, msg.blockPos()), msg.spellTrees(), msg.map());
+        try
+        {
+            SpellProgressionSyncMessage msg = SpellProgressionSyncMessage.decode(extraData);
+            return new SpellProgressionMenu(id, inventory, ContainerLevelAccess.create(inventory.player.level, msg.blockPos()), msg.spellTrees(), msg.map());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }

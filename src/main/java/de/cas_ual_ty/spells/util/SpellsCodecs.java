@@ -83,16 +83,16 @@ public class SpellsCodecs
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL).fieldOf("spell").forGetter(node -> node.getSpellInstance().getSpell()),
                 ExtraCodecs.lazyInitializedCodec(() -> CTX_VAR).listOf().fieldOf("variables").forGetter(node -> node.getSpellInstance().getVariables()),
                 Codec.INT.fieldOf("level_cost").forGetter(SpellNode::getLevelCost),
-                REQUIREMENT.listOf().fieldOf("requirements").forGetter(SpellNode::getRequirements),
+                REQUIREMENT.listOf().fieldOf("hidden_requirements").forGetter(SpellNode::getHiddenRequirements),
+                REQUIREMENT.listOf().fieldOf("learn_requirements").forGetter(SpellNode::getLearnRequirements),
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_NODE).listOf().fieldOf("children").forGetter(SpellNode::getChildren),
                 Codec.optionalField("id", Codec.INT).forGetter(node -> Optional.ofNullable(node.getNodeId()).map(SpellNodeId::nodeId))
-        ).apply(instance, (spell, variables, levelCost, requirements, children, id) -> new SpellNode(id.map(i -> new SpellNodeId(null, i)).orElse(null), new SpellInstance(spell, variables), levelCost, requirements, children))));
+        ).apply(instance, (spell, variables, levelCost, hiddenRequirements, learnRequirements, children, id) -> new SpellNode(id.map(i -> new SpellNodeId(null, i)).orElse(null), new SpellInstance(spell, variables), levelCost, hiddenRequirements, learnRequirements, children))));
         
         SPELL_TREE_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 SPELL_NODE.fieldOf("root").forGetter(SpellTree::getRoot),
                 COMPONENT.fieldOf("title").forGetter(SpellTree::getTitle),
-                SPELL.fieldOf("icon").forGetter(SpellTree::getIconSpell),
-                REQUIREMENT.listOf().fieldOf("requirements").forGetter(SpellTree::getRequirements)
+                SPELL.fieldOf("icon").forGetter(SpellTree::getIconSpell)
         ).apply(instance, SpellTree::new)));
         
         SPELL_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(

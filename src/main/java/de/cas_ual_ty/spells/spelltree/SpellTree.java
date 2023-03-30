@@ -5,6 +5,7 @@ import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -12,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -23,23 +25,16 @@ public class SpellTree
     private SpellNode root;
     private Component title;
     private Holder<Spell> icon;
-    private List<Requirement> requirements;
     
     private ResourceLocation id;
     
-    public SpellTree(SpellNode root, Component title, Holder<Spell> icon, List<Requirement> requirements)
+    public SpellTree(SpellNode root, Component title, Holder<Spell> icon)
     {
         this.root = root;
         this.title = title;
         this.icon = icon;
-        this.requirements = requirements;
         
         id = null;
-    }
-    
-    public SpellTree(SpellNode root, Component title, Holder<Spell> icon)
-    {
-        this(root, title, icon, new LinkedList<>());
     }
     
     public ResourceLocation getId(Registry<SpellTree> registry)
@@ -61,7 +56,7 @@ public class SpellTree
     {
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getTitle());
-        requirements.forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access)));
+        getRequirements().forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access).withStyle(ChatFormatting.GRAY)));
         return tooltips;
     }
     
@@ -82,7 +77,7 @@ public class SpellTree
     
     public List<Requirement> getRequirements()
     {
-        return requirements;
+        return root.getHiddenRequirements();
     }
     
     public ResourceLocation getId()
@@ -96,13 +91,6 @@ public class SpellTree
         return this;
     }
     
-    public SpellTree setRequirements(List<Requirement> requirements)
-    {
-        // used temporarily on client side for synced trees
-        this.requirements = requirements;
-        return this;
-    }
-    
     public int getDepth(Spell spell)
     {
         if(root == null)
@@ -113,16 +101,6 @@ public class SpellTree
         {
             return find(1, root, spell);
         }
-    }
-    
-    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
-    {
-        return requirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
-    }
-    
-    public boolean canSee(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
-    {
-        return spellProgressionHolder.getPlayer().isCreative() || passes(spellProgressionHolder, access);
     }
     
     private int find(int depth, SpellNode spellNode, Spell spell)
@@ -198,7 +176,7 @@ public class SpellTree
     
     public SpellTree copy() // deep copy
     {
-        return new SpellTree(innerDeepCopy(root), title, icon, requirements).setId(id);
+        return new SpellTree(innerDeepCopy(root), title, icon).setId(id);
     }
     
     private SpellNode innerDeepCopy(SpellNode original)
@@ -219,19 +197,9 @@ public class SpellTree
         child.setParent(parent);
     }
     
-    public static Builder builder(Component title, Holder<Spell> root, int levelCost, Requirement... requirements)
+    public static Builder builder(Component title)
     {
-        return new Builder(title, root, levelCost, List.of(requirements));
-    }
-    
-    public static Builder builder(Component title, int nodeId, Holder<Spell> root, int levelCost, Requirement... requirements)
-    {
-        return new Builder(title, nodeId, root, levelCost, List.of(requirements));
-    }
-    
-    public static Builder builder(Component title, SpellNode root)
-    {
-        return new Builder(title, root);
+        return new Builder(title);
     }
     
     public static class Builder
@@ -239,50 +207,44 @@ public class SpellTree
         private Component title;
         private SpellNode root;
         private Holder<Spell> icon;
-        private List<Requirement> treeRequirements;
         
         private Stack<SpellNode> stack;
         
-        private Builder(Component title, SpellNode root)
+        private Builder(Component title)
         {
             this.title = title;
-            this.root = root;
+            root = null;
             icon = null;
-            treeRequirements = new LinkedList<>();
             
             this.stack = new Stack<>();
-            this.stack.push(this.root);
         }
         
-        private Builder(Component title, Holder<Spell> root, int levelCost, List<Requirement> requirements)
+        public Builder icon(Holder<Spell> spell)
         {
-            this(title, new SpellNode(new SpellInstance(root), levelCost, requirements));
-        }
-        
-        private Builder(Component title, int nodeId, Holder<Spell> root, int levelCost, List<Requirement> requirements)
-        {
-            this(title, new SpellNode(nodeId, new SpellInstance(root), levelCost, requirements));
-        }
-        
-        public Builder requirement(Requirement requirement)
-        {
-            treeRequirements.add(requirement);
+            this.icon = spell;
             return this;
         }
         
-        public Builder add(int nodeId, Holder<Spell> spell, int levelCost, Requirement... requirements)
+        public Builder add(int nodeId, Holder<Spell> spell)
         {
-            return add(new SpellNode(nodeId, new SpellInstance(spell), levelCost, List.of(requirements)));
+            return add(new SpellNode(nodeId, new SpellInstance(spell)));
         }
         
-        public Builder add(Holder<Spell> spell, int levelCost, Requirement... requirements)
+        public Builder add(Holder<Spell> spell)
         {
-            return add(new SpellNode(new SpellInstance(spell), levelCost, List.of(requirements)));
+            return add(new SpellNode(new SpellInstance(spell)));
         }
         
         public Builder add(SpellNode spellNode)
         {
-            connect(stack.peek(), spellNode);
+            if(!stack.isEmpty())
+            {
+                connect(stack.peek(), spellNode);
+            }
+            else
+            {
+                root = spellNode;
+            }
             stack.push(spellNode);
             return this;
         }
@@ -293,15 +255,39 @@ public class SpellTree
             return this;
         }
         
-        public Builder icon(Holder<Spell> spell)
+        public Builder levelCost(int levelCost)
         {
-            this.icon = spell;
+            stack.peek().setLevelCost(levelCost);
+            return this;
+        }
+        
+        public Builder hiddenRequirements(Requirement... requirements)
+        {
+            Arrays.stream(requirements).forEach(this::hiddenRequirement);
+            return this;
+        }
+        
+        private Builder hiddenRequirement(Requirement requirement)
+        {
+            stack.peek().addHiddenRequirement(requirement);
+            return this;
+        }
+        
+        public Builder learnRequirements(Requirement... requirements)
+        {
+            Arrays.stream(requirements).forEach(this::learnRequirement);
+            return this;
+        }
+        
+        private Builder learnRequirement(Requirement requirement)
+        {
+            stack.peek().addLearnRequirement(requirement);
             return this;
         }
         
         public SpellTree finish()
         {
-            return new SpellTree(root, title, icon != null ? icon : root.getSpellInstance().getSpell(), treeRequirements);
+            return new SpellTree(root, title, icon != null ? icon : root.getSpellInstance().getSpell());
         }
     }
 }

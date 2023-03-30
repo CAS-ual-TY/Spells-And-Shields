@@ -29,16 +29,9 @@ public class SpellTreeSerializer
         buf.writeResourceLocation(spellTree.getId());
         buf.writeComponent(spellTree.getTitle());
         buf.writeResourceLocation(spellTree.getIconSpell().unwrapKey().orElseThrow().location());
-        encodeRequirements(spellTree.getRequirements(), buf);
         
         SpellNode spellNode = spellTree.getRoot();
-        encodeNode(spellNode, registry, buf);
-        
-        for(SpellNode child : spellNode.getChildren())
-        {
-            encodeTreeRec(child, registry, buf);
-        }
-        
+        encodeTreeRec(spellNode, registry, buf);
         buf.writeByte(TYPE_FINISH);
     }
     
@@ -65,7 +58,8 @@ public class SpellTreeSerializer
     {
         buf.writeResourceLocation(spellNode.getSpellInstance().getSpell().unwrap().map(ResourceKey::location, registry::getKey));
         buf.writeInt(spellNode.getLevelCost());
-        encodeRequirements(spellNode.getRequirements(), buf);
+        encodeRequirements(spellNode.getHiddenRequirements(), buf);
+        encodeRequirements(spellNode.getLearnRequirements(), buf);
         buf.writeResourceLocation(spellNode.getNodeId().treeId());
         buf.writeShort(spellNode.getNodeId().nodeId());
     }
@@ -75,9 +69,8 @@ public class SpellTreeSerializer
         ResourceLocation id = buf.readResourceLocation();
         Component title = buf.readComponent();
         Holder<Spell> icon = registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, buf.readResourceLocation()));
-        List<Requirement> requirements = decodeRequirements(buf);
         
-        SpellTree.Builder builder = SpellTree.builder(title, decodeNode(registry, buf));
+        SpellTree.Builder builder = SpellTree.builder(title);
         
         byte next;
         
@@ -97,7 +90,7 @@ public class SpellTreeSerializer
             }
         }
         
-        return builder.icon(icon).finish().setRequirements(requirements).setId(id);
+        return builder.icon(icon).finish().setId(id);
     }
     
     private static List<Requirement> decodeRequirements(FriendlyByteBuf buf)
@@ -117,9 +110,10 @@ public class SpellTreeSerializer
     {
         Holder<Spell> spell = registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, buf.readResourceLocation()));
         int levelCost = buf.readInt();
-        List<Requirement> requirements = decodeRequirements(buf);
+        List<Requirement> hiddenRequirements = decodeRequirements(buf);
+        List<Requirement> learnRequirements = decodeRequirements(buf);
         SpellNodeId id = new SpellNodeId(buf.readResourceLocation(), buf.readShort());
         
-        return new SpellNode(id, new SpellInstance(spell), levelCost, requirements);
+        return new SpellNode(id, new SpellInstance(spell), levelCost, hiddenRequirements, learnRequirements);
     }
 }

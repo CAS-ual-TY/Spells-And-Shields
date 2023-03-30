@@ -1,32 +1,33 @@
 {
   "icon": "spells_and_shields:toggle_haste",
-  "requirements": [],
   "root": {
     "children": [
       {
         "children": [
           {
             "children": [],
+            "hidden_requirements": [],
             "id": 102,
-            "level_cost": 25,
-            "requirements": [
+            "learn_requirements": [
               {
                 "type": "spells_and_shields:bookshelves",
                 "bookshelves": 26
               }
             ],
+            "level_cost": 25,
             "spell": "spells_and_shields:toggle_magic_immune",
             "variables": []
           }
         ],
+        "hidden_requirements": [],
         "id": 101,
-        "level_cost": 25,
-        "requirements": [
+        "learn_requirements": [
           {
             "type": "spells_and_shields:bookshelves",
             "bookshelves": 26
           }
         ],
+        "level_cost": 25,
         "spell": "spells_and_shields:silence_target",
         "variables": []
       },
@@ -34,51 +35,55 @@
         "children": [
           {
             "children": [],
+            "hidden_requirements": [],
             "id": 104,
-            "level_cost": 25,
-            "requirements": [
+            "learn_requirements": [
               {
                 "type": "spells_and_shields:bookshelves",
                 "bookshelves": 24
               }
             ],
+            "level_cost": 25,
             "spell": "spells_and_shields:toggle_haste",
             "variables": []
           }
         ],
+        "hidden_requirements": [],
         "id": 103,
-        "level_cost": 15,
-        "requirements": [
+        "learn_requirements": [
           {
             "type": "spells_and_shields:bookshelves",
             "bookshelves": 18
           }
         ],
+        "level_cost": 15,
         "spell": "spells_and_shields:instant_mine",
         "variables": []
       },
       {
         "children": [],
+        "hidden_requirements": [],
         "id": 105,
-        "level_cost": 10,
-        "requirements": [
+        "learn_requirements": [
           {
             "type": "spells_and_shields:bookshelves",
             "bookshelves": 12
           }
         ],
+        "level_cost": 10,
         "spell": "spells_and_shields:spit_metal",
         "variables": []
       }
     ],
+    "hidden_requirements": [],
     "id": 100,
-    "level_cost": 5,
-    "requirements": [
+    "learn_requirements": [
       {
         "type": "spells_and_shields:bookshelves",
         "bookshelves": 8
       }
     ],
+    "level_cost": 5,
     "spell": "spells_and_shields:blast_smelt",
     "variables": []
   },

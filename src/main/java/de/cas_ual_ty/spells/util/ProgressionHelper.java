@@ -40,7 +40,7 @@ public class ProgressionHelper
                     continue;
                 }
                 
-                if(!spellTree0.canSee(spellProgressionHolder, access))
+                if(!spellTree0.getRoot().passesHidden(spellProgressionHolder, access))
                 {
                     continue;
                 }
@@ -85,6 +85,19 @@ public class ProgressionHelper
                 
                 List<SpellNode> invisibleNodes = new LinkedList<>();
                 
+                // remove all nodes that can not be seen (hidden requirements not met)
+                stripped.forEach(spellNode ->
+                {
+                    if(!visibleNodes.contains(spellNode))
+                    {
+                        if(!spellNode.passesHidden(spellProgressionHolder, access))
+                        {
+                            invisibleNodes.add(spellNode);
+                        }
+                    }
+                });
+                invisibleNodes.forEach(spellNode -> spellNode.getParent().getChildren().remove(spellNode));
+                
                 // remove all invisible grandchildren of leaves of the visible tree
                 stripped.forEach(spellNode ->
                 {
@@ -102,7 +115,6 @@ public class ProgressionHelper
                         }
                     }
                 });
-                
                 invisibleNodes.forEach(spellNode -> spellNode.getParent().getChildren().remove(spellNode));
                 
                 strippedSkillTrees.add(stripped);
@@ -113,10 +125,9 @@ public class ProgressionHelper
         {
             tree.forEach(node ->
             {
-                node.setRequirements(node.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
+                node.setHiddenRequirements(node.getHiddenRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access, true)).collect(Collectors.toList()));
+                node.setLearnRequirements(node.getLearnRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access, false)).collect(Collectors.toList()));
             });
-            
-            tree.setRequirements(tree.getRequirements().stream().map(r -> WrappedRequirement.wrap(r, spellProgressionHolder, access)).collect(Collectors.toList()));
         });
         
         return strippedSkillTrees;

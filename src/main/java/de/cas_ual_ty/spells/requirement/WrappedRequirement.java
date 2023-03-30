@@ -78,10 +78,10 @@ public class WrappedRequirement extends Requirement
         requirement.onSpellLearned(spellProgressionHolder, access);
     }
     
-    public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
         this.status = RequirementStatus.decide(passes(spellProgressionHolder, access));
-        this.component = Component.literal("- ").append(makeDescription(spellProgressionHolder, access).withStyle(status.passes ? ChatFormatting.GREEN : ChatFormatting.RED));
+        this.component = Component.literal("- ").append(makeDescription(spellProgressionHolder, access).withStyle(hidden ? ChatFormatting.DARK_GRAY : (status.passes ? ChatFormatting.GREEN : ChatFormatting.RED)));
     }
     
     @Override
@@ -93,8 +93,6 @@ public class WrappedRequirement extends Requirement
     @Override
     public void writeToBuf(FriendlyByteBuf buf)
     {
-        
-        //IRequirementType.writeToBuf(buf, requirement);
         buf.writeByte(status.ordinal());
         buf.writeComponent(component);
     }
@@ -102,15 +100,14 @@ public class WrappedRequirement extends Requirement
     @Override
     public void readFromBuf(FriendlyByteBuf buf)
     {
-        //this.requirement =  IRequirementType.readFromBuf(buf);
         this.status = RequirementStatus.values()[buf.readByte()];
         this.component = (MutableComponent) buf.readComponent();
     }
     
-    public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
         WrappedRequirement w = new WrappedRequirement(RequirementTypes.WRAPPED.get(), requirement);
-        w.decide(spellProgressionHolder, access);
+        w.decide(spellProgressionHolder, access, hidden);
         return w;
     }
 }

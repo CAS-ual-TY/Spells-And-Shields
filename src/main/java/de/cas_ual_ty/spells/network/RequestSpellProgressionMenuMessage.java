@@ -49,39 +49,46 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                 return;
             }
             
-            if(player.containerMenu != null && SpellsUtil.isEnchantingTable(player.level.getBlockState(msg.pos()).getBlock()))
+            try
             {
-                ContainerLevelAccess access = ContainerLevelAccess.create(player.level, msg.pos());
-                
-                SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
+                if(player.containerMenu != null && SpellsUtil.isEnchantingTable(player.level.getBlockState(msg.pos()).getBlock()))
                 {
-                    access.execute((level, blockPos) ->
+                    ContainerLevelAccess access = ContainerLevelAccess.create(player.level, msg.pos());
+                    
+                    SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
                     {
-                        List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
-                        HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
-                        
-                        Registry<Spell> registry = Spells.getRegistry(level);
-                        
-                        NetworkHooks.openScreen(player, new MenuProvider()
+                        access.execute((level, blockPos) ->
                         {
-                            @Override
-                            public Component getDisplayName()
-                            {
-                                return SpellProgressionMenu.TITLE;
-                            }
+                            List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
+                            HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
                             
-                            @Override
-                            public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
+                            Registry<Spell> registry = Spells.getRegistry(level);
+                            
+                            NetworkHooks.openScreen(player, new MenuProvider()
                             {
-                                return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
-                            }
-                        }, buf ->
-                        {
-                            SpellProgressionSyncMessage data = new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression, level);
-                            SpellProgressionSyncMessage.encode(data, buf);
+                                @Override
+                                public Component getDisplayName()
+                                {
+                                    return SpellProgressionMenu.TITLE;
+                                }
+                                
+                                @Override
+                                public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
+                                {
+                                    return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
+                                }
+                            }, buf ->
+                            {
+                                SpellProgressionSyncMessage data = new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression, level);
+                                SpellProgressionSyncMessage.encode(data, buf);
+                            });
                         });
                     });
-                });
+                }
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
             }
         });
         
