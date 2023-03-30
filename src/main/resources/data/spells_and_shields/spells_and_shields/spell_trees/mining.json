@@ -6,6 +6,7 @@
         "children": [
           {
             "children": [],
+            "frame": 0,
             "hidden_requirements": [],
             "id": 102,
             "learn_requirements": [
@@ -19,6 +20,7 @@
             "variables": []
           }
         ],
+        "frame": 0,
         "hidden_requirements": [],
         "id": 101,
         "learn_requirements": [
@@ -35,6 +37,7 @@
         "children": [
           {
             "children": [],
+            "frame": 0,
             "hidden_requirements": [],
             "id": 104,
             "learn_requirements": [
@@ -48,6 +51,7 @@
             "variables": []
           }
         ],
+        "frame": 0,
         "hidden_requirements": [],
         "id": 103,
         "learn_requirements": [
@@ -62,6 +66,7 @@
       },
       {
         "children": [],
+        "frame": 0,
         "hidden_requirements": [],
         "id": 105,
         "learn_requirements": [
@@ -75,6 +80,7 @@
         "variables": []
       }
     ],
+    "frame": 0,
     "hidden_requirements": [],
     "id": 100,
     "learn_requirements": [

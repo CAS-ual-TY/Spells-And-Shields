@@ -86,8 +86,9 @@ public class SpellsCodecs
                 REQUIREMENT.listOf().fieldOf("hidden_requirements").forGetter(SpellNode::getHiddenRequirements),
                 REQUIREMENT.listOf().fieldOf("learn_requirements").forGetter(SpellNode::getLearnRequirements),
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_NODE).listOf().fieldOf("children").forGetter(SpellNode::getChildren),
-                Codec.optionalField("id", Codec.INT).forGetter(node -> Optional.ofNullable(node.getNodeId()).map(SpellNodeId::nodeId))
-        ).apply(instance, (spell, variables, levelCost, hiddenRequirements, learnRequirements, children, id) -> new SpellNode(id.map(i -> new SpellNodeId(null, i)).orElse(null), new SpellInstance(spell, variables), levelCost, hiddenRequirements, learnRequirements, children))));
+                Codec.optionalField("id", Codec.INT).forGetter(node -> Optional.ofNullable(node.getNodeId()).map(SpellNodeId::nodeId)),
+                Codec.optionalField("frame", Codec.intRange(0, 2)).forGetter(node -> Optional.of(node.getFrame()))
+        ).apply(instance, (spell, variables, levelCost, hiddenRequirements, learnRequirements, children, id, frame) -> new SpellNode(id.map(i -> new SpellNodeId(null, i)).orElse(null), new SpellInstance(spell, variables), levelCost, hiddenRequirements, learnRequirements, children, frame.orElse(0)))));
         
         SPELL_TREE_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 SPELL_NODE.fieldOf("root").forGetter(SpellTree::getRoot),

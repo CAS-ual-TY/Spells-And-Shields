@@ -10,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import javax.annotation.Nullable;
@@ -259,6 +260,22 @@ public class SpellTree
         {
             stack.peek().setLevelCost(levelCost);
             return this;
+        }
+        
+        public Builder frame(int frame)
+        {
+            stack.peek().setFrame(Mth.clamp(frame, 0, 2));
+            return this;
+        }
+        
+        public Builder goalFrame()
+        {
+            return frame(2);
+        }
+        
+        public Builder challengeFrame()
+        {
+            return frame(1);
         }
         
         public Builder hiddenRequirements(Requirement... requirements)

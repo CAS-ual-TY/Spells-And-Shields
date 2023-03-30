@@ -62,6 +62,7 @@ public class SpellTreeSerializer
         encodeRequirements(spellNode.getLearnRequirements(), buf);
         buf.writeResourceLocation(spellNode.getNodeId().treeId());
         buf.writeShort(spellNode.getNodeId().nodeId());
+        buf.writeByte(spellNode.getFrame());
     }
     
     public static SpellTree decodeTree(Registry<Spell> registry, FriendlyByteBuf buf)
@@ -113,7 +114,8 @@ public class SpellTreeSerializer
         List<Requirement> hiddenRequirements = decodeRequirements(buf);
         List<Requirement> learnRequirements = decodeRequirements(buf);
         SpellNodeId id = new SpellNodeId(buf.readResourceLocation(), buf.readShort());
+        int frame = buf.readByte();
         
-        return new SpellNode(id, new SpellInstance(spell), levelCost, hiddenRequirements, learnRequirements);
+        return new SpellNode(id, new SpellInstance(spell), levelCost, hiddenRequirements, learnRequirements, frame);
     }
 }

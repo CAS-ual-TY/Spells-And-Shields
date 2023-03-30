@@ -85,12 +85,7 @@ public class SpellNodeWidget extends GuiComponent
         
         this.width = 29 + this.font.width(this.title) + TITLE_PADDING_LEFT + TITLE_PADDING_RIGHT;
         
-        // 0 = squared = available
-        // 1 = fancy = lost
-        // 2 = round = locked
-        SpellStatus status = skillTreeTab.getScreen().getMenu().spellProgression.getOrDefault(spell.getSpellDirect(), SpellStatus.LOCKED);
-        
-        this.frameIcon = status == SpellStatus.FORGOTTEN ? 1 : 0;
+        this.frameIcon = spell.getFrame();
         
         // 0 = gold = available
         // 1 = blue = buyable

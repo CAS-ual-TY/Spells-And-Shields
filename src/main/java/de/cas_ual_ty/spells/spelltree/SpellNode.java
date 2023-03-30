@@ -20,11 +20,12 @@ public class SpellNode
     protected int levelCost;
     protected List<Requirement> hiddenRequirements;
     protected List<Requirement> learnRequirements;
+    protected int frame;
     
     protected SpellNode parent;
     protected List<SpellNode> children;
     
-    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, List<SpellNode> children)
+    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, List<SpellNode> children, int frame)
     {
         this.nodeId = nodeId;
         this.spell = spell;
@@ -32,31 +33,32 @@ public class SpellNode
         this.hiddenRequirements = hiddenRequirements;
         this.learnRequirements = learnRequirements;
         this.children = children;
+        this.frame = frame;
     }
     
-    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements)
+    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, int frame)
     {
-        this(nodeId, spell, levelCost, hiddenRequirements, learnRequirements, new LinkedList<>());
+        this(nodeId, spell, levelCost, hiddenRequirements, learnRequirements, new LinkedList<>(), frame);
     }
     
-    public SpellNode(int nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements)
+    public SpellNode(int nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, int frame)
     {
-        this(new SpellNodeId(null, nodeId), spell, levelCost, hiddenRequirements, learnRequirements, new LinkedList<>());
+        this(new SpellNodeId(null, nodeId), spell, levelCost, hiddenRequirements, learnRequirements, new LinkedList<>(), frame);
     }
     
     public SpellNode(int nodeId, SpellInstance spell)
     {
-        this(new SpellNodeId(null, nodeId), spell, 0, new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
+        this(new SpellNodeId(null, nodeId), spell, 0, new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), 0);
     }
     
-    public SpellNode(SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements)
+    public SpellNode(SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, int frame)
     {
-        this(null, spell, levelCost, hiddenRequirements, learnRequirements);
+        this(null, spell, levelCost, hiddenRequirements, learnRequirements, frame);
     }
     
     public SpellNode(SpellInstance spell)
     {
-        this(null, spell, 0, new LinkedList<>(), new LinkedList<>());
+        this(null, spell, 0, new LinkedList<>(), new LinkedList<>(), 0);
     }
     
     public SpellInstance getSpellInstance()
@@ -72,6 +74,16 @@ public class SpellNode
     public void setLevelCost(int levelCost)
     {
         this.levelCost = levelCost;
+    }
+    
+    public int getFrame()
+    {
+        return frame;
+    }
+    
+    public void setFrame(int frame)
+    {
+        this.frame = frame;
     }
     
     public List<Requirement> getHiddenRequirements()
@@ -156,7 +168,7 @@ public class SpellNode
     
     public SpellNode copy()
     {
-        return new SpellNode(nodeId, spell.copy(), levelCost, hiddenRequirements, learnRequirements);
+        return new SpellNode(nodeId, spell.copy(), levelCost, hiddenRequirements, learnRequirements, frame);
     }
     
     @Nullable

@@ -178,7 +178,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             @Override
             public void render(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
             {
-                this.active = selectedSpellWidget.spell != null && selectedSpellWidget.spell.canLearn(spellProgressionHolder, menu.access);
+                this.active = selectedSpellWidget.clickedWidget != null && selectedSpellWidget.clickedWidget.spell.canLearn(spellProgressionHolder, menu.access);
                 super.render(poseStack, mouseX, mouseY, deltaTick);
             }
             
@@ -187,9 +187,9 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             {
                 super.renderTitle(poseStack, mouseX, mouseY, deltaTick, font);
                 
-                if(selectedSpellWidget.spell != null)
+                if(selectedSpellWidget.clickedWidget != null)
                 {
-                    int cost = selectedSpellWidget.spell.getLevelCost();
+                    int cost = selectedSpellWidget.clickedWidget.spell.getLevelCost();
                     
                     // active ? lime green : dark green
                     int color = this.active ? 0x80FF20 : 0x407F10;
@@ -229,9 +229,9 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     
     private void learnButtonTooltip(Button button, PoseStack poseStack, int mouseX, int mouseY)
     {
-        if(selectedSpellWidget.spell != null && button.isMouseOver(mouseX, mouseY))
+        if(selectedSpellWidget.clickedWidget != null && button.isMouseOver(mouseX, mouseY))
         {
-            renderTooltip(poseStack, selectedSpellWidget.spell.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
+            renderTooltip(poseStack, selectedSpellWidget.clickedWidget.spell.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
         }
     }
     
@@ -243,17 +243,17 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             this.equipButton.visible = false;
             this.chooseButton.visible = true;
         }
-        else if(button == learnButton && selectedTab != null)
+        else if(button == learnButton && selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.spell.getNodeId()));
+            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.clickedWidget.spell.getNodeId()));
         }
     }
     
     private void slotChosen(int slot)
     {
-        if(selectedTab != null)
+        if(selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.spell.getNodeId()));
+            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.spell.getNodeId()));
             this.spellClicked(null);
         }
     }

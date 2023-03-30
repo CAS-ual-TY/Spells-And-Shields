@@ -4,6 +4,7 @@
     "children": [
       {
         "children": [],
+        "frame": 0,
         "hidden_requirements": [],
         "id": 101,
         "learn_requirements": [
@@ -20,6 +21,7 @@
         "children": [
           {
             "children": [],
+            "frame": 0,
             "hidden_requirements": [],
             "id": 103,
             "learn_requirements": [
@@ -41,6 +43,7 @@
             "variables": []
           }
         ],
+        "frame": 0,
         "hidden_requirements": [],
         "id": 102,
         "learn_requirements": [
@@ -58,6 +61,7 @@
         "variables": []
       }
     ],
+    "frame": 0,
     "hidden_requirements": [
       {
         "type": "spells_and_shields:advancement",
