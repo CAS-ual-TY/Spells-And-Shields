@@ -7,6 +7,7 @@
         "children": [
           {
             "children": [],
+            "id": 102,
             "level_cost": 30,
             "requirements": [
               {
@@ -19,6 +20,7 @@
           },
           {
             "children": [],
+            "id": 103,
             "level_cost": 20,
             "requirements": [
               {
@@ -30,6 +32,7 @@
             "variables": []
           }
         ],
+        "id": 101,
         "level_cost": 20,
         "requirements": [
           {
@@ -44,6 +47,7 @@
         "children": [
           {
             "children": [],
+            "id": 105,
             "level_cost": 20,
             "requirements": [
               {
@@ -55,6 +59,7 @@
             "variables": []
           }
         ],
+        "id": 104,
         "level_cost": 10,
         "requirements": [
           {
@@ -74,6 +79,7 @@
         "variables": []
       }
     ],
+    "id": 100,
     "level_cost": 15,
     "requirements": [
       {

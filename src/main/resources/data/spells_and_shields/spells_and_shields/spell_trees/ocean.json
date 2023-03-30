@@ -7,6 +7,7 @@
         "children": [
           {
             "children": [],
+            "id": 102,
             "level_cost": 20,
             "requirements": [
               {
@@ -19,6 +20,7 @@
           },
           {
             "children": [],
+            "id": 103,
             "level_cost": 20,
             "requirements": [
               {
@@ -30,6 +32,7 @@
             "variables": []
           }
         ],
+        "id": 101,
         "level_cost": 20,
         "requirements": [
           {
@@ -44,6 +47,7 @@
         "children": [
           {
             "children": [],
+            "id": 105,
             "level_cost": 30,
             "requirements": [
               {
@@ -56,6 +60,7 @@
           },
           {
             "children": [],
+            "id": 106,
             "level_cost": 10,
             "requirements": [
               {
@@ -67,6 +72,7 @@
             "variables": []
           }
         ],
+        "id": 104,
         "level_cost": 5,
         "requirements": [
           {
@@ -81,6 +87,7 @@
         "children": [
           {
             "children": [],
+            "id": 108,
             "level_cost": 10,
             "requirements": [
               {
@@ -92,6 +99,7 @@
             "variables": []
           }
         ],
+        "id": 107,
         "level_cost": 10,
         "requirements": [
           {
@@ -104,6 +112,7 @@
       },
       {
         "children": [],
+        "id": 109,
         "level_cost": 25,
         "requirements": [
           {
@@ -119,6 +128,7 @@
         "variables": []
       }
     ],
+    "id": 100,
     "level_cost": 10,
     "requirements": [],
     "spell": "spells_and_shields:toggle_water_breathing",

@@ -10,6 +10,7 @@
     "children": [
       {
         "children": [],
+        "id": 101,
         "level_cost": 30,
         "requirements": [
           {
@@ -24,6 +25,7 @@
         "children": [
           {
             "children": [],
+            "id": 103,
             "level_cost": 50,
             "requirements": [
               {
@@ -43,6 +45,7 @@
             "variables": []
           }
         ],
+        "id": 102,
         "level_cost": 30,
         "requirements": [
           {
@@ -58,6 +61,7 @@
         "variables": []
       }
     ],
+    "id": 100,
     "level_cost": 20,
     "requirements": [
       {
