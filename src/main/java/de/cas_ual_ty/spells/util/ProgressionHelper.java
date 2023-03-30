@@ -25,81 +25,88 @@ public class ProgressionHelper
     {
         List<SpellTree> strippedSkillTrees = new LinkedList<>();
         
-        for(Map.Entry<ResourceKey<SpellTree>, SpellTree> entry : registry.entrySet())
+        if(spellProgressionHolder.getPlayer().isCreative())
         {
-            SpellTree spellTree0 = entry.getValue();
-            
-            if(spellTree0.getRoot() == null)
+            registry.entrySet().stream().map(Map.Entry::getValue).map(SpellTree::copy).forEach(strippedSkillTrees::add);
+        }
+        else
+        {
+            for(Map.Entry<ResourceKey<SpellTree>, SpellTree> entry : registry.entrySet())
             {
-                continue;
-            }
-            
-            if(!spellTree0.canSee(spellProgressionHolder, access))
-            {
-                continue;
-            }
-            
-            SpellTree stripped = spellTree0.copy();
-            
-            List<SpellNode> visibleNodes = new LinkedList<>();
-            
-            // add all active or previously bought spells
-            stripped.forEach(spellNode ->
-            {
-                if(spellProgressionHolder.getSpellStatus(spellNode.getNodeId()).isVisible())
-                {
-                    visibleNodes.add(spellNode);
-                }
-            });
-            
-            // add root
-            if(!visibleNodes.contains(stripped.getRoot()))
-            {
-                visibleNodes.add(stripped.getRoot());
+                SpellTree spellTree0 = entry.getValue();
                 
-                if(visibleNodes.size() == 1)
+                if(spellTree0.getRoot() == null)
                 {
-                    stripped.getRoot().getChildren().clear();
-                    strippedSkillTrees.add(stripped);
                     continue;
                 }
-            }
-            
-            // add all spells above any visible spell
-            for(SpellNode spellNode : visibleNodes.stream().toList())
-            {
-                SpellNode parent;
                 
-                while((parent = spellNode.getParent()) != null && !visibleNodes.contains(parent))
+                if(!spellTree0.canSee(spellProgressionHolder, access))
                 {
-                    visibleNodes.add(parent);
-                    spellNode = parent;
+                    continue;
                 }
-            }
-            
-            List<SpellNode> invisibleNodes = new LinkedList<>();
-            
-            // remove all invisible grandchildren of leaves of the visible tree
-            stripped.forEach(spellNode ->
-            {
-                if(!visibleNodes.contains(spellNode))
+                
+                SpellTree stripped = spellTree0.copy();
+                
+                List<SpellNode> visibleNodes = new LinkedList<>();
+                
+                // add all active or previously bought spells
+                stripped.forEach(spellNode ->
                 {
-                    boolean fullyLinked = ProgressionHelper.isFullyLinked(spellNode, spellProgressionHolder.getProgression());
+                    if(spellProgressionHolder.getSpellStatus(spellNode.getNodeId()).isVisible())
+                    {
+                        visibleNodes.add(spellNode);
+                    }
+                });
+                
+                // add root
+                if(!visibleNodes.contains(stripped.getRoot()))
+                {
+                    visibleNodes.add(stripped.getRoot());
                     
-                    if(fullyLinked)
+                    if(visibleNodes.size() == 1)
                     {
-                        spellNode.getChildren().clear();
-                    }
-                    else
-                    {
-                        invisibleNodes.add(spellNode);
+                        stripped.getRoot().getChildren().clear();
+                        strippedSkillTrees.add(stripped);
+                        continue;
                     }
                 }
-            });
-            
-            invisibleNodes.forEach(spellNode -> spellNode.getParent().getChildren().remove(spellNode));
-            
-            strippedSkillTrees.add(stripped);
+                
+                // add all spells above any visible spell
+                for(SpellNode spellNode : visibleNodes.stream().toList())
+                {
+                    SpellNode parent;
+                    
+                    while((parent = spellNode.getParent()) != null && !visibleNodes.contains(parent))
+                    {
+                        visibleNodes.add(parent);
+                        spellNode = parent;
+                    }
+                }
+                
+                List<SpellNode> invisibleNodes = new LinkedList<>();
+                
+                // remove all invisible grandchildren of leaves of the visible tree
+                stripped.forEach(spellNode ->
+                {
+                    if(!visibleNodes.contains(spellNode))
+                    {
+                        boolean fullyLinked = ProgressionHelper.isFullyLinked(spellNode, spellProgressionHolder.getProgression());
+                        
+                        if(fullyLinked)
+                        {
+                            spellNode.getChildren().clear();
+                        }
+                        else
+                        {
+                            invisibleNodes.add(spellNode);
+                        }
+                    }
+                });
+                
+                invisibleNodes.forEach(spellNode -> spellNode.getParent().getChildren().remove(spellNode));
+                
+                strippedSkillTrees.add(stripped);
+            }
         }
         
         strippedSkillTrees.forEach(tree ->
