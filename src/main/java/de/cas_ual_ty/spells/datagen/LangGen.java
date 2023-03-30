@@ -140,13 +140,12 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_SUMMON_ANIMAL_DESC, "Create life based on the item in your hand.");
         add(Spells.KEY_FIRE_BALL, "Fire Ball");
         add(Spells.KEY_FIRE_BALL_DESC, "Shoot a fire ball forward.");
-        //TODO blast smelt
+        add(Spells.KEY_BLAST_SMELT, "Blast Smelt");
+        add(Spells.KEY_BLAST_SMELT_DESC, "Works like an instant blast furnace on the item in your hand.");
         add(Spells.KEY_TRANSFER_MANA, "Transfer Mana");
         //add(Spells.KEY_TRANSFER_MANA_DESC, "."); TODO transfer mana desc
         add(Spells.KEY_BLOW_ARROW, "Blow Arrow");
         add(Spells.KEY_BLOW_ARROW_DESC, "Shoot a projectile from your hand without a bow.");
-        add(Spells.KEY_BLAST_SMELT, "Blast Smelt");
-        add(Spells.KEY_BLAST_SMELT_DESC, "Works like an instant blast furnace on the item in your hand.");
         add(Spells.KEY_HEALTH_BOOST, "Health Boost");
         add(Spells.KEY_HEALTH_BOOST_DESC, "Increases your maximum health.");
         add(Spells.KEY_MANA_BOOST, "Mana Boost");
