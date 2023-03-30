@@ -69,20 +69,20 @@ public class DocsGen implements DataProvider
     {
         ROOT.mkdirs();
         SpellsAndShields.LOGGER.info("Generated reduced json files for docs in: " + ROOT.getAbsolutePath());
-    
+        
         File full = new File(ROOT, modId + ".md");
-    
+        
         try(FileWriter fw = new FileWriter(full))
         {
             for(Map.Entry<ResourceKey<SpellActionType<?>>, SpellActionType<?>> entry : SpellActionTypes.REGISTRY.get().getEntries())
             {
                 ResourceLocation rl = entry.getKey().location();
-        
+                
                 if(!rl.getNamespace().equals(modId))
                 {
                     continue;
                 }
-        
+                
                 SpellActionType<?> type = entry.getValue();
                 
                 create(rl, type, fw);
@@ -98,9 +98,9 @@ public class DocsGen implements DataProvider
     {
         File folder = new File(ROOT, rl.getNamespace());
         folder.mkdir();
-    
+        
         File f = new File(folder, rl.getPath() + ".md");
-    
+        
         try(FileWriter fw = new FileWriter(f))
         {
             create(rl, type, fw);
@@ -122,7 +122,7 @@ public class DocsGen implements DataProvider
             fw.write("JSON Format:\n");
             fw.write("```jsonc\n");
             fw.write("{\n");
-    
+            
             List<String> keys = new LinkedList<>();
             mapCodecCodec.codec().keys(JsonOps.INSTANCE).map(JsonElement::getAsString).forEach(key ->
             {
@@ -131,7 +131,7 @@ public class DocsGen implements DataProvider
                     keys.add(key);
                 }
             });
-    
+            
             fw.write("  \"type\": \"" + rl.toString() + "\"" + (keys.isEmpty() ? "\n" : ",\n"));
             fw.write("  \"activation\": String" + (keys.isEmpty() ? "\n" : ",\n"));
             fw.write(keys.stream().map(key -> "  \"" + key + "\": ABCDE").collect(Collectors.joining(",\n")) + "\n");

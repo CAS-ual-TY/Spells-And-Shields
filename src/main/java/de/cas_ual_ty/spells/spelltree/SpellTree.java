@@ -154,7 +154,7 @@ public class SpellTree
         setId(spellTreeId);
         
         AtomicInteger i = new AtomicInteger(0);
-        forEach(spellNode -> spellNode.setId(spellTreeId, i.getAndIncrement()));
+        forEach(spellNode -> spellNode.setNodeId(spellTreeId, i.getAndIncrement()));
     }
     
     @Nullable
@@ -167,7 +167,7 @@ public class SpellTree
         {
             SpellNode node = stack.pop();
             
-            if(node.getId().nodeId() == id)
+            if(node.getNodeId().nodeId() == id)
             {
                 return node;
             }
@@ -224,9 +224,9 @@ public class SpellTree
         return new Builder(title, root, levelCost, List.of(requirements));
     }
     
-    public static Builder builder(Component title, Holder<Spell> root, int levelCost, List<Requirement> requirements)
+    public static Builder builder(Component title, int nodeId, Holder<Spell> root, int levelCost, Requirement... requirements)
     {
-        return new Builder(title, root, levelCost, requirements);
+        return new Builder(title, nodeId, root, levelCost, List.of(requirements));
     }
     
     public static Builder builder(Component title, SpellNode root)
@@ -259,10 +259,20 @@ public class SpellTree
             this(title, new SpellNode(new SpellInstance(root), levelCost, requirements));
         }
         
+        private Builder(Component title, int nodeId, Holder<Spell> root, int levelCost, List<Requirement> requirements)
+        {
+            this(title, new SpellNode(nodeId, new SpellInstance(root), levelCost, requirements));
+        }
+        
         public Builder requirement(Requirement requirement)
         {
             treeRequirements.add(requirement);
             return this;
+        }
+        
+        public Builder add(int nodeId, Holder<Spell> spell, int levelCost, Requirement... requirements)
+        {
+            return add(new SpellNode(nodeId, new SpellInstance(spell), levelCost, List.of(requirements)));
         }
         
         public Builder add(Holder<Spell> spell, int levelCost, Requirement... requirements)

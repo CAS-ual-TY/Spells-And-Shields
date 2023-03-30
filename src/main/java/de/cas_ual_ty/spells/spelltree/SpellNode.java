@@ -14,6 +14,8 @@ import java.util.List;
 
 public class SpellNode
 {
+    protected SpellNodeId nodeId;
+    
     protected final SpellInstance spell;
     protected int levelCost;
     protected List<Requirement> requirements;
@@ -21,29 +23,28 @@ public class SpellNode
     protected SpellNode parent;
     protected List<SpellNode> children;
     
-    protected SpellNodeId id;
-    
-    public SpellNode(SpellInstance spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
+    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> requirements, List<SpellNode> children)
     {
+        this.nodeId = nodeId;
         this.spell = spell;
         this.levelCost = Math.max(0, levelCost);
         this.requirements = requirements;
         this.children = children;
-        this.id = null;
     }
     
-    public SpellNode(SpellInstance spell, int levelCost, List<Requirement> requirements, SpellNodeId id)
+    public SpellNode(SpellNodeId nodeId, SpellInstance spell, int levelCost, List<Requirement> requirements)
     {
-        this.spell = spell;
-        this.levelCost = Math.max(0, levelCost);
-        this.requirements = requirements;
-        children = new LinkedList<>();
-        this.id = id;
+        this(nodeId, spell, levelCost, requirements, new LinkedList<>());
+    }
+    
+    public SpellNode(int nodeId, SpellInstance spell, int levelCost, List<Requirement> requirements)
+    {
+        this(new SpellNodeId(null, nodeId), spell, levelCost, requirements, new LinkedList<>());
     }
     
     public SpellNode(SpellInstance spell, int levelCost, List<Requirement> requirements)
     {
-        this(spell, levelCost, requirements, (SpellNodeId) null);
+        this(null, spell, levelCost, requirements);
     }
     
     public SpellInstance getSpellInstance()
@@ -116,7 +117,7 @@ public class SpellNode
     
     public SpellNode copy()
     {
-        return new SpellNode(spell.copy(), levelCost, requirements, id);
+        return new SpellNode(nodeId, spell.copy(), levelCost, requirements);
     }
     
     @Nullable
@@ -130,14 +131,21 @@ public class SpellNode
         return children;
     }
     
-    public SpellNodeId getId()
+    public SpellNodeId getNodeId()
     {
-        return id;
+        return nodeId;
     }
     
-    public void setId(ResourceLocation sourceTree, int id)
+    public void setNodeId(ResourceLocation sourceTree, int id)
     {
-        this.id = new SpellNodeId(sourceTree, id);
-        this.spell.initId(this.id);
+        if(this.nodeId != null)
+        {
+            this.nodeId = new SpellNodeId(sourceTree, this.nodeId.nodeId());
+        }
+        else
+        {
+            this.nodeId = new SpellNodeId(sourceTree, id);
+        }
+        this.spell.initId(this.nodeId);
     }
 }

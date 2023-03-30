@@ -52,7 +52,7 @@ public class SpellTreeTab extends GuiComponent
         this.spellNode = spellTree.getRoot();
         this.icon = spellTree.getIcon();
         
-        spellTree.forEach(spellNode -> this.addNode(spellNode, mainScreen.getMenu().spellProgression.getOrDefault(spellNode.getId(), SpellStatus.LOCKED)));
+        spellTree.forEach(spellNode -> this.addNode(spellNode, mainScreen.getMenu().spellProgression.getOrDefault(spellNode.getNodeId(), SpellStatus.LOCKED)));
         this.root = this.widgets.get(spellTree.getRoot());
         fixPositions();
         

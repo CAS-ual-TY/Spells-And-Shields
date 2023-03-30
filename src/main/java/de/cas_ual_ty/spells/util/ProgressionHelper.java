@@ -46,7 +46,7 @@ public class ProgressionHelper
             // add all active or previously bought spells
             stripped.forEach(spellNode ->
             {
-                if(spellProgressionHolder.getSpellStatus(spellNode.getId()).isVisible())
+                if(spellProgressionHolder.getSpellStatus(spellNode.getNodeId()).isVisible())
                 {
                     visibleNodes.add(spellNode);
                 }
@@ -127,7 +127,7 @@ public class ProgressionHelper
         
         while((parent = parent.getParent()) != null)
         {
-            if(!progression.getOrDefault(parent.getId(), SpellStatus.LOCKED).isAvailable())
+            if(!progression.getOrDefault(parent.getNodeId(), SpellStatus.LOCKED).isAvailable())
             {
                 return false;
             }

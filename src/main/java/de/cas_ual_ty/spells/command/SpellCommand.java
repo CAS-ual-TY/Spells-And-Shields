@@ -125,12 +125,12 @@ public class SpellCommand
         {
             lazyOptional.ifPresent(spellProgressionHolder ->
             {
-                if(spellProgressionHolder.getSpellStatus(node.getId()) != status)
+                if(spellProgressionHolder.getSpellStatus(node.getNodeId()) != status)
                 {
                     changed.set(true);
                 }
                 
-                spellProgressionHolder.setSpellStatus(node.getId(), status);
+                spellProgressionHolder.setSpellStatus(node.getNodeId(), status);
             });
         });
         
@@ -172,12 +172,12 @@ public class SpellCommand
             {
                 spellTree.forEach(node ->
                 {
-                    if(single && spellProgressionHolder.getSpellStatus(node.getId()) != status)
+                    if(single && spellProgressionHolder.getSpellStatus(node.getNodeId()) != status)
                     {
                         changed.getAndIncrement();
                     }
                     
-                    spellProgressionHolder.setSpellStatus(node.getId(), status);
+                    spellProgressionHolder.setSpellStatus(node.getNodeId(), status);
                 });
             });
         });
@@ -221,12 +221,12 @@ public class SpellCommand
                 {
                     spellTree.forEach(spellNode ->
                     {
-                        if(single && spellProgressionHolder.getSpellStatus(spellNode.getId()) != status)
+                        if(single && spellProgressionHolder.getSpellStatus(spellNode.getNodeId()) != status)
                         {
                             learned.getAndIncrement();
                         }
                         
-                        spellProgressionHolder.setSpellStatus(spellNode.getId(), status);
+                        spellProgressionHolder.setSpellStatus(spellNode.getNodeId(), status);
                     });
                 });
             });
