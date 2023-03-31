@@ -4,6 +4,13 @@
     "texture": "spells_and_shields:textures/spell/water_whip.png"
   },
   "mana_cost": 5.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 10.0,
+      "var/name": "damage"
+    }
+  ],
   "spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
@@ -304,13 +311,6 @@
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.water_whip.desc"
-    }
-  ],
-  "variables": [
-    {
-      "type": "spells_and_shields:double",
-      "value": 10.0,
-      "var/name": "damage"
     }
   ]
 }

@@ -4,6 +4,18 @@
     "texture": "spells_and_shields:textures/mob_effect/mana_boost.png"
   },
   "mana_cost": 0.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 4.0,
+      "var/name": "value"
+    },
+    {
+      "type": "spells_and_shields:string",
+      "value": "addition",
+      "var/name": "operation"
+    }
+  ],
   "spell_actions": [
     {
       "type": "spells_and_shields:add_attribute_modifier",
@@ -57,18 +69,6 @@
           "translate": "attribute.name.generic.max_mana"
         }
       ]
-    }
-  ],
-  "variables": [
-    {
-      "type": "spells_and_shields:double",
-      "value": 4.0,
-      "var/name": "value"
-    },
-    {
-      "type": "spells_and_shields:string",
-      "value": "addition",
-      "var/name": "operation"
     }
   ]
 }

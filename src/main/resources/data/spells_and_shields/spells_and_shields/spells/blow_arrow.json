@@ -4,6 +4,7 @@
     "texture": "spells_and_shields:textures/spell/blow_arrow.png"
   },
   "mana_cost": 5.0,
+  "parameters": [],
   "spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
@@ -163,6 +164,5 @@
     {
       "translate": "spell.spells_and_shields.blow_arrow.desc"
     }
-  ],
-  "variables": []
+  ]
 }

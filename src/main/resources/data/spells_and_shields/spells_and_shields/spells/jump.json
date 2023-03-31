@@ -4,6 +4,13 @@
     "texture": "spells_and_shields:textures/spell/jump.png"
   },
   "mana_cost": 5.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 1.5,
+      "var/name": "speed"
+    }
+  ],
   "spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
@@ -54,13 +61,6 @@
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.jump.desc"
-    }
-  ],
-  "variables": [
-    {
-      "type": "spells_and_shields:double",
-      "value": 1.5,
-      "var/name": "speed"
     }
   ]
 }

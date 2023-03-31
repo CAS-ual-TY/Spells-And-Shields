@@ -16,8 +16,8 @@
               }
             ],
             "level_cost": 20,
-            "spell": "spells_and_shields:growth",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:growth"
           },
           {
             "children": [],
@@ -31,8 +31,8 @@
               }
             ],
             "level_cost": 20,
-            "spell": "spells_and_shields:aqua_affinity",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:aqua_affinity"
           }
         ],
         "frame": 0,
@@ -45,8 +45,8 @@
           }
         ],
         "level_cost": 20,
-        "spell": "spells_and_shields:toggle_regeneration",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:toggle_regeneration"
       },
       {
         "children": [
@@ -62,8 +62,8 @@
               }
             ],
             "level_cost": 30,
-            "spell": "spells_and_shields:toggle_dolphins_grace",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:toggle_dolphins_grace"
           },
           {
             "children": [],
@@ -77,8 +77,8 @@
               }
             ],
             "level_cost": 10,
-            "spell": "spells_and_shields:frost_walker",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:frost_walker"
           }
         ],
         "frame": 0,
@@ -91,8 +91,8 @@
           }
         ],
         "level_cost": 5,
-        "spell": "spells_and_shields:water_leap",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:water_leap"
       },
       {
         "children": [
@@ -108,8 +108,8 @@
               }
             ],
             "level_cost": 10,
-            "spell": "spells_and_shields:potion_shot",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:potion_shot"
           }
         ],
         "frame": 0,
@@ -122,8 +122,8 @@
           }
         ],
         "level_cost": 10,
-        "spell": "spells_and_shields:water_whip",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:water_whip"
       },
       {
         "children": [],
@@ -141,8 +141,8 @@
           }
         ],
         "level_cost": 25,
-        "spell": "spells_and_shields:lightning_strike",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:lightning_strike"
       }
     ],
     "frame": 0,
@@ -150,8 +150,8 @@
     "id": 100,
     "learn_requirements": [],
     "level_cost": 10,
-    "spell": "spells_and_shields:toggle_water_breathing",
-    "variables": []
+    "parameters": [],
+    "spell": "spells_and_shields:toggle_water_breathing"
   },
   "title": {
     "translate": "spell_tree.spells_and_shields.ocean"

@@ -7,6 +7,7 @@
     }
   },
   "mana_cost": 5.0,
+  "parameters": [],
   "spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
@@ -94,6 +95,5 @@
     {
       "translate": "spell.spells_and_shields.fire_charge.desc"
     }
-  ],
-  "variables": []
+  ]
 }

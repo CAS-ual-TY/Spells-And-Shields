@@ -4,6 +4,18 @@
     "texture": "spells_and_shields:textures/spell/fire_ball.png"
   },
   "mana_cost": 5.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 2.5,
+      "var/name": "speed"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 2,
+      "var/name": "fire_seconds"
+    }
+  ],
   "spell_actions": [
     {
       "type": "spells_and_shields:simple_item_check",
@@ -123,18 +135,6 @@
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.fire_ball.desc"
-    }
-  ],
-  "variables": [
-    {
-      "type": "spells_and_shields:double",
-      "value": 2.5,
-      "var/name": "speed"
-    },
-    {
-      "type": "spells_and_shields:int",
-      "value": 2,
-      "var/name": "fire_seconds"
     }
   ]
 }

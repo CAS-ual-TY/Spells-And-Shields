@@ -39,9 +39,10 @@ public class SpellInstance
     public SpellInstance(Holder<Spell> spell, float manaCost, List<CtxVar<?>> parameters)
     {
         this.spell = spell;
-        setManaCost(manaCost);
+        this.manaCost = manaCost;
         this.parameters = parameters;
         nodeId = null;
+        tooltipComponent = null;
     }
     
     public SpellInstance(Holder<Spell> spell, float manaCost)
@@ -63,8 +64,6 @@ public class SpellInstance
     public void setManaCost(float manaCost)
     {
         this.manaCost = manaCost;
-        float applied = getAppliedManaCost();
-        tooltipComponent = applied != 0 ? Optional.of(new ManaTooltipComponent(applied)) : Optional.empty();
     }
     
     public void initId(SpellNodeId nodeId)
@@ -99,6 +98,11 @@ public class SpellInstance
     
     public Optional<TooltipComponent> getTooltipComponent()
     {
+        if(tooltipComponent == null)
+        {
+            float applied = getAppliedManaCost();
+            tooltipComponent = applied != 0 ? Optional.of(new ManaTooltipComponent(applied)) : Optional.empty();
+        }
         return tooltipComponent;
     }
     

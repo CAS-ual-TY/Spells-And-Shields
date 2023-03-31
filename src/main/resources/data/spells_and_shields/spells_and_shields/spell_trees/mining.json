@@ -16,8 +16,8 @@
               }
             ],
             "level_cost": 25,
-            "spell": "spells_and_shields:toggle_magic_immune",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:toggle_magic_immune"
           }
         ],
         "frame": 0,
@@ -30,8 +30,8 @@
           }
         ],
         "level_cost": 25,
-        "spell": "spells_and_shields:silence_target",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:silence_target"
       },
       {
         "children": [
@@ -47,8 +47,8 @@
               }
             ],
             "level_cost": 25,
-            "spell": "spells_and_shields:toggle_haste",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:toggle_haste"
           }
         ],
         "frame": 0,
@@ -61,8 +61,8 @@
           }
         ],
         "level_cost": 15,
-        "spell": "spells_and_shields:instant_mine",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:instant_mine"
       },
       {
         "children": [],
@@ -76,8 +76,8 @@
           }
         ],
         "level_cost": 10,
-        "spell": "spells_and_shields:spit_metal",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:spit_metal"
       }
     ],
     "frame": 0,
@@ -90,8 +90,8 @@
       }
     ],
     "level_cost": 5,
-    "spell": "spells_and_shields:blast_smelt",
-    "variables": []
+    "parameters": [],
+    "spell": "spells_and_shields:blast_smelt"
   },
   "title": {
     "translate": "spell_tree.spells_and_shields.mining"

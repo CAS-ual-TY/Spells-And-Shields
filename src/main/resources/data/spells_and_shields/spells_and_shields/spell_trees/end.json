@@ -14,8 +14,8 @@
           }
         ],
         "level_cost": 30,
-        "spell": "spells_and_shields:forced_teleport",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:forced_teleport"
       },
       {
         "children": [
@@ -39,8 +39,8 @@
               }
             ],
             "level_cost": 50,
-            "spell": "spells_and_shields:ender_army",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:ender_army"
           }
         ],
         "frame": 0,
@@ -57,8 +57,8 @@
           }
         ],
         "level_cost": 30,
-        "spell": "spells_and_shields:teleport",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:teleport"
       }
     ],
     "frame": 0,
@@ -76,8 +76,8 @@
       }
     ],
     "level_cost": 20,
-    "spell": "spells_and_shields:random_teleport",
-    "variables": []
+    "parameters": [],
+    "spell": "spells_and_shields:random_teleport"
   },
   "title": {
     "translate": "spell_tree.spells_and_shields.end"

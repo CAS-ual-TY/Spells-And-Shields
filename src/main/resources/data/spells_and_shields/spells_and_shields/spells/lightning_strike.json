@@ -4,6 +4,13 @@
     "texture": "spells_and_shields:textures/spell/lightning_strike.png"
   },
   "mana_cost": 8.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 20.0,
+      "var/name": "range"
+    }
+  ],
   "spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
@@ -79,13 +86,6 @@
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.lightning_strike.desc"
-    }
-  ],
-  "variables": [
-    {
-      "type": "spells_and_shields:double",
-      "value": 20.0,
-      "var/name": "range"
     }
   ]
 }

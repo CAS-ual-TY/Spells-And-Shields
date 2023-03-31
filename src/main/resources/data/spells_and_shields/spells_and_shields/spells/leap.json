@@ -4,6 +4,13 @@
     "texture": "spells_and_shields:textures/spell/leap.png"
   },
   "mana_cost": 2.5,
+  "parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 2.5,
+      "var/name": "speed"
+    }
+  ],
   "spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
@@ -60,13 +67,6 @@
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.leap.desc"
-    }
-  ],
-  "variables": [
-    {
-      "type": "spells_and_shields:double",
-      "value": 2.5,
-      "var/name": "speed"
     }
   ]
 }

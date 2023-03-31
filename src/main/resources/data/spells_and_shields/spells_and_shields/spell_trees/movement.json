@@ -16,8 +16,8 @@
               }
             ],
             "level_cost": 20,
-            "spell": "spells_and_shields:toggle_speed",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:toggle_speed"
           },
           {
             "children": [],
@@ -31,8 +31,8 @@
               }
             ],
             "level_cost": 14,
-            "spell": "spells_and_shields:jump",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:jump"
           },
           {
             "children": [
@@ -48,8 +48,8 @@
                   }
                 ],
                 "level_cost": 15,
-                "spell": "spells_and_shields:toggle_slow_falling",
-                "variables": []
+                "parameters": [],
+                "spell": "spells_and_shields:toggle_slow_falling"
               }
             ],
             "frame": 0,
@@ -62,8 +62,8 @@
               }
             ],
             "level_cost": 15,
-            "spell": "spells_and_shields:mana_soles",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:mana_soles"
           },
           {
             "children": [
@@ -79,8 +79,8 @@
                   }
                 ],
                 "level_cost": 20,
-                "spell": "spells_and_shields:pressurize",
-                "variables": []
+                "parameters": [],
+                "spell": "spells_and_shields:pressurize"
               }
             ],
             "frame": 0,
@@ -93,8 +93,8 @@
               }
             ],
             "level_cost": 10,
-            "spell": "spells_and_shields:blow_arrow",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:blow_arrow"
           }
         ],
         "frame": 0,
@@ -107,8 +107,8 @@
           }
         ],
         "level_cost": 10,
-        "spell": "spells_and_shields:leap",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:leap"
       }
     ],
     "frame": 0,
@@ -121,8 +121,8 @@
       }
     ],
     "level_cost": 15,
-    "spell": "spells_and_shields:toggle_jump_boost",
-    "variables": []
+    "parameters": [],
+    "spell": "spells_and_shields:toggle_jump_boost"
   },
   "title": {
     "translate": "spell_tree.spells_and_shields.movement"

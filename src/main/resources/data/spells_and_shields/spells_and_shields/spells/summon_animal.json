@@ -4,6 +4,7 @@
     "texture": "spells_and_shields:textures/spell/summon_animal.png"
   },
   "mana_cost": 4.0,
+  "parameters": [],
   "spell_actions": [
     {
       "type": "spells_and_shields:get_entity_position_direction",
@@ -160,6 +161,5 @@
     {
       "translate": "spell.spells_and_shields.summon_animal.desc"
     }
-  ],
-  "variables": []
+  ]
 }

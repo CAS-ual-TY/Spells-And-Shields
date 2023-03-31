@@ -4,6 +4,7 @@
     "texture": "spells_and_shields:textures/mob_effect/silence.png"
   },
   "mana_cost": 0.0,
+  "parameters": [],
   "spell_actions": [],
   "title": {
     "translate": "spell.spells_and_shields.silence_target"
@@ -17,6 +18,5 @@
       "italic": true,
       "text": "In Development"
     }
-  ],
-  "variables": []
+  ]
 }

@@ -10,6 +10,7 @@
     "width": 16
   },
   "mana_cost": 4.0,
+  "parameters": [],
   "spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
@@ -123,6 +124,5 @@
     {
       "translate": "spell.spells_and_shields.ghast.desc"
     }
-  ],
-  "variables": []
+  ]
 }

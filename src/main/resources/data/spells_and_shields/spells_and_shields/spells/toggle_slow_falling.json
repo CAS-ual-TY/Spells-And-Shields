@@ -4,6 +4,33 @@
     "texture": "minecraft:textures/mob_effect/slow_falling.png"
   },
   "mana_cost": 2.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:int",
+      "value": 50,
+      "var/name": "duration"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 0,
+      "var/name": "amplifier"
+    },
+    {
+      "type": "spells_and_shields:boolean",
+      "value": false,
+      "var/name": "ambient"
+    },
+    {
+      "type": "spells_and_shields:boolean",
+      "value": false,
+      "var/name": "visible"
+    },
+    {
+      "type": "spells_and_shields:boolean",
+      "value": true,
+      "var/name": "show_icon"
+    }
+  ],
   "spell_actions": [
     {
       "type": "spells_and_shields:copy_targets",
@@ -161,33 +188,6 @@
           "translate": "effect.minecraft.slow_falling"
         }
       ]
-    }
-  ],
-  "variables": [
-    {
-      "type": "spells_and_shields:int",
-      "value": 50,
-      "var/name": "duration"
-    },
-    {
-      "type": "spells_and_shields:int",
-      "value": 0,
-      "var/name": "amplifier"
-    },
-    {
-      "type": "spells_and_shields:boolean",
-      "value": false,
-      "var/name": "ambient"
-    },
-    {
-      "type": "spells_and_shields:boolean",
-      "value": false,
-      "var/name": "visible"
-    },
-    {
-      "type": "spells_and_shields:boolean",
-      "value": true,
-      "var/name": "show_icon"
     }
   ]
 }

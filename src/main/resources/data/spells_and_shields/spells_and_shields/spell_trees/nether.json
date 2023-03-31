@@ -16,8 +16,8 @@
               }
             ],
             "level_cost": 30,
-            "spell": "spells_and_shields:toggle_fire_resistance",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:toggle_fire_resistance"
           },
           {
             "children": [],
@@ -31,8 +31,8 @@
               }
             ],
             "level_cost": 20,
-            "spell": "spells_and_shields:drain_flame",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:drain_flame"
           }
         ],
         "frame": 0,
@@ -45,8 +45,8 @@
           }
         ],
         "level_cost": 20,
-        "spell": "spells_and_shields:lava_walker",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:lava_walker"
       },
       {
         "children": [
@@ -62,8 +62,8 @@
               }
             ],
             "level_cost": 20,
-            "spell": "spells_and_shields:flamethrower",
-            "variables": []
+            "parameters": [],
+            "spell": "spells_and_shields:flamethrower"
           }
         ],
         "frame": 0,
@@ -84,8 +84,8 @@
           }
         ],
         "level_cost": 10,
-        "spell": "spells_and_shields:ghast",
-        "variables": []
+        "parameters": [],
+        "spell": "spells_and_shields:ghast"
       }
     ],
     "frame": 0,
@@ -98,8 +98,8 @@
       }
     ],
     "level_cost": 15,
-    "spell": "spells_and_shields:fire_ball",
-    "variables": []
+    "parameters": [],
+    "spell": "spells_and_shields:fire_ball"
   },
   "title": {
     "translate": "spell_tree.spells_and_shields.nether"
