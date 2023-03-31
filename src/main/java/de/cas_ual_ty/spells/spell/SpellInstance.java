@@ -30,17 +30,17 @@ public class SpellInstance
 {
     private Holder<Spell> spell;
     private float manaCost;
-    private List<CtxVar<?>> variables;
+    private List<CtxVar<?>> parameters;
     
     private SpellNodeId nodeId;
     
     private Optional<TooltipComponent> tooltipComponent;
     
-    public SpellInstance(Holder<Spell> spell, float manaCost, List<CtxVar<?>> variables)
+    public SpellInstance(Holder<Spell> spell, float manaCost, List<CtxVar<?>> parameters)
     {
         this.spell = spell;
         setManaCost(manaCost);
-        this.variables = variables;
+        this.parameters = parameters;
         nodeId = null;
     }
     
@@ -54,9 +54,9 @@ public class SpellInstance
         this(spell, -1, new LinkedList<>());
     }
     
-    public <T> SpellInstance addVariable(CtxVar<T> ctxVar)
+    public <T> SpellInstance addParameter(CtxVar<T> ctxVar)
     {
-        variables.add(ctxVar);
+        parameters.add(ctxVar);
         return this;
     }
     
@@ -82,9 +82,9 @@ public class SpellInstance
         return manaCost;
     }
     
-    public List<CtxVar<?>> getVariables()
+    public List<CtxVar<?>> getParameters()
     {
-        return variables;
+        return parameters;
     }
     
     public SpellNodeId getNodeId()
@@ -132,14 +132,14 @@ public class SpellInstance
         }
         
         spell.get().getParameters().forEach(ctx::initCtxVar);
-        variables.forEach(ctx::initCtxVar);
+        parameters.forEach(ctx::initCtxVar);
         
         return ctx;
     }
     
     public SpellInstance copy()
     {
-        return new SpellInstance(spell, manaCost, new LinkedList<>(variables));
+        return new SpellInstance(spell, manaCost, new LinkedList<>(parameters));
     }
     
     public void toNbt(CompoundTag nbt, Registry<Spell> spellRegistry)

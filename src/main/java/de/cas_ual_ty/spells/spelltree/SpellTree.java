@@ -280,9 +280,9 @@ public class SpellTree
             return manaCost(0);
         }
         
-        public Builder addVariable(CtxVar<?> ctxVar)
+        public Builder addParameter(CtxVar<?> ctxVar)
         {
-            stack.peek().getSpellInstance().addVariable(ctxVar);
+            stack.peek().getSpellInstance().addParameter(ctxVar);
             return this;
         }
         
