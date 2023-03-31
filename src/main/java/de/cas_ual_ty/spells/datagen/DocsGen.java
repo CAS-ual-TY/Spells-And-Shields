@@ -68,9 +68,9 @@ public class DocsGen implements DataProvider
     public static void generateBigFile(String modId)
     {
         ROOT.mkdirs();
-        SpellsAndShields.LOGGER.info("Generated reduced json files for docs in: " + ROOT.getAbsolutePath());
-        
         File full = new File(ROOT, modId + ".md");
+        
+        SpellsAndShields.LOGGER.info("Generated big file containing reduced json entries for docs in: " + full.getAbsolutePath());
         
         try(FileWriter fw = new FileWriter(full))
         {
