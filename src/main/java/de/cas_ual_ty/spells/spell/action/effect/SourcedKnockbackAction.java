@@ -72,7 +72,7 @@ public class SourcedKnockbackAction extends AffectTypeAction<LivingEntityTarget>
             {
                 TargetTypes.POSITION.get().ifType(t, source ->
                 {
-                    Vec3 vec = target.getPosition().subtract(source.getPosition()).multiply(1, 0, 1);
+                    Vec3 vec = source.getPosition().subtract(target.getPosition()).multiply(1, 0, 1);
                     target.getLivingEntity().knockback(strength, vec.x, vec.z);
                 });
             });
