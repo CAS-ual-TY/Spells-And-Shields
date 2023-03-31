@@ -11,17 +11,14 @@ import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
-import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 public class Spell
 {
@@ -32,8 +29,6 @@ public class Spell
     protected float manaCost;
     private List<CtxVar<?>> parameters;
     
-    protected Optional<TooltipComponent> tooltipComponent;
-    
     public Spell(List<SpellAction> spellActions, SpellIcon icon, Component title, List<Component> tooltip, float manaCost, List<CtxVar<?>> parameters)
     {
         this.spellActions = spellActions;
@@ -42,7 +37,6 @@ public class Spell
         this.tooltip = tooltip;
         this.manaCost = manaCost;
         this.parameters = parameters;
-        tooltipComponent = manaCost != 0 ? Optional.of(new ManaTooltipComponent(manaCost)) : Optional.empty();
     }
     
     public Spell(SpellIcon icon, Component title, float manaCost)
@@ -132,11 +126,6 @@ public class Spell
         tooltip.addAll(getTooltip());
         
         return tooltip;
-    }
-    
-    public Optional<TooltipComponent> getTooltipComponent()
-    {
-        return tooltipComponent;
     }
     
     public void run(SpellContext ctx)

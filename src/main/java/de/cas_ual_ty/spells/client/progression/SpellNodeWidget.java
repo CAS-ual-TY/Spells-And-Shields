@@ -47,7 +47,7 @@ public class SpellNodeWidget extends GuiComponent
     public static final int TITLE_MAX_WIDTH = BAR_WIDTH - FRAME_WIDTH - 2 * TITLE_PADDING_LEFT - TITLE_PADDING_RIGHT;
     
     public final SpellTreeTab tab;
-    public final SpellNode spell;
+    public final SpellNode spellNode;
     public final SpellStatus spellStatus;
     
     public final int width;
@@ -71,7 +71,7 @@ public class SpellNodeWidget extends GuiComponent
     public SpellNodeWidget(SpellTreeTab skillTreeTab, SpellNode spell, SpellStatus spellStatus)
     {
         this.tab = skillTreeTab;
-        this.spell = spell;
+        this.spellNode = spell;
         this.spellStatus = spellStatus;
         
         this.font = Minecraft.getInstance().font;
@@ -309,9 +309,9 @@ public class SpellNodeWidget extends GuiComponent
     
     public void attachToParent()
     {
-        if(this.parent == null && this.spell.getParent() != null)
+        if(this.parent == null && this.spellNode.getParent() != null)
         {
-            this.parent = this.tab.getWidget(this.spell.getParent());
+            this.parent = this.tab.getWidget(this.spellNode.getParent());
             
             if(this.parent != null)
             {

@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.client.progression;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
-import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.SpellInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -71,18 +71,18 @@ public class SelectedSpellWidget extends GuiComponent
     
     public void drawTooltip(PoseStack poseStack, int mouseX, int mouseY, Screen screen)
     {
-        if(active && clickedWidget != null && mouseX >= this.x && mouseX < this.x + this.w && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
+        if(active && clickedWidget != null && clickedWidget.spellNode != null && mouseX >= this.x && mouseX < this.x + this.w && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
         {
-            Spell spell = clickedWidget.spell.getSpellDirect();
+            SpellInstance spellInstance = clickedWidget.spellNode.getSpellInstance();
             
-            if(spell != null)
+            if(spellInstance != null)
             {
                 RenderSystem.enableDepthTest();
                 poseStack.pushPose();
                 poseStack.translate(0, 0, 400D);
                 
-                List<Component> tooltip = spell.makeTooltipList(null);
-                Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
+                List<Component> tooltip = spellInstance.getSpell().get().makeTooltipList(null);
+                Optional<TooltipComponent> tooltipComponent = clickedWidget.spellNode.getSpellInstance().getTooltipComponent();
                 
                 screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);
                 

@@ -9,6 +9,7 @@ import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
+import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -16,36 +17,54 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class SpellInstance
 {
     private Holder<Spell> spell;
+    private float manaCost;
     private List<CtxVar<?>> variables;
     
     private SpellNodeId nodeId;
     
-    public SpellInstance(Holder<Spell> spell, List<CtxVar<?>> variables)
+    private Optional<TooltipComponent> tooltipComponent;
+    
+    public SpellInstance(Holder<Spell> spell, float manaCost, List<CtxVar<?>> variables)
     {
         this.spell = spell;
+        setManaCost(manaCost);
         this.variables = variables;
         nodeId = null;
     }
     
+    public SpellInstance(Holder<Spell> spell, float manaCost)
+    {
+        this(spell, manaCost, new LinkedList<>());
+    }
+    
     public SpellInstance(Holder<Spell> spell)
     {
-        this(spell, new LinkedList<>());
+        this(spell, -1, new LinkedList<>());
     }
     
     public <T> SpellInstance addVariable(CtxVar<T> ctxVar)
     {
         variables.add(ctxVar);
         return this;
+    }
+    
+    public void setManaCost(float manaCost)
+    {
+        this.manaCost = manaCost;
+        float applied = getAppliedManaCost();
+        tooltipComponent = applied != 0 ? Optional.of(new ManaTooltipComponent(applied)) : Optional.empty();
     }
     
     public void initId(SpellNodeId nodeId)
@@ -58,6 +77,11 @@ public class SpellInstance
         return spell;
     }
     
+    public float getManaCost()
+    {
+        return manaCost;
+    }
+    
     public List<CtxVar<?>> getVariables()
     {
         return variables;
@@ -66,6 +90,16 @@ public class SpellInstance
     public SpellNodeId getNodeId()
     {
         return nodeId;
+    }
+    
+    public float getAppliedManaCost()
+    {
+        return manaCost >= 0 ? manaCost : spell.get().getManaCost();
+    }
+    
+    public Optional<TooltipComponent> getTooltipComponent()
+    {
+        return tooltipComponent;
     }
     
     public void run(Player owner, String activation)
@@ -90,7 +124,7 @@ public class SpellInstance
         SpellContext ctx = new SpellContext(level, owner, this);
         
         ctx.activate(activation);
-        ctx.initCtxVar(new CtxVar<>(CtxVarTypes.DOUBLE.get(), BuiltinVariables.MANA_COST.name, (double) spell.get().getManaCost()));
+        ctx.initCtxVar(new CtxVar<>(CtxVarTypes.DOUBLE.get(), BuiltinVariables.MANA_COST.name, (double) getAppliedManaCost()));
         
         if(owner != null)
         {
@@ -105,7 +139,7 @@ public class SpellInstance
     
     public SpellInstance copy()
     {
-        return new SpellInstance(spell, new LinkedList<>(variables));
+        return new SpellInstance(spell, manaCost, new LinkedList<>(variables));
     }
     
     public void toNbt(CompoundTag nbt, Registry<Spell> spellRegistry)

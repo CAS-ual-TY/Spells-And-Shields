@@ -5,6 +5,7 @@ import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
+import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -265,6 +266,23 @@ public class SpellTree
         public Builder frame(int frame)
         {
             stack.peek().setFrame(Mth.clamp(frame, 0, 2));
+            return this;
+        }
+        
+        public Builder manaCost(float manaCost)
+        {
+            stack.peek().getSpellInstance().setManaCost(manaCost);
+            return this;
+        }
+        
+        public Builder noManaCost()
+        {
+            return manaCost(0);
+        }
+        
+        public Builder addVariable(CtxVar<?> ctxVar)
+        {
+            stack.peek().getSpellInstance().addVariable(ctxVar);
             return this;
         }
         

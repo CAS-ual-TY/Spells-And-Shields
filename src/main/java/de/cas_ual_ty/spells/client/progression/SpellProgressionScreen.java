@@ -178,7 +178,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             @Override
             public void render(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
             {
-                this.active = selectedSpellWidget.clickedWidget != null && selectedSpellWidget.clickedWidget.spell.canLearn(spellProgressionHolder, menu.access);
+                this.active = selectedSpellWidget.clickedWidget != null && selectedSpellWidget.clickedWidget.spellNode.canLearn(spellProgressionHolder, menu.access);
                 super.render(poseStack, mouseX, mouseY, deltaTick);
             }
             
@@ -189,7 +189,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                 
                 if(selectedSpellWidget.clickedWidget != null)
                 {
-                    int cost = selectedSpellWidget.clickedWidget.spell.getLevelCost();
+                    int cost = selectedSpellWidget.clickedWidget.spellNode.getLevelCost();
                     
                     // active ? lime green : dark green
                     int color = this.active ? 0x80FF20 : 0x407F10;
@@ -231,7 +231,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     {
         if(selectedSpellWidget.clickedWidget != null && button.isMouseOver(mouseX, mouseY))
         {
-            renderTooltip(poseStack, selectedSpellWidget.clickedWidget.spell.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
+            renderTooltip(poseStack, selectedSpellWidget.clickedWidget.spellNode.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
         }
     }
     
@@ -245,7 +245,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
         else if(button == learnButton && selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.clickedWidget.spell.getNodeId()));
+            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.clickedWidget.spellNode.getNodeId()));
         }
     }
     
@@ -253,7 +253,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     {
         if(selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.spell.getNodeId()));
+            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.spellNode.getNodeId()));
             this.spellClicked(null);
         }
     }
@@ -332,7 +332,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             this.selectedSpellWidget.setClickedWidget(w);
             this.selectedSpellWidget.active = true;
             
-            this.learnButton.visible = ProgressionHelper.isFullyLinked(w.spell, menu.spellProgression) && (w.spellStatus == SpellStatus.LOCKED || w.spellStatus == SpellStatus.FORGOTTEN);
+            this.learnButton.visible = ProgressionHelper.isFullyLinked(w.spellNode, menu.spellProgression) && (w.spellStatus == SpellStatus.LOCKED || w.spellStatus == SpellStatus.FORGOTTEN);
             this.equipButton.visible = w.spellStatus == SpellStatus.LEARNED;
             this.unavailableButton.visible = !this.learnButton.visible && !this.equipButton.visible;
         }

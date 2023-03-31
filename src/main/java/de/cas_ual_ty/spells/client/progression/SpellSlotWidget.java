@@ -111,7 +111,7 @@ public class SpellSlotWidget extends Button
                     
                     Component keyBindTooltip = SpellKeyBindings.getBaseTooltip().append(": ").append(SpellKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
                     List<Component> tooltip = spell.getSpell().get().makeTooltipList(keyBindTooltip);
-                    Optional<TooltipComponent> tooltipComponent = spell.getSpell().get().getTooltipComponent();
+                    Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
                     
                     screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);
                     
