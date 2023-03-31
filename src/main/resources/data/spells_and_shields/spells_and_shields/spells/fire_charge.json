@@ -15,7 +15,7 @@
       "t/target": "owner"
     },
     {
-      "type": "spells_and_shields:simple_item_check",
+      "type": "spells_and_shields:item_check",
       "activation": "active",
       "d/boolean/must_be_in_hand": true,
       "item": {

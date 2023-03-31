@@ -3,7 +3,7 @@
     "type": "spells_and_shields:default",
     "texture": "minecraft:textures/mob_effect/night_vision.png"
   },
-  "mana_cost": 2.0,
+  "mana_cost": 4.0,
   "parameters": [
     {
       "type": "spells_and_shields:int",
@@ -105,8 +105,9 @@
       "ts/targets": "player"
     },
     {
-      "type": "spells_and_shields:simple_mana_check",
+      "type": "spells_and_shields:mana_check",
       "activation": "apply",
+      "amount": "<< (mana_cost * duration) / 100 >>",
       "t/target": "player"
     },
     {
