@@ -1,7 +1,7 @@
 {
   "icon": {
     "type": "spells_and_shields:default",
-    "texture": "spells_and_shields:textures/spell/water_whip.png"
+    "texture": "spells_and_shields:textures/spell/potion_shot.png"
   },
   "mana_cost": 5.0,
   "parameters": [
@@ -85,14 +85,8 @@
       "d/compound_tag/tag": "<<item_tag>>",
       "d/int/amount": "<<amount>>",
       "d/int/damage": "<<damage>>",
-      "d/string/item": "minecraft:bucket",
+      "d/string/item": "minecraft:glass_bottle",
       "t/target": "item"
-    },
-    {
-      "type": "spells_and_shields:get_entity_uuid",
-      "activation": "shoot",
-      "t/source": "owner",
-      "var/uuid": "owner_uuid_return"
     },
     {
       "type": "spells_and_shields:put_compound_tag",
@@ -103,17 +97,17 @@
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "shoot",
-      "d/tag/source": "<< put_nbt_uuid(tag, 'owner_uuid_return', owner_uuid_return) >>",
+      "d/tag/source": "<< put_nbt_string(tag, 'Potion', get_nbt_string(item_tag, 'Potion')) >>",
       "var/result": "tag"
     },
     {
       "type": "spells_and_shields:shoot",
-      "a/block_hit_activation": "on_block_hit",
+      "a/block_hit_activation": "",
       "a/entity_hit_activation": "on_entity_hit",
-      "a/timeout_activation": "on_timeout",
+      "a/timeout_activation": "",
       "activation": "shoot",
       "d/double/inaccuracy": 0.0,
-      "d/double/velocity": 1.0,
+      "d/double/velocity": 2.0,
       "d/int/timeout": 100,
       "t/source": "owner",
       "td/projectile": "projectile"
@@ -133,9 +127,15 @@
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:damage",
+      "type": "spells_and_shields:get_entity_extra_tag",
       "activation": "on_entity_hit",
-      "d/double/damage": 10.0,
+      "t/source": "projectile",
+      "var/compound_tag": "tag"
+    },
+    {
+      "type": "spells_and_shields:apply_potion_effect",
+      "activation": "on_entity_hit",
+      "d/string/potion": "<< get_nbt_string(tag, 'Potion') >>",
       "ts/targets": "entity_hit"
     }
   ],

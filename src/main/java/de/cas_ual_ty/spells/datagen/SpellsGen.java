@@ -459,6 +459,29 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_WATER_WHIP_DESC))
         );
         
+        //TODO fx, test
+        addSpell(Spells.POTION_SHOT, new Spell(modId, "potion_shot", Spells.KEY_POTION_SHOT, 5F)
+                .addParameter(DOUBLE.get(), "damage", 10.0)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
+                .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
+                .addAction(ItemEqualsActivationAction.make(ACTIVE.activation, "item", "shoot", new ItemStack(Items.POTION), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
+                .addAction(ActivateAction.make(ACTIVE.activation, "offhand"))
+                .addAction(DeactivateAction.make("shoot", "offhand"))
+                .addAction(ClearTargetsAction.make("offhand", "item"))
+                .addAction(OffhandItemTargetAction.make("offhand", OWNER.targetGroup, "item"))
+                .addAction(ItemEqualsActivationAction.make("offhand", "item", "shoot", new ItemStack(Items.POTION), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
+                .addAction(GetItemAttributesAction.make("shoot", "item", "item", "amount", "damage", "item_tag"))
+                .addAction(OverrideItemAction.make("shoot", "item", INT.get().reference("amount"), INT.get().reference("damage"), COMPOUND_TAG.get().reference("item_tag"), SpellsUtil.objectToString(Items.GLASS_BOTTLE, ForgeRegistries.ITEMS)))
+                .addAction(PutVarAction.makeCompoundTag("shoot", new CompoundTag(), "tag"))
+                .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_string(tag, 'Potion', get_nbt_string(item_tag, 'Potion')) ", COMPOUND_TAG.get()), "tag"))
+                .addAction(ShootAction.make("shoot", OWNER.targetGroup, DOUBLE.get().immediate(2D), DOUBLE.get().immediate(0D), INT.get().immediate(100), "", "on_entity_hit", "", "projectile"))
+                .addAction(ApplyEntityExtraTagAction.make("shoot", "projectile", COMPOUND_TAG.get().reference("tag")))
+                .addAction(PlaySoundAction.make("shoot", OWNER.targetGroup, SoundEvents.BOTTLE_EMPTY, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(GetEntityExtraTagAction.make("on_entity_hit", PROJECTILE.targetGroup, "tag"))
+                .addAction(ApplyPotionEffectAction.make("on_entity_hit", ENTITY_HIT.targetGroup, Compiler.compileString(" get_nbt_string(tag, 'Potion') ", STRING.get())))
+                .addTooltip(Component.translatable(Spells.KEY_POTION_SHOT_DESC))
+        );
+        
         dummy(Spells.FROST_WALKER);
         
         addSpell(Spells.JUMP, new Spell(modId, "jump", Spells.KEY_JUMP, 5F)
