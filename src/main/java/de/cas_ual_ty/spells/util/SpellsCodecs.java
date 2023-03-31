@@ -58,9 +58,6 @@ public class SpellsCodecs
     
     public static Codec<Component> COMPONENT; // json only, no NBT support
     
-    public static Codec<Integer> STRING_INT_CODEC;
-    public static Codec<Double> STRING_DOUBLE_CODEC;
-    
     public static void makeCodecs()
     {
         SPELL = ExtraCodecs.lazyInitializedCodec(() -> RegistryFileCodec.create(Spells.REGISTRY_KEY, ExtraCodecs.lazyInitializedCodec(() -> SPELL_CONTENTS), false));
@@ -80,7 +77,7 @@ public class SpellsCodecs
         SPELL_NODE = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL).fieldOf("spell").forGetter(node -> node.getSpellInstance().getSpell()),
                 Codec.optionalField("mana_cost", Codec.FLOAT).forGetter(node -> Optional.of(node.getSpellInstance()).map(SpellInstance::getManaCost).map(mana -> mana >= 0 ? mana : null)),
-                ExtraCodecs.lazyInitializedCodec(() -> CTX_VAR).listOf().fieldOf("variables").forGetter(node -> node.getSpellInstance().getVariables()),
+                ExtraCodecs.lazyInitializedCodec(() -> CTX_VAR).listOf().fieldOf("parameters").forGetter(node -> node.getSpellInstance().getParameters()),
                 Codec.INT.fieldOf("level_cost").forGetter(SpellNode::getLevelCost),
                 REQUIREMENT.listOf().fieldOf("hidden_requirements").forGetter(SpellNode::getHiddenRequirements),
                 REQUIREMENT.listOf().fieldOf("learn_requirements").forGetter(SpellNode::getLearnRequirements),
@@ -101,7 +98,7 @@ public class SpellsCodecs
                 COMPONENT.fieldOf("title").forGetter(Spell::getTitle),
                 COMPONENT.listOf().fieldOf("tooltip").forGetter(Spell::getTooltip),
                 Codec.FLOAT.fieldOf("mana_cost").forGetter(Spell::getManaCost),
-                CTX_VAR.listOf().fieldOf("variables").forGetter(Spell::getParameters)
+                CTX_VAR.listOf().fieldOf("parameters").forGetter(Spell::getParameters)
         ).apply(instance, Spell::new)));
         
         COMPONENT = ExtraCodecs.lazyInitializedCodec(() -> new PrimitiveCodec<>()
@@ -129,9 +126,6 @@ public class SpellsCodecs
                 return ops.empty();
             }
         });
-        
-        STRING_INT_CODEC = makeStringCodec(Pattern.compile("^\s*(?<value>[0-9]+)\s*$"), matcher -> Integer.valueOf(matcher.group("value")), Object::toString);
-        STRING_DOUBLE_CODEC = makeStringCodec(Pattern.compile("^\s*(?<value>[0-9]+\\.[0-9]*)\s*$"), matcher -> Double.valueOf(matcher.group("value")), Object::toString);
     }
     
     private static <T> Codec<T> makeStringCodec(Pattern pattern, Function<Matcher, T> fromString, Function<T, String> toString)
