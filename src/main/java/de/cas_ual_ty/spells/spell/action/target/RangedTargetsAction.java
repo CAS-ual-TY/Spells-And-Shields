@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spell.action.base.SrcDstTargetAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
+import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -61,7 +62,9 @@ public class RangedTargetsAction extends SrcDstTargetAction
                 {
                     range = range * 2;
                     Entity entity = TargetTypes.ENTITY.get().ifType(target).map(EntityTarget::getEntity).orElse(null);
-                    level.getEntities(entity, AABB.ofSize(position.getPosition(), range, range, range));
+                    level.getEntities(entity, AABB.ofSize(position.getPosition(), range, range, range)).stream()
+                            .map(Target::of)
+                            .forEach(destination::addTargets);
                 }
             });
         }));
