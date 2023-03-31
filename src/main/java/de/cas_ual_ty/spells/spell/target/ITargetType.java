@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.spell.target;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public interface ITargetType<T extends Target>
@@ -16,6 +17,18 @@ public interface ITargetType<T extends Target>
         if(isType(target))
         {
             consumer.accept(asType(target));
+        }
+    }
+    
+    default Optional<T> ifType(Target target)
+    {
+        if(isType(target))
+        {
+            return Optional.of(asType(target));
+        }
+        else
+        {
+            return Optional.empty();
         }
     }
     

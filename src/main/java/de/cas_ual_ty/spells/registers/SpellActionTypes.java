@@ -129,6 +129,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<HomeAction>> HOME = DEFERRED_REGISTER.register("home", () -> new SpellActionType<>(HomeAction::new, HomeAction::makeCodec));
     public static final RegistryObject<SpellActionType<LookAtTargetAction>> LOOK_AT_TARGET = DEFERRED_REGISTER.register("look_at_target", () -> new SpellActionType<>(LookAtTargetAction::new, LookAtTargetAction::makeCodec));
     public static final RegistryObject<SpellActionType<PickTargetAction>> PICK_TARGET = DEFERRED_REGISTER.register("pick_target", () -> new SpellActionType<>(PickTargetAction::new, PickTargetAction::makeCodec2));
+    public static final RegistryObject<SpellActionType<RangedTargetsAction>> RANGED_TARGETS = DEFERRED_REGISTER.register("ranged_targets", () -> new SpellActionType<>(RangedTargetsAction::new, RangedTargetsAction::makeCodec));
     public static final RegistryObject<SpellActionType<ShootAction>> SHOOT = DEFERRED_REGISTER.register("shoot", () -> new SpellActionType<>(ShootAction::new, ShootAction::makeCodec));
     
     // variable
