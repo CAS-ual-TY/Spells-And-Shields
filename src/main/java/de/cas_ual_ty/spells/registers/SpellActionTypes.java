@@ -14,10 +14,7 @@ import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
-import de.cas_ual_ty.spells.spell.action.mana.BurnManaAction;
-import de.cas_ual_ty.spells.spell.action.mana.GetManaAction;
-import de.cas_ual_ty.spells.spell.action.mana.ReplenishManaAction;
-import de.cas_ual_ty.spells.spell.action.mana.SimpleManaCheckAction;
+import de.cas_ual_ty.spells.spell.action.mana.*;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.target.filter.ItemFilterAction;
 import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
@@ -114,6 +111,7 @@ public class SpellActionTypes
     // mana
     public static final RegistryObject<SpellActionType<BurnManaAction>> BURN_MANA = DEFERRED_REGISTER.register("burn_mana", () -> new SpellActionType<>(BurnManaAction::new, BurnManaAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetManaAction>> GET_MANA = DEFERRED_REGISTER.register("get_mana", () -> new SpellActionType<>(GetManaAction::new, GetManaAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ManaCheckAction>> MANA_CHECK = DEFERRED_REGISTER.register("mana_check", () -> new SpellActionType<>(ManaCheckAction::new, ManaCheckAction::makeCodec));
     public static final RegistryObject<SpellActionType<ReplenishManaAction>> REPLENISH_MANA = DEFERRED_REGISTER.register("replenish_mana", () -> new SpellActionType<>(ReplenishManaAction::new, ReplenishManaAction::makeCodec));
     public static final RegistryObject<SpellActionType<SimpleManaCheckAction>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheckAction::new, SimpleManaCheckAction::makeCodec));
     
