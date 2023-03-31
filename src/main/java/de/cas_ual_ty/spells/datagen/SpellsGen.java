@@ -511,7 +511,17 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_CHARGE_DESC))
         );
         
-        dummy(Spells.PRESSURIZE);
+        addSpell(Spells.PRESSURIZE, new Spell(modId, "pressurize", Spells.KEY_PRESSURIZE, 4F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
+                .addAction(RangedTargetsAction.make(ACTIVE.activation, "targets", OWNER.targetGroup, DOUBLE.get().reference("range")))
+                .addAction(SourcedKnockbackAction.make(ACTIVE.activation, "targets", DOUBLE.get().reference("knockback_strength"), OWNER.targetGroup))
+                .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.PLAYER_BREATH, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(SpawnParticlesAction.make(ACTIVE.activation, "targets", ParticleTypes.POOF, INT.get().immediate(3), DOUBLE.get().immediate(0.5D)))
+                .addParameter(DOUBLE.get(), "range", 6D)
+                .addParameter(DOUBLE.get(), "knockback_strength", 3D)
+                .addTooltip(Component.translatable(Spells.KEY_PRESSURIZE_DESC))
+        );
+        
         dummy(Spells.INSTANT_MINE);
         dummy(Spells.SPIT_METAL);
         dummy(Spells.FLAMETHROWER);
