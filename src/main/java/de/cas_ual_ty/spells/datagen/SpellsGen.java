@@ -136,7 +136,7 @@ public class SpellsGen implements DataProvider
                 .addAction(ActivateAction.make(ON_UNEQUIP.activation, "remove"))
                 .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), BOOLEAN.get().immediate(false)))
                 .addAction(ActivateAction.make("apply", "renew"))
-                .addAction(ApplyPotionEffectAction.make("apply", "player", SpellsUtil.objectToString(mobEffect, ForgeRegistries.MOB_EFFECTS), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
+                .addAction(ApplyMobEffectAction.make("apply", "player", SpellsUtil.objectToString(mobEffect, ForgeRegistries.MOB_EFFECTS), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
                 .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("duration"), STRING.get().reference("uuid"), COMPOUND_TAG.get().immediate(new CompoundTag())))
                 .addParameter(INT.get(), "duration", duration)
                 .addParameter(INT.get(), "amplifier", amplifier)
@@ -211,7 +211,7 @@ public class SpellsGen implements DataProvider
                 .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), BOOLEAN.get().immediate(false)))
                 .addAction(SimpleManaCheckAction.make("apply", "player"))
                 .addAction(ActivateAction.make("apply", "renew"))
-                .addAction(ApplyPotionEffectAction.make("apply", "player", SpellsUtil.objectToString(mobEffect, ForgeRegistries.MOB_EFFECTS), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
+                .addAction(ApplyMobEffectAction.make("apply", "player", SpellsUtil.objectToString(mobEffect, ForgeRegistries.MOB_EFFECTS), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
                 .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("duration"), STRING.get().reference("uuid"), COMPOUND_TAG.get().immediate(new CompoundTag())))
                 .addAction(ActivateAction.make("apply", "sound"))
                 .addAction(ActivateAction.make("apply", "anti_sound"))
@@ -459,7 +459,6 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_WATER_WHIP_DESC))
         );
         
-        dummy(Spells.POTION_SHOT);
         dummy(Spells.FROST_WALKER);
         
         addSpell(Spells.JUMP, new Spell(modId, "jump", Spells.KEY_JUMP, 5F)

@@ -91,7 +91,7 @@
       "activation": "apply"
     },
     {
-      "type": "spells_and_shields:apply_potion_effect",
+      "type": "spells_and_shields:apply_mob_effect",
       "activation": "apply",
       "d/boolean/ambient": "<<ambient>>",
       "d/boolean/showIcon": "<<show_icon>>",

@@ -17,25 +17,25 @@ import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget>
+public class ApplyMobEffectAction extends AffectTypeAction<LivingEntityTarget>
 {
-    public static Codec<ApplyPotionEffectAction> makeCodec(SpellActionType<ApplyPotionEffectAction> type)
+    public static Codec<ApplyMobEffectAction> makeCodec(SpellActionType<ApplyMobEffectAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 multiTargetsCodec(),
-                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("mob_effect")).forGetter(ApplyPotionEffectAction::getMobEffect),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("duration")).forGetter(ApplyPotionEffectAction::getDuration),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amplifier")).forGetter(ApplyPotionEffectAction::getAmplifier),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("ambient")).forGetter(ApplyPotionEffectAction::getAmbient),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("visible")).forGetter(ApplyPotionEffectAction::getVisible),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("showIcon")).forGetter(ApplyPotionEffectAction::getShowIcon)
-        ).apply(instance, (activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon) -> new ApplyPotionEffectAction(type, activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon)));
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("mob_effect")).forGetter(ApplyMobEffectAction::getMobEffect),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("duration")).forGetter(ApplyMobEffectAction::getDuration),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amplifier")).forGetter(ApplyMobEffectAction::getAmplifier),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("ambient")).forGetter(ApplyMobEffectAction::getAmbient),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("visible")).forGetter(ApplyMobEffectAction::getVisible),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("showIcon")).forGetter(ApplyMobEffectAction::getShowIcon)
+        ).apply(instance, (activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon) -> new ApplyMobEffectAction(type, activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon)));
     }
     
-    public static ApplyPotionEffectAction make(String activation, String multiTargets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
+    public static ApplyMobEffectAction make(String activation, String multiTargets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
     {
-        return new ApplyPotionEffectAction(SpellActionTypes.APPLY_POTION_EFFECT.get(), activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon);
+        return new ApplyMobEffectAction(SpellActionTypes.APPLY_MOB_EFFECT.get(), activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon);
     }
     
     protected DynamicCtxVar<String> mobEffect;
@@ -45,12 +45,12 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
     protected DynamicCtxVar<Boolean> visible;
     protected DynamicCtxVar<Boolean> showIcon;
     
-    public ApplyPotionEffectAction(SpellActionType<?> type)
+    public ApplyMobEffectAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public ApplyPotionEffectAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
+    public ApplyMobEffectAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
     {
         super(type, activation, multiTargets);
         this.mobEffect = mobEffect;
