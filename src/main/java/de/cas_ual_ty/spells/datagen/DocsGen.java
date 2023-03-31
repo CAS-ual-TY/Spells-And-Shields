@@ -139,7 +139,6 @@ public class DocsGen implements DataProvider
             fw.write("}\n");
             fw.write("```\n");
             fw.write("Elements:\n");
-            fw.write("- `activation`:\n");
             fw.write(keys.stream().map(key -> "- `" + key + "`: ABCDE").collect(Collectors.joining(",\n")) + "\n");
             fw.write('\n');
         }
