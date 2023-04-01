@@ -117,6 +117,14 @@
       "ts/targets": "item"
     },
     {
+      "type": "spells_and_shields:play_sound",
+      "activation": "active",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.llama.spit",
+      "ts/targets": "owner"
+    },
+    {
       "type": "spells_and_shields:get_entity_extra_tag",
       "activation": "on_entity_hit",
       "t/source": "projectile",

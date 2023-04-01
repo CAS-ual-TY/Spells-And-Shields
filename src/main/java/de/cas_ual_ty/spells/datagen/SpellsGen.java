@@ -578,7 +578,7 @@ public class SpellsGen implements DataProvider
         
         dummy(Spells.INSTANT_MINE);
         
-        //TODO Sound fx
+        //TODO fx
         CompoundTag metalMap = new CompoundTag();
         metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.IRON_NUGGET).toString(), Tiers.IRON.getAttackDamageBonus());
         metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.GOLD_NUGGET).toString(), Tiers.GOLD.getAttackDamageBonus());
@@ -597,6 +597,7 @@ public class SpellsGen implements DataProvider
                 .addAction(PutVarAction.makeDouble("shoot", Compiler.compileString(" base_damage + get_nbt_double(item_damage_map, item_id) ", DOUBLE.get()), "damage"))
                 .addAction(ApplyEntityExtraTagAction.make("shoot", "projectile", Compiler.compileString(" put_nbt_double(tag(), 'damage', damage) ", COMPOUND_TAG.get())))
                 .addAction(ConsumeItemAction.make("shoot", "item", INT.get().immediate(1)))
+                .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.LLAMA_SPIT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(GetEntityExtraTagAction.make("on_entity_hit", PROJECTILE.targetGroup, "damage_tag"))
                 .addAction(SourcedDamageAction.make("on_entity_hit", ENTITY_HIT.targetGroup, Compiler.compileString(" get_nbt_double(damage_tag, 'damage') ", DOUBLE.get()), PROJECTILE.targetGroup))
                 .addParameter(DOUBLE.get(), "base_damage", 8D)
