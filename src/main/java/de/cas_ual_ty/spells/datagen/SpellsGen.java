@@ -578,6 +578,7 @@ public class SpellsGen implements DataProvider
         
         dummy(Spells.INSTANT_MINE);
         
+        //TODO Sound fx
         CompoundTag metalMap = new CompoundTag();
         metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.IRON_NUGGET).toString(), Tiers.IRON.getAttackDamageBonus());
         metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.GOLD_NUGGET).toString(), Tiers.GOLD.getAttackDamageBonus());
@@ -603,7 +604,30 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_SPIT_METAL_DESC))
         );
         
+        // TODO fx
         dummy(Spells.FLAMETHROWER);
+        addSpell(Spells.FLAMETHROWER, new Spell(modId, "flamethrower", Spells.KEY_FLAMETHROWER, 7F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
+                .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.BLAZE_POWDER)))
+                .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
+                .addAction(ActivateAction.make(ACTIVE.activation, "shoot"))
+                .addAction(CopyTargetsAction.make("on_timeout", "player", HOLDER.targetGroup))
+                .addAction(PutVarAction.makeInt("on_timeout", Compiler.compileString(" get_nbt_int(" + DELAY_TAG.name + ", 'repetitions') ", INT.get()), "repetitions"))
+                .addAction(ActivateAction.make("on_timeout", "shoot"))
+                .addAction(ShootAction.make("shoot", "player", DOUBLE.get().immediate(2D), DOUBLE.get().reference("inaccuracy"), INT.get().immediate(20), "on_block_hit", "on_entity_hit", "", ""))
+                .addAction(ShootAction.make("shoot", "player", DOUBLE.get().immediate(2D), DOUBLE.get().reference("inaccuracy"), INT.get().immediate(20), "on_block_hit", "on_entity_hit", "", ""))
+                .addAction(ShootAction.make("shoot", "player", DOUBLE.get().immediate(2D), DOUBLE.get().reference("inaccuracy"), INT.get().immediate(20), "on_block_hit", "on_entity_hit", "", ""))
+                .addAction(BooleanActivationAction.make("shoot", "repeat", Compiler.compileString(" repetitions > 1 ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(PlaySoundAction.make("shoot", "player", SoundEvents.BLAZE_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(AddDelayedSpellAction.make("repeat", "player", "on_timeout", INT.get().reference("repetition_delay"), STRING.get().immediate(""), Compiler.compileString(" put_nbt_int(tag(), 'repetitions', repetitions - 1) ", COMPOUND_TAG.get())))
+                .addAction(SetOnFireAction.make("on_entity_hit", ENTITY_HIT.targetGroup, INT.get().reference("fire_seconds")))
+                .addParameter(INT.get(), "fire_seconds", 10)
+                .addParameter(INT.get(), "repetitions", 5)
+                .addParameter(INT.get(), "repetition_delay", 4)
+                .addParameter(DOUBLE.get(), "inaccuracy", 15D)
+                .addTooltip(Component.translatable(Spells.KEY_FLAMETHROWER_DESC))
+        );
+        
         dummy(Spells.LAVA_WALKER);
         dummy(Spells.SILENCE_TARGET, Spells.KEY_SILENCE_TARGET, Spells.KEY_SILENCE_TARGET_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")));
         dummy(Spells.RANDOM_TELEPORT);

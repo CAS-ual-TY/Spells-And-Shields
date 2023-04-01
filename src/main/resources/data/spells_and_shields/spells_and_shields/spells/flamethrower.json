@@ -3,20 +3,147 @@
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/flamethrower.png"
   },
-  "mana_cost": 0.0,
-  "parameters": [],
-  "spell_actions": [],
+  "mana_cost": 7.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:int",
+      "value": 10,
+      "var/name": "fire_seconds"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 5,
+      "var/name": "repetitions"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 4,
+      "var/name": "repetition_delay"
+    },
+    {
+      "type": "spells_and_shields:double",
+      "value": 15.0,
+      "var/name": "inaccuracy"
+    }
+  ],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active",
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:item_check",
+      "activation": "active",
+      "d/boolean/must_be_in_hand": true,
+      "item": {
+        "Count": 1,
+        "id": "minecraft:blaze_powder"
+      },
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "active",
+      "td/destination": "player",
+      "ts/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "shoot",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "on_timeout",
+      "td/destination": "player",
+      "ts/source": "holder"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "on_timeout",
+      "d/int/source": "<< get_nbt_int(delay_tag, 'repetitions') >>",
+      "var/result": "repetitions"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "shoot",
+      "activation": "on_timeout"
+    },
+    {
+      "type": "spells_and_shields:shoot",
+      "activation": "shoot",
+      "ad/block_hit_activation": "on_block_hit",
+      "ad/entity_hit_activation": "on_entity_hit",
+      "ad/timeout_activation": "",
+      "d/double/inaccuracy": "<<inaccuracy>>",
+      "d/double/velocity": 2.0,
+      "d/int/timeout": 20,
+      "t/source": "player",
+      "td/projectile": ""
+    },
+    {
+      "type": "spells_and_shields:shoot",
+      "activation": "shoot",
+      "ad/block_hit_activation": "on_block_hit",
+      "ad/entity_hit_activation": "on_entity_hit",
+      "ad/timeout_activation": "",
+      "d/double/inaccuracy": "<<inaccuracy>>",
+      "d/double/velocity": 2.0,
+      "d/int/timeout": 20,
+      "t/source": "player",
+      "td/projectile": ""
+    },
+    {
+      "type": "spells_and_shields:shoot",
+      "activation": "shoot",
+      "ad/block_hit_activation": "on_block_hit",
+      "ad/entity_hit_activation": "on_entity_hit",
+      "ad/timeout_activation": "",
+      "d/double/inaccuracy": "<<inaccuracy>>",
+      "d/double/velocity": 2.0,
+      "d/int/timeout": 20,
+      "t/source": "player",
+      "td/projectile": ""
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "repeat",
+      "activation": "shoot",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< repetitions > 1 >>"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "shoot",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.blaze.shoot",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:add_delayed_spell",
+      "activation": "repeat",
+      "ad/on_remove": "on_timeout",
+      "d/compound_tag/extra_data": "<< put_nbt_int(tag(), 'repetitions', repetitions - 1) >>",
+      "d/int/tick_time": "<<repetition_delay>>",
+      "d/string/uuid": "",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:set_on_fire",
+      "activation": "on_entity_hit",
+      "d/int/fire_seconds": "<<fire_seconds>>",
+      "ts/targets": "entity_hit"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.flamethrower"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.flamethrower.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ]
 }
