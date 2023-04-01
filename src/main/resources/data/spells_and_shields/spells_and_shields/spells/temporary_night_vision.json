@@ -1,0 +1,88 @@
+{
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "minecraft:textures/mob_effect/night_vision.png"
+  },
+  "mana_cost": 13.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:int",
+      "value": 400,
+      "var/name": "duration"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 0,
+      "var/name": "amplifier"
+    },
+    {
+      "type": "spells_and_shields:boolean",
+      "value": false,
+      "var/name": "ambient"
+    },
+    {
+      "type": "spells_and_shields:boolean",
+      "value": false,
+      "var/name": "visible"
+    },
+    {
+      "type": "spells_and_shields:boolean",
+      "value": true,
+      "var/name": "show_icon"
+    }
+  ],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:mana_check",
+      "activation": "active",
+      "amount": "<< (mana_cost * duration) / 100 >>",
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:apply_mob_effect",
+      "activation": "active",
+      "d/boolean/ambient": "<<ambient>>",
+      "d/boolean/showIcon": "<<show_icon>>",
+      "d/boolean/visible": "<<visible>>",
+      "d/int/amplifier": "<<amplifier>>",
+      "d/int/duration": "<<duration+1>>",
+      "d/string/mob_effect": "minecraft:night_vision",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "active",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.generic.drink",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "active",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.splash_potion.break",
+      "ts/targets": "owner"
+    }
+  ],
+  "title": {
+    "translate": "spell.spells_and_shields.temporary_night_vision",
+    "with": [
+      {
+        "translate": "effect.minecraft.night_vision"
+      }
+    ]
+  },
+  "tooltip": [
+    {
+      "translate": "spell.spells_and_shields.temporary_night_vision.desc",
+      "with": [
+        {
+          "color": "blue",
+          "translate": "effect.minecraft.night_vision"
+        }
+      ]
+    }
+  ]
+}
