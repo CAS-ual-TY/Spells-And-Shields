@@ -3,20 +3,139 @@
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/spit_metal.png"
   },
-  "mana_cost": 0.0,
-  "parameters": [],
-  "spell_actions": [],
+  "mana_cost": 4.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 8.0,
+      "var/name": "base_damage"
+    },
+    {
+      "type": "spells_and_shields:tag",
+      "value": {
+        "minecraft:gold_nugget": 0.0,
+        "minecraft:iron_nugget": 2.0
+      },
+      "var/name": "item_damage_map"
+    }
+  ],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active",
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:mainhand_item_target",
+      "activation": "active",
+      "t/source": "owner",
+      "td/item": "item"
+    },
+    {
+      "type": "spells_and_shields:get_item_attributes",
+      "activation": "active",
+      "t/source": "item",
+      "var/amount": "amount",
+      "var/compound_tag": "",
+      "var/damage": "",
+      "var/item": "item_id"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "offhand",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "shoot",
+      "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< nbt_contains(item_damage_map, item_id) >>"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "offhand",
+      "activation": "shoot"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "offhand",
+      "td/destination": "item"
+    },
+    {
+      "type": "spells_and_shields:offhand_item_target",
+      "activation": "offhand",
+      "t/source": "owner",
+      "td/item": "item"
+    },
+    {
+      "type": "spells_and_shields:get_item_attributes",
+      "activation": "offhand",
+      "t/source": "item",
+      "var/amount": "amount",
+      "var/compound_tag": "",
+      "var/damage": "",
+      "var/item": "item_id"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "shoot",
+      "activation": "offhand",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< nbt_contains(item_damage_map, item_id) >>"
+    },
+    {
+      "type": "spells_and_shields:shoot",
+      "a/block_hit_activation": "",
+      "a/entity_hit_activation": "on_entity_hit",
+      "a/timeout_activation": "",
+      "activation": "shoot",
+      "d/double/inaccuracy": 0.0,
+      "d/double/velocity": 2.0,
+      "d/int/timeout": 100,
+      "t/source": "owner",
+      "td/projectile": "projectile"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "shoot",
+      "d/double/source": "<< base_damage + get_nbt_double(item_damage_map, item_id) >>",
+      "var/result": "damage"
+    },
+    {
+      "type": "spells_and_shields:apply_entity_extra_tag",
+      "activation": "shoot",
+      "d/compound_tag/tag": "<< put_nbt_double(tag(), 'damage', damage) >>",
+      "ts/targets": "projectile"
+    },
+    {
+      "type": "spells_and_shields:consume_item",
+      "activation": "shoot",
+      "d/int/amount": 1,
+      "ts/targets": "item"
+    },
+    {
+      "type": "spells_and_shields:get_entity_extra_tag",
+      "activation": "on_entity_hit",
+      "t/source": "projectile",
+      "var/compound_tag": "damage_tag"
+    },
+    {
+      "type": "spells_and_shields:sourced_damage",
+      "activation": "on_entity_hit",
+      "d/double/damage": "<< get_nbt_double(damage_tag, 'damage') >>",
+      "t/source": "projectile",
+      "ts/targets": "entity_hit"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.spit_metal"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.spit_metal.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ]
 }

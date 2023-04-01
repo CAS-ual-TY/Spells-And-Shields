@@ -53,6 +53,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -576,7 +577,32 @@ public class SpellsGen implements DataProvider
         );
         
         dummy(Spells.INSTANT_MINE);
-        dummy(Spells.SPIT_METAL);
+        
+        CompoundTag metalMap = new CompoundTag();
+        metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.IRON_NUGGET).toString(), Tiers.IRON.getAttackDamageBonus());
+        metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.GOLD_NUGGET).toString(), Tiers.GOLD.getAttackDamageBonus());
+        addSpell(Spells.SPIT_METAL, new Spell(modId, "spit_metal", Spells.KEY_SPIT_METAL, 4F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
+                .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
+                .addAction(GetItemAttributesAction.make(ACTIVE.activation, "item", "item_id", "amount", "", ""))
+                .addAction(ActivateAction.make(ACTIVE.activation, "offhand"))
+                .addAction(BooleanActivationAction.make(ACTIVE.activation, "shoot", Compiler.compileString(" nbt_contains(item_damage_map, item_id) ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(DeactivateAction.make("shoot", "offhand"))
+                .addAction(ClearTargetsAction.make("offhand", "item"))
+                .addAction(OffhandItemTargetAction.make("offhand", OWNER.targetGroup, "item"))
+                .addAction(GetItemAttributesAction.make("offhand", "item", "item_id", "amount", "", ""))
+                .addAction(BooleanActivationAction.make("offhand", "shoot", Compiler.compileString(" nbt_contains(item_damage_map, item_id) ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(ShootAction.make("shoot", OWNER.targetGroup, DOUBLE.get().immediate(2D), DOUBLE.get().immediate(0D), INT.get().immediate(100), "", "on_entity_hit", "", "projectile"))
+                .addAction(PutVarAction.makeDouble("shoot", Compiler.compileString(" base_damage + get_nbt_double(item_damage_map, item_id) ", DOUBLE.get()), "damage"))
+                .addAction(ApplyEntityExtraTagAction.make("shoot", "projectile", Compiler.compileString(" put_nbt_double(tag(), 'damage', damage) ", COMPOUND_TAG.get())))
+                .addAction(ConsumeItemAction.make("shoot", "item", INT.get().immediate(1)))
+                .addAction(GetEntityExtraTagAction.make("on_entity_hit", PROJECTILE.targetGroup, "damage_tag"))
+                .addAction(SourcedDamageAction.make("on_entity_hit", ENTITY_HIT.targetGroup, Compiler.compileString(" get_nbt_double(damage_tag, 'damage') ", DOUBLE.get()), PROJECTILE.targetGroup))
+                .addParameter(DOUBLE.get(), "base_damage", 8D)
+                .addParameter(COMPOUND_TAG.get(), "item_damage_map", metalMap)
+                .addTooltip(Component.translatable(Spells.KEY_SPIT_METAL_DESC))
+        );
+        
         dummy(Spells.FLAMETHROWER);
         dummy(Spells.LAVA_WALKER);
         dummy(Spells.SILENCE_TARGET, Spells.KEY_SILENCE_TARGET, Spells.KEY_SILENCE_TARGET_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")));
