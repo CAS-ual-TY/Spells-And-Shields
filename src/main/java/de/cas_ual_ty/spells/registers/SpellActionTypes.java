@@ -299,9 +299,9 @@ public class SpellActionTypes
         BinaryOperation.MOVE_Z.register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y) -> x.south(y));
         
         BinaryOperation.NBT_CONTAINS.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.contains(y));
-        BinaryOperation.GET_NBT_INT.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.INT.get(), (x, y) -> x.contains(y, Tag.TAG_INT) ? x.getInt(y) : null);
-        BinaryOperation.GET_NBT_DOUBLE.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x.contains(y, Tag.TAG_DOUBLE) ? x.getDouble(y) : null);
-        BinaryOperation.GET_NBT_BOOLEAN.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.contains(y, Tag.TAG_BYTE) ? x.getBoolean(y) : null);
+        BinaryOperation.GET_NBT_INT.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.INT.get(), (x, y) -> x.contains(y, Tag.TAG_ANY_NUMERIC) ? x.getInt(y) : null);
+        BinaryOperation.GET_NBT_DOUBLE.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x.contains(y, Tag.TAG_ANY_NUMERIC) ? x.getDouble(y) : null;);
+        BinaryOperation.GET_NBT_BOOLEAN.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.contains(y, Tag.TAG_ANY_NUMERIC) ? x.getBoolean(y) : null);
         BinaryOperation.GET_NBT_COMPOUND_TAG.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.COMPOUND_TAG.get(), (x, y) -> x.contains(y, Tag.TAG_COMPOUND) ? x.getCompound(y) : null);
         BinaryOperation.GET_NBT_STRING.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x, y) -> x.contains(y, Tag.TAG_STRING) ? x.getString(y) : null);
         BinaryOperation.GET_NBT_UUID.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x, y) -> x.hasUUID(y) ? x.getUUID(y).toString() : null);
