@@ -97,13 +97,7 @@
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "shoot",
-      "d/tag/source": {},
-      "var/result": "tag"
-    },
-    {
-      "type": "spells_and_shields:put_compound_tag",
-      "activation": "shoot",
-      "d/tag/source": "<< put_nbt_uuid(tag, 'owner_uuid_return', owner_uuid_return) >>",
+      "d/tag/source": "<< put_nbt_uuid(tag(), 'owner_uuid_return', owner_uuid_return) >>",
       "var/result": "tag"
     },
     {

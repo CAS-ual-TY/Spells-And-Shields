@@ -9,6 +9,7 @@ import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.spell.variable.ReferencedCtxVar;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -32,6 +33,8 @@ public class Compiler
         registerSupplier("random_int", CtxVarTypes.INT, random::nextInt);
         registerSupplier("random_double", CtxVarTypes.DOUBLE, random::nextDouble);
         registerSupplier("random_uuid", CtxVarTypes.STRING, () -> UUID.randomUUID().toString());
+    
+        registerSupplier("tag()", CtxVarTypes.COMPOUND_TAG, () -> new CompoundTag());
     }
     
     public static <T> void registerSupplier(String name, Supplier<CtxVarType<T>> type, Supplier<T> value)

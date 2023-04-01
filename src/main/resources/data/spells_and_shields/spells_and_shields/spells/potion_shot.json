@@ -91,13 +91,7 @@
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "shoot",
-      "d/tag/source": {},
-      "var/result": "tag"
-    },
-    {
-      "type": "spells_and_shields:put_compound_tag",
-      "activation": "shoot",
-      "d/tag/source": "<< put_nbt_string(tag, 'Potion', get_nbt_string(item_tag, 'Potion')) >>",
+      "d/tag/source": "<< put_nbt_string(tag(), 'Potion', get_nbt_string(item_tag, 'Potion')) >>",
       "var/result": "tag"
     },
     {
