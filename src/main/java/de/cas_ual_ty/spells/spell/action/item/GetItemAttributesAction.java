@@ -51,7 +51,7 @@ public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget
         
         if(!item.isEmpty())
         {
-            addVariableAttribute(i -> ForgeRegistries.ITEMS.getKey(i.getItem().getItem()).toString(), CtxVarTypes.STRING.get(), amount);
+            addVariableAttribute(i -> ForgeRegistries.ITEMS.getKey(i.getItem().getItem()).toString(), CtxVarTypes.STRING.get(), item);
         }
         
         if(!amount.isEmpty())
