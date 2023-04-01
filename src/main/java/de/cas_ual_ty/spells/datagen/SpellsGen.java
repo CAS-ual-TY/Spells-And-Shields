@@ -137,8 +137,9 @@ public class SpellsGen implements DataProvider
                 .addAction(ActivateAction.make(ON_UNEQUIP.activation, "remove"))
                 .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), BOOLEAN.get().immediate(false)))
                 .addAction(ActivateAction.make("apply", "renew"))
-                .addAction(ApplyMobEffectAction.make("apply", "player", SpellsUtil.objectToString(mobEffect, ForgeRegistries.MOB_EFFECTS), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
+                .addAction(ApplyMobEffectAction.make("apply", "player", STRING.get().reference("mob_effect"), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
                 .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("duration"), STRING.get().reference("uuid"), COMPOUND_TAG.get().immediate(new CompoundTag())))
+                .addParameter(STRING.get(), "mob_effect", ForgeRegistries.MOB_EFFECTS.getKey(mobEffect).toString())
                 .addParameter(INT.get(), "duration", duration)
                 .addParameter(INT.get(), "amplifier", amplifier)
                 .addParameter(BOOLEAN.get(), "ambient", false)
@@ -192,28 +193,29 @@ public class SpellsGen implements DataProvider
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
         Spell spell = new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), manaCost)
-                .addAction(ManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup, Compiler.compileString(" (" + MANA_COST.name + " * duration) / 100 ", DOUBLE.get())))
-                .addAction(ApplyMobEffectAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(mobEffect, ForgeRegistries.MOB_EFFECTS), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
+                .addAction(ManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(ApplyMobEffectAction.make(ACTIVE.activation, OWNER.targetGroup, STRING.get().reference("mob_effect"), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.GENERIC_DRINK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.SPLASH_POTION_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addParameter(STRING.get(), "mob_effect", ForgeRegistries.MOB_EFFECTS.getKey(mobEffect).toString())
                 .addParameter(INT.get(), "duration", duration)
                 .addParameter(INT.get(), "amplifier", amplifier)
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
                 .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())));
-    
+        
         if(!mobEffect.getAttributeModifiers().isEmpty())
         {
             spell.addTooltip(Component.empty());
             spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
-        
+            
             for(Map.Entry<Attribute, AttributeModifier> e : mobEffect.getAttributeModifiers().entrySet())
             {
                 Attribute attribute = e.getKey();
                 AttributeModifier.Operation op = e.getValue().getOperation();
                 double value = e.getValue().getAmount();
-            
+                
                 double d;
                 if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
                 {
@@ -223,7 +225,7 @@ public class SpellsGen implements DataProvider
                 {
                     d = value * 100;
                 }
-            
+                
                 if(value > 0)
                 {
                     spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
@@ -235,7 +237,7 @@ public class SpellsGen implements DataProvider
                 }
             }
         }
-    
+        
         addSpell(rl, spell);
     }
     
@@ -263,7 +265,7 @@ public class SpellsGen implements DataProvider
                 .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), BOOLEAN.get().immediate(false)))
                 .addAction(ManaCheckAction.make("apply", "player", Compiler.compileString(" (" + MANA_COST.name + " * duration) / 100 ", DOUBLE.get())))
                 .addAction(ActivateAction.make("apply", "renew"))
-                .addAction(ApplyMobEffectAction.make("apply", "player", SpellsUtil.objectToString(mobEffect, ForgeRegistries.MOB_EFFECTS), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
+                .addAction(ApplyMobEffectAction.make("apply", "player", STRING.get().reference("mob_effect"), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
                 .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("duration"), STRING.get().reference("uuid"), COMPOUND_TAG.get().immediate(new CompoundTag())))
                 .addAction(ActivateAction.make("apply", "sound"))
                 .addAction(ActivateAction.make("apply", "anti_sound"))
@@ -271,6 +273,7 @@ public class SpellsGen implements DataProvider
                 .addAction(DeactivateAction.make("anti_sound", "sound"))
                 .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(PlaySoundAction.make("remove_sound", "player", SoundEvents.SPLASH_POTION_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addParameter(STRING.get(), "mob_effect", ForgeRegistries.MOB_EFFECTS.getKey(mobEffect).toString())
                 .addParameter(INT.get(), "duration", duration)
                 .addParameter(INT.get(), "amplifier", amplifier)
                 .addParameter(BOOLEAN.get(), "ambient", false)

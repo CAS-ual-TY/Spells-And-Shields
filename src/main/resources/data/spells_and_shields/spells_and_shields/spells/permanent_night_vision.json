@@ -6,6 +6,11 @@
   "mana_cost": 0.0,
   "parameters": [
     {
+      "type": "spells_and_shields:string",
+      "value": "minecraft:night_vision",
+      "var/name": "mob_effect"
+    },
+    {
       "type": "spells_and_shields:int",
       "value": 50,
       "var/name": "duration"
@@ -98,7 +103,7 @@
       "d/boolean/visible": "<<visible>>",
       "d/int/amplifier": "<<amplifier>>",
       "d/int/duration": "<<duration+1>>",
-      "d/string/mob_effect": "minecraft:night_vision",
+      "d/string/mob_effect": "<<mob_effect>>",
       "ts/targets": "player"
     },
     {

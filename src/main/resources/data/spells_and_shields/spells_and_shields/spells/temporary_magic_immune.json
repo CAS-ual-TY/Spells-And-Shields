@@ -6,6 +6,11 @@
   "mana_cost": 13.0,
   "parameters": [
     {
+      "type": "spells_and_shields:string",
+      "value": "spells_and_shields:magic_immune",
+      "var/name": "mob_effect"
+    },
+    {
       "type": "spells_and_shields:int",
       "value": 400,
       "var/name": "duration"
@@ -35,7 +40,7 @@
     {
       "type": "spells_and_shields:mana_check",
       "activation": "active",
-      "amount": "<< (mana_cost * duration) / 100 >>",
+      "amount": "<<mana_cost>>",
       "t/target": "owner"
     },
     {
@@ -46,7 +51,7 @@
       "d/boolean/visible": "<<visible>>",
       "d/int/amplifier": "<<amplifier>>",
       "d/int/duration": "<<duration+1>>",
-      "d/string/mob_effect": "spells_and_shields:magic_immune",
+      "d/string/mob_effect": "<<mob_effect>>",
       "ts/targets": "owner"
     },
     {
