@@ -606,7 +606,6 @@ public class SpellsGen implements DataProvider
         );
         
         // TODO fx
-        dummy(Spells.FLAMETHROWER);
         addSpell(Spells.FLAMETHROWER, new Spell(modId, "flamethrower", Spells.KEY_FLAMETHROWER, 7F)
                 .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
                 .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.BLAZE_POWDER)))
