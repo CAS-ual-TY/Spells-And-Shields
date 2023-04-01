@@ -556,6 +556,7 @@ public class Compiler
                 }
                 else
                 {
+                    skipSpaces();
                     op = BinaryOperation.GT;
                 }
             }
@@ -568,6 +569,7 @@ public class Compiler
                 }
                 else
                 {
+                    skipSpaces();
                     op = BinaryOperation.LT;
                 }
             }
