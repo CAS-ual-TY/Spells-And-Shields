@@ -29,8 +29,8 @@
     },
     {
       "type": "spells_and_shields:add_delayed_spell",
-      "a/on_remove": "sound",
       "activation": "active",
+      "ad/on_remove": "sound",
       "d/compound_tag/extra_data": {},
       "d/int/tick_time": 10,
       "d/string/uuid": "",
@@ -38,8 +38,8 @@
     },
     {
       "type": "spells_and_shields:add_delayed_spell",
-      "a/on_remove": "shoot",
       "activation": "active",
+      "ad/on_remove": "shoot",
       "d/compound_tag/extra_data": {},
       "d/int/tick_time": 20,
       "d/string/uuid": "",

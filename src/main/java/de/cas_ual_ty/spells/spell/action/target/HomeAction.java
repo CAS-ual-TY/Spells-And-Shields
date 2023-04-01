@@ -26,9 +26,9 @@ public class HomeAction extends AffectSingleTypeAction<PositionTarget>
                 Codec.STRING.fieldOf(ParamNames.multiTarget()).forGetter(HomeAction::getTarget),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("velocity")).forGetter(HomeAction::getVelocity),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("timeout")).forGetter(HomeAction::getTimeout),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("block_hit_activation")).forGetter(HomeAction::getBlockHitActivation),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(HomeAction::getEntityHitActivation),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("timeout_activation")).forGetter(HomeAction::getTimeoutActivation),
+                Codec.STRING.fieldOf(ParamNames.asynchronousActivation("block_hit_activation")).forGetter(HomeAction::getBlockHitActivation),
+                Codec.STRING.fieldOf(ParamNames.asynchronousActivation("entity_hit_activation")).forGetter(HomeAction::getEntityHitActivation),
+                Codec.STRING.fieldOf(ParamNames.asynchronousActivation("timeout_activation")).forGetter(HomeAction::getTimeoutActivation),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(HomeAction::getProjectileDestination)
         ).apply(instance, (activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination) -> new HomeAction(type, activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination)));
     }

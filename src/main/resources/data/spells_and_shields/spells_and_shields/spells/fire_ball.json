@@ -34,10 +34,10 @@
     },
     {
       "type": "spells_and_shields:shoot",
-      "a/block_hit_activation": "on_block_hit",
-      "a/entity_hit_activation": "on_entity_hit",
-      "a/timeout_activation": "on_timeout",
       "activation": "active",
+      "ad/block_hit_activation": "on_block_hit",
+      "ad/entity_hit_activation": "on_entity_hit",
+      "ad/timeout_activation": "on_timeout",
       "d/double/inaccuracy": 0.0,
       "d/double/velocity": 3.0,
       "d/int/timeout": 200,

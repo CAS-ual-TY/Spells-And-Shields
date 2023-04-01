@@ -30,6 +30,11 @@ public class ParamNames
         return "a/" + activation;
     }
     
+    public static String asynchronousActivation(String activation)
+    {
+        return "ad/" + activation;
+    }
+    
     public static String param(String name, CtxVarType<?> type)
     {
         return "d/" + paramImm(name, type);

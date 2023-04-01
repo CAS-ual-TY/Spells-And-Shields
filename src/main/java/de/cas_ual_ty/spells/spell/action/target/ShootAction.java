@@ -27,9 +27,9 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("velocity")).forGetter(ShootAction::getVelocity),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("inaccuracy")).forGetter(ShootAction::getInaccuracy),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("timeout")).forGetter(ShootAction::getTimeout),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("block_hit_activation")).forGetter(ShootAction::getBlockHitActivation),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(ShootAction::getEntityHitActivation),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("timeout_activation")).forGetter(ShootAction::getTimeoutActivation),
+                Codec.STRING.fieldOf(ParamNames.asynchronousActivation("block_hit_activation")).forGetter(ShootAction::getBlockHitActivation),
+                Codec.STRING.fieldOf(ParamNames.asynchronousActivation("entity_hit_activation")).forGetter(ShootAction::getEntityHitActivation),
+                Codec.STRING.fieldOf(ParamNames.asynchronousActivation("timeout_activation")).forGetter(ShootAction::getTimeoutActivation),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(ShootAction::getProjectileDestination)
         ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination) -> new ShootAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination)));
     }

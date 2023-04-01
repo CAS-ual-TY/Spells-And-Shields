@@ -108,8 +108,8 @@
     },
     {
       "type": "spells_and_shields:add_delayed_spell",
-      "a/on_remove": "apply",
       "activation": "renew",
+      "ad/on_remove": "apply",
       "d/compound_tag/extra_data": {},
       "d/int/tick_time": "<<duration>>",
       "d/string/uuid": "<<uuid>>",
