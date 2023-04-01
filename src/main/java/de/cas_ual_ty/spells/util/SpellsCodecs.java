@@ -7,7 +7,6 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.*;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
@@ -31,9 +30,6 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.ExtraCodecs;
 
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SpellsCodecs
 {
@@ -126,34 +122,5 @@ public class SpellsCodecs
                 return ops.empty();
             }
         });
-    }
-    
-    private static <T> Codec<T> makeStringCodec(Pattern pattern, Function<Matcher, T> fromString, Function<T, String> toString)
-    {
-        return new PrimitiveCodec<T>()
-        {
-            @Override
-            public <T1> DataResult<T> read(DynamicOps<T1> ops, T1 input)
-            {
-                String string = ops.getStringValue(input).getOrThrow(false, SpellsAndShields.LOGGER::error);
-                
-                Matcher matcher = pattern.matcher(string);
-                
-                if(matcher.matches())
-                {
-                    return DataResult.success(fromString.apply(matcher));
-                }
-                else
-                {
-                    return DataResult.error("Not a string!");
-                }
-            }
-            
-            @Override
-            public <T1> T1 write(DynamicOps<T1> ops, T value)
-            {
-                return ops.createString(toString.apply(value));
-            }
-        };
     }
 }
