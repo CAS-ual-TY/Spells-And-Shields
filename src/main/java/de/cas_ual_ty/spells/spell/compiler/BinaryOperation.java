@@ -34,6 +34,7 @@ public class BinaryOperation
     public static final BinaryOperation MOVE_X = new BinaryOperation("move_x");
     public static final BinaryOperation MOVE_Y = new BinaryOperation("move_y");
     public static final BinaryOperation MOVE_Z = new BinaryOperation("move_z");
+    public static final BinaryOperation NBT_CONTAINS = new BinaryOperation("nbt_contains");
     public static final BinaryOperation GET_NBT_INT = new BinaryOperation("get_nbt_int");
     public static final BinaryOperation GET_NBT_DOUBLE = new BinaryOperation("get_nbt_double");
     public static final BinaryOperation GET_NBT_BOOLEAN = new BinaryOperation("get_nbt_boolean");
@@ -49,6 +50,7 @@ public class BinaryOperation
         Compiler.registerBinaryFunction("move_x", MOVE_X);
         Compiler.registerBinaryFunction("move_y", MOVE_Y);
         Compiler.registerBinaryFunction("move_z", MOVE_Z);
+        Compiler.registerBinaryFunction("nbt_contains", NBT_CONTAINS);
         Compiler.registerBinaryFunction("get_nbt_int", GET_NBT_INT);
         Compiler.registerBinaryFunction("get_nbt_double", GET_NBT_DOUBLE);
         Compiler.registerBinaryFunction("get_nbt_boolean", GET_NBT_BOOLEAN);

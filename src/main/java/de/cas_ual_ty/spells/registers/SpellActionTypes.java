@@ -176,6 +176,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> MOVE_X = DEFERRED_REGISTER.register("move_x", () -> MappedBinaryVarAction.makeType(BinaryOperation.MOVE_X));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> MOVE_Y = DEFERRED_REGISTER.register("move_y", () -> MappedBinaryVarAction.makeType(BinaryOperation.MOVE_Y));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> MOVE_Z = DEFERRED_REGISTER.register("move_z", () -> MappedBinaryVarAction.makeType(BinaryOperation.MOVE_Z));
+    public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> NBT_CONTAINS = DEFERRED_REGISTER.register("nbt_contains", () -> MappedBinaryVarAction.makeType(BinaryOperation.NBT_CONTAINS));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_INT = DEFERRED_REGISTER.register("get_nbt_int", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_INT));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_DOUBLE = DEFERRED_REGISTER.register("get_nbt_double", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_DOUBLE));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_BOOLEAN = DEFERRED_REGISTER.register("get_nbt_boolean", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_BOOLEAN));
@@ -297,6 +298,7 @@ public class SpellActionTypes
         BinaryOperation.MOVE_Y.register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y) -> x.above(y));
         BinaryOperation.MOVE_Z.register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y) -> x.south(y));
         
+        BinaryOperation.NBT_CONTAINS.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.contains(y));
         BinaryOperation.GET_NBT_INT.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.INT.get(), (x, y) -> x.contains(y, Tag.TAG_INT) ? x.getInt(y) : null);
         BinaryOperation.GET_NBT_DOUBLE.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x.contains(y, Tag.TAG_DOUBLE) ? x.getDouble(y) : null);
         BinaryOperation.GET_NBT_BOOLEAN.register(CtxVarTypes.COMPOUND_TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.contains(y, Tag.TAG_BYTE) ? x.getBoolean(y) : null);
