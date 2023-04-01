@@ -34,7 +34,7 @@ public class Compiler
         registerSupplier("random_double", CtxVarTypes.DOUBLE, random::nextDouble);
         registerSupplier("random_uuid", CtxVarTypes.STRING, () -> UUID.randomUUID().toString());
     
-        registerSupplier("tag()", CtxVarTypes.COMPOUND_TAG, () -> new CompoundTag());
+        registerSupplier("tag", CtxVarTypes.COMPOUND_TAG, () -> new CompoundTag());
     }
     
     public static <T> void registerSupplier(String name, Supplier<CtxVarType<T>> type, Supplier<T> value)
