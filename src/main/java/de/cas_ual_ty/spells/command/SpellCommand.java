@@ -173,7 +173,7 @@ public class SpellCommand
     private static int setAllOfTree(CommandContext<CommandSourceStack> context, SpellStatus status, String singleKey, String singleFailedKey, String multipleKey) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-    
+        
         if(players.isEmpty())
         {
             return 0;
@@ -222,7 +222,7 @@ public class SpellCommand
     private static int setForAllTrees(CommandContext<CommandSourceStack> context, SpellStatus status, String singleKey, String singleFailedKey, String multipleKey) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-    
+        
         if(players.isEmpty())
         {
             return 0;
@@ -308,7 +308,7 @@ public class SpellCommand
     private static int spellsProgressionReset(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-    
+        
         if(players.isEmpty())
         {
             return 0;
@@ -343,7 +343,7 @@ public class SpellCommand
     private static int spellsSlotSetDirect(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-    
+        
         if(players.isEmpty())
         {
             return 0;
@@ -376,7 +376,7 @@ public class SpellCommand
     private static int spellsSlotSet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-    
+        
         if(players.isEmpty())
         {
             return 0;
@@ -420,7 +420,7 @@ public class SpellCommand
     private static int spellsSlotRemove(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-    
+        
         if(players.isEmpty())
         {
             return 0;
@@ -452,7 +452,7 @@ public class SpellCommand
     private static int spellsSlotClear(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-    
+        
         if(players.isEmpty())
         {
             return 0;

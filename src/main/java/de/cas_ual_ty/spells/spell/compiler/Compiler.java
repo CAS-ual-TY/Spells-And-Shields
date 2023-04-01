@@ -33,7 +33,7 @@ public class Compiler
         registerSupplier("random_int", CtxVarTypes.INT, random::nextInt);
         registerSupplier("random_double", CtxVarTypes.DOUBLE, random::nextDouble);
         registerSupplier("random_uuid", CtxVarTypes.STRING, () -> UUID.randomUUID().toString());
-    
+        
         registerSupplier("tag", CtxVarTypes.COMPOUND_TAG, () -> new CompoundTag());
     }
     
