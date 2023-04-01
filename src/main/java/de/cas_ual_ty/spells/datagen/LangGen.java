@@ -118,10 +118,13 @@ public class LangGen extends LanguageProvider
         add(SpellCommand.SPELLS_PROGRESSION_RESET_MULTIPLE, "Cleared all learned spells of %s players");
         add(SpellCommand.SPELLS_SLOT_REMOVE_SINGLE, "Cleared active spell in slot %s of %s");
         add(SpellCommand.SPELLS_SLOT_REMOVE_MULTIPLE, "Cleared active spell in slot %s of %s players");
-        add(SpellCommand.SPELLS_SLOT_SET_SINGLE, "Set active spell in slot %s of %s to '%s'");
-        add(SpellCommand.SPELLS_SLOT_SET_MULTIPLE, "Set active spell in slot %s of %s players to '%s'");
+        add(SpellCommand.SPELLS_SLOT_SET_DIRECT_SINGLE, "Set active spell in slot %s of %s to '%s'");
+        add(SpellCommand.SPELLS_SLOT_SET_DIRECT_MULTIPLE, "Set active spell in slot %s of %s players to '%s'");
+        add(SpellCommand.SPELLS_SLOT_SET_SINGLE, "Set active spell in slot %s of %s to '%s' from spell tree '%s'");
+        add(SpellCommand.SPELLS_SLOT_SET_MULTIPLE, "Set active spell in slot %s of %s players to '%s' from spell tree '%s'");
         add(SpellCommand.SPELLS_SLOT_CLEAR_SINGLE, "Cleared active spells of %s");
         add(SpellCommand.SPELLS_SLOT_CLEAR_MULTIPLE, "Cleared active spells of %s players");
+        add(SpellCommand.UNKNOWN_NODE, "Spell tree '%s' does not have a spell node '%s'");
         
         add(SpellProgressionScreen.KEY_LEARN, "Learn");
         add(SpellProgressionScreen.KEY_EQUIP, "Equip");

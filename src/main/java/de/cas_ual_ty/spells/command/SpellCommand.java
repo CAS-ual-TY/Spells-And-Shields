@@ -50,10 +50,13 @@ public class SpellCommand
     public static final String SPELLS_PROGRESSION_RESET_MULTIPLE = "spells.progression.reset.success.multiple";
     public static final String SPELLS_SLOT_REMOVE_SINGLE = "spells.slot.remove.success.single";
     public static final String SPELLS_SLOT_REMOVE_MULTIPLE = "spells.slot.remove.success.multiple";
+    public static final String SPELLS_SLOT_SET_DIRECT_SINGLE = "spells.slot.set.direct.success.single";
+    public static final String SPELLS_SLOT_SET_DIRECT_MULTIPLE = "spells.slot.set.direct.success.multiple";
     public static final String SPELLS_SLOT_SET_SINGLE = "spells.slot.set.success.single";
     public static final String SPELLS_SLOT_SET_MULTIPLE = "spells.slot.set.success.multiple";
     public static final String SPELLS_SLOT_CLEAR_SINGLE = "spells.slot.clear.success.single";
     public static final String SPELLS_SLOT_CLEAR_MULTIPLE = "spells.slot.clear.success.multiple";
+    public static final String UNKNOWN_NODE = "spells.node.failed";
     
     public static final String ARG_TARGETS = "targets";
     public static final String ARG_SPELL = "spell";
@@ -98,7 +101,14 @@ public class SpellCommand
                         .then(Commands.literal("reset").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(SpellCommand::spellsProgressionReset)))
                 )
                 .then(Commands.literal("slots")
-                        .then(Commands.literal("set").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS)).then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx)).executes(SpellCommand::spellsSlotSet)))))
+                        .then(Commands.literal("set")
+                                .then(Commands.argument(ARG_TARGETS, EntityArgument.players())
+                                        .then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS))
+                                                .then(Commands.literal("direct").then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx)).executes(SpellCommand::spellsSlotSetDirect)))
+                                                .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx)).then(Commands.argument(ARG_NODE_ID, IntegerArgumentType.integer()).executes(SpellCommand::spellsSlotSet)))
+                                        )
+                                )
+                        )
                         .then(Commands.literal("remove").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS)).executes(SpellCommand::spellsSlotRemove))))
                         .then(Commands.literal("clear").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(SpellCommand::spellsSlotClear)))
                 )
@@ -108,6 +118,12 @@ public class SpellCommand
     private static int setOneOfTree(CommandContext<CommandSourceStack> context, SpellStatus status, String singleKey, String singleFailedKey, String multipleKey) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
+        
+        if(players.isEmpty())
+        {
+            return 0;
+        }
+        
         SpellTree spellTree = SpellTreeArgument.getSpellTree(context, ARG_SPELL_TREE);
         int nodeId = IntegerArgumentType.getInteger(context, ARG_NODE_ID);
         
@@ -115,7 +131,8 @@ public class SpellCommand
         
         if(node == null)
         {
-            return 0; //TODO message
+            context.getSource().sendFailure(Component.translatable(UNKNOWN_NODE, spellTree.getTitle(), nodeId));
+            return 0;
         }
         
         boolean single = players.size() == 1;
@@ -156,12 +173,13 @@ public class SpellCommand
     private static int setAllOfTree(CommandContext<CommandSourceStack> context, SpellStatus status, String singleKey, String singleFailedKey, String multipleKey) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-        SpellTree spellTree = SpellTreeArgument.getSpellTree(context, ARG_SPELL_TREE);
-        
-        if(players.size() == 0)
+    
+        if(players.isEmpty())
         {
             return 0;
         }
+        
+        SpellTree spellTree = SpellTreeArgument.getSpellTree(context, ARG_SPELL_TREE);
         
         boolean single = players.size() == 1;
         AtomicInteger changed = new AtomicInteger(0);
@@ -204,6 +222,12 @@ public class SpellCommand
     private static int setForAllTrees(CommandContext<CommandSourceStack> context, SpellStatus status, String singleKey, String singleFailedKey, String multipleKey) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
+    
+        if(players.isEmpty())
+        {
+            return 0;
+        }
+        
         Registry<SpellTree> registry = SpellTrees.getRegistry(context.getSource().getLevel());
         
         int totalTrees = registry.size();
@@ -284,6 +308,11 @@ public class SpellCommand
     private static int spellsProgressionReset(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
+    
+        if(players.isEmpty())
+        {
+            return 0;
+        }
         
         players.stream().map(SpellProgressionHolder::getSpellProgressionHolder).forEach(lazyOptional ->
         {
@@ -311,16 +340,17 @@ public class SpellCommand
         return 0;
     }
     
-    private static int spellsSlotSet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
+    private static int spellsSlotSetDirect(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-        int slot = IntegerArgumentType.getInteger(context, ARG_SLOT);
-        Spell spell = SpellArgument.getSpell(context, ARG_SPELL);
-        
-        if(players.size() == 0)
+    
+        if(players.isEmpty())
         {
             return 0;
         }
+        
+        int slot = IntegerArgumentType.getInteger(context, ARG_SLOT);
+        Spell spell = SpellArgument.getSpell(context, ARG_SPELL);
         
         players.stream().map(SpellHolder::getSpellHolder).forEach(lazyOptional ->
         {
@@ -333,11 +363,55 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_DIRECT_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getTitle()), true);
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_DIRECT_MULTIPLE, slot, players.size(), spell.getTitle()), true);
+        }
+        
+        return players.size();
+    }
+    
+    private static int spellsSlotSet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
+    {
+        Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
+    
+        if(players.isEmpty())
+        {
+            return 0;
+        }
+        
+        int slot = IntegerArgumentType.getInteger(context, ARG_SLOT);
+        SpellTree spellTree = SpellTreeArgument.getSpellTree(context, ARG_SPELL_TREE);
+        int nodeId = IntegerArgumentType.getInteger(context, ARG_NODE_ID);
+        
+        SpellNode spellNode = spellTree.findNode(nodeId);
+        
+        if(spellNode == null)
+        {
+            context.getSource().sendFailure(Component.translatable(UNKNOWN_NODE, spellTree.getTitle(), nodeId));
+            return 0;
+        }
+        
+        players.stream().map(SpellHolder::getSpellHolder).forEach(lazyOptional ->
+        {
+            lazyOptional.ifPresent(spellHolder ->
+            {
+                spellHolder.setSpell(slot, spellNode.getSpellInstance());
+                spellHolder.sendSync();
+            });
+        });
+        
+        Spell spell = spellNode.getSpellDirect();
+        
+        if(players.size() == 1)
+        {
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle(), spellTree.getTitle()), true);
+        }
+        else
+        {
+            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getTitle(), spellTree.getTitle()), true);
         }
         
         return players.size();
@@ -346,12 +420,13 @@ public class SpellCommand
     private static int spellsSlotRemove(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-        int slot = IntegerArgumentType.getInteger(context, ARG_SLOT);
-        
-        if(players.size() == 0)
+    
+        if(players.isEmpty())
         {
             return 0;
         }
+        
+        int slot = IntegerArgumentType.getInteger(context, ARG_SLOT);
         
         players.stream().map(SpellHolder::getSpellHolder).forEach(lazyOptional ->
         {
@@ -377,8 +452,8 @@ public class SpellCommand
     private static int spellsSlotClear(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
     {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
-        
-        if(players.size() == 0)
+    
+        if(players.isEmpty())
         {
             return 0;
         }

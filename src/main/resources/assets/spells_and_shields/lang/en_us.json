@@ -253,6 +253,7 @@
   "spell_tree.spells_and_shields.movement": "Movement",
   "spell_tree.spells_and_shields.nether": "Nether",
   "spell_tree.spells_and_shields.ocean": "Ocean",
+  "spells.node.failed": "Spell tree '%s' does not have a spell node '%s'",
   "spells.progression.forget.failed.single": "Spell '%s' was already forgotten by %s",
   "spells.progression.forget.success.multiple": "Spell '%s' has been forgotten by %s players",
   "spells.progression.forget.success.single": "Spell '%s' has been forgotten by %s",
@@ -277,6 +278,8 @@
   "spells.slot.clear.success.single": "Cleared active spells of %s",
   "spells.slot.remove.success.multiple": "Cleared active spell in slot %s of %s players",
   "spells.slot.remove.success.single": "Cleared active spell in slot %s of %s",
-  "spells.slot.set.success.multiple": "Set active spell in slot %s of %s players to '%s'",
-  "spells.slot.set.success.single": "Set active spell in slot %s of %s to '%s'"
+  "spells.slot.set.direct.success.multiple": "Set active spell in slot %s of %s players to '%s'",
+  "spells.slot.set.direct.success.single": "Set active spell in slot %s of %s to '%s'",
+  "spells.slot.set.success.multiple": "Set active spell in slot %s of %s players to '%s' from spell tree '%s'",
+  "spells.slot.set.success.single": "Set active spell in slot %s of %s to '%s' from spell tree '%s'"
 }
