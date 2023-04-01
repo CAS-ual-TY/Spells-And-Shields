@@ -1,10 +1,28 @@
 package de.cas_ual_ty.spells.util;
 
+import de.cas_ual_ty.spells.datagen.DocsGen;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
 public class ParamNames
 {
+    static
+    {
+        DocsGen.PREFIX_MAP.put("a/", "String");
+        DocsGen.PREFIX_MAP.put("ad/", "String");
+        DocsGen.PREFIX_MAP.put("var/", "String");
+        DocsGen.PREFIX_MAP.put("int/", "Integer");
+        DocsGen.PREFIX_MAP.put("double/", "Double");
+        DocsGen.PREFIX_MAP.put("vec3/", "Vector");
+        DocsGen.PREFIX_MAP.put("block_pos/", "Block Position");
+        DocsGen.PREFIX_MAP.put("boolean/", "Boolean");
+        DocsGen.PREFIX_MAP.put("tag/", "NBT Compound Tag");
+        DocsGen.PREFIX_MAP.put("string/", "String");
+        DocsGen.PREFIX_MAP.put("ts/", "String");
+        DocsGen.PREFIX_MAP.put("t/", "String");
+        DocsGen.PREFIX_MAP.put("td/", "String");
+    }
+    
     public static String actionType()
     {
         return "type";

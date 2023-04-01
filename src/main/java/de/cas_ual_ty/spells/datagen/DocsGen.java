@@ -21,6 +21,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,8 @@ import java.util.stream.Collectors;
 
 public class DocsGen implements DataProvider
 {
+    public static final Map<String, String> PREFIX_MAP = new HashMap<>();
+    
     private static final File ROOT = new File("./docsgen");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     
@@ -115,7 +118,7 @@ public class DocsGen implements DataProvider
     {
         if(type.getCodec() instanceof MapCodec.MapCodecCodec<A> mapCodecCodec)
         {
-            fw.write("## `" + rl.getPath() + "` Type\n");
+            fw.write("### `" + rl.getPath() + "` Type\n");
             fw.write('\n');
             fw.write("ABCDE Text WIP\n");
             fw.write('\n');
@@ -134,12 +137,19 @@ public class DocsGen implements DataProvider
             
             fw.write("  \"type\": \"" + rl.toString() + "\"" + (keys.isEmpty() ? "\n" : ",\n"));
             fw.write("  \"activation\": String" + (keys.isEmpty() ? "\n" : ",\n"));
-            fw.write(keys.stream().map(key -> "  \"" + key + "\": ABCDE").collect(Collectors.joining(",\n")) + "\n");
+            fw.write(keys.stream().map(key -> "  \"" + key + "\": " +
+                    (PREFIX_MAP.entrySet().stream()
+                            .filter(e -> key.contains(e.getKey()))
+                            .map(Map.Entry::getValue).findFirst().orElse("ABCDE")
+                    )
+            ).collect(Collectors.joining(",\n")) + "\n");
             
             fw.write("}\n");
             fw.write("```\n");
             fw.write("Elements:\n");
-            fw.write(keys.stream().map(key -> "- `" + key + "`: ABCDE").collect(Collectors.joining(",\n")) + "\n");
+            fw.write(keys.stream()
+                    .map(key -> "- `" + key + "`: ABCDE.")
+                    .collect(Collectors.joining("\n")) + "\n");
             fw.write('\n');
         }
     }
