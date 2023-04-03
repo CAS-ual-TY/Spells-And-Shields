@@ -32,6 +32,8 @@ public class SpellContext
     protected boolean terminated;
     
     protected int index;
+    protected Map<String, Label> labels;
+    protected int jumpLimit;
     
     public SpellContext(Level level, @Nullable Player owner, SpellInstance spell)
     {
@@ -42,6 +44,9 @@ public class SpellContext
         targetGroups = new HashMap<>();
         ctxVars = new HashMap<>();
         terminated = false;
+        index = 0;
+        labels = new HashMap<>();
+        jumpLimit = SpellsConfig.ACTION_JUMP_LIMIT.get();
     }
     
     public Level getLevel()
@@ -162,6 +167,31 @@ public class SpellContext
         }
     }
     
+    public void addLabel(String label, SpellAction spellAction)
+    {
+        addLabel(index, label, spellAction);
+    }
+    
+    public void addLabel(int index, String label, SpellAction spellAction)
+    {
+        if(label.isEmpty())
+        {
+            return;
+        }
+        
+        labels.put(label, new Label(index, label, spellAction));
+    }
+    
+    public void jumpToLabel(String label)
+    {
+        Label l = labels.get(label);
+        
+        if(l != null)
+        {
+            setIndex(l.getIndex());
+        }
+    }
+    
     public void terminate()
     {
         terminated = true;
@@ -174,7 +204,14 @@ public class SpellContext
     
     public void setIndex(int index)
     {
-        this.index = index;
+        if(jumpLimit-- > 0)
+        {
+            this.index = index;
+        }
+        else if(SpellsConfig.DEBUG_SPELLS.get())
+        {
+            SpellsAndShields.LOGGER.info("Hard jump limit reached! Skipping jump...");
+        }
     }
     
     public int getIndex()
@@ -199,7 +236,6 @@ public class SpellContext
             SpellsAndShields.LOGGER.info("-".repeat(50));
         }
         
-        index = 0;
         List<SpellAction> actions = spell.getSpellActions();
         
         for(index = 0; index < actions.size() && index >= 0; index++)
@@ -270,6 +306,30 @@ public class SpellContext
         for(String a : activationsList)
         {
             SpellsAndShields.LOGGER.info("   - " + a);
+        }
+    }
+    
+    private static class Label
+    {
+        private int index;
+        public final String label;
+        public final SpellAction spellAction;
+        
+        public Label(int index, String label, SpellAction spellAction)
+        {
+            this.index = index;
+            this.label = label;
+            this.spellAction = spellAction;
+        }
+    
+        public int getIndex()
+        {
+            return index;
+        }
+    
+        public void setIndex(int index)
+        {
+            this.index = index;
         }
     }
 }

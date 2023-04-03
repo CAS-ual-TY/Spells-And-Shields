@@ -3,10 +3,7 @@ package de.cas_ual_ty.spells.registers;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
-import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
-import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
-import de.cas_ual_ty.spells.spell.action.control.DeactivateAction;
-import de.cas_ual_ty.spells.spell.action.control.TerminateAction;
+import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
@@ -62,6 +59,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ActivateAction>> ACTIVATE = DEFERRED_REGISTER.register("activate", () -> new SpellActionType<>(ActivateAction::new, ActivateAction::makeCodec));
     public static final RegistryObject<SpellActionType<BooleanActivationAction>> BOOLEAN_ACTIVATION = DEFERRED_REGISTER.register("boolean_activation", () -> new SpellActionType<>(BooleanActivationAction::new, BooleanActivationAction::makeCodec));
     public static final RegistryObject<SpellActionType<DeactivateAction>> DEACTIVATE = DEFERRED_REGISTER.register("deactivate", () -> new SpellActionType<>(DeactivateAction::new, DeactivateAction::makeCodec));
+    public static final RegistryObject<SpellActionType<LabelAction>> LABEL = DEFERRED_REGISTER.register("label", () -> new SpellActionType<>(LabelAction::new, LabelAction::makeCodec));
     public static final RegistryObject<SpellActionType<TerminateAction>> TERMINATE = DEFERRED_REGISTER.register("terminate", () -> new SpellActionType<>(TerminateAction::new, TerminateAction::makeCodec));
     
     // delayed
