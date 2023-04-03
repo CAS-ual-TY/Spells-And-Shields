@@ -629,7 +629,19 @@ public class SpellsGen implements DataProvider
         );
         
         dummy(Spells.LAVA_WALKER);
-        dummy(Spells.SILENCE_TARGET, Spells.KEY_SILENCE_TARGET, Spells.KEY_SILENCE_TARGET_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")));
+        
+        addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(new ResourceLocation(BuiltinRegistries.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
+                .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.AMETHYST_SHARD)))
+                .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "", "on_entity_hit", ""))
+                .addAction(ApplyMobEffectAction.make("on_entity_hit", ENTITY_HIT.targetGroup, STRING.get().immediate(BuiltinRegistries.SILENCE_EFFECT.getId().toString()), INT.get().reference("silence_seconds"), INT.get().immediate(0), BOOLEAN.get().immediate(false), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(PlaySoundAction.make("on_entity_hit", OWNER.targetGroup, SoundEvents.AMETHYST_CLUSTER_HIT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT.targetGroup, SoundEvents.AMETHYST_CLUSTER_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(SpawnParticlesAction.make("on_entity_hit", HIT_POSITION.targetGroup, ParticleTypes.POOF, INT.get().immediate(3), DOUBLE.get().immediate(0.2)))
+                .addParameter(DOUBLE.get(), "range", 20D)
+                .addParameter(INT.get(), "silence_seconds", 15)
+        );
+        
         dummy(Spells.RANDOM_TELEPORT);
         dummy(Spells.FORCED_TELEPORT);
         dummy(Spells.TELEPORT);

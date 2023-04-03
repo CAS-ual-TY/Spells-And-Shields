@@ -163,7 +163,7 @@
   "spell.spells_and_shields.pressurize.desc": "Knock back every entity around you and remove any fluid.",
   "spell.spells_and_shields.random_teleport": "Random Teleport",
   "spell.spells_and_shields.random_teleport.desc": "Randomly teleport away. This spell can fail.",
-  "spell.spells_and_shields.silence_target": "Silence",
+  "spell.spells_and_shields.silence_target": "Silence Target",
   "spell.spells_and_shields.silence_target.desc": "Silence the target you are looking at within a certain range.",
   "spell.spells_and_shields.spit_metal": "Spit Metal",
   "spell.spells_and_shields.spit_metal.desc": "Spit a nugget that deals damage (from your hand).",
