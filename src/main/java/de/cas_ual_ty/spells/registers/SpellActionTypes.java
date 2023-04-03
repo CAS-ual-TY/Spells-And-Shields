@@ -13,8 +13,6 @@ import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
 import de.cas_ual_ty.spells.spell.action.mana.*;
 import de.cas_ual_ty.spells.spell.action.target.*;
-import de.cas_ual_ty.spells.spell.action.target.filter.ItemFilterAction;
-import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedTernaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedUnaryVarAction;
@@ -114,10 +112,6 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ManaCheckAction>> MANA_CHECK = DEFERRED_REGISTER.register("mana_check", () -> new SpellActionType<>(ManaCheckAction::new, ManaCheckAction::makeCodec));
     public static final RegistryObject<SpellActionType<ReplenishManaAction>> REPLENISH_MANA = DEFERRED_REGISTER.register("replenish_mana", () -> new SpellActionType<>(ReplenishManaAction::new, ReplenishManaAction::makeCodec));
     public static final RegistryObject<SpellActionType<SimpleManaCheckAction>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheckAction::new, SimpleManaCheckAction::makeCodec));
-    
-    // target filter
-    public static final RegistryObject<SpellActionType<ItemFilterAction>> ITEM_FILTER = DEFERRED_REGISTER.register("item_filter", () -> new SpellActionType<>(ItemFilterAction::new, ItemFilterAction::makeCodec));
-    public static final RegistryObject<SpellActionType<TypeFilterAction>> TYPE_FILTER = DEFERRED_REGISTER.register("type_filter", () -> new SpellActionType<>(TypeFilterAction::new, TypeFilterAction::makeCodec));
     
     // target
     public static final RegistryObject<SpellActionType<ClearTargetsAction>> CLEAR_TARGETS = DEFERRED_REGISTER.register("clear_targets", () -> new SpellActionType<>(ClearTargetsAction::new, ClearTargetsAction::makeCodec));
