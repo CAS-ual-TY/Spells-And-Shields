@@ -19,6 +19,7 @@ public class SpellsConfig
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANTING_TABLE;
     
     public static final ForgeConfigSpec.BooleanValue DEBUG_SPELLS;
+    public static final ForgeConfigSpec.IntValue ACTION_JUMP_LIMIT;
     
     static
     {
@@ -51,6 +52,10 @@ public class SpellsConfig
         DEBUG_SPELLS = configBuilder
                 .comment("Debug spells on use. For data pack creators.")
                 .define("debugSpells", false);
+        
+        ACTION_JUMP_LIMIT = configBuilder
+                .comment("Hard limit of jumps by spell actions to prevent endless loops (which would result in a crash).")
+                .defineInRange("actionJumpLimit", 100, 10, 10000);
         
         GENERAL_SPEC = configBuilder.build();
     }
