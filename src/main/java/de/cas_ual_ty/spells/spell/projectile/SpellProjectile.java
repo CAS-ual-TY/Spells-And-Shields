@@ -86,7 +86,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult)
     {
-        if(spell != null && !level.isClientSide())
+        if(spell != null && !level.isClientSide() && !(entityHitResult.getEntity() instanceof SpellProjectile))
         {
             spell.run(level, getPlayerOwner(), entityHitActivation, (ctx) ->
             {
