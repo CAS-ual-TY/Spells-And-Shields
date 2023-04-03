@@ -12,6 +12,11 @@
     },
     {
       "type": "spells_and_shields:int",
+      "value": 3,
+      "var/name": "shots_per_repetition"
+    },
+    {
+      "type": "spells_and_shields:int",
       "value": 5,
       "var/name": "repetitions"
     },
@@ -71,8 +76,21 @@
       "activation": "on_timeout"
     },
     {
-      "type": "spells_and_shields:shoot",
+      "type": "spells_and_shields:label",
       "activation": "shoot",
+      "label": "loop"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "do_shoot",
+      "activation": "shoot",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": true,
+      "d/boolean/input": "<< shots_per_repetition > 0 >>"
+    },
+    {
+      "type": "spells_and_shields:shoot",
+      "activation": "do_shoot",
       "ad/block_hit_activation": "on_block_hit",
       "ad/entity_hit_activation": "on_entity_hit",
       "ad/timeout_activation": "",
@@ -83,28 +101,15 @@
       "td/projectile": ""
     },
     {
-      "type": "spells_and_shields:shoot",
-      "activation": "shoot",
-      "ad/block_hit_activation": "on_block_hit",
-      "ad/entity_hit_activation": "on_entity_hit",
-      "ad/timeout_activation": "",
-      "d/double/inaccuracy": "<<inaccuracy>>",
-      "d/double/velocity": 2.0,
-      "d/int/timeout": 20,
-      "t/source": "player",
-      "td/projectile": ""
+      "type": "spells_and_shields:put_int",
+      "activation": "do_shoot",
+      "d/int/source": "<< shots_per_repetition - 1 >>",
+      "var/result": "shots_per_repetition"
     },
     {
-      "type": "spells_and_shields:shoot",
-      "activation": "shoot",
-      "ad/block_hit_activation": "on_block_hit",
-      "ad/entity_hit_activation": "on_entity_hit",
-      "ad/timeout_activation": "",
-      "d/double/inaccuracy": "<<inaccuracy>>",
-      "d/double/velocity": 2.0,
-      "d/int/timeout": 20,
-      "t/source": "player",
-      "td/projectile": ""
+      "type": "spells_and_shields:jump",
+      "activation": "do_shoot",
+      "label": "loop"
     },
     {
       "type": "spells_and_shields:boolean_activation",

@@ -11,9 +11,7 @@ import de.cas_ual_ty.spells.spell.action.attribute.GetEntityExtraTagAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityEyePositionAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionMotionAction;
 import de.cas_ual_ty.spells.spell.action.attribute.GetEntityUUIDAction;
-import de.cas_ual_ty.spells.spell.action.control.ActivateAction;
-import de.cas_ual_ty.spells.spell.action.control.BooleanActivationAction;
-import de.cas_ual_ty.spells.spell.action.control.DeactivateAction;
+import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
@@ -614,14 +612,17 @@ public class SpellsGen implements DataProvider
                 .addAction(CopyTargetsAction.make("on_timeout", "player", HOLDER.targetGroup))
                 .addAction(PutVarAction.makeInt("on_timeout", Compiler.compileString(" get_nbt_int(" + DELAY_TAG.name + ", 'repetitions') ", INT.get()), "repetitions"))
                 .addAction(ActivateAction.make("on_timeout", "shoot"))
-                .addAction(ShootAction.make("shoot", "player", DOUBLE.get().immediate(2D), DOUBLE.get().reference("inaccuracy"), INT.get().immediate(20), "on_block_hit", "on_entity_hit", "", ""))
-                .addAction(ShootAction.make("shoot", "player", DOUBLE.get().immediate(2D), DOUBLE.get().reference("inaccuracy"), INT.get().immediate(20), "on_block_hit", "on_entity_hit", "", ""))
-                .addAction(ShootAction.make("shoot", "player", DOUBLE.get().immediate(2D), DOUBLE.get().reference("inaccuracy"), INT.get().immediate(20), "on_block_hit", "on_entity_hit", "", ""))
+                .addAction(LabelAction.make("shoot", "loop"))
+                .addAction(BooleanActivationAction.make("shoot", "do_shoot", Compiler.compileString(" shots_per_repetition > 0 ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(ShootAction.make("do_shoot", "player", DOUBLE.get().immediate(2D), DOUBLE.get().reference("inaccuracy"), INT.get().immediate(20), "on_block_hit", "on_entity_hit", "", ""))
+                .addAction(PutVarAction.makeInt("do_shoot", Compiler.compileString(" shots_per_repetition - 1 ", INT.get()), "shots_per_repetition"))
+                .addAction(JumpAction.make("do_shoot", "loop"))
                 .addAction(BooleanActivationAction.make("shoot", "repeat", Compiler.compileString(" repetitions > 1 ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
                 .addAction(PlaySoundAction.make("shoot", "player", SoundEvents.BLAZE_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(AddDelayedSpellAction.make("repeat", "player", "on_timeout", INT.get().reference("repetition_delay"), STRING.get().immediate(""), Compiler.compileString(" put_nbt_int(tag(), 'repetitions', repetitions - 1) ", COMPOUND_TAG.get())))
                 .addAction(SetOnFireAction.make("on_entity_hit", ENTITY_HIT.targetGroup, INT.get().reference("fire_seconds")))
                 .addParameter(INT.get(), "fire_seconds", 10)
+                .addParameter(INT.get(), "shots_per_repetition", 3)
                 .addParameter(INT.get(), "repetitions", 5)
                 .addParameter(INT.get(), "repetition_delay", 4)
                 .addParameter(DOUBLE.get(), "inaccuracy", 15D)
