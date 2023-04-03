@@ -56,7 +56,7 @@ public class SpellContext
     
     public void activate(String activation)
     {
-        if(!activation.isEmpty())
+        if(!activation.isEmpty() && !activationsList.contains(activation))
         {
             activationsList.add(activation);
         }
