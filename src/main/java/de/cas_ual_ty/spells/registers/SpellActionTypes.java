@@ -59,6 +59,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ActivateAction>> ACTIVATE = DEFERRED_REGISTER.register("activate", () -> new SpellActionType<>(ActivateAction::new, ActivateAction::makeCodec));
     public static final RegistryObject<SpellActionType<BooleanActivationAction>> BOOLEAN_ACTIVATION = DEFERRED_REGISTER.register("boolean_activation", () -> new SpellActionType<>(BooleanActivationAction::new, BooleanActivationAction::makeCodec));
     public static final RegistryObject<SpellActionType<DeactivateAction>> DEACTIVATE = DEFERRED_REGISTER.register("deactivate", () -> new SpellActionType<>(DeactivateAction::new, DeactivateAction::makeCodec));
+    public static final RegistryObject<SpellActionType<JumpAction>> JUMP = DEFERRED_REGISTER.register("jump", () -> new SpellActionType<>(JumpAction::new, JumpAction::makeCodec));
     public static final RegistryObject<SpellActionType<LabelAction>> LABEL = DEFERRED_REGISTER.register("label", () -> new SpellActionType<>(LabelAction::new, LabelAction::makeCodec));
     public static final RegistryObject<SpellActionType<TerminateAction>> TERMINATE = DEFERRED_REGISTER.register("terminate", () -> new SpellActionType<>(TerminateAction::new, TerminateAction::makeCodec));
     
