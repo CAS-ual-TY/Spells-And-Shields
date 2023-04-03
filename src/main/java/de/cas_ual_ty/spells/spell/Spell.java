@@ -1,12 +1,7 @@
 package de.cas_ual_ty.spells.spell;
 
-import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.SpellsConfig;
-import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
-import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
-import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
@@ -17,6 +12,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,7 +37,7 @@ public class Spell
     
     public Spell(SpellIcon icon, Component title, float manaCost)
     {
-        this(new LinkedList<>(), icon, title, new LinkedList<>(), manaCost, new LinkedList<>());
+        this(new ArrayList<>(), icon, title, new LinkedList<>(), manaCost, new LinkedList<>());
     }
     
     public Spell(SpellIcon icon, String titleKey, float manaCost)
@@ -126,54 +122,5 @@ public class Spell
         tooltip.addAll(getTooltip());
         
         return tooltip;
-    }
-    
-    public void run(SpellContext ctx)
-    {
-        if(SpellsConfig.DEBUG_SPELLS.get())
-        {
-            SpellsAndShields.LOGGER.info("Running spell " + Spells.getRegistry(ctx.getLevel()).getKey(this));
-            SpellsAndShields.LOGGER.info("-".repeat(50));
-            SpellsAndShields.LOGGER.info("Initial state:");
-            ctx.debugActivations();
-            ctx.debugTargetGroups();
-            ctx.debugCtxVars();
-            SpellsAndShields.LOGGER.info("-".repeat(50));
-        }
-        
-        for(SpellAction spellAction : spellActions)
-        {
-            if(spellAction.doActivate(ctx))
-            {
-                if(SpellsConfig.DEBUG_SPELLS.get())
-                {
-                    SpellsAndShields.LOGGER.info("Starting action " + SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
-                }
-                
-                spellAction.doAction(ctx);
-                
-                if(SpellsConfig.DEBUG_SPELLS.get())
-                {
-                    SpellsAndShields.LOGGER.info("Finish action " + SpellActionTypes.REGISTRY.get().getKey(spellAction.getType()));
-                    SpellsAndShields.LOGGER.info("-".repeat(50));
-                    ctx.debugActivations();
-                    ctx.debugTargetGroups();
-                    ctx.debugCtxVars();
-                    SpellsAndShields.LOGGER.info("-".repeat(50));
-                }
-                
-                if(ctx.isTerminated())
-                {
-                    break;
-                }
-            }
-        }
-        
-        if(SpellsConfig.DEBUG_SPELLS.get())
-        {
-            SpellsAndShields.LOGGER.info("Finished running spell " + Spells.getRegistry(ctx.getLevel()).getKey(this));
-            SpellsAndShields.LOGGER.info("-".repeat(50));
-            SpellsAndShields.LOGGER.info("-".repeat(50));
-        }
     }
 }

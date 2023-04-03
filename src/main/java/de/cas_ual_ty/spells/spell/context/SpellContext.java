@@ -1,11 +1,17 @@
 package de.cas_ual_ty.spells.spell.context;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
+import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.registers.TargetTypes;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
+import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
@@ -24,6 +30,8 @@ public class SpellContext
     protected Map<String, TargetGroup> targetGroups;
     protected Map<String, CtxVar<?>> ctxVars;
     protected boolean terminated;
+    
+    protected int index;
     
     public SpellContext(Level level, @Nullable Player owner, SpellInstance spell)
     {
@@ -162,6 +170,79 @@ public class SpellContext
     public boolean isTerminated()
     {
         return terminated;
+    }
+    
+    public void setIndex(int index)
+    {
+        this.index = index;
+    }
+    
+    public int getIndex()
+    {
+        return index;
+    }
+    
+    public void run()
+    {
+        Spell spell = this.spell.getSpell().get();
+        ResourceLocation spellRl = null;
+        
+        if(SpellsConfig.DEBUG_SPELLS.get())
+        {
+            spellRl = Spells.getRegistry(level).getKey(spell);
+            SpellsAndShields.LOGGER.info("Running spell " + spellRl);
+            SpellsAndShields.LOGGER.info("-".repeat(50));
+            SpellsAndShields.LOGGER.info("Initial state:");
+            debugActivations();
+            debugTargetGroups();
+            debugCtxVars();
+            SpellsAndShields.LOGGER.info("-".repeat(50));
+        }
+        
+        index = 0;
+        List<SpellAction> actions = spell.getSpellActions();
+        
+        for(index = 0; index < actions.size() && index >= 0; index++)
+        {
+            SpellAction spellAction = actions.get(index);
+            
+            if(spellAction.doActivate(this))
+            {
+                ResourceLocation actionRl = null;
+                
+                if(SpellsConfig.DEBUG_SPELLS.get())
+                {
+                    actionRl = SpellActionTypes.REGISTRY.get().getKey(spellAction.getType());
+                    SpellsAndShields.LOGGER.info("Starting action " + actionRl);
+                }
+                
+                spellAction.doAction(this);
+                
+                if(SpellsConfig.DEBUG_SPELLS.get())
+                {
+                    SpellsAndShields.LOGGER.info("Finish action " + actionRl);
+                    SpellsAndShields.LOGGER.info("-".repeat(50));
+                    debugActivations();
+                    debugTargetGroups();
+                    debugCtxVars();
+                    SpellsAndShields.LOGGER.info("-".repeat(50));
+                }
+                
+                if(isTerminated())
+                {
+                    break;
+                }
+            }
+        }
+        
+        if(SpellsConfig.DEBUG_SPELLS.get())
+        {
+            SpellsAndShields.LOGGER.info("Finished running spell " + spellRl);
+            SpellsAndShields.LOGGER.info("-".repeat(50));
+            SpellsAndShields.LOGGER.info("-".repeat(50));
+        }
+        
+        terminate(); // make sure this context is not run again
     }
     
     public void debugCtxVars()

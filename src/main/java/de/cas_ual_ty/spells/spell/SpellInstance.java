@@ -120,7 +120,7 @@ public class SpellInstance
     {
         SpellContext ctx = initializeContext(level, owner, activation);
         consumer.accept(ctx);
-        this.spell.get().run(ctx);
+        ctx.run();
     }
     
     public SpellContext initializeContext(Level level, @Nullable Player owner, String activation)
