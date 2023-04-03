@@ -190,30 +190,43 @@
       "ts/targets": "return_target"
     },
     {
-      "type": "spells_and_shields:type_filter",
-      "activation": "on_entity_hit_return",
-      "target_type": "spells_and_shields:player",
-      "td/destination": "return_player",
-      "ts/source": "entity_hit"
+      "type": "spells_and_shields:apply_entity_extra_tag",
+      "activation": "return",
+      "d/compound_tag/tag": "<<tag>>",
+      "ts/targets": "projectile"
     },
     {
-      "type": "spells_and_shields:get_target_group_size",
+      "type": "spells_and_shields:get_entity_type",
       "activation": "on_entity_hit_return",
-      "td/source": "return_player",
-      "var/result": "count"
+      "t/source": "entity_hit",
+      "var/entity_type": "",
+      "var/is_living": "",
+      "var/is_player": "is_player"
+    },
+    {
+      "type": "spells_and_shields:get_entity_uuid",
+      "activation": "on_entity_hit_return",
+      "t/source": "entity_hit",
+      "var/uuid": "hit_uuid"
+    },
+    {
+      "type": "spells_and_shields:get_entity_extra_tag",
+      "activation": "on_entity_hit_return",
+      "t/source": "projectile",
+      "var/compound_tag": "tag"
     },
     {
       "type": "spells_and_shields:boolean_activation",
       "a/to_activate": "refill",
       "activation": "on_entity_hit_return",
       "d/boolean/activate_if_true": true,
-      "d/boolean/deactivate_if_false": true,
-      "d/boolean/input": "<< count == 1 >>"
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< is_player && (hit_uuid == get_nbt_uuid(tag, 'owner_uuid_return')) >>"
     },
     {
       "type": "spells_and_shields:mainhand_item_target",
       "activation": "refill",
-      "t/source": "return_player",
+      "t/source": "entity_hit",
       "td/item": "item"
     },
     {
@@ -247,7 +260,7 @@
     {
       "type": "spells_and_shields:offhand_item_target",
       "activation": "refill_offhand",
-      "t/source": "return_player",
+      "t/source": "entity_hit",
       "td/item": "item"
     },
     {

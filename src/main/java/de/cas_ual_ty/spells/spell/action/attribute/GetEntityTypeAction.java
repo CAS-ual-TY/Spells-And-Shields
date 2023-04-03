@@ -27,7 +27,7 @@ public class GetEntityTypeAction extends GetTargetAttributeAction<EntityTarget>
         ).apply(instance, (activation, source, entityType, isLiving, isPlayer) -> new GetEntityTypeAction(type, activation, source, entityType, isLiving, isPlayer)));
     }
     
-    public static GetEntityTypeAction make(String activation, String entityType, String source, String isLiving, String isPlayer)
+    public static GetEntityTypeAction make(String activation, String source, String entityType, String isLiving, String isPlayer)
     {
         return new GetEntityTypeAction(SpellActionTypes.GET_ENTITY_TYPE.get(), activation, source, entityType, isLiving, isPlayer);
     }

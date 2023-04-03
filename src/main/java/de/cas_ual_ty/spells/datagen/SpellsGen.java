@@ -5,12 +5,8 @@ import com.mojang.serialization.JsonOps;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.Spells;
-import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.Spell;
-import de.cas_ual_ty.spells.spell.action.attribute.GetEntityExtraTagAction;
-import de.cas_ual_ty.spells.spell.action.attribute.GetEntityEyePositionAction;
-import de.cas_ual_ty.spells.spell.action.attribute.GetEntityPositionDirectionMotionAction;
-import de.cas_ual_ty.spells.spell.action.attribute.GetEntityUUIDAction;
+import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
@@ -23,7 +19,6 @@ import de.cas_ual_ty.spells.spell.action.mana.ManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.mana.ReplenishManaAction;
 import de.cas_ual_ty.spells.spell.action.mana.SimpleManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
-import de.cas_ual_ty.spells.spell.action.target.filter.TypeFilterAction;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.icon.AdvancedSpellIcon;
@@ -495,15 +490,17 @@ public class SpellsGen implements DataProvider
                 .addAction(GetEntityExtraTagAction.make("return", PROJECTILE.targetGroup, "tag"))
                 .addAction(EntityUUIDTargetAction.make("return", "return_target", Compiler.compileString(" get_nbt_uuid(tag, 'owner_uuid_return') ", STRING.get())))
                 .addAction(HomeAction.make("return", "position", "return_target", DOUBLE.get().immediate(1D), INT.get().immediate(100), "dummy_block_hit", "on_entity_hit_return", "dummy_timeout", "projectile"))
-                .addAction(TypeFilterAction.make("on_entity_hit_return", "return_player", ENTITY_HIT.targetGroup, TargetTypes.PLAYER::get))
-                .addAction(GetTargetGroupSizeAction.make("on_entity_hit_return", "return_player", "count"))
-                .addAction(BooleanActivationAction.make("on_entity_hit_return", "refill", Compiler.compileString(" count == 1 ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
-                .addAction(MainhandItemTargetAction.make("refill", "return_player", "item"))
+                .addAction(ApplyEntityExtraTagAction.make("return", "projectile", COMPOUND_TAG.get().reference("tag")))
+                .addAction(GetEntityTypeAction.make("on_entity_hit_return", ENTITY_HIT.targetGroup, "", "", "is_player"))
+                .addAction(GetEntityUUIDAction.make("on_entity_hit_return", ENTITY_HIT.targetGroup, "hit_uuid"))
+                .addAction(GetEntityExtraTagAction.make("on_entity_hit_return", PROJECTILE.targetGroup, "tag"))
+                .addAction(BooleanActivationAction.make("on_entity_hit_return", "refill", Compiler.compileString(" is_player && (hit_uuid == get_nbt_uuid(tag, 'owner_uuid_return')) ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(MainhandItemTargetAction.make("refill", ENTITY_HIT.targetGroup, "item"))
                 .addAction(ItemEqualsActivationAction.make("refill", "item", "do_refill", new ItemStack(Items.BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
                 .addAction(ActivateAction.make("refill", "refill_offhand"))
                 .addAction(DeactivateAction.make("do_refill", "refill_offhand"))
                 .addAction(ClearTargetsAction.make("refill_offhand", "item"))
-                .addAction(OffhandItemTargetAction.make("refill_offhand", "return_player", "item"))
+                .addAction(OffhandItemTargetAction.make("refill_offhand", ENTITY_HIT.targetGroup, "item"))
                 .addAction(ItemEqualsActivationAction.make("refill_offhand", "item", "do_refill", new ItemStack(Items.BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
                 .addAction(GetItemAttributesAction.make("do_refill", "item", "item", "amount", "damage", "item_tag"))
                 .addAction(OverrideItemAction.make("do_refill", "item", INT.get().immediate(1), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), SpellsUtil.objectToString(Items.WATER_BUCKET, ForgeRegistries.ITEMS)))
