@@ -32,6 +32,7 @@ public class LabelAction extends SpellAction
     public LabelAction(SpellActionType<?> type, String activation, String label)
     {
         super(type, activation);
+        this.label = label;
     }
     
     public String getLabel()

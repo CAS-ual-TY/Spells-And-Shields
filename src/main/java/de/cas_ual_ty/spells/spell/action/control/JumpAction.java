@@ -32,6 +32,7 @@ public class JumpAction extends SpellAction
     public JumpAction(SpellActionType<?> type, String activation, String label)
     {
         super(type, activation);
+        this.label = label;
     }
     
     public String getLabel()
