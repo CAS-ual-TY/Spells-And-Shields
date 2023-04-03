@@ -233,6 +233,7 @@ public class SpellContext
             debugActivations();
             debugTargetGroups();
             debugCtxVars();
+            debugLabels();
             SpellsAndShields.LOGGER.info("-".repeat(50));
         }
         
@@ -261,6 +262,7 @@ public class SpellContext
                     debugActivations();
                     debugTargetGroups();
                     debugCtxVars();
+                    debugLabels();
                     SpellsAndShields.LOGGER.info("-".repeat(50));
                 }
                 
@@ -309,6 +311,15 @@ public class SpellContext
         }
     }
     
+    public void debugLabels()
+    {
+        SpellsAndShields.LOGGER.info("  Labels:");
+        for(Label l : labels.values())
+        {
+            SpellsAndShields.LOGGER.info("   - " + l.label);
+        }
+    }
+    
     private static class Label
     {
         private int index;
@@ -321,12 +332,12 @@ public class SpellContext
             this.label = label;
             this.spellAction = spellAction;
         }
-    
+        
         public int getIndex()
         {
             return index;
         }
-    
+        
         public void setIndex(int index)
         {
             this.index = index;
