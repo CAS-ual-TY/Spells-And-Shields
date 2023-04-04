@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
+import de.cas_ual_ty.spells.spell.action.level.SetBlockAction;
 import de.cas_ual_ty.spells.spell.action.mana.*;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
@@ -105,6 +106,9 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<OverrideItemAction>> OVERRIDE_ITEM = DEFERRED_REGISTER.register("override_item", () -> new SpellActionType<>(OverrideItemAction::new, OverrideItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<TryConsumeItemAction>> TRY_CONSUME_ITEM = DEFERRED_REGISTER.register("try_consume_item", () -> new SpellActionType<>(TryConsumeItemAction::new, TryConsumeItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<TryDamageItemAction>> TRY_DAMAGE_ITEM = DEFERRED_REGISTER.register("try_damage_item", () -> new SpellActionType<>(TryDamageItemAction::new, TryDamageItemAction::makeCodec));
+    
+    // level
+    public static final RegistryObject<SpellActionType<SetBlockAction>> SET_BLOCK = DEFERRED_REGISTER.register("set_block", () -> new SpellActionType<>(SetBlockAction::new, SetBlockAction::makeCodec));
     
     // mana
     public static final RegistryObject<SpellActionType<BurnManaAction>> BURN_MANA = DEFERRED_REGISTER.register("burn_mana", () -> new SpellActionType<>(BurnManaAction::new, BurnManaAction::makeCodec));
