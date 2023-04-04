@@ -16,31 +16,31 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
-public class RangedTargetsAction extends SrcDstTargetAction
+public class RangedEntityTargetsAction extends SrcDstTargetAction
 {
-    public static Codec<RangedTargetsAction> makeCodec(SpellActionType<RangedTargetsAction> type)
+    public static Codec<RangedEntityTargetsAction> makeCodec(SpellActionType<RangedEntityTargetsAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 dstCodec(),
                 srcCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("range").forGetter(RangedTargetsAction::getRange)
-        ).apply(instance, (activation, dst, src, range) -> new RangedTargetsAction(type, activation, dst, src, range)));
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("range").forGetter(RangedEntityTargetsAction::getRange)
+        ).apply(instance, (activation, dst, src, range) -> new RangedEntityTargetsAction(type, activation, dst, src, range)));
     }
     
-    public static RangedTargetsAction make(String activation, String dest, String src, DynamicCtxVar<Double> range)
+    public static RangedEntityTargetsAction make(String activation, String dest, String src, DynamicCtxVar<Double> range)
     {
-        return new RangedTargetsAction(SpellActionTypes.RANGED_TARGETS.get(), activation, dest, src, range);
+        return new RangedEntityTargetsAction(SpellActionTypes.RANGED_ENTITY_TARGETS.get(), activation, dest, src, range);
     }
     
     protected DynamicCtxVar<Double> range;
     
-    public RangedTargetsAction(SpellActionType<?> type)
+    public RangedEntityTargetsAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public RangedTargetsAction(SpellActionType<?> type, String activation, String dest, String src, DynamicCtxVar<Double> range)
+    public RangedEntityTargetsAction(SpellActionType<?> type, String activation, String dest, String src, DynamicCtxVar<Double> range)
     {
         super(type, activation, dest, src);
         this.range = range;

@@ -23,7 +23,7 @@
       "t/target": "owner"
     },
     {
-      "type": "spells_and_shields:ranged_targets",
+      "type": "spells_and_shields:ranged_entity_targets",
       "activation": "active",
       "range": "<<range>>",
       "td/destination": "targets",
