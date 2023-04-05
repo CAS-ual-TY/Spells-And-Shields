@@ -19,7 +19,7 @@ public class LayeredSpellIcon extends SpellIcon
     
     public static LayeredSpellIcon make(List<SpellIcon> list)
     {
-        return new LayeredSpellIcon(SpellIconTypes.SIZED.get(), list);
+        return new LayeredSpellIcon(SpellIconTypes.LAYERED.get(), list);
     }
     
     protected List<SpellIcon> list;
