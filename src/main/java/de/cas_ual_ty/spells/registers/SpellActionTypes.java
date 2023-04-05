@@ -108,6 +108,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<TryDamageItemAction>> TRY_DAMAGE_ITEM = DEFERRED_REGISTER.register("try_damage_item", () -> new SpellActionType<>(TryDamageItemAction::new, TryDamageItemAction::makeCodec));
     
     // level
+    public static final RegistryObject<SpellActionType<CubeBlockTargetsAction>> CUBE_BLOCK_TARGETS = DEFERRED_REGISTER.register("cube_block_targets", () -> new SpellActionType<>(CubeBlockTargetsAction::new, CubeBlockTargetsAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetBlockAction>> GET_BLOCK = DEFERRED_REGISTER.register("get_block", () -> new SpellActionType<>(GetBlockAction::new, GetBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<SetBlockAction>> SET_BLOCK = DEFERRED_REGISTER.register("set_block", () -> new SpellActionType<>(SetBlockAction::new, SetBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<TickBlockAction>> TICK_BLOCK = DEFERRED_REGISTER.register("tick_block", () -> new SpellActionType<>(TickBlockAction::new, TickBlockAction::makeCodec));
