@@ -19,6 +19,7 @@ import de.cas_ual_ty.spells.spell.action.variable.MappedTernaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedUnaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.BinaryOperation;
+import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.compiler.TernaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
 import de.cas_ual_ty.spells.util.SpellsUtil;
@@ -160,6 +161,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> TO_RADIANS = DEFERRED_REGISTER.register("to_radians", () -> MappedUnaryVarAction.makeType(UnaryOperation.TO_RADIANS));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> TO_DEGREES = DEFERRED_REGISTER.register("to_degrees", () -> MappedUnaryVarAction.makeType(UnaryOperation.TO_DEGREES));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> UUID_FROM_STRING = DEFERRED_REGISTER.register("uuid_from_string", () -> MappedUnaryVarAction.makeType(UnaryOperation.UUID_FROM_STRING));
+    public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NEXT_INT = DEFERRED_REGISTER.register("next_int", () -> MappedUnaryVarAction.makeType(UnaryOperation.NEXT_INT));
     
     // variable / mapped binary
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> ADD = DEFERRED_REGISTER.register("add", () -> MappedBinaryVarAction.makeType(BinaryOperation.ADD));
@@ -252,6 +254,7 @@ public class SpellActionTypes
         UnaryOperation.TO_DEGREES.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> Math.toDegrees(x));
         
         UnaryOperation.UUID_FROM_STRING.register(CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x) -> SpellsUtil.generateUUIDFromName(x).toString());
+        UnaryOperation.NEXT_INT.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x) -> Compiler.RANDOM.nextInt(x));
         
         BinaryOperation.ADD.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> x + y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x + y)

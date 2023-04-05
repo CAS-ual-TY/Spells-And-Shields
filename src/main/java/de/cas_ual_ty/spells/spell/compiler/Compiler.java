@@ -22,6 +22,8 @@ public class Compiler
     private static Map<String, BinaryOperation> BINARY_FUNCTIONS = new HashMap<>();
     private static Map<String, TernaryOperation> TERNARY_FUNCTIONS = new HashMap<>();
     
+    public static final Random RANDOM = new Random();
+    
     public static <T> void registerSuppliersToCompiler()
     {
         registerSupplier("pi", CtxVarTypes.DOUBLE, () -> Math.PI);
@@ -29,9 +31,8 @@ public class Compiler
         double sqrt2 = Math.sqrt(2D);
         registerSupplier("sqrt2", CtxVarTypes.DOUBLE, () -> sqrt2);
         
-        Random random = new Random();
-        registerSupplier("random_int", CtxVarTypes.INT, random::nextInt);
-        registerSupplier("random_double", CtxVarTypes.DOUBLE, random::nextDouble);
+        registerSupplier("random_int", CtxVarTypes.INT, RANDOM::nextInt);
+        registerSupplier("random_double", CtxVarTypes.DOUBLE, RANDOM::nextDouble);
         registerSupplier("random_uuid", CtxVarTypes.STRING, () -> UUID.randomUUID().toString());
         
         registerSupplier("tag", CtxVarTypes.COMPOUND_TAG, () -> new CompoundTag());
