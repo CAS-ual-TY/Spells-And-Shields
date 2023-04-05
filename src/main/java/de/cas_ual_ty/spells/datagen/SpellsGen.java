@@ -689,7 +689,7 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_FLAMETHROWER_DESC))
         );
         
-        dummy(Spells.LAVA_WALKER);
+        addToggleWalkerSpell(Spells.LAVA_WALKER, Spells.KEY_LAVA_WALKER, Spells.KEY_LAVA_WALKER_DESC, "lava_walker", Blocks.LAVA.defaultBlockState(), Blocks.OBSIDIAN.defaultBlockState(), 5F, true);
         
         addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(new ResourceLocation(BuiltinRegistries.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
                 .addAction(SimpleManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup))
