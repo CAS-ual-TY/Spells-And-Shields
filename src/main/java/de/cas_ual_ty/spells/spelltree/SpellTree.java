@@ -26,11 +26,11 @@ public class SpellTree
 {
     private SpellNode root;
     private Component title;
-    private Holder<Spell> icon;
+    private SpellIcon icon;
     
     private ResourceLocation id;
     
-    public SpellTree(SpellNode root, Component title, Holder<Spell> icon)
+    public SpellTree(SpellNode root, Component title, SpellIcon icon)
     {
         this.root = root;
         this.title = title;
@@ -62,19 +62,9 @@ public class SpellTree
         return tooltips;
     }
     
-    public Holder<Spell> getIconSpell()
-    {
-        return icon;
-    }
-    
-    public Spell getIconSpellDirect()
-    {
-        return getIconSpell().get();
-    }
-    
     public SpellIcon getIcon()
     {
-        return getIconSpellDirect().getIcon();
+        return icon;
     }
     
     public List<Requirement> getRequirements()
@@ -208,7 +198,7 @@ public class SpellTree
     {
         private Component title;
         private SpellNode root;
-        private Holder<Spell> icon;
+        private SpellIcon icon;
         
         private Stack<SpellNode> stack;
         
@@ -221,7 +211,7 @@ public class SpellTree
             this.stack = new Stack<>();
         }
         
-        public Builder icon(Holder<Spell> spell)
+        public Builder icon(SpellIcon spell)
         {
             this.icon = spell;
             return this;
@@ -322,7 +312,7 @@ public class SpellTree
         
         public SpellTree finish()
         {
-            return new SpellTree(root, title, icon != null ? icon : root.getSpellInstance().getSpell());
+            return new SpellTree(root, title, icon != null ? icon : root.getSpellInstance().getSpell().get().getIcon());
         }
     }
 }

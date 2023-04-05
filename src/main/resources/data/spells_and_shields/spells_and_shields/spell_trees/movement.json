@@ -1,5 +1,8 @@
 {
-  "icon": "spells_and_shields:toggle_jump_boost",
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "minecraft:textures/mob_effect/jump_boost.png"
+  },
   "root": {
     "children": [
       {

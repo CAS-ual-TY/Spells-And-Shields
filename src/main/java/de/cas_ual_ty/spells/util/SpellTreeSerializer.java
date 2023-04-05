@@ -5,6 +5,7 @@ import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
+import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
@@ -28,7 +29,7 @@ public class SpellTreeSerializer
     {
         buf.writeResourceLocation(spellTree.getId());
         buf.writeComponent(spellTree.getTitle());
-        buf.writeResourceLocation(spellTree.getIconSpell().unwrapKey().orElseThrow().location());
+        SpellIcon.iconToBuf(buf, spellTree.getIcon());
         
         SpellNode spellNode = spellTree.getRoot();
         encodeTreeRec(spellNode, registry, buf);
@@ -70,7 +71,7 @@ public class SpellTreeSerializer
     {
         ResourceLocation id = buf.readResourceLocation();
         Component title = buf.readComponent();
-        Holder<Spell> icon = registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, buf.readResourceLocation()));
+        SpellIcon icon = SpellIcon.iconFromBuf(buf);
         
         SpellTree.Builder builder = SpellTree.builder(title);
         

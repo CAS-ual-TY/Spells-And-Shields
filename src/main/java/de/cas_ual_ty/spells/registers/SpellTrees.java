@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
 import de.cas_ual_ty.spells.requirement.ItemRequirement;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Holder;
@@ -71,7 +72,7 @@ public class SpellTrees
     {
         int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_NETHER))
-                .icon(spellGetter.apply(Spells.TOGGLE_FIRE_RESISTANCE))
+                .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/fire_resistance.png")))
                 .add(nodeId++, spellGetter.apply(Spells.FIRE_BALL)).levelCost(15).learnRequirements(bookshelves(28))
                 .add(nodeId++, spellGetter.apply(Spells.LAVA_WALKER)).levelCost(20).learnRequirements(bookshelves(19))
                 .add(nodeId++, spellGetter.apply(Spells.TOGGLE_FIRE_RESISTANCE)).levelCost(30).learnRequirements(bookshelves(30))
@@ -88,7 +89,7 @@ public class SpellTrees
     {
         int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_OCEAN))
-                .icon(spellGetter.apply(Spells.TOGGLE_DOLPHINS_GRACE))
+                .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/dolphins_grace.png")))
                 .add(nodeId++, spellGetter.apply(Spells.TOGGLE_WATER_BREATHING)).levelCost(10)
                 .add(nodeId++, spellGetter.apply(Spells.TOGGLE_REGENERATION)).levelCost(20).learnRequirements(bookshelves(20))
                 .add(nodeId++, spellGetter.apply(Spells.GROWTH)).levelCost(20).learnRequirements(bookshelves(20))
@@ -115,7 +116,7 @@ public class SpellTrees
     {
         int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_MINING))
-                .icon(spellGetter.apply(Spells.TOGGLE_HASTE))
+                .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/haste.png")))
                 .add(nodeId++, spellGetter.apply(Spells.BLAST_SMELT)).levelCost(5).learnRequirements(bookshelves(8))
                 .add(nodeId++, spellGetter.apply(Spells.SILENCE_TARGET)).levelCost(25).learnRequirements(bookshelves(26))
                 .add(nodeId++, spellGetter.apply(Spells.TOGGLE_MAGIC_IMMUNE)).levelCost(25).learnRequirements(bookshelves(26))
@@ -133,7 +134,7 @@ public class SpellTrees
     {
         int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_MOVEMENT))
-                .icon(spellGetter.apply(Spells.TOGGLE_JUMP_BOOST))
+                .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/jump_boost.png")))
                 .add(nodeId++, spellGetter.apply(Spells.TOGGLE_JUMP_BOOST)).levelCost(15).learnRequirements(bookshelves(12))
                 .add(nodeId++, spellGetter.apply(Spells.LEAP)).levelCost(10).learnRequirements(bookshelves(14))
                 .add(nodeId++, spellGetter.apply(Spells.TOGGLE_SPEED)).levelCost(20).learnRequirements(bookshelves(20))
@@ -155,7 +156,7 @@ public class SpellTrees
     {
         int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_END))
-                .icon(spellGetter.apply(Spells.TELEPORT))
+                .icon(DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/teleport.png")))
                 .add(nodeId++, spellGetter.apply(Spells.RANDOM_TELEPORT)).levelCost(20).learnRequirements(bookshelves(28)).hiddenRequirements(advancement("end/root"))
                 .add(nodeId++, spellGetter.apply(Spells.FORCED_TELEPORT)).levelCost(30).learnRequirements(bookshelves(28))
                 .leaf()

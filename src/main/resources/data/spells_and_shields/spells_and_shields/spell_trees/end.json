@@ -1,5 +1,8 @@
 {
-  "icon": "spells_and_shields:teleport",
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/teleport.png"
+  },
   "root": {
     "children": [
       {

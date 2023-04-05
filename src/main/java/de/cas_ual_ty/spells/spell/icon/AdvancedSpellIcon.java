@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.icon;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class AdvancedSpellIcon extends SpellIcon
@@ -83,5 +84,29 @@ public class AdvancedSpellIcon extends SpellIcon
     public int getTextureHeight()
     {
         return textureHeight;
+    }
+    
+    @Override
+    public void readFromBuf(FriendlyByteBuf buf)
+    {
+        texture = buf.readResourceLocation();
+        u = buf.readShort(); //could also use unsigned, of course, but this is large enough regardless
+        v = buf.readShort();
+        width = buf.readShort();
+        height = buf.readShort();
+        textureWidth = buf.readShort();
+        textureHeight = buf.readShort();
+    }
+    
+    @Override
+    public void writeToBuf(FriendlyByteBuf buf)
+    {
+        buf.writeResourceLocation(texture);
+        buf.writeShort(u);
+        buf.writeShort(v);
+        buf.writeShort(width);
+        buf.writeShort(height);
+        buf.writeShort(textureWidth);
+        buf.writeShort(textureHeight);
     }
 }

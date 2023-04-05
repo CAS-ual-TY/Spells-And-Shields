@@ -85,7 +85,7 @@ public class SpellsCodecs
         SPELL_TREE_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 SPELL_NODE.fieldOf("root").forGetter(SpellTree::getRoot),
                 COMPONENT.fieldOf("title").forGetter(SpellTree::getTitle),
-                SPELL.fieldOf("icon").forGetter(SpellTree::getIconSpell)
+                SPELL_ICON.fieldOf("icon").forGetter(SpellTree::getIcon)
         ).apply(instance, SpellTree::new)));
         
         SPELL_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(

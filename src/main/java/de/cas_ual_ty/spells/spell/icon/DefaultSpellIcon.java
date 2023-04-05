@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.icon;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public class DefaultSpellIcon extends SpellIcon
@@ -35,5 +36,17 @@ public class DefaultSpellIcon extends SpellIcon
     public ResourceLocation getTexture()
     {
         return texture;
+    }
+    
+    @Override
+    public void readFromBuf(FriendlyByteBuf buf)
+    {
+        texture = buf.readResourceLocation();
+    }
+    
+    @Override
+    public void writeToBuf(FriendlyByteBuf buf)
+    {
+        buf.writeResourceLocation(texture);
     }
 }

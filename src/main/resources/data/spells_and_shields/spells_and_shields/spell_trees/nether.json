@@ -1,5 +1,8 @@
 {
-  "icon": "spells_and_shields:toggle_fire_resistance",
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "minecraft:textures/mob_effect/fire_resistance.png"
+  },
   "root": {
     "children": [
       {

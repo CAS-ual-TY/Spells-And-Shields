@@ -4,8 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.ExtraCodecs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LayeredSpellIcon extends SpellIcon
@@ -38,5 +40,26 @@ public class LayeredSpellIcon extends SpellIcon
     public List<SpellIcon> getList()
     {
         return list;
+    }
+    
+    @Override
+    public void readFromBuf(FriendlyByteBuf buf)
+    {
+        int size = buf.readByte();
+        list = new ArrayList<>(size);
+        for(int i = 0; i < size; i++)
+        {
+            list.add(SpellIcon.iconFromBuf(buf));
+        }
+    }
+    
+    @Override
+    public void writeToBuf(FriendlyByteBuf buf)
+    {
+        buf.writeByte(list.size());
+        for(SpellIcon icon : list)
+        {
+            SpellIcon.iconToBuf(buf, icon);
+        }
     }
 }

@@ -1,5 +1,8 @@
 {
-  "icon": "spells_and_shields:toggle_dolphins_grace",
+  "icon": {
+    "type": "spells_and_shields:default",
+    "texture": "minecraft:textures/mob_effect/dolphins_grace.png"
+  },
   "root": {
     "children": [
       {
