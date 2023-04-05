@@ -15,6 +15,7 @@ import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
+import de.cas_ual_ty.spells.spell.action.level.*;
 import de.cas_ual_ty.spells.spell.action.mana.ManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.mana.ReplenishManaAction;
 import de.cas_ual_ty.spells.spell.action.mana.SimpleManaCheckAction;
@@ -48,6 +49,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.JsonCodecProvider;
@@ -352,6 +355,66 @@ public class SpellsGen implements DataProvider
         addSpell(rl, spell);
     }
     
+    public void addToggleWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, BlockState from, BlockState to, float manaCost, boolean tick)
+    {
+        ResourceLocation fromRL = ForgeRegistries.BLOCKS.getKey(from.getBlock());
+        ResourceLocation toRL = ForgeRegistries.BLOCKS.getKey(to.getBlock());
+        String uuidCode = " uuid_from_string('toggle_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT.name);
+        Spell spell = new Spell(modId, icon, key, manaCost)
+                .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
+                .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
+                .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
+                .addAction(PutVarAction.makeString(ACTIVE.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
+                .addAction(PutVarAction.makeString(ON_UNEQUIP.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
+                .addAction(PutVarAction.makeStringMoveVar("apply", DELAY_UUID.name, "uuid"))
+                .addAction(CheckHasDelayedSpellAction.make(ACTIVE.activation, "player", STRING.get().reference("uuid"), "remove"))
+                .addAction(ActivateAction.make(ACTIVE.activation, "apply"))
+                .addAction(DeactivateAction.make("remove", "apply"))
+                .addAction(ActivateAction.make(ON_UNEQUIP.activation, "remove"))
+                .addAction(CheckHasDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), "remove_sound"))
+                .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), BOOLEAN.get().immediate(false)))
+                .addAction(ManaCheckAction.make("apply", "player", Compiler.compileString(" (" + MANA_COST.name + " * refresh_rate) / 100 ", DOUBLE.get())))
+                .addAction(ActivateAction.make("apply", "renew"))
+                
+                .addAction(OffsetBlockAction.make("apply", "player", "above", VEC3.get().immediate(Vec3.ZERO)))
+                .addAction(GetBlockAction.make("apply", "above", "", "", "is_air"))
+                .addAction(BooleanActivationAction.make("apply", "apply", BOOLEAN.get().reference(" is_air "), BOOLEAN.get().immediate(false), BOOLEAN.get().immediate(true)))
+                
+                .addAction(OffsetBlockAction.make("apply", "player", "below", VEC3.get().immediate(new Vec3(0, -1, 0))))
+                .addAction(CubeBlockTargetsAction.make("apply", "below", "blocks", Compiler.compileString(" vec3(-rect_radius, 0, -rect_radius) ", VEC3.get()), Compiler.compileString(" vec3(rect_radius, 0, rect_radius) ", VEC3.get())))
+                
+                .addAction(LabelAction.make("apply", "loop"))
+                .addAction(ClearTargetsAction.make("apply", "block"))
+                .addAction(PickTargetAction.make("apply", "block", "blocks", true, false))
+                
+                .addAction(GetBlockAction.make("apply", "block", "block_id", "", ""))
+                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.get().reference(" block_id == '" + fromRL.toString() + "' "), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(SetBlockAction.make("do_apply", "block", STRING.get().reference("block_to"), COMPOUND_TAG.get().reference("block_state_to")));
+        
+        if(tick)
+        {
+            spell.addAction(TickBlockAction.make("apply", "block", Compiler.compileString(" next_int(60) + 60 ", INT.get())));
+        }
+        
+        spell.addAction(GetTargetGroupSizeAction.make("apply", "blocks", "size"))
+                .addAction(BranchAction.make("apply", "loop", Compiler.compileString(" size > 0 ", BOOLEAN.get())))
+                .addAction(ActivateAction.make("apply", "sound"))
+                .addAction(ActivateAction.make("apply", "anti_sound"))
+                .addAction(DeactivateAction.make(ACTIVE.activation, "anti_sound"))
+                .addAction(DeactivateAction.make("anti_sound", "sound"))
+                .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(PlaySoundAction.make("remove_sound", "player", SoundEvents.SPLASH_POTION_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("refresh_rate"), STRING.get().reference("uuid"), COMPOUND_TAG.get().immediate(new CompoundTag())))
+                .addParameter(INT.get(), "refresh_rate", 2)
+                .addParameter(STRING.get(), "block_from", fromRL.toString())
+                .addParameter(STRING.get(), "block_to", toRL.toString())
+                .addParameter(COMPOUND_TAG.get(), "block_state_to", SpellsUtil.stateToTag(to))
+                .addParameter(INT.get(), "rect_radius", 3)
+                .addTooltip(Component.translatable(descKey));
+        
+        addSpell(rl, spell);
+    }
+    
     protected void addSpells()
     {
         dummy(Spells.DUMMY);
@@ -531,7 +594,7 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_POTION_SHOT_DESC))
         );
         
-        dummy(Spells.FROST_WALKER);
+        addToggleWalkerSpell(Spells.FROST_WALKER, Spells.KEY_FROST_WALKER, Spells.KEY_FROST_WALKER_DESC, "frost_walker", Blocks.WATER.defaultBlockState(), Blocks.FROSTED_ICE.defaultBlockState(), 5F, true);
         
         addSpell(Spells.JUMP, new Spell(modId, "jump", Spells.KEY_JUMP, 5F)
                 .addParameter(DOUBLE.get(), "speed", 1.5)

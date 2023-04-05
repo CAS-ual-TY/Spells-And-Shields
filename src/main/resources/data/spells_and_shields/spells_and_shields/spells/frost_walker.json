@@ -3,20 +3,277 @@
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/frost_walker.png"
   },
-  "mana_cost": 0.0,
-  "parameters": [],
-  "spell_actions": [],
+  "mana_cost": 5.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:int",
+      "value": 2,
+      "var/name": "refresh_rate"
+    },
+    {
+      "type": "spells_and_shields:string",
+      "value": "minecraft:water",
+      "var/name": "block_from"
+    },
+    {
+      "type": "spells_and_shields:string",
+      "value": "minecraft:frosted_ice",
+      "var/name": "block_to"
+    },
+    {
+      "type": "spells_and_shields:tag",
+      "value": {
+        "age": "0"
+      },
+      "var/name": "block_state_to"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 3,
+      "var/name": "rect_radius"
+    }
+  ],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "active",
+      "td/destination": "player",
+      "ts/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "on_unequip",
+      "td/destination": "player",
+      "ts/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "apply",
+      "td/destination": "player",
+      "ts/source": "holder"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "active",
+      "d/string/source": "<< uuid_from_string('toggle_walker' + 'spells_and_shields:frost_walker' + spell_slot) >>",
+      "var/result": "uuid"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "on_unequip",
+      "d/string/source": "<< uuid_from_string('toggle_walker' + 'spells_and_shields:frost_walker' + spell_slot) >>",
+      "var/result": "uuid"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "apply",
+      "d/string/source": "<<delay_uuid>>",
+      "var/result": "uuid"
+    },
+    {
+      "type": "spells_and_shields:check_has_delayed_spell",
+      "a/to_activate": "remove",
+      "activation": "active",
+      "d/string/uuid": "<<uuid>>",
+      "t/target": "player"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "apply",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "apply",
+      "activation": "remove"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "remove",
+      "activation": "on_unequip"
+    },
+    {
+      "type": "spells_and_shields:check_has_delayed_spell",
+      "a/to_activate": "remove_sound",
+      "activation": "remove",
+      "d/string/uuid": "<<uuid>>",
+      "t/target": "player"
+    },
+    {
+      "type": "spells_and_shields:remove_delayed_spell",
+      "activation": "remove",
+      "d/boolean/force_activate": false,
+      "d/string/uuid": "<<uuid>>",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:mana_check",
+      "activation": "apply",
+      "amount": "<< (mana_cost * refresh_rate) / 100 >>",
+      "t/target": "player"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "renew",
+      "activation": "apply"
+    },
+    {
+      "type": "spells_and_shields:offset_block",
+      "activation": "apply",
+      "d/vec3/offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "td/result": "above",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:get_block",
+      "activation": "apply",
+      "t/target": "above",
+      "var/block": "",
+      "var/block_state": "",
+      "var/is_air": "is_air"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "apply",
+      "activation": "apply",
+      "d/boolean/activate_if_true": false,
+      "d/boolean/deactivate_if_false": true,
+      "d/boolean/input": "<< is_air >>"
+    },
+    {
+      "type": "spells_and_shields:offset_block",
+      "activation": "apply",
+      "d/vec3/offset": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "td/result": "below",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:cube_block_targets",
+      "activation": "apply",
+      "corner1": "<< vec3(-rect_radius, 0, -rect_radius) >>",
+      "corner2": "<< vec3(rect_radius, 0, rect_radius) >>",
+      "t/source": "below",
+      "td/targets": "blocks"
+    },
+    {
+      "type": "spells_and_shields:label",
+      "activation": "apply",
+      "label": "loop"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "apply",
+      "td/destination": "block"
+    },
+    {
+      "type": "spells_and_shields:pick_target",
+      "activation": "apply",
+      "boolean/random": false,
+      "boolean/remove": true,
+      "td/destination": "block",
+      "ts/source": "blocks"
+    },
+    {
+      "type": "spells_and_shields:get_block",
+      "activation": "apply",
+      "t/target": "block",
+      "var/block": "block_id",
+      "var/block_state": "",
+      "var/is_air": ""
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "do_apply",
+      "activation": "apply",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": true,
+      "d/boolean/input": "<< block_id == 'minecraft:water' >>"
+    },
+    {
+      "type": "spells_and_shields:set_block",
+      "activation": "do_apply",
+      "d/compound_tag/block_state": "<<block_state_to>>",
+      "d/string/block": "<<block_to>>",
+      "ts/targets": "block"
+    },
+    {
+      "type": "spells_and_shields:tick_block",
+      "activation": "apply",
+      "d/int/duration": "<< next_int(60) + 60 >>",
+      "ts/targets": "block"
+    },
+    {
+      "type": "spells_and_shields:get_target_group_size",
+      "activation": "apply",
+      "td/source": "blocks",
+      "var/result": "size"
+    },
+    {
+      "type": "spells_and_shields:branch",
+      "activation": "apply",
+      "d/boolean/conditional": "<< size > 0 >>",
+      "label": "loop"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "sound",
+      "activation": "apply"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "anti_sound",
+      "activation": "apply"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "anti_sound",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "sound",
+      "activation": "anti_sound"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "sound",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.generic.drink",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "remove_sound",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.splash_potion.break",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:add_delayed_spell",
+      "activation": "renew",
+      "ad/on_remove": "apply",
+      "d/compound_tag/extra_data": {},
+      "d/int/tick_time": "<<refresh_rate>>",
+      "d/string/uuid": "<<uuid>>",
+      "ts/targets": "player"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.frost_walker"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.frost_walker.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ]
 }
