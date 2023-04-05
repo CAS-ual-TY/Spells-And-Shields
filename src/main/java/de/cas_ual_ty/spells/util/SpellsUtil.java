@@ -7,6 +7,8 @@ import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
@@ -21,6 +23,8 @@ import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -289,5 +293,41 @@ public class SpellsUtil
     public static <T> Optional<T> stringToObject(SpellContext ctx, DynamicCtxVar<String> s, IForgeRegistry<T> registry)
     {
         return s.getValue(ctx).map(id -> registry.getValue(new ResourceLocation(id)));
+    }
+    
+    public static BlockState tagToState(Block block, CompoundTag tag)
+    {
+        BlockState blockState = block.defaultBlockState();
+        for(Property<?> p : blockState.getProperties())
+        {
+            addPropertyFromTag(blockState, p, tag);
+        }
+        return blockState;
+    }
+    
+    private static <X extends Comparable<X>> void addPropertyFromTag(BlockState blockState, Property<X> p, CompoundTag tag)
+    {
+        p.valueCodec().decode(NbtOps.INSTANCE, tag).result().ifPresent(pair ->
+        {
+            blockState.setValue(p, pair.getFirst().value());
+        });
+    }
+    
+    public static CompoundTag stateToTag(BlockState blockState)
+    {
+        CompoundTag tag = new CompoundTag();
+        for(Property<?> p : blockState.getProperties())
+        {
+            addPropertyToTag(blockState, tag, p);
+        }
+        return tag;
+    }
+    
+    private static <X extends Comparable<X>> void addPropertyToTag(BlockState blockState, CompoundTag tag, Property<X> p)
+    {
+        p.valueCodec().encodeStart(NbtOps.INSTANCE, p.value(blockState)).result().ifPresent(element ->
+        {
+            tag.put(p.getName(), element);
+        });
     }
 }
