@@ -1,7 +1,16 @@
 {
   "icon": {
-    "type": "spells_and_shields:default",
-    "texture": "minecraft:textures/mob_effect/regeneration.png"
+    "type": "spells_and_shields:layered",
+    "icons_list": [
+      {
+        "type": "spells_and_shields:default",
+        "texture": "minecraft:textures/mob_effect/regeneration.png"
+      },
+      {
+        "type": "spells_and_shields:default",
+        "texture": "spells_and_shields:textures/spell/permanent.png"
+      }
+    ]
   },
   "mana_cost": 0.0,
   "parameters": [

@@ -1,7 +1,16 @@
 {
   "icon": {
-    "type": "spells_and_shields:default",
-    "texture": "minecraft:textures/mob_effect/fire_resistance.png"
+    "type": "spells_and_shields:layered",
+    "icons_list": [
+      {
+        "type": "spells_and_shields:default",
+        "texture": "minecraft:textures/mob_effect/fire_resistance.png"
+      },
+      {
+        "type": "spells_and_shields:default",
+        "texture": "spells_and_shields:textures/spell/toggle.png"
+      }
+    ]
   },
   "mana_cost": 4.0,
   "parameters": [

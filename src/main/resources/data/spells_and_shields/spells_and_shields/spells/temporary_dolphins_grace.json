@@ -1,7 +1,16 @@
 {
   "icon": {
-    "type": "spells_and_shields:default",
-    "texture": "minecraft:textures/mob_effect/dolphins_grace.png"
+    "type": "spells_and_shields:layered",
+    "icons_list": [
+      {
+        "type": "spells_and_shields:default",
+        "texture": "minecraft:textures/mob_effect/dolphins_grace.png"
+      },
+      {
+        "type": "spells_and_shields:default",
+        "texture": "spells_and_shields:textures/spell/temporary.png"
+      }
+    ]
   },
   "mana_cost": 13.0,
   "parameters": [

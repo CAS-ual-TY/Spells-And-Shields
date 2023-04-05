@@ -22,10 +22,7 @@ import de.cas_ual_ty.spells.spell.action.mana.SimpleManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
-import de.cas_ual_ty.spells.spell.icon.AdvancedSpellIcon;
-import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
-import de.cas_ual_ty.spells.spell.icon.ItemSpellIcon;
-import de.cas_ual_ty.spells.spell.icon.SpellIcon;
+import de.cas_ual_ty.spells.spell.icon.*;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
@@ -58,6 +55,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static de.cas_ual_ty.spells.registers.CtxVarTypes.*;
@@ -67,6 +65,10 @@ import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.*;
 
 public class SpellsGen implements DataProvider
 {
+    public static final ResourceLocation PERMANENT_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/permanent.png");
+    public static final ResourceLocation TEMPORARY_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/temporary.png");
+    public static final ResourceLocation TOGGLE_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/toggle.png");
+    
     protected Map<ResourceLocation, Spell> spells;
     
     protected DataGenerator gen;
@@ -123,7 +125,7 @@ public class SpellsGen implements DataProvider
         }
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('permanent' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
-        Spell spell = new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), 0F)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(PERMANENT_ICON_RL))), Component.translatable(key, component), 0F)
                 .addAction(CopyTargetsAction.make(ON_EQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
@@ -189,7 +191,7 @@ public class SpellsGen implements DataProvider
         }
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
-        Spell spell = new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), manaCost)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), Component.translatable(key, component), manaCost)
                 .addAction(ManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ApplyMobEffectAction.make(ACTIVE.activation, OWNER.targetGroup, STRING.get().reference("mob_effect"), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.GENERIC_DRINK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
@@ -247,7 +249,7 @@ public class SpellsGen implements DataProvider
         }
         ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT.name);
-        Spell spell = new Spell(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), Component.translatable(key, component), manaCost)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), Component.translatable(key, component), manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
@@ -322,7 +324,7 @@ public class SpellsGen implements DataProvider
         
         String uuidCode = " uuid_from_string('attribute' + '%s' + %s + %s + %s) ".formatted(attributeRL.getPath(), SPELL_SLOT.name, "operation", "value");
         
-        Spell spell = new Spell(spellIcon, Component.translatable(key, component), 0F)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(spellIcon, DefaultSpellIcon.make(PERMANENT_ICON_RL))), Component.translatable(key, component), 0F)
                 .addAction(AddAttributeModifierAction.make(ON_EQUIP.activation, OWNER.targetGroup, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING.get()), STRING.get().immediate(attributeRL.getPath()), DOUBLE.get().immediate(value), STRING.get().immediate(opString)))
                 .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP.activation, OWNER.targetGroup, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING.get())))
                 .addParameter(DOUBLE.get(), "value", value)
@@ -360,7 +362,7 @@ public class SpellsGen implements DataProvider
         ResourceLocation fromRL = ForgeRegistries.BLOCKS.getKey(from.getBlock());
         ResourceLocation toRL = ForgeRegistries.BLOCKS.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('toggle_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT.name);
-        Spell spell = new Spell(modId, icon, key, manaCost)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), key, manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP.activation, "player", OWNER.targetGroup))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER.targetGroup))
