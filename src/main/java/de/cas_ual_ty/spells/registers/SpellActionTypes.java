@@ -106,6 +106,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ModifyItemAction>> MODIFY_ITEM = DEFERRED_REGISTER.register("modify_item", () -> new SpellActionType<>(ModifyItemAction::new, ModifyItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<OffhandItemTargetAction>> OFFHAND_ITEM_TARGET = DEFERRED_REGISTER.register("offhand_item_target", () -> new SpellActionType<>(OffhandItemTargetAction::new, OffhandItemTargetAction::makeCodec));
     public static final RegistryObject<SpellActionType<OverrideItemAction>> OVERRIDE_ITEM = DEFERRED_REGISTER.register("override_item", () -> new SpellActionType<>(OverrideItemAction::new, OverrideItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<PlayerItemTargetsAction>> PLAYER_ITEM_TARGETS = DEFERRED_REGISTER.register("player_item_targets", () -> new SpellActionType<>(PlayerItemTargetsAction::new, PlayerItemTargetsAction::makeCodec));
     public static final RegistryObject<SpellActionType<TryConsumeItemAction>> TRY_CONSUME_ITEM = DEFERRED_REGISTER.register("try_consume_item", () -> new SpellActionType<>(TryConsumeItemAction::new, TryConsumeItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<TryDamageItemAction>> TRY_DAMAGE_ITEM = DEFERRED_REGISTER.register("try_damage_item", () -> new SpellActionType<>(TryDamageItemAction::new, TryDamageItemAction::makeCodec));
     
