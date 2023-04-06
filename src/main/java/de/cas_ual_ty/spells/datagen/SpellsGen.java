@@ -16,6 +16,7 @@ import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
 import de.cas_ual_ty.spells.spell.action.level.*;
+import de.cas_ual_ty.spells.spell.action.mana.BurnManaAction;
 import de.cas_ual_ty.spells.spell.action.mana.ManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.mana.ReplenishManaAction;
 import de.cas_ual_ty.spells.spell.action.mana.SimpleManaCheckAction;
@@ -707,7 +708,24 @@ public class SpellsGen implements DataProvider
         
         dummy(Spells.RANDOM_TELEPORT);
         dummy(Spells.FORCED_TELEPORT);
-        dummy(Spells.TELEPORT);
+        
+        addSpell(Spells.TELEPORT, new Spell(modId, "teleport", Spells.KEY_TELEPORT, 10F)
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, "continue", SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(ManaCheckAction.make("continue", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(LookAtTargetAction.make("continue", OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, "on_block_hit", "on_entity_hit", "on_miss"))
+                .addAction(CopyTargetsAction.make("on_entity_hit", "teleport_position", ENTITY_HIT.targetGroup))
+                .addAction(ActivateAction.make("on_entity_hit", "teleport"))
+                .addAction(OffsetBlockAction.make("on_block_hit", BLOCK_HIT.targetGroup, "teleport_position", VEC3.get().immediate(new Vec3(0, 0.5, 0))))
+                .addAction(ActivateAction.make("on_block_hit", "teleport"))
+                .addAction(CopyTargetsAction.make("on_miss", "teleport_position", HIT_POSITION.targetGroup))
+                .addAction(ActivateAction.make("on_miss", "teleport"))
+                .addAction(ConsumePlayerItemsAction.make("teleport", OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(PlaySoundAction.make("teleport", OWNER.targetGroup, SoundEvents.ENDERMAN_TELEPORT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(TeleportToAction.make("teleport", OWNER.targetGroup, "teleport_position"))
+                .addAction(PlaySoundAction.make("teleport", OWNER.targetGroup, SoundEvents.ENDERMAN_TELEPORT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addParameter(INT.get(), "range", 32)
+                .addTooltip(Component.translatable(Spells.KEY_TELEPORT_DESC))
+        );
         
         addSpell(Spells.LIGHTNING_STRIKE, new Spell(modId, "lightning_strike", Spells.KEY_LIGHTNING_STRIKE, 8F)
                 .addParameter(DOUBLE.get(), "range", 20D)
