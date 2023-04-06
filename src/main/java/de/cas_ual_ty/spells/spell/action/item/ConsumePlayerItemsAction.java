@@ -6,7 +6,7 @@ import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
+import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
@@ -22,23 +22,23 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConsumePlayerItemsAction extends AffectTypeAction<PlayerTarget>
+public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarget>
 {
     public static Codec<ConsumePlayerItemsAction> makeCodec(SpellActionType<ConsumePlayerItemsAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                multiTargetsCodec(),
+                sourceCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(ConsumePlayerItemsAction::getItem),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(ConsumePlayerItemsAction::getAmount),
                 CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(ConsumePlayerItemsAction::getTag),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(ConsumePlayerItemsAction::getMustBeInHand)
-        ).apply(instance, (activation, multiTargets, item, amount, tag, mustBeInHand) -> new ConsumePlayerItemsAction(type, activation, multiTargets, item, amount, tag, mustBeInHand)));
+        ).apply(instance, (activation, source, item, amount, tag, mustBeInHand) -> new ConsumePlayerItemsAction(type, activation, source, item, amount, tag, mustBeInHand)));
     }
     
-    public static ConsumePlayerItemsAction make(String activation, String multiTargets, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public static ConsumePlayerItemsAction make(String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
     {
-        return new ConsumePlayerItemsAction(SpellActionTypes.CONSUME_PLAYER_ITEMS.get(), activation, multiTargets, item, amount, tag, mustBeInHand);
+        return new ConsumePlayerItemsAction(SpellActionTypes.CONSUME_PLAYER_ITEMS.get(), activation, source, item, amount, tag, mustBeInHand);
     }
     
     protected DynamicCtxVar<String> item;
@@ -51,9 +51,9 @@ public class ConsumePlayerItemsAction extends AffectTypeAction<PlayerTarget>
         super(type);
     }
     
-    public ConsumePlayerItemsAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public ConsumePlayerItemsAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
     {
-        super(type, activation, multiTargets);
+        super(type, activation, source);
         this.item = item;
         this.amount = amount;
         this.tag = tag;
@@ -81,7 +81,7 @@ public class ConsumePlayerItemsAction extends AffectTypeAction<PlayerTarget>
     }
     
     @Override
-    public void affectTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
+    public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
         SpellsUtil.stringToObject(ctx, item, ForgeRegistries.ITEMS).ifPresent(item ->
         {
