@@ -83,14 +83,19 @@ public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarge
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
+        Player player = playerTarget.getPlayer();
+        
+        if(player.isCreative())
+        {
+            return;
+        }
+        
         SpellsUtil.stringToObject(ctx, item, ForgeRegistries.ITEMS).ifPresent(item ->
         {
             amount.getValue(ctx).ifPresent(amount ->
             {
                 mustBeInHand.getValue(ctx).ifPresent(mustBeInHand ->
                 {
-                    Player player = playerTarget.getPlayer();
-                    
                     List<ItemStack> items;
                     if(mustBeInHand)
                     {

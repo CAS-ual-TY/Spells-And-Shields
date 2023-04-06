@@ -117,7 +117,7 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
                     
                     for(ItemStack i : items)
                     {
-                        if(i.getItem() == item && (tag == null || (i.getTag() != null && tag.equals(i.getTag()))))
+                        if(i.getItem() == item && (tag == null || tag.isEmpty() || (i.getTag() != null && tag.equals(i.getTag()))))
                         {
                             count += i.getCount();
                         }
