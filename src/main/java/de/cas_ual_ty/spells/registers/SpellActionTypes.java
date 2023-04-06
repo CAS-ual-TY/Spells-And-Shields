@@ -93,6 +93,7 @@ public class SpellActionTypes
     
     // item
     public static final RegistryObject<SpellActionType<ConsumeItemAction>> CONSUME_ITEM = DEFERRED_REGISTER.register("consume_item", () -> new SpellActionType<>(ConsumeItemAction::new, ConsumeItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ConsumePlayerItemsAction>> CONSUME_PLAYER_ITEMS = DEFERRED_REGISTER.register("consume_player_items", () -> new SpellActionType<>(ConsumePlayerItemsAction::new, ConsumePlayerItemsAction::makeCodec));
     public static final RegistryObject<SpellActionType<DamageItemAction>> DAMAGE_ITEM = DEFERRED_REGISTER.register("damage_item", () -> new SpellActionType<>(DamageItemAction::new, DamageItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<FindItemAction>> FIND_ITEM = DEFERRED_REGISTER.register("find_item", () -> new SpellActionType<>(FindItemAction::new, FindItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetItemAttributesAction>> GET_ITEM_ATTRIBUTES = DEFERRED_REGISTER.register("get_item_attributes", () -> new SpellActionType<>(GetItemAttributesAction::new, GetItemAttributesAction::makeCodec));
