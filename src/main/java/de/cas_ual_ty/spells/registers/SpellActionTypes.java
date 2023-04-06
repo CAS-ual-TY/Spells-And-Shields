@@ -85,6 +85,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<SourcedDamageAction>> SOURCED_DAMAGE = DEFERRED_REGISTER.register("sourced_damage", () -> new SpellActionType<>(SourcedDamageAction::new, SourcedDamageAction::makeCodec));
     public static final RegistryObject<SpellActionType<SourcedKnockbackAction>> SOURCED_KNOCKBACK = DEFERRED_REGISTER.register("sourced_knockback", () -> new SpellActionType<>(SourcedKnockbackAction::new, SourcedKnockbackAction::makeCodec));
     public static final RegistryObject<SpellActionType<SpawnEntityAction>> SPAWN_ENTITY = DEFERRED_REGISTER.register("spawn_entity", () -> new SpellActionType<>(SpawnEntityAction::new, SpawnEntityAction::makeCodec));
+    public static final RegistryObject<SpellActionType<TeleportToAction>> TELEPORT_TO = DEFERRED_REGISTER.register("teleport_to", () -> new SpellActionType<>(TeleportToAction::new, TeleportToAction::makeCodec));
     
     // fx
     public static final RegistryObject<SpellActionType<PlaySoundAction>> PLAY_SOUND = DEFERRED_REGISTER.register("play_sound", () -> new SpellActionType<>(PlaySoundAction::new, PlaySoundAction::makeCodec));
