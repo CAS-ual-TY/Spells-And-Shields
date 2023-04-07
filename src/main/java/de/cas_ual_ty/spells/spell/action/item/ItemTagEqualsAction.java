@@ -17,48 +17,39 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ItemTagEqualsActivationAction extends AffectSingleTypeAction<ItemTarget>
+public class ItemTagEqualsAction extends AffectSingleTypeAction<ItemTarget>
 {
-    public static Codec<ItemTagEqualsActivationAction> makeCodec(SpellActionType<ItemTagEqualsActivationAction> type)
+    public static Codec<ItemTagEqualsAction> makeCodec(SpellActionType<ItemTagEqualsAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(ItemTagEqualsActivationAction::getToActivate),
-                TagKey.codec(ForgeRegistries.ITEMS.getRegistryKey()).fieldOf("item_tag").forGetter(ItemTagEqualsActivationAction::getItemTag),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_count")).forGetter(ItemTagEqualsActivationAction::getMinimumCount),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_durability")).forGetter(ItemTagEqualsActivationAction::getMinimumDurability)
-        ).apply(instance, (activation, singleTarget, toActivate, itemTag, minimumCount, minimumDurability) -> new ItemTagEqualsActivationAction(type, activation, singleTarget, toActivate, itemTag, minimumCount, minimumDurability)));
+                TagKey.codec(ForgeRegistries.ITEMS.getRegistryKey()).fieldOf("item_tag").forGetter(ItemTagEqualsAction::getItemTag),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_count")).forGetter(ItemTagEqualsAction::getMinimumCount),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_durability")).forGetter(ItemTagEqualsAction::getMinimumDurability)
+        ).apply(instance, (activation, singleTarget, itemTag, minimumCount, minimumDurability) -> new ItemTagEqualsAction(type, activation, singleTarget, itemTag, minimumCount, minimumDurability)));
     }
     
-    public static ItemTagEqualsActivationAction make(String activation, String singleTarget, String toActivate, TagKey<Item> itemTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
+    public static ItemTagEqualsAction make(String activation, String singleTarget, TagKey<Item> itemTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
     {
-        return new ItemTagEqualsActivationAction(SpellActionTypes.ITEM_TAG_EQUALS_ACTIVATION.get(), activation, singleTarget, toActivate, itemTag, minimumCount, minimumDurability);
+        return new ItemTagEqualsAction(SpellActionTypes.ITEM_TAG_EQUALS.get(), activation, singleTarget, itemTag, minimumCount, minimumDurability);
     }
-    
-    protected String toActivate;
     
     protected TagKey<Item> itemTag;
     protected DynamicCtxVar<Integer> minimumCount;
     protected DynamicCtxVar<Integer> minimumDurability;
     
-    public ItemTagEqualsActivationAction(SpellActionType<?> type)
+    public ItemTagEqualsAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public ItemTagEqualsActivationAction(SpellActionType<?> type, String activation, String singleTarget, String toActivate, TagKey<Item> itemTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
+    public ItemTagEqualsAction(SpellActionType<?> type, String activation, String singleTarget, TagKey<Item> itemTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
     {
         super(type, activation, singleTarget);
-        this.toActivate = toActivate;
         this.itemTag = itemTag;
         this.minimumCount = minimumCount;
         this.minimumDurability = minimumDurability;
-    }
-    
-    public String getToActivate()
-    {
-        return toActivate;
     }
     
     public TagKey<Item> getItemTag()
@@ -91,20 +82,20 @@ public class ItemTagEqualsActivationAction extends AffectSingleTypeAction<ItemTa
             {
                 if(!itemTarget.getItem().is(this.itemTag))
                 {
+                    ctx.deactivate(activation);
                     return;
                 }
                 
                 if(minimumCount >= 0 && itemTarget.getItem().getCount() < minimumCount)
                 {
+                    ctx.deactivate(activation);
                     return;
                 }
                 
                 if(minimumDurability >= 0 && itemTarget.getItem().getMaxDamage() - itemTarget.getItem().getDamageValue() < minimumDurability)
                 {
-                    return;
+                    ctx.deactivate(activation);
                 }
-                
-                ctx.activate(toActivate);
             });
         });
     }
