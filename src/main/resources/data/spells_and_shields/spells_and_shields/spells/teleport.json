@@ -14,7 +14,6 @@
   "spell_actions": [
     {
       "type": "spells_and_shields:player_has_items",
-      "a/to_activate": "continue",
       "activation": "active",
       "d/boolean/must_be_in_hand": true,
       "d/compound_tag/tag": {},
@@ -24,7 +23,7 @@
     },
     {
       "type": "spells_and_shields:mana_check",
-      "activation": "continue",
+      "activation": "active",
       "amount": "<<mana_cost>>",
       "t/target": "owner"
     },
@@ -33,7 +32,7 @@
       "a/block_hit_activation": "on_block_hit",
       "a/entity_hit_activation": "on_entity_hit",
       "a/miss_activation": "on_miss",
-      "activation": "continue",
+      "activation": "active",
       "block_clip_context": "outline",
       "d/double/range": "<<range>>",
       "double/bb_inflation": 0.5,

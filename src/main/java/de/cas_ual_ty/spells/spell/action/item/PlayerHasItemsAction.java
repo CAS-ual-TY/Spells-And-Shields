@@ -29,20 +29,18 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(PlayerHasItemsAction::getToActivate),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(PlayerHasItemsAction::getItem),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(PlayerHasItemsAction::getAmount),
                 CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(PlayerHasItemsAction::getTag),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(PlayerHasItemsAction::getMustBeInHand)
-        ).apply(instance, (activation, source, toActivate, item, amount, tag, mustBeInHand) -> new PlayerHasItemsAction(type, activation, source, toActivate, item, amount, tag, mustBeInHand)));
+        ).apply(instance, (activation, source, item, amount, tag, mustBeInHand) -> new PlayerHasItemsAction(type, activation, source, item, amount, tag, mustBeInHand)));
     }
     
-    public static PlayerHasItemsAction make(String activation, String source, String toActivate, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public static PlayerHasItemsAction make(String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
     {
-        return new PlayerHasItemsAction(SpellActionTypes.PLAYER_HAS_ITEMS.get(), activation, source, toActivate, item, amount, tag, mustBeInHand);
+        return new PlayerHasItemsAction(SpellActionTypes.PLAYER_HAS_ITEMS.get(), activation, source, item, amount, tag, mustBeInHand);
     }
     
-    protected String toActivate;
     protected DynamicCtxVar<String> item;
     protected DynamicCtxVar<Integer> amount;
     protected DynamicCtxVar<CompoundTag> tag;
@@ -53,19 +51,13 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
         super(type);
     }
     
-    public PlayerHasItemsAction(SpellActionType<?> type, String activation, String source, String toActivate, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public PlayerHasItemsAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
     {
         super(type, activation, source);
-        this.toActivate = toActivate;
         this.item = item;
         this.amount = amount;
         this.tag = tag;
         this.mustBeInHand = mustBeInHand;
-    }
-    
-    public String getToActivate()
-    {
-        return toActivate;
     }
     
     public DynamicCtxVar<String> getItem()
@@ -124,10 +116,11 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
                         
                         if(count >= amount)
                         {
-                            ctx.activate(toActivate);
-                            break;
+                            return;
                         }
                     }
+                    
+                    ctx.deactivate(activation);
                 });
             });
         });

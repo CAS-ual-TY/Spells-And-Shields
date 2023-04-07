@@ -709,9 +709,9 @@ public class SpellsGen implements DataProvider
         dummy(Spells.FORCED_TELEPORT);
         
         addSpell(Spells.TELEPORT, new Spell(modId, "teleport", Spells.KEY_TELEPORT, 10F)
-                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, "continue", SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
-                .addAction(ManaCheckAction.make("continue", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
-                .addAction(LookAtTargetAction.make("continue", OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, "on_block_hit", "on_entity_hit", "on_miss"))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(ManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, "on_block_hit", "on_entity_hit", "on_miss"))
                 .addAction(CopyTargetsAction.make("on_entity_hit", "teleport_position", ENTITY_HIT.targetGroup))
                 .addAction(ActivateAction.make("on_entity_hit", "teleport"))
                 .addAction(OffsetBlockAction.make("on_block_hit", BLOCK_HIT.targetGroup, "teleport_position", VEC3.get().immediate(new Vec3(0, 0.5, 0))))
