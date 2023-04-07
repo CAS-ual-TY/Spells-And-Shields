@@ -23,9 +23,13 @@
       "td/item": "item"
     },
     {
-      "type": "spells_and_shields:item_equals_activation",
+      "type": "spells_and_shields:activate",
       "a/to_activate": "shoot",
-      "activation": "active",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:item_equals",
+      "activation": "shoot",
       "d/boolean/ignore_tag": true,
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,
@@ -57,9 +61,13 @@
       "td/item": "item"
     },
     {
-      "type": "spells_and_shields:item_equals_activation",
+      "type": "spells_and_shields:activate",
       "a/to_activate": "shoot",
-      "activation": "offhand",
+      "activation": "offhand"
+    },
+    {
+      "type": "spells_and_shields:item_equals",
+      "activation": "shoot",
       "d/boolean/ignore_tag": true,
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,

@@ -52,9 +52,23 @@
       "td/item": "item"
     },
     {
-      "type": "spells_and_shields:item_equals_activation",
+      "type": "spells_and_shields:activate",
       "a/to_activate": "shoot",
-      "activation": "active",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "potion",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "spectral",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:item_equals",
+      "activation": "shoot",
       "d/boolean/ignore_tag": true,
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,
@@ -65,9 +79,8 @@
       "t/target": "item"
     },
     {
-      "type": "spells_and_shields:item_equals_activation",
-      "a/to_activate": "potion",
-      "activation": "active",
+      "type": "spells_and_shields:item_equals",
+      "activation": "potion",
       "d/boolean/ignore_tag": true,
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,
@@ -119,9 +132,8 @@
       "ts/targets": "item"
     },
     {
-      "type": "spells_and_shields:item_equals_activation",
-      "a/to_activate": "spectral",
-      "activation": "active",
+      "type": "spells_and_shields:item_equals",
+      "activation": "spectral",
       "d/boolean/ignore_tag": true,
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,

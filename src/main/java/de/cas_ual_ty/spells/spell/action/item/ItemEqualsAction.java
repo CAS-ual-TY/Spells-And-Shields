@@ -15,51 +15,42 @@ import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemEqualsActivationAction extends AffectSingleTypeAction<ItemTarget>
+public class ItemEqualsAction extends AffectSingleTypeAction<ItemTarget>
 {
-    public static Codec<ItemEqualsActivationAction> makeCodec(SpellActionType<ItemEqualsActivationAction> type)
+    public static Codec<ItemEqualsAction> makeCodec(SpellActionType<ItemEqualsAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(ItemEqualsActivationAction::getToActivate),
-                ItemStack.CODEC.fieldOf("item").forGetter(ItemEqualsActivationAction::getItem),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("ignore_tag")).forGetter(ItemEqualsActivationAction::getIgnoreTag),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_count")).forGetter(ItemEqualsActivationAction::getMinimumCount),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_durability")).forGetter(ItemEqualsActivationAction::getMinimumDurability)
-        ).apply(instance, (activation, singleTarget, toActivate, item, ignoreTag, minimumCount, minimumDurability) -> new ItemEqualsActivationAction(type, activation, singleTarget, toActivate, item, ignoreTag, minimumCount, minimumDurability)));
+                ItemStack.CODEC.fieldOf("item").forGetter(ItemEqualsAction::getItem),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("ignore_tag")).forGetter(ItemEqualsAction::getIgnoreTag),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_count")).forGetter(ItemEqualsAction::getMinimumCount),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_durability")).forGetter(ItemEqualsAction::getMinimumDurability)
+        ).apply(instance, (activation, singleTarget, item, ignoreTag, minimumCount, minimumDurability) -> new ItemEqualsAction(type, activation, singleTarget, item, ignoreTag, minimumCount, minimumDurability)));
     }
     
-    public static ItemEqualsActivationAction make(String activation, String singleTarget, String toActivate, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
+    public static ItemEqualsAction make(String activation, String singleTarget, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
     {
-        return new ItemEqualsActivationAction(SpellActionTypes.ITEM_EQUALS_ACTIVATION.get(), activation, singleTarget, toActivate, item, ignoreTag, minimumCount, minimumDurability);
+        return new ItemEqualsAction(SpellActionTypes.ITEM_EQUALS.get(), activation, singleTarget, item, ignoreTag, minimumCount, minimumDurability);
     }
-    
-    protected String toActivate;
     
     protected ItemStack item;
     protected DynamicCtxVar<Boolean> ignoreTag;
     protected DynamicCtxVar<Integer> minimumCount;
     protected DynamicCtxVar<Integer> minimumDurability;
     
-    public ItemEqualsActivationAction(SpellActionType<?> type)
+    public ItemEqualsAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public ItemEqualsActivationAction(SpellActionType<?> type, String activation, String singleTarget, String toActivate, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
+    public ItemEqualsAction(SpellActionType<?> type, String activation, String singleTarget, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
     {
         super(type, activation, singleTarget);
-        this.toActivate = toActivate;
         this.item = item;
         this.ignoreTag = ignoreTag;
         this.minimumCount = minimumCount;
         this.minimumDurability = minimumDurability;
-    }
-    
-    public String getToActivate()
-    {
-        return toActivate;
     }
     
     public ItemStack getItem()
@@ -99,25 +90,26 @@ public class ItemEqualsActivationAction extends AffectSingleTypeAction<ItemTarge
                 {
                     if(!itemTarget.getItem().is(this.item.getItem()))
                     {
+                        ctx.deactivate(activation);
                         return;
                     }
                     
                     if(minimumCount >= 0 && itemTarget.getItem().getCount() < minimumCount)
                     {
+                        ctx.deactivate(activation);
                         return;
                     }
                     
                     if(minimumDurability >= 0 && itemTarget.getItem().getMaxDamage() - itemTarget.getItem().getDamageValue() < minimumDurability)
                     {
+                        ctx.deactivate(activation);
                         return;
                     }
                     
                     if(!ignoreTag && !ItemStack.tagMatches(item, itemTarget.getItem()))
                     {
-                        return;
+                        ctx.deactivate(activation);
                     }
-                    
-                    ctx.activate(toActivate);
                 });
             });
         });
