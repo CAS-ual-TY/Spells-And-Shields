@@ -22,39 +22,31 @@ public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(TryDamageItemAction::getDamage),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("success")).forGetter(TryDamageItemAction::getSuccess)
-        ).apply(instance, (activation, singleTarget, damage, success) -> new TryDamageItemAction(type, activation, singleTarget, damage, success)));
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(TryDamageItemAction::getDamage)
+        ).apply(instance, (activation, singleTarget, damage) -> new TryDamageItemAction(type, activation, singleTarget, damage)));
     }
     
-    public static TryDamageItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> damage, String success)
+    public static TryDamageItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> damage)
     {
-        return new TryDamageItemAction(SpellActionTypes.TRY_DAMAGE_ITEM.get(), activation, singleTarget, damage, success);
+        return new TryDamageItemAction(SpellActionTypes.TRY_DAMAGE_ITEM.get(), activation, singleTarget, damage);
     }
     
     protected DynamicCtxVar<Integer> damage;
-    protected String success;
     
     public TryDamageItemAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public TryDamageItemAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Integer> damage, String success)
+    public TryDamageItemAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Integer> damage)
     {
         super(type, activation, singleTarget);
         this.damage = damage;
-        this.success = success;
     }
     
     public DynamicCtxVar<Integer> getDamage()
     {
         return damage;
-    }
-    
-    public String getSuccess()
-    {
-        return success;
     }
     
     @Override
@@ -64,10 +56,9 @@ public class TryDamageItemAction extends AffectSingleTypeAction<ItemTarget>
         {
             if(itemTarget.getItem().getMaxDamage() - itemTarget.getItem().getDamageValue() < damage)
             {
+                ctx.deactivate(activation);
                 return;
             }
-            
-            ctx.activate(success);
             
             if(!itemTarget.isCreative())
             {
