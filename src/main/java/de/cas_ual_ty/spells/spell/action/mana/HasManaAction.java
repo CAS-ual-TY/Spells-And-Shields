@@ -13,7 +13,6 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
-import de.cas_ual_ty.spells.util.ParamNames;
 
 public class HasManaAction extends AffectSingleTypeAction<PlayerTarget>
 {
@@ -22,17 +21,15 @@ public class HasManaAction extends AffectSingleTypeAction<PlayerTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(HasManaAction::getToActivate),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf("amount").forGetter(HasManaAction::getAmount)
-        ).apply(instance, (activation, singleTarget, toActivate, amount) -> new HasManaAction(type, activation, singleTarget, toActivate, amount)));
+        ).apply(instance, (activation, singleTarget, amount) -> new HasManaAction(type, activation, singleTarget, amount)));
     }
     
-    public static HasManaAction make(String activation, String singleTarget, String toActivate, DynamicCtxVar<Double> amount)
+    public static HasManaAction make(String activation, String singleTarget, DynamicCtxVar<Double> amount)
     {
-        return new HasManaAction(SpellActionTypes.HAS_MANA.get(), activation, singleTarget, toActivate, amount);
+        return new HasManaAction(SpellActionTypes.HAS_MANA.get(), activation, singleTarget, amount);
     }
     
-    protected String toActivate;
     protected DynamicCtxVar<Double> amount;
     
     public HasManaAction(SpellActionType<?> type)
@@ -40,10 +37,9 @@ public class HasManaAction extends AffectSingleTypeAction<PlayerTarget>
         super(type);
     }
     
-    public HasManaAction(SpellActionType<?> type, String activation, String singleTarget, String toActivate, DynamicCtxVar<Double> amount)
+    public HasManaAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Double> amount)
     {
         super(type, activation, singleTarget);
-        this.toActivate = toActivate;
         this.amount = amount;
     }
     
@@ -51,11 +47,6 @@ public class HasManaAction extends AffectSingleTypeAction<PlayerTarget>
     public ITargetType<PlayerTarget> getAffectedType()
     {
         return TargetTypes.PLAYER.get();
-    }
-    
-    public String getToActivate()
-    {
-        return toActivate;
     }
     
     public DynamicCtxVar<Double> getAmount()
@@ -72,9 +63,9 @@ public class HasManaAction extends AffectSingleTypeAction<PlayerTarget>
             {
                 ManaHolder.getManaHolder(target.getPlayer()).ifPresent(manaHolder ->
                 {
-                    if(manaHolder.getMana() >= amount)
+                    if(manaHolder.getMana() < amount)
                     {
-                        ctx.activate(toActivate);
+                        ctx.deactivate(activation);
                     }
                 });
             });
