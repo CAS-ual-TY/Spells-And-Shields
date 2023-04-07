@@ -31,8 +31,7 @@
     },
     {
       "type": "spells_and_shields:simple_mana_check",
-      "activation": "looked_at_entity",
-      "t/target": "owner"
+      "activation": "looked_at_entity"
     },
     {
       "type": "spells_and_shields:home",

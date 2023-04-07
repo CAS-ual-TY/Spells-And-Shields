@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
+import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
@@ -20,14 +21,13 @@ public class SimpleManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
     public static Codec<SimpleManaCheckAction> makeCodec(SpellActionType<SimpleManaCheckAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                activationCodec(),
-                singleTargetCodec()
-        ).apply(instance, (activation, singleTarget) -> new SimpleManaCheckAction(type, activation, singleTarget)));
+                activationCodec()
+        ).apply(instance, (activation) -> new SimpleManaCheckAction(type, activation)));
     }
     
-    public static SimpleManaCheckAction make(String activation, String singleTarget)
+    public static SimpleManaCheckAction make(String activation)
     {
-        return new SimpleManaCheckAction(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation, singleTarget);
+        return new SimpleManaCheckAction(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation);
     }
     
     protected DynamicCtxVar<Double> amount;
@@ -37,9 +37,9 @@ public class SimpleManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
         super(type);
     }
     
-    public SimpleManaCheckAction(SpellActionType<?> type, String activation, String singleTarget)
+    public SimpleManaCheckAction(SpellActionType<?> type, String activation)
     {
-        super(type, activation, singleTarget);
+        super(type, activation, BuiltinTargetGroups.OWNER.targetGroup);
         this.amount = CtxVarTypes.DOUBLE.get().reference(BuiltinVariables.MANA_COST.name);
     }
     

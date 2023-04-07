@@ -29,8 +29,7 @@
     },
     {
       "type": "spells_and_shields:simple_mana_check",
-      "activation": "active",
-      "t/target": "owner"
+      "activation": "active"
     },
     {
       "type": "spells_and_shields:shoot",
