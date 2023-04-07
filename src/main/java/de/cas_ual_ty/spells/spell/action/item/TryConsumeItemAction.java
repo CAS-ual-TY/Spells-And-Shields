@@ -21,39 +21,31 @@ public class TryConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(TryConsumeItemAction::getAmount),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("success")).forGetter(TryConsumeItemAction::getSuccess)
-        ).apply(instance, (activation, singleTarget, amount, success) -> new TryConsumeItemAction(type, activation, singleTarget, amount, success)));
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(TryConsumeItemAction::getAmount)
+        ).apply(instance, (activation, singleTarget, amount) -> new TryConsumeItemAction(type, activation, singleTarget, amount)));
     }
     
-    public static TryConsumeItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> damage, String success)
+    public static TryConsumeItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> damage)
     {
-        return new TryConsumeItemAction(SpellActionTypes.TRY_CONSUME_ITEM.get(), activation, singleTarget, damage, success);
+        return new TryConsumeItemAction(SpellActionTypes.TRY_CONSUME_ITEM.get(), activation, singleTarget, damage);
     }
     
     protected DynamicCtxVar<Integer> amount;
-    protected String success;
     
     public TryConsumeItemAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public TryConsumeItemAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Integer> amount, String success)
+    public TryConsumeItemAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Integer> amount)
     {
         super(type, activation, singleTarget);
         this.amount = amount;
-        this.success = success;
     }
     
     public DynamicCtxVar<Integer> getAmount()
     {
         return amount;
-    }
-    
-    public String getSuccess()
-    {
-        return success;
     }
     
     @Override
@@ -63,10 +55,9 @@ public class TryConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
         {
             if(itemTarget.getItem().getCount() < amount)
             {
+                ctx.deactivate(activation);
                 return;
             }
-            
-            ctx.activate(success);
             
             if(!itemTarget.isCreative())
             {
