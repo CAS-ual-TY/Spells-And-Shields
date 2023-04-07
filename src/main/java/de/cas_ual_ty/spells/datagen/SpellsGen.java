@@ -16,7 +16,6 @@ import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
 import de.cas_ual_ty.spells.spell.action.level.*;
-import de.cas_ual_ty.spells.spell.action.mana.BurnManaAction;
 import de.cas_ual_ty.spells.spell.action.mana.ManaCheckAction;
 import de.cas_ual_ty.spells.spell.action.mana.ReplenishManaAction;
 import de.cas_ual_ty.spells.spell.action.mana.SimpleManaCheckAction;
@@ -257,12 +256,13 @@ public class SpellsGen implements DataProvider
                 .addAction(PutVarAction.makeString(ACTIVE.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
                 .addAction(PutVarAction.makeString(ON_UNEQUIP.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
                 .addAction(PutVarAction.makeStringMoveVar("apply", DELAY_UUID.name, "uuid"))
-                .addAction(CheckHasDelayedSpellAction.make(ACTIVE.activation, "player", STRING.get().reference("uuid"), "remove"))
                 .addAction(ActivateAction.make(ACTIVE.activation, "apply"))
-                .addAction(DeactivateAction.make("remove", "apply"))
+                .addAction(ActivateAction.make(ACTIVE.activation, "remove"))
                 .addAction(ActivateAction.make(ON_UNEQUIP.activation, "remove"))
-                .addAction(CheckHasDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), "remove_sound"))
+                .addAction(CheckHasDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid")))
+                .addAction(DeactivateAction.make("remove", "apply"))
                 .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), BOOLEAN.get().immediate(false)))
+                .addAction(PlaySoundAction.make("remove", "player", SoundEvents.SPLASH_POTION_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(ManaCheckAction.make("apply", "player", Compiler.compileString(" (" + MANA_COST.name + " * duration) / 100 ", DOUBLE.get())))
                 .addAction(ActivateAction.make("apply", "renew"))
                 .addAction(ApplyMobEffectAction.make("apply", "player", STRING.get().reference("mob_effect"), INT.get().reference("duration+1"), INT.get().reference("amplifier"), BOOLEAN.get().reference("ambient"), BOOLEAN.get().reference("visible"), BOOLEAN.get().reference("show_icon")))
@@ -272,7 +272,6 @@ public class SpellsGen implements DataProvider
                 .addAction(DeactivateAction.make(ACTIVE.activation, "anti_sound"))
                 .addAction(DeactivateAction.make("anti_sound", "sound"))
                 .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
-                .addAction(PlaySoundAction.make("remove_sound", "player", SoundEvents.SPLASH_POTION_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addParameter(STRING.get(), "mob_effect", ForgeRegistries.MOB_EFFECTS.getKey(mobEffect).toString())
                 .addParameter(INT.get(), "duration", duration)
                 .addParameter(INT.get(), "amplifier", amplifier)
@@ -370,12 +369,13 @@ public class SpellsGen implements DataProvider
                 .addAction(PutVarAction.makeString(ACTIVE.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
                 .addAction(PutVarAction.makeString(ON_UNEQUIP.activation, Compiler.compileString(uuidCode, STRING.get()), "uuid"))
                 .addAction(PutVarAction.makeStringMoveVar("apply", DELAY_UUID.name, "uuid"))
-                .addAction(CheckHasDelayedSpellAction.make(ACTIVE.activation, "player", STRING.get().reference("uuid"), "remove"))
                 .addAction(ActivateAction.make(ACTIVE.activation, "apply"))
-                .addAction(DeactivateAction.make("remove", "apply"))
+                .addAction(ActivateAction.make(ACTIVE.activation, "remove"))
+                .addAction(CheckHasDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid")))
                 .addAction(ActivateAction.make(ON_UNEQUIP.activation, "remove"))
-                .addAction(CheckHasDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), "remove_sound"))
                 .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.get().reference("uuid"), BOOLEAN.get().immediate(false)))
+                .addAction(DeactivateAction.make("remove", "apply"))
+                .addAction(PlaySoundAction.make("remove", "player", SoundEvents.SPLASH_POTION_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(ManaCheckAction.make("apply", "player", Compiler.compileString(" (" + MANA_COST.name + " * refresh_rate) / 100 ", DOUBLE.get())))
                 .addAction(ActivateAction.make("apply", "renew"))
                 
@@ -406,7 +406,6 @@ public class SpellsGen implements DataProvider
                 .addAction(DeactivateAction.make(ACTIVE.activation, "anti_sound"))
                 .addAction(DeactivateAction.make("anti_sound", "sound"))
                 .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
-                .addAction(PlaySoundAction.make("remove_sound", "player", SoundEvents.SPLASH_POTION_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.get().reference("refresh_rate"), STRING.get().reference("uuid"), COMPOUND_TAG.get().immediate(new CompoundTag())))
                 .addParameter(INT.get(), "refresh_rate", 2)
                 .addParameter(STRING.get(), "block_from", fromRL.toString())

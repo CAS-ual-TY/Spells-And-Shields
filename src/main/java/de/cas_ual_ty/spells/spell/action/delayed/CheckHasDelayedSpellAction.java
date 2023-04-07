@@ -23,39 +23,31 @@ public class CheckHasDelayedSpellAction extends AffectSingleTypeAction<EntityTar
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(CheckHasDelayedSpellAction::getUuid),
-                Codec.STRING.fieldOf(ParamNames.interactedActivation("to_activate")).forGetter(CheckHasDelayedSpellAction::getToActivate)
-        ).apply(instance, (activation, singleTarget, uuid, toActivate) -> new CheckHasDelayedSpellAction(type, activation, singleTarget, uuid, toActivate)));
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(CheckHasDelayedSpellAction::getUuid)
+        ).apply(instance, (activation, singleTarget, uuid) -> new CheckHasDelayedSpellAction(type, activation, singleTarget, uuid)));
     }
     
-    public static CheckHasDelayedSpellAction make(String activation, String singleTarget, DynamicCtxVar<String> uuid, String toActivate)
+    public static CheckHasDelayedSpellAction make(String activation, String singleTarget, DynamicCtxVar<String> uuid)
     {
-        return new CheckHasDelayedSpellAction(SpellActionTypes.CHECK_HAS_DELAYED_SPELL.get(), activation, singleTarget, uuid, toActivate);
+        return new CheckHasDelayedSpellAction(SpellActionTypes.CHECK_HAS_DELAYED_SPELL.get(), activation, singleTarget, uuid);
     }
     
     protected DynamicCtxVar<String> uuid;
-    protected String toActivate;
     
     public CheckHasDelayedSpellAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public CheckHasDelayedSpellAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<String> uuid, String toActivate)
+    public CheckHasDelayedSpellAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<String> uuid)
     {
         super(type, activation, singleTarget);
         this.uuid = uuid;
-        this.toActivate = toActivate;
     }
     
     public DynamicCtxVar<String> getUuid()
     {
         return uuid;
-    }
-    
-    public String getToActivate()
-    {
-        return toActivate;
     }
     
     @Override
@@ -67,18 +59,15 @@ public class CheckHasDelayedSpellAction extends AffectSingleTypeAction<EntityTar
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, EntityTarget target)
     {
-        if(!toActivate.isEmpty())
+        DelayedSpellHolder.getHolder(target.getEntity()).ifPresent(holder ->
         {
-            DelayedSpellHolder.getHolder(target.getEntity()).ifPresent(holder ->
+            this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid1 ->
             {
-                this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid1 ->
+                if(!holder.hasDelayedSpell(uuid1))
                 {
-                    if(holder.hasDelayedSpell(uuid1))
-                    {
-                        ctx.activate(toActivate);
-                    }
-                });
+                    ctx.deactivate(activation);
+                }
             });
-        }
+        });
     }
 }

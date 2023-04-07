@@ -83,21 +83,14 @@
       "var/result": "uuid"
     },
     {
-      "type": "spells_and_shields:check_has_delayed_spell",
-      "a/to_activate": "remove",
-      "activation": "active",
-      "d/string/uuid": "<<uuid>>",
-      "t/target": "player"
-    },
-    {
       "type": "spells_and_shields:activate",
       "a/to_activate": "apply",
       "activation": "active"
     },
     {
-      "type": "spells_and_shields:deactivate",
-      "a/to_deactivate": "apply",
-      "activation": "remove"
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "remove",
+      "activation": "active"
     },
     {
       "type": "spells_and_shields:activate",
@@ -106,16 +99,28 @@
     },
     {
       "type": "spells_and_shields:check_has_delayed_spell",
-      "a/to_activate": "remove_sound",
       "activation": "remove",
       "d/string/uuid": "<<uuid>>",
       "t/target": "player"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "apply",
+      "activation": "remove"
     },
     {
       "type": "spells_and_shields:remove_delayed_spell",
       "activation": "remove",
       "d/boolean/force_activate": false,
       "d/string/uuid": "<<uuid>>",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "remove",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.splash_potion.break",
       "ts/targets": "player"
     },
     {
@@ -175,14 +180,6 @@
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.generic.drink",
-      "ts/targets": "player"
-    },
-    {
-      "type": "spells_and_shields:play_sound",
-      "activation": "remove_sound",
-      "d/double/pitch": 1.0,
-      "d/double/volume": 1.0,
-      "sound_event": "minecraft:entity.splash_potion.break",
       "ts/targets": "player"
     }
   ],
