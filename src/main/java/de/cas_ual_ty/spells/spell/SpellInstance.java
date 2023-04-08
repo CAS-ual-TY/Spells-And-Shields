@@ -129,6 +129,8 @@ public class SpellInstance
         
         ctx.activate(activation);
         ctx.initCtxVar(new CtxVar<>(CtxVarTypes.DOUBLE.get(), BuiltinVariables.MANA_COST.name, (double) getAppliedManaCost()));
+        ctx.initCtxVar(new CtxVar<>(CtxVarTypes.INT.get(), BuiltinVariables.MIN_BLOCK_HEIGHT.name, level.getMinBuildHeight()));
+        ctx.initCtxVar(new CtxVar<>(CtxVarTypes.INT.get(), BuiltinVariables.MAX_BLOCK_HEIGHT.name, level.getMaxBuildHeight() - 1));
         
         if(owner != null)
         {

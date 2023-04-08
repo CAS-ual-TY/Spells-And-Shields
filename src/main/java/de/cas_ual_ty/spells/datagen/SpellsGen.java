@@ -16,9 +16,7 @@ import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
 import de.cas_ual_ty.spells.spell.action.level.*;
-import de.cas_ual_ty.spells.spell.action.mana.ManaCheckAction;
-import de.cas_ual_ty.spells.spell.action.mana.ReplenishManaAction;
-import de.cas_ual_ty.spells.spell.action.mana.SimpleManaCheckAction;
+import de.cas_ual_ty.spells.spell.action.mana.*;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
@@ -714,7 +712,55 @@ public class SpellsGen implements DataProvider
                 .addParameter(INT.get(), "silence_seconds", 15)
         );
         
-        dummy(Spells.RANDOM_TELEPORT);
+        addSpell(Spells.RANDOM_TELEPORT, new Spell(modId, "random_teleport", Spells.KEY_RANDOM_TELEPORT, 5F)
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                
+                .addAction(PutVarAction.makeInt(ACTIVE.activation, INT.get().reference("max_attempts"), "attempts"))
+                .addAction(LabelAction.make(ACTIVE.activation, "loop"))
+                
+                .addAction(ClearTargetsAction.make(ACTIVE.activation, "below"))
+                .addAction(ClearTargetsAction.make(ACTIVE.activation, "feet"))
+                .addAction(ClearTargetsAction.make(ACTIVE.activation, "head"))
+                .addAction(PutVarAction.makeInt(ACTIVE.activation, INT.get().reference("max_inner_attempts"), "inner_attempts"))
+                .addAction(PutVarAction.makeDouble(ACTIVE.activation, Compiler.compileString(" random_double() * 2 * range - range ", DOUBLE.get()), "x"))
+                .addAction(PutVarAction.makeDouble(ACTIVE.activation, Compiler.compileString(" min(" + MAX_BLOCK_HEIGHT.name + ", max(" + MIN_BLOCK_HEIGHT.name + ", random_double() * 2 * range - range)) ", DOUBLE.get()), "y"))
+                .addAction(PutVarAction.makeDouble(ACTIVE.activation, Compiler.compileString(" random_double() * 2 * range - range ", DOUBLE.get()), "z"))
+                .addAction(OffsetBlockAction.make(ACTIVE.activation, OWNER.targetGroup, "below", Compiler.compileString(" vec3(x, y, z) ", VEC3.get())))
+                .addAction(OffsetBlockAction.make(ACTIVE.activation, "below", "feet", VEC3.get().immediate(new Vec3(0, 1, 0))))
+                .addAction(OffsetBlockAction.make(ACTIVE.activation, "feet", "head", VEC3.get().immediate(new Vec3(0, 1, 0))))
+                .addAction(LabelAction.make(ACTIVE.activation, "inner_loop"))
+                
+                .addAction(GetBlockAction.make(ACTIVE.activation, "below", "", "", "below_is_air"))
+                .addAction(GetBlockAction.make(ACTIVE.activation, "feet", "", "", "feet_is_air"))
+                .addAction(GetBlockAction.make(ACTIVE.activation, "head", "", "", "head_is_air"))
+                .addAction(BooleanActivationAction.make(ACTIVE.activation, "success", Compiler.compileString(" !below_is_air && feet_is_air && head_is_air ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                
+                .addAction(DeactivateAction.make("success", ACTIVE.activation))
+                .addAction(ClearTargetsAction.make(ACTIVE.activation, "below"))
+                .addAction(PickTargetAction.make(ACTIVE.activation, "below", "feet", true, false))
+                .addAction(PickTargetAction.make(ACTIVE.activation, "feet", "head", true, false))
+                .addAction(OffsetBlockAction.make(ACTIVE.activation, "feet", "head", VEC3.get().immediate(new Vec3(0, 1, 0))))
+                .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" inner_attempts - 1 ", INT.get()), "inner_attempts"))
+                .addAction(BranchAction.make(ACTIVE.activation, "inner_loop", Compiler.compileString(" inner_attempts > 0 ", BOOLEAN.get())))
+                
+                .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" attempts - 1 ", INT.get()), "attempts"))
+                .addAction(BranchAction.make(ACTIVE.activation, "loop", Compiler.compileString(" attempts > 0 ", BOOLEAN.get())))
+                .addAction(BurnManaAction.make("success", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(ConsumePlayerItemsAction.make("success", OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(GetPositionAction.make("success", "feet", "feet_pos"))
+                .addAction(PutVarAction.makeDouble("success", Compiler.compileString(" get_y(feet_pos) - floor(get_y(feet_pos))", DOUBLE.get()), "feet_pos_floor"))
+                .addAction(OffsetBlockAction.make("success", "feet", "teleport_position", Compiler.compileString("vec3(0, -feet_pos_floor, 0)", VEC3.get())))
+                .addAction(PlaySoundAction.make("success", OWNER.targetGroup, SoundEvents.ENDERMAN_TELEPORT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(TeleportToAction.make("success", OWNER.targetGroup, "teleport_position"))
+                .addAction(PlaySoundAction.make("success", OWNER.targetGroup, SoundEvents.ENDERMAN_TELEPORT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                
+                .addParameter(INT.get(), "max_attempts", 10)
+                .addParameter(INT.get(), "max_inner_attempts", 10)
+                .addParameter(DOUBLE.get(), "range", 32D)
+                .addTooltip(Component.translatable(Spells.KEY_RANDOM_TELEPORT_DESC))
+        );
+        
         dummy(Spells.FORCED_TELEPORT);
         
         addSpell(Spells.TELEPORT, new Spell(modId, "teleport", Spells.KEY_TELEPORT, 10F)
@@ -731,7 +777,7 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make("teleport", OWNER.targetGroup, SoundEvents.ENDERMAN_TELEPORT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(TeleportToAction.make("teleport", OWNER.targetGroup, "teleport_position"))
                 .addAction(PlaySoundAction.make("teleport", OWNER.targetGroup, SoundEvents.ENDERMAN_TELEPORT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
-                .addParameter(INT.get(), "range", 32)
+                .addParameter(DOUBLE.get(), "range", 32D)
                 .addTooltip(Component.translatable(Spells.KEY_TELEPORT_DESC))
         );
         

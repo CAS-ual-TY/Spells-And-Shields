@@ -6,8 +6,8 @@
   "mana_cost": 10.0,
   "parameters": [
     {
-      "type": "spells_and_shields:int",
-      "value": 32,
+      "type": "spells_and_shields:double",
+      "value": 32.0,
       "var/name": "range"
     }
   ],
