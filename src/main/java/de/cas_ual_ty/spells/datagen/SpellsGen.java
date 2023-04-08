@@ -419,7 +419,7 @@ public class SpellsGen implements DataProvider
     {
         dummy(Spells.DUMMY);
         
-        addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 2.5F)
+        addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 5F)
                 .addParameter(DOUBLE.get(), "speed", 2.5)
                 .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
                 .addAction(ResetFallDistanceAction.make(ACTIVE.activation, OWNER.targetGroup))

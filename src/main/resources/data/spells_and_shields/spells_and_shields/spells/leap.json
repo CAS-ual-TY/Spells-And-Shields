@@ -3,7 +3,7 @@
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/leap.png"
   },
-  "mana_cost": 2.5,
+  "mana_cost": 5.0,
   "parameters": [
     {
       "type": "spells_and_shields:double",
