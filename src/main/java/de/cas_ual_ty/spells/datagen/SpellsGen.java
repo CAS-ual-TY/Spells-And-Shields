@@ -23,6 +23,7 @@ import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.icon.*;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.CachedOutput;
@@ -870,7 +871,7 @@ public class SpellsGen implements DataProvider
                 .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ConsumePlayerItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
                 .addAction(CubeBlockTargetsAction.make(ACTIVE.activation, OWNER.targetGroup, "blocks", Compiler.compileString(" vec3(-range, -1, -range) ", VEC3.get()), Compiler.compileString(" vec3(range, 1, range) ", VEC3.get())))
-                .addAction(TickBlockAction.make(ACTIVE.activation, "blocks", INT.get().reference("duration")))
+                .addAction(UseItemOnBlocksAction.make(ACTIVE.activation, "blocks", OWNER.targetGroup, new ItemStack(Items.BONE_MEAL), false, Direction.UP))
                 .addAction(SpawnParticlesAction.make(ACTIVE.activation, "blocks", ParticleTypes.POOF, INT.get().immediate(1), DOUBLE.get().immediate(0.25D)))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BONE_MEAL_USE, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addParameter(INT.get(), "range", 3)
