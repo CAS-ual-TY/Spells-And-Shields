@@ -525,7 +525,23 @@ public class SpellsGen implements DataProvider
         
         addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltinRegistries.MAX_MANA_ATTRIBUTE.get(), AttributeModifier.Operation.ADDITION, 4D);
         
-        dummy(Spells.WATER_LEAP);
+        addSpell(Spells.WATER_LEAP, new Spell(modId, "water_leap", Spells.KEY_WATER_LEAP, 5F)
+                .addParameter(DOUBLE.get(), "speed", 2.5)
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(GetEntityEyePositionAction.make(ACTIVE.activation, OWNER.targetGroup, "eye_pos"))
+                .addAction(GetBlockAction.make(ACTIVE.activation, OWNER.targetGroup, "feet_block", "", ""))
+                .addAction(GetBlockAction.make(ACTIVE.activation, "eye_pos", "eye_block", "", ""))
+                .addAction(BooleanActivationAction.make(ACTIVE.activation, ACTIVE.activation, Compiler.compileString(" feet_block == '" + ForgeRegistries.BLOCKS.getKey(Blocks.WATER).toString() + "' && eye_block == '" + ForgeRegistries.BLOCKS.getKey(Blocks.WATER).toString() + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(false), BOOLEAN.get().immediate(true)))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(ResetFallDistanceAction.make(ACTIVE.activation, OWNER.targetGroup))
+                .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "look", ""))
+                .addAction(PutVarAction.makeVec3(ACTIVE.activation, " (normalize(look + vec3(0, -get_y(look), 0))) * speed ", "direction"))
+                .addAction(SetMotionAction.make(ACTIVE.activation, OWNER.targetGroup, Compiler.compileString(" vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) ", VEC3.get())))
+                .addAction(SpawnParticlesAction.make(ACTIVE.activation, OWNER.targetGroup, ParticleTypes.POOF, INT.get().immediate(4), DOUBLE.get().immediate(0.1)))
+                .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addTooltip(Component.translatable(Spells.KEY_WATER_LEAP_DESC))
+        );
+        
         dummy(Spells.AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY_DESC, ItemSpellIcon.make(new ItemStack(Items.ENCHANTED_BOOK)));
         
         //TODO fx, test
