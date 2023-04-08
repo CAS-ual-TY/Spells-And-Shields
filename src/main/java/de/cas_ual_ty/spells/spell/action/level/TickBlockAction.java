@@ -2,12 +2,11 @@ package de.cas_ual_ty.spells.spell.action.level;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
+import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
@@ -15,12 +14,8 @@ import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
 
-public class TickBlockAction extends AffectSingleTypeAction<PositionTarget>
+public class TickBlockAction extends AffectTypeAction<PositionTarget>
 {
     public static Codec<TickBlockAction> makeCodec(SpellActionType<TickBlockAction> type)
     {
@@ -61,20 +56,12 @@ public class TickBlockAction extends AffectSingleTypeAction<PositionTarget>
     }
     
     @Override
-    public void affectSingleTarget(SpellContext ctx, TargetGroup group, PositionTarget positionTarget)
+    public void affectTarget(SpellContext ctx, TargetGroup group, PositionTarget positionTarget)
     {
         duration.getValue(ctx).ifPresent(duration ->
         {
             BlockPos pos = positionTarget.getBlockPos();
             ctx.level.scheduleTick(pos, ctx.level.getBlockState(pos).getBlock(), duration);
         });
-    }
-    
-    public static <X extends Comparable<X>> void addPropertyToTag(BlockState blockState, CompoundTag tag, Property<X> p)
-    {
-        p.valueCodec().encodeStart(NbtOps.INSTANCE, p.value(blockState)).result().ifPresentOrElse(element ->
-        {
-            tag.put(p.getName(), element);
-        }, () -> SpellsAndShields.LOGGER.error("ERROR ERROR ERROR!!!!!!!!!!! ################################"));
     }
 }

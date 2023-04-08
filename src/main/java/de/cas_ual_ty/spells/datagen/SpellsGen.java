@@ -863,7 +863,20 @@ public class SpellsGen implements DataProvider
         );
         
         dummy(Spells.DRAIN_FLAME);
-        dummy(Spells.GROWTH);
+        
+        addSpell(Spells.GROWTH, new Spell(modId, "growth", Spells.KEY_GROWTH, 4F)
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(ConsumePlayerItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(CubeBlockTargetsAction.make(ACTIVE.activation, OWNER.targetGroup, "blocks", Compiler.compileString(" vec3(-range, -1, -range) ", VEC3.get()), Compiler.compileString(" vec3(range, 1, range) ", VEC3.get())))
+                .addAction(TickBlockAction.make(ACTIVE.activation, "blocks", INT.get().reference("duration")))
+                .addAction(SpawnParticlesAction.make(ACTIVE.activation, "blocks", ParticleTypes.POOF, INT.get().immediate(1), DOUBLE.get().immediate(0.25D)))
+                .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BONE_MEAL_USE, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addParameter(INT.get(), "range", 3)
+                .addParameter(INT.get(), "duration", 20)
+                .addTooltip(Component.translatable(Spells.KEY_GROWTH_DESC))
+        );
         
         addSpell(Spells.GHAST, new Spell(AdvancedSpellIcon.make(new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32), Spells.KEY_GHAST, 4F)
                 .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
