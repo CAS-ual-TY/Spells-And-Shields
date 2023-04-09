@@ -20,7 +20,7 @@ public class ClearTargetsAction extends DstTargetAction
     
     public static ClearTargetsAction make(String activation, String dst)
     {
-        return new ClearTargetsAction(SpellActionTypes.CLEAR_TARGET.get(), activation, dst);
+        return new ClearTargetsAction(SpellActionTypes.CLEAR_TARGETS.get(), activation, dst);
     }
     
     public ClearTargetsAction(SpellActionType<?> type)

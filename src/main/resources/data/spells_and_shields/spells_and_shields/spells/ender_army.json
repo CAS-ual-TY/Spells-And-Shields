@@ -3,20 +3,155 @@
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/ender_army.png"
   },
-  "mana_cost": 0.0,
-  "parameters": [],
-  "spell_actions": [],
+  "mana_cost": 20.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 50.0,
+      "var/name": "target_range"
+    },
+    {
+      "type": "spells_and_shields:double",
+      "value": 40.0,
+      "var/name": "enderman_range"
+    }
+  ],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:has_mana",
+      "activation": "active",
+      "amount": "<<mana_cost>>",
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:player_has_items",
+      "activation": "active",
+      "d/boolean/must_be_in_hand": true,
+      "d/compound_tag/tag": {},
+      "d/int/amount": 1,
+      "d/string/item": "minecraft:dragon_head",
+      "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:look_at_target",
+      "a/block_hit_activation": "",
+      "a/entity_hit_activation": "on_entity_hit",
+      "a/miss_activation": "",
+      "activation": "active",
+      "block_clip_context": "collider",
+      "d/double/range": "<<target_range>>",
+      "double/bb_inflation": 0.5,
+      "fluid_clip_context": "none",
+      "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:burn_mana",
+      "activation": "on_entity_hit",
+      "d/double/mana_amount": "<<mana_cost>>",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:consume_player_items",
+      "activation": "on_entity_hit",
+      "d/boolean/must_be_in_hand": true,
+      "d/compound_tag/tag": {},
+      "d/int/amount": 1,
+      "d/string/item": "minecraft:dragon_head",
+      "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:ranged_entity_targets",
+      "activation": "on_entity_hit",
+      "range": "<<enderman_range>>",
+      "td/destination": "targets",
+      "ts/source": "entity_hit"
+    },
+    {
+      "type": "spells_and_shields:label",
+      "activation": "on_entity_hit",
+      "label": "loop"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "on_entity_hit",
+      "td/destination": "to_check"
+    },
+    {
+      "type": "spells_and_shields:pick_target",
+      "activation": "on_entity_hit",
+      "boolean/random": false,
+      "boolean/remove": true,
+      "td/destination": "to_check",
+      "ts/source": "targets"
+    },
+    {
+      "type": "spells_and_shields:get_entity_type",
+      "activation": "on_entity_hit",
+      "t/source": "to_check",
+      "var/entity_type": "type",
+      "var/is_living": "",
+      "var/is_player": ""
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "move_entity",
+      "activation": "on_entity_hit",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< type == 'minecraft:enderman' >>"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "move_entity",
+      "td/destination": "endermen",
+      "ts/source": "to_check"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "move_entity",
+      "activation": "move_entity"
+    },
+    {
+      "type": "spells_and_shields:get_target_group_size",
+      "activation": "on_entity_hit",
+      "td/source": "targets",
+      "var/result": "size"
+    },
+    {
+      "type": "spells_and_shields:branch",
+      "activation": "on_entity_hit",
+      "d/boolean/conditional": "<< size > 0 >>",
+      "label": "loop"
+    },
+    {
+      "type": "spells_and_shields:set_target",
+      "activation": "on_entity_hit",
+      "t/target": "entity_hit",
+      "ts/mobs": "endermen"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "on_entity_hit",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.enderman.scream",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "on_entity_hit",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.enderman.scream",
+      "ts/targets": "entity_hit"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.ender_army"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.ender_army.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ]
 }

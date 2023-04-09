@@ -27,7 +27,7 @@ public class GetTargetAction extends GetTargetAttributeAction<LivingEntityTarget
     
     public static GetTargetAction make(String activation, String source, String target, String hasTarget)
     {
-        return new GetTargetAction(SpellActionTypes.GET_ENTITY_TAG.get(), activation, source, target, hasTarget);
+        return new GetTargetAction(SpellActionTypes.GET_TARGET.get(), activation, source, target, hasTarget);
     }
     
     protected String target;

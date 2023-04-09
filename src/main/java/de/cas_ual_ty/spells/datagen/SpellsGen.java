@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.action.ai.SetTargetAction;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
@@ -896,7 +897,29 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_GHAST_DESC))
         );
         
-        dummy(Spells.ENDER_ARMY);
+        addSpell(Spells.ENDER_ARMY, new Spell(modId, "ender_army", Spells.KEY_ENDER_ARMY, 20F)
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.DRAGON_HEAD, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("target_range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "", "on_entity_hit", ""))
+                .addAction(BurnManaAction.make("on_entity_hit", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(ConsumePlayerItemsAction.make("on_entity_hit", OWNER.targetGroup, SpellsUtil.objectToString(Items.DRAGON_HEAD, ForgeRegistries.ITEMS), INT.get().immediate(1), COMPOUND_TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(RangedEntityTargetsAction.make("on_entity_hit", "targets", ENTITY_HIT.targetGroup, DOUBLE.get().reference("enderman_range")))
+                .addAction(LabelAction.make("on_entity_hit", "loop"))
+                .addAction(ClearTargetsAction.make("on_entity_hit", "to_check"))
+                .addAction(PickTargetAction.make("on_entity_hit", "to_check", "targets", true, false))
+                .addAction(GetEntityTypeAction.make("on_entity_hit", "to_check", "type", "", ""))
+                .addAction(BooleanActivationAction.make("on_entity_hit", "move_entity", Compiler.compileString(" type == '" + ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ENDERMAN).toString() + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(CopyTargetsAction.make("move_entity", "endermen", "to_check"))
+                .addAction(DeactivateAction.make("move_entity", "move_entity"))
+                .addAction(GetTargetGroupSizeAction.make("on_entity_hit", "targets", "size"))
+                .addAction(BranchAction.make("on_entity_hit", "loop", Compiler.compileString(" size > 0 ", BOOLEAN.get())))
+                .addAction(SetTargetAction.make("on_entity_hit", ENTITY_HIT.targetGroup, "endermen"))
+                .addAction(PlaySoundAction.make("on_entity_hit", OWNER.targetGroup, SoundEvents.ENDERMAN_SCREAM, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT.targetGroup, SoundEvents.ENDERMAN_SCREAM, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addParameter(DOUBLE.get(), "target_range", 50D)
+                .addParameter(DOUBLE.get(), "enderman_range", 40D)
+                .addTooltip(Component.translatable(Spells.KEY_ENDER_ARMY_DESC))
+        );
         
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);
         addTemporaryEffectSpell(Spells.TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 13F, 400, 0);
