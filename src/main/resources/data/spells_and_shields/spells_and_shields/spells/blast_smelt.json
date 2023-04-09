@@ -3,20 +3,148 @@
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/blast_smelt.png"
   },
-  "mana_cost": 0.0,
-  "parameters": [],
-  "spell_actions": [],
+  "mana_cost": 4.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:tag",
+      "value": {
+        "minecraft:ancient_debris": "minecraft:netherite_scrap",
+        "minecraft:chainmail_boots": "minecraft:iron_nugget",
+        "minecraft:chainmail_chestplate": "minecraft:iron_nugget",
+        "minecraft:chainmail_helmet": "minecraft:iron_nugget",
+        "minecraft:chainmail_leggings": "minecraft:iron_nugget",
+        "minecraft:coal_ore": "minecraft:coal",
+        "minecraft:copper_ore": "minecraft:copper_ingot",
+        "minecraft:deepslate_coal_ore": "minecraft:coal",
+        "minecraft:deepslate_copper_ore": "minecraft:copper_ingot",
+        "minecraft:deepslate_diamond_ore": "minecraft:diamond",
+        "minecraft:deepslate_emerald_ore": "minecraft:emerald",
+        "minecraft:deepslate_gold_ore": "minecraft:gold_ingot",
+        "minecraft:deepslate_iron_ore": "minecraft:iron_ingot",
+        "minecraft:deepslate_lapis_ore": "minecraft:lapis_lazuli",
+        "minecraft:deepslate_redstone_ore": "minecraft:redstone",
+        "minecraft:diamond_ore": "minecraft:diamond",
+        "minecraft:emerald_ore": "minecraft:emerald",
+        "minecraft:gold_ore": "minecraft:gold_ingot",
+        "minecraft:golden_axe": "minecraft:gold_nugget",
+        "minecraft:golden_boots": "minecraft:gold_nugget",
+        "minecraft:golden_chestplate": "minecraft:gold_nugget",
+        "minecraft:golden_helmet": "minecraft:gold_nugget",
+        "minecraft:golden_hoe": "minecraft:gold_nugget",
+        "minecraft:golden_horse_armor": "minecraft:gold_nugget",
+        "minecraft:golden_leggings": "minecraft:gold_nugget",
+        "minecraft:golden_pickaxe": "minecraft:gold_nugget",
+        "minecraft:golden_shovel": "minecraft:gold_nugget",
+        "minecraft:golden_sword": "minecraft:gold_nugget",
+        "minecraft:iron_axe": "minecraft:iron_nugget",
+        "minecraft:iron_boots": "minecraft:iron_nugget",
+        "minecraft:iron_chestplate": "minecraft:iron_nugget",
+        "minecraft:iron_helmet": "minecraft:iron_nugget",
+        "minecraft:iron_hoe": "minecraft:iron_nugget",
+        "minecraft:iron_horse_armor": "minecraft:iron_nugget",
+        "minecraft:iron_leggings": "minecraft:iron_nugget",
+        "minecraft:iron_ore": "minecraft:iron_ingot",
+        "minecraft:iron_pickaxe": "minecraft:iron_nugget",
+        "minecraft:iron_shovel": "minecraft:iron_nugget",
+        "minecraft:iron_sword": "minecraft:iron_nugget",
+        "minecraft:lapis_ore": "minecraft:lapis_lazuli",
+        "minecraft:nether_gold_ore": "minecraft:gold_ingot",
+        "minecraft:nether_quartz_ore": "minecraft:quartz",
+        "minecraft:raw_copper": "minecraft:copper_ingot",
+        "minecraft:raw_gold": "minecraft:gold_ingot",
+        "minecraft:raw_iron": "minecraft:iron_ingot",
+        "minecraft:redstone_ore": "minecraft:redstone"
+      },
+      "var/name": "recipes"
+    }
+  ],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:has_mana",
+      "activation": "active",
+      "amount": "<<mana_cost>>",
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:mainhand_item_target",
+      "activation": "active",
+      "t/source": "owner",
+      "td/item": "item"
+    },
+    {
+      "type": "spells_and_shields:get_item_attributes",
+      "activation": "active",
+      "t/source": "item",
+      "var/amount": "amount",
+      "var/compound_tag": "",
+      "var/damage": "",
+      "var/item": "item_id"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "smelt",
+      "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< nbt_contains(recipes, item_id) >>"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "offhand",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "offhand",
+      "activation": "smelt"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "offhand",
+      "td/destination": "item"
+    },
+    {
+      "type": "spells_and_shields:offhand_item_target",
+      "activation": "offhand",
+      "t/source": "owner",
+      "td/item": "item"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "smelt",
+      "activation": "offhand",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< nbt_contains(recipes, item_id) >>"
+    },
+    {
+      "type": "spells_and_shields:burn_mana",
+      "activation": "smelt",
+      "d/double/mana_amount": "<<mana_cost>>",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:consume_item",
+      "activation": "smelt",
+      "d/int/amount": 1,
+      "ts/targets": "item"
+    },
+    {
+      "type": "spells_and_shields:give_item",
+      "activation": "smelt",
+      "d/compound_tag/tag": {},
+      "d/int/amount": 1,
+      "d/int/damage": 0,
+      "item": "<< get_nbt_string(recipes, item_id) >>",
+      "ts/targets": "owner"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.blast_smelt"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.blast_smelt.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ]
 }

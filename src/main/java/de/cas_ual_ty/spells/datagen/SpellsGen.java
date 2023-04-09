@@ -45,7 +45,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -54,6 +56,7 @@ import net.minecraftforge.common.data.JsonCodecProvider;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -474,8 +477,23 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_BALL_DESC))
         );
         
-        //TODO Blast Smelt
-        dummy(Spells.BLAST_SMELT);
+        CompoundTag blastRecipes = blastFurnaceRecipes();
+        addSpell(Spells.BLAST_SMELT, new Spell(modId, "blast_smelt", Spells.KEY_BLAST_SMELT, 4F)
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
+                .addAction(GetItemAttributesAction.make(ACTIVE.activation, "item", "item_id", "amount", "", ""))
+                .addAction(BooleanActivationAction.make(ACTIVE.activation, "smelt", Compiler.compileString(" nbt_contains(recipes, item_id) ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(ActivateAction.make(ACTIVE.activation, "offhand"))
+                .addAction(DeactivateAction.make("smelt", "offhand"))
+                .addAction(ClearTargetsAction.make("offhand", "item"))
+                .addAction(OffhandItemTargetAction.make("offhand", OWNER.targetGroup, "item"))
+                .addAction(BooleanActivationAction.make("offhand", "smelt", Compiler.compileString(" nbt_contains(recipes, item_id) ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(BurnManaAction.make("smelt", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(ConsumeItemAction.make("smelt", "item", INT.get().immediate(1)))
+                .addAction(GiveItemAction.make("smelt", OWNER.targetGroup, INT.get().immediate(1), INT.get().immediate(0), COMPOUND_TAG.get().immediate(new CompoundTag()), Compiler.compileString(" get_nbt_string(recipes, item_id) ", STRING.get())))
+                .addParameter(COMPOUND_TAG.get(), "recipes", blastRecipes)
+                .addTooltip(Component.translatable(Spells.KEY_BLAST_SMELT_DESC))
+        );
         
         addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
                 .addParameter(DOUBLE.get(), "speed", 2.5)
@@ -1022,5 +1040,75 @@ public class SpellsGen implements DataProvider
     public String getName()
     {
         return "Spells & Shields Spells Files";
+    }
+    
+    // yes this is stupid but I do not know how to access these without a level
+    // so I print this as code to console and then copy paste it into actual code
+    public static void printBlastingRecipes(Level level)
+    {
+        System.out.println("ABCDEFG=".repeat(50));
+        level.getRecipeManager().getAllRecipesFor(RecipeType.BLASTING).forEach(r ->
+        {
+            String out = ForgeRegistries.ITEMS.getKey(r.getResultItem().getItem()).toString();
+            r.getIngredients().forEach(i ->
+            {
+                Arrays.stream(i.getItems()).map(it -> ForgeRegistries.ITEMS.getKey(it.getItem()).toString()).forEach(item ->
+                {
+                    System.out.printf("blastRecipes.putString(\"%s\", \"%s\");\n", item, out);
+                });
+            });
+        });
+    }
+    
+    public static CompoundTag blastFurnaceRecipes()
+    {
+        CompoundTag blastRecipes = new CompoundTag();
+        blastRecipes.putString("minecraft:golden_pickaxe", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:golden_shovel", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:golden_axe", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:golden_hoe", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:golden_sword", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:golden_helmet", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:golden_chestplate", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:golden_leggings", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:golden_boots", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:golden_horse_armor", "minecraft:gold_nugget");
+        blastRecipes.putString("minecraft:deepslate_copper_ore", "minecraft:copper_ingot");
+        blastRecipes.putString("minecraft:coal_ore", "minecraft:coal");
+        blastRecipes.putString("minecraft:diamond_ore", "minecraft:diamond");
+        blastRecipes.putString("minecraft:redstone_ore", "minecraft:redstone");
+        blastRecipes.putString("minecraft:deepslate_lapis_ore", "minecraft:lapis_lazuli");
+        blastRecipes.putString("minecraft:deepslate_diamond_ore", "minecraft:diamond");
+        blastRecipes.putString("minecraft:deepslate_redstone_ore", "minecraft:redstone");
+        blastRecipes.putString("minecraft:ancient_debris", "minecraft:netherite_scrap");
+        blastRecipes.putString("minecraft:deepslate_iron_ore", "minecraft:iron_ingot");
+        blastRecipes.putString("minecraft:copper_ore", "minecraft:copper_ingot");
+        blastRecipes.putString("minecraft:deepslate_emerald_ore", "minecraft:emerald");
+        blastRecipes.putString("minecraft:raw_gold", "minecraft:gold_ingot");
+        blastRecipes.putString("minecraft:iron_pickaxe", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:iron_shovel", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:iron_axe", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:iron_hoe", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:iron_sword", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:iron_helmet", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:iron_chestplate", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:iron_leggings", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:iron_boots", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:iron_horse_armor", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:chainmail_helmet", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:chainmail_chestplate", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:chainmail_leggings", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:chainmail_boots", "minecraft:iron_nugget");
+        blastRecipes.putString("minecraft:gold_ore", "minecraft:gold_ingot");
+        blastRecipes.putString("minecraft:nether_quartz_ore", "minecraft:quartz");
+        blastRecipes.putString("minecraft:iron_ore", "minecraft:iron_ingot");
+        blastRecipes.putString("minecraft:nether_gold_ore", "minecraft:gold_ingot");
+        blastRecipes.putString("minecraft:deepslate_gold_ore", "minecraft:gold_ingot");
+        blastRecipes.putString("minecraft:emerald_ore", "minecraft:emerald");
+        blastRecipes.putString("minecraft:raw_iron", "minecraft:iron_ingot");
+        blastRecipes.putString("minecraft:lapis_ore", "minecraft:lapis_lazuli");
+        blastRecipes.putString("minecraft:raw_copper", "minecraft:copper_ingot");
+        blastRecipes.putString("minecraft:deepslate_coal_ore", "minecraft:coal");
+        return blastRecipes;
     }
 }
