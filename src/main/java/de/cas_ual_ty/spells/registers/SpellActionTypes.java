@@ -2,6 +2,9 @@ package de.cas_ual_ty.spells.registers;
 
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
+import de.cas_ual_ty.spells.spell.action.ai.ClearTargetAction;
+import de.cas_ual_ty.spells.spell.action.ai.GetTargetAction;
+import de.cas_ual_ty.spells.spell.action.ai.SetTargetAction;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
@@ -45,6 +48,11 @@ public class SpellActionTypes
     public static Supplier<IForgeRegistry<SpellActionType<?>>> REGISTRY;
     private static final DeferredRegister<SpellActionType<?>> DEFERRED_REGISTER = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_actions"), MOD_ID);
     
+    // ai
+    public static final RegistryObject<SpellActionType<ClearTargetAction>> CLEAR_TARGET = DEFERRED_REGISTER.register("clear_target", () -> new SpellActionType<>(ClearTargetAction::new, ClearTargetAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetTargetAction>> GET_TARGET = DEFERRED_REGISTER.register("get_target", () -> new SpellActionType<>(GetTargetAction::new, GetTargetAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SetTargetAction>> SET_TARGET = DEFERRED_REGISTER.register("set_target", () -> new SpellActionType<>(SetTargetAction::new, SetTargetAction::makeCodec));
+    
     // attribute
     public static final RegistryObject<SpellActionType<CheckTagAction>> CHECK_TAG = DEFERRED_REGISTER.register("check_tag", () -> new SpellActionType<>(CheckTagAction::new, CheckTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityExtraTagAction>> GET_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("get_entity_extra_tag", () -> new SpellActionType<>(GetEntityExtraTagAction::new, GetEntityExtraTagAction::makeCodec));
@@ -83,7 +91,6 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ResetFallDistanceAction>> RESET_FALL_DISTANCE = DEFERRED_REGISTER.register("reset_fall_distance", () -> new SpellActionType<>(ResetFallDistanceAction::new, ResetFallDistanceAction::makeCodec));
     public static final RegistryObject<SpellActionType<SetMotionAction>> SET_MOTION = DEFERRED_REGISTER.register("set_motion", () -> new SyncedSpellActionType<>(SetMotionAction::new, SetMotionAction::makeCodec, SetMotionAction.ClientAction::new));
     public static final RegistryObject<SpellActionType<SetOnFireAction>> SET_ON_FIRE = DEFERRED_REGISTER.register("set_on_fire", () -> new SpellActionType<>(SetOnFireAction::new, SetOnFireAction::makeCodec));
-    public static final RegistryObject<SpellActionType<SetTargetAction>> SET_TARGET = DEFERRED_REGISTER.register("set_target", () -> new SpellActionType<>(SetTargetAction::new, SetTargetAction::makeCodec));
     public static final RegistryObject<SpellActionType<SourcedDamageAction>> SOURCED_DAMAGE = DEFERRED_REGISTER.register("sourced_damage", () -> new SpellActionType<>(SourcedDamageAction::new, SourcedDamageAction::makeCodec));
     public static final RegistryObject<SpellActionType<SourcedKnockbackAction>> SOURCED_KNOCKBACK = DEFERRED_REGISTER.register("sourced_knockback", () -> new SpellActionType<>(SourcedKnockbackAction::new, SourcedKnockbackAction::makeCodec));
     public static final RegistryObject<SpellActionType<SpawnEntityAction>> SPAWN_ENTITY = DEFERRED_REGISTER.register("spawn_entity", () -> new SpellActionType<>(SpawnEntityAction::new, SpawnEntityAction::makeCodec));
