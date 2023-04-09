@@ -864,7 +864,27 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_LIGHTNING_STRIKE_DESC))
         );
         
-        dummy(Spells.DRAIN_FLAME);
+        addSpell(Spells.DRAIN_FLAME, new Spell(modId, "drain_flame", Spells.KEY_DRAIN_FLAME, 0F)
+                .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0F, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, "on_block_hit", "", ""))
+                .addAction(CubeBlockTargetsAction.make("on_block_hit", BLOCK_HIT.targetGroup, "blocks", Compiler.compileString(" vec3(-radius, -radius, -radius) ", VEC3.get()), Compiler.compileString(" vec3(radius, radius, radius) ", VEC3.get())))
+                .addAction(LabelAction.make("on_block_hit", "loop"))
+                .addAction(ClearTargetsAction.make("on_block_hit", "block_to_check"))
+                .addAction(PickTargetAction.make("on_block_hit", "block_to_check", "blocks", true, true))
+                .addAction(GetBlockAction.make("on_block_hit", "block_to_check", "block_type", "", ""))
+                .addAction(BooleanActivationAction.make("on_block_hit", "success", Compiler.compileString(" block_type == '" + ForgeRegistries.BLOCKS.getKey(Blocks.FIRE).toString() + "' || block_type == '" + ForgeRegistries.BLOCKS.getKey(Blocks.SOUL_FIRE) + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(DeactivateAction.make("success", "on_block_hit"))
+                .addAction(JumpAction.make("on_block_hit", "loop"))
+                .addAction(RemoveBlockAction.make("success", "block_to_check"))
+                .addAction(PlaySoundAction.make("success", OWNER.targetGroup, SoundEvents.FIRE_EXTINGUISH, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(PlaySoundAction.make("success", "block_to_check", SoundEvents.FIRE_EXTINGUISH, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(HomeAction.make("success", "block_to_check", OWNER.targetGroup, DOUBLE.get().immediate(1D), INT.get().immediate(100), "", "owner_hit", "", ""))
+                .addAction(ApplyMobEffectAction.make("owner_hit", ENTITY_HIT.targetGroup, SpellsUtil.objectToString(BuiltinRegistries.REPLENISHMENT_EFFECT.get(), ForgeRegistries.MOB_EFFECTS), INT.get().reference("replenishment_duration"), INT.get().immediate(0), BOOLEAN.get().immediate(false), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(PlaySoundAction.make("owner_hit", ENTITY_HIT.targetGroup, SoundEvents.FIRE_AMBIENT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addParameter(DOUBLE.get(), "range", 50D)
+                .addParameter(INT.get(), "replenishment_duration", 100)
+                .addParameter(INT.get(), "radius", 1)
+                .addTooltip(Component.translatable(Spells.KEY_DRAIN_FLAME_DESC))
+        );
         
         addSpell(Spells.GROWTH, new Spell(modId, "growth", Spells.KEY_GROWTH, 4F)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
