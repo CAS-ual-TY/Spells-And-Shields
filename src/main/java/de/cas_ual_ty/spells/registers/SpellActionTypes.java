@@ -125,6 +125,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<CubeBlockTargetsAction>> CUBE_BLOCK_TARGETS = DEFERRED_REGISTER.register("cube_block_targets", () -> new SpellActionType<>(CubeBlockTargetsAction::new, CubeBlockTargetsAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetBlockAction>> GET_BLOCK = DEFERRED_REGISTER.register("get_block", () -> new SpellActionType<>(GetBlockAction::new, GetBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<OffsetBlockAction>> OFFSET_BLOCK = DEFERRED_REGISTER.register("offset_block", () -> new SpellActionType<>(OffsetBlockAction::new, OffsetBlockAction::makeCodec));
+    public static final RegistryObject<SpellActionType<RemoveBlockAction>> REMOVE_BLOCK = DEFERRED_REGISTER.register("remove_block", () -> new SpellActionType<>(RemoveBlockAction::new, RemoveBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<SetBlockAction>> SET_BLOCK = DEFERRED_REGISTER.register("set_block", () -> new SpellActionType<>(SetBlockAction::new, SetBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<TickBlockAction>> TICK_BLOCK = DEFERRED_REGISTER.register("tick_block", () -> new SpellActionType<>(TickBlockAction::new, TickBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<UseItemOnBlocksAction>> USE_ITEM_ON_BLOCK = DEFERRED_REGISTER.register("use_item_on_block", () -> new SpellActionType<>(UseItemOnBlocksAction::new, UseItemOnBlocksAction::makeCodec));
