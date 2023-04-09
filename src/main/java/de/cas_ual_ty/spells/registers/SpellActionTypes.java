@@ -2,9 +2,9 @@ package de.cas_ual_ty.spells.registers;
 
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
-import de.cas_ual_ty.spells.spell.action.ai.ClearTargetAction;
-import de.cas_ual_ty.spells.spell.action.ai.GetTargetAction;
-import de.cas_ual_ty.spells.spell.action.ai.SetTargetAction;
+import de.cas_ual_ty.spells.spell.action.ai.ClearMobTargetAction;
+import de.cas_ual_ty.spells.spell.action.ai.GetMobTargetAction;
+import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
@@ -49,9 +49,9 @@ public class SpellActionTypes
     private static final DeferredRegister<SpellActionType<?>> DEFERRED_REGISTER = DeferredRegister.create(new ResourceLocation(MOD_ID, "spell_actions"), MOD_ID);
     
     // ai
-    public static final RegistryObject<SpellActionType<ClearTargetAction>> CLEAR_TARGET = DEFERRED_REGISTER.register("clear_target", () -> new SpellActionType<>(ClearTargetAction::new, ClearTargetAction::makeCodec));
-    public static final RegistryObject<SpellActionType<GetTargetAction>> GET_TARGET = DEFERRED_REGISTER.register("get_target", () -> new SpellActionType<>(GetTargetAction::new, GetTargetAction::makeCodec));
-    public static final RegistryObject<SpellActionType<SetTargetAction>> SET_TARGET = DEFERRED_REGISTER.register("set_target", () -> new SpellActionType<>(SetTargetAction::new, SetTargetAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ClearMobTargetAction>> CLEAR_MOB_TARGET = DEFERRED_REGISTER.register("clear_mob_target", () -> new SpellActionType<>(ClearMobTargetAction::new, ClearMobTargetAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetMobTargetAction>> GET_MOB_TARGET = DEFERRED_REGISTER.register("get_mob_target", () -> new SpellActionType<>(GetMobTargetAction::new, GetMobTargetAction::makeCodec));
+    public static final RegistryObject<SpellActionType<SetMobTargetAction>> SET_MOB_TARGET = DEFERRED_REGISTER.register("set_mob_target", () -> new SpellActionType<>(SetMobTargetAction::new, SetMobTargetAction::makeCodec));
     
     // attribute
     public static final RegistryObject<SpellActionType<CheckTagAction>> CHECK_TAG = DEFERRED_REGISTER.register("check_tag", () -> new SpellActionType<>(CheckTagAction::new, CheckTagAction::makeCodec));

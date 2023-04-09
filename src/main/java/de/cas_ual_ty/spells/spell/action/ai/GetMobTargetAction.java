@@ -13,32 +13,32 @@ import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.world.entity.Mob;
 
-public class GetTargetAction extends GetTargetAttributeAction<LivingEntityTarget>
+public class GetMobTargetAction extends GetTargetAttributeAction<LivingEntityTarget>
 {
-    public static Codec<GetTargetAction> makeCodec(SpellActionType<GetTargetAction> type)
+    public static Codec<GetMobTargetAction> makeCodec(SpellActionType<GetMobTargetAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
-                Codec.STRING.fieldOf(ParamNames.destinationTarget("target")).forGetter(GetTargetAction::getTarget),
-                Codec.STRING.fieldOf(ParamNames.var("has_target")).forGetter(GetTargetAction::getHasTarget)
-        ).apply(instance, (activation, source, target, hasTarget) -> new GetTargetAction(type, activation, source, target, hasTarget)));
+                Codec.STRING.fieldOf(ParamNames.destinationTarget("target")).forGetter(GetMobTargetAction::getTarget),
+                Codec.STRING.fieldOf(ParamNames.var("has_target")).forGetter(GetMobTargetAction::getHasTarget)
+        ).apply(instance, (activation, source, target, hasTarget) -> new GetMobTargetAction(type, activation, source, target, hasTarget)));
     }
     
-    public static GetTargetAction make(String activation, String source, String target, String hasTarget)
+    public static GetMobTargetAction make(String activation, String source, String target, String hasTarget)
     {
-        return new GetTargetAction(SpellActionTypes.GET_TARGET.get(), activation, source, target, hasTarget);
+        return new GetMobTargetAction(SpellActionTypes.GET_MOB_TARGET.get(), activation, source, target, hasTarget);
     }
     
     protected String target;
     protected String hasTarget;
     
-    public GetTargetAction(SpellActionType<?> type)
+    public GetMobTargetAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public GetTargetAction(SpellActionType<?> type, String activation, String source, String target, String hasTarget)
+    public GetMobTargetAction(SpellActionType<?> type, String activation, String source, String target, String hasTarget)
     {
         super(type, activation, source);
         this.target = target;

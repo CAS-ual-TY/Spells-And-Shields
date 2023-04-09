@@ -13,30 +13,30 @@ import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.world.entity.Mob;
 
-public class SetTargetAction extends AffectSingleTypeAction<LivingEntityTarget>
+public class SetMobTargetAction extends AffectSingleTypeAction<LivingEntityTarget>
 {
-    public static Codec<SetTargetAction> makeCodec(SpellActionType<SetTargetAction> type)
+    public static Codec<SetMobTargetAction> makeCodec(SpellActionType<SetMobTargetAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                Codec.STRING.fieldOf(ParamNames.multiTarget("mobs")).forGetter(SetTargetAction::getMobs)
-        ).apply(instance, (activation, singleTarget, mobs) -> new SetTargetAction(type, activation, singleTarget, mobs)));
+                Codec.STRING.fieldOf(ParamNames.multiTarget("mobs")).forGetter(SetMobTargetAction::getMobs)
+        ).apply(instance, (activation, singleTarget, mobs) -> new SetMobTargetAction(type, activation, singleTarget, mobs)));
     }
     
-    public static SetTargetAction make(String activation, String singleTarget, String mobs)
+    public static SetMobTargetAction make(String activation, String singleTarget, String mobs)
     {
-        return new SetTargetAction(SpellActionTypes.SET_TARGET.get(), activation, singleTarget, mobs);
+        return new SetMobTargetAction(SpellActionTypes.SET_MOB_TARGET.get(), activation, singleTarget, mobs);
     }
     
     protected String mobs;
     
-    public SetTargetAction(SpellActionType<?> type)
+    public SetMobTargetAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public SetTargetAction(SpellActionType<?> type, String activation, String singleTarget, String mobs)
+    public SetMobTargetAction(SpellActionType<?> type, String activation, String singleTarget, String mobs)
     {
         super(type, activation, singleTarget);
         this.mobs = mobs;

@@ -13,27 +13,27 @@ import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.world.entity.Mob;
 
-public class ClearTargetAction extends AffectTypeAction<LivingEntityTarget>
+public class ClearMobTargetAction extends AffectTypeAction<LivingEntityTarget>
 {
-    public static Codec<ClearTargetAction> makeCodec(SpellActionType<ClearTargetAction> type)
+    public static Codec<ClearMobTargetAction> makeCodec(SpellActionType<ClearMobTargetAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                Codec.STRING.fieldOf(ParamNames.multiTarget("mobs")).forGetter(ClearTargetAction::getMultiTargets)
-        ).apply(instance, (activation, mobs) -> new ClearTargetAction(type, activation, mobs)));
+                Codec.STRING.fieldOf(ParamNames.multiTarget("mobs")).forGetter(ClearMobTargetAction::getMultiTargets)
+        ).apply(instance, (activation, mobs) -> new ClearMobTargetAction(type, activation, mobs)));
     }
     
-    public static ClearTargetAction make(String activation, String mobs)
+    public static ClearMobTargetAction make(String activation, String mobs)
     {
-        return new ClearTargetAction(SpellActionTypes.CLEAR_TARGET.get(), activation, mobs);
+        return new ClearMobTargetAction(SpellActionTypes.CLEAR_MOB_TARGET.get(), activation, mobs);
     }
     
-    public ClearTargetAction(SpellActionType<?> type)
+    public ClearMobTargetAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public ClearTargetAction(SpellActionType<?> type, String activation, String mobs)
+    public ClearMobTargetAction(SpellActionType<?> type, String activation, String mobs)
     {
         super(type, activation, mobs);
     }

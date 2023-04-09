@@ -124,7 +124,7 @@
       "label": "loop"
     },
     {
-      "type": "spells_and_shields:set_target",
+      "type": "spells_and_shields:set_mob_target",
       "activation": "on_entity_hit",
       "t/target": "entity_hit",
       "ts/mobs": "endermen"

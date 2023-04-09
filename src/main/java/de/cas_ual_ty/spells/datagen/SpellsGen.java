@@ -6,7 +6,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
-import de.cas_ual_ty.spells.spell.action.ai.SetTargetAction;
+import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
@@ -913,7 +913,7 @@ public class SpellsGen implements DataProvider
                 .addAction(DeactivateAction.make("move_entity", "move_entity"))
                 .addAction(GetTargetGroupSizeAction.make("on_entity_hit", "targets", "size"))
                 .addAction(BranchAction.make("on_entity_hit", "loop", Compiler.compileString(" size > 0 ", BOOLEAN.get())))
-                .addAction(SetTargetAction.make("on_entity_hit", ENTITY_HIT.targetGroup, "endermen"))
+                .addAction(SetMobTargetAction.make("on_entity_hit", ENTITY_HIT.targetGroup, "endermen"))
                 .addAction(PlaySoundAction.make("on_entity_hit", OWNER.targetGroup, SoundEvents.ENDERMAN_SCREAM, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT.targetGroup, SoundEvents.ENDERMAN_SCREAM, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addParameter(DOUBLE.get(), "target_range", 50D)
