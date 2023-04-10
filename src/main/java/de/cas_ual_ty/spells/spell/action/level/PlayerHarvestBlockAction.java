@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
+import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-public class PlayerHarvestBlockAction extends AffectTypeAction<PlayerTarget>
+public class PlayerHarvestBlockAction extends AffectSingleTypeAction<PlayerTarget>
 {
     public static Codec<PlayerHarvestBlockAction> makeCodec(SpellActionType<PlayerHarvestBlockAction> type)
     {
@@ -69,7 +69,7 @@ public class PlayerHarvestBlockAction extends AffectTypeAction<PlayerTarget>
     }
     
     @Override
-    public void affectTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
+    public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
         if(playerTarget.getPlayer() instanceof ServerPlayer player)
         {
