@@ -106,21 +106,31 @@ public class SpellInstance
         return tooltipComponent;
     }
     
-    public void run(Player owner, String activation)
+    public void runEvent(Player owner, String event, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
     {
-        run(owner.level, owner, activation);
+        if(spell.get().getEventsList().contains(event))
+        {
+            SpellContext ctx = run(owner.level, owner, event, toContext);
+            fromContext.accept(ctx);
+        }
     }
     
-    public void run(Level level, @Nullable Player owner, String activation)
+    public SpellContext run(Player owner, String activation)
     {
-        run(level, owner, activation, (ctx) -> {});
+        return run(owner.level, owner, activation);
     }
     
-    public void run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> consumer)
+    public SpellContext run(Level level, @Nullable Player owner, String activation)
+    {
+        return run(level, owner, activation, (ctx) -> {});
+    }
+    
+    public SpellContext run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> consumer)
     {
         SpellContext ctx = initializeContext(level, owner, activation);
         consumer.accept(ctx);
         ctx.run();
+        return ctx;
     }
     
     public SpellContext initializeContext(Level level, @Nullable Player owner, String activation)

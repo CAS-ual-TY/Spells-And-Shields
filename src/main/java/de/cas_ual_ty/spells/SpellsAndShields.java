@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.spell.compiler.BinaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.compiler.TernaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
+import de.cas_ual_ty.spells.spell.context.SpellsEvents;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -68,6 +69,7 @@ public class SpellsAndShields
         UnaryOperation.registerToCompiler();
         BinaryOperation.registerToCompiler();
         TernaryOperation.registerToCompiler();
+        SpellsEvents.registerEvents();
         
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> de.cas_ual_ty.spells.client.SpellsClientUtil::onModConstruct);
     }

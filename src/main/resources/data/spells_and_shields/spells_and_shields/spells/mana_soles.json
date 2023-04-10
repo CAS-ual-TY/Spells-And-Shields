@@ -1,23 +1,59 @@
 {
-  "events": [],
+  "events": [
+    "living_hurt"
+  ],
   "icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/mana_soles.png"
   },
   "mana_cost": 0.0,
   "parameters": [],
-  "spell_actions": [],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "reduce",
+      "activation": "living_hurt",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": true,
+      "d/boolean/input": "<< damage_type == 'fall' >>"
+    },
+    {
+      "type": "spells_and_shields:get_mana",
+      "activation": "reduce",
+      "t/target": "owner",
+      "var/result": "mana"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "reduce",
+      "d/double/source": "<< min(mana, damage_amount) >>",
+      "var/result": "reduce_amount"
+    },
+    {
+      "type": "spells_and_shields:put_boolean",
+      "activation": "reduce",
+      "d/boolean/source": "<< event_is_canceled || (reduce_amount >= damage_amount) >>",
+      "var/result": "event_is_canceled"
+    },
+    {
+      "type": "spells_and_shields:burn_mana",
+      "activation": "reduce",
+      "d/double/mana_amount": "<<reduce_amount>>",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "reduce",
+      "d/double/source": "<< damage_amount - reduce_amount >>",
+      "var/result": "damage_amount"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.mana_soles"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.mana_soles.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ]
 }

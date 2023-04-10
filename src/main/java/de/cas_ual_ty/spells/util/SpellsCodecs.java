@@ -94,7 +94,8 @@ public class SpellsCodecs
                 COMPONENT.fieldOf("title").forGetter(Spell::getTitle),
                 COMPONENT.listOf().fieldOf("tooltip").forGetter(Spell::getTooltip),
                 Codec.FLOAT.fieldOf("mana_cost").forGetter(Spell::getManaCost),
-                CTX_VAR.listOf().fieldOf("parameters").forGetter(Spell::getParameters)
+                CTX_VAR.listOf().fieldOf("parameters").forGetter(Spell::getParameters),
+                Codec.STRING.listOf().fieldOf("events").forGetter(Spell::getEventsList)
         ).apply(instance, Spell::new)));
         
         COMPONENT = ExtraCodecs.lazyInitializedCodec(() -> new PrimitiveCodec<>()

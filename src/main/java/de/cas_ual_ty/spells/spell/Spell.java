@@ -24,8 +24,9 @@ public class Spell
     protected List<Component> tooltip;
     protected float manaCost;
     private List<CtxVar<?>> parameters;
+    private List<String> events;
     
-    public Spell(List<SpellAction> spellActions, SpellIcon icon, Component title, List<Component> tooltip, float manaCost, List<CtxVar<?>> parameters)
+    public Spell(List<SpellAction> spellActions, SpellIcon icon, Component title, List<Component> tooltip, float manaCost, List<CtxVar<?>> parameters, List<String> events)
     {
         this.spellActions = spellActions;
         this.icon = icon;
@@ -33,11 +34,12 @@ public class Spell
         this.tooltip = tooltip;
         this.manaCost = manaCost;
         this.parameters = parameters;
+        this.events = events;
     }
     
     public Spell(SpellIcon icon, Component title, float manaCost)
     {
-        this(new ArrayList<>(), icon, title, new LinkedList<>(), manaCost, new LinkedList<>());
+        this(new ArrayList<>(), icon, title, new LinkedList<>(), manaCost, new LinkedList<>(), new LinkedList<>());
     }
     
     public Spell(SpellIcon icon, String titleKey, float manaCost)
@@ -78,6 +80,12 @@ public class Spell
         return addParameter(new CtxVar<>(type, name, value));
     }
     
+    public Spell addEventHook(String eventId)
+    {
+        events.add(eventId);
+        return this;
+    }
+    
     public List<SpellAction> getSpellActions()
     {
         return spellActions;
@@ -106,6 +114,11 @@ public class Spell
     public List<CtxVar<?>> getParameters()
     {
         return parameters;
+    }
+    
+    public List<String> getEventsList()
+    {
+        return events;
     }
     
     public List<Component> makeTooltipList(@Nullable Component keyBindTooltip)
