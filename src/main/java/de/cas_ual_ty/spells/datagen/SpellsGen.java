@@ -37,6 +37,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -660,7 +661,16 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_JUMP_DESC))
         );
         
-        dummy(Spells.MANA_SOLES);
+        addSpell(Spells.MANA_SOLES, new Spell(modId, "mana_soles", Spells.KEY_MANA_SOLES, 0F)
+                .addAction(BooleanActivationAction.make(SpellsEvents.LIVING_HURT, "reduce", Compiler.compileString(" damage_type == '" + DamageSource.FALL.getMsgId() + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(GetManaAction.make("reduce", OWNER.targetGroup, "mana"))
+                .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" min(mana, damage_amount) ", DOUBLE.get()), "reduce_amount"))
+                .addAction(PutVarAction.makeBoolean("reduce", Compiler.compileString(" " + EVENT_IS_CANCELED.name + " || (reduce_amount >= damage_amount) ", BOOLEAN.get()), EVENT_IS_CANCELED.name))
+                .addAction(BurnManaAction.make("reduce", OWNER.targetGroup, DOUBLE.get().reference("reduce_amount")))
+                .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" damage_amount - reduce_amount ", DOUBLE.get()), "damage_amount"))
+                .addEventHook(SpellsEvents.LIVING_HURT)
+                .addTooltip(Component.translatable(Spells.KEY_MANA_SOLES_DESC))
+        );
         
         addSpell(Spells.FIRE_CHARGE, new Spell(ItemSpellIcon.make(new ItemStack(Items.FIRE_CHARGE)), Spells.KEY_FIRE_CHARGE, 5F)
                 .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
