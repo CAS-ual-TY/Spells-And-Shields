@@ -21,6 +21,7 @@ import de.cas_ual_ty.spells.spell.action.mana.*;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
+import de.cas_ual_ty.spells.spell.context.SpellsEvents;
 import de.cas_ual_ty.spells.spell.icon.*;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
@@ -562,7 +563,14 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_WATER_LEAP_DESC))
         );
         
-        dummy(Spells.AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY, Spells.KEY_AQUA_AFFINITY_DESC, ItemSpellIcon.make(new ItemStack(Items.ENCHANTED_BOOK)));
+        addSpell(Spells.AQUA_AFFINITY, new Spell(modId, "mana_soles", Spells.KEY_AQUA_AFFINITY, 0F)
+                .addAction(GetEntityEyePositionAction.make(SpellsEvents.PLAYER_BREAK_SPEED, OWNER.targetGroup, "eye_pos"))
+                .addAction(GetBlockAction.make(SpellsEvents.PLAYER_BREAK_SPEED, "eye_pos", "block_type", "", ""))
+                .addAction(BooleanActivationAction.make(SpellsEvents.PLAYER_BREAK_SPEED, "boost", Compiler.compileString(" block_type == '" + ForgeRegistries.BLOCKS.getKey(Blocks.WATER) + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(PutVarAction.makeDouble("boost", Compiler.compileString(" new_speed * 5 ", DOUBLE.get()), "new_speed"))
+                .addEventHook(SpellsEvents.PLAYER_BREAK_SPEED)
+                .addTooltip(Component.translatable(Spells.KEY_AQUA_AFFINITY_DESC))
+        );
         
         //TODO fx, test
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
