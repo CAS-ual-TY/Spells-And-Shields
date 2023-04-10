@@ -1,25 +1,49 @@
 {
+  "events": [
+    "player_break_speed"
+  ],
   "icon": {
-    "type": "spells_and_shields:item",
-    "item": {
-      "Count": 1,
-      "id": "minecraft:enchanted_book"
-    }
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/mana_soles.png"
   },
   "mana_cost": 0.0,
   "parameters": [],
-  "spell_actions": [],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:get_entity_eye_position",
+      "activation": "player_break_speed",
+      "t/source": "owner",
+      "td/eye_position": "eye_pos"
+    },
+    {
+      "type": "spells_and_shields:get_block",
+      "activation": "player_break_speed",
+      "t/target": "eye_pos",
+      "var/block": "block_type",
+      "var/block_state": "",
+      "var/is_air": ""
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "boost",
+      "activation": "player_break_speed",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": true,
+      "d/boolean/input": "<< block_type == 'minecraft:water' >>"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "boost",
+      "d/double/source": "<< new_speed * 5 >>",
+      "var/result": "new_speed"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.aqua_affinity"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.aqua_affinity.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ]
 }

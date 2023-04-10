@@ -1,4 +1,5 @@
 {
+  "events": [],
   "icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/pressurize.png"
