@@ -3,20 +3,69 @@
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/instant_mine.png"
   },
-  "mana_cost": 0.0,
-  "parameters": [],
-  "spell_actions": [],
+  "mana_cost": 4.0,
+  "parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 4.0,
+      "var/name": "range"
+    }
+  ],
+  "spell_actions": [
+    {
+      "type": "spells_and_shields:has_mana",
+      "activation": "active",
+      "amount": "<<mana_cost>>",
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:look_at_target",
+      "a/block_hit_activation": "on_block_hit",
+      "a/entity_hit_activation": "",
+      "a/miss_activation": "",
+      "activation": "active",
+      "block_clip_context": "outline",
+      "d/double/range": "<<range>>",
+      "double/bb_inflation": 0.0,
+      "fluid_clip_context": "none",
+      "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:player_harvest_block",
+      "activation": "on_block_hit",
+      "direction": "up",
+      "t/source": "owner",
+      "ts/blocks": "block_hit"
+    },
+    {
+      "type": "spells_and_shields:get_block",
+      "activation": "on_block_hit",
+      "t/target": "block_hit",
+      "var/block": "",
+      "var/block_state": "",
+      "var/is_air": "is_air"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "burn_mana",
+      "activation": "on_block_hit",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<<is_air>>"
+    },
+    {
+      "type": "spells_and_shields:burn_mana",
+      "activation": "burn_mana",
+      "d/double/mana_amount": "<<mana_cost>>",
+      "ts/targets": "owner"
+    }
+  ],
   "title": {
     "translate": "spell.spells_and_shields.instant_mine"
   },
   "tooltip": [
     {
       "translate": "spell.spells_and_shields.instant_mine.desc"
-    },
-    {
-      "color": "red",
-      "italic": true,
-      "text": "In Development"
     }
   ]
 }

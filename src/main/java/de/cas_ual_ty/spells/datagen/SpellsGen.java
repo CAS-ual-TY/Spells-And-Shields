@@ -679,7 +679,16 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_PRESSURIZE_DESC))
         );
         
-        dummy(Spells.INSTANT_MINE);
+        addSpell(Spells.INSTANT_MINE, new Spell(modId, "instant_mine", Spells.KEY_INSTANT_MINE, 4F)
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0F, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, "on_block_hit", "", ""))
+                .addAction(PlayerHarvestBlockAction.make("on_block_hit", OWNER.targetGroup, BLOCK_HIT.targetGroup, Direction.UP))
+                .addAction(GetBlockAction.make("on_block_hit", BLOCK_HIT.targetGroup, "", "", "is_air"))
+                .addAction(BooleanActivationAction.make("on_block_hit", "burn_mana", BOOLEAN.get().reference("is_air"), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(BurnManaAction.make("burn_mana", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addParameter(DOUBLE.get(), "range", 4D)
+                .addTooltip(Component.translatable(Spells.KEY_INSTANT_MINE_DESC))
+        );
         
         //TODO fx
         CompoundTag metalMap = new CompoundTag();
