@@ -154,6 +154,11 @@ public class SpellContext
     
     public <T> boolean setCtxVar(CtxVarType<T> type, String name, T value)
     {
+        if(name.isEmpty())
+        {
+            return false;
+        }
+        
         CtxVar<?> ctxVar = getCtxVar(name);
         
         if(ctxVar != null)
