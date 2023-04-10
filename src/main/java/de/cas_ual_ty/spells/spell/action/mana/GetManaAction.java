@@ -38,6 +38,7 @@ public class GetManaAction extends GetTargetAttributeAction<LivingEntityTarget>
     public GetManaAction(SpellActionType<?> type, String activation, String singleTarget, String mana)
     {
         super(type, activation, singleTarget);
+        this.mana = mana;
         
         if(!mana.isEmpty())
         {
