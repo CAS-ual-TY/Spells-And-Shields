@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 
@@ -21,10 +22,16 @@ import java.util.function.Supplier;
 
 public class SpellsEvents
 {
+    public static final String PLAYER_BREAK_SPEED = "player_break_speed";
+    
     public static final Map<String, RegisteredEvent<?>> NAME_TO_ENTRY = new HashMap<>();
     
     public static void registerEvents()
     {
+        register(PLAYER_BREAK_SPEED, PlayerEvent.BreakSpeed.class, true)
+                .addTargetLink(e -> e.getPosition().map(pos -> Target.of(e.getEntity().level, pos)).orElse(null), "block_position")
+                .addVariableLink(e -> (double) e.getOriginalSpeed(), CtxVarTypes.DOUBLE, "original_speed")
+                .addVariableLink(e -> (double) e.getNewSpeed(), (e, c) -> e.setNewSpeed(c.floatValue()), CtxVarTypes.DOUBLE, "new_speed");
     }
     
     public static <E extends EntityEvent> RegisteredEvent<E> register(String eventId, Class<E> eventClass, boolean includeClient)
