@@ -7,7 +7,11 @@
     "texture": "spells_and_shields:textures/mob_effect/silence.png"
   },
   "s3/mana_cost": 5.0,
-  "s4/tooltip": [],
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.silence_target.desc"
+    }
+  ],
   "s5/spell_events": [
     "active"
   ],

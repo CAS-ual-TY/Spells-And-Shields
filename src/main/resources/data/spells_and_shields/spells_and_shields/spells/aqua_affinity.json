@@ -3,8 +3,17 @@
     "translate": "spell.spells_and_shields.aqua_affinity"
   },
   "s2/icon": {
-    "type": "spells_and_shields:default",
-    "texture": "spells_and_shields:textures/spell/mana_soles.png"
+    "type": "spells_and_shields:layered",
+    "icons_list": [
+      {
+        "type": "spells_and_shields:default",
+        "texture": "minecraft:textures/mob_effect/haste.png"
+      },
+      {
+        "type": "spells_and_shields:default",
+        "texture": "minecraft:textures/mob_effect/water_breathing.png"
+      }
+    ]
   },
   "s3/mana_cost": 0.0,
   "s4/tooltip": [

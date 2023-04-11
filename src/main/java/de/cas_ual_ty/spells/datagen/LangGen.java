@@ -137,6 +137,15 @@ public class LangGen extends LanguageProvider
         add(SpellTrees.KEY_MOVEMENT, "Movement");
         add(SpellTrees.KEY_END, "End");
         
+        add(SpellsGen.KEY_HAND_ITEM_REQUIREMENT_TITLE, "Item Requirement (In Your Hand):");
+        add(SpellsGen.KEY_HAND_ITEM_COST_TITLE, "Item Costs (Hand):");
+        add(SpellsGen.KEY_MAINHAND_ITEM_COST_TITLE, "Item Costs (Mainhand):");
+        add(SpellsGen.KEY_OFFHAND_ITEM_COST_TITLE, "Item Costs (Offhand):");
+        add(SpellsGen.KEY_INVENTORY_ITEM_COST_TITLE, "Item Costs (Inventory):");
+        add(SpellsGen.KEY_ITEM_COST, "- %sx %s");
+        add(SpellsGen.KEY_ITEM_COST_SINGLE, "- %s");
+        add(SpellsGen.KEY_ITEM_COST_TEXT, "- %s");
+        
         add(Spells.KEY_LEAP, "Leap");
         add(Spells.KEY_LEAP_DESC, "Leap forward.");
         add(Spells.KEY_SUMMON_ANIMAL, "Summon Animal");
@@ -145,6 +154,7 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_FIRE_BALL_DESC, "Shoot a fire ball forward.");
         add(Spells.KEY_BLAST_SMELT, "Blast Smelt");
         add(Spells.KEY_BLAST_SMELT_DESC, "Works like an instant blast furnace on the item in your hand.");
+        add(Spells.KEY_BLAST_SMELT_DESC_COST, "Any item that goes into a blast furnace");
         add(Spells.KEY_TRANSFER_MANA, "Transfer Mana");
         //add(Spells.KEY_TRANSFER_MANA_DESC, "."); TODO transfer mana desc
         add(Spells.KEY_BLOW_ARROW, "Blow Arrow");
@@ -173,6 +183,7 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_PRESSURIZE_DESC, "Knock back every entity around you and remove any fluid.");
         add(Spells.KEY_INSTANT_MINE, "Instant Mine");
         add(Spells.KEY_INSTANT_MINE_DESC, "Breaks the block you are looking at using the tool in your hand.");
+        add(Spells.KEY_INSTANT_MINE_DESC_REQUIREMENT, "The tool to break the block with");
         add(Spells.KEY_SPIT_METAL, "Spit Metal");
         add(Spells.KEY_SPIT_METAL_DESC, "Spit a nugget that deals damage (from your hand).");
         add(Spells.KEY_FLAMETHROWER, "Flamethrower");

@@ -10,6 +10,40 @@
   "s4/tooltip": [
     {
       "translate": "spell.spells_and_shields.blow_arrow.desc"
+    },
+    {
+      "text": ""
+    },
+    {
+      "color": "blue",
+      "translate": "spell.generic.title.item_cost.hand"
+    },
+    {
+      "color": "yellow",
+      "translate": "spell.generic.item_cost.single",
+      "with": [
+        {
+          "translate": "item.minecraft.arrow"
+        }
+      ]
+    },
+    {
+      "color": "yellow",
+      "translate": "spell.generic.item_cost.single",
+      "with": [
+        {
+          "translate": "item.minecraft.tipped_arrow"
+        }
+      ]
+    },
+    {
+      "color": "yellow",
+      "translate": "spell.generic.item_cost.single",
+      "with": [
+        {
+          "translate": "item.minecraft.spectral_arrow"
+        }
+      ]
     }
   ],
   "s5/spell_events": [

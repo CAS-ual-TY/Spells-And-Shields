@@ -43,6 +43,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
@@ -72,6 +73,15 @@ public class SpellsGen implements DataProvider
     public static final ResourceLocation PERMANENT_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/permanent.png");
     public static final ResourceLocation TEMPORARY_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/temporary.png");
     public static final ResourceLocation TOGGLE_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/toggle.png");
+    
+    public static final String KEY_HAND_ITEM_REQUIREMENT_TITLE = "spell.generic.title.item_requirement.hand";
+    public static final String KEY_HAND_ITEM_COST_TITLE = "spell.generic.title.item_cost.hand";
+    public static final String KEY_MAINHAND_ITEM_COST_TITLE = "spell.generic.title.item_cost.mainhand";
+    public static final String KEY_OFFHAND_ITEM_COST_TITLE = "spell.generic.title.item_cost.offhand";
+    public static final String KEY_INVENTORY_ITEM_COST_TITLE = "spell.generic.title.item_cost.inventory";
+    public static final String KEY_ITEM_COST = "spell.generic.item_cost";
+    public static final String KEY_ITEM_COST_SINGLE = "spell.generic.item_cost.single";
+    public static final String KEY_ITEM_COST_TEXT = "spell.generic.item_cost.text";
     
     protected Map<ResourceLocation, Spell> spells;
     
@@ -467,6 +477,12 @@ public class SpellsGen implements DataProvider
                 .addAction(SpawnEntityAction.make("sheep", "baby", SpellsUtil.objectToString(EntityType.SHEEP, ForgeRegistries.ENTITY_TYPES), OWNER.targetGroup, Compiler.compileString(" -direction ", VEC3.get()), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(childTag)))
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_SUMMON_ANIMAL_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.BEEF, 8)))
+                .addTooltip(itemCostComponent(new ItemStack(Items.CHICKEN, 8)))
+                .addTooltip(itemCostComponent(new ItemStack(Items.PORKCHOP, 8)))
+                .addTooltip(itemCostComponent(new ItemStack(Items.MUTTON, 8)))
         );
         
         addSpell(Spells.FIRE_BALL, new Spell(modId, "fire_ball", Spells.KEY_FIRE_BALL, 5F)
@@ -488,6 +504,9 @@ public class SpellsGen implements DataProvider
                 .addAction(SpawnParticlesAction.make("fx", HIT_POSITION.targetGroup, ParticleTypes.FLAME, INT.get().immediate(2), DOUBLE.get().immediate(0.1)))
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_BALL_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.BLAZE_POWDER)))
         );
         
         CompoundTag blastRecipes = blastFurnaceRecipes();
@@ -507,6 +526,9 @@ public class SpellsGen implements DataProvider
                 .addParameter(COMPOUND_TAG.get(), "recipes", blastRecipes)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_BLAST_SMELT_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(textItemCostComponent(Component.translatable(Spells.KEY_BLAST_SMELT_DESC_COST), 1))
         );
         
         addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
@@ -555,6 +577,11 @@ public class SpellsGen implements DataProvider
                 .addAction(ConsumeItemAction.make("spectral", "item", INT.get().immediate(1)))
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_BLOW_ARROW_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.ARROW)))
+                .addTooltip(itemCostComponent(Items.TIPPED_ARROW))
+                .addTooltip(itemCostComponent(new ItemStack(Items.SPECTRAL_ARROW)))
         );
         
         addPermanentAttributeSpell(Spells.HEALTH_BOOST, Spells.KEY_HEALTH_BOOST, Spells.KEY_HEALTH_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/" + ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.HEALTH_BOOST).getPath() + ".png")), Attributes.MAX_HEALTH, AttributeModifier.Operation.ADDITION, 4D);
@@ -579,7 +606,9 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_WATER_LEAP_DESC))
         );
         
-        addSpell(Spells.AQUA_AFFINITY, new Spell(modId, "mana_soles", Spells.KEY_AQUA_AFFINITY, 0F)
+        ResourceLocation hasteRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.DIG_SPEED);
+        ResourceLocation waterBreathingRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.WATER_BREATHING);
+        addSpell(Spells.AQUA_AFFINITY, new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(hasteRL.getNamespace(), "textures/mob_effect/" + hasteRL.getPath() + ".png")), DefaultSpellIcon.make(new ResourceLocation(waterBreathingRL.getNamespace(), "textures/mob_effect/" + waterBreathingRL.getPath() + ".png")))), Spells.KEY_AQUA_AFFINITY, 0F)
                 .addAction(GetEntityEyePositionAction.make(PLAYER_BREAK_SPEED.activation, OWNER.targetGroup, "eye_pos"))
                 .addAction(GetBlockAction.make(PLAYER_BREAK_SPEED.activation, "eye_pos", "block_type", "", ""))
                 .addAction(BooleanActivationAction.make(PLAYER_BREAK_SPEED.activation, "boost", Compiler.compileString(" block_type == '" + ForgeRegistries.BLOCKS.getKey(Blocks.WATER) + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
@@ -638,6 +667,9 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make("do_refill", OWNER.targetGroup, SoundEvents.BUCKET_FILL, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_WATER_WHIP_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.WATER_BUCKET)))
         );
         
         //TODO fx, test
@@ -663,6 +695,9 @@ public class SpellsGen implements DataProvider
                 .addAction(ApplyPotionEffectAction.make("on_entity_hit", ENTITY_HIT.targetGroup, Compiler.compileString(" get_nbt_string(tag, 'Potion') ", STRING.get())))
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_POTION_SHOT_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(Items.POTION))
         );
         
         addToggleWalkerSpell(Spells.FROST_WALKER, Spells.KEY_FROST_WALKER, Spells.KEY_FROST_WALKER_DESC, "frost_walker", Blocks.WATER.defaultBlockState(), Blocks.FROSTED_ICE.defaultBlockState(), 5F, true);
@@ -703,6 +738,9 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_CHARGE_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.FIRE_CHARGE)))
         );
         
         addSpell(Spells.PRESSURIZE, new Spell(modId, "pressurize", Spells.KEY_PRESSURIZE, 4F)
@@ -727,6 +765,9 @@ public class SpellsGen implements DataProvider
                 .addParameter(DOUBLE.get(), "range", 4D)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_INSTANT_MINE_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_REQUIREMENT_TITLE))
+                .addTooltip(textItemCostComponent(Component.translatable(Spells.KEY_INSTANT_MINE_DESC_REQUIREMENT), 1))
         );
         
         //TODO fx
@@ -755,6 +796,10 @@ public class SpellsGen implements DataProvider
                 .addParameter(COMPOUND_TAG.get(), "item_damage_map", metalMap)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_SPIT_METAL_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.IRON_NUGGET)))
+                .addTooltip(itemCostComponent(new ItemStack(Items.GOLD_NUGGET)))
         );
         
         // TODO fx
@@ -782,6 +827,9 @@ public class SpellsGen implements DataProvider
                 .addParameter(DOUBLE.get(), "inaccuracy", 15D)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_FLAMETHROWER_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.BLAZE_POWDER)))
         );
         
         addToggleWalkerSpell(Spells.LAVA_WALKER, Spells.KEY_LAVA_WALKER, Spells.KEY_LAVA_WALKER_DESC, "lava_walker", Blocks.LAVA.defaultBlockState(), Blocks.OBSIDIAN.defaultBlockState(), 5F, true);
@@ -794,9 +842,10 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make("on_entity_hit", OWNER.targetGroup, SoundEvents.AMETHYST_CLUSTER_HIT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT.targetGroup, SoundEvents.AMETHYST_CLUSTER_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(SpawnParticlesAction.make("on_entity_hit", HIT_POSITION.targetGroup, ParticleTypes.POOF, INT.get().immediate(3), DOUBLE.get().immediate(0.2)))
-                .addParameter(DOUBLE.get(), "range", 20D)
                 .addEventHook(ACTIVE.activation)
+                .addParameter(DOUBLE.get(), "range", 20D)
                 .addParameter(INT.get(), "silence_seconds", 15)
+                .addTooltip(Component.translatable(Spells.KEY_SILENCE_TARGET_DESC))
         );
         
         addSpell(Spells.RANDOM_TELEPORT, new Spell(modId, "random_teleport", Spells.KEY_RANDOM_TELEPORT, 5F)
@@ -848,6 +897,9 @@ public class SpellsGen implements DataProvider
                 .addParameter(DOUBLE.get(), "range", 32D)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_RANDOM_TELEPORT_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.CHORUS_FRUIT)))
         );
         
         addSpell(Spells.FORCED_TELEPORT, new Spell(modId, "forced_teleport", Spells.KEY_FORCED_TELEPORT, 10F)
@@ -902,6 +954,9 @@ public class SpellsGen implements DataProvider
                 .addParameter(DOUBLE.get(), "target_range", 32D)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_FORCED_TELEPORT_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.CHORUS_FRUIT)))
         );
         
         addSpell(Spells.TELEPORT, new Spell(modId, "teleport", Spells.KEY_TELEPORT, 10F)
@@ -921,6 +976,9 @@ public class SpellsGen implements DataProvider
                 .addParameter(DOUBLE.get(), "range", 32D)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_TELEPORT_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.CHORUS_FRUIT)))
         );
         
         addSpell(Spells.LIGHTNING_STRIKE, new Spell(modId, "lightning_strike", Spells.KEY_LIGHTNING_STRIKE, 8F)
@@ -935,6 +993,9 @@ public class SpellsGen implements DataProvider
                 .addAction(SpawnEntityAction.make("on_hit", "", SpellsUtil.objectToString(EntityType.LIGHTNING_BOLT, ForgeRegistries.ENTITY_TYPES), "position", VEC3.get().immediate(Vec3.ZERO), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(new CompoundTag())))
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_LIGHTNING_STRIKE_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.COPPER_INGOT)))
         );
         
         addSpell(Spells.DRAIN_FLAME, new Spell(modId, "drain_flame", Spells.KEY_DRAIN_FLAME, 0F)
@@ -973,6 +1034,9 @@ public class SpellsGen implements DataProvider
                 .addParameter(INT.get(), "duration", 20)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_GROWTH_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.BONE_MEAL)))
         );
         
         addSpell(Spells.GHAST, new Spell(AdvancedSpellIcon.make(new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32), Spells.KEY_GHAST, 4F)
@@ -991,6 +1055,9 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make("shoot", HOLDER.targetGroup, SoundEvents.GHAST_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_GHAST_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.FIRE_CHARGE)))
         );
         
         addSpell(Spells.ENDER_ARMY, new Spell(modId, "ender_army", Spells.KEY_ENDER_ARMY, 20F)
@@ -1016,6 +1083,9 @@ public class SpellsGen implements DataProvider
                 .addParameter(DOUBLE.get(), "enderman_range", 40D)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_ENDER_ARMY_DESC))
+                .addTooltip(Component.empty())
+                .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
+                .addTooltip(itemCostComponent(new ItemStack(Items.DRAGON_HEAD)))
         );
         
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);
@@ -1099,6 +1169,45 @@ public class SpellsGen implements DataProvider
     public String getName()
     {
         return "Spells & Shields Spells Files";
+    }
+    
+    public static Component itemCostTitle(String key)
+    {
+        return Component.translatable(key).withStyle(ChatFormatting.BLUE);
+    }
+    
+    public static Component itemCostComponent(Item item)
+    {
+        return itemCostComponent(item, 1);
+    }
+    
+    public static Component itemCostComponent(Item item, int count)
+    {
+        if(count == 1)
+        {
+            return Component.translatable(KEY_ITEM_COST_SINGLE, Component.translatable(item.getDescriptionId())).withStyle(ChatFormatting.YELLOW);
+        }
+        else
+        {
+            return Component.translatable(KEY_ITEM_COST, count, Component.translatable(item.getDescriptionId())).withStyle(ChatFormatting.YELLOW);
+        }
+    }
+    
+    public static Component itemCostComponent(ItemStack itemStack)
+    {
+        if(itemStack.getCount() == 1)
+        {
+            return Component.translatable(KEY_ITEM_COST_SINGLE, itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW);
+        }
+        else
+        {
+            return Component.translatable(KEY_ITEM_COST, itemStack.getCount(), itemStack.getHoverName()).withStyle(ChatFormatting.YELLOW);
+        }
+    }
+    
+    public static Component textItemCostComponent(Component translatable, int count)
+    {
+        return Component.translatable(KEY_ITEM_COST_TEXT, translatable).withStyle(ChatFormatting.YELLOW);
     }
     
     // yes this is stupid but I do not know how to access these without a level

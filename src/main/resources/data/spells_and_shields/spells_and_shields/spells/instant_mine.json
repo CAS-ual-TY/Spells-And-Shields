@@ -10,6 +10,22 @@
   "s4/tooltip": [
     {
       "translate": "spell.spells_and_shields.instant_mine.desc"
+    },
+    {
+      "text": ""
+    },
+    {
+      "color": "blue",
+      "translate": "spell.generic.title.item_requirement.hand"
+    },
+    {
+      "color": "yellow",
+      "translate": "spell.generic.item_cost.text",
+      "with": [
+        {
+          "translate": "spell.spells_and_shields.instant_mine.desc.requirement"
+        }
+      ]
     }
   ],
   "s5/spell_events": [

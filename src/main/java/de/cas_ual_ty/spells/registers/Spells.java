@@ -45,6 +45,7 @@ public class Spells
     public static final ResourceLocation BLAST_SMELT = rl("blast_smelt");
     public static final String KEY_BLAST_SMELT = key(BLAST_SMELT);
     public static final String KEY_BLAST_SMELT_DESC = descKey(BLAST_SMELT);
+    public static final String KEY_BLAST_SMELT_DESC_COST = descKey(BLAST_SMELT) + ".cost";
     
     public static final ResourceLocation TRANSFER_MANA = rl("transfer_mana");
     public static final String KEY_TRANSFER_MANA = key(TRANSFER_MANA);
@@ -102,6 +103,7 @@ public class Spells
     public static final ResourceLocation INSTANT_MINE = rl("instant_mine");
     public static final String KEY_INSTANT_MINE = key(INSTANT_MINE);
     public static final String KEY_INSTANT_MINE_DESC = descKey(INSTANT_MINE);
+    public static final String KEY_INSTANT_MINE_DESC_REQUIREMENT = descKey(INSTANT_MINE) + ".requirement";
     
     public static final ResourceLocation SPIT_METAL = rl("spit_metal");
     public static final String KEY_SPIT_METAL = key(SPIT_METAL);
