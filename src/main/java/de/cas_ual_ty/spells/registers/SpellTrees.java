@@ -70,83 +70,79 @@ public class SpellTrees
     
     public static SpellTree fireTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_NETHER))
                 .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/fire_resistance.png")))
-                .add(nodeId++, spellGetter.apply(Spells.FIRE_BALL)).levelCost(15).learnRequirements(bookshelves(28))
-                .add(nodeId++, spellGetter.apply(Spells.LAVA_WALKER)).levelCost(20).learnRequirements(bookshelves(19))
-                .add(nodeId++, spellGetter.apply(Spells.TOGGLE_FIRE_RESISTANCE)).levelCost(30).learnRequirements(bookshelves(30))
+                .add(spellGetter.apply(Spells.FIRE_BALL)).levelCost(15).learnRequirements(bookshelves(28))
+                .add(spellGetter.apply(Spells.LAVA_WALKER)).levelCost(20).learnRequirements(bookshelves(19))
+                .add(spellGetter.apply(Spells.TOGGLE_FIRE_RESISTANCE)).levelCost(30).learnRequirements(bookshelves(30))
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.DRAIN_FLAME)).levelCost(20).learnRequirements(bookshelves(20))
+                .add(spellGetter.apply(Spells.DRAIN_FLAME)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.GHAST)).levelCost(10).learnRequirements(bookshelves(20), item(Items.GHAST_TEAR, 1, true))
-                .add(nodeId++, spellGetter.apply(Spells.FLAMETHROWER)).levelCost(20).learnRequirements(bookshelves(24))
+                .add(spellGetter.apply(Spells.GHAST)).levelCost(10).learnRequirements(bookshelves(20), item(Items.GHAST_TEAR, 1, true))
+                .add(spellGetter.apply(Spells.FLAMETHROWER)).levelCost(20).learnRequirements(bookshelves(24))
                 .finish();
     }
     
     public static SpellTree waterTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_OCEAN))
                 .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/dolphins_grace.png")))
-                .add(nodeId++, spellGetter.apply(Spells.TOGGLE_WATER_BREATHING)).levelCost(10)
-                .add(nodeId++, spellGetter.apply(Spells.TOGGLE_REGENERATION)).levelCost(20).learnRequirements(bookshelves(20))
-                .add(nodeId++, spellGetter.apply(Spells.GROWTH)).levelCost(20).learnRequirements(bookshelves(20))
+                .add(spellGetter.apply(Spells.TOGGLE_WATER_BREATHING)).levelCost(10)
+                .add(spellGetter.apply(Spells.TOGGLE_REGENERATION)).levelCost(20).learnRequirements(bookshelves(20))
+                .add(spellGetter.apply(Spells.GROWTH)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.AQUA_AFFINITY)).levelCost(20).learnRequirements(bookshelves(20))
-                .leaf()
-                .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.WATER_LEAP)).levelCost(5).learnRequirements(bookshelves(10))
-                .add(nodeId++, spellGetter.apply(Spells.TOGGLE_DOLPHINS_GRACE)).levelCost(30).learnRequirements(bookshelves(30))
-                .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.FROST_WALKER)).levelCost(10).learnRequirements(bookshelves(14))
+                .add(spellGetter.apply(Spells.AQUA_AFFINITY)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.WATER_WHIP)).levelCost(10).learnRequirements(bookshelves(10))
-                .add(nodeId++, spellGetter.apply(Spells.POTION_SHOT)).levelCost(10).learnRequirements(bookshelves(10))
+                .add(spellGetter.apply(Spells.WATER_LEAP)).levelCost(5).learnRequirements(bookshelves(10))
+                .add(spellGetter.apply(Spells.TOGGLE_DOLPHINS_GRACE)).levelCost(30).learnRequirements(bookshelves(30))
+                .leaf()
+                .add(spellGetter.apply(Spells.FROST_WALKER)).levelCost(10).learnRequirements(bookshelves(14))
                 .leaf()
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.LIGHTNING_STRIKE)).levelCost(25).learnRequirements(bookshelves(24), advancement("adventure/lightning_rod_with_villager_no_fire"))
+                .add(spellGetter.apply(Spells.WATER_WHIP)).levelCost(10).learnRequirements(bookshelves(10))
+                .add(spellGetter.apply(Spells.POTION_SHOT)).levelCost(10).learnRequirements(bookshelves(10))
+                .leaf()
+                .leaf()
+                .add(spellGetter.apply(Spells.LIGHTNING_STRIKE)).levelCost(25).learnRequirements(bookshelves(24), advancement("adventure/lightning_rod_with_villager_no_fire"))
                 .leaf()
                 .finish();
     }
     
     public static SpellTree earthTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_MINING))
                 .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/haste.png")))
-                .add(nodeId++, spellGetter.apply(Spells.BLAST_SMELT)).levelCost(5).learnRequirements(bookshelves(8))
-                .add(nodeId++, spellGetter.apply(Spells.SILENCE_TARGET)).levelCost(25).learnRequirements(bookshelves(26))
-                .add(nodeId++, spellGetter.apply(Spells.TOGGLE_MAGIC_IMMUNE)).levelCost(25).learnRequirements(bookshelves(26))
+                .add(spellGetter.apply(Spells.BLAST_SMELT)).levelCost(5).learnRequirements(bookshelves(8))
+                .add(spellGetter.apply(Spells.SILENCE_TARGET)).levelCost(25).learnRequirements(bookshelves(26))
+                .add(spellGetter.apply(Spells.TOGGLE_MAGIC_IMMUNE)).levelCost(25).learnRequirements(bookshelves(26))
                 .leaf()
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.INSTANT_MINE)).levelCost(15).learnRequirements(bookshelves(18))
-                .add(nodeId++, spellGetter.apply(Spells.TOGGLE_HASTE)).levelCost(25).learnRequirements(bookshelves(24))
+                .add(spellGetter.apply(Spells.INSTANT_MINE)).levelCost(15).learnRequirements(bookshelves(18))
+                .add(spellGetter.apply(Spells.TOGGLE_HASTE)).levelCost(25).learnRequirements(bookshelves(24))
                 .leaf()
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.SPIT_METAL)).levelCost(10).learnRequirements(bookshelves(12))
+                .add(spellGetter.apply(Spells.SPIT_METAL)).levelCost(10).learnRequirements(bookshelves(12))
                 .finish();
     }
     
     public static SpellTree airTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_MOVEMENT))
                 .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/jump_boost.png")))
-                .add(nodeId++, spellGetter.apply(Spells.TOGGLE_JUMP_BOOST)).levelCost(15).learnRequirements(bookshelves(12))
-                .add(nodeId++, spellGetter.apply(Spells.LEAP)).levelCost(10).learnRequirements(bookshelves(14))
-                .add(nodeId++, spellGetter.apply(Spells.TOGGLE_SPEED)).levelCost(20).learnRequirements(bookshelves(20))
+                .add(spellGetter.apply(Spells.TOGGLE_JUMP_BOOST)).levelCost(15).learnRequirements(bookshelves(12))
+                .add(spellGetter.apply(Spells.LEAP)).levelCost(10).learnRequirements(bookshelves(14))
+                .add(spellGetter.apply(Spells.TOGGLE_SPEED)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.JUMP)).levelCost(14).learnRequirements(bookshelves(14))
+                .add(spellGetter.apply(Spells.JUMP)).levelCost(14).learnRequirements(bookshelves(14))
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.MANA_SOLES)).levelCost(15).learnRequirements(bookshelves(12))
-                .add(nodeId++, spellGetter.apply(Spells.TOGGLE_SLOW_FALLING)).levelCost(15).learnRequirements(bookshelves(16))
+                .add(spellGetter.apply(Spells.MANA_SOLES)).levelCost(15).learnRequirements(bookshelves(12))
+                .add(spellGetter.apply(Spells.TOGGLE_SLOW_FALLING)).levelCost(15).learnRequirements(bookshelves(16))
                 .leaf()
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.BLOW_ARROW)).levelCost(10).learnRequirements(bookshelves(16))
-                .add(nodeId++, spellGetter.apply(Spells.PRESSURIZE)).levelCost(20).learnRequirements(bookshelves(18))
+                .add(spellGetter.apply(Spells.BLOW_ARROW)).levelCost(10).learnRequirements(bookshelves(16))
+                .add(spellGetter.apply(Spells.PRESSURIZE)).levelCost(20).learnRequirements(bookshelves(18))
                 .leaf()
                 .leaf()
                 .finish();
@@ -154,14 +150,13 @@ public class SpellTrees
     
     public static SpellTree enderTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
-        int nodeId = 100;
         return SpellTree.builder(Component.translatable(KEY_END))
                 .icon(DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/teleport.png")))
-                .add(nodeId++, spellGetter.apply(Spells.RANDOM_TELEPORT)).levelCost(20).learnRequirements(bookshelves(28)).hiddenRequirements(advancement("end/root"))
-                .add(nodeId++, spellGetter.apply(Spells.FORCED_TELEPORT)).levelCost(30).learnRequirements(bookshelves(28))
+                .add(spellGetter.apply(Spells.RANDOM_TELEPORT)).levelCost(20).learnRequirements(bookshelves(28)).hiddenRequirements(advancement("end/root"))
+                .add(spellGetter.apply(Spells.FORCED_TELEPORT)).levelCost(30).learnRequirements(bookshelves(28))
                 .leaf()
-                .add(nodeId++, spellGetter.apply(Spells.TELEPORT)).levelCost(30).learnRequirements(bookshelves(28), advancement("end/respawn_dragon"))
-                .add(nodeId++, spellGetter.apply(Spells.ENDER_ARMY)).levelCost(50).learnRequirements(bookshelves(30), item(Items.DRAGON_EGG, 1, false))
+                .add(spellGetter.apply(Spells.TELEPORT)).levelCost(30).learnRequirements(bookshelves(28), advancement("end/respawn_dragon"))
+                .add(spellGetter.apply(Spells.ENDER_ARMY)).levelCost(50).learnRequirements(bookshelves(30), item(Items.DRAGON_EGG, 1, false))
                 .finish();
     }
     

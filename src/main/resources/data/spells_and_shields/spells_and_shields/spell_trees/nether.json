@@ -8,7 +8,7 @@
   },
   "t3/root_node": {
     "n1/spell_id": "spells_and_shields:fire_ball",
-    "n2/node_id": 100,
+    "n2/node_id": 1,
     "n4/level_cost": 15,
     "n6/learn_requirements": [
       {
@@ -20,7 +20,7 @@
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:lava_walker",
-        "n2/node_id": 101,
+        "n2/node_id": 16,
         "n4/level_cost": 20,
         "n6/learn_requirements": [
           {
@@ -32,7 +32,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_fire_resistance",
-            "n2/node_id": 102,
+            "n2/node_id": 256,
             "n4/level_cost": 30,
             "n6/learn_requirements": [
               {
@@ -45,7 +45,7 @@
           },
           {
             "n1/spell_id": "spells_and_shields:drain_flame",
-            "n2/node_id": 103,
+            "n2/node_id": 257,
             "n4/level_cost": 20,
             "n6/learn_requirements": [
               {
@@ -60,7 +60,7 @@
       },
       {
         "n1/spell_id": "spells_and_shields:ghast",
-        "n2/node_id": 104,
+        "n2/node_id": 17,
         "n4/level_cost": 10,
         "n6/learn_requirements": [
           {
@@ -80,7 +80,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:flamethrower",
-            "n2/node_id": 105,
+            "n2/node_id": 272,
             "n4/level_cost": 20,
             "n6/learn_requirements": [
               {

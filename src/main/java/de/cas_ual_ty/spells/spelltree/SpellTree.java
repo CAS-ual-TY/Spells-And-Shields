@@ -124,7 +124,19 @@ public class SpellTree
         setId(spellTreeId);
         
         AtomicInteger i = new AtomicInteger(0);
-        forEach(spellNode -> spellNode.setNodeId(spellTreeId, i.getAndIncrement()));
+        
+        forEach(spellNode ->
+        {
+            if(spellNode.getNodeId() != null)
+            {
+                i.set(Math.max(spellNode.getNodeId().nodeId(), i.get()));
+            }
+        });
+        
+        forEach(spellNode ->
+        {
+            spellNode.setNodeId(spellTreeId, i.getAndIncrement());
+        });
     }
     
     @Nullable
@@ -231,10 +243,27 @@ public class SpellTree
         {
             if(!stack.isEmpty())
             {
-                connect(stack.peek(), spellNode);
+                SpellNode parent = stack.peek();
+                
+                if(spellNode.getNodeId() == null)
+                {
+                    if(parent.getChildren().size() > 15)
+                    {
+                        throw new IllegalArgumentException();
+                    }
+                    
+                    spellNode.setNodeId(null, parent.getNodeId().nodeId() * 0x10 + parent.getChildren().size());
+                }
+                
+                connect(parent, spellNode);
             }
             else
             {
+                if(spellNode.getNodeId() == null)
+                {
+                    spellNode.setNodeId(null, 0x1);
+                }
+                
                 root = spellNode;
             }
             stack.push(spellNode);
