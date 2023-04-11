@@ -1,20 +1,28 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.potion_shot"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/potion_shot.png"
   },
-  "mana_cost": 5.0,
-  "parameters": [
+  "s3/mana_cost": 5.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.potion_shot.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 10.0,
       "var/name": "damage"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active"
@@ -141,14 +149,6 @@
       "activation": "on_entity_hit",
       "d/string/potion": "<< get_nbt_string(tag, 'Potion') >>",
       "ts/targets": "entity_hit"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.potion_shot"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.potion_shot.desc"
     }
   ]
 }

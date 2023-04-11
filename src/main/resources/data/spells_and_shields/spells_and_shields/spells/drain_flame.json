@@ -1,13 +1,21 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.drain_flame"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/drain_flame.png"
   },
-  "mana_cost": 0.0,
-  "parameters": [
+  "s3/mana_cost": 0.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.drain_flame.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 50.0,
@@ -24,7 +32,7 @@
       "var/name": "radius"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:look_at_target",
       "a/block_hit_activation": "on_block_hit",
@@ -140,14 +148,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:block.fire.ambient",
       "ts/targets": "entity_hit"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.drain_flame"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.drain_flame.desc"
     }
   ]
 }

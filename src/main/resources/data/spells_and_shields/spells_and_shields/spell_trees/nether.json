@@ -1,78 +1,68 @@
 {
-  "icon": {
+  "t1/title": {
+    "translate": "spell_tree.spells_and_shields.nether"
+  },
+  "t2/icon": {
     "type": "spells_and_shields:default",
     "texture": "minecraft:textures/mob_effect/fire_resistance.png"
   },
-  "root": {
-    "children": [
+  "t3/root_node": {
+    "n1/spell_id": "spells_and_shields:fire_ball",
+    "n2/node_id": 100,
+    "n4/level_cost": 15,
+    "n6/learn_requirements": [
       {
-        "children": [
-          {
-            "children": [],
-            "frame": 0,
-            "hidden_requirements": [],
-            "id": 102,
-            "learn_requirements": [
-              {
-                "type": "spells_and_shields:bookshelves",
-                "bookshelves": 30
-              }
-            ],
-            "level_cost": 30,
-            "parameters": [],
-            "spell": "spells_and_shields:toggle_fire_resistance"
-          },
-          {
-            "children": [],
-            "frame": 0,
-            "hidden_requirements": [],
-            "id": 103,
-            "learn_requirements": [
-              {
-                "type": "spells_and_shields:bookshelves",
-                "bookshelves": 20
-              }
-            ],
-            "level_cost": 20,
-            "parameters": [],
-            "spell": "spells_and_shields:drain_flame"
-          }
-        ],
-        "frame": 0,
-        "hidden_requirements": [],
-        "id": 101,
-        "learn_requirements": [
+        "type": "spells_and_shields:bookshelves",
+        "bookshelves": 28
+      }
+    ],
+    "n8/spell_parameters": [],
+    "n9/child_nodes": [
+      {
+        "n1/spell_id": "spells_and_shields:lava_walker",
+        "n2/node_id": 101,
+        "n4/level_cost": 20,
+        "n6/learn_requirements": [
           {
             "type": "spells_and_shields:bookshelves",
             "bookshelves": 19
           }
         ],
-        "level_cost": 20,
-        "parameters": [],
-        "spell": "spells_and_shields:lava_walker"
-      },
-      {
-        "children": [
+        "n8/spell_parameters": [],
+        "n9/child_nodes": [
           {
-            "children": [],
-            "frame": 0,
-            "hidden_requirements": [],
-            "id": 105,
-            "learn_requirements": [
+            "n1/spell_id": "spells_and_shields:toggle_fire_resistance",
+            "n2/node_id": 102,
+            "n4/level_cost": 30,
+            "n6/learn_requirements": [
               {
                 "type": "spells_and_shields:bookshelves",
-                "bookshelves": 24
+                "bookshelves": 30
               }
             ],
-            "level_cost": 20,
-            "parameters": [],
-            "spell": "spells_and_shields:flamethrower"
+            "n8/spell_parameters": [],
+            "n9/child_nodes": []
+          },
+          {
+            "n1/spell_id": "spells_and_shields:drain_flame",
+            "n2/node_id": 103,
+            "n4/level_cost": 20,
+            "n6/learn_requirements": [
+              {
+                "type": "spells_and_shields:bookshelves",
+                "bookshelves": 20
+              }
+            ],
+            "n8/spell_parameters": [],
+            "n9/child_nodes": []
           }
-        ],
-        "frame": 0,
-        "hidden_requirements": [],
-        "id": 104,
-        "learn_requirements": [
+        ]
+      },
+      {
+        "n1/spell_id": "spells_and_shields:ghast",
+        "n2/node_id": 104,
+        "n4/level_cost": 10,
+        "n6/learn_requirements": [
           {
             "type": "spells_and_shields:bookshelves",
             "bookshelves": 20
@@ -86,25 +76,23 @@
             }
           }
         ],
-        "level_cost": 10,
-        "parameters": [],
-        "spell": "spells_and_shields:ghast"
+        "n8/spell_parameters": [],
+        "n9/child_nodes": [
+          {
+            "n1/spell_id": "spells_and_shields:flamethrower",
+            "n2/node_id": 105,
+            "n4/level_cost": 20,
+            "n6/learn_requirements": [
+              {
+                "type": "spells_and_shields:bookshelves",
+                "bookshelves": 24
+              }
+            ],
+            "n8/spell_parameters": [],
+            "n9/child_nodes": []
+          }
+        ]
       }
-    ],
-    "frame": 0,
-    "hidden_requirements": [],
-    "id": 100,
-    "learn_requirements": [
-      {
-        "type": "spells_and_shields:bookshelves",
-        "bookshelves": 28
-      }
-    ],
-    "level_cost": 15,
-    "parameters": [],
-    "spell": "spells_and_shields:fire_ball"
-  },
-  "title": {
-    "translate": "spell_tree.spells_and_shields.nether"
+    ]
   }
 }

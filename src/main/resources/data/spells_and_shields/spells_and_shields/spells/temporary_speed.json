@@ -1,8 +1,13 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.temporary_speed",
+    "with": [
+      {
+        "translate": "effect.minecraft.speed"
+      }
+    ]
+  },
+  "s2/icon": {
     "type": "spells_and_shields:layered",
     "icons_list": [
       {
@@ -15,8 +20,39 @@
       }
     ]
   },
-  "mana_cost": 13.0,
-  "parameters": [
+  "s3/mana_cost": 13.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.temporary_speed.desc",
+      "with": [
+        {
+          "color": "blue",
+          "translate": "effect.minecraft.speed"
+        }
+      ]
+    },
+    {
+      "text": ""
+    },
+    {
+      "color": "dark_purple",
+      "translate": "potion.whenDrank"
+    },
+    {
+      "color": "blue",
+      "translate": "attribute.modifier.plus.2",
+      "with": [
+        "20",
+        {
+          "translate": "effect.minecraft.speed"
+        }
+      ]
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:string",
       "value": "minecraft:speed",
@@ -48,7 +84,7 @@
       "var/name": "show_icon"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:mana_check",
       "activation": "active",
@@ -81,42 +117,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.splash_potion.break",
       "ts/targets": "owner"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.temporary_speed",
-    "with": [
-      {
-        "translate": "effect.minecraft.speed"
-      }
-    ]
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.temporary_speed.desc",
-      "with": [
-        {
-          "color": "blue",
-          "translate": "effect.minecraft.speed"
-        }
-      ]
-    },
-    {
-      "text": ""
-    },
-    {
-      "color": "dark_purple",
-      "translate": "potion.whenDrank"
-    },
-    {
-      "color": "blue",
-      "translate": "attribute.modifier.plus.2",
-      "with": [
-        "20",
-        {
-          "translate": "effect.minecraft.speed"
-        }
-      ]
     }
   ]
 }

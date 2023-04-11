@@ -1,20 +1,28 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.teleport"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/teleport.png"
   },
-  "mana_cost": 10.0,
-  "parameters": [
+  "s3/mana_cost": 10.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.teleport.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 32.0,
       "var/name": "range"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:player_has_items",
       "activation": "active",
@@ -110,14 +118,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.enderman.teleport",
       "ts/targets": "owner"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.teleport"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.teleport.desc"
     }
   ]
 }

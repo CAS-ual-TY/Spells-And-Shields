@@ -1,13 +1,21 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.pressurize"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/pressurize.png"
   },
-  "mana_cost": 4.0,
-  "parameters": [
+  "s3/mana_cost": 4.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.pressurize.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 6.0,
@@ -19,7 +27,7 @@
       "var/name": "knockback_strength"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active"
@@ -55,14 +63,6 @@
         "type": "minecraft:poof"
       },
       "ts/targets": "targets"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.pressurize"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.pressurize.desc"
     }
   ]
 }

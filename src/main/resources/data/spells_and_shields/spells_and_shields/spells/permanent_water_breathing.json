@@ -1,9 +1,13 @@
 {
-  "events": [
-    "on_equip",
-    "on_unequip"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.permanent_water_breathing",
+    "with": [
+      {
+        "translate": "effect.minecraft.water_breathing"
+      }
+    ]
+  },
+  "s2/icon": {
     "type": "spells_and_shields:layered",
     "icons_list": [
       {
@@ -16,8 +20,23 @@
       }
     ]
   },
-  "mana_cost": 0.0,
-  "parameters": [
+  "s3/mana_cost": 0.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.permanent_water_breathing.desc",
+      "with": [
+        {
+          "color": "blue",
+          "translate": "effect.minecraft.water_breathing"
+        }
+      ]
+    }
+  ],
+  "s5/spell_events": [
+    "on_equip",
+    "on_unequip"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:string",
       "value": "minecraft:water_breathing",
@@ -49,7 +68,7 @@
       "var/name": "show_icon"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "on_equip",
@@ -127,25 +146,6 @@
       "d/int/tick_time": "<<duration>>",
       "d/string/uuid": "<<uuid>>",
       "ts/targets": "player"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.permanent_water_breathing",
-    "with": [
-      {
-        "translate": "effect.minecraft.water_breathing"
-      }
-    ]
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.permanent_water_breathing.desc",
-      "with": [
-        {
-          "color": "blue",
-          "translate": "effect.minecraft.water_breathing"
-        }
-      ]
     }
   ]
 }

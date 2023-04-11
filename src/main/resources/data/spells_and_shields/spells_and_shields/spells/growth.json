@@ -1,13 +1,21 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.growth"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/growth.png"
   },
-  "mana_cost": 4.0,
-  "parameters": [
+  "s3/mana_cost": 4.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.growth.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:int",
       "value": 3,
@@ -19,7 +27,7 @@
       "var/name": "duration"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:has_mana",
       "activation": "active",
@@ -87,14 +95,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:item.bone_meal.use",
       "ts/targets": "owner"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.growth"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.growth.desc"
     }
   ]
 }

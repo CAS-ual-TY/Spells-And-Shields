@@ -1,14 +1,22 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.blow_arrow"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/blow_arrow.png"
   },
-  "mana_cost": 5.0,
-  "parameters": [],
-  "spell_actions": [
+  "s3/mana_cost": 5.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.blow_arrow.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [],
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active"
@@ -169,14 +177,6 @@
       "activation": "spectral",
       "d/int/amount": 1,
       "ts/targets": "item"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.blow_arrow"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.blow_arrow.desc"
     }
   ]
 }

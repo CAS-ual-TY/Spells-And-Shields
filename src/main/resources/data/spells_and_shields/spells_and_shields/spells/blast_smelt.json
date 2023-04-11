@@ -1,13 +1,21 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.blast_smelt"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/blast_smelt.png"
   },
-  "mana_cost": 4.0,
-  "parameters": [
+  "s3/mana_cost": 4.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.blast_smelt.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:tag",
       "value": {
@@ -61,7 +69,7 @@
       "var/name": "recipes"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:has_mana",
       "activation": "active",
@@ -140,14 +148,6 @@
       "d/int/damage": 0,
       "item": "<< get_nbt_string(recipes, item_id) >>",
       "ts/targets": "owner"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.blast_smelt"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.blast_smelt.desc"
     }
   ]
 }

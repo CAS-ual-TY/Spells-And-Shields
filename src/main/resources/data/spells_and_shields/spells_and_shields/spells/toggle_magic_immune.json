@@ -1,9 +1,13 @@
 {
-  "events": [
-    "active",
-    "on_unequip"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.toggle_magic_immune",
+    "with": [
+      {
+        "translate": "effect.spells_and_shields.magic_immune"
+      }
+    ]
+  },
+  "s2/icon": {
     "type": "spells_and_shields:layered",
     "icons_list": [
       {
@@ -16,8 +20,23 @@
       }
     ]
   },
-  "mana_cost": 4.0,
-  "parameters": [
+  "s3/mana_cost": 4.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.toggle_magic_immune.desc",
+      "with": [
+        {
+          "color": "blue",
+          "translate": "effect.spells_and_shields.magic_immune"
+        }
+      ]
+    }
+  ],
+  "s5/spell_events": [
+    "active",
+    "on_unequip"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:string",
       "value": "spells_and_shields:magic_immune",
@@ -49,7 +68,7 @@
       "var/name": "show_icon"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "active",
@@ -185,25 +204,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.generic.drink",
       "ts/targets": "player"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.toggle_magic_immune",
-    "with": [
-      {
-        "translate": "effect.spells_and_shields.magic_immune"
-      }
-    ]
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.toggle_magic_immune.desc",
-      "with": [
-        {
-          "color": "blue",
-          "translate": "effect.spells_and_shields.magic_immune"
-        }
-      ]
     }
   ]
 }

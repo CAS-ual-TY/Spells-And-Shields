@@ -29,6 +29,7 @@ import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.ExtraCodecs;
 
+import java.util.LinkedList;
 import java.util.Optional;
 
 public class SpellsCodecs
@@ -71,31 +72,31 @@ public class SpellsCodecs
         SPELL_ICON = ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON_TYPE.dispatch("type", SpellIcon::getType, SpellIconType::getCodec));
         
         SPELL_NODE = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.lazyInitializedCodec(() -> SPELL).fieldOf("spell").forGetter(node -> node.getSpellInstance().getSpell()),
-                Codec.optionalField("mana_cost", Codec.FLOAT).forGetter(node -> Optional.of(node.getSpellInstance()).map(SpellInstance::getManaCost).map(mana -> mana >= 0 ? mana : null)),
-                ExtraCodecs.lazyInitializedCodec(() -> CTX_VAR).listOf().fieldOf("parameters").forGetter(node -> node.getSpellInstance().getParameters()),
-                Codec.INT.fieldOf("level_cost").forGetter(SpellNode::getLevelCost),
-                REQUIREMENT.listOf().fieldOf("hidden_requirements").forGetter(SpellNode::getHiddenRequirements),
-                REQUIREMENT.listOf().fieldOf("learn_requirements").forGetter(SpellNode::getLearnRequirements),
-                ExtraCodecs.lazyInitializedCodec(() -> SPELL_NODE).listOf().fieldOf("children").forGetter(SpellNode::getChildren),
-                Codec.optionalField("id", Codec.INT).forGetter(node -> Optional.ofNullable(node.getNodeId()).map(SpellNodeId::nodeId)),
-                Codec.optionalField("frame", Codec.intRange(0, 2)).forGetter(node -> Optional.of(node.getFrame()))
-        ).apply(instance, (spell, manaCost, variables, levelCost, hiddenRequirements, learnRequirements, children, id, frame) -> new SpellNode(id.map(i -> new SpellNodeId(null, i)).orElse(null), new SpellInstance(spell, manaCost.orElse(-1F), variables), levelCost, hiddenRequirements, learnRequirements, children, frame.orElse(0)))));
+                ExtraCodecs.lazyInitializedCodec(() -> SPELL).fieldOf("n1/spell_id").forGetter(node -> node.getSpellInstance().getSpell()),
+                Codec.optionalField("n7/mana_cost", Codec.FLOAT).forGetter(node -> Optional.of(node.getSpellInstance()).map(SpellInstance::getManaCost).map(mana -> mana >= 0 ? mana : null)),
+                Codec.optionalField("n8/spell_parameters", ExtraCodecs.lazyInitializedCodec(() -> CTX_VAR).listOf()).forGetter(node -> Optional.of(node).map(n -> n.getSpellInstance().getParameters())),
+                Codec.INT.fieldOf("n4/level_cost").forGetter(SpellNode::getLevelCost),
+                Codec.optionalField("n5/hidden_requirements", REQUIREMENT.listOf()).forGetter(node -> Optional.of(node.getHiddenRequirements()).map(l -> l.isEmpty() ? null : l)),
+                Codec.optionalField("n6/learn_requirements", REQUIREMENT.listOf()).forGetter(node -> Optional.of(node.getLearnRequirements()).map(l -> l.isEmpty() ? null : l)),
+                ExtraCodecs.lazyInitializedCodec(() -> SPELL_NODE).listOf().fieldOf("n9/child_nodes").forGetter(SpellNode::getChildren),
+                Codec.optionalField("n2/node_id", Codec.INT).forGetter(node -> Optional.ofNullable(node.getNodeId()).map(SpellNodeId::nodeId)),
+                Codec.optionalField("n3/node_frame", Codec.intRange(0, 2)).forGetter(node -> Optional.of(node.getFrame()).map(f -> f == 0 ? null : f))
+        ).apply(instance, (spell, manaCost, variables, levelCost, hiddenRequirements, learnRequirements, children, id, frame) -> new SpellNode(id.map(i -> new SpellNodeId(null, i)).orElse(null), new SpellInstance(spell, manaCost.orElse(-1F), variables.orElse(new LinkedList<>())), levelCost, hiddenRequirements.orElse(new LinkedList<>()), learnRequirements.orElse(new LinkedList<>()), children, frame.orElse(0)))));
         
         SPELL_TREE_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
-                SPELL_NODE.fieldOf("root").forGetter(SpellTree::getRoot),
-                COMPONENT.fieldOf("title").forGetter(SpellTree::getTitle),
-                SPELL_ICON.fieldOf("icon").forGetter(SpellTree::getIcon)
+                SPELL_NODE.fieldOf("t3/root_node").forGetter(SpellTree::getRoot),
+                COMPONENT.fieldOf("t1/title").forGetter(SpellTree::getTitle),
+                SPELL_ICON.fieldOf("t2/icon").forGetter(SpellTree::getIcon)
         ).apply(instance, SpellTree::new)));
         
         SPELL_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.lazyInitializedCodec(() -> SPELL_ACTION).listOf().fieldOf("spell_actions").forGetter(Spell::getSpellActions),
-                ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("icon").forGetter(Spell::getIcon),
-                COMPONENT.fieldOf("title").forGetter(Spell::getTitle),
-                COMPONENT.listOf().fieldOf("tooltip").forGetter(Spell::getTooltip),
-                Codec.FLOAT.fieldOf("mana_cost").forGetter(Spell::getManaCost),
-                CTX_VAR.listOf().fieldOf("parameters").forGetter(Spell::getParameters),
-                Codec.STRING.listOf().fieldOf("events").forGetter(Spell::getEventsList)
+                ExtraCodecs.lazyInitializedCodec(() -> SPELL_ACTION).listOf().fieldOf("s7/spell_actions").forGetter(Spell::getSpellActions),
+                ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("s2/icon").forGetter(Spell::getIcon),
+                COMPONENT.fieldOf("s1/title").forGetter(Spell::getTitle),
+                COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(Spell::getTooltip),
+                Codec.FLOAT.fieldOf("s3/mana_cost").xmap(f -> Math.max(0, f), f -> Math.max(0, f)).forGetter(Spell::getManaCost),
+                CTX_VAR.listOf().fieldOf("s6/spell_parameters").forGetter(Spell::getParameters),
+                Codec.STRING.listOf().fieldOf("s5/spell_events").forGetter(Spell::getEventsList)
         ).apply(instance, Spell::new)));
         
         COMPONENT = ExtraCodecs.lazyInitializedCodec(() -> new PrimitiveCodec<>()

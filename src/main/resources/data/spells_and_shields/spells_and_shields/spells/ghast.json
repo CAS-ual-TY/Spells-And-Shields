@@ -1,8 +1,8 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.ghast"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:advanced",
     "height": 16,
     "texture": "minecraft:textures/entity/ghast/ghast_shooting.png",
@@ -12,9 +12,17 @@
     "v": 16,
     "width": 16
   },
-  "mana_cost": 4.0,
-  "parameters": [],
-  "spell_actions": [
+  "s3/mana_cost": 4.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.ghast.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [],
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active"
@@ -117,14 +125,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.ghast.shoot",
       "ts/targets": "holder"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.ghast"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.ghast.desc"
     }
   ]
 }

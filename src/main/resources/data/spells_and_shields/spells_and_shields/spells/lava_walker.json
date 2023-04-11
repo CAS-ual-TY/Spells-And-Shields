@@ -1,9 +1,8 @@
 {
-  "events": [
-    "active",
-    "on_unequip"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.lava_walker"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:layered",
     "icons_list": [
       {
@@ -16,8 +15,17 @@
       }
     ]
   },
-  "mana_cost": 5.0,
-  "parameters": [
+  "s3/mana_cost": 5.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.lava_walker.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active",
+    "on_unequip"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:int",
       "value": 2,
@@ -44,7 +52,7 @@
       "var/name": "rect_radius"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:copy_targets",
       "activation": "active",
@@ -274,14 +282,6 @@
       "d/int/tick_time": "<<refresh_rate>>",
       "d/string/uuid": "<<uuid>>",
       "ts/targets": "player"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.lava_walker"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.lava_walker.desc"
     }
   ]
 }

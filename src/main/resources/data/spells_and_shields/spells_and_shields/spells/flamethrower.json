@@ -1,13 +1,21 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.flamethrower"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/flamethrower.png"
   },
-  "mana_cost": 7.0,
-  "parameters": [
+  "s3/mana_cost": 7.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.flamethrower.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:int",
       "value": 10,
@@ -34,7 +42,7 @@
       "var/name": "inaccuracy"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active"
@@ -143,14 +151,6 @@
       "activation": "on_entity_hit",
       "d/int/fire_seconds": "<<fire_seconds>>",
       "ts/targets": "entity_hit"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.flamethrower"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.flamethrower.desc"
     }
   ]
 }

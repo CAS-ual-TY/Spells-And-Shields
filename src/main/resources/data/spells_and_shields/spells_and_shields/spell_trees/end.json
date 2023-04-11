@@ -1,33 +1,63 @@
 {
-  "icon": {
+  "t1/title": {
+    "translate": "spell_tree.spells_and_shields.end"
+  },
+  "t2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/teleport.png"
   },
-  "root": {
-    "children": [
+  "t3/root_node": {
+    "n1/spell_id": "spells_and_shields:random_teleport",
+    "n2/node_id": 100,
+    "n4/level_cost": 20,
+    "n5/hidden_requirements": [
       {
-        "children": [],
-        "frame": 0,
-        "hidden_requirements": [],
-        "id": 101,
-        "learn_requirements": [
+        "type": "spells_and_shields:advancement",
+        "advancement": "minecraft:end/root"
+      }
+    ],
+    "n6/learn_requirements": [
+      {
+        "type": "spells_and_shields:bookshelves",
+        "bookshelves": 28
+      }
+    ],
+    "n8/spell_parameters": [],
+    "n9/child_nodes": [
+      {
+        "n1/spell_id": "spells_and_shields:forced_teleport",
+        "n2/node_id": 101,
+        "n4/level_cost": 30,
+        "n6/learn_requirements": [
           {
             "type": "spells_and_shields:bookshelves",
             "bookshelves": 28
           }
         ],
-        "level_cost": 30,
-        "parameters": [],
-        "spell": "spells_and_shields:forced_teleport"
+        "n8/spell_parameters": [],
+        "n9/child_nodes": []
       },
       {
-        "children": [
+        "n1/spell_id": "spells_and_shields:teleport",
+        "n2/node_id": 102,
+        "n4/level_cost": 30,
+        "n6/learn_requirements": [
           {
-            "children": [],
-            "frame": 0,
-            "hidden_requirements": [],
-            "id": 103,
-            "learn_requirements": [
+            "type": "spells_and_shields:bookshelves",
+            "bookshelves": 28
+          },
+          {
+            "type": "spells_and_shields:advancement",
+            "advancement": "minecraft:end/respawn_dragon"
+          }
+        ],
+        "n8/spell_parameters": [],
+        "n9/child_nodes": [
+          {
+            "n1/spell_id": "spells_and_shields:ender_army",
+            "n2/node_id": 103,
+            "n4/level_cost": 50,
+            "n6/learn_requirements": [
               {
                 "type": "spells_and_shields:bookshelves",
                 "bookshelves": 30
@@ -41,48 +71,11 @@
                 }
               }
             ],
-            "level_cost": 50,
-            "parameters": [],
-            "spell": "spells_and_shields:ender_army"
+            "n8/spell_parameters": [],
+            "n9/child_nodes": []
           }
-        ],
-        "frame": 0,
-        "hidden_requirements": [],
-        "id": 102,
-        "learn_requirements": [
-          {
-            "type": "spells_and_shields:bookshelves",
-            "bookshelves": 28
-          },
-          {
-            "type": "spells_and_shields:advancement",
-            "advancement": "minecraft:end/respawn_dragon"
-          }
-        ],
-        "level_cost": 30,
-        "parameters": [],
-        "spell": "spells_and_shields:teleport"
+        ]
       }
-    ],
-    "frame": 0,
-    "hidden_requirements": [
-      {
-        "type": "spells_and_shields:advancement",
-        "advancement": "minecraft:end/root"
-      }
-    ],
-    "id": 100,
-    "learn_requirements": [
-      {
-        "type": "spells_and_shields:bookshelves",
-        "bookshelves": 28
-      }
-    ],
-    "level_cost": 20,
-    "parameters": [],
-    "spell": "spells_and_shields:random_teleport"
-  },
-  "title": {
-    "translate": "spell_tree.spells_and_shields.end"
+    ]
   }
 }

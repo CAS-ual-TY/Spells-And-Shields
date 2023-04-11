@@ -1,102 +1,90 @@
 {
-  "icon": {
+  "t1/title": {
+    "translate": "spell_tree.spells_and_shields.mining"
+  },
+  "t2/icon": {
     "type": "spells_and_shields:default",
     "texture": "minecraft:textures/mob_effect/haste.png"
   },
-  "root": {
-    "children": [
-      {
-        "children": [
-          {
-            "children": [],
-            "frame": 0,
-            "hidden_requirements": [],
-            "id": 102,
-            "learn_requirements": [
-              {
-                "type": "spells_and_shields:bookshelves",
-                "bookshelves": 26
-              }
-            ],
-            "level_cost": 25,
-            "parameters": [],
-            "spell": "spells_and_shields:toggle_magic_immune"
-          }
-        ],
-        "frame": 0,
-        "hidden_requirements": [],
-        "id": 101,
-        "learn_requirements": [
-          {
-            "type": "spells_and_shields:bookshelves",
-            "bookshelves": 26
-          }
-        ],
-        "level_cost": 25,
-        "parameters": [],
-        "spell": "spells_and_shields:silence_target"
-      },
-      {
-        "children": [
-          {
-            "children": [],
-            "frame": 0,
-            "hidden_requirements": [],
-            "id": 104,
-            "learn_requirements": [
-              {
-                "type": "spells_and_shields:bookshelves",
-                "bookshelves": 24
-              }
-            ],
-            "level_cost": 25,
-            "parameters": [],
-            "spell": "spells_and_shields:toggle_haste"
-          }
-        ],
-        "frame": 0,
-        "hidden_requirements": [],
-        "id": 103,
-        "learn_requirements": [
-          {
-            "type": "spells_and_shields:bookshelves",
-            "bookshelves": 18
-          }
-        ],
-        "level_cost": 15,
-        "parameters": [],
-        "spell": "spells_and_shields:instant_mine"
-      },
-      {
-        "children": [],
-        "frame": 0,
-        "hidden_requirements": [],
-        "id": 105,
-        "learn_requirements": [
-          {
-            "type": "spells_and_shields:bookshelves",
-            "bookshelves": 12
-          }
-        ],
-        "level_cost": 10,
-        "parameters": [],
-        "spell": "spells_and_shields:spit_metal"
-      }
-    ],
-    "frame": 0,
-    "hidden_requirements": [],
-    "id": 100,
-    "learn_requirements": [
+  "t3/root_node": {
+    "n1/spell_id": "spells_and_shields:blast_smelt",
+    "n2/node_id": 100,
+    "n4/level_cost": 5,
+    "n6/learn_requirements": [
       {
         "type": "spells_and_shields:bookshelves",
         "bookshelves": 8
       }
     ],
-    "level_cost": 5,
-    "parameters": [],
-    "spell": "spells_and_shields:blast_smelt"
-  },
-  "title": {
-    "translate": "spell_tree.spells_and_shields.mining"
+    "n8/spell_parameters": [],
+    "n9/child_nodes": [
+      {
+        "n1/spell_id": "spells_and_shields:silence_target",
+        "n2/node_id": 101,
+        "n4/level_cost": 25,
+        "n6/learn_requirements": [
+          {
+            "type": "spells_and_shields:bookshelves",
+            "bookshelves": 26
+          }
+        ],
+        "n8/spell_parameters": [],
+        "n9/child_nodes": [
+          {
+            "n1/spell_id": "spells_and_shields:toggle_magic_immune",
+            "n2/node_id": 102,
+            "n4/level_cost": 25,
+            "n6/learn_requirements": [
+              {
+                "type": "spells_and_shields:bookshelves",
+                "bookshelves": 26
+              }
+            ],
+            "n8/spell_parameters": [],
+            "n9/child_nodes": []
+          }
+        ]
+      },
+      {
+        "n1/spell_id": "spells_and_shields:instant_mine",
+        "n2/node_id": 103,
+        "n4/level_cost": 15,
+        "n6/learn_requirements": [
+          {
+            "type": "spells_and_shields:bookshelves",
+            "bookshelves": 18
+          }
+        ],
+        "n8/spell_parameters": [],
+        "n9/child_nodes": [
+          {
+            "n1/spell_id": "spells_and_shields:toggle_haste",
+            "n2/node_id": 104,
+            "n4/level_cost": 25,
+            "n6/learn_requirements": [
+              {
+                "type": "spells_and_shields:bookshelves",
+                "bookshelves": 24
+              }
+            ],
+            "n8/spell_parameters": [],
+            "n9/child_nodes": []
+          }
+        ]
+      },
+      {
+        "n1/spell_id": "spells_and_shields:spit_metal",
+        "n2/node_id": 105,
+        "n4/level_cost": 10,
+        "n6/learn_requirements": [
+          {
+            "type": "spells_and_shields:bookshelves",
+            "bookshelves": 12
+          }
+        ],
+        "n8/spell_parameters": [],
+        "n9/child_nodes": []
+      }
+    ]
   }
 }

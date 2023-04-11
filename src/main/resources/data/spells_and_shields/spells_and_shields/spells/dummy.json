@@ -1,16 +1,13 @@
 {
-  "events": [],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.dummy"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/dummy.png"
   },
-  "mana_cost": 0.0,
-  "parameters": [],
-  "spell_actions": [],
-  "title": {
-    "translate": "spell.spells_and_shields.dummy"
-  },
-  "tooltip": [
+  "s3/mana_cost": 0.0,
+  "s4/tooltip": [
     {
       "translate": "spell.spells_and_shields.dummy.desc"
     },
@@ -19,5 +16,8 @@
       "italic": true,
       "text": "In Development"
     }
-  ]
+  ],
+  "s5/spell_events": [],
+  "s6/spell_parameters": [],
+  "s7/spell_actions": []
 }

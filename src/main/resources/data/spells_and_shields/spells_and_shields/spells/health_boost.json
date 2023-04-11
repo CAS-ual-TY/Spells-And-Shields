@@ -1,9 +1,13 @@
 {
-  "events": [
-    "on_equip",
-    "on_unequip"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.health_boost",
+    "with": [
+      {
+        "translate": "attribute.name.generic.max_health"
+      }
+    ]
+  },
+  "s2/icon": {
     "type": "spells_and_shields:layered",
     "icons_list": [
       {
@@ -16,47 +20,8 @@
       }
     ]
   },
-  "mana_cost": 0.0,
-  "parameters": [
-    {
-      "type": "spells_and_shields:double",
-      "value": 4.0,
-      "var/name": "value"
-    },
-    {
-      "type": "spells_and_shields:string",
-      "value": "addition",
-      "var/name": "operation"
-    }
-  ],
-  "spell_actions": [
-    {
-      "type": "spells_and_shields:add_attribute_modifier",
-      "activation": "on_equip",
-      "d/double/amount": 4.0,
-      "d/string/attribute": "minecraft:generic.max_health",
-      "d/string/name": "generic.max_health",
-      "d/string/operation": "addition",
-      "d/string/uuid": "<< uuid_from_string('attribute' + 'generic.max_health' + spell_slot + operation + value) >>",
-      "ts/targets": "owner"
-    },
-    {
-      "type": "spells_and_shields:remove_attribute_modifier",
-      "activation": "on_unequip",
-      "d/string/attribute": "minecraft:generic.max_health",
-      "d/string/uuid": "<< uuid_from_string('attribute' + 'generic.max_health' + spell_slot + operation + value) >>",
-      "ts/targets": "owner"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.health_boost",
-    "with": [
-      {
-        "translate": "attribute.name.generic.max_health"
-      }
-    ]
-  },
-  "tooltip": [
+  "s3/mana_cost": 0.0,
+  "s4/tooltip": [
     {
       "translate": "spell.spells_and_shields.health_boost.desc",
       "with": [
@@ -82,6 +47,41 @@
           "translate": "attribute.name.generic.max_health"
         }
       ]
+    }
+  ],
+  "s5/spell_events": [
+    "on_equip",
+    "on_unequip"
+  ],
+  "s6/spell_parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 4.0,
+      "var/name": "value"
+    },
+    {
+      "type": "spells_and_shields:string",
+      "value": "addition",
+      "var/name": "operation"
+    }
+  ],
+  "s7/spell_actions": [
+    {
+      "type": "spells_and_shields:add_attribute_modifier",
+      "activation": "on_equip",
+      "d/double/amount": 4.0,
+      "d/string/attribute": "minecraft:generic.max_health",
+      "d/string/name": "generic.max_health",
+      "d/string/operation": "addition",
+      "d/string/uuid": "<< uuid_from_string('attribute' + 'generic.max_health' + spell_slot + operation + value) >>",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:remove_attribute_modifier",
+      "activation": "on_unequip",
+      "d/string/attribute": "minecraft:generic.max_health",
+      "d/string/uuid": "<< uuid_from_string('attribute' + 'generic.max_health' + spell_slot + operation + value) >>",
+      "ts/targets": "owner"
     }
   ]
 }

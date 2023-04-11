@@ -1,14 +1,22 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.summon_animal"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/summon_animal.png"
   },
-  "mana_cost": 4.0,
-  "parameters": [],
-  "spell_actions": [
+  "s3/mana_cost": 4.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.summon_animal.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [],
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:get_entity_position_direction",
       "activation": "active",
@@ -154,14 +162,6 @@
       ],
       "t/position": "owner",
       "td/entity": "baby"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.summon_animal"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.summon_animal.desc"
     }
   ]
 }

@@ -1,13 +1,21 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.transfer_mana"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/transfer_mana.png"
   },
-  "mana_cost": 4.0,
-  "parameters": [
+  "s3/mana_cost": 4.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.transfer_mana.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 2.5,
@@ -19,7 +27,7 @@
       "var/name": "range"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:look_at_target",
       "a/block_hit_activation": "looked_at_block",
@@ -104,14 +112,6 @@
         "type": "minecraft:poof"
       },
       "ts/targets": "hit_position"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.transfer_mana"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.transfer_mana.desc"
     }
   ]
 }

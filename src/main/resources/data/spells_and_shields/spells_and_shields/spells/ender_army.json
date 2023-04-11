@@ -1,13 +1,21 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.ender_army"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/ender_army.png"
   },
-  "mana_cost": 20.0,
-  "parameters": [
+  "s3/mana_cost": 20.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.ender_army.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 50.0,
@@ -19,7 +27,7 @@
       "var/name": "enderman_range"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:has_mana",
       "activation": "active",
@@ -147,14 +155,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.enderman.scream",
       "ts/targets": "entity_hit"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.ender_army"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.ender_army.desc"
     }
   ]
 }

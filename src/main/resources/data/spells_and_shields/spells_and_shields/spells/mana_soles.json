@@ -1,14 +1,22 @@
 {
-  "events": [
-    "living_hurt"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.mana_soles"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/mana_soles.png"
   },
-  "mana_cost": 0.0,
-  "parameters": [],
-  "spell_actions": [
+  "s3/mana_cost": 0.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.mana_soles.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "living_hurt"
+  ],
+  "s6/spell_parameters": [],
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:boolean_activation",
       "a/to_activate": "reduce",
@@ -46,14 +54,6 @@
       "activation": "reduce",
       "d/double/source": "<< damage_amount - reduce_amount >>",
       "var/result": "damage_amount"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.mana_soles"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.mana_soles.desc"
     }
   ]
 }

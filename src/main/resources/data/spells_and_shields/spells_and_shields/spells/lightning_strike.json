@@ -1,20 +1,28 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.lightning_strike"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/lightning_strike.png"
   },
-  "mana_cost": 8.0,
-  "parameters": [
+  "s3/mana_cost": 8.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.lightning_strike.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 20.0,
       "var/name": "range"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active"
@@ -80,14 +88,6 @@
       ],
       "t/position": "position",
       "td/entity": ""
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.lightning_strike"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.lightning_strike.desc"
     }
   ]
 }

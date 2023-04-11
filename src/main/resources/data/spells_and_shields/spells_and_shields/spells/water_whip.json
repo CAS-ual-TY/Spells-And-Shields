@@ -1,20 +1,28 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.water_whip"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/water_whip.png"
   },
-  "mana_cost": 5.0,
-  "parameters": [
+  "s3/mana_cost": 5.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.water_whip.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 10.0,
       "var/name": "damage"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active"
@@ -328,14 +336,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:item.bucket.fill",
       "ts/targets": "owner"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.water_whip"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.water_whip.desc"
     }
   ]
 }

@@ -1,20 +1,28 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.instant_mine"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/instant_mine.png"
   },
-  "mana_cost": 4.0,
-  "parameters": [
+  "s3/mana_cost": 4.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.instant_mine.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 4.0,
       "var/name": "range"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:has_mana",
       "activation": "active",
@@ -61,14 +69,6 @@
       "activation": "burn_mana",
       "d/double/mana_amount": "<<mana_cost>>",
       "ts/targets": "owner"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.instant_mine"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.instant_mine.desc"
     }
   ]
 }

@@ -1,13 +1,21 @@
 {
-  "events": [
-    "active"
-  ],
-  "icon": {
+  "s1/title": {
+    "translate": "spell.spells_and_shields.spit_metal"
+  },
+  "s2/icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/spell/spit_metal.png"
   },
-  "mana_cost": 4.0,
-  "parameters": [
+  "s3/mana_cost": 4.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.spit_metal.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
       "value": 8.0,
@@ -22,7 +30,7 @@
       "var/name": "item_damage_map"
     }
   ],
-  "spell_actions": [
+  "s7/spell_actions": [
     {
       "type": "spells_and_shields:simple_mana_check",
       "activation": "active"
@@ -138,14 +146,6 @@
       "d/double/damage": "<< get_nbt_double(damage_tag, 'damage') >>",
       "t/source": "projectile",
       "ts/targets": "entity_hit"
-    }
-  ],
-  "title": {
-    "translate": "spell.spells_and_shields.spit_metal"
-  },
-  "tooltip": [
-    {
-      "translate": "spell.spells_and_shields.spit_metal.desc"
     }
   ]
 }
