@@ -249,10 +249,17 @@ public class SpellTree
                 {
                     if(parent.getChildren().size() > 15)
                     {
-                        throw new IllegalArgumentException();
+                        throw new IllegalStateException();
                     }
                     
-                    spellNode.setNodeId(null, parent.getNodeId().nodeId() * 0x10 + parent.getChildren().size());
+                    int newId = parent.getNodeId().nodeId() * 0x10 + parent.getChildren().size();
+                    
+                    if(newId < 0 || newId < parent.getNodeId().nodeId())
+                    {
+                        throw new IllegalStateException();
+                    }
+                    
+                    spellNode.setNodeId(null, newId);
                 }
                 
                 connect(parent, spellNode);
