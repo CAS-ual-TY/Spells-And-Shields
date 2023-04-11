@@ -1,5 +1,7 @@
 {
-  "events": [],
+  "events": [
+    "active"
+  ],
   "icon": {
     "type": "spells_and_shields:default",
     "texture": "spells_and_shields:textures/mob_effect/silence.png"

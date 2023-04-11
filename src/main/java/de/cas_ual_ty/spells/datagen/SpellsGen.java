@@ -21,7 +21,6 @@ import de.cas_ual_ty.spells.spell.action.mana.*;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
-import de.cas_ual_ty.spells.spell.context.SpellsEvents;
 import de.cas_ual_ty.spells.spell.icon.*;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
@@ -64,7 +63,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.cas_ual_ty.spells.registers.CtxVarTypes.*;
-import static de.cas_ual_ty.spells.spell.context.BuiltinActivations.*;
+import static de.cas_ual_ty.spells.spell.context.BuiltinEvents.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.*;
 
@@ -149,6 +148,8 @@ public class SpellsGen implements DataProvider
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
+                .addEventHook(ON_EQUIP.activation)
+                .addEventHook(ON_UNEQUIP.activation)
                 .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())));
         
         if(!mobEffect.getAttributeModifiers().isEmpty())
@@ -207,6 +208,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())));
         
         if(!mobEffect.getAttributeModifiers().isEmpty())
@@ -283,6 +285,8 @@ public class SpellsGen implements DataProvider
                 .addParameter(BOOLEAN.get(), "ambient", false)
                 .addParameter(BOOLEAN.get(), "visible", false)
                 .addParameter(BOOLEAN.get(), "show_icon", true)
+                .addEventHook(ACTIVE.activation)
+                .addEventHook(ON_UNEQUIP.activation)
                 .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())));
         
         if(!mobEffect.getAttributeModifiers().isEmpty())
@@ -334,6 +338,8 @@ public class SpellsGen implements DataProvider
                 .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP.activation, OWNER.targetGroup, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING.get())))
                 .addParameter(DOUBLE.get(), "value", value)
                 .addParameter(STRING.get(), "operation", opString)
+                .addEventHook(ON_EQUIP.activation)
+                .addEventHook(ON_UNEQUIP.activation)
                 .addTooltip(Component.translatable(descKey, component.copy().withStyle(ChatFormatting.BLUE)));
         
         spell.addTooltip(Component.empty());
@@ -417,6 +423,8 @@ public class SpellsGen implements DataProvider
                 .addParameter(STRING.get(), "block_to", toRL.toString())
                 .addParameter(COMPOUND_TAG.get(), "block_state_to", SpellsUtil.stateToTag(to))
                 .addParameter(INT.get(), "rect_radius", 3)
+                .addEventHook(ACTIVE.activation)
+                .addEventHook(ON_UNEQUIP.activation)
                 .addTooltip(Component.translatable(descKey));
         
         addSpell(rl, spell);
@@ -435,6 +443,7 @@ public class SpellsGen implements DataProvider
                 .addAction(SetMotionAction.make(ACTIVE.activation, OWNER.targetGroup, Compiler.compileString(" vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) ", VEC3.get())))
                 .addAction(SpawnParticlesAction.make(ACTIVE.activation, OWNER.targetGroup, ParticleTypes.POOF, INT.get().immediate(4), DOUBLE.get().immediate(0.1)))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_LEAP_DESC))
         );
         
@@ -456,6 +465,7 @@ public class SpellsGen implements DataProvider
                 .addAction(ActivateAction.make(ACTIVE.activation, "sheep"))
                 .addAction(ItemCheckAction.make("sheep", OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.MUTTON, 8)))
                 .addAction(SpawnEntityAction.make("sheep", "baby", SpellsUtil.objectToString(EntityType.SHEEP, ForgeRegistries.ENTITY_TYPES), OWNER.targetGroup, Compiler.compileString(" -direction ", VEC3.get()), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(childTag)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_SUMMON_ANIMAL_DESC))
         );
         
@@ -476,6 +486,7 @@ public class SpellsGen implements DataProvider
                 .addAction(SpawnParticlesAction.make("fx", HIT_POSITION.targetGroup, ParticleTypes.LAVA, INT.get().immediate(1), DOUBLE.get().immediate(0.2)))
                 .addAction(SpawnParticlesAction.make("fx", HIT_POSITION.targetGroup, ParticleTypes.SMOKE, INT.get().immediate(2), DOUBLE.get().immediate(0.1)))
                 .addAction(SpawnParticlesAction.make("fx", HIT_POSITION.targetGroup, ParticleTypes.FLAME, INT.get().immediate(2), DOUBLE.get().immediate(0.1)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_BALL_DESC))
         );
         
@@ -494,6 +505,7 @@ public class SpellsGen implements DataProvider
                 .addAction(ConsumeItemAction.make("smelt", "item", INT.get().immediate(1)))
                 .addAction(GiveItemAction.make("smelt", OWNER.targetGroup, INT.get().immediate(1), INT.get().immediate(0), COMPOUND_TAG.get().immediate(new CompoundTag()), Compiler.compileString(" get_nbt_string(recipes, item_id) ", STRING.get())))
                 .addParameter(COMPOUND_TAG.get(), "recipes", blastRecipes)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_BLAST_SMELT_DESC))
         );
         
@@ -511,6 +523,7 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make("fx", HIT_POSITION.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(SpawnParticlesAction.make("fx", HIT_POSITION.targetGroup, ParticleTypes.BUBBLE, INT.get().immediate(3), DOUBLE.get().immediate(0.2)))
                 .addAction(SpawnParticlesAction.make("fx", HIT_POSITION.targetGroup, ParticleTypes.POOF, INT.get().immediate(2), DOUBLE.get().immediate(0.2)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_TRANSFER_MANA_DESC))
         );
         
@@ -540,6 +553,7 @@ public class SpellsGen implements DataProvider
                 .addAction(SpawnEntityAction.make("spectral", "arrow", SpellsUtil.objectToString(EntityType.SPECTRAL_ARROW, ForgeRegistries.ENTITY_TYPES), "position", VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", VEC3.get()), COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("spectral", OWNER.targetGroup, SoundEvents.ARROW_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(ConsumeItemAction.make("spectral", "item", INT.get().immediate(1)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_BLOW_ARROW_DESC))
         );
         
@@ -561,15 +575,16 @@ public class SpellsGen implements DataProvider
                 .addAction(SetMotionAction.make(ACTIVE.activation, OWNER.targetGroup, Compiler.compileString(" vec3(get_x(direction), max(0.5, get_y(look) + 0.5), get_z(direction)) ", VEC3.get())))
                 .addAction(SpawnParticlesAction.make(ACTIVE.activation, OWNER.targetGroup, ParticleTypes.POOF, INT.get().immediate(4), DOUBLE.get().immediate(0.1)))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_WATER_LEAP_DESC))
         );
         
         addSpell(Spells.AQUA_AFFINITY, new Spell(modId, "mana_soles", Spells.KEY_AQUA_AFFINITY, 0F)
-                .addAction(GetEntityEyePositionAction.make(SpellsEvents.PLAYER_BREAK_SPEED, OWNER.targetGroup, "eye_pos"))
-                .addAction(GetBlockAction.make(SpellsEvents.PLAYER_BREAK_SPEED, "eye_pos", "block_type", "", ""))
-                .addAction(BooleanActivationAction.make(SpellsEvents.PLAYER_BREAK_SPEED, "boost", Compiler.compileString(" block_type == '" + ForgeRegistries.BLOCKS.getKey(Blocks.WATER) + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(GetEntityEyePositionAction.make(PLAYER_BREAK_SPEED.activation, OWNER.targetGroup, "eye_pos"))
+                .addAction(GetBlockAction.make(PLAYER_BREAK_SPEED.activation, "eye_pos", "block_type", "", ""))
+                .addAction(BooleanActivationAction.make(PLAYER_BREAK_SPEED.activation, "boost", Compiler.compileString(" block_type == '" + ForgeRegistries.BLOCKS.getKey(Blocks.WATER) + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(PutVarAction.makeDouble("boost", Compiler.compileString(" new_speed * 5 ", DOUBLE.get()), "new_speed"))
-                .addEventHook(SpellsEvents.PLAYER_BREAK_SPEED)
+                .addEventHook(PLAYER_BREAK_SPEED.activation)
                 .addTooltip(Component.translatable(Spells.KEY_AQUA_AFFINITY_DESC))
         );
         
@@ -621,6 +636,7 @@ public class SpellsGen implements DataProvider
                 .addAction(OverrideItemAction.make("do_refill", "item", INT.get().immediate(1), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), SpellsUtil.objectToString(Items.WATER_BUCKET, ForgeRegistries.ITEMS)))
                 .addAction(GiveItemAction.make("do_refill", "item", Compiler.compileString(" amount - 1 ", INT.get()), INT.get().reference("amount"), COMPOUND_TAG.get().reference("item_tag"), SpellsUtil.objectToString(Items.BUCKET, ForgeRegistries.ITEMS)))
                 .addAction(PlaySoundAction.make("do_refill", OWNER.targetGroup, SoundEvents.BUCKET_FILL, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_WATER_WHIP_DESC))
         );
         
@@ -645,6 +661,7 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make("shoot", OWNER.targetGroup, SoundEvents.BOTTLE_EMPTY, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(GetEntityExtraTagAction.make("on_entity_hit", PROJECTILE.targetGroup, "tag"))
                 .addAction(ApplyPotionEffectAction.make("on_entity_hit", ENTITY_HIT.targetGroup, Compiler.compileString(" get_nbt_string(tag, 'Potion') ", STRING.get())))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_POTION_SHOT_DESC))
         );
         
@@ -658,17 +675,18 @@ public class SpellsGen implements DataProvider
                 .addAction(SetMotionAction.make(ACTIVE.activation, OWNER.targetGroup, Compiler.compileString(" vec3(0, get_y(motion) + speed, 0) ", VEC3.get())))
                 .addAction(SpawnParticlesAction.make(ACTIVE.activation, OWNER.targetGroup, ParticleTypes.POOF, INT.get().immediate(4), DOUBLE.get().immediate(0.1)))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.ENDER_DRAGON_FLAP, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_JUMP_DESC))
         );
         
         addSpell(Spells.MANA_SOLES, new Spell(modId, "mana_soles", Spells.KEY_MANA_SOLES, 0F)
-                .addAction(BooleanActivationAction.make(SpellsEvents.LIVING_HURT, "reduce", Compiler.compileString(" damage_type == '" + DamageSource.FALL.getMsgId() + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(BooleanActivationAction.make(LIVING_HURT.activation, "reduce", Compiler.compileString(" damage_type == '" + DamageSource.FALL.getMsgId() + "' ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(GetManaAction.make("reduce", OWNER.targetGroup, "mana"))
                 .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" min(mana, damage_amount) ", DOUBLE.get()), "reduce_amount"))
                 .addAction(PutVarAction.makeBoolean("reduce", Compiler.compileString(" " + EVENT_IS_CANCELED.name + " || (reduce_amount >= damage_amount) ", BOOLEAN.get()), EVENT_IS_CANCELED.name))
                 .addAction(BurnManaAction.make("reduce", OWNER.targetGroup, DOUBLE.get().reference("reduce_amount")))
                 .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" damage_amount - reduce_amount ", DOUBLE.get()), "damage_amount"))
-                .addEventHook(SpellsEvents.LIVING_HURT)
+                .addEventHook(LIVING_HURT.activation)
                 .addTooltip(Component.translatable(Spells.KEY_MANA_SOLES_DESC))
         );
         
@@ -683,6 +701,7 @@ public class SpellsGen implements DataProvider
                 .addAction(GetEntityEyePositionAction.make(ACTIVE.activation, OWNER.targetGroup, "position"))
                 .addAction(SpawnEntityAction.make(ACTIVE.activation, "fire_charge", SpellsUtil.objectToString(EntityType.FIREBALL, ForgeRegistries.ENTITY_TYPES), "position", VEC3.get().reference("direction"), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_CHARGE_DESC))
         );
         
@@ -694,6 +713,7 @@ public class SpellsGen implements DataProvider
                 .addAction(SpawnParticlesAction.make(ACTIVE.activation, "targets", ParticleTypes.POOF, INT.get().immediate(3), DOUBLE.get().immediate(0.5D)))
                 .addParameter(DOUBLE.get(), "range", 6D)
                 .addParameter(DOUBLE.get(), "knockback_strength", 3D)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_PRESSURIZE_DESC))
         );
         
@@ -705,6 +725,7 @@ public class SpellsGen implements DataProvider
                 .addAction(BooleanActivationAction.make("on_block_hit", "burn_mana", BOOLEAN.get().reference("is_air"), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
                 .addAction(BurnManaAction.make("burn_mana", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addParameter(DOUBLE.get(), "range", 4D)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_INSTANT_MINE_DESC))
         );
         
@@ -732,6 +753,7 @@ public class SpellsGen implements DataProvider
                 .addAction(SourcedDamageAction.make("on_entity_hit", ENTITY_HIT.targetGroup, Compiler.compileString(" get_nbt_double(damage_tag, 'damage') ", DOUBLE.get()), PROJECTILE.targetGroup))
                 .addParameter(DOUBLE.get(), "base_damage", 8D)
                 .addParameter(COMPOUND_TAG.get(), "item_damage_map", metalMap)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_SPIT_METAL_DESC))
         );
         
@@ -758,6 +780,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(INT.get(), "repetitions", 5)
                 .addParameter(INT.get(), "repetition_delay", 4)
                 .addParameter(DOUBLE.get(), "inaccuracy", 15D)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_FLAMETHROWER_DESC))
         );
         
@@ -772,6 +795,7 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT.targetGroup, SoundEvents.AMETHYST_CLUSTER_BREAK, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(SpawnParticlesAction.make("on_entity_hit", HIT_POSITION.targetGroup, ParticleTypes.POOF, INT.get().immediate(3), DOUBLE.get().immediate(0.2)))
                 .addParameter(DOUBLE.get(), "range", 20D)
+                .addEventHook(ACTIVE.activation)
                 .addParameter(INT.get(), "silence_seconds", 15)
         );
         
@@ -822,6 +846,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(INT.get(), "max_attempts", 10)
                 .addParameter(INT.get(), "max_inner_attempts", 10)
                 .addParameter(DOUBLE.get(), "range", 32D)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_RANDOM_TELEPORT_DESC))
         );
         
@@ -875,6 +900,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(INT.get(), "max_inner_attempts", 10)
                 .addParameter(DOUBLE.get(), "teleport_range", 32D)
                 .addParameter(DOUBLE.get(), "target_range", 32D)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_FORCED_TELEPORT_DESC))
         );
         
@@ -893,6 +919,7 @@ public class SpellsGen implements DataProvider
                 .addAction(TeleportToAction.make("teleport", OWNER.targetGroup, "teleport_position"))
                 .addAction(PlaySoundAction.make("teleport", OWNER.targetGroup, SoundEvents.ENDERMAN_TELEPORT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addParameter(DOUBLE.get(), "range", 32D)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_TELEPORT_DESC))
         );
         
@@ -906,6 +933,7 @@ public class SpellsGen implements DataProvider
                 .addAction(ActivateAction.make("on_block_hit", "on_hit"))
                 .addAction(ActivateAction.make("on_entity_hit", "on_hit"))
                 .addAction(SpawnEntityAction.make("on_hit", "", SpellsUtil.objectToString(EntityType.LIGHTNING_BOLT, ForgeRegistries.ENTITY_TYPES), "position", VEC3.get().immediate(Vec3.ZERO), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(new CompoundTag())))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_LIGHTNING_STRIKE_DESC))
         );
         
@@ -928,6 +956,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(DOUBLE.get(), "range", 50D)
                 .addParameter(INT.get(), "replenishment_duration", 100)
                 .addParameter(INT.get(), "radius", 1)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_DRAIN_FLAME_DESC))
         );
         
@@ -942,6 +971,7 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BONE_MEAL_USE, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addParameter(INT.get(), "range", 3)
                 .addParameter(INT.get(), "duration", 20)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_GROWTH_DESC))
         );
         
@@ -959,6 +989,7 @@ public class SpellsGen implements DataProvider
                 .addAction(GetEntityEyePositionAction.make("shoot", HOLDER.targetGroup, "position"))
                 .addAction(SpawnEntityAction.make("shoot", "fire_charge", SpellsUtil.objectToString(EntityType.FIREBALL, ForgeRegistries.ENTITY_TYPES), "position", VEC3.get().reference("direction"), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", HOLDER.targetGroup, SoundEvents.GHAST_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_GHAST_DESC))
         );
         
@@ -983,6 +1014,7 @@ public class SpellsGen implements DataProvider
                 .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT.targetGroup, SoundEvents.ENDERMAN_SCREAM, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addParameter(DOUBLE.get(), "target_range", 50D)
                 .addParameter(DOUBLE.get(), "enderman_range", 40D)
+                .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_ENDER_ARMY_DESC))
         );
         

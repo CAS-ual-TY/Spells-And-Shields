@@ -23,19 +23,16 @@ import java.util.function.Supplier;
 
 public class SpellsEvents
 {
-    public static final String PLAYER_BREAK_SPEED = "player_break_speed";
-    public static final String LIVING_HURT = "living_hurt";
-    
     public static final Map<String, RegisteredEvent<?>> NAME_TO_ENTRY = new HashMap<>();
     
     public static void registerEvents()
     {
-        register(PLAYER_BREAK_SPEED, PlayerEvent.BreakSpeed.class, true)
+        register(BuiltinEvents.PLAYER_BREAK_SPEED.activation, PlayerEvent.BreakSpeed.class, true)
                 .addTargetLink(e -> e.getPosition().map(pos -> Target.of(e.getEntity().level, pos)).orElse(null), "block_position")
                 .addVariableLink(e -> (double) e.getOriginalSpeed(), CtxVarTypes.DOUBLE, "original_speed")
                 .addVariableLink(e -> (double) e.getNewSpeed(), (e, c) -> e.setNewSpeed(c.floatValue()), CtxVarTypes.DOUBLE, "new_speed");
         
-        register(LIVING_HURT, LivingHurtEvent.class, false)
+        register(BuiltinEvents.LIVING_HURT.activation, LivingHurtEvent.class, false)
                 //TODO source player/entity
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
@@ -61,7 +58,7 @@ public class SpellsEvents
                         SpellInstance spell = spellHolder.getSpell(i);
                         if(spell != null)
                         {
-                            spell.runEvent(player, eventId, ctx ->
+                            spell.run(player, eventId, ctx ->
                             {
                                 if(event.isCancelable())
                                 {

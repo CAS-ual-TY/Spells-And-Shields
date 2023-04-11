@@ -1,5 +1,8 @@
 {
-  "events": [],
+  "events": [
+    "active",
+    "on_unequip"
+  ],
   "icon": {
     "type": "spells_and_shields:layered",
     "icons_list": [

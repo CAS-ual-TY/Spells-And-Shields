@@ -106,31 +106,37 @@ public class SpellInstance
         return tooltipComponent;
     }
     
-    public void runEvent(Player owner, String event, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
-    {
-        if(spell.get().getEventsList().contains(event))
-        {
-            SpellContext ctx = run(owner.level, owner, event, toContext);
-            fromContext.accept(ctx);
-        }
-    }
-    
-    public SpellContext run(Player owner, String activation)
+    public boolean run(Player owner, String activation)
     {
         return run(owner.level, owner, activation);
     }
     
-    public SpellContext run(Level level, @Nullable Player owner, String activation)
+    public boolean run(Level level, @Nullable Player owner, String activation)
     {
-        return run(level, owner, activation, (ctx) -> {});
+        return run(level, owner, activation, (ctx) -> {}, (ctx) -> {});
     }
     
-    public SpellContext run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> consumer)
+    public boolean run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> preRun)
     {
-        SpellContext ctx = initializeContext(level, owner, activation);
-        consumer.accept(ctx);
-        ctx.run();
-        return ctx;
+        return run(level, owner, activation, preRun, (ctx) -> {});
+    }
+    
+    public boolean run(Player owner, String event, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
+    {
+        return run(owner.level, owner, event, toContext, fromContext);
+    }
+    
+    public boolean run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)
+    {
+        if(spell.get().getEventsList().contains(activation))
+        {
+            SpellContext ctx = initializeContext(level, owner, activation);
+            preRun.accept(ctx);
+            ctx.run();
+            postRun.accept(ctx);
+            return true;
+        }
+        return false;
     }
     
     public SpellContext initializeContext(Level level, @Nullable Player owner, String activation)

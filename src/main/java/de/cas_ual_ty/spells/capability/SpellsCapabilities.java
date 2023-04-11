@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.capability;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
+import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
@@ -176,7 +176,7 @@ public class SpellsCapabilities
                     });
                     
                     current.sendSync();
-                    current.activateAll(BuiltinActivations.ON_EQUIP.activation);
+                    current.activateAll(BuiltinEvents.ON_EQUIP.activation);
                 });
             }
         }

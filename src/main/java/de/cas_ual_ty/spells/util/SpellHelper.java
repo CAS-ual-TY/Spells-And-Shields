@@ -8,7 +8,7 @@ import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.SpellInstance;
-import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
+import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,7 +33,7 @@ public class SpellHelper
                 {
                     try
                     {
-                        spell.run(spellHolder.getPlayer().level, spellHolder.getPlayer(), BuiltinActivations.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                        spell.run(spellHolder.getPlayer().level, spellHolder.getPlayer(), BuiltinEvents.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
                     }
                     catch(Exception e)
                     {

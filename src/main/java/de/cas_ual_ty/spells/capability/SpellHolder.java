@@ -7,7 +7,7 @@ import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
-import de.cas_ual_ty.spells.spell.context.BuiltinActivations;
+import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
@@ -58,12 +58,12 @@ public class SpellHolder implements ISpellHolder
         {
             if(slots[slot] != null)
             {
-                slots[slot].run(player.level, player, BuiltinActivations.ON_UNEQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                slots[slot].run(player.level, player, BuiltinEvents.ON_UNEQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
             }
             
             if(spell != null)
             {
-                spell.run(player.level, player, BuiltinActivations.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                spell.run(player.level, player, BuiltinEvents.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
             }
         }
         
