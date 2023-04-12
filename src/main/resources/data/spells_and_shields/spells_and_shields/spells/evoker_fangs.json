@@ -3,14 +3,53 @@
     "translate": "spell.spells_and_shields.evoker_fangs"
   },
   "s2/icon": {
-    "type": "spells_and_shields:advanced",
-    "height": 10,
-    "texture": "minecraft:textures/entity/illager/evoker.png",
-    "textureHeight": 64,
-    "textureWidth": 64,
-    "u": 8,
-    "v": 8,
-    "width": 8
+    "type": "spells_and_shields:layered",
+    "icons_list": [
+      {
+        "type": "spells_and_shields:advanced",
+        "height": 10,
+        "offsetY": -2,
+        "texture": "minecraft:textures/entity/illager/evoker.png",
+        "textureHeight": 64,
+        "textureWidth": 64,
+        "u": 8,
+        "v": 8,
+        "width": 8
+      },
+      {
+        "type": "spells_and_shields:advanced",
+        "height": 4,
+        "offsetY": 5,
+        "texture": "minecraft:textures/entity/illager/evoker.png",
+        "textureHeight": 64,
+        "textureWidth": 64,
+        "u": 22,
+        "v": 26,
+        "width": 8
+      },
+      {
+        "type": "spells_and_shields:advanced",
+        "height": 4,
+        "offsetY": 5,
+        "texture": "minecraft:textures/entity/illager/evoker.png",
+        "textureHeight": 64,
+        "textureWidth": 64,
+        "u": 6,
+        "v": 44,
+        "width": 8
+      },
+      {
+        "type": "spells_and_shields:advanced",
+        "height": 4,
+        "offsetY": 2,
+        "texture": "minecraft:textures/entity/illager/evoker.png",
+        "textureHeight": 64,
+        "textureWidth": 64,
+        "u": 26,
+        "v": 2,
+        "width": 2
+      }
+    ]
   },
   "s3/mana_cost": 6.0,
   "s4/tooltip": [

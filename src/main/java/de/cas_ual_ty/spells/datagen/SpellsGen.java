@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.datagen;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.cas_ual_ty.spells.SpellsAndShields;
@@ -1088,64 +1089,69 @@ public class SpellsGen implements DataProvider
                 .addTooltip(itemCostComponent(new ItemStack(Items.DRAGON_HEAD)))
         );
         
-        addSpell(Spells.EVOKER_FANGS, new Spell(AdvancedSpellIcon.make(new ResourceLocation("textures/entity/illager/evoker.png"), 8, 8, 8, 10, 64, 64), Spells.KEY_EVOKER_FANGS, 6F)
-                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
-                .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "", "", ""))
-                .addAction(GetEntityUUIDAction.make(ACTIVE.activation, OWNER.targetGroup, "owner_uuid"))
-                .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, Compiler.compileString(" put_nbt_uuid(tag(), 'Owner', owner_uuid) ", COMPOUND_TAG.get()), "tag"))
-                
-                .addAction(GetPositionAction.make(ACTIVE.activation, HIT_POSITION.targetGroup, "target_pos"))
-                .addAction(GetEntityEyePositionAction.make(ACTIVE.activation, OWNER.targetGroup, "eye_position"))
-                .addAction(GetPositionAction.make(ACTIVE.activation, "eye_position", "player_pos1"))
-                .addAction(GetPositionAction.make(ACTIVE.activation, OWNER.targetGroup, "player_pos2"))
-                .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "look", ""))
-                .addAction(PutVarAction.makeVec3(ACTIVE.activation, Compiler.compileString(" get_y(look) >= 0 ? player_pos2 : player_pos1 ", VEC3.get()), "player_pos"))
-                .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" ceil(max(get_y(player_pos), get_y(target_pos))) + 1 ", INT.get()), "max_y"))
-                .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" floor(min(get_y(player_pos), get_y(target_pos))) - 2 ", INT.get()), "min_y"))
-                .addAction(PutVarAction.makeVec3(ACTIVE.activation, Compiler.compileString(" target_pos - player_pos ", VEC3.get()), "vector"))
-                .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" max(1, ceil(2 * sqrt(length(vector)))) ", INT.get()), "fangs"))
-                .addAction(PutVarAction.makeInt(ACTIVE.activation, 0, "fangs_spawned"))
-                
-                .addAction(PutVarAction.makeInt(ACTIVE.activation, 1, "fang"))
-                .addAction(LabelAction.make(ACTIVE.activation, "outer_loop"))
-                
-                .addAction(ClearTargetsAction.make(ACTIVE.activation, "position"))
-                .addAction(PutVarAction.makeVec3(ACTIVE.activation, Compiler.compileString(" (vector * fang) / fangs ", VEC3.get()), "offset"))
-                
-                .addAction(ClearTargetsAction.make(ACTIVE.activation, "position"))
-                .addAction(OffsetBlockAction.make(ACTIVE.activation, "eye_position", "position", VEC3.get().reference("offset")))
-                .addAction(GetPositionAction.make(ACTIVE.activation, "position", "position_var"))
-                .addAction(PutVarAction.makeDouble(ACTIVE.activation, Compiler.compileString(" get_x(position_var) ", DOUBLE.get()), "x"))
-                .addAction(PutVarAction.makeDouble(ACTIVE.activation, Compiler.compileString(" get_z(position_var) ", DOUBLE.get()), "z"))
-                .addAction(PutVarAction.makeInt(ACTIVE.activation, "max_y", "y"))
-                
-                .addAction(ActivateAction.make(ACTIVE.activation, "repeat"))
-                .addAction(DeactivateAction.make(ACTIVE.activation, "success"))
-                .addAction(LabelAction.make(ACTIVE.activation, "inner_loop"))
-                
-                .addAction(ClearTargetsAction.make(ACTIVE.activation, "block"))
-                .addAction(PositionToTargetAction.make(ACTIVE.activation, "block", Compiler.compileString(" vec3(x, y, z) ", VEC3.get())))
-                .addAction(GetBlockAttributesAction.make(ACTIVE.activation, "block", "", "", "has_collider"))
-                .addAction(BooleanActivationAction.make(ACTIVE.activation, "success", BOOLEAN.get().reference("has_collider"), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
-                
-                .addAction(ClearTargetsAction.make("success", "above"))
-                .addAction(PositionToTargetAction.make("success", "above", Compiler.compileString(" vec3(x, y + 1, z) ", VEC3.get())))
-                .addAction(PutVarAction.makeCompoundTag("success", Compiler.compileString(" put_nbt_int(tag, 'Warmup', fang) ", COMPOUND_TAG.get()), "delayed_tag"))
-                .addAction(SpawnEntityAction.make("success", "", STRING.get().immediate(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.EVOKER_FANGS).toString()), "above", VEC3.get().reference("look"), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().reference("delayed_tag")))
-                .addAction(PutVarAction.makeInt("success", Compiler.compileString(" fangs_spawned + 1 ", INT.get()), "fangs_spawned"))
-                
-                .addAction(DeactivateAction.make("success", "repeat"))
-                .addAction(PutVarAction.makeInt("repeat", Compiler.compileString(" y - 1 ", INT.get()), "y"))
-                .addAction(BranchAction.make("repeat", "inner_loop", Compiler.compileString(" y >= min_y ", BOOLEAN.get())))
-                
-                .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" fang + 1 ", INT.get()), "fang"))
-                .addAction(BranchAction.make(ACTIVE.activation, "outer_loop", Compiler.compileString(" fang <= fangs ", BOOLEAN.get())))
-                .addAction(BooleanActivationAction.make(ACTIVE.activation, ACTIVE.activation, Compiler.compileString(" fangs_spawned > 0 ", BOOLEAN.get()), BOOLEAN.get().immediate(false), BOOLEAN.get().immediate(true)))
-                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
-                
-                .addParameter(DOUBLE.get(), "range", 20D)
-                .addEventHook(ACTIVE.activation)
-                .addTooltip(Component.translatable(Spells.KEY_EVOKER_FANGS_DESC))
+        addSpell(Spells.EVOKER_FANGS, new Spell(LayeredSpellIcon.make(ImmutableList.of(
+                        AdvancedSpellIcon.make(new ResourceLocation("textures/entity/illager/evoker.png"), 8, 8, 8, 10, 64, 64, 0, -2),
+                        AdvancedSpellIcon.make(new ResourceLocation("textures/entity/illager/evoker.png"), 22, 26, 8, 4, 64, 64, 0, 5),
+                        AdvancedSpellIcon.make(new ResourceLocation("textures/entity/illager/evoker.png"), 6, 44, 8, 4, 64, 64, 0, 5),
+                        AdvancedSpellIcon.make(new ResourceLocation("textures/entity/illager/evoker.png"), 26, 2, 2, 4, 64, 64, 0, 2)
+                )), Spells.KEY_EVOKER_FANGS, 6F)
+                        .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                        .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "", "", ""))
+                        .addAction(GetEntityUUIDAction.make(ACTIVE.activation, OWNER.targetGroup, "owner_uuid"))
+                        .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, Compiler.compileString(" put_nbt_uuid(tag(), 'Owner', owner_uuid) ", COMPOUND_TAG.get()), "tag"))
+                        
+                        .addAction(GetPositionAction.make(ACTIVE.activation, HIT_POSITION.targetGroup, "target_pos"))
+                        .addAction(GetEntityEyePositionAction.make(ACTIVE.activation, OWNER.targetGroup, "eye_position"))
+                        .addAction(GetPositionAction.make(ACTIVE.activation, "eye_position", "player_pos1"))
+                        .addAction(GetPositionAction.make(ACTIVE.activation, OWNER.targetGroup, "player_pos2"))
+                        .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "look", ""))
+                        .addAction(PutVarAction.makeVec3(ACTIVE.activation, Compiler.compileString(" get_y(look) >= 0 ? player_pos2 : player_pos1 ", VEC3.get()), "player_pos"))
+                        .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" ceil(max(get_y(player_pos), get_y(target_pos))) + 1 ", INT.get()), "max_y"))
+                        .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" floor(min(get_y(player_pos), get_y(target_pos))) - 2 ", INT.get()), "min_y"))
+                        .addAction(PutVarAction.makeVec3(ACTIVE.activation, Compiler.compileString(" target_pos - player_pos ", VEC3.get()), "vector"))
+                        .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" max(1, ceil(2 * sqrt(length(vector)))) ", INT.get()), "fangs"))
+                        .addAction(PutVarAction.makeInt(ACTIVE.activation, 0, "fangs_spawned"))
+                        
+                        .addAction(PutVarAction.makeInt(ACTIVE.activation, 1, "fang"))
+                        .addAction(LabelAction.make(ACTIVE.activation, "outer_loop"))
+                        
+                        .addAction(ClearTargetsAction.make(ACTIVE.activation, "position"))
+                        .addAction(PutVarAction.makeVec3(ACTIVE.activation, Compiler.compileString(" (vector * fang) / fangs ", VEC3.get()), "offset"))
+                        
+                        .addAction(ClearTargetsAction.make(ACTIVE.activation, "position"))
+                        .addAction(OffsetBlockAction.make(ACTIVE.activation, "eye_position", "position", VEC3.get().reference("offset")))
+                        .addAction(GetPositionAction.make(ACTIVE.activation, "position", "position_var"))
+                        .addAction(PutVarAction.makeDouble(ACTIVE.activation, Compiler.compileString(" get_x(position_var) ", DOUBLE.get()), "x"))
+                        .addAction(PutVarAction.makeDouble(ACTIVE.activation, Compiler.compileString(" get_z(position_var) ", DOUBLE.get()), "z"))
+                        .addAction(PutVarAction.makeInt(ACTIVE.activation, "max_y", "y"))
+                        
+                        .addAction(ActivateAction.make(ACTIVE.activation, "repeat"))
+                        .addAction(DeactivateAction.make(ACTIVE.activation, "success"))
+                        .addAction(LabelAction.make(ACTIVE.activation, "inner_loop"))
+                        
+                        .addAction(ClearTargetsAction.make(ACTIVE.activation, "block"))
+                        .addAction(PositionToTargetAction.make(ACTIVE.activation, "block", Compiler.compileString(" vec3(x, y, z) ", VEC3.get())))
+                        .addAction(GetBlockAttributesAction.make(ACTIVE.activation, "block", "", "", "has_collider"))
+                        .addAction(BooleanActivationAction.make(ACTIVE.activation, "success", BOOLEAN.get().reference("has_collider"), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                        
+                        .addAction(ClearTargetsAction.make("success", "above"))
+                        .addAction(PositionToTargetAction.make("success", "above", Compiler.compileString(" vec3(x, y + 1, z) ", VEC3.get())))
+                        .addAction(PutVarAction.makeCompoundTag("success", Compiler.compileString(" put_nbt_int(tag, 'Warmup', fang) ", COMPOUND_TAG.get()), "delayed_tag"))
+                        .addAction(SpawnEntityAction.make("success", "", STRING.get().immediate(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.EVOKER_FANGS).toString()), "above", VEC3.get().reference("look"), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().reference("delayed_tag")))
+                        .addAction(PutVarAction.makeInt("success", Compiler.compileString(" fangs_spawned + 1 ", INT.get()), "fangs_spawned"))
+                        
+                        .addAction(DeactivateAction.make("success", "repeat"))
+                        .addAction(PutVarAction.makeInt("repeat", Compiler.compileString(" y - 1 ", INT.get()), "y"))
+                        .addAction(BranchAction.make("repeat", "inner_loop", Compiler.compileString(" y >= min_y ", BOOLEAN.get())))
+                        
+                        .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" fang + 1 ", INT.get()), "fang"))
+                        .addAction(BranchAction.make(ACTIVE.activation, "outer_loop", Compiler.compileString(" fang <= fangs ", BOOLEAN.get())))
+                        .addAction(BooleanActivationAction.make(ACTIVE.activation, ACTIVE.activation, Compiler.compileString(" fangs_spawned > 0 ", BOOLEAN.get()), BOOLEAN.get().immediate(false), BOOLEAN.get().immediate(true)))
+                        .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                        
+                        .addParameter(DOUBLE.get(), "range", 20D)
+                        .addEventHook(ACTIVE.activation)
+                        .addTooltip(Component.translatable(Spells.KEY_EVOKER_FANGS_DESC))
         );
         
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);
