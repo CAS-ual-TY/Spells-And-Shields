@@ -43,8 +43,8 @@ public class SpellIconRegistry
     public static final SpellIconRenderer<AdvancedSpellIcon> ADVANCED_RENDERER = (icon, poseStack, width, height, x, y, partialTicks) -> {
         RenderSystem.setShaderTexture(0, icon.getTexture());
         RenderSystem.enableBlend();
-        int offX = (width - icon.getWidth()) / 2;
-        int offY = (height - icon.getHeight()) / 2;
+        int offX = (width - icon.getWidth()) / 2 + icon.getOffsetX();
+        int offY = (height - icon.getHeight()) / 2 + icon.getOffsetY();
         GuiComponent.blit(poseStack, x + offX, y + offY, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
         RenderSystem.disableBlend();
     };
