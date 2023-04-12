@@ -124,6 +124,7 @@ public class SpellActionTypes
     // level
     public static final RegistryObject<SpellActionType<CubeBlockTargetsAction>> CUBE_BLOCK_TARGETS = DEFERRED_REGISTER.register("cube_block_targets", () -> new SpellActionType<>(CubeBlockTargetsAction::new, CubeBlockTargetsAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetBlockAction>> GET_BLOCK = DEFERRED_REGISTER.register("get_block", () -> new SpellActionType<>(GetBlockAction::new, GetBlockAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetBlockAttributes>> GET_BLOCK_ATTRIBUTES = DEFERRED_REGISTER.register("get_block_attributes", () -> new SpellActionType<>(GetBlockAttributes::new, GetBlockAttributes::makeCodec));
     public static final RegistryObject<SpellActionType<GetFluidAction>> GET_FLUID = DEFERRED_REGISTER.register("get_fluid", () -> new SpellActionType<>(GetFluidAction::new, GetFluidAction::makeCodec));
     public static final RegistryObject<SpellActionType<OffsetBlockAction>> OFFSET_BLOCK = DEFERRED_REGISTER.register("offset_block", () -> new SpellActionType<>(OffsetBlockAction::new, OffsetBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<PlayerHarvestBlockAction>> PLAYER_HARVEST_BLOCK = DEFERRED_REGISTER.register("player_harvest_block", () -> new SpellActionType<>(PlayerHarvestBlockAction::new, PlayerHarvestBlockAction::makeCodec));
