@@ -692,7 +692,7 @@ public class Compiler
             
             if(getChar() == ':')
             {
-                nextChar();
+                nextCharSkipSpaces();
             }
             else
             {
