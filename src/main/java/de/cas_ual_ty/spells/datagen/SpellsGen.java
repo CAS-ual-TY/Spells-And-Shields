@@ -501,8 +501,9 @@ public class SpellsGen implements DataProvider
         addSpell(Spells.FIRE_BALL, new Spell(modId, "fire_ball", Spells.KEY_FIRE_BALL, 5F)
                 .addParameter(DOUBLE.get(), "speed", 2.5)
                 .addParameter(INT.get(), "fire_seconds", 2)
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.BLAZE_POWDER)))
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ShootAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().immediate(3D), DOUBLE.get().immediate(0D), INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", ""))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(SourcedDamageAction.make("on_entity_hit", ENTITY_HIT.targetGroup, DOUBLE.get().immediate(2D), PROJECTILE.targetGroup))
@@ -547,8 +548,9 @@ public class SpellsGen implements DataProvider
         addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
                 .addParameter(DOUBLE.get(), "speed", 2.5)
                 .addParameter(DOUBLE.get(), "range", 25D)
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, "looked_at_block", "looked_at_entity", "looked_at_nothing"))
-                .addAction(SimpleManaCheckAction.make("looked_at_entity"))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(HomeAction.make("looked_at_entity", OWNER.targetGroup, ENTITY_HIT.targetGroup, DOUBLE.get().immediate(3D), INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", ""))
                 .addAction(PlaySoundAction.make("looked_at_entity", OWNER.targetGroup, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(ReplenishManaAction.make("on_entity_hit", ENTITY_HIT.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
@@ -566,7 +568,7 @@ public class SpellsGen implements DataProvider
         tag.putBoolean("crit", true);
         tag.putInt("pickup", 1);
         addSpell(Spells.BLOW_ARROW, new Spell(modId, "blow_arrow", Spells.KEY_BLOW_ARROW, 5F)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, tag, "tag"))
                 .addAction(GetEntityUUIDAction.make(ACTIVE.activation, OWNER.targetGroup, "uuid"))
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, Compiler.compileString(" put_nbt_uuid(tag, 'Owner', uuid) ", COMPOUND_TAG.get()), "tag"))
@@ -581,10 +583,12 @@ public class SpellsGen implements DataProvider
                 .addAction(GetItemTagAction.make("potion", "item", "potion_tag"))
                 .addAction(PutVarAction.makeCompoundTag("potion", Compiler.compileString(" put_nbt_string(tag, 'Potion', get_nbt_string(potion_tag, 'Potion')) ", COMPOUND_TAG.get()), "tag"))
                 .addAction(ActivateAction.make("potion", "shoot"))
+                .addAction(BurnManaAction.make("shoot", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(SpawnEntityAction.make("shoot", "arrow", SpellsUtil.objectToString(EntityType.ARROW, ForgeRegistries.ENTITY_TYPES), "position", VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", VEC3.get()), COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", OWNER.targetGroup, SoundEvents.ARROW_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(ConsumeItemAction.make("shoot", "item", INT.get().immediate(1)))
                 .addAction(ItemEqualsAction.make("spectral", "item", new ItemStack(Items.SPECTRAL_ARROW), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
+                .addAction(HasManaAction.make("spectral", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(SpawnEntityAction.make("spectral", "arrow", SpellsUtil.objectToString(EntityType.SPECTRAL_ARROW, ForgeRegistries.ENTITY_TYPES), "position", VEC3.get().reference("direction"), Compiler.compileString(" 3 * direction ", VEC3.get()), COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("spectral", OWNER.targetGroup, SoundEvents.ARROW_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(ConsumeItemAction.make("spectral", "item", INT.get().immediate(1)))
@@ -633,7 +637,7 @@ public class SpellsGen implements DataProvider
         //TODO fx, test
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
                 .addParameter(DOUBLE.get(), "damage", 10.0)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
                 .addAction(ActivateAction.make(ACTIVE.activation, "shoot"))
                 .addAction(ItemEqualsAction.make("shoot", "item", new ItemStack(Items.WATER_BUCKET), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
@@ -647,6 +651,7 @@ public class SpellsGen implements DataProvider
                 .addAction(OverrideItemAction.make("shoot", "item", INT.get().reference("amount"), INT.get().reference("damage"), COMPOUND_TAG.get().reference("item_tag"), SpellsUtil.objectToString(Items.BUCKET, ForgeRegistries.ITEMS)))
                 .addAction(GetEntityUUIDAction.make("shoot", OWNER.targetGroup, "owner_uuid_return"))
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(tag(), 'owner_uuid_return', owner_uuid_return) ", COMPOUND_TAG.get()), "tag"))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ShootAction.make("shoot", OWNER.targetGroup, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(0D), INT.get().immediate(100), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
                 .addAction(ApplyEntityExtraTagAction.make("shoot", "projectile", COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", OWNER.targetGroup, SoundEvents.BUCKET_EMPTY, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
@@ -688,7 +693,7 @@ public class SpellsGen implements DataProvider
         //TODO fx, test
         addSpell(Spells.POTION_SHOT, new Spell(modId, "potion_shot", Spells.KEY_POTION_SHOT, 5F)
                 .addParameter(DOUBLE.get(), "damage", 10.0)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
                 .addAction(ActivateAction.make(ACTIVE.activation, "shoot"))
                 .addAction(ItemEqualsAction.make("shoot", "item", new ItemStack(Items.POTION), BOOLEAN.get().immediate(true), INT.get().immediate(1), INT.get().immediate(-1)))
@@ -701,6 +706,7 @@ public class SpellsGen implements DataProvider
                 .addAction(GetItemAttributesAction.make("shoot", "item", "item", "amount", "damage", "item_tag"))
                 .addAction(OverrideItemAction.make("shoot", "item", INT.get().reference("amount"), INT.get().reference("damage"), COMPOUND_TAG.get().reference("item_tag"), SpellsUtil.objectToString(Items.GLASS_BOTTLE, ForgeRegistries.ITEMS)))
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_string(tag(), 'Potion', get_nbt_string(item_tag, 'Potion')) ", COMPOUND_TAG.get()), "tag"))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ShootAction.make("shoot", OWNER.targetGroup, DOUBLE.get().immediate(2D), DOUBLE.get().immediate(0D), INT.get().immediate(100), "", "on_entity_hit", "", "projectile"))
                 .addAction(ApplyEntityExtraTagAction.make("shoot", "projectile", COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", OWNER.targetGroup, SoundEvents.BOTTLE_EMPTY, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
@@ -739,8 +745,9 @@ public class SpellsGen implements DataProvider
         );
         
         addSpell(Spells.FIRE_CHARGE, new Spell(ItemSpellIcon.make(new ItemStack(Items.FIRE_CHARGE)), Spells.KEY_FIRE_CHARGE, 5F)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.FIRE_CHARGE)))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE.activation, tag, "tag"))
                 .addAction(GetEntityUUIDAction.make(ACTIVE.activation, OWNER.targetGroup, "uuid"))
                 .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "direction", ""))
@@ -788,7 +795,7 @@ public class SpellsGen implements DataProvider
         metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.IRON_NUGGET).toString(), Tiers.IRON.getAttackDamageBonus());
         metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.GOLD_NUGGET).toString(), Tiers.GOLD.getAttackDamageBonus());
         addSpell(Spells.SPIT_METAL, new Spell(modId, "spit_metal", Spells.KEY_SPIT_METAL, 4F)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
                 .addAction(GetItemAttributesAction.make(ACTIVE.activation, "item", "item_id", "amount", "", ""))
                 .addAction(ActivateAction.make(ACTIVE.activation, "offhand"))
@@ -798,6 +805,7 @@ public class SpellsGen implements DataProvider
                 .addAction(OffhandItemTargetAction.make("offhand", OWNER.targetGroup, "item"))
                 .addAction(GetItemAttributesAction.make("offhand", "item", "item_id", "amount", "", ""))
                 .addAction(BooleanActivationAction.make("offhand", "shoot", Compiler.compileString(" nbt_contains(item_damage_map, item_id) ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ShootAction.make("shoot", OWNER.targetGroup, DOUBLE.get().immediate(2D), DOUBLE.get().immediate(0D), INT.get().immediate(100), "", "on_entity_hit", "", "projectile"))
                 .addAction(PutVarAction.makeDouble("shoot", Compiler.compileString(" base_damage + get_nbt_double(item_damage_map, item_id) ", DOUBLE.get()), "damage"))
                 .addAction(ApplyEntityExtraTagAction.make("shoot", "projectile", Compiler.compileString(" put_nbt_double(tag(), 'damage', damage) ", COMPOUND_TAG.get())))
@@ -817,8 +825,9 @@ public class SpellsGen implements DataProvider
         
         // TODO fx
         addSpell(Spells.FLAMETHROWER, new Spell(modId, "flamethrower", Spells.KEY_FLAMETHROWER, 7F)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.BLAZE_POWDER)))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
                 .addAction(ActivateAction.make(ACTIVE.activation, "shoot"))
                 .addAction(CopyTargetsAction.make("on_timeout", "player", HOLDER.targetGroup))
@@ -848,8 +857,9 @@ public class SpellsGen implements DataProvider
         addToggleWalkerSpell(Spells.LAVA_WALKER, Spells.KEY_LAVA_WALKER, Spells.KEY_LAVA_WALKER_DESC, "lava_walker", Blocks.LAVA.defaultBlockState(), Blocks.OBSIDIAN.defaultBlockState(), 5F, true);
         
         addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(new ResourceLocation(BuiltinRegistries.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.AMETHYST_SHARD)))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "", "on_entity_hit", ""))
                 .addAction(ApplyMobEffectAction.make("on_entity_hit", ENTITY_HIT.targetGroup, STRING.get().immediate(BuiltinRegistries.SILENCE_EFFECT.getId().toString()), INT.get().reference("silence_seconds"), INT.get().immediate(0), BOOLEAN.get().immediate(false), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(PlaySoundAction.make("on_entity_hit", OWNER.targetGroup, SoundEvents.AMETHYST_CLUSTER_HIT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
@@ -996,8 +1006,9 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.LIGHTNING_STRIKE, new Spell(modId, "lightning_strike", Spells.KEY_LIGHTNING_STRIKE, 8F)
                 .addParameter(DOUBLE.get(), "range", 20D)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.COPPER_INGOT)))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, "on_block_hit", "on_entity_hit", ""))
                 .addAction(CopyTargetsAction.make("on_block_hit", "position", BLOCK_HIT.targetGroup))
                 .addAction(CopyTargetsAction.make("on_entity_hit", "position", ENTITY_HIT.targetGroup))
@@ -1053,8 +1064,9 @@ public class SpellsGen implements DataProvider
         );
         
         addSpell(Spells.GHAST, new Spell(AdvancedSpellIcon.make(new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32), Spells.KEY_GHAST, 4F)
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.FIRE_CHARGE)))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(AddDelayedSpellAction.make(ACTIVE.activation, OWNER.targetGroup, "sound", INT.get().immediate(10), STRING.get().immediate(""), COMPOUND_TAG.get().immediate(new CompoundTag())))
                 .addAction(AddDelayedSpellAction.make(ACTIVE.activation, OWNER.targetGroup, "shoot", INT.get().immediate(20), STRING.get().immediate(""), COMPOUND_TAG.get().immediate(new CompoundTag())))
                 .addAction(PlaySoundAction.make("sound", HOLDER.targetGroup, SoundEvents.GHAST_WARN, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
