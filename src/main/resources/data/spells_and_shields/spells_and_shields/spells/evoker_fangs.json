@@ -1,0 +1,311 @@
+{
+  "s1/title": {
+    "translate": "spell.spells_and_shields.evoker_fangs"
+  },
+  "s2/icon": {
+    "type": "spells_and_shields:advanced",
+    "height": 10,
+    "texture": "minecraft:textures/entity/illager/evoker.png",
+    "textureHeight": 64,
+    "textureWidth": 64,
+    "u": 8,
+    "v": 8,
+    "width": 8
+  },
+  "s3/mana_cost": 6.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.evoker_fangs.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 20.0,
+      "var/name": "range"
+    }
+  ],
+  "s7/spell_actions": [
+    {
+      "type": "spells_and_shields:has_mana",
+      "activation": "active",
+      "amount": "<<mana_cost>>",
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:look_at_target",
+      "a/block_hit_activation": "",
+      "a/entity_hit_activation": "",
+      "a/miss_activation": "",
+      "activation": "active",
+      "block_clip_context": "collider",
+      "d/double/range": "<<range>>",
+      "double/bb_inflation": 0.5,
+      "fluid_clip_context": "none",
+      "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:get_entity_uuid",
+      "activation": "active",
+      "t/source": "owner",
+      "var/uuid": "owner_uuid"
+    },
+    {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "active",
+      "d/tag/source": "<< put_nbt_uuid(tag(), 'Owner', owner_uuid) >>",
+      "var/result": "tag"
+    },
+    {
+      "type": "spells_and_shields:get_position",
+      "activation": "active",
+      "t/source": "hit_position",
+      "var/position": "target_pos"
+    },
+    {
+      "type": "spells_and_shields:get_entity_eye_position",
+      "activation": "active",
+      "t/source": "owner",
+      "td/eye_position": "eye_position"
+    },
+    {
+      "type": "spells_and_shields:get_position",
+      "activation": "active",
+      "t/source": "eye_position",
+      "var/position": "player_pos1"
+    },
+    {
+      "type": "spells_and_shields:get_position",
+      "activation": "active",
+      "t/source": "owner",
+      "var/position": "player_pos2"
+    },
+    {
+      "type": "spells_and_shields:get_entity_position_direction",
+      "activation": "active",
+      "t/source": "owner",
+      "td/position": "",
+      "var/direction": "look",
+      "var/motion": ""
+    },
+    {
+      "type": "spells_and_shields:put_vec3",
+      "activation": "active",
+      "d/vec3/source": "<< get_y(look) >= 0 ? player_pos2 : player_pos1 >>",
+      "var/result": "player_pos"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "active",
+      "d/int/source": "<< ceil(max(get_y(player_pos), get_y(target_pos))) + 1 >>",
+      "var/result": "max_y"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "active",
+      "d/int/source": "<< floor(min(get_y(player_pos), get_y(target_pos))) - 2 >>",
+      "var/result": "min_y"
+    },
+    {
+      "type": "spells_and_shields:put_vec3",
+      "activation": "active",
+      "d/vec3/source": "<< target_pos - player_pos >>",
+      "var/result": "vector"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "active",
+      "d/int/source": "<< max(1, ceil(2 * sqrt(length(vector)))) >>",
+      "var/result": "fangs"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "active",
+      "d/int/source": 0,
+      "var/result": "fangs_spawned"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "active",
+      "d/int/source": 1,
+      "var/result": "fang"
+    },
+    {
+      "type": "spells_and_shields:label",
+      "activation": "active",
+      "label": "outer_loop"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "active",
+      "td/destination": "position"
+    },
+    {
+      "type": "spells_and_shields:put_vec3",
+      "activation": "active",
+      "d/vec3/source": "<< (vector * fang) / fangs >>",
+      "var/result": "offset"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "active",
+      "td/destination": "position"
+    },
+    {
+      "type": "spells_and_shields:offset_block",
+      "activation": "active",
+      "d/vec3/offset": "<<offset>>",
+      "td/result": "position",
+      "ts/targets": "eye_position"
+    },
+    {
+      "type": "spells_and_shields:get_position",
+      "activation": "active",
+      "t/source": "position",
+      "var/position": "position_var"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "active",
+      "d/double/source": "<< get_x(position_var) >>",
+      "var/result": "x"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "active",
+      "d/double/source": "<< get_z(position_var) >>",
+      "var/result": "z"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "active",
+      "d/int/source": "<<max_y>>",
+      "var/result": "y"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "repeat",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "success",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:label",
+      "activation": "active",
+      "label": "inner_loop"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "active",
+      "td/destination": "block"
+    },
+    {
+      "type": "spells_and_shields:position_to_target",
+      "activation": "active",
+      "d/vec3/position": "<< vec3(x, y, z) >>",
+      "td/result": "block"
+    },
+    {
+      "type": "spells_and_shields:get_block_attributes",
+      "activation": "active",
+      "t/target": "block",
+      "var/has_collider": "has_collider",
+      "var/is_air": "",
+      "var/is_fluid": ""
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "success",
+      "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<<has_collider>>"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "success",
+      "td/destination": "above"
+    },
+    {
+      "type": "spells_and_shields:position_to_target",
+      "activation": "success",
+      "d/vec3/position": "<< vec3(x, y + 1, z) >>",
+      "td/result": "above"
+    },
+    {
+      "type": "spells_and_shields:put_compound_tag",
+      "activation": "success",
+      "d/tag/source": "<< put_nbt_int(tag, 'Warmup', fang) >>",
+      "var/result": "delayed_tag"
+    },
+    {
+      "type": "spells_and_shields:spawn_entity",
+      "activation": "success",
+      "d/compound_tag/tag": "<<delayed_tag>>",
+      "d/string/entity_type": "minecraft:evoker_fangs",
+      "d/vec3/direction": "<<look>>",
+      "d/vec3/motion": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "t/position": "above",
+      "td/entity": ""
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "success",
+      "d/int/source": "<< fangs_spawned + 1 >>",
+      "var/result": "fangs_spawned"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "repeat",
+      "activation": "success"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "repeat",
+      "d/int/source": "<< y - 1 >>",
+      "var/result": "y"
+    },
+    {
+      "type": "spells_and_shields:branch",
+      "activation": "repeat",
+      "d/boolean/conditional": "<< y >= min_y >>",
+      "label": "inner_loop"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "active",
+      "d/int/source": "<< fang + 1 >>",
+      "var/result": "fang"
+    },
+    {
+      "type": "spells_and_shields:branch",
+      "activation": "active",
+      "d/boolean/conditional": "<< fang <= fangs >>",
+      "label": "outer_loop"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "active",
+      "activation": "active",
+      "d/boolean/activate_if_true": false,
+      "d/boolean/deactivate_if_false": true,
+      "d/boolean/input": "<< fangs_spawned > 0 >>"
+    },
+    {
+      "type": "spells_and_shields:burn_mana",
+      "activation": "active",
+      "d/double/mana_amount": "<<mana_cost>>",
+      "ts/targets": "owner"
+    }
+  ]
+}

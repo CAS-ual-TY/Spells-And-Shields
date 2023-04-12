@@ -153,6 +153,10 @@ public class Spells
     public static final String KEY_ENDER_ARMY = key(ENDER_ARMY);
     public static final String KEY_ENDER_ARMY_DESC = descKey(ENDER_ARMY);
     
+    public static final ResourceLocation EVOKER_FANGS = rl("evoker_fangs");
+    public static final String KEY_EVOKER_FANGS = key(EVOKER_FANGS);
+    public static final String KEY_EVOKER_FANGS_DESC = descKey(EVOKER_FANGS);
+    
     public static final ResourceLocation PERMANENT_REPLENISHMENT = rl("permanent_replenishment");
     public static final String KEY_PERMANENT_REPLENISHMENT = key(PERMANENT_REPLENISHMENT);
     public static final String KEY_PERMANENT_REPLENISHMENT_DESC = descKey(PERMANENT_REPLENISHMENT);

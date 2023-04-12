@@ -102,6 +102,8 @@
   "spell.spells_and_shields.drain_flame.desc": "Drain fire to convert it into mana regeneration. The fire must be infinite (eg. on top of Netherrack) for this to work.",
   "spell.spells_and_shields.ender_army": "Ender Army",
   "spell.spells_and_shields.ender_army.desc": "Make all Endermen close to the target you are looking at attack said target.",
+  "spell.spells_and_shields.evoker_fangs": "Evoker Fangs",
+  "spell.spells_and_shields.evoker_fangs.desc": "Summon Fangs forward like an Evoker.",
   "spell.spells_and_shields.fire_ball": "Fire Ball",
   "spell.spells_and_shields.fire_ball.desc": "Shoot a fire ball forward.",
   "spell.spells_and_shields.fire_charge": "Fire Charge",
