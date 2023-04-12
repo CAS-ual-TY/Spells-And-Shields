@@ -118,6 +118,9 @@ public class DocsGen implements DataProvider
     {
         if(type.getCodec() instanceof MapCodec.MapCodecCodec<A> mapCodecCodec)
         {
+            fw.write('\n');
+            fw.write("***\n");
+            fw.write('\n');
             fw.write("### `" + rl.getPath() + "` Type\n");
             fw.write('\n');
             fw.write("ABCDE Text WIP\n");
