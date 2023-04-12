@@ -24,6 +24,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.api.distmarker.Dist;
@@ -313,19 +314,19 @@ public class SpellsUtil
         });
     }
     
-    public static CompoundTag stateToTag(BlockState blockState)
+    public static CompoundTag stateToTag(StateHolder<?, ?> stateHolder)
     {
         CompoundTag tag = new CompoundTag();
-        for(Property<?> p : blockState.getProperties())
+        for(Property<?> p : stateHolder.getProperties())
         {
-            addPropertyToTag(blockState, tag, p);
+            addPropertyToTag(stateHolder, tag, p);
         }
         return tag;
     }
     
-    private static <X extends Comparable<X>> void addPropertyToTag(BlockState blockState, CompoundTag tag, Property<X> p)
+    private static <X extends Comparable<X>> void addPropertyToTag(StateHolder<?, ?> stateHolder, CompoundTag tag, Property<X> p)
     {
-        p.valueCodec().encodeStart(NbtOps.INSTANCE, p.value(blockState)).result().ifPresent(element ->
+        p.valueCodec().encodeStart(NbtOps.INSTANCE, p.value(stateHolder)).result().ifPresent(element ->
         {
             tag.put(p.getName(), element);
         });

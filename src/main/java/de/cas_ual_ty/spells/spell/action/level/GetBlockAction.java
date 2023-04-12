@@ -77,7 +77,6 @@ public class GetBlockAction extends AffectSingleTypeAction<PositionTarget>
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PositionTarget positionTarget)
     {
         BlockState blockState = ctx.level.getBlockState(positionTarget.getBlockPos());
-        
         ResourceLocation id = ForgeRegistries.BLOCKS.getKey(blockState.getBlock());
         
         if(id == null)
