@@ -62,29 +62,29 @@
   "s5/spell_events": [
     "active"
   ],
-  "s6/spell_parameters": [],
+  "s6/spell_parameters": [
+    {
+      "type": "spells_and_shields:tag",
+      "value": {
+        "minecraft:beef": 8,
+        "minecraft:chicken": 8,
+        "minecraft:mutton": 8,
+        "minecraft:porkchop": 8
+      },
+      "var/name": "animals"
+    },
+    {
+      "type": "spells_and_shields:tag",
+      "value": {},
+      "var/name": "amounts"
+    }
+  ],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:get_entity_position_direction",
+      "type": "spells_and_shields:has_mana",
       "activation": "active",
-      "t/source": "owner",
-      "td/position": "",
-      "var/direction": "direction",
-      "var/motion": ""
-    },
-    {
-      "type": "spells_and_shields:simple_mana_check",
-      "activation": "active"
-    },
-    {
-      "type": "spells_and_shields:spawn_particles",
-      "activation": "active",
-      "d/double/spread": 0.4,
-      "d/int/count": 3,
-      "particle": {
-        "type": "minecraft:explosion"
-      },
-      "ts/targets": "owner"
+      "amount": "<<mana_cost>>",
+      "t/target": "owner"
     },
     {
       "type": "spells_and_shields:activate",
@@ -92,111 +92,60 @@
       "activation": "active"
     },
     {
-      "type": "spells_and_shields:item_check",
-      "activation": "cow",
-      "d/boolean/must_be_in_hand": true,
-      "item": {
-        "Count": 8,
-        "id": "minecraft:beef"
-      },
-      "t/target": "owner"
+      "type": "spells_and_shields:mainhand_item_target",
+      "activation": "active",
+      "t/source": "owner",
+      "td/item": "item"
     },
     {
-      "type": "spells_and_shields:spawn_entity",
-      "activation": "cow",
-      "d/compound_tag/tag": {
-        "Age": -24000
-      },
-      "d/string/entity_type": "minecraft:cow",
-      "d/vec3/direction": "<< -direction >>",
-      "d/vec3/motion": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "t/position": "owner",
-      "td/entity": "baby"
+      "type": "spells_and_shields:get_item_attributes",
+      "activation": "active",
+      "t/source": "item",
+      "var/amount": "amount",
+      "var/compound_tag": "",
+      "var/damage": "",
+      "var/item": "item_id"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "spawn",
+      "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= get_nbt_int(amounts, item_id) >>"
     },
     {
       "type": "spells_and_shields:activate",
-      "a/to_activate": "chicken",
+      "a/to_activate": "offhand",
       "activation": "active"
     },
     {
-      "type": "spells_and_shields:item_check",
-      "activation": "chicken",
-      "d/boolean/must_be_in_hand": true,
-      "item": {
-        "Count": 8,
-        "id": "minecraft:chicken"
-      },
-      "t/target": "owner"
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "offhand",
+      "activation": "spawn"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "offhand",
+      "td/destination": "item"
+    },
+    {
+      "type": "spells_and_shields:offhand_item_target",
+      "activation": "offhand",
+      "t/source": "owner",
+      "td/item": "item"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "spawn",
+      "activation": "offhand",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= get_nbt_int(amounts, item_id) >>"
     },
     {
       "type": "spells_and_shields:spawn_entity",
-      "activation": "chicken",
-      "d/compound_tag/tag": {
-        "Age": -24000
-      },
-      "d/string/entity_type": "minecraft:chicken",
-      "d/vec3/direction": "<< -direction >>",
-      "d/vec3/motion": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "t/position": "owner",
-      "td/entity": "baby"
-    },
-    {
-      "type": "spells_and_shields:activate",
-      "a/to_activate": "pig",
-      "activation": "active"
-    },
-    {
-      "type": "spells_and_shields:item_check",
-      "activation": "pig",
-      "d/boolean/must_be_in_hand": true,
-      "item": {
-        "Count": 8,
-        "id": "minecraft:porkchop"
-      },
-      "t/target": "owner"
-    },
-    {
-      "type": "spells_and_shields:spawn_entity",
-      "activation": "pig",
-      "d/compound_tag/tag": {
-        "Age": -24000
-      },
-      "d/string/entity_type": "minecraft:pig",
-      "d/vec3/direction": "<< -direction >>",
-      "d/vec3/motion": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "t/position": "owner",
-      "td/entity": "baby"
-    },
-    {
-      "type": "spells_and_shields:activate",
-      "a/to_activate": "sheep",
-      "activation": "active"
-    },
-    {
-      "type": "spells_and_shields:item_check",
-      "activation": "sheep",
-      "d/boolean/must_be_in_hand": true,
-      "item": {
-        "Count": 8,
-        "id": "minecraft:mutton"
-      },
-      "t/target": "owner"
-    },
-    {
-      "type": "spells_and_shields:spawn_entity",
-      "activation": "sheep",
+      "activation": "spawn",
       "d/compound_tag/tag": {
         "Age": -24000
       },
@@ -209,6 +158,36 @@
       ],
       "t/position": "owner",
       "td/entity": "baby"
+    },
+    {
+      "type": "spells_and_shields:burn_mana",
+      "activation": "spawn",
+      "d/double/mana_amount": "<<mana_cost>>",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:consume_item",
+      "activation": "spawn",
+      "d/int/amount": "<< get_nbt_int(amounts, item_id) >>",
+      "ts/targets": "item"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "spawn",
+      "d/double/spread": 0.4,
+      "d/int/count": 3,
+      "particle": {
+        "type": "minecraft:explosion"
+      },
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "spawn",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "sound_event": "minecraft:entity.chicken.egg",
+      "ts/targets": "owner"
     }
   ]
 }

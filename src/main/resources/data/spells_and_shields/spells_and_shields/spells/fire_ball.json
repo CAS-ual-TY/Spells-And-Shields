@@ -45,6 +45,12 @@
   ],
   "s7/spell_actions": [
     {
+      "type": "spells_and_shields:has_mana",
+      "activation": "active",
+      "amount": "<<mana_cost>>",
+      "t/target": "owner"
+    },
+    {
       "type": "spells_and_shields:item_check",
       "activation": "active",
       "d/boolean/must_be_in_hand": true,
@@ -55,8 +61,10 @@
       "t/target": "owner"
     },
     {
-      "type": "spells_and_shields:simple_mana_check",
-      "activation": "active"
+      "type": "spells_and_shields:burn_mana",
+      "activation": "active",
+      "d/double/mana_amount": "<<mana_cost>>",
+      "ts/targets": "owner"
     },
     {
       "type": "spells_and_shields:shoot",
