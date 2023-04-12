@@ -460,22 +460,34 @@ public class SpellsGen implements DataProvider
         
         CompoundTag childTag = new CompoundTag();
         childTag.putInt("Age", -24000);
+        CompoundTag animalsTag = new CompoundTag();
+        animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.BEEF).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.COW).toString());
+        animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.CHICKEN).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.CHICKEN).toString());
+        animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.PORKCHOP).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.PIG).toString());
+        animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.MUTTON).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.SHEEP).toString());
+        CompoundTag amountsTag = new CompoundTag();
+        animalsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.BEEF).toString(), 8);
+        animalsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.CHICKEN).toString(), 8);
+        animalsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.PORKCHOP).toString(), 8);
+        animalsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.MUTTON).toString(), 8);
         addSpell(Spells.SUMMON_ANIMAL, new Spell(modId, "summon_animal", Spells.KEY_SUMMON_ANIMAL, 4F)
-                .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE.activation, OWNER.targetGroup, "", "direction", ""))
-                .addAction(SimpleManaCheckAction.make(ACTIVE.activation))
-                .addAction(SpawnParticlesAction.make(ACTIVE.activation, OWNER.targetGroup, ParticleTypes.EXPLOSION, INT.get().immediate(3), DOUBLE.get().immediate(0.4)))
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ActivateAction.make(ACTIVE.activation, "cow"))
-                .addAction(ItemCheckAction.make("cow", OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.BEEF, 8)))
-                .addAction(SpawnEntityAction.make("cow", "baby", SpellsUtil.objectToString(EntityType.COW, ForgeRegistries.ENTITY_TYPES), OWNER.targetGroup, Compiler.compileString(" -direction ", VEC3.get()), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(childTag)))
-                .addAction(ActivateAction.make(ACTIVE.activation, "chicken"))
-                .addAction(ItemCheckAction.make("chicken", OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.CHICKEN, 8)))
-                .addAction(SpawnEntityAction.make("chicken", "baby", SpellsUtil.objectToString(EntityType.CHICKEN, ForgeRegistries.ENTITY_TYPES), OWNER.targetGroup, Compiler.compileString(" -direction ", VEC3.get()), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(childTag)))
-                .addAction(ActivateAction.make(ACTIVE.activation, "pig"))
-                .addAction(ItemCheckAction.make("pig", OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.PORKCHOP, 8)))
-                .addAction(SpawnEntityAction.make("pig", "baby", SpellsUtil.objectToString(EntityType.PIG, ForgeRegistries.ENTITY_TYPES), OWNER.targetGroup, Compiler.compileString(" -direction ", VEC3.get()), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(childTag)))
-                .addAction(ActivateAction.make(ACTIVE.activation, "sheep"))
-                .addAction(ItemCheckAction.make("sheep", OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.MUTTON, 8)))
-                .addAction(SpawnEntityAction.make("sheep", "baby", SpellsUtil.objectToString(EntityType.SHEEP, ForgeRegistries.ENTITY_TYPES), OWNER.targetGroup, Compiler.compileString(" -direction ", VEC3.get()), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(childTag)))
+                .addAction(MainhandItemTargetAction.make(ACTIVE.activation, OWNER.targetGroup, "item"))
+                .addAction(GetItemAttributesAction.make(ACTIVE.activation, "item", "item_id", "amount", "", ""))
+                .addAction(BooleanActivationAction.make(ACTIVE.activation, "spawn", Compiler.compileString(" nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= get_nbt_int(amounts, item_id) ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(ActivateAction.make(ACTIVE.activation, "offhand"))
+                .addAction(DeactivateAction.make("spawn", "offhand"))
+                .addAction(ClearTargetsAction.make("offhand", "item"))
+                .addAction(OffhandItemTargetAction.make("offhand", OWNER.targetGroup, "item"))
+                .addAction(BooleanActivationAction.make("offhand", "spawn", Compiler.compileString(" nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= get_nbt_int(amounts, item_id) ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
+                .addAction(SpawnEntityAction.make("spawn", "baby", SpellsUtil.objectToString(EntityType.SHEEP, ForgeRegistries.ENTITY_TYPES), OWNER.targetGroup, Compiler.compileString(" -direction ", VEC3.get()), VEC3.get().immediate(Vec3.ZERO), COMPOUND_TAG.get().immediate(childTag)))
+                .addAction(BurnManaAction.make("spawn", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(ConsumeItemAction.make("spawn", "item", Compiler.compileString(" get_nbt_int(amounts, item_id) ", INT.get())))
+                .addAction(SpawnParticlesAction.make("spawn", OWNER.targetGroup, ParticleTypes.EXPLOSION, INT.get().immediate(3), DOUBLE.get().immediate(0.4)))
+                .addAction(PlaySoundAction.make("spawn", OWNER.targetGroup, SoundEvents.CHICKEN_EGG, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addParameter(COMPOUND_TAG.get(), "animals", animalsTag)
+                .addParameter(COMPOUND_TAG.get(), "amounts", amountsTag)
                 .addEventHook(ACTIVE.activation)
                 .addTooltip(Component.translatable(Spells.KEY_SUMMON_ANIMAL_DESC))
                 .addTooltip(Component.empty())
