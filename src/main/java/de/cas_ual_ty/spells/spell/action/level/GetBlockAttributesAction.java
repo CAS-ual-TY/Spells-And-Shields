@@ -15,34 +15,34 @@ import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 
-public class GetBlockAttributes extends AffectSingleTypeAction<PositionTarget>
+public class GetBlockAttributesAction extends AffectSingleTypeAction<PositionTarget>
 {
-    public static Codec<GetBlockAttributes> makeCodec(SpellActionType<GetBlockAttributes> type)
+    public static Codec<GetBlockAttributesAction> makeCodec(SpellActionType<GetBlockAttributesAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                Codec.STRING.fieldOf(ParamNames.var("is_air")).forGetter(GetBlockAttributes::getIsAir),
-                Codec.STRING.fieldOf(ParamNames.var("is_fluid")).forGetter(GetBlockAttributes::getIsFluid),
-                Codec.STRING.fieldOf(ParamNames.var("has_collider")).forGetter(GetBlockAttributes::getHasCollider)
-        ).apply(instance, (activation, singleTarget, isAir, isFluid, hasCollider) -> new GetBlockAttributes(type, activation, singleTarget, isAir, isFluid, hasCollider)));
+                Codec.STRING.fieldOf(ParamNames.var("is_air")).forGetter(GetBlockAttributesAction::getIsAir),
+                Codec.STRING.fieldOf(ParamNames.var("is_fluid")).forGetter(GetBlockAttributesAction::getIsFluid),
+                Codec.STRING.fieldOf(ParamNames.var("has_collider")).forGetter(GetBlockAttributesAction::getHasCollider)
+        ).apply(instance, (activation, singleTarget, isAir, isFluid, hasCollider) -> new GetBlockAttributesAction(type, activation, singleTarget, isAir, isFluid, hasCollider)));
     }
     
-    public static GetBlockAttributes make(String activation, String singleTarget, String isAir, String isFluid, String hasCollider)
+    public static GetBlockAttributesAction make(String activation, String singleTarget, String isAir, String isFluid, String hasCollider)
     {
-        return new GetBlockAttributes(SpellActionTypes.GET_BLOCK_ATTRIBUTES.get(), activation, singleTarget, isAir, isFluid, hasCollider);
+        return new GetBlockAttributesAction(SpellActionTypes.GET_BLOCK_ATTRIBUTES.get(), activation, singleTarget, isAir, isFluid, hasCollider);
     }
     
     protected String isAir;
     protected String isFluid;
     protected String hasCollider;
     
-    public GetBlockAttributes(SpellActionType<?> type)
+    public GetBlockAttributesAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public GetBlockAttributes(SpellActionType<?> type, String activation, String singleTarget, String isAir, String isFluid, String hasCollider)
+    public GetBlockAttributesAction(SpellActionType<?> type, String activation, String singleTarget, String isAir, String isFluid, String hasCollider)
     {
         super(type, activation, singleTarget);
         this.isAir = isAir;
