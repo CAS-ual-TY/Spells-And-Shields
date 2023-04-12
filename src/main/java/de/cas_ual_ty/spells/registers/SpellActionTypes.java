@@ -128,6 +128,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<GetFluidAction>> GET_FLUID = DEFERRED_REGISTER.register("get_fluid", () -> new SpellActionType<>(GetFluidAction::new, GetFluidAction::makeCodec));
     public static final RegistryObject<SpellActionType<OffsetBlockAction>> OFFSET_BLOCK = DEFERRED_REGISTER.register("offset_block", () -> new SpellActionType<>(OffsetBlockAction::new, OffsetBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<PlayerHarvestBlockAction>> PLAYER_HARVEST_BLOCK = DEFERRED_REGISTER.register("player_harvest_block", () -> new SpellActionType<>(PlayerHarvestBlockAction::new, PlayerHarvestBlockAction::makeCodec));
+    public static final RegistryObject<SpellActionType<PositionToTargetAction>> POSITION_TO_TARGET = DEFERRED_REGISTER.register("position_to_target", () -> new SpellActionType<>(PositionToTargetAction::new, PositionToTargetAction::makeCodec));
     public static final RegistryObject<SpellActionType<RemoveBlockAction>> REMOVE_BLOCK = DEFERRED_REGISTER.register("remove_block", () -> new SpellActionType<>(RemoveBlockAction::new, RemoveBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<SetBlockAction>> SET_BLOCK = DEFERRED_REGISTER.register("set_block", () -> new SpellActionType<>(SetBlockAction::new, SetBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<TickBlockAction>> TICK_BLOCK = DEFERRED_REGISTER.register("tick_block", () -> new SpellActionType<>(TickBlockAction::new, TickBlockAction::makeCodec));
