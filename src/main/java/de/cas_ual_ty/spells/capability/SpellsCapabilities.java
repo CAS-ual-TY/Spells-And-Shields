@@ -134,6 +134,14 @@ public class SpellsCapabilities
                     current.deserializeNBT(original.serializeNBT());
                 });
             });
+            
+            DelayedSpellHolder.getHolder(event.getEntity()).ifPresent(current ->
+            {
+                DelayedSpellHolder.getHolder(event.getOriginal()).ifPresent(original ->
+                {
+                    current.deserializeNBT(original.serializeNBT());
+                });
+            });
         }
         else
         {
