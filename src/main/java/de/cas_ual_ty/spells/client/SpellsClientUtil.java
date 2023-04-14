@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.capability.ParticleEmitterHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellInteractButton;
 import de.cas_ual_ty.spells.client.progression.SpellNodeWidget;
@@ -24,9 +25,11 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -35,6 +38,7 @@ import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEv
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -64,6 +68,7 @@ public class SpellsClientUtil
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, SpellsClientUtil::rightClickBlock);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
+        MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::levelTick);
     }
     
     private static void clientSetup(FMLClientSetupEvent event)
@@ -218,6 +223,17 @@ public class SpellsClientUtil
     private static void registerClientTooltipComponent(RegisterClientTooltipComponentFactoriesEvent event)
     {
         event.register(ManaTooltipComponent.class, tooltip -> new ManaClientTooltipComponent(tooltip.mana));
+    }
+    
+    private static void levelTick(TickEvent.LevelTickEvent event)
+    {
+        if(event.phase == TickEvent.Phase.END && event.level instanceof ClientLevel level)
+        {
+            for(Entity entity : level.getEntities().getAll())
+            {
+                ParticleEmitterHolder.getHolder(entity).ifPresent(h -> h.tick(true));
+            }
+        }
     }
     
     public static LazyOptional<ManaHolder> getClientManaHolder()

@@ -1,18 +1,17 @@
 package de.cas_ual_ty.spells.client;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.capability.ParticleEmitterHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
-import de.cas_ual_ty.spells.network.ManaSyncMessage;
-import de.cas_ual_ty.spells.network.RunActionOnClientMessage;
-import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
-import de.cas_ual_ty.spells.network.SpellsSyncMessage;
+import de.cas_ual_ty.spells.network.*;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -75,6 +74,33 @@ public class ClientMessageHandler
             screen.getMenu().spellProgression = msg.map();
             screen.spellTreesUpdated();
         }
+    }
+    
+    public static void handleParticleEmitterSync(ParticleEmitterSyncMessage msg)
+    {
+        Level level = Minecraft.getInstance().level;
+        
+        if(level == null)
+        {
+            return;
+        }
+        
+        Entity entity = level.getEntity(msg.entityId());
+        
+        if(entity == null)
+        {
+            return;
+        }
+        
+        ParticleEmitterHolder.getHolder(entity).ifPresent(holder ->
+        {
+            if(msg.clear())
+            {
+                holder.clear();
+            }
+            
+            msg.list().forEach(holder::addParticleEmitter);
+        });
     }
     
     public static void handleSpellAction(RunActionOnClientMessage msg)

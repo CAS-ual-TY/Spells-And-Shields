@@ -30,6 +30,7 @@ public class SpellsCapabilities
     public static Capability<ISpellProgressionHolder> SPELL_PROGRESSION_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static Capability<IExtraTagHolder> EXTRA_TAG_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static Capability<IDelayedSpellHolder> DELAYED_SPELL_HOLDER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<ParticleEmitterHolder> PARTICLE_EMITTER_HOLDER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     
     private static void registerCapabilities(RegisterCapabilitiesEvent event)
     {
@@ -38,6 +39,7 @@ public class SpellsCapabilities
         event.register(ISpellProgressionHolder.class);
         event.register(IExtraTagHolder.class);
         event.register(IDelayedSpellHolder.class);
+        event.register(ParticleEmitterHolder.class);
     }
     
     private static void attachCapabilities(AttachCapabilitiesEvent<Entity> event)
@@ -59,6 +61,9 @@ public class SpellsCapabilities
         
         DelayedSpellHolder delayedSpellHolder = new DelayedSpellHolder(event.getObject());
         attachCapability(event, delayedSpellHolder, DELAYED_SPELL_HOLDER_CAPABILITY, "delayed_spell_holder");
+        
+        ParticleEmitterHolder particleEmitterHolder = new ParticleEmitterHolder(event.getObject());
+        attachCapability(event, particleEmitterHolder, PARTICLE_EMITTER_HOLDER_CAPABILITY, "particle_emitter_holder");
     }
     
     private static <T extends Tag, C extends INBTSerializable<T>> void attachCapability(AttachCapabilitiesEvent<?> event, C capData, Capability<C> capability, String name)
@@ -142,6 +147,14 @@ public class SpellsCapabilities
                     current.deserializeNBT(original.serializeNBT());
                 });
             });
+            
+            ParticleEmitterHolder.getHolder(event.getEntity()).ifPresent(current ->
+            {
+                ParticleEmitterHolder.getHolder(event.getOriginal()).ifPresent(original ->
+                {
+                    current.deserializeNBT(original.serializeNBT());
+                });
+            });
         }
         else
         {
@@ -221,24 +234,33 @@ public class SpellsCapabilities
     
     private static void startTracking(PlayerEvent.StartTracking event)
     {
-        if(event.getEntity() instanceof ServerPlayer serverPlayer && event.getTarget() instanceof LivingEntity livingEntity)
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
         {
-            ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder -> SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), manaHolder.makeSyncMessage()));
+            ParticleEmitterHolder.getHolder(event.getTarget()).ifPresent(particleEmitterHolder -> SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), particleEmitterHolder.makeSyncMessage()));
             
-            if(livingEntity instanceof Player target)
+            if(event.getTarget() instanceof LivingEntity livingEntity)
             {
-                SpellHolder.getSpellHolder(target).ifPresent((spellHolder -> SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), spellHolder.makeSyncMessage())));
+                ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder -> SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), manaHolder.makeSyncMessage()));
+                
+                if(livingEntity instanceof Player target)
+                {
+                    SpellHolder.getSpellHolder(target).ifPresent((spellHolder -> SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), spellHolder.makeSyncMessage())));
+                }
             }
         }
     }
     
     private static void levelTick(TickEvent.LevelTickEvent event)
     {
-        if(event.phase == TickEvent.Phase.END && event.level instanceof ServerLevel level)
+        if(event.phase == TickEvent.Phase.END)
         {
-            for(Entity e : level.getAllEntities())
+            if(event.level instanceof ServerLevel level)
             {
-                DelayedSpellHolder.getHolder(e).ifPresent(DelayedSpellHolder::tick);
+                for(Entity e : level.getAllEntities())
+                {
+                    DelayedSpellHolder.getHolder(e).ifPresent(DelayedSpellHolder::tick);
+                    ParticleEmitterHolder.getHolder(e).ifPresent(h -> h.tick(false));
+                }
             }
         }
     }
