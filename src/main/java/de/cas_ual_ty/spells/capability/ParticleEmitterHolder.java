@@ -208,6 +208,6 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
     
     public static LazyOptional<ParticleEmitterHolder> getHolder(Entity entity)
     {
-        return entity.getCapability(SpellsCapabilities.DELAYED_SPELL_HOLDER_CAPABILITY).cast();
+        return entity.getCapability(SpellsCapabilities.PARTICLE_EMITTER_HOLDER_CAPABILITY).cast();
     }
 }

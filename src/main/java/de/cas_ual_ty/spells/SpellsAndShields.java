@@ -64,6 +64,7 @@ public class SpellsAndShields
         CHANNEL.registerMessage(5, RequestLearnSpellMessage.class, RequestLearnSpellMessage::encode, RequestLearnSpellMessage::decode, RequestLearnSpellMessage::handle);
         CHANNEL.registerMessage(6, RequestEquipSpellMessage.class, RequestEquipSpellMessage::encode, RequestEquipSpellMessage::decode, RequestEquipSpellMessage::handle);
         CHANNEL.registerMessage(7, RunActionOnClientMessage.class, RunActionOnClientMessage::encode, RunActionOnClientMessage::decode, RunActionOnClientMessage::handle);
+        CHANNEL.registerMessage(8, ParticleEmitterSyncMessage.class, ParticleEmitterSyncMessage::encode, ParticleEmitterSyncMessage::decode, ParticleEmitterSyncMessage::handle);
         
         Compiler.registerSuppliersToCompiler();
         UnaryOperation.registerToCompiler();
