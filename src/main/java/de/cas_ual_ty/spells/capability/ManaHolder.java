@@ -13,10 +13,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
-public class ManaHolder implements IManaHolder
+public class ManaHolder implements INBTSerializable<ListTag>
 {
     // Amount of ticks until 1 half mana bottle is restored naturally
     public static final int TICKS_UNTIL_REG = 50;
@@ -45,20 +46,17 @@ public class ManaHolder implements IManaHolder
         this.player = player;
     }
     
-    @Override
     public void setMana(float mana)
     {
         this.mana = mana;
         this.checkSyncStatus();
     }
     
-    @Override
     public float getMana()
     {
         return mana;
     }
     
-    @Override
     public void setExtraMana(float extraMana)
     {
         this.extraMana = extraMana;
@@ -71,13 +69,11 @@ public class ManaHolder implements IManaHolder
         this.checkSyncStatus();
     }
     
-    @Override
     public float getExtraMana()
     {
         return extraMana;
     }
     
-    @Override
     public void replenish(float amount)
     {
         mana += amount;
@@ -91,7 +87,6 @@ public class ManaHolder implements IManaHolder
         this.checkSyncStatus();
     }
     
-    @Override
     public void burn(float amount)
     {
         boolean wasFull = this.mana >= this.getMaxMana();
@@ -126,7 +121,6 @@ public class ManaHolder implements IManaHolder
         this.checkSyncStatus();
     }
     
-    @Override
     public LivingEntity getPlayer()
     {
         return player;
@@ -243,7 +237,6 @@ public class ManaHolder implements IManaHolder
         }
     }
     
-    @Override
     public void sendSync()
     {
         if(player instanceof ServerPlayer serverPlayer)

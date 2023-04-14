@@ -13,13 +13,14 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.UUID;
 
-public class DelayedSpellHolder implements IDelayedSpellHolder
+public class DelayedSpellHolder implements INBTSerializable<ListTag>
 {
     public final Entity holder;
     private LinkedList<DelayedSpell> spells;
@@ -49,19 +50,16 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
         }
     }
     
-    @Override
     public void addDelayedSpell(SpellInstance spell, UUID uuid, String activation, int tickTime, CompoundTag tag)
     {
         spells.add(new DelayedSpell(spell, uuid, activation, tickTime, tag));
     }
     
-    @Override
     public boolean hasDelayedSpell(UUID uuid)
     {
         return uuid == null ? false : spells.stream().anyMatch(s -> uuid.equals(s.uuid));
     }
     
-    @Override
     public boolean removeDelayedSpell(UUID uuid, boolean forceActivate)
     {
         if(uuid == null)
@@ -91,7 +89,6 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
         return false;
     }
     
-    @Override
     public void tick()
     {
         LinkedList<DelayedSpell> theSpells = spells;
@@ -113,7 +110,6 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
         }
     }
     
-    @Override
     public Entity getHolder()
     {
         return holder;

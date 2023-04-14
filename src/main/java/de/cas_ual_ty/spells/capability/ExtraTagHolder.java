@@ -2,9 +2,10 @@ package de.cas_ual_ty.spells.capability;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class ExtraTagHolder implements IExtraTagHolder
+public class ExtraTagHolder implements INBTSerializable<CompoundTag>
 {
     protected CompoundTag tag;
     
@@ -13,7 +14,6 @@ public class ExtraTagHolder implements IExtraTagHolder
         this.tag = new CompoundTag();
     }
     
-    @Override
     public void applyExtraTag(CompoundTag tag)
     {
         for(String s : tag.getAllKeys())
@@ -22,7 +22,6 @@ public class ExtraTagHolder implements IExtraTagHolder
         }
     }
     
-    @Override
     public CompoundTag getExtraTag()
     {
         return tag;

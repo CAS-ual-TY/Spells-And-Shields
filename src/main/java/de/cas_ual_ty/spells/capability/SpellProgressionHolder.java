@@ -9,12 +9,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpellProgressionHolder implements ISpellProgressionHolder
+public class SpellProgressionHolder implements INBTSerializable<ListTag>
 {
     public static final String KEY_SPELL_STATUS = "spell_status";
     
@@ -27,19 +28,16 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
         this.progression = new HashMap<>();
     }
     
-    @Override
     public boolean isSpellAvailable(SpellNodeId spell)
     {
         return getSpellStatus(spell) == SpellStatus.LEARNED;
     }
     
-    @Override
     public SpellStatus getSpellStatus(SpellNodeId spell)
     {
         return progression.getOrDefault(spell, SpellStatus.LOCKED);
     }
     
-    @Override
     public void setSpellStatus(SpellNodeId spell, SpellStatus spellStatus)
     {
         progression.put(spell, spellStatus);
@@ -92,13 +90,11 @@ public class SpellProgressionHolder implements ISpellProgressionHolder
         }
     }
     
-    @Override
     public HashMap<SpellNodeId, SpellStatus> getProgression()
     {
         return progression;
     }
     
-    @Override
     public Player getPlayer()
     {
         return player;

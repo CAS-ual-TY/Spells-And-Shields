@@ -18,13 +18,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class SpellHolder implements ISpellHolder
+public class SpellHolder implements INBTSerializable<ListTag>
 {
     public static final int SPELL_SLOTS = 5;
     
@@ -39,19 +40,16 @@ public class SpellHolder implements ISpellHolder
         this.player = player;
     }
     
-    @Override
     public int getSlots()
     {
         return SPELL_SLOTS;
     }
     
-    @Override
     public SpellInstance getSpell(int slot)
     {
         return slots[slot];
     }
     
-    @Override
     public void setSpell(int slot, @Nullable SpellInstance spell)
     {
         if(!player.level.isClientSide)
@@ -70,7 +68,6 @@ public class SpellHolder implements ISpellHolder
         slots[slot] = spell;
     }
     
-    @Override
     public Player getPlayer()
     {
         return player;
@@ -103,6 +100,11 @@ public class SpellHolder implements ISpellHolder
         }
         
         return amount;
+    }
+    
+    public void removeSpell(int slot)
+    {
+        setSpell(slot, null);
     }
     
     public void clear()
@@ -156,7 +158,6 @@ public class SpellHolder implements ISpellHolder
         }
     }
     
-    @Override
     public void sendSync()
     {
         if(player instanceof ServerPlayer serverPlayer)

@@ -25,20 +25,20 @@ import net.minecraftforge.network.PacketDistributor;
 
 public class SpellsCapabilities
 {
-    public static Capability<IManaHolder> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static Capability<ISpellHolder> SPELLS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static Capability<ISpellProgressionHolder> SPELL_PROGRESSION_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static Capability<IExtraTagHolder> EXTRA_TAG_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static Capability<IDelayedSpellHolder> DELAYED_SPELL_HOLDER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<ManaHolder> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<SpellHolder> SPELLS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<SpellProgressionHolder> SPELL_PROGRESSION_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<ExtraTagHolder> EXTRA_TAG_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static Capability<DelayedSpellHolder> DELAYED_SPELL_HOLDER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static Capability<ParticleEmitterHolder> PARTICLE_EMITTER_HOLDER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     
     private static void registerCapabilities(RegisterCapabilitiesEvent event)
     {
-        event.register(IManaHolder.class);
-        event.register(ISpellHolder.class);
-        event.register(ISpellProgressionHolder.class);
-        event.register(IExtraTagHolder.class);
-        event.register(IDelayedSpellHolder.class);
+        event.register(ManaHolder.class);
+        event.register(SpellHolder.class);
+        event.register(SpellProgressionHolder.class);
+        event.register(ExtraTagHolder.class);
+        event.register(DelayedSpellHolder.class);
         event.register(ParticleEmitterHolder.class);
     }
     
