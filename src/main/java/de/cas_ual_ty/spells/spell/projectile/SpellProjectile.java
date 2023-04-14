@@ -74,7 +74,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
         {
             if(tickCount >= timeout)
             {
-                spell.run(level, getPlayerOwner(), timeoutActivation, (ctx) ->
+                spell.forceRun(level, getPlayerOwner(), timeoutActivation, (ctx) ->
                 {
                     ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 });
@@ -88,7 +88,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
     {
         if(spell != null && !level.isClientSide() && !(entityHitResult.getEntity() instanceof SpellProjectile))
         {
-            spell.run(level, getPlayerOwner(), entityHitActivation, (ctx) ->
+            spell.forceRun(level, getPlayerOwner(), entityHitActivation, (ctx) ->
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.ENTITY_HIT.targetGroup).addTargets(Target.of(entityHitResult.getEntity()));
@@ -106,7 +106,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
     {
         if(spell != null && !level.isClientSide())
         {
-            spell.run(level, getPlayerOwner(), blockHitActivation, (ctx) ->
+            spell.forceRun(level, getPlayerOwner(), blockHitActivation, (ctx) ->
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.BLOCK_HIT.targetGroup).addTargets(Target.of(level, blockHitResult.getBlockPos()));

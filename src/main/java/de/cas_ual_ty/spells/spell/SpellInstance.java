@@ -113,22 +113,27 @@ public class SpellInstance
     
     public boolean run(Level level, @Nullable Player owner, String activation)
     {
-        return run(level, owner, activation, (ctx) -> {}, (ctx) -> {});
+        return run(level, owner, activation, false, (ctx) -> {}, (ctx) -> {});
     }
     
     public boolean run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> preRun)
     {
-        return run(level, owner, activation, preRun, (ctx) -> {});
+        return run(level, owner, activation, false, preRun, (ctx) -> {});
+    }
+    
+    public boolean forceRun(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> preRun)
+    {
+        return run(level, owner, activation, true, preRun, (ctx) -> {});
     }
     
     public boolean run(Player owner, String event, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
     {
-        return run(owner.level, owner, event, toContext, fromContext);
+        return run(owner.level, owner, event, false, toContext, fromContext);
     }
     
-    public boolean run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)
+    public boolean run(Level level, @Nullable Player owner, String activation, boolean force, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)
     {
-        if(spell.get().getEventsList().contains(activation))
+        if(spell.get().getEventsList().contains(activation) || force)
         {
             SpellContext ctx = initializeContext(level, owner, activation);
             preRun.accept(ctx);

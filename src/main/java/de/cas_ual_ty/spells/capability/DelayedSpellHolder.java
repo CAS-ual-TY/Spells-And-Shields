@@ -35,7 +35,7 @@ public class DelayedSpellHolder implements IDelayedSpellHolder
         SpellInstance s = spell.spell;
         if(s != null)
         {
-            s.run(holder.level, null, spell.activation, ctx ->
+            s.forceRun(holder.level, null, spell.activation, ctx ->
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HOLDER.targetGroup).addTargets(Target.of(holder));
                 ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.DELAY_TIME.name, spell.getTime());
