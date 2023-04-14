@@ -150,7 +150,7 @@
     {
       "type": "spells_and_shields:apply_entity_extra_tag",
       "activation": "shoot",
-      "d/compound_tag/tag": "<< put_nbt_double(tag(), 'damage', damage) >>",
+      "d/compound_tag/tag": "<< put_nbt_double(new_tag(), 'damage', damage) >>",
       "ts/targets": "projectile"
     },
     {

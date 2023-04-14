@@ -95,7 +95,7 @@
     {
       "type": "spells_and_shields:put_compound_tag",
       "activation": "active",
-      "d/tag/source": "<< put_nbt_uuid(tag(), 'Owner', owner_uuid) >>",
+      "d/tag/source": "<< put_nbt_uuid(new_tag(), 'Owner', owner_uuid) >>",
       "var/result": "tag"
     },
     {

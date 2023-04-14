@@ -165,7 +165,7 @@
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "repeat",
       "ad/on_remove": "on_timeout",
-      "d/compound_tag/extra_data": "<< put_nbt_int(tag(), 'repetitions', repetitions - 1) >>",
+      "d/compound_tag/extra_data": "<< put_nbt_int(new_tag(), 'repetitions', repetitions - 1) >>",
       "d/int/tick_time": "<<repetition_delay>>",
       "d/string/uuid": "",
       "ts/targets": "player"
