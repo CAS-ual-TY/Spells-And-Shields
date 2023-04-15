@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
+import de.cas_ual_ty.spells.spell.action.fx.ParticleEmitterAction;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
@@ -97,6 +98,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<TeleportToAction>> TELEPORT_TO = DEFERRED_REGISTER.register("teleport_to", () -> new SpellActionType<>(TeleportToAction::new, TeleportToAction::makeCodec));
     
     // fx
+    public static final RegistryObject<SpellActionType<ParticleEmitterAction>> PARTICLE_EMITTER = DEFERRED_REGISTER.register("particle_emitter", () -> new SpellActionType<>(ParticleEmitterAction::new, ParticleEmitterAction::makeCodec));
     public static final RegistryObject<SpellActionType<PlaySoundAction>> PLAY_SOUND = DEFERRED_REGISTER.register("play_sound", () -> new SpellActionType<>(PlaySoundAction::new, PlaySoundAction::makeCodec));
     public static final RegistryObject<SpellActionType<SpawnParticlesAction>> SPAWN_PARTICLES = DEFERRED_REGISTER.register("spawn_particles", () -> new SpellActionType<>(SpawnParticlesAction::new, SpawnParticlesAction::makeCodec));
     
