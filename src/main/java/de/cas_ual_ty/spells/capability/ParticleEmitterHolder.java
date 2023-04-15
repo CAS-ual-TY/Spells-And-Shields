@@ -61,9 +61,9 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
                 for(int i = 0; i < e.amount; i++)
                 {
                     Vec3 pos = holder.position().add(e.offset);
-                    double x = pos.x + SpellsUtil.RANDOM.nextDouble() * e.spread;
-                    double y = pos.y + SpellsUtil.RANDOM.nextDouble() * e.spread;
-                    double z = pos.z + SpellsUtil.RANDOM.nextDouble() * e.spread;
+                    double x = pos.x + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
+                    double y = pos.y + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
+                    double z = pos.z + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
                     
                     holder.level.addParticle(e.particle, x, y, z, 0, 0, 0);
                 }
