@@ -171,8 +171,9 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
             
             activation = tag.getString("activation");
             tickTime = tag.getInt("maxTime");
-            time = tag.getInt("time");
             this.tag = tag.getCompound("tag");
+            
+            time = tag.getInt("time");
         }
         
         public boolean tick()
@@ -203,8 +204,8 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
             
             tag.putString("activation", activation);
             tag.putInt("maxTime", tickTime);
-            tag.putInt("time", time);
             tag.put("tag", this.tag);
+            tag.putInt("time", time);
             return tag;
         }
     }

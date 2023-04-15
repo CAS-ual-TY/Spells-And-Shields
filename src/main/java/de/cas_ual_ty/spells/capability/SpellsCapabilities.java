@@ -23,6 +23,9 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class SpellsCapabilities
 {
     public static Capability<ManaHolder> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
@@ -256,11 +259,19 @@ public class SpellsCapabilities
         {
             if(event.level instanceof ServerLevel level)
             {
+                List<Entity> entities = new LinkedList<>();
                 for(Entity e : level.getAllEntities())
+                {
+                    if(e != null)
+                    {
+                        entities.add(e);
+                    }
+                }
+                entities.forEach(e ->
                 {
                     DelayedSpellHolder.getHolder(e).ifPresent(DelayedSpellHolder::tick);
                     ParticleEmitterHolder.getHolder(e).ifPresent(h -> h.tick(false));
-                }
+                });
             }
         }
     }
