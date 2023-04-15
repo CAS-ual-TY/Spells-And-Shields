@@ -37,6 +37,11 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
     
     public void addParticleEmitter(ParticleEmitter emitter)
     {
+        if(!holder.level.isClientSide)
+        {
+            sendSync(emitter);
+        }
+        
         list.add(emitter);
     }
     
@@ -55,9 +60,10 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             {
                 for(int i = 0; i < e.amount; i++)
                 {
-                    double x = e.offset.x + SpellsUtil.RANDOM.nextDouble() * e.spread;
-                    double y = e.offset.y + SpellsUtil.RANDOM.nextDouble() * e.spread;
-                    double z = e.offset.z + SpellsUtil.RANDOM.nextDouble() * e.spread;
+                    Vec3 pos = holder.position().add(e.offset);
+                    double x = pos.x + SpellsUtil.RANDOM.nextDouble() * e.spread;
+                    double y = pos.y + SpellsUtil.RANDOM.nextDouble() * e.spread;
+                    double z = pos.z + SpellsUtil.RANDOM.nextDouble() * e.spread;
                     
                     holder.level.addParticle(e.particle, x, y, z, 0, 0, 0);
                 }
@@ -148,7 +154,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
         
         public boolean tick()
         {
-            return time-- % delay == 0;
+            return (time-- % delay) == 0;
         }
         
         public boolean remove()
@@ -203,6 +209,20 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             P particle = particleType.getDeserializer().fromNetwork(particleType, buf);
             int time = buf.readInt();
             return new ParticleEmitter(duration, delay, amount, spread, offset, particle, time);
+        }
+        
+        @Override
+        public String toString()
+        {
+            return "ParticleEmitter{" +
+                    "duration=" + duration +
+                    ", delay=" + delay +
+                    ", amount=" + amount +
+                    ", spread=" + spread +
+                    ", offset=" + offset +
+                    ", particle=" + particle +
+                    ", time=" + time +
+                    '}';
         }
     }
     
