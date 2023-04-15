@@ -132,7 +132,43 @@
       "d/double/velocity": 2.0,
       "d/int/timeout": 20,
       "t/source": "player",
-      "td/projectile": ""
+      "td/projectile": "projectile"
+    },
+    {
+      "type": "spells_and_shields:particle_emitter",
+      "activation": "do_shoot",
+      "d/boolean/motion_spread": true,
+      "d/double/spread": 0.0,
+      "d/int/amount": 1,
+      "d/int/delay": 4,
+      "d/int/duration": 20,
+      "d/vec3/offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "particle": {
+        "type": "minecraft:lava"
+      },
+      "ts/targets": "projectile"
+    },
+    {
+      "type": "spells_and_shields:particle_emitter",
+      "activation": "do_shoot",
+      "d/boolean/motion_spread": true,
+      "d/double/spread": 0.0,
+      "d/int/amount": 1,
+      "d/int/delay": 1,
+      "d/int/duration": 20,
+      "d/vec3/offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "particle": {
+        "type": "minecraft:smoke"
+      },
+      "ts/targets": "projectile"
     },
     {
       "type": "spells_and_shields:put_int",

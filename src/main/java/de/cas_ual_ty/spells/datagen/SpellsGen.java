@@ -696,7 +696,6 @@ public class SpellsGen implements DataProvider
                 .addTooltip(itemCostComponent(new ItemStack(Items.WATER_BUCKET)))
         );
         
-        //TODO fx, test
         addSpell(Spells.POTION_SHOT, new Spell(modId, "potion_shot", Spells.KEY_POTION_SHOT, 5F)
                 .addParameter(DOUBLE.get(), "damage", 10.0)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
@@ -796,7 +795,6 @@ public class SpellsGen implements DataProvider
                 .addTooltip(textItemCostComponent(Component.translatable(Spells.KEY_INSTANT_MINE_DESC_REQUIREMENT), 1))
         );
         
-        //TODO fx
         CompoundTag metalMap = new CompoundTag();
         metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.IRON_NUGGET).toString(), Tiers.IRON.getAttackDamageBonus());
         metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.GOLD_NUGGET).toString(), Tiers.GOLD.getAttackDamageBonus());
@@ -829,7 +827,6 @@ public class SpellsGen implements DataProvider
                 .addTooltip(itemCostComponent(new ItemStack(Items.GOLD_NUGGET)))
         );
         
-        // TODO fx
         addSpell(Spells.FLAMETHROWER, new Spell(modId, "flamethrower", Spells.KEY_FLAMETHROWER, 7F)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.BLAZE_POWDER)))
@@ -841,7 +838,9 @@ public class SpellsGen implements DataProvider
                 .addAction(ActivateAction.make("on_timeout", "shoot"))
                 .addAction(LabelAction.make("shoot", "loop"))
                 .addAction(BooleanActivationAction.make("shoot", "do_shoot", Compiler.compileString(" shots_per_repetition > 0 ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
-                .addAction(ShootAction.make("do_shoot", "player", DOUBLE.get().immediate(2D), DOUBLE.get().reference("inaccuracy"), INT.get().immediate(20), "on_block_hit", "on_entity_hit", "", ""))
+                .addAction(ShootAction.make("do_shoot", "player", DOUBLE.get().immediate(2D), DOUBLE.get().reference("inaccuracy"), INT.get().immediate(20), "on_block_hit", "on_entity_hit", "", "projectile"))
+                .addAction(ParticleEmitterAction.make("do_shoot", "projectile", INT.get().immediate(20), INT.get().immediate(4), INT.get().immediate(1), DOUBLE.get().immediate(0D), BOOLEAN.get().immediate(true), VEC3.get().immediate(Vec3.ZERO), ParticleTypes.LAVA))
+                .addAction(ParticleEmitterAction.make("do_shoot", "projectile", INT.get().immediate(20), INT.get().immediate(1), INT.get().immediate(1), DOUBLE.get().immediate(0D), BOOLEAN.get().immediate(true), VEC3.get().immediate(Vec3.ZERO), ParticleTypes.SMOKE))
                 .addAction(PutVarAction.makeInt("do_shoot", Compiler.compileString(" shots_per_repetition - 1 ", INT.get()), "shots_per_repetition"))
                 .addAction(JumpAction.make("do_shoot", "loop"))
                 .addAction(BooleanActivationAction.make("shoot", "repeat", Compiler.compileString(" repetitions > 1 ", BOOLEAN.get()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(false)))
