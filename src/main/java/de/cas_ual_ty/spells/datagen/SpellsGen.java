@@ -14,6 +14,7 @@ import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
+import de.cas_ual_ty.spells.spell.action.fx.ParticleEmitterAction;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
@@ -504,8 +505,12 @@ public class SpellsGen implements DataProvider
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ItemCheckAction.make(ACTIVE.activation, OWNER.targetGroup, BOOLEAN.get().immediate(true), new ItemStack(Items.BLAZE_POWDER)))
                 .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
-                .addAction(ShootAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().immediate(3D), DOUBLE.get().immediate(0D), INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", ""))
+                .addAction(ShootAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().immediate(3D), DOUBLE.get().immediate(0D), INT.get().immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BLAZE_SHOOT, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
+                .addAction(ParticleEmitterAction.make(ACTIVE.activation, "projectile", INT.get().immediate(200), INT.get().immediate(2), INT.get().immediate(3), DOUBLE.get().immediate(0.2D), VEC3.get().immediate(Vec3.ZERO), ParticleTypes.LARGE_SMOKE))
+                .addAction(ParticleEmitterAction.make(ACTIVE.activation, "projectile", INT.get().immediate(200), INT.get().immediate(4), INT.get().immediate(1), DOUBLE.get().immediate(0D), VEC3.get().immediate(Vec3.ZERO), ParticleTypes.LAVA))
+                .addAction(ParticleEmitterAction.make(ACTIVE.activation, "projectile", INT.get().immediate(200), INT.get().immediate(4), INT.get().immediate(2), DOUBLE.get().immediate(0.1D), VEC3.get().immediate(Vec3.ZERO), ParticleTypes.SMOKE))
+                .addAction(ParticleEmitterAction.make(ACTIVE.activation, "projectile", INT.get().immediate(200), INT.get().immediate(4), INT.get().immediate(2), DOUBLE.get().immediate(0.1D), VEC3.get().immediate(Vec3.ZERO), ParticleTypes.FLAME))
                 .addAction(SourcedDamageAction.make("on_entity_hit", ENTITY_HIT.targetGroup, DOUBLE.get().immediate(2D), PROJECTILE.targetGroup))
                 .addAction(SetOnFireAction.make("on_entity_hit", ENTITY_HIT.targetGroup, INT.get().reference("fire_seconds")))
                 .addAction(ActivateAction.make("on_entity_hit", "fx"))
