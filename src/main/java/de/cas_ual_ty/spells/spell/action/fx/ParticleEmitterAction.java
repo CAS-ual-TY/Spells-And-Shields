@@ -29,20 +29,22 @@ public class ParticleEmitterAction extends AffectTypeAction<EntityTarget>
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("delay")).forGetter(ParticleEmitterAction::getDelay),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(ParticleEmitterAction::getAmount),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("spread")).forGetter(ParticleEmitterAction::getSpread),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("motion_spread")).forGetter(ParticleEmitterAction::getMotionSpread),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("offset")).forGetter(ParticleEmitterAction::getOffset),
                 ParticleTypes.CODEC.fieldOf("particle").forGetter(ParticleEmitterAction::getParticle)
-        ).apply(instance, (activation, multiTargets, duration, delay, amount, spread, offset, particle) -> new ParticleEmitterAction(type, activation, multiTargets, duration, delay, amount, spread, offset, particle)));
+        ).apply(instance, (activation, multiTargets, duration, delay, amount, spread, motionSpread, offset, particle) -> new ParticleEmitterAction(type, activation, multiTargets, duration, delay, amount, spread, motionSpread, offset, particle)));
     }
     
-    public static ParticleEmitterAction make(String activation, String multiTargets, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> delay, DynamicCtxVar<Integer> amount, DynamicCtxVar<Double> spread, DynamicCtxVar<Vec3> offset, ParticleOptions particle)
+    public static ParticleEmitterAction make(String activation, String multiTargets, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> delay, DynamicCtxVar<Integer> amount, DynamicCtxVar<Double> spread, DynamicCtxVar<Boolean> motionSpread, DynamicCtxVar<Vec3> offset, ParticleOptions particle)
     {
-        return new ParticleEmitterAction(SpellActionTypes.PARTICLE_EMITTER.get(), activation, multiTargets, duration, delay, amount, spread, offset, particle);
+        return new ParticleEmitterAction(SpellActionTypes.PARTICLE_EMITTER.get(), activation, multiTargets, duration, delay, amount, spread, motionSpread, offset, particle);
     }
     
     protected DynamicCtxVar<Integer> duration;
     protected DynamicCtxVar<Integer> delay;
     protected DynamicCtxVar<Integer> amount;
     protected DynamicCtxVar<Double> spread;
+    protected DynamicCtxVar<Boolean> motionSpread;
     protected DynamicCtxVar<Vec3> offset;
     protected ParticleOptions particle;
     
@@ -51,7 +53,7 @@ public class ParticleEmitterAction extends AffectTypeAction<EntityTarget>
         super(type);
     }
     
-    public ParticleEmitterAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> delay, DynamicCtxVar<Integer> amount, DynamicCtxVar<Double> spread, DynamicCtxVar<Vec3> offset, ParticleOptions particle)
+    public ParticleEmitterAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> delay, DynamicCtxVar<Integer> amount, DynamicCtxVar<Double> spread, DynamicCtxVar<Boolean> motionSpread, DynamicCtxVar<Vec3> offset, ParticleOptions particle)
     {
         super(type, activation, multiTargets);
         this.duration = duration;
@@ -59,6 +61,7 @@ public class ParticleEmitterAction extends AffectTypeAction<EntityTarget>
         this.amount = amount;
         this.spread = spread;
         this.offset = offset;
+        this.motionSpread = motionSpread;
         this.particle = particle;
     }
     
@@ -80,6 +83,11 @@ public class ParticleEmitterAction extends AffectTypeAction<EntityTarget>
     public DynamicCtxVar<Double> getSpread()
     {
         return spread;
+    }
+    
+    public DynamicCtxVar<Boolean> getMotionSpread()
+    {
+        return motionSpread;
     }
     
     public DynamicCtxVar<Vec3> getOffset()
@@ -109,11 +117,14 @@ public class ParticleEmitterAction extends AffectTypeAction<EntityTarget>
                 {
                     spread.getValue(ctx).ifPresent(spread ->
                     {
-                        offset.getValue(ctx).ifPresent(offset ->
+                        motionSpread.getValue(ctx).ifPresent(motionSpread ->
                         {
-                            ParticleEmitterHolder.getHolder(entityTarget.getEntity()).ifPresent(holder ->
+                            offset.getValue(ctx).ifPresent(offset ->
                             {
-                                holder.addParticleEmitter(new ParticleEmitterHolder.ParticleEmitter(duration, delay, count, spread, offset, particle));
+                                ParticleEmitterHolder.getHolder(entityTarget.getEntity()).ifPresent(holder ->
+                                {
+                                    holder.addParticleEmitter(new ParticleEmitterHolder.ParticleEmitter(duration, delay, count, spread, motionSpread, offset, particle));
+                                });
                             });
                         });
                     });

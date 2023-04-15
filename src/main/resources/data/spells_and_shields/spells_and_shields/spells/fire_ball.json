@@ -89,6 +89,7 @@
     {
       "type": "spells_and_shields:particle_emitter",
       "activation": "active",
+      "d/boolean/motion_spread": true,
       "d/double/spread": 0.2,
       "d/int/amount": 3,
       "d/int/delay": 2,
@@ -106,6 +107,7 @@
     {
       "type": "spells_and_shields:particle_emitter",
       "activation": "active",
+      "d/boolean/motion_spread": true,
       "d/double/spread": 0.0,
       "d/int/amount": 1,
       "d/int/delay": 4,
@@ -123,6 +125,7 @@
     {
       "type": "spells_and_shields:particle_emitter",
       "activation": "active",
+      "d/boolean/motion_spread": true,
       "d/double/spread": 0.1,
       "d/int/amount": 2,
       "d/int/delay": 4,
@@ -140,6 +143,7 @@
     {
       "type": "spells_and_shields:particle_emitter",
       "activation": "active",
+      "d/boolean/motion_spread": true,
       "d/double/spread": 0.1,
       "d/int/amount": 2,
       "d/int/delay": 4,

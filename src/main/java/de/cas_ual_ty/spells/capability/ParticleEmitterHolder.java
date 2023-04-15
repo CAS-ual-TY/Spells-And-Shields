@@ -60,7 +60,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             {
                 for(int i = 0; i < e.amount; i++)
                 {
-                    Vec3 pos = holder.position().add(e.offset);
+                    Vec3 pos = holder.position().add(e.offset).add(e.motionSpread ? holder.getDeltaMovement().scale((double) i / (double) e.amount) : Vec3.ZERO);
                     double x = pos.x + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
                     double y = pos.y + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
                     double z = pos.z + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
@@ -118,25 +118,27 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
         public final int delay;
         public final int amount;
         public final double spread;
+        public final boolean motionSpread;
         public final Vec3 offset;
         public final ParticleOptions particle;
         
         private int time;
         
-        public ParticleEmitter(int duration, int delay, int amount, double spread, Vec3 offset, ParticleOptions particle, int time)
+        public ParticleEmitter(int duration, int delay, int amount, double spread, boolean motionSpread, Vec3 offset, ParticleOptions particle, int time)
         {
             this.duration = duration;
             this.delay = delay;
             this.amount = amount;
             this.spread = spread;
+            this.motionSpread = motionSpread;
             this.offset = offset;
             this.particle = particle;
             this.time = time;
         }
         
-        public ParticleEmitter(int duration, int delay, int amount, double spread, Vec3 offset, ParticleOptions particle)
+        public ParticleEmitter(int duration, int delay, int amount, double spread, boolean motionSpread, Vec3 offset, ParticleOptions particle)
         {
-            this(duration, delay, amount, spread, offset, particle, duration);
+            this(duration, delay, amount, spread, motionSpread, offset, particle, duration);
         }
         
         public ParticleEmitter(CompoundTag tag)
@@ -146,6 +148,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
                     tag.getInt("delay"),
                     tag.getInt("amount"),
                     tag.getDouble("spread"),
+                    tag.getBoolean("motionSpread"),
                     new Vec3(tag.getDouble("offX"), tag.getDouble("offY"), tag.getDouble("offZ")),
                     ParticleTypes.CODEC.decode(NbtOps.INSTANCE, tag.get("particle")).get().map(Pair::getFirst, o -> null),
                     tag.getInt("time")
@@ -175,6 +178,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             tag.putInt("delay", delay);
             tag.putInt("amount", amount);
             tag.putDouble("spread", spread);
+            tag.putBoolean("motionSpread", motionSpread);
             tag.putDouble("offX", offset.x);
             tag.putDouble("offY", offset.y);
             tag.putDouble("offZ", offset.z);
@@ -190,6 +194,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             buf.writeShort(delay);
             buf.writeByte(amount);
             buf.writeFloat((float) spread);
+            buf.writeBoolean(motionSpread);
             buf.writeFloat((float) offset.x);
             buf.writeFloat((float) offset.y);
             buf.writeFloat((float) offset.z);
@@ -204,11 +209,12 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             int delay = buf.readShort();
             int amount = buf.readByte();
             double spread = buf.readFloat();
+            boolean motionSpread = buf.readBoolean();
             Vec3 offset = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
             ParticleType<P> particleType = buf.readRegistryId();
             P particle = particleType.getDeserializer().fromNetwork(particleType, buf);
             int time = buf.readInt();
-            return new ParticleEmitter(duration, delay, amount, spread, offset, particle, time);
+            return new ParticleEmitter(duration, delay, amount, spread, motionSpread, offset, particle, time);
         }
         
         @Override
@@ -219,6 +225,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
                     ", delay=" + delay +
                     ", amount=" + amount +
                     ", spread=" + spread +
+                    ", motionSpread=" + motionSpread +
                     ", offset=" + offset +
                     ", particle=" + particle +
                     ", time=" + time +

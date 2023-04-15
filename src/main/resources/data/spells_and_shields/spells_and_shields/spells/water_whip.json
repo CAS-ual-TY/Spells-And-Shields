@@ -157,6 +157,7 @@
     {
       "type": "spells_and_shields:particle_emitter",
       "activation": "shoot",
+      "d/boolean/motion_spread": true,
       "d/double/spread": 0.5,
       "d/int/amount": 5,
       "d/int/delay": 1,
@@ -251,6 +252,7 @@
     {
       "type": "spells_and_shields:particle_emitter",
       "activation": "return",
+      "d/boolean/motion_spread": true,
       "d/double/spread": 0.1,
       "d/int/amount": 5,
       "d/int/delay": 1,
