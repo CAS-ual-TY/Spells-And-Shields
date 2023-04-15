@@ -639,7 +639,6 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_AQUA_AFFINITY_DESC))
         );
         
-        //TODO fx, test
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
                 .addParameter(DOUBLE.get(), "damage", 10.0)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
@@ -658,6 +657,7 @@ public class SpellsGen implements DataProvider
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(new_tag(), 'owner_uuid_return', owner_uuid_return) ", COMPOUND_TAG.get()), "tag"))
                 .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ShootAction.make("shoot", OWNER.targetGroup, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(0D), INT.get().immediate(100), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
+                .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.get().immediate(100), INT.get().immediate(1), INT.get().immediate(5), DOUBLE.get().immediate(0.5), VEC3.get().immediate(Vec3.ZERO), ParticleTypes.FALLING_WATER))
                 .addAction(ApplyEntityExtraTagAction.make("shoot", "projectile", COMPOUND_TAG.get().reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", OWNER.targetGroup, SoundEvents.BUCKET_EMPTY, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addAction(DamageAction.make("on_entity_hit", ENTITY_HIT.targetGroup, DOUBLE.get().immediate(10D)))
@@ -670,6 +670,7 @@ public class SpellsGen implements DataProvider
                 .addAction(GetEntityExtraTagAction.make("return", PROJECTILE.targetGroup, "tag"))
                 .addAction(EntityUUIDTargetAction.make("return", "return_target", Compiler.compileString(" get_nbt_uuid(tag, 'owner_uuid_return') ", STRING.get())))
                 .addAction(HomeAction.make("return", "position", "return_target", DOUBLE.get().immediate(1D), INT.get().immediate(100), "dummy_block_hit", "on_entity_hit_return", "dummy_timeout", "projectile"))
+                .addAction(ParticleEmitterAction.make("return", "projectile", INT.get().immediate(100), INT.get().immediate(1), INT.get().immediate(5), DOUBLE.get().immediate(0.1), VEC3.get().immediate(Vec3.ZERO), ParticleTypes.FALLING_WATER))
                 .addAction(ApplyEntityExtraTagAction.make("return", "projectile", COMPOUND_TAG.get().reference("tag")))
                 .addAction(GetEntityTypeAction.make("on_entity_hit_return", ENTITY_HIT.targetGroup, "", "", "is_player"))
                 .addAction(GetEntityUUIDAction.make("on_entity_hit_return", ENTITY_HIT.targetGroup, "hit_uuid"))

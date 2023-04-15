@@ -155,6 +155,23 @@
       "td/projectile": "projectile"
     },
     {
+      "type": "spells_and_shields:particle_emitter",
+      "activation": "shoot",
+      "d/double/spread": 0.5,
+      "d/int/amount": 5,
+      "d/int/delay": 1,
+      "d/int/duration": 100,
+      "d/vec3/offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "particle": {
+        "type": "minecraft:falling_water"
+      },
+      "ts/targets": "projectile"
+    },
+    {
       "type": "spells_and_shields:apply_entity_extra_tag",
       "activation": "shoot",
       "d/compound_tag/tag": "<<tag>>",
@@ -230,6 +247,23 @@
       "t/source": "position",
       "td/projectile": "projectile",
       "ts/targets": "return_target"
+    },
+    {
+      "type": "spells_and_shields:particle_emitter",
+      "activation": "return",
+      "d/double/spread": 0.1,
+      "d/int/amount": 5,
+      "d/int/delay": 1,
+      "d/int/duration": 100,
+      "d/vec3/offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "particle": {
+        "type": "minecraft:falling_water"
+      },
+      "ts/targets": "projectile"
     },
     {
       "type": "spells_and_shields:apply_entity_extra_tag",
