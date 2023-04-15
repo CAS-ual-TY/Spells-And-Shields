@@ -2,14 +2,20 @@ package de.cas_ual_ty.spells.spell.projectile;
 
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.SpellTrees;
+import de.cas_ual_ty.spells.registers.Spells;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -160,9 +166,17 @@ public class SpellProjectile extends AbstractHurtingProjectile
         
         if(spell != null)
         {
-            CompoundTag tag = new CompoundTag();
-            spell.getNodeId().toNbt(tag);
-            nbt.put("Spell", tag);
+            if(spell.getNodeId() != null)
+            {
+                CompoundTag tag = new CompoundTag();
+                spell.getNodeId().toNbt(tag);
+                nbt.put("Spell", tag);
+            }
+            else
+            {
+                Registry<Spell> spellRegistry = Spells.getRegistry(level);
+                nbt.putString("spellId", spell.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString());
+            }
         }
         else
         {
@@ -187,6 +201,11 @@ public class SpellProjectile extends AbstractHurtingProjectile
             if(spellNodeId != null)
             {
                 this.spell = spellNodeId.getSpellInstance(SpellTrees.getRegistry(this.level));
+            }
+            else if(nbt.contains("spellId", Tag.TAG_STRING))
+            {
+                Registry<Spell> spellRegistry = Spells.getRegistry(level);
+                this.spell = new SpellInstance(spellRegistry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, new ResourceLocation(nbt.getString("spellId")))));
             }
         }
         
