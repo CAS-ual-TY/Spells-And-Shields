@@ -59,7 +59,7 @@
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:put_compound_tag",
+      "type": "spells_and_shields:put_tag",
       "activation": "active",
       "d/tag/source": {
         "crit": 1,
@@ -82,13 +82,13 @@
       "var/motion": ""
     },
     {
-      "type": "spells_and_shields:put_compound_tag",
+      "type": "spells_and_shields:put_tag",
       "activation": "active",
       "d/tag/source": "<< put_nbt_uuid(tag, 'Owner', uuid) >>",
       "var/result": "tag"
     },
     {
-      "type": "spells_and_shields:put_compound_tag",
+      "type": "spells_and_shields:put_tag",
       "activation": "active",
       "d/tag/source": "<< put_nbt_vec3(tag, 'power', direction * 2.0 * 0.1) >>",
       "var/result": "tag"

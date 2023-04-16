@@ -58,7 +58,7 @@
       "t/target": "owner"
     },
     {
-      "type": "spells_and_shields:put_compound_tag",
+      "type": "spells_and_shields:put_tag",
       "activation": "active",
       "d/tag/source": {
         "crit": 1,
@@ -73,7 +73,7 @@
       "var/uuid": "uuid"
     },
     {
-      "type": "spells_and_shields:put_compound_tag",
+      "type": "spells_and_shields:put_tag",
       "activation": "active",
       "d/tag/source": "<< put_nbt_uuid(tag, 'Owner', uuid) >>",
       "var/result": "tag"
@@ -144,7 +144,7 @@
       "var/compound_tag": "potion_tag"
     },
     {
-      "type": "spells_and_shields:put_compound_tag",
+      "type": "spells_and_shields:put_tag",
       "activation": "potion",
       "d/tag/source": "<< put_nbt_string(tag, 'Potion', get_nbt_string(potion_tag, 'Potion')) >>",
       "var/result": "tag"

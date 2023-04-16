@@ -93,7 +93,7 @@
       "var/uuid": "owner_uuid"
     },
     {
-      "type": "spells_and_shields:put_compound_tag",
+      "type": "spells_and_shields:put_tag",
       "activation": "active",
       "d/tag/source": "<< put_nbt_uuid(new_tag(), 'Owner', owner_uuid) >>",
       "var/result": "tag"
@@ -278,7 +278,7 @@
       "td/result": "above"
     },
     {
-      "type": "spells_and_shields:put_compound_tag",
+      "type": "spells_and_shields:put_tag",
       "activation": "success",
       "d/tag/source": "<< put_nbt_int(tag, 'Warmup', fang) >>",
       "var/result": "delayed_tag"
