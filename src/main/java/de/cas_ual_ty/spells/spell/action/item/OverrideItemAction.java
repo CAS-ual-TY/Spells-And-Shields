@@ -27,7 +27,7 @@ public class OverrideItemAction extends AffectSingleTypeAction<ItemTarget>
                 singleTargetCodec(),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(OverrideItemAction::getAmount),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(OverrideItemAction::getDamage),
-                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(OverrideItemAction::getTag),
+                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(OverrideItemAction::getTag),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(OverrideItemAction::getItem)
         ).apply(instance, (activation, singleTarget, amount, damage, tag, item) -> new OverrideItemAction(type, activation, singleTarget, amount, damage, tag, item)));
     }

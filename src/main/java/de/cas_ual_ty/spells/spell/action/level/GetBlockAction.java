@@ -86,7 +86,7 @@ public class GetBlockAction extends AffectSingleTypeAction<PositionTarget>
         
         if(!blockState.isAir())
         {
-            ctx.setCtxVar(CtxVarTypes.COMPOUND_TAG.get(), this.blockState, SpellsUtil.stateToTag(blockState));
+            ctx.setCtxVar(CtxVarTypes.TAG.get(), this.blockState, SpellsUtil.stateToTag(blockState));
         }
         
         ctx.setCtxVar(CtxVarTypes.STRING.get(), block, id.toString());

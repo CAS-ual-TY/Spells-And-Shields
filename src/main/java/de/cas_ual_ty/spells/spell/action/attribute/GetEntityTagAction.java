@@ -42,7 +42,7 @@ public class GetEntityTagAction extends GetTargetAttributeAction<EntityTarget>
         
         if(!compoundTag.isEmpty())
         {
-            addVariableAttribute(e -> e.getEntity().saveWithoutId(new CompoundTag()), CtxVarTypes.COMPOUND_TAG.get(), compoundTag);
+            addVariableAttribute(e -> e.getEntity().saveWithoutId(new CompoundTag()), CtxVarTypes.TAG.get(), compoundTag);
         }
     }
     

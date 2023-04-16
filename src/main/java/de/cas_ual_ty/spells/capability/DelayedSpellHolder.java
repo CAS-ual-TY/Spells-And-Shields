@@ -40,7 +40,7 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HOLDER.targetGroup).addTargets(Target.of(holder));
                 ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.DELAY_TIME.name, spell.getTime());
-                ctx.setCtxVar(CtxVarTypes.COMPOUND_TAG.get(), BuiltinVariables.DELAY_TAG.name, spell.tag);
+                ctx.setCtxVar(CtxVarTypes.TAG.get(), BuiltinVariables.DELAY_TAG.name, spell.tag);
                 
                 if(spell.uuid != null)
                 {

@@ -86,7 +86,7 @@ public class GetFluidAction extends AffectSingleTypeAction<PositionTarget>
         
         if(!fluidState.isEmpty())
         {
-            ctx.setCtxVar(CtxVarTypes.COMPOUND_TAG.get(), this.fluidState, SpellsUtil.stateToTag(fluidState));
+            ctx.setCtxVar(CtxVarTypes.TAG.get(), this.fluidState, SpellsUtil.stateToTag(fluidState));
         }
         
         ctx.setCtxVar(CtxVarTypes.STRING.get(), fluid, id.toString());

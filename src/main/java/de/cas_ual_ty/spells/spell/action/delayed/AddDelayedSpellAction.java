@@ -29,7 +29,7 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("on_remove")).forGetter(AddDelayedSpellAction::getRemoveActivation),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("tick_time")).forGetter(AddDelayedSpellAction::getTickTime),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddDelayedSpellAction::getUuid),
-                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("extra_data")).forGetter(AddDelayedSpellAction::getTag)
+                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("extra_data")).forGetter(AddDelayedSpellAction::getTag)
         ).apply(instance, (activation, multiTargets, removeActivation, tickTime, uuid, tag) -> new AddDelayedSpellAction(type, activation, multiTargets, removeActivation, tickTime, uuid, tag)));
     }
     

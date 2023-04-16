@@ -105,17 +105,17 @@ public class PutVarAction<T> extends SpellAction
     
     public static PutVarAction<CompoundTag> makeCompoundTag(String activation, DynamicCtxVar<CompoundTag> src, String dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_COMPOUND_TAG.get(), activation, src, dst, CtxVarTypes.COMPOUND_TAG.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_TAG.get(), activation, src, dst, CtxVarTypes.TAG.get());
     }
     
     public static PutVarAction<CompoundTag> makeCompoundTag(String activation, String src, String dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_COMPOUND_TAG.get(), activation, Compiler.compileString(src, CtxVarTypes.COMPOUND_TAG.get()), dst, CtxVarTypes.COMPOUND_TAG.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_TAG.get(), activation, Compiler.compileString(src, CtxVarTypes.TAG.get()), dst, CtxVarTypes.TAG.get());
     }
     
     public static PutVarAction<CompoundTag> makeCompoundTag(String activation, CompoundTag value, String dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_COMPOUND_TAG.get(), activation, CtxVarTypes.COMPOUND_TAG.get().immediate(value), dst, CtxVarTypes.COMPOUND_TAG.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_TAG.get(), activation, CtxVarTypes.TAG.get().immediate(value), dst, CtxVarTypes.TAG.get());
     }
     
     public static PutVarAction<String> makeString(String activation, DynamicCtxVar<String> src, String dst)

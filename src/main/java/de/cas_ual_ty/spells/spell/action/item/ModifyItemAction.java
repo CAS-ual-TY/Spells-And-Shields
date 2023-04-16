@@ -25,7 +25,7 @@ public class ModifyItemAction extends AffectSingleTypeAction<ItemTarget>
                 singleTargetCodec(),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(ModifyItemAction::getAmount),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(ModifyItemAction::getDamage),
-                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(ModifyItemAction::getTag)
+                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(ModifyItemAction::getTag)
         ).apply(instance, (activation, singleTarget, amount, damage, tag) -> new ModifyItemAction(type, activation, singleTarget, amount, damage, tag)));
     }
     

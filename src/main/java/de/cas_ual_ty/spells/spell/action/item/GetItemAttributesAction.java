@@ -66,7 +66,7 @@ public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget
         
         if(!compoundTag.isEmpty())
         {
-            addVariableAttribute(i -> i.getItem().getOrCreateTag(), CtxVarTypes.COMPOUND_TAG.get(), compoundTag);
+            addVariableAttribute(i -> i.getItem().getOrCreateTag(), CtxVarTypes.TAG.get(), compoundTag);
         }
     }
     

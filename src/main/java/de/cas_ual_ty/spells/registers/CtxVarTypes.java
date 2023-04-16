@@ -24,7 +24,7 @@ public class CtxVarTypes
     public static final RegistryObject<CtxVarType<Vec3>> VEC3 = DEFERRED_REGISTER.register("vec3", () -> new CtxVarType<>(vec3 -> vec3, Vec3.CODEC));
     public static final RegistryObject<CtxVarType<BlockPos>> BLOCK_POS = DEFERRED_REGISTER.register("block_pos", () -> new CtxVarType<>(blockPos -> blockPos, BlockPos.CODEC));
     public static final RegistryObject<CtxVarType<Boolean>> BOOLEAN = DEFERRED_REGISTER.register("boolean", () -> new CtxVarType<>(Boolean::booleanValue, Codec.BOOL));
-    public static final RegistryObject<CtxVarType<CompoundTag>> COMPOUND_TAG = DEFERRED_REGISTER.register("tag", () -> new CtxVarType<>(CompoundTag::copy, CompoundTag.CODEC));
+    public static final RegistryObject<CtxVarType<CompoundTag>> TAG = DEFERRED_REGISTER.register("tag", () -> new CtxVarType<>(CompoundTag::copy, CompoundTag.CODEC));
     public static final RegistryObject<CtxVarType<String>> STRING = DEFERRED_REGISTER.register("string", () -> new CtxVarType<>(s -> s, Codec.STRING));
     
     public static void register()

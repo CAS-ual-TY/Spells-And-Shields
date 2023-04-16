@@ -21,7 +21,7 @@ public class TernaryOperation
     public static final TernaryOperation PUT_NBT_INT = new TernaryOperation("put_nbt_int");
     public static final TernaryOperation PUT_NBT_DOUBLE = new TernaryOperation("put_nbt_double");
     public static final TernaryOperation PUT_NBT_BOOLEAN = new TernaryOperation("put_nbt_boolean");
-    public static final TernaryOperation PUT_NBT_COMPOUND_TAG = new TernaryOperation("put_nbt_compound_tag");
+    public static final TernaryOperation PUT_NBT_TAG = new TernaryOperation("put_nbt_tag");
     public static final TernaryOperation PUT_NBT_STRING = new TernaryOperation("put_nbt_string");
     public static final TernaryOperation PUT_NBT_UUID = new TernaryOperation("put_nbt_uuid");
     public static final TernaryOperation PUT_NBT_VEC3 = new TernaryOperation("put_nbt_vec3");
@@ -33,7 +33,7 @@ public class TernaryOperation
         Compiler.registerTernaryFunction("put_nbt_int", PUT_NBT_INT);
         Compiler.registerTernaryFunction("put_nbt_double", PUT_NBT_DOUBLE);
         Compiler.registerTernaryFunction("put_nbt_boolean", PUT_NBT_BOOLEAN);
-        Compiler.registerTernaryFunction("put_nbt_compound_tag", PUT_NBT_COMPOUND_TAG);
+        Compiler.registerTernaryFunction("put_nbt_compound_tag", PUT_NBT_TAG);
         Compiler.registerTernaryFunction("put_nbt_string", PUT_NBT_STRING);
         Compiler.registerTernaryFunction("put_nbt_uuid", PUT_NBT_UUID);
         Compiler.registerTernaryFunction("put_nbt_vec3", PUT_NBT_VEC3);

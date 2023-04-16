@@ -24,7 +24,7 @@ public class ApplyEntityTagAction extends AffectTypeAction<EntityTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 multiTargetsCodec(),
-                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(ApplyEntityTagAction::getTag)
+                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(ApplyEntityTagAction::getTag)
         ).apply(instance, (activation, multiTargets, tag) -> new ApplyEntityTagAction(type, activation, multiTargets, tag)));
     }
     

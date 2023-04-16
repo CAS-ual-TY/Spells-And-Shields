@@ -31,7 +31,7 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
                 sourceCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(PlayerHasItemsAction::getItem),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(PlayerHasItemsAction::getAmount),
-                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(PlayerHasItemsAction::getTag),
+                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(PlayerHasItemsAction::getTag),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(PlayerHasItemsAction::getMustBeInHand)
         ).apply(instance, (activation, source, item, amount, tag, mustBeInHand) -> new PlayerHasItemsAction(type, activation, source, item, amount, tag, mustBeInHand)));
     }

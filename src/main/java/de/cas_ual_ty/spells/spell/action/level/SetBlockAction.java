@@ -25,7 +25,7 @@ public class SetBlockAction extends AffectTypeAction<PositionTarget>
                 activationCodec(),
                 multiTargetsCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("block")).forGetter(SetBlockAction::getBlock),
-                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("block_state")).forGetter(SetBlockAction::getBlockState)
+                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("block_state")).forGetter(SetBlockAction::getBlockState)
         ).apply(instance, (activation, multiTargets, block, blockState) -> new SetBlockAction(type, activation, multiTargets, block, blockState)));
     }
     

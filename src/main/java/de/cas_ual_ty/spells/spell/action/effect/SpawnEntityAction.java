@@ -31,7 +31,7 @@ public class SpawnEntityAction extends SpellAction
                 Codec.STRING.fieldOf(ParamNames.singleTarget("position")).forGetter(SpawnEntityAction::getPosition),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("direction")).forGetter(SpawnEntityAction::getDirection),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("motion")).forGetter(SpawnEntityAction::getMotion),
-                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(SpawnEntityAction::getTag)
+                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(SpawnEntityAction::getTag)
         ).apply(instance, (activation, entity, entityType, position, direction, motion, tag) -> new SpawnEntityAction(type, activation, entity, entityType, position, direction, motion, tag)));
     }
     

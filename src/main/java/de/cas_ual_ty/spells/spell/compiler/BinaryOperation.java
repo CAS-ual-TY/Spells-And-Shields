@@ -38,7 +38,7 @@ public class BinaryOperation
     public static final BinaryOperation GET_NBT_INT = new BinaryOperation("get_nbt_int");
     public static final BinaryOperation GET_NBT_DOUBLE = new BinaryOperation("get_nbt_double");
     public static final BinaryOperation GET_NBT_BOOLEAN = new BinaryOperation("get_nbt_boolean");
-    public static final BinaryOperation GET_NBT_COMPOUND_TAG = new BinaryOperation("get_nbt_compound_tag");
+    public static final BinaryOperation GET_NBT_TAG = new BinaryOperation("get_nbt_compound_tag");
     public static final BinaryOperation GET_NBT_STRING = new BinaryOperation("get_nbt_string");
     public static final BinaryOperation GET_NBT_UUID = new BinaryOperation("get_nbt_uuid");
     public static final BinaryOperation GET_NBT_VEC3 = new BinaryOperation("get_nbt_vec3");
@@ -54,7 +54,7 @@ public class BinaryOperation
         Compiler.registerBinaryFunction("get_nbt_int", GET_NBT_INT);
         Compiler.registerBinaryFunction("get_nbt_double", GET_NBT_DOUBLE);
         Compiler.registerBinaryFunction("get_nbt_boolean", GET_NBT_BOOLEAN);
-        Compiler.registerBinaryFunction("get_nbt_compound_tag", GET_NBT_COMPOUND_TAG);
+        Compiler.registerBinaryFunction("get_nbt_tag", GET_NBT_TAG);
         Compiler.registerBinaryFunction("get_nbt_string", GET_NBT_STRING);
         Compiler.registerBinaryFunction("get_nbt_uuid", GET_NBT_UUID);
         Compiler.registerBinaryFunction("get_nbt_vec3", GET_NBT_VEC3);

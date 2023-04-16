@@ -31,7 +31,7 @@ public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarge
                 sourceCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(ConsumePlayerItemsAction::getItem),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(ConsumePlayerItemsAction::getAmount),
-                CtxVarTypes.COMPOUND_TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(ConsumePlayerItemsAction::getTag),
+                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(ConsumePlayerItemsAction::getTag),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(ConsumePlayerItemsAction::getMustBeInHand)
         ).apply(instance, (activation, source, item, amount, tag, mustBeInHand) -> new ConsumePlayerItemsAction(type, activation, source, item, amount, tag, mustBeInHand)));
     }

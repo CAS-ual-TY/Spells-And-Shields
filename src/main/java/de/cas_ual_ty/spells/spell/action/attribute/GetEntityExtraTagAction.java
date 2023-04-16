@@ -42,7 +42,7 @@ public class GetEntityExtraTagAction extends GetTargetAttributeAction<EntityTarg
         
         if(!compoundTag.isEmpty())
         {
-            addVariableAttribute(e -> ExtraTagHolder.getHolder(e.getEntity()).lazyMap(ExtraTagHolder::getExtraTag).orElse(null), CtxVarTypes.COMPOUND_TAG.get(), compoundTag);
+            addVariableAttribute(e -> ExtraTagHolder.getHolder(e.getEntity()).lazyMap(ExtraTagHolder::getExtraTag).orElse(null), CtxVarTypes.TAG.get(), compoundTag);
         }
     }
     
