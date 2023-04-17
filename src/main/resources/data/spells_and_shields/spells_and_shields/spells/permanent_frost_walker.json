@@ -1,6 +1,6 @@
 {
   "s1/title": {
-    "translate": "spell.spells_and_shields.frost_walker"
+    "translate": "spell.spells_and_shields.permanent_frost_walker"
   },
   "s2/icon": {
     "type": "spells_and_shields:layered",
@@ -11,18 +11,18 @@
       },
       {
         "type": "spells_and_shields:default",
-        "texture": "spells_and_shields:textures/spell/toggle.png"
+        "texture": "spells_and_shields:textures/spell/permanent.png"
       }
     ]
   },
-  "s3/mana_cost": 5.0,
+  "s3/mana_cost": 0.0,
   "s4/tooltip": [
     {
-      "translate": "spell.spells_and_shields.frost_walker.desc"
+      "translate": "spell.spells_and_shields.permanent_frost_walker.desc"
     }
   ],
   "s5/spell_events": [
-    "active",
+    "on_equip",
     "on_unequip"
   ],
   "s6/spell_parameters": [
@@ -57,7 +57,7 @@
   "s7/spell_actions": [
     {
       "type": "spells_and_shields:copy_targets",
-      "activation": "active",
+      "activation": "on_equip",
       "td/destination": "player",
       "ts/source": "owner"
     },
@@ -75,14 +75,14 @@
     },
     {
       "type": "spells_and_shields:put_string",
-      "activation": "active",
-      "d/string/source": "<< uuid_from_string('toggle_walker' + 'spells_and_shields:frost_walker' + spell_slot) >>",
+      "activation": "on_equip",
+      "d/string/source": "<< uuid_from_string('permanent_walker' + 'spells_and_shields:permanent_frost_walker' + spell_slot) >>",
       "var/result": "uuid"
     },
     {
       "type": "spells_and_shields:put_string",
       "activation": "on_unequip",
-      "d/string/source": "<< uuid_from_string('toggle_walker' + 'spells_and_shields:frost_walker' + spell_slot) >>",
+      "d/string/source": "<< uuid_from_string('permanent_walker' + 'spells_and_shields:permanent_frost_walker' + spell_slot) >>",
       "var/result": "uuid"
     },
     {
@@ -94,23 +94,24 @@
     {
       "type": "spells_and_shields:activate",
       "a/to_activate": "apply",
-      "activation": "active"
-    },
-    {
-      "type": "spells_and_shields:activate",
-      "a/to_activate": "remove",
-      "activation": "active"
-    },
-    {
-      "type": "spells_and_shields:check_has_delayed_spell",
-      "activation": "remove",
-      "d/string/uuid": "<<uuid>>",
-      "t/target": "player"
+      "activation": "on_equip"
     },
     {
       "type": "spells_and_shields:activate",
       "a/to_activate": "remove",
       "activation": "on_unequip"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "on_equip",
+      "d/int/source": 0,
+      "var/result": "time"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "apply",
+      "d/int/source": "<< get_nbt_int(delay_tag, 'time') >>",
+      "var/result": "time"
     },
     {
       "type": "spells_and_shields:remove_delayed_spell",
@@ -131,12 +132,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.splash_potion.break",
       "ts/targets": "player"
-    },
-    {
-      "type": "spells_and_shields:mana_check",
-      "activation": "apply",
-      "amount": "<< (mana_cost * refresh_rate) / 100 >>",
-      "t/target": "player"
     },
     {
       "type": "spells_and_shields:activate",
@@ -261,7 +256,7 @@
     {
       "type": "spells_and_shields:deactivate",
       "a/to_deactivate": "anti_sound",
-      "activation": "active"
+      "activation": "on_equip"
     },
     {
       "type": "spells_and_shields:deactivate",
@@ -280,7 +275,7 @@
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "renew",
       "ad/on_remove": "apply",
-      "d/compound_tag/extra_data": {},
+      "d/compound_tag/extra_data": "<< put_nbt_int(new_tag(), 'time', time + refresh_rate) >>",
       "d/int/tick_time": "<<refresh_rate>>",
       "d/string/uuid": "<<uuid>>",
       "ts/targets": "player"

@@ -40,6 +40,13 @@ public class LangGen extends LanguageProvider
     public static final String TOGGLE_EFFECT_NAME = "Toggle %s";
     public static final String TOGGLE_EFFECT_DESC = "Toggles the %s effect and burns mana (per 5 seconds) while it is active.";
     
+    public static final String PERMANENT_SPELL_NAME = "Perm. %s";
+    public static final String PERMANENT_SPELL_DESC = "Applies the following effect while this spell is equipped: %s";
+    public static final String TEMPORARY_SPELL_NAME = "Temp. %s";
+    public static final String TEMPORARY_SPELL_DESC = "Applies the following effect for a short period of time: %s";
+    public static final String TOGGLE_SPELL_NAME = "Toggle %s";
+    public static final String TOGGLE_SPELL_DESC = "Toggles the following effect and burns mana (per 5 seconds) while it is active: %s";
+    
     @Override
     protected void addTranslations()
     {
@@ -171,8 +178,12 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_WATER_WHIP_DESC, "Shoots water out of the water bucket in your hand. The water returns and the bucket refills if you hold it on return");
         add(Spells.KEY_POTION_SHOT, "Potion Shot");
         add(Spells.KEY_POTION_SHOT_DESC, "Shoots the contents of the potion in your hand forward.");
-        add(Spells.KEY_FROST_WALKER, "Frost Walker");
-        add(Spells.KEY_FROST_WALKER_DESC, "Walk on water by turning the blocks you walk on into ice.");
+        add(Spells.KEY_PERMANENT_FROST_WALKER, PERMANENT_EFFECT_NAME.formatted("Frost Walker"));
+        add(Spells.KEY_PERMANENT_FROST_WALKER_DESC, PERMANENT_EFFECT_DESC.formatted("Walk on water by turning the blocks you walk on into ice."));
+        add(Spells.KEY_TEMPORARY_FROST_WALKER, TEMPORARY_EFFECT_NAME.formatted("Frost Walker"));
+        add(Spells.KEY_TEMPORARY_FROST_WALKER_DESC, TEMPORARY_EFFECT_DESC.formatted("Walk on water by turning the blocks you walk on into ice."));
+        add(Spells.KEY_TOGGLE_FROST_WALKER, TOGGLE_EFFECT_NAME.formatted("Frost Walker"));
+        add(Spells.KEY_TOGGLE_FROST_WALKER_DESC, TOGGLE_EFFECT_DESC.formatted("Walk on water by turning the blocks you walk on into ice."));
         add(Spells.KEY_JUMP, "Jump");
         add(Spells.KEY_JUMP_DESC, "High jump. Be aware of fall damage.");
         add(Spells.KEY_MANA_SOLES, "Mana Soles");
@@ -188,8 +199,12 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_SPIT_METAL_DESC, "Spit a nugget that deals damage (from your hand).");
         add(Spells.KEY_FLAMETHROWER, "Flamethrower");
         add(Spells.KEY_FLAMETHROWER_DESC, "Breath flames from your mouth setting everything on fire.");
-        add(Spells.KEY_LAVA_WALKER, "Lava Walker");
-        add(Spells.KEY_LAVA_WALKER_DESC, "Walk on lava by turning the blocks you walk on into obsidian.");
+        add(Spells.KEY_PERMANENT_LAVA_WALKER, PERMANENT_EFFECT_NAME.formatted("Lava Walker"));
+        add(Spells.KEY_PERMANENT_LAVA_WALKER_DESC, PERMANENT_EFFECT_DESC.formatted("Walk on lava by turning the blocks you walk on into obsidian."));
+        add(Spells.KEY_TEMPORARY_LAVA_WALKER, TEMPORARY_EFFECT_NAME.formatted("Lava Walker"));
+        add(Spells.KEY_TEMPORARY_LAVA_WALKER_DESC, TEMPORARY_EFFECT_DESC.formatted("Walk on lava by turning the blocks you walk on into obsidian."));
+        add(Spells.KEY_TOGGLE_LAVA_WALKER, TOGGLE_EFFECT_NAME.formatted("Lava Walker"));
+        add(Spells.KEY_TOGGLE_LAVA_WALKER_DESC, TOGGLE_EFFECT_DESC.formatted("Walk on lava by turning the blocks you walk on into obsidian."));
         add(Spells.KEY_SILENCE_TARGET, "Silence Target");
         add(Spells.KEY_SILENCE_TARGET_DESC, "Silence the target you are looking at within a certain range.");
         add(Spells.KEY_RANDOM_TELEPORT, "Random Teleport");

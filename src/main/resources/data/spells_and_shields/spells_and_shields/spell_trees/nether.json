@@ -19,7 +19,7 @@
     "n8/spell_parameters": [],
     "n9/child_nodes": [
       {
-        "n1/spell_id": "spells_and_shields:lava_walker",
+        "n1/spell_id": "spells_and_shields:toggle_lava_walker",
         "n2/node_id": 16,
         "n4/level_cost": 20,
         "n6/learn_requirements": [

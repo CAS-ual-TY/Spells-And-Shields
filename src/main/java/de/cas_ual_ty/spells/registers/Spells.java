@@ -80,9 +80,17 @@ public class Spells
     public static final String KEY_POTION_SHOT = key(POTION_SHOT);
     public static final String KEY_POTION_SHOT_DESC = descKey(POTION_SHOT);
     
-    public static final ResourceLocation FROST_WALKER = rl("frost_walker");
-    public static final String KEY_FROST_WALKER = key(FROST_WALKER);
-    public static final String KEY_FROST_WALKER_DESC = descKey(FROST_WALKER);
+    public static final ResourceLocation PERMANENT_FROST_WALKER = rl("permanent_frost_walker");
+    public static final String KEY_PERMANENT_FROST_WALKER = key(PERMANENT_FROST_WALKER);
+    public static final String KEY_PERMANENT_FROST_WALKER_DESC = descKey(PERMANENT_FROST_WALKER);
+    
+    public static final ResourceLocation TEMPORARY_FROST_WALKER = rl("temporary_frost_walker");
+    public static final String KEY_TEMPORARY_FROST_WALKER = key(TEMPORARY_FROST_WALKER);
+    public static final String KEY_TEMPORARY_FROST_WALKER_DESC = descKey(TEMPORARY_FROST_WALKER);
+    
+    public static final ResourceLocation TOGGLE_FROST_WALKER = rl("toggle_frost_walker");
+    public static final String KEY_TOGGLE_FROST_WALKER = key(TOGGLE_FROST_WALKER);
+    public static final String KEY_TOGGLE_FROST_WALKER_DESC = descKey(TOGGLE_FROST_WALKER);
     
     public static final ResourceLocation JUMP = rl("jump");
     public static final String KEY_JUMP = key(JUMP);
@@ -113,9 +121,17 @@ public class Spells
     public static final String KEY_FLAMETHROWER = key(FLAMETHROWER);
     public static final String KEY_FLAMETHROWER_DESC = descKey(FLAMETHROWER);
     
-    public static final ResourceLocation LAVA_WALKER = rl("lava_walker");
-    public static final String KEY_LAVA_WALKER = key(LAVA_WALKER);
-    public static final String KEY_LAVA_WALKER_DESC = descKey(LAVA_WALKER);
+    public static final ResourceLocation PERMANENT_LAVA_WALKER = rl("permanent_lava_walker");
+    public static final String KEY_PERMANENT_LAVA_WALKER = key(PERMANENT_LAVA_WALKER);
+    public static final String KEY_PERMANENT_LAVA_WALKER_DESC = descKey(PERMANENT_LAVA_WALKER);
+    
+    public static final ResourceLocation TEMPORARY_LAVA_WALKER = rl("temporary_lava_walker");
+    public static final String KEY_TEMPORARY_LAVA_WALKER = key(TEMPORARY_LAVA_WALKER);
+    public static final String KEY_TEMPORARY_LAVA_WALKER_DESC = descKey(TEMPORARY_LAVA_WALKER);
+    
+    public static final ResourceLocation TOGGLE_LAVA_WALKER = rl("toggle_lava_walker");
+    public static final String KEY_TOGGLE_LAVA_WALKER = key(TOGGLE_LAVA_WALKER);
+    public static final String KEY_TOGGLE_LAVA_WALKER_DESC = descKey(TOGGLE_LAVA_WALKER);
     
     public static final ResourceLocation SILENCE_TARGET = rl("silence_target");
     public static final String KEY_SILENCE_TARGET = key(SILENCE_TARGET);

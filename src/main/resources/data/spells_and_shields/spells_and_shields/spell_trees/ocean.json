@@ -78,7 +78,7 @@
             "n9/child_nodes": []
           },
           {
-            "n1/spell_id": "spells_and_shields:frost_walker",
+            "n1/spell_id": "spells_and_shields:toggle_frost_walker",
             "n2/node_id": 273,
             "n4/level_cost": 10,
             "n6/learn_requirements": [
