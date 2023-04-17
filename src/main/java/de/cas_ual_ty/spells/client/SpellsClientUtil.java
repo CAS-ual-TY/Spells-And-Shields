@@ -135,6 +135,9 @@ public class SpellsClientUtil
                 
                 spellSlotWidgets.clear();
                 
+                // -----------------------------------------
+                // recipe book
+                
                 RecipeBookComponent recipeBook = null;
                 
                 if(screen instanceof InventoryScreen)
@@ -151,6 +154,9 @@ public class SpellsClientUtil
                 final RecipeBookComponent finalRecipeBook = recipeBook;
                 
                 BooleanSupplier isRecipeBookClosed = finalRecipeBook != null ? () -> !finalRecipeBook.isVisible() : () -> true;
+                
+                // -----------------------------------------
+                
                 BooleanSupplier hasSpellLearned = () ->
                 {
                     if(SpellsClientConfig.ALWAYS_SHOW_SPELL_SLOTS.get())
@@ -178,15 +184,28 @@ public class SpellsClientUtil
                     return ret.get();
                 };
                 
+                // -----------------------------------------
+                
+                SlotsPosition slotsPosition = (screen instanceof InventoryScreen) ? SlotsPosition.fromId(SpellsClientConfig.SPELL_SLOTS_POSITION_CREATIVE.get()) : SlotsPosition.fromId(SpellsClientConfig.SPELL_SLOTS_POSITION_SURVIVAL.get());
+                int startX = slotsPosition.startPositionX(screen.getGuiLeft(), screen.getGuiTop(), screen.getXSize(), screen.getYSize(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, SpellHolder.SPELL_SLOTS);
+                int startY = slotsPosition.startPositionY(screen.getGuiLeft(), screen.getGuiTop(), screen.getXSize(), screen.getYSize(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, SpellHolder.SPELL_SLOTS);
+                
+                int x = startX + SpellsClientConfig.SPELL_SLOTS_POSITION_OFFSET_X.get();
+                int y = startY + SpellsClientConfig.SPELL_SLOTS_POSITION_OFFSET_Y.get();
+                
                 for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)
                 {
-                    int x = screen.getGuiLeft() - SpellNodeWidget.FRAME_WIDTH;
-                    int y = screen.getGuiTop() + i * (SpellNodeWidget.FRAME_HEIGHT + 1);
-                    
                     // if the recipe book is open already, fix position
                     if(!isRecipeBookClosed.getAsBoolean())
                     {
-                        x -= 77;
+                        if(slotsPosition.isLeft())
+                        {
+                            x -= 77;
+                        }
+                        else if(slotsPosition.isRight())
+                        {
+                            x += 77;
+                        }
                     }
                     
                     int slot = i;
@@ -202,6 +221,9 @@ public class SpellsClientUtil
                     spellSlotWidgets.add(s);
                     event.addListener(s);
                     s.active = false;
+                    
+                    x += slotsPosition.incrementX(SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+                    y += slotsPosition.incrementY(SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
                 }
             }
         }
