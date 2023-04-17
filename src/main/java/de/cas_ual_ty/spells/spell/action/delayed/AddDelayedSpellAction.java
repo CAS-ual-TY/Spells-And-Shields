@@ -35,7 +35,7 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("tick_time")).forGetter(AddDelayedSpellAction::getTickTime),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddDelayedSpellAction::getUuid),
                 CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("extra_data")).forGetter(AddDelayedSpellAction::getTag),
-                Codec.optionalField("events_map", ExtraCodecs.lazyInitializedCodec(() -> SpellsCodecs.STRING_MAP)).xmap(o -> o.orElse(new HashMap<>()), Optional::ofNullable).forGetter(AddDelayedSpellAction::getEventsMap)
+                Codec.optionalField("events_map", ExtraCodecs.lazyInitializedCodec(() -> SpellsCodecs.STRING_MAP)).xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(AddDelayedSpellAction::getEventsMap)
         ).apply(instance, (activation, multiTargets, removeActivation, tickTime, uuid, tag, eventsMap) -> new AddDelayedSpellAction(type, activation, multiTargets, removeActivation, tickTime, uuid, tag, eventsMap)));
     }
     
