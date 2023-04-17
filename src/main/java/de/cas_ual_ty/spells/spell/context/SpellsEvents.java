@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.spell.context;
 
+import de.cas_ual_ty.spells.capability.DelayedSpellHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.SpellInstance;
@@ -18,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -44,10 +46,29 @@ public class SpellsEvents
         NAME_TO_ENTRY.put(eventId, registeredEvent);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, true, eventClass, event ->
         {
-            /*DelayedSpellHolder.getHolder(event.getEntity()).ifPresent(delayedSpellHolder ->
+            Consumer<SpellContext> toContext = ctx ->
             {
+                if(event.isCancelable())
+                {
+                    ctx.setCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name, event.isCanceled());
+                }
+                registeredEvent.getTargetLinks().forEach(link -> link.toContext(ctx, event));
+                registeredEvent.getVariableLinks().forEach(link -> link.toContext(ctx, event));
+            };
             
-            });*/
+            Consumer<SpellContext> fromContext = ctx ->
+            {
+                if(event.isCancelable())
+                {
+                    ctx.getCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name).ifPresent(event::setCanceled);
+                }
+                registeredEvent.getVariableLinks().forEach(link -> link.fromContext(ctx, event));
+            };
+            
+            DelayedSpellHolder.getHolder(event.getEntity()).ifPresent(delayedSpellHolder ->
+            {
+                delayedSpellHolder.activateEvent(eventId, toContext, fromContext);
+            });
             
             if(event.getEntity() instanceof Player player && (includeClient || !event.getEntity().level.isClientSide))
             {
@@ -58,22 +79,7 @@ public class SpellsEvents
                         SpellInstance spell = spellHolder.getSpell(i);
                         if(spell != null)
                         {
-                            spell.run(player, eventId, ctx ->
-                            {
-                                if(event.isCancelable())
-                                {
-                                    ctx.setCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name, event.isCanceled());
-                                }
-                                registeredEvent.getTargetLinks().forEach(link -> link.toContext(ctx, event));
-                                registeredEvent.getVariableLinks().forEach(link -> link.toContext(ctx, event));
-                            }, ctx ->
-                            {
-                                if(event.isCancelable())
-                                {
-                                    ctx.getCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name).ifPresent(event::setCanceled);
-                                }
-                                registeredEvent.getVariableLinks().forEach(link -> link.fromContext(ctx, event));
-                            });
+                            spell.run(player, eventId, toContext, fromContext);
                         }
                     }
                 });

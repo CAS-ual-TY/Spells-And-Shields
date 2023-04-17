@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.util;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
@@ -29,7 +30,9 @@ import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.ExtraCodecs;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Optional;
 
 public class SpellsCodecs
@@ -54,6 +57,7 @@ public class SpellsCodecs
     public static Codec<Spell> SPELL_CONTENTS;
     
     public static Codec<Component> COMPONENT; // json only, no NBT support
+    public static Codec<Map<String, String>> STRING_MAP;
     
     public static void makeCodecs()
     {
@@ -124,5 +128,55 @@ public class SpellsCodecs
                 return ops.empty();
             }
         });
+        
+        STRING_MAP = new PrimitiveCodec<>()
+        {
+            @Override
+            public <T> DataResult<Map<String, String>> read(DynamicOps<T> ops, T input0)
+            {
+                if(ops == JsonOps.INSTANCE || ops == JsonOps.COMPRESSED || ops instanceof RegistryOps)
+                {
+                    JsonElement input = (JsonElement) input0;
+                    if(input.isJsonObject())
+                    {
+                        JsonObject jsonMap = input.getAsJsonObject();
+                        Map<String, String> map = new HashMap<>();
+                        for(String key : jsonMap.keySet())
+                        {
+                            JsonElement value = jsonMap.get(key);
+                            if(value.isJsonPrimitive() && value.getAsJsonPrimitive().isString())
+                            {
+                                map.put(key, value.getAsString());
+                            }
+                            else
+                            {
+                                return DataResult.error("Value with key " + key + " is not a string");
+                            }
+                        }
+                        
+                        return DataResult.success(map);
+                    }
+                    else
+                    {
+                        DataResult.error("Not a json object");
+                    }
+                }
+                
+                return DataResult.error("Codec only works on JsonOps");
+            }
+            
+            @Override
+            public <T> T write(DynamicOps<T> ops, Map<String, String> value)
+            {
+                if(ops == JsonOps.INSTANCE || ops == JsonOps.COMPRESSED || ops instanceof RegistryOps)
+                {
+                    JsonObject jsonMap = new JsonObject();
+                    value.forEach(jsonMap::addProperty);
+                    return (T) jsonMap;
+                }
+                
+                return ops.empty();
+            }
+        };
     }
 }
