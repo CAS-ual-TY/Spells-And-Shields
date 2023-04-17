@@ -197,12 +197,13 @@
       "ts/source": "blocks"
     },
     {
-      "type": "spells_and_shields:get_block",
+      "type": "spells_and_shields:get_fluid",
       "activation": "apply",
       "t/target": "block",
-      "var/block": "block_id",
-      "var/block_state": "",
-      "var/is_air": ""
+      "var/fluid": "fluid_id",
+      "var/fluid_state": "",
+      "var/is_fluid": "",
+      "var/is_source": "is_source"
     },
     {
       "type": "spells_and_shields:boolean_activation",
@@ -210,7 +211,7 @@
       "activation": "apply",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": true,
-      "d/boolean/input": "<< block_id == 'minecraft:water' >>"
+      "d/boolean/input": "<< is_source && fluid_id == 'minecraft:water' >>"
     },
     {
       "type": "spells_and_shields:set_block",

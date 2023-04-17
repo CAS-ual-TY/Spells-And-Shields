@@ -7,7 +7,7 @@
     "icons_list": [
       {
         "type": "spells_and_shields:default",
-        "texture": "spells_and_shields:textures/spell/frost_walker.png"
+        "texture": "spells_and_shields:textures/spell/lava_walker.png"
       },
       {
         "type": "spells_and_shields:default",
@@ -37,19 +37,17 @@
     },
     {
       "type": "spells_and_shields:string",
-      "value": "minecraft:water",
+      "value": "minecraft:lava",
       "var/name": "block_from"
     },
     {
       "type": "spells_and_shields:string",
-      "value": "minecraft:frosted_ice",
+      "value": "minecraft:obsidian",
       "var/name": "block_to"
     },
     {
       "type": "spells_and_shields:tag",
-      "value": {
-        "age": "0"
-      },
+      "value": {},
       "var/name": "block_state_to"
     },
     {
@@ -197,12 +195,13 @@
       "ts/source": "blocks"
     },
     {
-      "type": "spells_and_shields:get_block",
+      "type": "spells_and_shields:get_fluid",
       "activation": "apply",
       "t/target": "block",
-      "var/block": "block_id",
-      "var/block_state": "",
-      "var/is_air": ""
+      "var/fluid": "fluid_id",
+      "var/fluid_state": "",
+      "var/is_fluid": "",
+      "var/is_source": "is_source"
     },
     {
       "type": "spells_and_shields:boolean_activation",
@@ -210,19 +209,13 @@
       "activation": "apply",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": true,
-      "d/boolean/input": "<< block_id == 'minecraft:water' >>"
+      "d/boolean/input": "<< is_source && fluid_id == 'minecraft:lava' >>"
     },
     {
       "type": "spells_and_shields:set_block",
       "activation": "do_apply",
       "d/compound_tag/block_state": "<<block_state_to>>",
       "d/string/block": "<<block_to>>",
-      "ts/targets": "block"
-    },
-    {
-      "type": "spells_and_shields:tick_block",
-      "activation": "apply",
-      "d/int/duration": "<< next_int(60) + 60 >>",
       "ts/targets": "block"
     },
     {

@@ -54,9 +54,11 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.JsonCodecProvider;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
@@ -380,9 +382,9 @@ public class SpellsGen implements DataProvider
         addSpell(rl, spell);
     }
     
-    public void addPermanentWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, BlockState from, BlockState to, boolean tick)
+    public void addPermanentWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, boolean tick)
     {
-        ResourceLocation fromRL = ForgeRegistries.BLOCKS.getKey(from.getBlock());
+        ResourceLocation fromRL = ForgeRegistries.FLUID_TYPES.get().getKey(from);
         ResourceLocation toRL = ForgeRegistries.BLOCKS.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('permanent_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT.name);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(PERMANENT_ICON_RL))), key, 0F)
@@ -412,8 +414,8 @@ public class SpellsGen implements DataProvider
                 .addAction(ClearTargetsAction.make("apply", "block"))
                 .addAction(PickTargetAction.make("apply", "block", "blocks", true, false))
                 
-                .addAction(GetBlockAction.make("apply", "block", "block_id", "", ""))
-                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.get().reference(" block_id == '" + fromRL.toString() + "' "), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(GetFluidAction.make("apply", "block", "fluid_id", "", "", "is_source"))
+                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.get().reference(" is_source && fluid_id == '" + fromRL.toString() + "' "), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(SetBlockAction.make("do_apply", "block", STRING.get().reference("block_to"), TAG.get().reference("block_state_to")));
         
         if(tick)
@@ -442,9 +444,9 @@ public class SpellsGen implements DataProvider
         addSpell(rl, spell);
     }
     
-    public void addTemporaryWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, BlockState from, BlockState to, float manaCost, boolean tick, int duration)
+    public void addTemporaryWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, float manaCost, boolean tick, int duration)
     {
-        ResourceLocation fromRL = ForgeRegistries.BLOCKS.getKey(from.getBlock());
+        ResourceLocation fromRL = ForgeRegistries.FLUID_TYPES.get().getKey(from);
         ResourceLocation toRL = ForgeRegistries.BLOCKS.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('temporary_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT.name);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), key, manaCost)
@@ -472,8 +474,8 @@ public class SpellsGen implements DataProvider
                 .addAction(ClearTargetsAction.make("apply", "block"))
                 .addAction(PickTargetAction.make("apply", "block", "blocks", true, false))
                 
-                .addAction(GetBlockAction.make("apply", "block", "block_id", "", ""))
-                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.get().reference(" block_id == '" + fromRL.toString() + "' "), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(GetFluidAction.make("apply", "block", "fluid_id", "", "", "is_source"))
+                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.get().reference(" is_source && fluid_id == '" + fromRL.toString() + "' "), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(SetBlockAction.make("do_apply", "block", STRING.get().reference("block_to"), TAG.get().reference("block_state_to")));
         
         if(tick)
@@ -502,9 +504,9 @@ public class SpellsGen implements DataProvider
         addSpell(rl, spell);
     }
     
-    public void addToggleWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, BlockState from, BlockState to, float manaCost, boolean tick)
+    public void addToggleWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, float manaCost, boolean tick)
     {
-        ResourceLocation fromRL = ForgeRegistries.BLOCKS.getKey(from.getBlock());
+        ResourceLocation fromRL = ForgeRegistries.FLUID_TYPES.get().getKey(from);
         ResourceLocation toRL = ForgeRegistries.BLOCKS.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('toggle_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT.name);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), key, manaCost)
@@ -535,8 +537,8 @@ public class SpellsGen implements DataProvider
                 .addAction(ClearTargetsAction.make("apply", "block"))
                 .addAction(PickTargetAction.make("apply", "block", "blocks", true, false))
                 
-                .addAction(GetBlockAction.make("apply", "block", "block_id", "", ""))
-                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.get().reference(" block_id == '" + fromRL.toString() + "' "), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
+                .addAction(GetFluidAction.make("apply", "block", "fluid_id", "", "", "is_source"))
+                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.get().reference(" is_source && fluid_id == '" + fromRL.toString() + "' "), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(SetBlockAction.make("do_apply", "block", STRING.get().reference("block_to"), TAG.get().reference("block_state_to")));
         
         if(tick)
@@ -846,9 +848,9 @@ public class SpellsGen implements DataProvider
                 .addTooltip(itemCostComponent(Items.POTION))
         );
         
-        addPermanentWalkerSpell(Spells.PERMANENT_FROST_WALKER, Spells.KEY_PERMANENT_FROST_WALKER, Spells.KEY_PERMANENT_FROST_WALKER_DESC, "frost_walker", Blocks.WATER.defaultBlockState(), Blocks.FROSTED_ICE.defaultBlockState(), true);
-        addTemporaryWalkerSpell(Spells.TEMPORARY_FROST_WALKER, Spells.KEY_TEMPORARY_FROST_WALKER, Spells.KEY_TEMPORARY_FROST_WALKER_DESC, "frost_walker", Blocks.WATER.defaultBlockState(), Blocks.FROSTED_ICE.defaultBlockState(), 16F, true, 400);
-        addToggleWalkerSpell(Spells.TOGGLE_FROST_WALKER, Spells.KEY_TOGGLE_FROST_WALKER, Spells.KEY_TOGGLE_FROST_WALKER_DESC, "frost_walker", Blocks.WATER.defaultBlockState(), Blocks.FROSTED_ICE.defaultBlockState(), 5F, true);
+        addPermanentWalkerSpell(Spells.PERMANENT_FROST_WALKER, Spells.KEY_PERMANENT_FROST_WALKER, Spells.KEY_PERMANENT_FROST_WALKER_DESC, "frost_walker", Fluids.WATER.getFluidType(), Blocks.FROSTED_ICE.defaultBlockState(), true);
+        addTemporaryWalkerSpell(Spells.TEMPORARY_FROST_WALKER, Spells.KEY_TEMPORARY_FROST_WALKER, Spells.KEY_TEMPORARY_FROST_WALKER_DESC, "frost_walker", Fluids.WATER.getFluidType(), Blocks.FROSTED_ICE.defaultBlockState(), 16F, true, 400);
+        addToggleWalkerSpell(Spells.TOGGLE_FROST_WALKER, Spells.KEY_TOGGLE_FROST_WALKER, Spells.KEY_TOGGLE_FROST_WALKER_DESC, "frost_walker", Fluids.WATER.getFluidType(), Blocks.FROSTED_ICE.defaultBlockState(), 5F, true);
         
         addSpell(Spells.JUMP, new Spell(modId, "jump", Spells.KEY_JUMP, 5F)
                 .addParameter(DOUBLE.get(), "speed", 1.5)
@@ -983,9 +985,9 @@ public class SpellsGen implements DataProvider
                 .addTooltip(itemCostComponent(new ItemStack(Items.BLAZE_POWDER)))
         );
         
-        addPermanentWalkerSpell(Spells.PERMANENT_LAVA_WALKER, Spells.KEY_PERMANENT_LAVA_WALKER, Spells.KEY_PERMANENT_LAVA_WALKER_DESC, "frost_walker", Blocks.WATER.defaultBlockState(), Blocks.FROSTED_ICE.defaultBlockState(), true);
-        addTemporaryWalkerSpell(Spells.TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER_DESC, "frost_walker", Blocks.WATER.defaultBlockState(), Blocks.FROSTED_ICE.defaultBlockState(), 16F, true, 400);
-        addToggleWalkerSpell(Spells.TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER_DESC, "frost_walker", Blocks.WATER.defaultBlockState(), Blocks.FROSTED_ICE.defaultBlockState(), 5F, true);
+        addPermanentWalkerSpell(Spells.PERMANENT_LAVA_WALKER, Spells.KEY_PERMANENT_LAVA_WALKER, Spells.KEY_PERMANENT_LAVA_WALKER_DESC, "lava_walker", Fluids.LAVA.getFluidType(), Blocks.OBSIDIAN.defaultBlockState(), false);
+        addTemporaryWalkerSpell(Spells.TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER_DESC, "lava_walker", Fluids.LAVA.getFluidType(), Blocks.OBSIDIAN.defaultBlockState(), 16F, false, 400);
+        addToggleWalkerSpell(Spells.TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER_DESC, "lava_walker", Fluids.LAVA.getFluidType(), Blocks.OBSIDIAN.defaultBlockState(), 5F, false);
         
         addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(new ResourceLocation(BuiltinRegistries.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))

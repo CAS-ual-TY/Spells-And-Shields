@@ -26,30 +26,33 @@ public class GetFluidAction extends AffectSingleTypeAction<PositionTarget>
                 singleTargetCodec(),
                 Codec.STRING.fieldOf(ParamNames.var("fluid")).forGetter(GetFluidAction::getFluid),
                 Codec.STRING.fieldOf(ParamNames.var("fluid_state")).forGetter(GetFluidAction::getFluidState),
-                Codec.STRING.fieldOf(ParamNames.var("is_fluid")).forGetter(GetFluidAction::getIsFluid)
-        ).apply(instance, (activation, singleTarget, fluid, fluidState, isFluid) -> new GetFluidAction(type, activation, singleTarget, fluid, fluidState, isFluid)));
+                Codec.STRING.fieldOf(ParamNames.var("is_fluid")).forGetter(GetFluidAction::getIsFluid),
+                Codec.STRING.fieldOf(ParamNames.var("is_source")).forGetter(GetFluidAction::getIsSource)
+        ).apply(instance, (activation, singleTarget, fluid, fluidState, isFluid, isSource) -> new GetFluidAction(type, activation, singleTarget, fluid, fluidState, isFluid, isSource)));
     }
     
-    public static GetFluidAction make(String activation, String singleTarget, String fluid, String fluidState, String isFluid)
+    public static GetFluidAction make(String activation, String singleTarget, String fluid, String fluidState, String isFluid, String isSource)
     {
-        return new GetFluidAction(SpellActionTypes.GET_FLUID.get(), activation, singleTarget, fluid, fluidState, isFluid);
+        return new GetFluidAction(SpellActionTypes.GET_FLUID.get(), activation, singleTarget, fluid, fluidState, isFluid, isSource);
     }
     
     protected String fluid;
     protected String fluidState;
     protected String isFluid;
+    protected String isSource;
     
     public GetFluidAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public GetFluidAction(SpellActionType<?> type, String activation, String singleTarget, String fluid, String fluidState, String isFluid)
+    public GetFluidAction(SpellActionType<?> type, String activation, String singleTarget, String fluid, String fluidState, String isFluid, String isSource)
     {
         super(type, activation, singleTarget);
         this.fluid = fluid;
         this.fluidState = fluidState;
         this.isFluid = isFluid;
+        this.isSource = isSource;
     }
     
     public String getFluid()
@@ -65,6 +68,11 @@ public class GetFluidAction extends AffectSingleTypeAction<PositionTarget>
     public String getIsFluid()
     {
         return isFluid;
+    }
+    
+    public String getIsSource()
+    {
+        return isSource;
     }
     
     @Override
@@ -91,5 +99,6 @@ public class GetFluidAction extends AffectSingleTypeAction<PositionTarget>
         
         ctx.setCtxVar(CtxVarTypes.STRING.get(), fluid, id.toString());
         ctx.setCtxVar(CtxVarTypes.BOOLEAN.get(), isFluid, !fluidState.isEmpty());
+        ctx.setCtxVar(CtxVarTypes.BOOLEAN.get(), isSource, fluidState.isSource());
     }
 }
