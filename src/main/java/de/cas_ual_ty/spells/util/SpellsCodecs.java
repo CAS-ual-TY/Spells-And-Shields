@@ -77,15 +77,15 @@ public class SpellsCodecs
         
         SPELL_NODE = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL).fieldOf("n1/spell_id").forGetter(node -> node.getSpellInstance().getSpell()),
-                Codec.optionalField("n7/mana_cost", Codec.FLOAT).forGetter(node -> Optional.of(node.getSpellInstance()).map(SpellInstance::getManaCost).map(mana -> mana >= 0 ? mana : null)),
-                Codec.optionalField("n8/spell_parameters", ExtraCodecs.lazyInitializedCodec(() -> CTX_VAR).listOf()).forGetter(node -> Optional.of(node).map(n -> n.getSpellInstance().getParameters())),
+                Codec.optionalField("n7/mana_cost", Codec.FLOAT).xmap(o -> o.orElse(-1F), manaCost -> manaCost >= 0 ? Optional.of(manaCost) : Optional.empty()).forGetter(node -> node.getSpellInstance().getManaCost()),
+                Codec.optionalField("n8/spell_parameters", ExtraCodecs.lazyInitializedCodec(() -> CTX_VAR).listOf()).xmap(o -> o.orElse(new LinkedList<>()), p -> Optional.of(p).map(l -> l.isEmpty() ? null : l)).forGetter(node -> node.getSpellInstance().getParameters()),
                 Codec.INT.fieldOf("n4/level_cost").forGetter(SpellNode::getLevelCost),
-                Codec.optionalField("n5/hidden_requirements", REQUIREMENT.listOf()).forGetter(node -> Optional.of(node.getHiddenRequirements()).map(l -> l.isEmpty() ? null : l)),
-                Codec.optionalField("n6/learn_requirements", REQUIREMENT.listOf()).forGetter(node -> Optional.of(node.getLearnRequirements()).map(l -> l.isEmpty() ? null : l)),
+                Codec.optionalField("n5/hidden_requirements", REQUIREMENT.listOf()).xmap(o -> o.orElse(new LinkedList<>()), r -> Optional.of(r).map(l -> l.isEmpty() ? null : l)).forGetter(SpellNode::getHiddenRequirements),
+                Codec.optionalField("n6/learn_requirements", REQUIREMENT.listOf()).xmap(o -> o.orElse(new LinkedList<>()), r -> Optional.of(r).map(l -> l.isEmpty() ? null : l)).forGetter(SpellNode::getLearnRequirements),
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_NODE).listOf().fieldOf("n9/child_nodes").forGetter(SpellNode::getChildren),
-                Codec.optionalField("n2/node_id", Codec.INT).forGetter(node -> Optional.ofNullable(node.getNodeId()).map(SpellNodeId::nodeId)),
-                Codec.optionalField("n3/node_frame", Codec.intRange(0, 2)).forGetter(node -> Optional.of(node.getFrame()).map(f -> f == 0 ? null : f))
-        ).apply(instance, (spell, manaCost, variables, levelCost, hiddenRequirements, learnRequirements, children, id, frame) -> new SpellNode(id.map(i -> new SpellNodeId(null, i)).orElse(null), new SpellInstance(spell, manaCost.orElse(-1F), variables.orElse(new LinkedList<>())), levelCost, hiddenRequirements.orElse(new LinkedList<>()), learnRequirements.orElse(new LinkedList<>()), children, frame.orElse(0)))));
+                Codec.optionalField("n2/node_id", Codec.INT).xmap(o -> o.map(i -> new SpellNodeId(null, i)).orElse(null), nodeId -> Optional.ofNullable(nodeId).map(SpellNodeId::nodeId)).forGetter(SpellNode::getNodeId),
+                Codec.optionalField("n3/node_frame", Codec.intRange(0, 2)).xmap(o -> o.orElse(0), f -> Optional.of(f).map(i -> i <= 0 ? null : i)).forGetter(SpellNode::getFrame)
+        ).apply(instance, (spell, manaCost, variables, levelCost, hiddenRequirements, learnRequirements, children, id, frame) -> new SpellNode(id, new SpellInstance(spell, manaCost, variables), levelCost, hiddenRequirements, learnRequirements, children, frame))));
         
         SPELL_TREE_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 SPELL_NODE.fieldOf("t3/root_node").forGetter(SpellTree::getRoot),

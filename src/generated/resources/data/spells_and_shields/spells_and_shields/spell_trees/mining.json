@@ -16,7 +16,6 @@
         "bookshelves": 8
       }
     ],
-    "n8/spell_parameters": [],
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:silence_target",
@@ -28,7 +27,6 @@
             "bookshelves": 26
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_magic_immune",
@@ -40,7 +38,6 @@
                 "bookshelves": 26
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           }
         ]
@@ -55,7 +52,6 @@
             "bookshelves": 18
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_haste",
@@ -67,7 +63,6 @@
                 "bookshelves": 24
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           }
         ]
@@ -82,7 +77,6 @@
             "bookshelves": 12
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": []
       }
     ]

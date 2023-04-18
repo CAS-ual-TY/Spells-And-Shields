@@ -16,7 +16,6 @@
         "bookshelves": 12
       }
     ],
-    "n8/spell_parameters": [],
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:leap",
@@ -28,7 +27,6 @@
             "bookshelves": 14
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_speed",
@@ -40,7 +38,6 @@
                 "bookshelves": 20
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           },
           {
@@ -53,7 +50,6 @@
                 "bookshelves": 14
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           },
           {
@@ -66,7 +62,6 @@
                 "bookshelves": 12
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:toggle_slow_falling",
@@ -78,7 +73,6 @@
                     "bookshelves": 16
                   }
                 ],
-                "n8/spell_parameters": [],
                 "n9/child_nodes": []
               }
             ]
@@ -93,7 +87,6 @@
                 "bookshelves": 16
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:pressurize",
@@ -105,7 +98,6 @@
                     "bookshelves": 18
                   }
                 ],
-                "n8/spell_parameters": [],
                 "n9/child_nodes": []
               }
             ]

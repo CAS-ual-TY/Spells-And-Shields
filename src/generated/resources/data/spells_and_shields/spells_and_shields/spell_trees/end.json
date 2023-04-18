@@ -22,7 +22,6 @@
         "bookshelves": 28
       }
     ],
-    "n8/spell_parameters": [],
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:forced_teleport",
@@ -34,7 +33,6 @@
             "bookshelves": 28
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": []
       },
       {
@@ -51,7 +49,6 @@
             "advancement": "minecraft:end/respawn_dragon"
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:ender_army",
@@ -71,7 +68,6 @@
                 }
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           }
         ]

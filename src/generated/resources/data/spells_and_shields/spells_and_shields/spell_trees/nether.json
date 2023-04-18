@@ -16,7 +16,6 @@
         "bookshelves": 28
       }
     ],
-    "n8/spell_parameters": [],
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:toggle_lava_walker",
@@ -28,7 +27,6 @@
             "bookshelves": 19
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_fire_resistance",
@@ -40,7 +38,6 @@
                 "bookshelves": 30
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           },
           {
@@ -53,7 +50,6 @@
                 "bookshelves": 20
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           }
         ]
@@ -76,7 +72,6 @@
             }
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:flamethrower",
@@ -88,7 +83,6 @@
                 "bookshelves": 24
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           }
         ]

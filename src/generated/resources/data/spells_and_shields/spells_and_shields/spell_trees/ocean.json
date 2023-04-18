@@ -10,7 +10,6 @@
     "n1/spell_id": "spells_and_shields:toggle_water_breathing",
     "n2/node_id": 1,
     "n4/level_cost": 10,
-    "n8/spell_parameters": [],
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:toggle_regeneration",
@@ -22,7 +21,6 @@
             "bookshelves": 20
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:growth",
@@ -34,7 +32,6 @@
                 "bookshelves": 20
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           },
           {
@@ -47,7 +44,6 @@
                 "bookshelves": 20
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           }
         ]
@@ -62,7 +58,6 @@
             "bookshelves": 10
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_dolphins_grace",
@@ -74,7 +69,6 @@
                 "bookshelves": 30
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           },
           {
@@ -87,7 +81,6 @@
                 "bookshelves": 14
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           }
         ]
@@ -102,7 +95,6 @@
             "bookshelves": 10
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:potion_shot",
@@ -114,7 +106,6 @@
                 "bookshelves": 10
               }
             ],
-            "n8/spell_parameters": [],
             "n9/child_nodes": []
           }
         ]
@@ -133,7 +124,6 @@
             "advancement": "minecraft:adventure/lightning_rod_with_villager_no_fire"
           }
         ],
-        "n8/spell_parameters": [],
         "n9/child_nodes": []
       }
     ]
