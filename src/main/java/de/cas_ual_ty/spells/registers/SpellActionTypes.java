@@ -123,6 +123,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<TryConsumeItemAction>> TRY_CONSUME_ITEM = DEFERRED_REGISTER.register("try_consume_item", () -> new SpellActionType<>(TryConsumeItemAction::new, TryConsumeItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<TryDamageItemAction>> TRY_DAMAGE_ITEM = DEFERRED_REGISTER.register("try_damage_item", () -> new SpellActionType<>(TryDamageItemAction::new, TryDamageItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<UseItemAction>> USE_ITEM = DEFERRED_REGISTER.register("use_item", () -> new SpellActionType<>(UseItemAction::new, UseItemAction::makeCodec));
+    public static final RegistryObject<SpellActionType<UseItemOnBlocksAction>> USE_ITEM_ON_BLOCK = DEFERRED_REGISTER.register("use_item_on_block", () -> new SpellActionType<>(UseItemOnBlocksAction::new, UseItemOnBlocksAction::makeCodec));
     
     // level
     public static final RegistryObject<SpellActionType<CubeBlockTargetsAction>> CUBE_BLOCK_TARGETS = DEFERRED_REGISTER.register("cube_block_targets", () -> new SpellActionType<>(CubeBlockTargetsAction::new, CubeBlockTargetsAction::makeCodec));
@@ -135,7 +136,6 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<RemoveBlockAction>> REMOVE_BLOCK = DEFERRED_REGISTER.register("remove_block", () -> new SpellActionType<>(RemoveBlockAction::new, RemoveBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<SetBlockAction>> SET_BLOCK = DEFERRED_REGISTER.register("set_block", () -> new SpellActionType<>(SetBlockAction::new, SetBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<TickBlockAction>> TICK_BLOCK = DEFERRED_REGISTER.register("tick_block", () -> new SpellActionType<>(TickBlockAction::new, TickBlockAction::makeCodec));
-    public static final RegistryObject<SpellActionType<UseItemOnBlocksAction>> USE_ITEM_ON_BLOCK = DEFERRED_REGISTER.register("use_item_on_block", () -> new SpellActionType<>(UseItemOnBlocksAction::new, UseItemOnBlocksAction::makeCodec));
     
     // mana
     public static final RegistryObject<SpellActionType<BurnManaAction>> BURN_MANA = DEFERRED_REGISTER.register("burn_mana", () -> new SpellActionType<>(BurnManaAction::new, BurnManaAction::makeCodec));

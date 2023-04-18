@@ -1184,7 +1184,7 @@ public class SpellsGen implements DataProvider
                 .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ConsumePlayerItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
                 .addAction(CubeBlockTargetsAction.make(ACTIVE.activation, OWNER.targetGroup, "blocks", Compiler.compileString(" vec3(-range, -1, -range) ", VEC3.get()), Compiler.compileString(" vec3(range, 1, range) ", VEC3.get())))
-                .addAction(UseItemOnBlocksAction.make(ACTIVE.activation, "blocks", OWNER.targetGroup, new ItemStack(Items.BONE_MEAL), false, Direction.UP))
+                .addAction(UseItemOnBlocksAction.make(ACTIVE.activation, OWNER.targetGroup, "blocks", new ItemStack(Items.BONE_MEAL), false, Direction.UP))
                 .addAction(SpawnParticlesAction.make(ACTIVE.activation, "blocks", ParticleTypes.POOF, INT.get().immediate(1), DOUBLE.get().immediate(0.25D)))
                 .addAction(PlaySoundAction.make(ACTIVE.activation, OWNER.targetGroup, SoundEvents.BONE_MEAL_USE, DOUBLE.get().immediate(1D), DOUBLE.get().immediate(1D)))
                 .addParameter(INT.get(), "range", 3)
@@ -1311,6 +1311,7 @@ public class SpellsGen implements DataProvider
                         .addTooltip(Component.translatable(Spells.KEY_EVOKER_FANGS_DESC))
         );
         
+    
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);
         addTemporaryEffectSpell(Spells.TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 13F, 400, 0);
         addToggleEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 4F, 50, 0);

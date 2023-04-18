@@ -183,8 +183,6 @@
   "spell.spells_and_shields.summon_animal.desc": "Create life based on the item in your hand.",
   "spell.spells_and_shields.teleport": "Teleport",
   "spell.spells_and_shields.teleport.desc": "Teleport to where you are looking at.",
-  "spell.spells_and_shields.temporary_aqua_affinity": "Temp. Aqua Affinity",
-  "spell.spells_and_shields.temporary_aqua_affinity.desc": "Applies the Mine underwater with full speed. effect for a short period of time.",
   "spell.spells_and_shields.temporary_conduit_power": "Temp. %s",
   "spell.spells_and_shields.temporary_conduit_power.desc": "Applies the %s effect for a short period of time.",
   "spell.spells_and_shields.temporary_dolphins_grace": "Temp. %s",

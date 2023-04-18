@@ -92,7 +92,7 @@
       },
       "offhand": false,
       "t/source": "owner",
-      "ts/targets": "blocks"
+      "ts/blocks": "blocks"
     },
     {
       "type": "spells_and_shields:spawn_particles",
