@@ -225,6 +225,8 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_ENDER_ARMY_DESC, "Make all Endermen close to the target you are looking at attack said target.");
         add(Spells.KEY_EVOKER_FANGS, "Evoker Fangs");
         add(Spells.KEY_EVOKER_FANGS_DESC, "Summon Fangs forward like an Evoker.");
+        add(Spells.KEY_POCKET_ROCKET, "Pocket Rocket");
+        add(Spells.KEY_POCKET_ROCKET_DESC, "Fire a bunch of Firework Rockets in a row to boost Elytra flight.");
         
         add(Spells.KEY_PERMANENT_REPLENISHMENT, PERMANENT_EFFECT_NAME);
         add(Spells.KEY_PERMANENT_REPLENISHMENT_DESC, PERMANENT_EFFECT_DESC);

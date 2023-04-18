@@ -1311,6 +1311,25 @@ public class SpellsGen implements DataProvider
                         .addTooltip(Component.translatable(Spells.KEY_EVOKER_FANGS_DESC))
         );
         
+        addSpell(Spells.POCKET_ROCKET, new Spell(ItemSpellIcon.make(new ItemStack(Items.FIREWORK_ROCKET)), Spells.KEY_POCKET_ROCKET, 8F)
+                .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.GUNPOWDER, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
+                .addAction(ConsumePlayerItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.GUNPOWDER, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(LabelAction.make(ACTIVE.activation, "loop"))
+                .addAction(PutVarAction.makeInt(ACTIVE.activation, Compiler.compileString(" repetitions - 1 ", INT.get()), "repetitions"))
+                .addAction(AddDelayedSpellAction.make(ACTIVE.activation, OWNER.targetGroup, "fire", Compiler.compileString(" repetitions * time_delay_ticks ", INT.get()), STRING.get().immediate(""), TAG.get().immediate(new CompoundTag()), eventHookMap()))
+                .addAction(BranchAction.make(ACTIVE.activation, "loop", Compiler.compileString(" repetitions > 1 ", BOOLEAN.get())))
+                .addAction(CopyTargetsAction.make(ACTIVE.activation, "player", OWNER.targetGroup))
+                .addAction(CopyTargetsAction.make("fire", "player", HOLDER.targetGroup))
+                .addAction(ActivateAction.make(ACTIVE.activation, "fire"))
+                .addAction(UseItemAction.make("fire", "player", new ItemStack(Items.FIREWORK_ROCKET), false))
+                .addParameter(INT.get(), "repetitions", 4)
+                .addParameter(INT.get(), "time_delay_ticks", 30)
+                .addEventHook(ACTIVE.activation)
+                .addTooltip(Component.translatable(Spells.KEY_POCKET_ROCKET_DESC))
+        );
+        
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);
         addTemporaryEffectSpell(Spells.TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 13F, 400, 0);
         addToggleEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 4F, 50, 0);

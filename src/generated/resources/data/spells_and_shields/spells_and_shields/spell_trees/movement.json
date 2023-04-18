@@ -50,7 +50,20 @@
                 "bookshelves": 14
               }
             ],
-            "n9/child_nodes": []
+            "n9/child_nodes": [
+              {
+                "n1/spell_id": "spells_and_shields:pocket_rocket",
+                "n2/node_id": 4112,
+                "n4/level_cost": 25,
+                "n6/learn_requirements": [
+                  {
+                    "type": "spells_and_shields:bookshelves",
+                    "bookshelves": 20
+                  }
+                ],
+                "n9/child_nodes": []
+              }
+            ]
           },
           {
             "n1/spell_id": "spells_and_shields:mana_soles",

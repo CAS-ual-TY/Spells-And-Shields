@@ -169,6 +169,8 @@
   "spell.spells_and_shields.permanent_strength.desc": "Applies the %s effect while this spell is equipped.",
   "spell.spells_and_shields.permanent_water_breathing": "Perm. %s",
   "spell.spells_and_shields.permanent_water_breathing.desc": "Applies the %s effect while this spell is equipped.",
+  "spell.spells_and_shields.pocket_rocket": "Pocket Rocket",
+  "spell.spells_and_shields.pocket_rocket.desc": "Fire a bunch of Firework Rockets in a row to boost Elytra flight.",
   "spell.spells_and_shields.potion_shot": "Potion Shot",
   "spell.spells_and_shields.potion_shot.desc": "Shoots the contents of the potion in your hand forward.",
   "spell.spells_and_shields.pressurize": "Pressurize",

@@ -136,6 +136,8 @@ public class SpellTrees
                 .add(spellGetter.apply(Spells.TOGGLE_SPEED)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
                 .add(spellGetter.apply(Spells.JUMP)).levelCost(14).learnRequirements(bookshelves(14))
+                .add(spellGetter.apply(Spells.POCKET_ROCKET)).levelCost(25).learnRequirements(bookshelves(20))
+                .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.MANA_SOLES)).levelCost(15).learnRequirements(bookshelves(12))
                 .add(spellGetter.apply(Spells.TOGGLE_SLOW_FALLING)).levelCost(15).learnRequirements(bookshelves(16))

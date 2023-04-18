@@ -173,6 +173,10 @@ public class Spells
     public static final String KEY_EVOKER_FANGS = key(EVOKER_FANGS);
     public static final String KEY_EVOKER_FANGS_DESC = descKey(EVOKER_FANGS);
     
+    public static final ResourceLocation POCKET_ROCKET = rl("pocket_rocket");
+    public static final String KEY_POCKET_ROCKET = key(POCKET_ROCKET);
+    public static final String KEY_POCKET_ROCKET_DESC = descKey(POCKET_ROCKET);
+    
     public static final ResourceLocation PERMANENT_REPLENISHMENT = rl("permanent_replenishment");
     public static final String KEY_PERMANENT_REPLENISHMENT = key(PERMANENT_REPLENISHMENT);
     public static final String KEY_PERMANENT_REPLENISHMENT_DESC = descKey(PERMANENT_REPLENISHMENT);
