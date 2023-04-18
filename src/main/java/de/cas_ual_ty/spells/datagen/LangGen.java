@@ -172,8 +172,8 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_MANA_BOOST_DESC, "Increases your maximum mana.");
         add(Spells.KEY_WATER_LEAP, "Water Leap");
         add(Spells.KEY_WATER_LEAP_DESC, "Leap forward like a dolphin (must be underwater).");
-        add(Spells.KEY_AQUA_AFFINITY, "Aqua Affinity");
-        add(Spells.KEY_AQUA_AFFINITY_DESC, "Mine underwater with full speed.");
+        add(Spells.KEY_PERMANENT_AQUA_AFFINITY, PERMANENT_EFFECT_NAME.formatted("Aqua Affinity"));
+        add(Spells.KEY_PERMANENT_AQUA_AFFINITY_DESC, PERMANENT_EFFECT_DESC.formatted("Mine underwater with full speed."));
         add(Spells.KEY_WATER_WHIP, "Water Whip");
         add(Spells.KEY_WATER_WHIP_DESC, "Shoots water out of the water bucket in your hand. The water returns and the bucket refills if you hold it on return");
         add(Spells.KEY_POTION_SHOT, "Potion Shot");

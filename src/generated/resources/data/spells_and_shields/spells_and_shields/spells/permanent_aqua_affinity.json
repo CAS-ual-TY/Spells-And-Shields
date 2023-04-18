@@ -1,6 +1,6 @@
 {
   "s1/title": {
-    "translate": "spell.spells_and_shields.aqua_affinity"
+    "translate": "spell.spells_and_shields.permanent_aqua_affinity"
   },
   "s2/icon": {
     "type": "spells_and_shields:layered",
@@ -18,7 +18,7 @@
   "s3/mana_cost": 0.0,
   "s4/tooltip": [
     {
-      "translate": "spell.spells_and_shields.aqua_affinity.desc"
+      "translate": "spell.spells_and_shields.permanent_aqua_affinity.desc"
     }
   ],
   "s5/spell_events": [

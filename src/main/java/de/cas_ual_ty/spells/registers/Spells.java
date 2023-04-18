@@ -67,9 +67,9 @@ public class Spells
     public static final String KEY_WATER_LEAP = key(WATER_LEAP);
     public static final String KEY_WATER_LEAP_DESC = descKey(WATER_LEAP);
     
-    public static final ResourceLocation AQUA_AFFINITY = rl("aqua_affinity");
-    public static final String KEY_AQUA_AFFINITY = key(AQUA_AFFINITY);
-    public static final String KEY_AQUA_AFFINITY_DESC = descKey(AQUA_AFFINITY);
+    public static final ResourceLocation PERMANENT_AQUA_AFFINITY = rl("permanent_aqua_affinity");
+    public static final String KEY_PERMANENT_AQUA_AFFINITY = key(PERMANENT_AQUA_AFFINITY);
+    public static final String KEY_PERMANENT_AQUA_AFFINITY_DESC = descKey(PERMANENT_AQUA_AFFINITY);
     
     //TODO fx
     public static final ResourceLocation WATER_WHIP = rl("water_whip");
