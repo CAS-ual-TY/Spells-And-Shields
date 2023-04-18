@@ -192,11 +192,14 @@ public class SpellInstance
         }
         else if(nbt.contains("spellId", Tag.TAG_STRING))
         {
-            return new SpellInstance(spellRegistry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, new ResourceLocation(nbt.getString("spellId")))));
+            Holder<Spell> holder = spellRegistry.getHolder(ResourceKey.create(Spells.REGISTRY_KEY, new ResourceLocation(nbt.getString("spellId")))).orElse(null);
+    
+            if(holder != null)
+            {
+                return new SpellInstance(holder);
+            }
         }
-        else
-        {
-            return null;
-        }
+    
+        return null;
     }
 }
