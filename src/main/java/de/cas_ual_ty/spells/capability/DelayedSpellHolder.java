@@ -33,25 +33,28 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
     
     private void activate(DelayedSpell spell)
     {
-        activate(spell, spell.activation, ctx ->
-        {
-            ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HOLDER.targetGroup).addTargets(Target.of(holder));
-            ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.DELAY_TIME.name, spell.getTime());
-            ctx.setCtxVar(CtxVarTypes.TAG.get(), BuiltinVariables.DELAY_TAG.name, spell.tag);
-            
-            if(spell.uuid != null)
-            {
-                ctx.setCtxVar(CtxVarTypes.STRING.get(), BuiltinVariables.DELAY_UUID.name, spell.uuid.toString());
-            }
-        }, ctx -> {});
+        activate(spell, spell.activation, ctx -> {}, ctx -> {});
     }
     
     private void activate(DelayedSpell spell, String activation, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
     {
         SpellInstance s = spell.spell;
-        if(s != null)
+        if(s != null && !activation.isEmpty())
         {
-            s.run(holder.level, null, activation, true, toContext, fromContext);
+            Consumer<SpellContext> toContextExt = ctx ->
+            {
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HOLDER.targetGroup).addTargets(Target.of(holder));
+                ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.DELAY_TIME.name, spell.getTime());
+                ctx.setCtxVar(CtxVarTypes.TAG.get(), BuiltinVariables.DELAY_TAG.name, spell.tag);
+                
+                if(spell.uuid != null)
+                {
+                    ctx.setCtxVar(CtxVarTypes.STRING.get(), BuiltinVariables.DELAY_UUID.name, spell.uuid.toString());
+                }
+                
+                toContext.accept(ctx);
+            };
+            s.run(holder.level, null, activation, true, toContextExt, fromContext);
         }
     }
     
@@ -104,9 +107,11 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
         
         for(DelayedSpell spell : theSpells)
         {
-            if(spell.eventsMap.containsKey(event))
+            String activation = spell.eventsMap.getOrDefault(event, null);
+            
+            if(activation != null)
             {
-                activate(spell, spell.eventsMap.get(event), toContext, fromContext);
+                activate(spell, activation, toContext, fromContext);
             }
             
             spells.add(spell);
@@ -126,7 +131,7 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
             }
             else
             {
-                theSpells.add(spell);
+                spells.add(spell);
             }
         }
     }

@@ -99,23 +99,20 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, EntityTarget target)
     {
-        if(!removeActivation.isEmpty())
+        DelayedSpellHolder.getHolder(target.getEntity()).ifPresent(holder ->
         {
-            DelayedSpellHolder.getHolder(target.getEntity()).ifPresent(holder ->
+            tickTime.getValue(ctx).ifPresent(tickTime ->
             {
-                tickTime.getValue(ctx).ifPresent(tickTime ->
+                tag.getValue(ctx).ifPresent(tag ->
                 {
-                    tag.getValue(ctx).ifPresent(tag ->
+                    if(tickTime > 0)
                     {
-                        if(tickTime > 0)
-                        {
-                            UUID uuid = this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).orElse(null);
-                            
-                            holder.addDelayedSpell(ctx.spell, uuid, removeActivation, tickTime, tag, eventsMap);
-                        }
-                    });
+                        UUID uuid = this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).orElse(null);
+                        
+                        holder.addDelayedSpell(ctx.spell, uuid, removeActivation, tickTime, tag, eventsMap);
+                    }
                 });
             });
-        }
+        });
     }
 }

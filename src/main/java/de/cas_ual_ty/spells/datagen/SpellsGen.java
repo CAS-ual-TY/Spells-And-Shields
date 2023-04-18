@@ -1433,6 +1433,17 @@ public class SpellsGen implements DataProvider
         return Component.translatable(KEY_ITEM_COST_TEXT, translatable).withStyle(ChatFormatting.YELLOW);
     }
     
+    public static Map<String, String> eventHookMap(String... keyValuePairs)
+    {
+        assert keyValuePairs.length % 2 == 0;
+        Map<String, String> map = new HashMap<>();
+        for(int i = 0; i < keyValuePairs.length; i += 2)
+        {
+            map.put(keyValuePairs[0], keyValuePairs[1]);
+        }
+        return map;
+    }
+    
     // yes this is stupid but I do not know how to access these without a level
     // so I print this as code to console and then copy paste it into actual code
     public static void printBlastingRecipes(Level level)
