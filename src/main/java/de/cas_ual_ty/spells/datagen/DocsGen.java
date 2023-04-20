@@ -153,7 +153,6 @@ public class DocsGen implements DataProvider
             fw.write(keys.stream()
                     .map(key -> "- `" + key + "`: ABCDE.")
                     .collect(Collectors.joining("\n")) + "\n");
-            fw.write('\n');
         }
     }
     
