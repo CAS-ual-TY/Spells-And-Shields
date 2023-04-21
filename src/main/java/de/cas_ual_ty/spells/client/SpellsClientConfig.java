@@ -12,9 +12,13 @@ public class SpellsClientConfig
     public static final ForgeConfigSpec.BooleanValue MANA_JITTER;
     public static final ForgeConfigSpec.BooleanValue ALWAYS_SHOW_SPELL_SLOTS;
     public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL;
+    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL_OFFSET_X;
+    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL_OFFSET_Y;
+    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL_SPACING;
     public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_OFFSET_X;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_OFFSET_Y;
+    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_OFFSET_X;
+    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_OFFSET_Y;
+    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_SPACING;
     
     static
     {
@@ -32,23 +36,41 @@ public class SpellsClientConfig
         MANA_JITTER = builder
                 .comment("The mana bar icons jitter when your current mana is low (true) or else the icons always stay put (false).")
                 .define("manaJitter", true);
+        
+        builder.comment("Everything about the gui widgets representing your spell slots (equipped spells)").push("spellSlots");
         ALWAYS_SHOW_SPELL_SLOTS = builder
                 .comment("Always show all spell slots (true) or else only show them if at least 1 spell is equipped (false).")
-                .define("alwaysShowSpellSlots", true);
-        
-        builder.push("spellSlots");
+                .define("alwaysShow", true);
+        builder.comment("The position to put the spell slots in the survival inventory gui.").push("survival");
         SPELL_SLOTS_POSITION_SURVIVAL = builder
-                .comment("The position to put the spell slots in the survival inventory gui. These values represent the position by going counter-clockwise around the gui with 3 available positions on each side.")
-                .defineInRange("spellSlotsPositionSurvival", 0, 0, 11);
-        SPELL_SLOTS_POSITION_CREATIVE = builder
-                .comment("The position to put the spell slots in the creative inventory gui. These values represent the position by going counter-clockwise around the gui with 3 available positions on each side.")
-                .defineInRange("spellSlotsPositionCreative", 0, 0, 11);
-        SPELL_SLOTS_POSITION_OFFSET_X = builder
+                .comment("These values represent the position by going counter-clockwise around the gui with 3 available positions on each side. 0-11 attaches it to the edge of the inventory gui, 12-23 to the edge of the screen.")
+                .defineInRange("position", 0, 0, 23);
+        SPELL_SLOTS_POSITION_SURVIVAL_OFFSET_X = builder
                 .comment("Manually move the x position of the spell slots by the set amount.")
-                .defineInRange("spellSlotsPositionOffsetX", 0, -800, 800);
-        SPELL_SLOTS_POSITION_OFFSET_Y = builder
+                .defineInRange("offsetX", 0, -800, 800);
+        SPELL_SLOTS_POSITION_SURVIVAL_OFFSET_Y = builder
                 .comment("Manually move the y position of the spell slots by the set amount.")
-                .defineInRange("spellSlotsPositionOffsetY", 0, -800, 800);
+                .defineInRange("offsetY", 0, -800, 800);
+        SPELL_SLOTS_POSITION_SURVIVAL_SPACING = builder
+                .comment("The spacing between the spell slots.")
+                .defineInRange("spacing", 1, 0, 10);
+        builder.pop();
+        
+        builder.comment("The position to put the spell slots in the creative inventory gui.").push("creative");
+        SPELL_SLOTS_POSITION_CREATIVE = builder
+                .comment("These values represent the position by going counter-clockwise around the gui with 3 available positions on each side. 0-11 attaches it to the edge of the inventory gui, 12-23 to the edge of the screen.")
+                .defineInRange("position", 0, 0, 23);
+        SPELL_SLOTS_POSITION_CREATIVE_OFFSET_X = builder
+                .comment("Manually move the x position of the spell slots by the set amount.")
+                .defineInRange("offsetX", 0, -800, 800);
+        SPELL_SLOTS_POSITION_CREATIVE_OFFSET_Y = builder
+                .comment("Manually move the y position of the spell slots by the set amount.")
+                .defineInRange("offsetY", 0, -800, 800);
+        SPELL_SLOTS_POSITION_CREATIVE_SPACING = builder
+                .comment("The spacing between the spell slots.")
+                .defineInRange("spacing", 1, 0, 10);
+        builder.pop();
+        
         builder.pop();
         
         CLIENT_SPEC = builder.build();

@@ -13,143 +13,205 @@ public enum SlotsPosition
     TR_DOWN(8),
     TR_LEFT(9),
     T(10),
-    TL_RIGHT(11);
+    TL_RIGHT(11),
+    EDGE_TL_DOWN(12),
+    EDGE_L(13),
+    EDGE_BL_UP(14),
+    EDGE_BL_RIGHT(15),
+    EDGE_B(16),
+    EDGE_BR_LEFT(17),
+    EDGE_BR_UP(18),
+    EDGE_R(19),
+    EDGE_TR_DOWN(20),
+    EDGE_TR_LEFT(21),
+    EDGE_T(22),
+    EDGE_TL_RIGHT(23);
+    
+    public static final int GROUP_AMT = 12;
     
     public final int id;
+    
+    public final boolean atScreenEdge;
+    public final boolean isHorizontal;
+    public final boolean isVertical;
+    public final boolean isLeft;
+    public final boolean isRight;
+    public final boolean isTop;
+    public final boolean isBottom;
+    public final boolean isDownwards;
+    public final boolean isUpwards;
+    public final boolean isRightwards;
+    public final boolean isLeftwards;
+    public final boolean isCentered;
     
     SlotsPosition(int id)
     {
         this.id = id;
+        
+        atScreenEdge = id >= GROUP_AMT;
+        id = id % GROUP_AMT;
+        
+        isVertical = id % 6 < 3;
+        isHorizontal = !isVertical;
+        isLeft = id <= 3 || id == 11;
+        isRight = id >= 5 && id <= 9;
+        isTop = id == 0 || id >= 8;
+        isBottom = id >= 2 && id <= 6;
+        isDownwards = id == 0 || id == 8;
+        isUpwards = id == 2 || id == 6;
+        isRightwards = id == 3 || id == 11;
+        isLeftwards = id == 5 || id == 9;
+        isCentered = id % 3 == 1;
     }
     
-    public boolean isVertical()
+    public SlotsPosition transform()
     {
-        //0, 1, 2, 6, 7, 8
-        return id % 6 < 3;
-    }
-    
-    public boolean isHorizontal()
-    {
-        return !isVertical();
-    }
-    
-    public boolean isLeft()
-    {
-        return id <= 3 || id == 11;
-    }
-    
-    public boolean isBottom()
-    {
-        return id >= 2 && id <= 6;
-    }
-    
-    public boolean isRight()
-    {
-        return id >= 5 && id <= 9;
-    }
-    
-    public boolean isTop()
-    {
-        return id == 0 || id >= 8;
-    }
-    
-    public boolean downwards()
-    {
-        return id == 0 || id == 8;
-    }
-    
-    public boolean upwards()
-    {
-        return id == 2 || id == 6;
-    }
-    
-    public boolean rightwards()
-    {
-        return id == 3 || id == 11;
-    }
-    
-    public boolean leftwards()
-    {
-        return id == 5 || id == 9;
-    }
-    
-    public boolean centered()
-    {
-        return id % 3 == 1;
-    }
-    
-    public int startPositionX(int guiLeft, int guiTop, int guiWidth, int guiHeight, int frameWidth, int frameHeight, int frames)
-    {
-        if(isVertical())
+        if(id >= GROUP_AMT)
         {
-            if(isLeft())
+            return fromId(id % GROUP_AMT);
+        }
+        else
+        {
+            return fromId(id + GROUP_AMT);
+        }
+    }
+    
+    public int startPositionX(int screenWidth, int screenHeight, int guiLeft, int guiTop, int guiWidth, int guiHeight, int frameWidth, int frameHeight, int frames, int margin)
+    {
+        if(atScreenEdge)
+        {
+            if(isVertical)
             {
-                return guiLeft - frameWidth;
+                if(isLeft)
+                {
+                    return margin;
+                }
+                else if(isRight)
+                {
+                    return screenWidth - (frameWidth + margin);
+                }
             }
-            else if(isRight())
+            else
             {
-                return guiLeft + guiWidth;
+                if(isLeft)
+                {
+                    return margin;
+                }
+                else if(isRight)
+                {
+                    return screenWidth - frames * (frameWidth + margin);
+                }
+                else
+                {
+                    return (screenWidth - frames * (frameWidth + margin) + margin) / 2;
+                }
             }
         }
         else
         {
-            if(isLeft())
+            if(isVertical)
             {
-                return guiLeft;
-            }
-            else if(isRight())
-            {
-                return guiLeft + guiWidth - frames * frameWidth;
+                if(isLeft)
+                {
+                    return guiLeft - (frameWidth + margin);
+                }
+                else if(isRight)
+                {
+                    return guiLeft + guiWidth + margin;
+                }
             }
             else
             {
-                return guiLeft + (guiWidth - frames * frameWidth) / 2;
+                if(isLeft)
+                {
+                    return guiLeft;
+                }
+                else if(isRight)
+                {
+                    return guiLeft + guiWidth - frames * (frameWidth + margin) + margin;
+                }
+                else
+                {
+                    return guiLeft + (guiWidth - frames * (frameWidth + margin) + margin) / 2;
+                }
             }
         }
         
         return -1;
     }
     
-    public int startPositionY(int guiLeft, int guiTop, int guiWidth, int guiHeight, int frameWidth, int frameHeight, int frames)
+    public int startPositionY(int screenWidth, int screenHeight, int guiLeft, int guiTop, int guiWidth, int guiHeight, int frameWidth, int frameHeight, int frames, int margin)
     {
-        if(isHorizontal())
+        if(atScreenEdge)
         {
-            if(isTop())
+            if(isHorizontal)
             {
-                return guiTop - frameHeight;
+                if(isTop)
+                {
+                    return margin;
+                }
+                else if(isBottom)
+                {
+                    return screenHeight - (frameHeight + margin);
+                }
             }
-            else if(isBottom())
+            else
             {
-                return guiTop + guiHeight;
+                if(isTop)
+                {
+                    return margin;
+                }
+                else if(isBottom)
+                {
+                    return screenHeight - frames * (frameHeight + margin);
+                }
+                else
+                {
+                    return (screenHeight - frames * (frameHeight + margin) + margin) / 2;
+                }
             }
         }
         else
         {
-            if(isTop())
+            if(isHorizontal)
             {
-                return guiTop;
-            }
-            else if(isBottom())
-            {
-                return guiTop + guiHeight - frames * frameHeight;
+                if(isTop)
+                {
+                    return guiTop - (frameHeight + margin);
+                }
+                else if(isBottom)
+                {
+                    return guiTop + guiHeight + margin;
+                }
             }
             else
             {
-                return guiTop + (guiHeight - frames * frameHeight) / 2;
+                if(isTop)
+                {
+                    return guiTop;
+                }
+                else if(isBottom)
+                {
+                    return guiTop + guiHeight - frames * (frameHeight + margin) + margin;
+                }
+                else
+                {
+                    return guiTop + (guiHeight - frames * (frameHeight + margin) + margin) / 2;
+                }
             }
         }
         
         return -1;
     }
     
-    public int incrementX(int frameWidth, int frameHeight)
+    public int incrementX(int frameWidth, int frameHeight, int margin)
     {
-        return isHorizontal() ? frameWidth : 0;
+        return isHorizontal ? frameWidth + margin : 0;
     }
     
-    public int incrementY(int frameWidth, int frameHeight)
+    public int incrementY(int frameWidth, int frameHeight, int margin)
     {
-        return isVertical() ? frameHeight : 0;
+        return isVertical ? frameHeight + margin : 0;
     }
     
     public static SlotsPosition fromId(int id)
