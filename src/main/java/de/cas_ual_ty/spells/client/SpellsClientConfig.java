@@ -24,19 +24,21 @@ public class SpellsClientConfig
     {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         
+        builder.push("mana");
         MANA_HIDE_DELAY = builder
                 .comment("Hide the mana bar if it has not changed for the set amount of time (in ticks, 1 second = 20 ticks). Set to 0 to always have it visible.")
-                .defineInRange("manaHideDelay", 0, 0, 1200); // max = 1 min
+                .defineInRange("hideDelay", 0, 0, 1200); // max = 1 min
         MANA_ABOVE_FOOD = builder
                 .comment("Put the mana bar above the food/health bar (true) or else put it below (false).")
-                .define("manaAboveFood", true);
+                .define("guiAboveFood", true);
         MANA_BY_HEALTH = builder
                 .comment("Put the mana bar next to the health bar (true) or else leave it next to the food bar (false).")
-                .define("manaByHealth", false);
+                .define("guiByHealth", false);
         MANA_JITTER = builder
                 .comment("The mana bar icons jitter when your current mana is low (true) or else the icons always stay put (false).")
-                .define("manaJitter", true);
-        
+                .define("jitter", true);
+        builder.pop();
+    
         builder.comment("Everything about the gui widgets representing your spell slots (equipped spells)").push("spellSlots");
         ALWAYS_SHOW_SPELL_SLOTS = builder
                 .comment("Always show all spell slots (true) or else only show them if at least 1 spell is equipped (false).")
