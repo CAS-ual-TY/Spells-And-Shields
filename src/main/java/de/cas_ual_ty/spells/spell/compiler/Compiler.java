@@ -27,14 +27,14 @@ public class Compiler
     public static <T> void registerSuppliers()
     {
         registerSupplier("pi", CtxVarTypes.DOUBLE.get(), () -> Math.PI);
-    
+        
         double sqrt2 = Math.sqrt(2D);
         registerSupplier("sqrt2", CtxVarTypes.DOUBLE.get(), () -> sqrt2);
-    
+        
         registerSupplier("random_int", CtxVarTypes.INT.get(), RANDOM::nextInt);
         registerSupplier("random_double", CtxVarTypes.DOUBLE.get(), RANDOM::nextDouble);
         registerSupplier("random_uuid", CtxVarTypes.STRING.get(), () -> UUID.randomUUID().toString());
-    
+        
         registerSupplier("new_tag", CtxVarTypes.TAG.get(), () -> new CompoundTag());
     }
     
@@ -731,7 +731,7 @@ public class Compiler
         {
             super();
         }
-    
+        
         public InlineCompilationException(String message)
         {
             super(message);

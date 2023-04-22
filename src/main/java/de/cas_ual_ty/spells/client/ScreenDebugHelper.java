@@ -6,11 +6,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -33,7 +31,7 @@ public class ScreenDebugHelper
     
     public static void hLine(PoseStack poseStack, int minX, int maxX, int y, int color)
     {
-        if (maxX < minX)
+        if(maxX < minX)
         {
             int i = minX;
             minX = maxX;
@@ -45,13 +43,13 @@ public class ScreenDebugHelper
     
     public static void vLine(PoseStack poseStack, int x, int minY, int maxY, int color)
     {
-        if (maxY < minY)
+        if(maxY < minY)
         {
             int i = minY;
             minY = maxY;
             maxY = i;
         }
-    
+        
         GuiComponent.fill(poseStack, x, minY + 1, x + 1, maxY, color);
     }
     

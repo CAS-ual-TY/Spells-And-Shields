@@ -39,7 +39,7 @@ public class SpellsConfig
                 .comment("Make a player forget all learned spells on death (true) or not (false). Forgotten spells are still visible in spell trees but must be relearned before you can equip them.")
                 .define("forgetSpells", true);
         configBuilder.pop();
-    
+        
         configBuilder.push("misc");
         ENCHANTING_TABLE = configBuilder
                 .comment("Resource location of the enchanting table. Some mods could change that.")

@@ -38,7 +38,7 @@ public class SpellsClientConfig
                 .comment("The mana bar icons jitter when your current mana is low (true) or else the icons always stay put (false).")
                 .define("jitter", true);
         builder.pop();
-    
+        
         builder.comment("Everything about the gui widgets representing your spell slots (equipped spells)").push("spellSlots");
         ALWAYS_SHOW_SPELL_SLOTS = builder
                 .comment("Always show all spell slots (true) or else only show them if at least 1 spell is equipped (false).")

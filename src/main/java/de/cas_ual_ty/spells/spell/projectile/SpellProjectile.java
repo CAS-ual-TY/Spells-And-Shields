@@ -207,7 +207,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
             {
                 Registry<Spell> spellRegistry = Spells.getRegistry(level);
                 Holder<Spell> holder = spellRegistry.getHolder(ResourceKey.create(Spells.REGISTRY_KEY, new ResourceLocation(nbt.getString("spellId")))).orElse(null);
-    
+                
                 if(holder != null)
                 {
                     this.spell = new SpellInstance(holder);
