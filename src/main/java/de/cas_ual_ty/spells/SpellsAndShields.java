@@ -66,10 +66,6 @@ public class SpellsAndShields
         CHANNEL.registerMessage(7, RunActionOnClientMessage.class, RunActionOnClientMessage::encode, RunActionOnClientMessage::decode, RunActionOnClientMessage::handle);
         CHANNEL.registerMessage(8, ParticleEmitterSyncMessage.class, ParticleEmitterSyncMessage::encode, ParticleEmitterSyncMessage::decode, ParticleEmitterSyncMessage::handle);
         
-        Compiler.registerSuppliersToCompiler();
-        UnaryOperation.registerToCompiler();
-        BinaryOperation.registerToCompiler();
-        TernaryOperation.registerToCompiler();
         SpellsEvents.registerEvents();
         
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> de.cas_ual_ty.spells.client.SpellsClientUtil::onModConstruct);
@@ -78,5 +74,10 @@ public class SpellsAndShields
     private void setup(FMLCommonSetupEvent event)
     {
         BuiltinRegistries.addPotionRecipes();
+        Compiler.registerSuppliers();
+        SpellsConfig.registerGlobals();
+        UnaryOperation.registerToCompiler();
+        BinaryOperation.registerToCompiler();
+        TernaryOperation.registerToCompiler();
     }
 }

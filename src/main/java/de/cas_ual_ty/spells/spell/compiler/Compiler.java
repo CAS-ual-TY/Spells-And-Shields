@@ -24,23 +24,23 @@ public class Compiler
     
     public static final Random RANDOM = new Random();
     
-    public static <T> void registerSuppliersToCompiler()
+    public static <T> void registerSuppliers()
     {
-        registerSupplier("pi", CtxVarTypes.DOUBLE, () -> Math.PI);
-        
+        registerSupplier("pi", CtxVarTypes.DOUBLE.get(), () -> Math.PI);
+    
         double sqrt2 = Math.sqrt(2D);
-        registerSupplier("sqrt2", CtxVarTypes.DOUBLE, () -> sqrt2);
-        
-        registerSupplier("random_int", CtxVarTypes.INT, RANDOM::nextInt);
-        registerSupplier("random_double", CtxVarTypes.DOUBLE, RANDOM::nextDouble);
-        registerSupplier("random_uuid", CtxVarTypes.STRING, () -> UUID.randomUUID().toString());
-        
-        registerSupplier("new_tag", CtxVarTypes.TAG, () -> new CompoundTag());
+        registerSupplier("sqrt2", CtxVarTypes.DOUBLE.get(), () -> sqrt2);
+    
+        registerSupplier("random_int", CtxVarTypes.INT.get(), RANDOM::nextInt);
+        registerSupplier("random_double", CtxVarTypes.DOUBLE.get(), RANDOM::nextDouble);
+        registerSupplier("random_uuid", CtxVarTypes.STRING.get(), () -> UUID.randomUUID().toString());
+    
+        registerSupplier("new_tag", CtxVarTypes.TAG.get(), () -> new CompoundTag());
     }
     
-    public static <T> void registerSupplier(String name, Supplier<CtxVarType<T>> type, Supplier<T> value)
+    public static <T> void registerSupplier(String name, CtxVarType<T> type, Supplier<T> value)
     {
-        SUPPLIERS.put(name, () -> new CtxVar<>(type.get(), value.get()));
+        SUPPLIERS.put(name, () -> new CtxVar<>(type, value.get()));
     }
     
     public static void registerUnaryFunction(String name, UnaryOperation op)
@@ -731,10 +731,15 @@ public class Compiler
         {
             super();
         }
-        
+    
         public InlineCompilationException(String message)
         {
             super(message);
         }
+    }
+    
+    private static record Global<T>(String name, CtxVarType<T> type, Supplier<T> value)
+    {
+    
     }
 }
