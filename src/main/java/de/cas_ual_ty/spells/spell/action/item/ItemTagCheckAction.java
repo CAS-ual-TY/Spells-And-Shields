@@ -32,9 +32,9 @@ public class ItemTagCheckAction extends AffectTypeAction<PlayerTarget>
         ).apply(instance, (activation, target, mustBeInHand, itemTag, count) -> new ItemTagCheckAction(type, activation, target, mustBeInHand, itemTag, count)));
     }
     
-    public static ItemTagCheckAction make(String activation, String targets, DynamicCtxVar<Boolean> mustBeInHand, TagKey<Item> itemTag, DynamicCtxVar<Integer> count)
+    public static ItemTagCheckAction make(Object activation, Object targets, DynamicCtxVar<Boolean> mustBeInHand, TagKey<Item> itemTag, DynamicCtxVar<Integer> count)
     {
-        return new ItemTagCheckAction(SpellActionTypes.ITEM_TAG_CHECK.get(), activation, targets, mustBeInHand, itemTag, count);
+        return new ItemTagCheckAction(SpellActionTypes.ITEM_TAG_CHECK.get(), activation.toString(), targets.toString(), mustBeInHand, itemTag, count);
     }
     
     protected DynamicCtxVar<Boolean> mustBeInHand;

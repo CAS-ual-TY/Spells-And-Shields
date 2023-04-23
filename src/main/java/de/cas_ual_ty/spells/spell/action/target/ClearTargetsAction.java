@@ -18,9 +18,9 @@ public class ClearTargetsAction extends DstTargetAction
         ).apply(instance, (activation, dst) -> new ClearTargetsAction(type, activation, dst)));
     }
     
-    public static ClearTargetsAction make(String activation, String dst)
+    public static ClearTargetsAction make(Object activation, Object dst)
     {
-        return new ClearTargetsAction(SpellActionTypes.CLEAR_TARGETS.get(), activation, dst);
+        return new ClearTargetsAction(SpellActionTypes.CLEAR_TARGETS.get(), activation.toString(), dst.toString());
     }
     
     public ClearTargetsAction(SpellActionType<?> type)

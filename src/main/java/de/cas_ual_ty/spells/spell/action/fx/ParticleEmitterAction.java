@@ -35,9 +35,9 @@ public class ParticleEmitterAction extends AffectTypeAction<EntityTarget>
         ).apply(instance, (activation, multiTargets, duration, delay, amount, spread, motionSpread, offset, particle) -> new ParticleEmitterAction(type, activation, multiTargets, duration, delay, amount, spread, motionSpread, offset, particle)));
     }
     
-    public static ParticleEmitterAction make(String activation, String multiTargets, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> delay, DynamicCtxVar<Integer> amount, DynamicCtxVar<Double> spread, DynamicCtxVar<Boolean> motionSpread, DynamicCtxVar<Vec3> offset, ParticleOptions particle)
+    public static ParticleEmitterAction make(Object activation, Object multiTargets, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> delay, DynamicCtxVar<Integer> amount, DynamicCtxVar<Double> spread, DynamicCtxVar<Boolean> motionSpread, DynamicCtxVar<Vec3> offset, ParticleOptions particle)
     {
-        return new ParticleEmitterAction(SpellActionTypes.PARTICLE_EMITTER.get(), activation, multiTargets, duration, delay, amount, spread, motionSpread, offset, particle);
+        return new ParticleEmitterAction(SpellActionTypes.PARTICLE_EMITTER.get(), activation.toString(), multiTargets.toString(), duration, delay, amount, spread, motionSpread, offset, particle);
     }
     
     protected DynamicCtxVar<Integer> duration;

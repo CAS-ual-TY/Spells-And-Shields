@@ -21,9 +21,9 @@ public class BranchAction extends SpellAction
         ).apply(instance, (activation, label, conditional) -> new BranchAction(type, activation, label, conditional)));
     }
     
-    public static BranchAction make(String activation, String label, DynamicCtxVar<Boolean> conditional)
+    public static BranchAction make(Object activation, String label, DynamicCtxVar<Boolean> conditional)
     {
-        return new BranchAction(SpellActionTypes.BRANCH.get(), activation, label, conditional);
+        return new BranchAction(SpellActionTypes.BRANCH.get(), activation.toString(), label, conditional);
     }
     
     protected String label;

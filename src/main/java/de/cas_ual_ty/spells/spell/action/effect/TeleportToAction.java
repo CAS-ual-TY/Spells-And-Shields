@@ -24,9 +24,9 @@ public class TeleportToAction extends AffectTypeAction<EntityTarget>
         ).apply(instance, (activation, multiTargets, position) -> new TeleportToAction(type, activation, multiTargets, position)));
     }
     
-    public static TeleportToAction make(String activation, String multiTargets, String position)
+    public static TeleportToAction make(Object activation, Object multiTargets, String position)
     {
-        return new TeleportToAction(SpellActionTypes.TELEPORT_TO.get(), activation, multiTargets, position);
+        return new TeleportToAction(SpellActionTypes.TELEPORT_TO.get(), activation.toString(), multiTargets.toString(), position);
     }
     
     protected String position;

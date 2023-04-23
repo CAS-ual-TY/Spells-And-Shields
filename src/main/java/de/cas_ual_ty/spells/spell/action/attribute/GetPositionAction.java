@@ -22,9 +22,9 @@ public class GetPositionAction extends GetTargetAttributeAction<PositionTarget>
         ).apply(instance, (activation, source, position) -> new GetPositionAction(type, activation, source, position)));
     }
     
-    public static GetPositionAction make(String activation, String source, String position)
+    public static GetPositionAction make(Object activation, Object source, String position)
     {
-        return new GetPositionAction(SpellActionTypes.GET_POSITION.get(), activation, source, position);
+        return new GetPositionAction(SpellActionTypes.GET_POSITION.get(), activation.toString(), source.toString(), position);
     }
     
     protected String position;

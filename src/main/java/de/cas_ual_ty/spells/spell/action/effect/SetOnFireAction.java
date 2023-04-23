@@ -25,9 +25,9 @@ public class SetOnFireAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, multiTargets, fireSeconds) -> new SetOnFireAction(type, activation, multiTargets, fireSeconds)));
     }
     
-    public static SetOnFireAction make(String activation, String multiTargets, DynamicCtxVar<Integer> fireSeconds)
+    public static SetOnFireAction make(Object activation, Object multiTargets, DynamicCtxVar<Integer> fireSeconds)
     {
-        return new SetOnFireAction(SpellActionTypes.SET_ON_FIRE.get(), activation, multiTargets, fireSeconds);
+        return new SetOnFireAction(SpellActionTypes.SET_ON_FIRE.get(), activation.toString(), multiTargets.toString(), fireSeconds);
     }
     
     protected DynamicCtxVar<Integer> fireSeconds;

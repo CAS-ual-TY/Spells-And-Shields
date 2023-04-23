@@ -32,9 +32,9 @@ public class PlayerHarvestBlockAction extends AffectSingleTypeAction<PlayerTarge
         ).apply(instance, (activation, source, blocks, direction) -> new PlayerHarvestBlockAction(type, activation, source, blocks, direction)));
     }
     
-    public static PlayerHarvestBlockAction make(String activation, String source, String blocks, Direction direction)
+    public static PlayerHarvestBlockAction make(Object activation, Object source, Object blocks, Direction direction)
     {
-        return new PlayerHarvestBlockAction(SpellActionTypes.PLAYER_HARVEST_BLOCK.get(), activation, source, blocks, direction);
+        return new PlayerHarvestBlockAction(SpellActionTypes.PLAYER_HARVEST_BLOCK.get(), activation.toString(), source.toString(), blocks.toString(), direction);
     }
     
     protected String blocks;

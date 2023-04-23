@@ -23,9 +23,9 @@ public class ClearMobTargetAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, mobs) -> new ClearMobTargetAction(type, activation, mobs)));
     }
     
-    public static ClearMobTargetAction make(String activation, String mobs)
+    public static ClearMobTargetAction make(Object activation, Object mobs)
     {
-        return new ClearMobTargetAction(SpellActionTypes.CLEAR_MOB_TARGET.get(), activation, mobs);
+        return new ClearMobTargetAction(SpellActionTypes.CLEAR_MOB_TARGET.get(), activation.toString(), mobs.toString());
     }
     
     public ClearMobTargetAction(SpellActionType<?> type)

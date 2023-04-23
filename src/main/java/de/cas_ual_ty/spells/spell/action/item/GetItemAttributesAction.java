@@ -26,9 +26,9 @@ public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget
         ).apply(instance, (activation, source, item, amount, damage, compoundTag) -> new GetItemAttributesAction(type, activation, source, item, amount, damage, compoundTag)));
     }
     
-    public static GetItemAttributesAction make(String activation, String source, String item, String amount, String damage, String compoundTag)
+    public static GetItemAttributesAction make(Object activation, Object source, String item, String amount, String damage, String compoundTag)
     {
-        return new GetItemAttributesAction(SpellActionTypes.GET_ITEM_ATTRIBUTES.get(), activation, source, item, amount, damage, compoundTag);
+        return new GetItemAttributesAction(SpellActionTypes.GET_ITEM_ATTRIBUTES.get(), activation.toString(), source.toString(), item, amount, damage, compoundTag);
     }
     
     protected String item;

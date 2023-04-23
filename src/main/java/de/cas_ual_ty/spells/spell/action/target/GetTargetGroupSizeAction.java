@@ -21,9 +21,9 @@ public class GetTargetGroupSizeAction extends DstTargetAction
         ).apply(instance, (activation, dst, result) -> new GetTargetGroupSizeAction(type, activation, dst, result)));
     }
     
-    public static GetTargetGroupSizeAction make(String activation, String dst, String result)
+    public static GetTargetGroupSizeAction make(Object activation, Object dst, String result)
     {
-        return new GetTargetGroupSizeAction(SpellActionTypes.GET_TARGET_GROUP_SIZE.get(), activation, dst, result);
+        return new GetTargetGroupSizeAction(SpellActionTypes.GET_TARGET_GROUP_SIZE.get(), activation.toString(), dst.toString(), result);
     }
     
     protected String result;

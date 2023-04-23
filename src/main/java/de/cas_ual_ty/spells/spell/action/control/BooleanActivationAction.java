@@ -23,9 +23,9 @@ public class BooleanActivationAction extends SpellAction
         ).apply(instance, (activation, toActivate, operant, activateIfTrue, deactivateIfFalse) -> new BooleanActivationAction(type, activation, toActivate, operant, activateIfTrue, deactivateIfFalse)));
     }
     
-    public static BooleanActivationAction make(String activation, String toActivate, DynamicCtxVar<Boolean> operant, DynamicCtxVar<Boolean> activateIfTrue, DynamicCtxVar<Boolean> deactivateIfFalse)
+    public static BooleanActivationAction make(Object activation, Object toActivate, DynamicCtxVar<Boolean> operant, DynamicCtxVar<Boolean> activateIfTrue, DynamicCtxVar<Boolean> deactivateIfFalse)
     {
-        return new BooleanActivationAction(SpellActionTypes.BOOLEAN_ACTIVATION.get(), activation, toActivate, operant, activateIfTrue, deactivateIfFalse);
+        return new BooleanActivationAction(SpellActionTypes.BOOLEAN_ACTIVATION.get(), activation.toString(), toActivate.toString(), operant, activateIfTrue, deactivateIfFalse);
     }
     
     protected String toActivate;

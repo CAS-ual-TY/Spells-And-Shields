@@ -29,9 +29,9 @@ public class SetBlockAction extends AffectTypeAction<PositionTarget>
         ).apply(instance, (activation, multiTargets, block, blockState) -> new SetBlockAction(type, activation, multiTargets, block, blockState)));
     }
     
-    public static SetBlockAction make(String activation, String multiTargets, DynamicCtxVar<String> block, DynamicCtxVar<CompoundTag> blockState)
+    public static SetBlockAction make(Object activation, Object multiTargets, DynamicCtxVar<String> block, DynamicCtxVar<CompoundTag> blockState)
     {
-        return new SetBlockAction(SpellActionTypes.SET_BLOCK.get(), activation, multiTargets, block, blockState);
+        return new SetBlockAction(SpellActionTypes.SET_BLOCK.get(), activation.toString(), multiTargets.toString(), block, blockState);
     }
     
     protected DynamicCtxVar<String> block;

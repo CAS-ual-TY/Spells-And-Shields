@@ -24,9 +24,9 @@ public class SetMobTargetAction extends AffectSingleTypeAction<LivingEntityTarge
         ).apply(instance, (activation, singleTarget, mobs) -> new SetMobTargetAction(type, activation, singleTarget, mobs)));
     }
     
-    public static SetMobTargetAction make(String activation, String singleTarget, String mobs)
+    public static SetMobTargetAction make(Object activation, Object singleTarget, Object mobs)
     {
-        return new SetMobTargetAction(SpellActionTypes.SET_MOB_TARGET.get(), activation, singleTarget, mobs);
+        return new SetMobTargetAction(SpellActionTypes.SET_MOB_TARGET.get(), activation.toString(), singleTarget.toString(), mobs.toString());
     }
     
     protected String mobs;

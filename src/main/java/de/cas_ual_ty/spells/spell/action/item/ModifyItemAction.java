@@ -29,9 +29,9 @@ public class ModifyItemAction extends AffectSingleTypeAction<ItemTarget>
         ).apply(instance, (activation, singleTarget, amount, damage, tag) -> new ModifyItemAction(type, activation, singleTarget, amount, damage, tag)));
     }
     
-    public static ModifyItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag)
+    public static ModifyItemAction make(Object activation, Object singleTarget, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag)
     {
-        return new ModifyItemAction(SpellActionTypes.MODIFY_ITEM.get(), activation, singleTarget, amount, damage, tag);
+        return new ModifyItemAction(SpellActionTypes.MODIFY_ITEM.get(), activation.toString(), singleTarget.toString(), amount, damage, tag);
     }
     
     protected DynamicCtxVar<Integer> amount;

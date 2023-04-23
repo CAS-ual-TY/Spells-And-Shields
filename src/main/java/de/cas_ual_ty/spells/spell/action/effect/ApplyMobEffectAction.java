@@ -33,9 +33,9 @@ public class ApplyMobEffectAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon) -> new ApplyMobEffectAction(type, activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon)));
     }
     
-    public static ApplyMobEffectAction make(String activation, String multiTargets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
+    public static ApplyMobEffectAction make(Object activation, Object multiTargets, DynamicCtxVar<String> mobEffect, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> amplifier, DynamicCtxVar<Boolean> ambient, DynamicCtxVar<Boolean> visible, DynamicCtxVar<Boolean> showIcon)
     {
-        return new ApplyMobEffectAction(SpellActionTypes.APPLY_MOB_EFFECT.get(), activation, multiTargets, mobEffect, duration, amplifier, ambient, visible, showIcon);
+        return new ApplyMobEffectAction(SpellActionTypes.APPLY_MOB_EFFECT.get(), activation.toString(), multiTargets.toString(), mobEffect, duration, amplifier, ambient, visible, showIcon);
     }
     
     protected DynamicCtxVar<String> mobEffect;

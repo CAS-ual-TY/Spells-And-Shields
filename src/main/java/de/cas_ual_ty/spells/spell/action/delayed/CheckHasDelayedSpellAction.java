@@ -27,9 +27,9 @@ public class CheckHasDelayedSpellAction extends AffectSingleTypeAction<EntityTar
         ).apply(instance, (activation, singleTarget, uuid) -> new CheckHasDelayedSpellAction(type, activation, singleTarget, uuid)));
     }
     
-    public static CheckHasDelayedSpellAction make(String activation, String singleTarget, DynamicCtxVar<String> uuid)
+    public static CheckHasDelayedSpellAction make(Object activation, Object singleTarget, DynamicCtxVar<String> uuid)
     {
-        return new CheckHasDelayedSpellAction(SpellActionTypes.CHECK_HAS_DELAYED_SPELL.get(), activation, singleTarget, uuid);
+        return new CheckHasDelayedSpellAction(SpellActionTypes.CHECK_HAS_DELAYED_SPELL.get(), activation.toString(), singleTarget.toString(), uuid);
     }
     
     protected DynamicCtxVar<String> uuid;

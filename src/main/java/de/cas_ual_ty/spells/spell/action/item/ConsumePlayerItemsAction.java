@@ -36,9 +36,9 @@ public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarge
         ).apply(instance, (activation, source, item, amount, tag, mustBeInHand) -> new ConsumePlayerItemsAction(type, activation, source, item, amount, tag, mustBeInHand)));
     }
     
-    public static ConsumePlayerItemsAction make(String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public static ConsumePlayerItemsAction make(Object activation, Object source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
     {
-        return new ConsumePlayerItemsAction(SpellActionTypes.CONSUME_PLAYER_ITEMS.get(), activation, source, item, amount, tag, mustBeInHand);
+        return new ConsumePlayerItemsAction(SpellActionTypes.CONSUME_PLAYER_ITEMS.get(), activation.toString(), source.toString(), item, amount, tag, mustBeInHand);
     }
     
     protected DynamicCtxVar<String> item;

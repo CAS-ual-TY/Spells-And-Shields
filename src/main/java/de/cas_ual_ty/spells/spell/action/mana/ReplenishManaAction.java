@@ -26,9 +26,9 @@ public class ReplenishManaAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, multiTargets, amount) -> new ReplenishManaAction(type, activation, multiTargets, amount)));
     }
     
-    public static ReplenishManaAction make(String activation, String multiTargets, DynamicCtxVar<Double> amount)
+    public static ReplenishManaAction make(Object activation, Object multiTargets, DynamicCtxVar<Double> amount)
     {
-        return new ReplenishManaAction(SpellActionTypes.REPLENISH_MANA.get(), activation, multiTargets, amount);
+        return new ReplenishManaAction(SpellActionTypes.REPLENISH_MANA.get(), activation.toString(), multiTargets.toString(), amount);
     }
     
     protected DynamicCtxVar<Double> amount;

@@ -22,9 +22,9 @@ public class GetEntityEyePositionAction extends GetTargetAttributeAction<EntityT
         ).apply(instance, (activation, source, eyePosition) -> new GetEntityEyePositionAction(type, activation, source, eyePosition)));
     }
     
-    public static GetEntityEyePositionAction make(String activation, String source, String eyePosition)
+    public static GetEntityEyePositionAction make(Object activation, Object source, String eyePosition)
     {
-        return new GetEntityEyePositionAction(SpellActionTypes.GET_ENTITY_EYE_POSITION.get(), activation, source, eyePosition);
+        return new GetEntityEyePositionAction(SpellActionTypes.GET_ENTITY_EYE_POSITION.get(), activation.toString(), source.toString(), eyePosition);
     }
     
     protected String eyePosition;

@@ -56,11 +56,11 @@ public class SimpleUnaryVarAction<X, Y> extends UnaryVarAction
         return new SpellActionType<>((type) -> new SimpleUnaryVarAction<>(type, function), (type) -> makeCodec(type, function));
     }
     
-    public static <X, Y> SimpleUnaryVarAction<X, Y> makeInstance(SpellActionType<SimpleUnaryVarAction<X, Y>> type, String activation, String operant, String result)
+    public static <X, Y> SimpleUnaryVarAction<X, Y> makeInstance(SpellActionType<SimpleUnaryVarAction<X, Y>> type, Object activation, String operant, String result)
     {
         //TODO very ugly, figure something out or just leave this up forever
         SimpleUnaryVarAction<X, Y> action = type.makeInstance();
-        action.activation = activation;
+        action.activation = activation.toString();
         action.operant = operant;
         action.result = result;
         return action;

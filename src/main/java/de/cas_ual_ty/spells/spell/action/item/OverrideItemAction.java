@@ -32,9 +32,9 @@ public class OverrideItemAction extends AffectSingleTypeAction<ItemTarget>
         ).apply(instance, (activation, singleTarget, amount, damage, tag, item) -> new OverrideItemAction(type, activation, singleTarget, amount, damage, tag, item)));
     }
     
-    public static OverrideItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
+    public static OverrideItemAction make(Object activation, Object singleTarget, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
     {
-        return new OverrideItemAction(SpellActionTypes.OVERRIDE_ITEM.get(), activation, singleTarget, amount, damage, tag, item);
+        return new OverrideItemAction(SpellActionTypes.OVERRIDE_ITEM.get(), activation.toString(), singleTarget.toString(), amount, damage, tag, item);
     }
     
     protected DynamicCtxVar<Integer> amount;

@@ -30,9 +30,9 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
         ).apply(instance, (activation, multiTargets, particle, count, spread) -> new PlaySoundAction(type, activation, multiTargets, particle, count, spread)));
     }
     
-    public static PlaySoundAction make(String activation, String multiTargets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
+    public static PlaySoundAction make(Object activation, Object multiTargets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
     {
-        return new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), activation, multiTargets, soundEvent, volume, pitch);
+        return new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), activation.toString(), multiTargets.toString(), soundEvent, volume, pitch);
     }
     
     protected SoundEvent soundEvent;

@@ -39,9 +39,9 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
         ).apply(instance, (activation, multiTargets, removeActivation, tickTime, uuid, tag, eventsMap) -> new AddDelayedSpellAction(type, activation, multiTargets, removeActivation, tickTime, uuid, tag, eventsMap)));
     }
     
-    public static AddDelayedSpellAction make(String activation, String multiTargets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag, Map<String, String> eventsMap)
+    public static AddDelayedSpellAction make(Object activation, Object multiTargets, Object removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag, Map<String, String> eventsMap)
     {
-        return new AddDelayedSpellAction(SpellActionTypes.ADD_DELAYED_SPELL.get(), activation, multiTargets, removeActivation, tickTime, uuid, tag, eventsMap);
+        return new AddDelayedSpellAction(SpellActionTypes.ADD_DELAYED_SPELL.get(), activation.toString(), multiTargets.toString(), removeActivation.toString(), tickTime, uuid, tag, eventsMap);
     }
     
     protected String removeActivation;

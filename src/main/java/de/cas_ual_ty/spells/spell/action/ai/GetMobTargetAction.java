@@ -25,9 +25,9 @@ public class GetMobTargetAction extends GetTargetAttributeAction<LivingEntityTar
         ).apply(instance, (activation, source, target, hasTarget) -> new GetMobTargetAction(type, activation, source, target, hasTarget)));
     }
     
-    public static GetMobTargetAction make(String activation, String source, String target, String hasTarget)
+    public static GetMobTargetAction make(Object activation, Object source, Object target, String hasTarget)
     {
-        return new GetMobTargetAction(SpellActionTypes.GET_MOB_TARGET.get(), activation, source, target, hasTarget);
+        return new GetMobTargetAction(SpellActionTypes.GET_MOB_TARGET.get(), activation.toString(), source.toString(), target.toString(), hasTarget);
     }
     
     protected String target;

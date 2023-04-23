@@ -27,9 +27,9 @@ public class KnockbackAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, multiTargets, strength, dx, dz) -> new KnockbackAction(type, activation, multiTargets, strength, dx, dz)));
     }
     
-    public static KnockbackAction make(String activation, String multiTargets, DynamicCtxVar<Double> strength, DynamicCtxVar<Double> dx, DynamicCtxVar<Double> dz)
+    public static KnockbackAction make(Object activation, Object multiTargets, DynamicCtxVar<Double> strength, DynamicCtxVar<Double> dx, DynamicCtxVar<Double> dz)
     {
-        return new KnockbackAction(SpellActionTypes.KNOCKBACK.get(), activation, multiTargets, strength, dx, dz);
+        return new KnockbackAction(SpellActionTypes.KNOCKBACK.get(), activation.toString(), multiTargets.toString(), strength, dx, dz);
     }
     
     protected DynamicCtxVar<Double> strength;

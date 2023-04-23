@@ -21,9 +21,9 @@ public class ResetFallDistanceAction extends AffectTypeAction<LivingEntityTarget
         ).apply(instance, (activation, multiTargets) -> new ResetFallDistanceAction(type, activation, multiTargets)));
     }
     
-    public static ResetFallDistanceAction make(String activation, String multiTargets)
+    public static ResetFallDistanceAction make(Object activation, Object multiTargets)
     {
-        return new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), activation, multiTargets);
+        return new ResetFallDistanceAction(SpellActionTypes.RESET_FALL_DISTANCE.get(), activation.toString(), multiTargets.toString());
     }
     
     public ResetFallDistanceAction(SpellActionType<?> type)

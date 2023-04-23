@@ -57,11 +57,11 @@ public class SimpleBinaryVarAction<X, Y, Z> extends BinaryVarAction
         return new SpellActionType<>((type) -> new SimpleBinaryVarAction<>(type, function), (type) -> makeCodec(type, function));
     }
     
-    public static <X, Y, Z> SimpleBinaryVarAction<X, Y, Z> makeInstance(SpellActionType<SimpleBinaryVarAction<X, Y, Z>> type, String activation, String operant1, String operant2, String result)
+    public static <X, Y, Z> SimpleBinaryVarAction<X, Y, Z> makeInstance(SpellActionType<SimpleBinaryVarAction<X, Y, Z>> type, Object activation, String operant1, String operant2, String result)
     {
         //TODO very ugly, figure something out or just leave this up forever
         SimpleBinaryVarAction<X, Y, Z> action = type.makeInstance();
-        action.activation = activation;
+        action.activation = activation.toString();
         action.operant1 = operant1;
         action.operant2 = operant2;
         action.result = result;

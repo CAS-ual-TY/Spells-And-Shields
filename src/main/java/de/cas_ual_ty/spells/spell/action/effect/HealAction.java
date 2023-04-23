@@ -25,9 +25,9 @@ public class HealAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, multiTargets, healingAmount) -> new HealAction(type, activation, multiTargets, healingAmount)));
     }
     
-    public static HealAction make(String activation, String multiTargets, DynamicCtxVar<Double> healingAmount)
+    public static HealAction make(Object activation, Object multiTargets, DynamicCtxVar<Double> healingAmount)
     {
-        return new HealAction(SpellActionTypes.HEAL.get(), activation, multiTargets, healingAmount);
+        return new HealAction(SpellActionTypes.HEAL.get(), activation.toString(), multiTargets.toString(), healingAmount);
     }
     
     protected DynamicCtxVar<Double> healingAmount;

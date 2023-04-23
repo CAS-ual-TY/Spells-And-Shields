@@ -16,9 +16,9 @@ public class TerminateAction extends SpellAction
         ).apply(instance, (activation) -> new TerminateAction(type, activation)));
     }
     
-    public static TerminateAction make(String activation)
+    public static TerminateAction make(Object activation)
     {
-        return new TerminateAction(SpellActionTypes.TERMINATE.get(), activation);
+        return new TerminateAction(SpellActionTypes.TERMINATE.get(), activation.toString());
     }
     
     public TerminateAction(SpellActionType<?> type)

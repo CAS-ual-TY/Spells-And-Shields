@@ -25,9 +25,9 @@ public class GetEntityPositionDirectionMotionAction extends GetTargetAttributeAc
         ).apply(instance, (activation, source, position, direction, motion) -> new GetEntityPositionDirectionMotionAction(type, activation, source, position, direction, motion)));
     }
     
-    public static GetEntityPositionDirectionMotionAction make(String activation, String source, String position, String direction, String motion)
+    public static GetEntityPositionDirectionMotionAction make(Object activation, Object source, String position, String direction, String motion)
     {
-        return new GetEntityPositionDirectionMotionAction(SpellActionTypes.GET_ENTITY_POSITION_DIRECTION_MOTION.get(), activation, source, position, direction, motion);
+        return new GetEntityPositionDirectionMotionAction(SpellActionTypes.GET_ENTITY_POSITION_DIRECTION_MOTION.get(), activation.toString(), source.toString(), position, direction, motion);
     }
     
     protected String position;

@@ -29,9 +29,9 @@ public class ItemEqualsAction extends AffectSingleTypeAction<ItemTarget>
         ).apply(instance, (activation, singleTarget, item, ignoreTag, minimumCount, minimumDurability) -> new ItemEqualsAction(type, activation, singleTarget, item, ignoreTag, minimumCount, minimumDurability)));
     }
     
-    public static ItemEqualsAction make(String activation, String singleTarget, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
+    public static ItemEqualsAction make(Object activation, Object singleTarget, ItemStack item, DynamicCtxVar<Boolean> ignoreTag, DynamicCtxVar<Integer> minimumCount, DynamicCtxVar<Integer> minimumDurability)
     {
-        return new ItemEqualsAction(SpellActionTypes.ITEM_EQUALS.get(), activation, singleTarget, item, ignoreTag, minimumCount, minimumDurability);
+        return new ItemEqualsAction(SpellActionTypes.ITEM_EQUALS.get(), activation.toString(), singleTarget.toString(), item, ignoreTag, minimumCount, minimumDurability);
     }
     
     protected ItemStack item;

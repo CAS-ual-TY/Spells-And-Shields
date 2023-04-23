@@ -80,9 +80,9 @@ public class Spell
         return addParameter(new CtxVar<>(type, name, value));
     }
     
-    public Spell addEventHook(String eventId)
+    public Spell addEventHook(Object eventId)
     {
-        events.add(eventId);
+        events.add(eventId.toString());
         return this;
     }
     

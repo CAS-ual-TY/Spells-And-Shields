@@ -57,11 +57,11 @@ public class SimpleTernaryVarAction<X, Y, Z, W> extends TernaryVarAction
         return new SpellActionType<>((type) -> new SimpleTernaryVarAction<>(type, function), (type) -> makeCodec(type, function));
     }
     
-    public static <X, Y, Z, W> SimpleTernaryVarAction<X, Y, Z, W> makeInstance(SpellActionType<SimpleTernaryVarAction<X, Y, Z, W>> type, String activation, String operant1, String operant2, String operant3, String result)
+    public static <X, Y, Z, W> SimpleTernaryVarAction<X, Y, Z, W> makeInstance(SpellActionType<SimpleTernaryVarAction<X, Y, Z, W>> type, Object activation, String operant1, String operant2, String operant3, String result)
     {
         //TODO very ugly, figure something out or just leave this up forever
         SimpleTernaryVarAction<X, Y, Z, W> action = type.makeInstance();
-        action.activation = activation;
+        action.activation = activation.toString();
         action.operant1 = operant1;
         action.operant2 = operant2;
         action.operant3 = operant3;

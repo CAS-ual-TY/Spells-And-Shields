@@ -25,9 +25,9 @@ public class OffhandItemTargetAction extends AffectSingleTypeAction<PlayerTarget
         ).apply(instance, (activation, source, dst) -> new OffhandItemTargetAction(type, activation, source, dst)));
     }
     
-    public static OffhandItemTargetAction make(String activation, String source, String dst)
+    public static OffhandItemTargetAction make(Object activation, Object source, String dst)
     {
-        return new OffhandItemTargetAction(SpellActionTypes.OFFHAND_ITEM_TARGET.get(), activation, source, dst);
+        return new OffhandItemTargetAction(SpellActionTypes.OFFHAND_ITEM_TARGET.get(), activation.toString(), source.toString(), dst);
     }
     
     protected String dst;

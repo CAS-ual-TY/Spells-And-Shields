@@ -28,9 +28,9 @@ public class ItemCheckAction extends AffectSingleTypeAction<PlayerTarget>
         ).apply(instance, (activation, singleTarget, mustBeInHand, item) -> new ItemCheckAction(type, activation, singleTarget, mustBeInHand, item)));
     }
     
-    public static ItemCheckAction make(String activation, String singleTarget, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
+    public static ItemCheckAction make(Object activation, Object singleTarget, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
     {
-        return new ItemCheckAction(SpellActionTypes.ITEM_CHECK.get(), activation, singleTarget, mustBeInHand, item);
+        return new ItemCheckAction(SpellActionTypes.ITEM_CHECK.get(), activation.toString(), singleTarget.toString(), mustBeInHand, item);
     }
     
     protected DynamicCtxVar<Boolean> mustBeInHand;

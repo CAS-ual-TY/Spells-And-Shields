@@ -31,9 +31,9 @@ public class SpawnParticlesAction extends AffectTypeAction<PositionTarget>
         ).apply(instance, (activation, multiTargets, particle, count, spread) -> new SpawnParticlesAction(type, activation, multiTargets, particle, count, spread)));
     }
     
-    public static SpawnParticlesAction make(String activation, String multiTargets, ParticleOptions particle, DynamicCtxVar<Integer> count, DynamicCtxVar<Double> spread)
+    public static SpawnParticlesAction make(Object activation, Object multiTargets, ParticleOptions particle, DynamicCtxVar<Integer> count, DynamicCtxVar<Double> spread)
     {
-        return new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), activation, multiTargets, particle, count, spread);
+        return new SpawnParticlesAction(SpellActionTypes.SPAWN_PARTICLES.get(), activation.toString(), multiTargets.toString(), particle, count, spread);
     }
     
     protected ParticleOptions particle;

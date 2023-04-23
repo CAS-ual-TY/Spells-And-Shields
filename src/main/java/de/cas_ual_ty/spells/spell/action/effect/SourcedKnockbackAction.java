@@ -27,9 +27,9 @@ public class SourcedKnockbackAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, multiTargets, strength, source) -> new SourcedKnockbackAction(type, activation, multiTargets, strength, source)));
     }
     
-    public static SourcedKnockbackAction make(String activation, String multiTargets, DynamicCtxVar<Double> strength, String source)
+    public static SourcedKnockbackAction make(Object activation, Object multiTargets, DynamicCtxVar<Double> strength, Object source)
     {
-        return new SourcedKnockbackAction(SpellActionTypes.SOURCED_KNOCKBACK.get(), activation, multiTargets, strength, source);
+        return new SourcedKnockbackAction(SpellActionTypes.SOURCED_KNOCKBACK.get(), activation.toString(), multiTargets.toString(), strength, source.toString());
     }
     
     protected DynamicCtxVar<Double> strength;

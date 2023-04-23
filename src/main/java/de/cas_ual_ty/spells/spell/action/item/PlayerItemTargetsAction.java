@@ -31,9 +31,9 @@ public class PlayerItemTargetsAction extends AffectSingleTypeAction<PlayerTarget
         ).apply(instance, (activation, source, dst, includeHands, includeInventory, includeArmor) -> new PlayerItemTargetsAction(type, activation, source, dst, includeHands, includeInventory, includeArmor)));
     }
     
-    public static PlayerItemTargetsAction make(String activation, String source, String dst, DynamicCtxVar<Boolean> includeHands, DynamicCtxVar<Boolean> includeInventory, DynamicCtxVar<Boolean> includeArmor)
+    public static PlayerItemTargetsAction make(Object activation, Object source, String dst, DynamicCtxVar<Boolean> includeHands, DynamicCtxVar<Boolean> includeInventory, DynamicCtxVar<Boolean> includeArmor)
     {
-        return new PlayerItemTargetsAction(SpellActionTypes.PLAYER_ITEM_TARGETS.get(), activation, source, dst, includeHands, includeInventory, includeArmor);
+        return new PlayerItemTargetsAction(SpellActionTypes.PLAYER_ITEM_TARGETS.get(), activation.toString(), source.toString(), dst, includeHands, includeInventory, includeArmor);
     }
     
     protected String dst;

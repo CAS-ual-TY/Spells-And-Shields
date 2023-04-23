@@ -32,9 +32,9 @@ public class UseItemOnBlocksAction extends AffectSingleTypeAction<PlayerTarget>
         ).apply(instance, (activation, source, blocks, item, offhand, direction) -> new UseItemOnBlocksAction(type, activation, source, blocks, item, offhand, direction)));
     }
     
-    public static UseItemOnBlocksAction make(String activation, String source, String blocks, ItemStack item, boolean offhand, Direction direction)
+    public static UseItemOnBlocksAction make(Object activation, Object source, String blocks, ItemStack item, boolean offhand, Direction direction)
     {
-        return new UseItemOnBlocksAction(SpellActionTypes.USE_ITEM_ON_BLOCK.get(), activation, source, blocks, item, offhand, direction);
+        return new UseItemOnBlocksAction(SpellActionTypes.USE_ITEM_ON_BLOCK.get(), activation.toString(), source.toString(), blocks, item, offhand, direction);
     }
     
     protected String blocks;

@@ -25,9 +25,9 @@ public class UseItemAction extends AffectSingleTypeAction<PlayerTarget>
         ).apply(instance, (activation, source, item, offhand) -> new UseItemAction(type, activation, source, item, offhand)));
     }
     
-    public static UseItemAction make(String activation, String source, ItemStack item, boolean offhand)
+    public static UseItemAction make(Object activation, Object source, ItemStack item, boolean offhand)
     {
-        return new UseItemAction(SpellActionTypes.USE_ITEM.get(), activation, source, item, offhand);
+        return new UseItemAction(SpellActionTypes.USE_ITEM.get(), activation.toString(), source.toString(), item, offhand);
     }
     
     protected ItemStack item;

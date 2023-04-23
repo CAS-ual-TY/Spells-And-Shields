@@ -23,9 +23,9 @@ public class GetManaAction extends GetTargetAttributeAction<LivingEntityTarget>
         ).apply(instance, (activation, singleTarget, mana) -> new GetManaAction(type, activation, singleTarget, mana)));
     }
     
-    public static GetManaAction make(String activation, String singleTarget, String mana)
+    public static GetManaAction make(Object activation, Object singleTarget, String mana)
     {
-        return new GetManaAction(SpellActionTypes.GET_MANA.get(), activation, singleTarget, mana);
+        return new GetManaAction(SpellActionTypes.GET_MANA.get(), activation.toString(), singleTarget.toString(), mana);
     }
     
     protected String mana;

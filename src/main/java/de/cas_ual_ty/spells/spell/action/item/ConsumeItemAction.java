@@ -25,9 +25,9 @@ public class ConsumeItemAction extends AffectTypeAction<ItemTarget>
         ).apply(instance, (activation, multiTargets, amount) -> new ConsumeItemAction(type, activation, multiTargets, amount)));
     }
     
-    public static ConsumeItemAction make(String activation, String multiTargets, DynamicCtxVar<Integer> amount)
+    public static ConsumeItemAction make(Object activation, Object multiTargets, DynamicCtxVar<Integer> amount)
     {
-        return new ConsumeItemAction(SpellActionTypes.CONSUME_ITEM.get(), activation, multiTargets, amount);
+        return new ConsumeItemAction(SpellActionTypes.CONSUME_ITEM.get(), activation.toString(), multiTargets.toString(), amount);
     }
     
     protected DynamicCtxVar<Integer> amount;

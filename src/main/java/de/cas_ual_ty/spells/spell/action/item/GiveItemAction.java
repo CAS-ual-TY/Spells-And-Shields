@@ -32,9 +32,9 @@ public class GiveItemAction extends AffectTypeAction<PlayerTarget>
         ).apply(instance, (activation, multiTargets, amount, damage, tag, item) -> new GiveItemAction(type, activation, multiTargets, amount, damage, tag, item)));
     }
     
-    public static GiveItemAction make(String activation, String multiTargets, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
+    public static GiveItemAction make(Object activation, Object multiTargets, DynamicCtxVar<Integer> amount, DynamicCtxVar<Integer> damage, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<String> item)
     {
-        return new GiveItemAction(SpellActionTypes.GIVE_ITEM.get(), activation, multiTargets, amount, damage, tag, item);
+        return new GiveItemAction(SpellActionTypes.GIVE_ITEM.get(), activation.toString(), multiTargets.toString(), amount, damage, tag, item);
     }
     
     protected DynamicCtxVar<Integer> amount;

@@ -25,9 +25,9 @@ public class TryConsumeItemAction extends AffectSingleTypeAction<ItemTarget>
         ).apply(instance, (activation, singleTarget, amount) -> new TryConsumeItemAction(type, activation, singleTarget, amount)));
     }
     
-    public static TryConsumeItemAction make(String activation, String singleTarget, DynamicCtxVar<Integer> damage)
+    public static TryConsumeItemAction make(Object activation, Object singleTarget, DynamicCtxVar<Integer> damage)
     {
-        return new TryConsumeItemAction(SpellActionTypes.TRY_CONSUME_ITEM.get(), activation, singleTarget, damage);
+        return new TryConsumeItemAction(SpellActionTypes.TRY_CONSUME_ITEM.get(), activation.toString(), singleTarget.toString(), damage);
     }
     
     protected DynamicCtxVar<Integer> amount;

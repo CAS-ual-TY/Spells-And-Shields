@@ -26,9 +26,9 @@ public class EntityUUIDTargetAction extends DstTargetAction
         ).apply(instance, (activation, dst, uuid) -> new EntityUUIDTargetAction(type, activation, dst, uuid)));
     }
     
-    public static EntityUUIDTargetAction make(String activation, String dst, DynamicCtxVar<String> uuid)
+    public static EntityUUIDTargetAction make(Object activation, Object dst, DynamicCtxVar<String> uuid)
     {
-        return new EntityUUIDTargetAction(SpellActionTypes.ENTITY_UUID_TARGET.get(), activation, dst, uuid);
+        return new EntityUUIDTargetAction(SpellActionTypes.ENTITY_UUID_TARGET.get(), activation.toString(), dst.toString(), uuid);
     }
     
     protected DynamicCtxVar<String> uuid;

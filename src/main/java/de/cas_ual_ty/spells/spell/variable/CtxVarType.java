@@ -82,9 +82,9 @@ public class CtxVarType<T>
         return new ImmediateCtxVar<>(this, value);
     }
     
-    public DynamicCtxVar<T> reference(String name)
+    public DynamicCtxVar<T> reference(Object name)
     {
-        return new ReferencedCtxVar<>(this, name, (ctx) -> ctx.getCtxVar(this, name));
+        return new ReferencedCtxVar<>(this, name.toString(), (ctx) -> ctx.getCtxVar(this, name.toString()));
     }
     
     @Override

@@ -35,9 +35,9 @@ public class SpawnEntityAction extends SpellAction
         ).apply(instance, (activation, entity, entityType, position, direction, motion, tag) -> new SpawnEntityAction(type, activation, entity, entityType, position, direction, motion, tag)));
     }
     
-    public static SpawnEntityAction make(String activation, String entity, DynamicCtxVar<String> entityType, String position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, DynamicCtxVar<CompoundTag> tag)
+    public static SpawnEntityAction make(Object activation, String entity, DynamicCtxVar<String> entityType, Object position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, DynamicCtxVar<CompoundTag> tag)
     {
-        return new SpawnEntityAction(SpellActionTypes.SPAWN_ENTITY.get(), activation, entity, entityType, position, direction, motion, tag);
+        return new SpawnEntityAction(SpellActionTypes.SPAWN_ENTITY.get(), activation.toString(), entity, entityType, position.toString(), direction, motion, tag);
     }
     
     protected String entity;

@@ -25,9 +25,9 @@ public class ManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
         ).apply(instance, (activation, singleTarget, amount) -> new ManaCheckAction(type, activation, singleTarget, amount)));
     }
     
-    public static ManaCheckAction make(String activation, String singleTarget, DynamicCtxVar<Double> amount)
+    public static ManaCheckAction make(Object activation, Object singleTarget, DynamicCtxVar<Double> amount)
     {
-        return new ManaCheckAction(SpellActionTypes.MANA_CHECK.get(), activation, singleTarget, amount);
+        return new ManaCheckAction(SpellActionTypes.MANA_CHECK.get(), activation.toString(), singleTarget.toString(), amount);
     }
     
     protected DynamicCtxVar<Double> amount;

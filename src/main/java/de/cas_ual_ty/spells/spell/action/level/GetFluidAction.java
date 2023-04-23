@@ -31,9 +31,9 @@ public class GetFluidAction extends AffectSingleTypeAction<PositionTarget>
         ).apply(instance, (activation, singleTarget, fluid, fluidState, isFluid, isSource) -> new GetFluidAction(type, activation, singleTarget, fluid, fluidState, isFluid, isSource)));
     }
     
-    public static GetFluidAction make(String activation, String singleTarget, String fluid, String fluidState, String isFluid, String isSource)
+    public static GetFluidAction make(Object activation, Object singleTarget, String fluid, String fluidState, String isFluid, String isSource)
     {
-        return new GetFluidAction(SpellActionTypes.GET_FLUID.get(), activation, singleTarget, fluid, fluidState, isFluid, isSource);
+        return new GetFluidAction(SpellActionTypes.GET_FLUID.get(), activation.toString(), singleTarget.toString(), fluid, fluidState, isFluid, isSource);
     }
     
     protected String fluid;

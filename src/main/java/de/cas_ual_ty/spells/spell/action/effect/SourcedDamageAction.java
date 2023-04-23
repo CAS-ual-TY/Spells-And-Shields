@@ -27,9 +27,9 @@ public class SourcedDamageAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, multiTargets, damage, source) -> new SourcedDamageAction(type, activation, multiTargets, damage, source)));
     }
     
-    public static SourcedDamageAction make(String activation, String multiTargets, DynamicCtxVar<Double> damage, String source)
+    public static SourcedDamageAction make(Object activation, Object multiTargets, DynamicCtxVar<Double> damage, Object source)
     {
-        return new SourcedDamageAction(SpellActionTypes.SOURCED_DAMAGE.get(), activation, multiTargets, damage, source);
+        return new SourcedDamageAction(SpellActionTypes.SOURCED_DAMAGE.get(), activation.toString(), multiTargets.toString(), damage, source.toString());
     }
     
     protected DynamicCtxVar<Double> damage;

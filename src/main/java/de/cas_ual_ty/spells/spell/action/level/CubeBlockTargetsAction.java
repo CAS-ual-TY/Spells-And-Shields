@@ -30,9 +30,9 @@ public class CubeBlockTargetsAction extends AffectSingleTypeAction<PositionTarge
         ).apply(instance, (activation, source, targets, corner1, corner2) -> new CubeBlockTargetsAction(type, activation, source, targets, corner1, corner2)));
     }
     
-    public static CubeBlockTargetsAction make(String activation, String source, String targets, DynamicCtxVar<Vec3> corner1, DynamicCtxVar<Vec3> corner2)
+    public static CubeBlockTargetsAction make(Object activation, Object source, String targets, DynamicCtxVar<Vec3> corner1, DynamicCtxVar<Vec3> corner2)
     {
-        return new CubeBlockTargetsAction(SpellActionTypes.CUBE_BLOCK_TARGETS.get(), activation, source, targets, corner1, corner2);
+        return new CubeBlockTargetsAction(SpellActionTypes.CUBE_BLOCK_TARGETS.get(), activation.toString(), source.toString(), targets, corner1, corner2);
     }
     
     protected String targets;

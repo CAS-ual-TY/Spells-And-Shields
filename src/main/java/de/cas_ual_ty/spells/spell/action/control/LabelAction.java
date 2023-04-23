@@ -17,9 +17,9 @@ public class LabelAction extends SpellAction
         ).apply(instance, (activation, label) -> new LabelAction(type, activation, label)));
     }
     
-    public static LabelAction make(String activation, String label)
+    public static LabelAction make(Object activation, String label)
     {
-        return new LabelAction(SpellActionTypes.LABEL.get(), activation, label);
+        return new LabelAction(SpellActionTypes.LABEL.get(), activation.toString(), label);
     }
     
     protected String label;

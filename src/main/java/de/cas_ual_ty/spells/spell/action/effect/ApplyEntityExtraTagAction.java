@@ -27,9 +27,9 @@ public class ApplyEntityExtraTagAction extends AffectTypeAction<EntityTarget>
         ).apply(instance, (activation, targets, tag) -> new ApplyEntityExtraTagAction(type, activation, targets, tag)));
     }
     
-    public static ApplyEntityExtraTagAction make(String activation, String targets, DynamicCtxVar<CompoundTag> tag)
+    public static ApplyEntityExtraTagAction make(Object activation, Object targets, DynamicCtxVar<CompoundTag> tag)
     {
-        return new ApplyEntityExtraTagAction(SpellActionTypes.APPLY_ENTITY_EXTRA_TAG.get(), activation, targets, tag);
+        return new ApplyEntityExtraTagAction(SpellActionTypes.APPLY_ENTITY_EXTRA_TAG.get(), activation.toString(), targets.toString(), tag);
     }
     
     protected DynamicCtxVar<CompoundTag> tag;

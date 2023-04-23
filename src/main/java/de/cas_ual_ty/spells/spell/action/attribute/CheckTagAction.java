@@ -28,9 +28,9 @@ public class CheckTagAction extends SpellAction
         ).apply(instance, (activation, registry, tag, entry) -> new CheckTagAction(type, activation, registry, tag, entry)));
     }
     
-    public static CheckTagAction make(String activation, String registry, DynamicCtxVar<String> tag, DynamicCtxVar<String> entry)
+    public static CheckTagAction make(Object activation, String registry, DynamicCtxVar<String> tag, DynamicCtxVar<String> entry)
     {
-        return new CheckTagAction(SpellActionTypes.CHECK_TAG.get(), activation, registry, tag, entry);
+        return new CheckTagAction(SpellActionTypes.CHECK_TAG.get(), activation.toString(), registry, tag, entry);
     }
     
     protected String registry;

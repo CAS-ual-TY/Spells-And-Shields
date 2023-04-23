@@ -22,9 +22,9 @@ public class RemoveBlockAction extends AffectTypeAction<PositionTarget>
         ).apply(instance, (activation, multiTargets) -> new RemoveBlockAction(type, activation, multiTargets)));
     }
     
-    public static RemoveBlockAction make(String activation, String multiTargets)
+    public static RemoveBlockAction make(Object activation, Object multiTargets)
     {
-        return new RemoveBlockAction(SpellActionTypes.REMOVE_BLOCK.get(), activation, multiTargets);
+        return new RemoveBlockAction(SpellActionTypes.REMOVE_BLOCK.get(), activation.toString(), multiTargets.toString());
     }
     
     public RemoveBlockAction(SpellActionType<?> type)

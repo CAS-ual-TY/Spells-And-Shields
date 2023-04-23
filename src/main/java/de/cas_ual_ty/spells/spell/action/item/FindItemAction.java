@@ -31,9 +31,9 @@ public class FindItemAction extends AffectTypeAction<PlayerTarget>
         ).apply(instance, (activation, target, mustBeInHand, item, foundItems) -> new FindItemAction(type, activation, target, mustBeInHand, item, foundItems)));
     }
     
-    public static FindItemAction make(String activation, String multiTargets, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item, String foundItems)
+    public static FindItemAction make(Object activation, Object multiTargets, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item, String foundItems)
     {
-        return new FindItemAction(SpellActionTypes.FIND_ITEM.get(), activation, multiTargets, mustBeInHand, item, foundItems);
+        return new FindItemAction(SpellActionTypes.FIND_ITEM.get(), activation.toString(), multiTargets.toString(), mustBeInHand, item, foundItems);
     }
     
     protected DynamicCtxVar<Boolean> mustBeInHand;

@@ -15,4 +15,10 @@ public enum BuiltinTargetGroups
     {
         this.targetGroup = targetGroup;
     }
+    
+    @Override
+    public String toString()
+    {
+        return targetGroup;
+    }
 }

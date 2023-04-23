@@ -18,9 +18,9 @@ public class DeactivateAction extends SpellAction
         ).apply(instance, (activation, toActivate) -> new DeactivateAction(type, activation, toActivate)));
     }
     
-    public static DeactivateAction make(String activation, String toDeactivate)
+    public static DeactivateAction make(Object activation, Object toDeactivate)
     {
-        return new DeactivateAction(SpellActionTypes.DEACTIVATE.get(), activation, toDeactivate);
+        return new DeactivateAction(SpellActionTypes.DEACTIVATE.get(), activation.toString(), toDeactivate.toString());
     }
     
     protected String toDeactivate;

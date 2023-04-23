@@ -22,9 +22,9 @@ public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
         ).apply(instance, (activation, source, compoundTag) -> new GetItemTagAction(type, activation, source, compoundTag)));
     }
     
-    public static GetItemTagAction make(String activation, String source, String compoundTag)
+    public static GetItemTagAction make(Object activation, Object source, String compoundTag)
     {
-        return new GetItemTagAction(SpellActionTypes.GET_ITEM_TAG.get(), activation, source, compoundTag);
+        return new GetItemTagAction(SpellActionTypes.GET_ITEM_TAG.get(), activation.toString(), source.toString(), compoundTag);
     }
     
     protected String compoundTag;

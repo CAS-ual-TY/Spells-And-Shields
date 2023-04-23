@@ -26,9 +26,9 @@ public class TickBlockAction extends AffectTypeAction<PositionTarget>
         ).apply(instance, (activation, multiTargets, duration) -> new TickBlockAction(type, activation, multiTargets, duration)));
     }
     
-    public static TickBlockAction make(String activation, String multiTargets, DynamicCtxVar<Integer> duration)
+    public static TickBlockAction make(Object activation, Object multiTargets, DynamicCtxVar<Integer> duration)
     {
-        return new TickBlockAction(SpellActionTypes.TICK_BLOCK.get(), activation, multiTargets, duration);
+        return new TickBlockAction(SpellActionTypes.TICK_BLOCK.get(), activation.toString(), multiTargets.toString(), duration);
     }
     
     protected DynamicCtxVar<Integer> duration;

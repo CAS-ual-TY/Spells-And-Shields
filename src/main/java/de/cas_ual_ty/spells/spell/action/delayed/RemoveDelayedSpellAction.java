@@ -28,9 +28,9 @@ public class RemoveDelayedSpellAction extends AffectTypeAction<EntityTarget>
         ).apply(instance, (activation, multiTargets, uuid, forceActivate) -> new RemoveDelayedSpellAction(type, activation, multiTargets, uuid, forceActivate)));
     }
     
-    public static RemoveDelayedSpellAction make(String activation, String multiTargets, DynamicCtxVar<String> uuid, DynamicCtxVar<Boolean> forceActivate)
+    public static RemoveDelayedSpellAction make(Object activation, Object multiTargets, DynamicCtxVar<String> uuid, DynamicCtxVar<Boolean> forceActivate)
     {
-        return new RemoveDelayedSpellAction(SpellActionTypes.REMOVE_DELAYED_SPELL.get(), activation, multiTargets, uuid, forceActivate);
+        return new RemoveDelayedSpellAction(SpellActionTypes.REMOVE_DELAYED_SPELL.get(), activation.toString(), multiTargets.toString(), uuid, forceActivate);
     }
     
     protected DynamicCtxVar<String> uuid;

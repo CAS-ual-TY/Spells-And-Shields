@@ -23,9 +23,9 @@ public class GetEntityTagAction extends GetTargetAttributeAction<EntityTarget>
         ).apply(instance, (activation, source, compoundTag) -> new GetEntityTagAction(type, activation, source, compoundTag)));
     }
     
-    public static GetEntityTagAction make(String activation, String source, String compoundTag)
+    public static GetEntityTagAction make(Object activation, Object source, String compoundTag)
     {
-        return new GetEntityTagAction(SpellActionTypes.GET_ENTITY_TAG.get(), activation, source, compoundTag);
+        return new GetEntityTagAction(SpellActionTypes.GET_ENTITY_TAG.get(), activation.toString(), source.toString(), compoundTag);
     }
     
     protected String compoundTag;

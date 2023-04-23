@@ -28,9 +28,9 @@ public class RangedEntityTargetsAction extends SrcDstTargetAction
         ).apply(instance, (activation, dst, src, range) -> new RangedEntityTargetsAction(type, activation, dst, src, range)));
     }
     
-    public static RangedEntityTargetsAction make(String activation, String dest, String src, DynamicCtxVar<Double> range)
+    public static RangedEntityTargetsAction make(Object activation, Object dst, Object src, DynamicCtxVar<Double> range)
     {
-        return new RangedEntityTargetsAction(SpellActionTypes.RANGED_ENTITY_TARGETS.get(), activation, dest, src, range);
+        return new RangedEntityTargetsAction(SpellActionTypes.RANGED_ENTITY_TARGETS.get(), activation.toString(), dst.toString(), src.toString(), range);
     }
     
     protected DynamicCtxVar<Double> range;
@@ -40,9 +40,9 @@ public class RangedEntityTargetsAction extends SrcDstTargetAction
         super(type);
     }
     
-    public RangedEntityTargetsAction(SpellActionType<?> type, String activation, String dest, String src, DynamicCtxVar<Double> range)
+    public RangedEntityTargetsAction(SpellActionType<?> type, String activation, String dst, String src, DynamicCtxVar<Double> range)
     {
-        super(type, activation, dest, src);
+        super(type, activation, dst, src);
         this.range = range;
     }
     

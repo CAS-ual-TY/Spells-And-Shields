@@ -28,109 +28,109 @@ public class PutVarAction<T> extends SpellAction
         ).apply(instance, (activation, src, dst) -> new PutVarAction<>(type, activation, src, dst, varType)));
     }
     
-    public static PutVarAction<Integer> makeInt(String activation, DynamicCtxVar<Integer> src, String dst)
+    public static PutVarAction<Integer> makeInt(Object activation, DynamicCtxVar<Integer> src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_INT.get(), activation, src, dst, CtxVarTypes.INT.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_INT.get(), activation.toString(), src, dst.toString(), CtxVarTypes.INT.get());
     }
     
-    public static PutVarAction<Integer> makeInt(String activation, String src, String dst)
+    public static PutVarAction<Integer> moveInt(Object activation, Object src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_INT.get(), activation, Compiler.compileString(src, CtxVarTypes.INT.get()), dst, CtxVarTypes.INT.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_INT.get(), activation.toString(), Compiler.compileString(src.toString(), CtxVarTypes.INT.get()), dst.toString(), CtxVarTypes.INT.get());
     }
     
-    public static PutVarAction<Integer> makeInt(String activation, int value, String dst)
+    public static PutVarAction<Integer> makeInt(Object activation, int value, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_INT.get(), activation, CtxVarTypes.INT.get().immediate(value), dst, CtxVarTypes.INT.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_INT.get(), activation.toString(), CtxVarTypes.INT.get().immediate(value), dst.toString(), CtxVarTypes.INT.get());
     }
     
-    public static PutVarAction<Double> makeDouble(String activation, DynamicCtxVar<Double> src, String dst)
+    public static PutVarAction<Double> makeDouble(Object activation, DynamicCtxVar<Double> src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_DOUBLE.get(), activation, src, dst, CtxVarTypes.DOUBLE.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_DOUBLE.get(), activation.toString(), src, dst.toString(), CtxVarTypes.DOUBLE.get());
     }
     
-    public static PutVarAction<Double> makeDouble(String activation, String src, String dst)
+    public static PutVarAction<Double> moveDouble(Object activation, Object src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_DOUBLE.get(), activation, Compiler.compileString(src, CtxVarTypes.DOUBLE.get()), dst, CtxVarTypes.DOUBLE.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_DOUBLE.get(), activation.toString(), Compiler.compileString(src.toString(), CtxVarTypes.DOUBLE.get()), dst.toString(), CtxVarTypes.DOUBLE.get());
     }
     
-    public static PutVarAction<Double> makeDouble(String activation, double value, String dst)
+    public static PutVarAction<Double> makeDouble(Object activation, double value, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_DOUBLE.get(), activation, CtxVarTypes.DOUBLE.get().immediate(value), dst, CtxVarTypes.DOUBLE.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_DOUBLE.get(), activation.toString(), CtxVarTypes.DOUBLE.get().immediate(value), dst.toString(), CtxVarTypes.DOUBLE.get());
     }
     
-    public static PutVarAction<Vec3> makeVec3(String activation, DynamicCtxVar<Vec3> src, String dst)
+    public static PutVarAction<Vec3> makeVec3(Object activation, DynamicCtxVar<Vec3> src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), activation, src, dst, CtxVarTypes.VEC3.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), activation.toString(), src, dst.toString(), CtxVarTypes.VEC3.get());
     }
     
-    public static PutVarAction<Vec3> makeVec3(String activation, String src, String dst)
+    public static PutVarAction<Vec3> moveVec3(Object activation, Object src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), activation, Compiler.compileString(src, CtxVarTypes.VEC3.get()), dst, CtxVarTypes.VEC3.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), activation.toString(), Compiler.compileString(src.toString(), CtxVarTypes.VEC3.get()), dst.toString(), CtxVarTypes.VEC3.get());
     }
     
-    public static PutVarAction<Vec3> makeVec3(String activation, Vec3 value, String dst)
+    public static PutVarAction<Vec3> makeVec3(Object activation, Vec3 value, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), activation, CtxVarTypes.VEC3.get().immediate(value), dst, CtxVarTypes.VEC3.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), activation.toString(), CtxVarTypes.VEC3.get().immediate(value), dst.toString(), CtxVarTypes.VEC3.get());
     }
     
-    public static PutVarAction<BlockPos> makeBlockPos(String activation, DynamicCtxVar<BlockPos> src, String dst)
+    public static PutVarAction<BlockPos> makeBlockPos(Object activation, DynamicCtxVar<BlockPos> src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_BLOCK_POS.get(), activation, src, dst, CtxVarTypes.BLOCK_POS.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_BLOCK_POS.get(), activation.toString(), src, dst.toString(), CtxVarTypes.BLOCK_POS.get());
     }
     
-    public static PutVarAction<BlockPos> makeBlockPos(String activation, String src, String dst)
+    public static PutVarAction<BlockPos> moveBlockPos(Object activation, Object src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_BLOCK_POS.get(), activation, Compiler.compileString(src, CtxVarTypes.BLOCK_POS.get()), dst, CtxVarTypes.BLOCK_POS.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_BLOCK_POS.get(), activation.toString(), Compiler.compileString(src.toString(), CtxVarTypes.BLOCK_POS.get()), dst.toString(), CtxVarTypes.BLOCK_POS.get());
     }
     
-    public static PutVarAction<BlockPos> makeBlockPos(String activation, BlockPos value, String dst)
+    public static PutVarAction<BlockPos> makeBlockPos(Object activation, BlockPos value, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_BLOCK_POS.get(), activation, CtxVarTypes.BLOCK_POS.get().immediate(value), dst, CtxVarTypes.BLOCK_POS.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_BLOCK_POS.get(), activation.toString(), CtxVarTypes.BLOCK_POS.get().immediate(value), dst.toString(), CtxVarTypes.BLOCK_POS.get());
     }
     
-    public static PutVarAction<Boolean> makeBoolean(String activation, DynamicCtxVar<Boolean> src, String dst)
+    public static PutVarAction<Boolean> makeBoolean(Object activation, DynamicCtxVar<Boolean> src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_BOOLEAN.get(), activation, src, dst, CtxVarTypes.BOOLEAN.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_BOOLEAN.get(), activation.toString(), src, dst.toString(), CtxVarTypes.BOOLEAN.get());
     }
     
-    public static PutVarAction<Boolean> makeBoolean(String activation, String src, String dst)
+    public static PutVarAction<Boolean> moveBoolean(Object activation, Object src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_BOOLEAN.get(), activation, Compiler.compileString(src, CtxVarTypes.BOOLEAN.get()), dst, CtxVarTypes.BOOLEAN.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_BOOLEAN.get(), activation.toString(), Compiler.compileString(src.toString(), CtxVarTypes.BOOLEAN.get()), dst.toString(), CtxVarTypes.BOOLEAN.get());
     }
     
-    public static PutVarAction<Boolean> makeBoolean(String activation, boolean value, String dst)
+    public static PutVarAction<Boolean> makeBoolean(Object activation, boolean value, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_BOOLEAN.get(), activation, CtxVarTypes.BOOLEAN.get().immediate(value), dst, CtxVarTypes.BOOLEAN.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_BOOLEAN.get(), activation.toString(), CtxVarTypes.BOOLEAN.get().immediate(value), dst.toString(), CtxVarTypes.BOOLEAN.get());
     }
     
-    public static PutVarAction<CompoundTag> makeCompoundTag(String activation, DynamicCtxVar<CompoundTag> src, String dst)
+    public static PutVarAction<CompoundTag> makeCompoundTag(Object activation, DynamicCtxVar<CompoundTag> src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_TAG.get(), activation, src, dst, CtxVarTypes.TAG.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_TAG.get(), activation.toString(), src, dst.toString(), CtxVarTypes.TAG.get());
     }
     
-    public static PutVarAction<CompoundTag> makeCompoundTag(String activation, String src, String dst)
+    public static PutVarAction<CompoundTag> moveCompoundTag(Object activation, Object src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_TAG.get(), activation, Compiler.compileString(src, CtxVarTypes.TAG.get()), dst, CtxVarTypes.TAG.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_TAG.get(), activation.toString(), Compiler.compileString(src.toString(), CtxVarTypes.TAG.get()), dst.toString(), CtxVarTypes.TAG.get());
     }
     
-    public static PutVarAction<CompoundTag> makeCompoundTag(String activation, CompoundTag value, String dst)
+    public static PutVarAction<CompoundTag> makeCompoundTag(Object activation, CompoundTag value, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_TAG.get(), activation, CtxVarTypes.TAG.get().immediate(value), dst, CtxVarTypes.TAG.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_TAG.get(), activation.toString(), CtxVarTypes.TAG.get().immediate(value), dst.toString(), CtxVarTypes.TAG.get());
     }
     
-    public static PutVarAction<String> makeString(String activation, DynamicCtxVar<String> src, String dst)
+    public static PutVarAction<String> makeString(Object activation, DynamicCtxVar<String> src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_STRING.get(), activation, src, dst, CtxVarTypes.STRING.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_STRING.get(), activation.toString(), src, dst.toString(), CtxVarTypes.STRING.get());
     }
     
-    public static PutVarAction<String> makeStringMoveVar(String activation, String src, String dst)
+    public static PutVarAction<String> moveString(Object activation, Object src, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_STRING.get(), activation, Compiler.compileString(src, CtxVarTypes.STRING.get()), dst, CtxVarTypes.STRING.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_STRING.get(), activation.toString(), Compiler.compileString(src.toString(), CtxVarTypes.STRING.get()), dst.toString(), CtxVarTypes.STRING.get());
     }
     
-    public static PutVarAction<String> makeString(String activation, String value, String dst)
+    public static PutVarAction<String> makeString(Object activation, String value, Object dst)
     {
-        return new PutVarAction<>(SpellActionTypes.PUT_STRING.get(), activation, CtxVarTypes.STRING.get().immediate(value), dst, CtxVarTypes.STRING.get());
+        return new PutVarAction<>(SpellActionTypes.PUT_STRING.get(), activation.toString(), CtxVarTypes.STRING.get().immediate(value), dst.toString(), CtxVarTypes.STRING.get());
     }
     
     protected DynamicCtxVar<T> src;

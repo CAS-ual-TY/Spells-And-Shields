@@ -22,9 +22,9 @@ public class PickTargetAction extends CopyTargetsAction
         ).apply(instance, (activation, dst, src, remove, random) -> new PickTargetAction(type, activation, dst, src, remove, random)));
     }
     
-    public static PickTargetAction make(String activation, String dst, String src, boolean remove, boolean random)
+    public static PickTargetAction make(Object activation, Object dst, Object src, boolean remove, boolean random)
     {
-        return new PickTargetAction(SpellActionTypes.PICK_TARGET.get(), activation, dst, src, remove, random);
+        return new PickTargetAction(SpellActionTypes.PICK_TARGET.get(), activation.toString(), dst.toString(), src.toString(), remove, random);
     }
     
     protected boolean remove;

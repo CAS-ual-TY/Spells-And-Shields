@@ -25,9 +25,9 @@ public class SimpleManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
         ).apply(instance, (activation) -> new SimpleManaCheckAction(type, activation)));
     }
     
-    public static SimpleManaCheckAction make(String activation)
+    public static SimpleManaCheckAction make(Object activation)
     {
-        return new SimpleManaCheckAction(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation);
+        return new SimpleManaCheckAction(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation.toString());
     }
     
     protected DynamicCtxVar<Double> amount;

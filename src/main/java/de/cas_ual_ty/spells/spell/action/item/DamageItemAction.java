@@ -26,9 +26,9 @@ public class DamageItemAction extends AffectTypeAction<ItemTarget>
         ).apply(instance, (activation, multiTargets, damage) -> new DamageItemAction(type, activation, multiTargets, damage)));
     }
     
-    public static DamageItemAction make(String activation, String multiTargets, DynamicCtxVar<Integer> damage)
+    public static DamageItemAction make(Object activation, Object multiTargets, DynamicCtxVar<Integer> damage)
     {
-        return new DamageItemAction(SpellActionTypes.DAMAGE_ITEM.get(), activation, multiTargets, damage);
+        return new DamageItemAction(SpellActionTypes.DAMAGE_ITEM.get(), activation.toString(), multiTargets.toString(), damage);
     }
     
     protected DynamicCtxVar<Integer> damage;

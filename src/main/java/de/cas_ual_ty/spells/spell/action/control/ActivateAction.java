@@ -18,9 +18,9 @@ public class ActivateAction extends SpellAction
         ).apply(instance, (activation, toActivate) -> new ActivateAction(type, activation, toActivate)));
     }
     
-    public static ActivateAction make(String activation, String toActivate)
+    public static ActivateAction make(Object activation, Object toActivate)
     {
-        return new ActivateAction(SpellActionTypes.ACTIVATE.get(), activation, toActivate);
+        return new ActivateAction(SpellActionTypes.ACTIVATE.get(), activation.toString(), toActivate.toString());
     }
     
     protected String toActivate;

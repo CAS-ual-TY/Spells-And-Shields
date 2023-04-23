@@ -30,9 +30,9 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
         ).apply(instance, (activation, multiTargets, potion) -> new ApplyPotionEffectAction(type, activation, multiTargets, potion)));
     }
     
-    public static ApplyPotionEffectAction make(String activation, String multiTargets, DynamicCtxVar<String> potion)
+    public static ApplyPotionEffectAction make(Object activation, Object multiTargets, DynamicCtxVar<String> potion)
     {
-        return new ApplyPotionEffectAction(SpellActionTypes.APPLY_POTION_EFFECT.get(), activation, multiTargets, potion);
+        return new ApplyPotionEffectAction(SpellActionTypes.APPLY_POTION_EFFECT.get(), activation.toString(), multiTargets.toString(), potion);
     }
     
     protected DynamicCtxVar<String> potion;

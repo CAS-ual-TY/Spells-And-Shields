@@ -22,9 +22,9 @@ public class GetEntityUUIDAction extends GetTargetAttributeAction<EntityTarget>
         ).apply(instance, (activation, source, uuid) -> new GetEntityUUIDAction(type, activation, source, uuid)));
     }
     
-    public static GetEntityUUIDAction make(String activation, String source, String uuid)
+    public static GetEntityUUIDAction make(Object activation, Object source, String uuid)
     {
-        return new GetEntityUUIDAction(SpellActionTypes.GET_ENTITY_UUID.get(), activation, source, uuid);
+        return new GetEntityUUIDAction(SpellActionTypes.GET_ENTITY_UUID.get(), activation.toString(), source.toString(), uuid);
     }
     
     protected String uuid;

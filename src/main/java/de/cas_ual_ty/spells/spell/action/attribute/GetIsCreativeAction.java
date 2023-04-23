@@ -22,9 +22,9 @@ public class GetIsCreativeAction extends GetTargetAttributeAction<PlayerTarget>
         ).apply(instance, (activation, source, isCreative) -> new GetIsCreativeAction(type, activation, source, isCreative)));
     }
     
-    public static GetIsCreativeAction make(String activation, String source, String isCreative)
+    public static GetIsCreativeAction make(Object activation, Object source, String isCreative)
     {
-        return new GetIsCreativeAction(SpellActionTypes.GET_IS_CREATIVE.get(), activation, source, isCreative);
+        return new GetIsCreativeAction(SpellActionTypes.GET_IS_CREATIVE.get(), activation.toString(), source.toString(), isCreative);
     }
     
     protected String isCreative;

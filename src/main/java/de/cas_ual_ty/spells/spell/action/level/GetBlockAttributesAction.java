@@ -28,9 +28,9 @@ public class GetBlockAttributesAction extends AffectSingleTypeAction<PositionTar
         ).apply(instance, (activation, singleTarget, isAir, isFluid, hasCollider) -> new GetBlockAttributesAction(type, activation, singleTarget, isAir, isFluid, hasCollider)));
     }
     
-    public static GetBlockAttributesAction make(String activation, String singleTarget, String isAir, String isFluid, String hasCollider)
+    public static GetBlockAttributesAction make(Object activation, Object singleTarget, String isAir, String isFluid, String hasCollider)
     {
-        return new GetBlockAttributesAction(SpellActionTypes.GET_BLOCK_ATTRIBUTES.get(), activation, singleTarget, isAir, isFluid, hasCollider);
+        return new GetBlockAttributesAction(SpellActionTypes.GET_BLOCK_ATTRIBUTES.get(), activation.toString(), singleTarget.toString(), isAir, isFluid, hasCollider);
     }
     
     protected String isAir;

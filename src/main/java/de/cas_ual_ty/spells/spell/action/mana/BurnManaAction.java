@@ -27,9 +27,9 @@ public class BurnManaAction extends AffectTypeAction<LivingEntityTarget>
         ).apply(instance, (activation, multiTargets, amount) -> new BurnManaAction(type, activation, multiTargets, amount)));
     }
     
-    public static BurnManaAction make(String activation, String multiTargets, DynamicCtxVar<Double> amount)
+    public static BurnManaAction make(Object activation, Object multiTargets, DynamicCtxVar<Double> amount)
     {
-        return new BurnManaAction(SpellActionTypes.BURN_MANA.get(), activation, multiTargets, amount);
+        return new BurnManaAction(SpellActionTypes.BURN_MANA.get(), activation.toString(), multiTargets.toString(), amount);
     }
     
     protected DynamicCtxVar<Double> amount;

@@ -33,9 +33,9 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
         ).apply(instance, (activation, targets, attribute, uuid, name, amount, operation) -> new AddAttributeModifierAction(type, activation, targets, attribute, uuid, name, amount, operation)));
     }
     
-    public static AddAttributeModifierAction make(String activation, String targets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> uuid, DynamicCtxVar<String> name, DynamicCtxVar<Double> amount, DynamicCtxVar<String> operation)
+    public static AddAttributeModifierAction make(Object activation, Object targets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> uuid, DynamicCtxVar<String> name, DynamicCtxVar<Double> amount, DynamicCtxVar<String> operation)
     {
-        return new AddAttributeModifierAction(SpellActionTypes.ADD_ATTRIBUTE_MODIFIER.get(), activation, targets, attribute, uuid, name, amount, operation);
+        return new AddAttributeModifierAction(SpellActionTypes.ADD_ATTRIBUTE_MODIFIER.get(), activation.toString(), targets.toString(), attribute, uuid, name, amount, operation);
     }
     
     protected DynamicCtxVar<String> attribute;

@@ -19,9 +19,9 @@ public class CopyTargetsAction extends SrcDstTargetAction
         ).apply(instance, (activation, dst, src) -> new CopyTargetsAction(type, activation, dst, src)));
     }
     
-    public static CopyTargetsAction make(String activation, String dest, String src)
+    public static CopyTargetsAction make(Object activation, Object dst, Object src)
     {
-        return new CopyTargetsAction(SpellActionTypes.COPY_TARGETS.get(), activation, dest, src);
+        return new CopyTargetsAction(SpellActionTypes.COPY_TARGETS.get(), activation.toString(), dst.toString(), src.toString());
     }
     
     public CopyTargetsAction(SpellActionType<?> type)
@@ -29,9 +29,9 @@ public class CopyTargetsAction extends SrcDstTargetAction
         super(type);
     }
     
-    public CopyTargetsAction(SpellActionType<?> type, String activation, String dest, String src)
+    public CopyTargetsAction(SpellActionType<?> type, String activation, String dst, String src)
     {
-        super(type, activation, dest, src);
+        super(type, activation, dst, src);
     }
     
     @Override

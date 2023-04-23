@@ -33,9 +33,9 @@ public class SetMotionAction extends AffectTypeAction<EntityTarget>
         ).apply(instance, (activation, multiTargets, motion) -> new SetMotionAction(type, activation, multiTargets, motion)));
     }
     
-    public static SetMotionAction make(String activation, String multiTargets, DynamicCtxVar<Vec3> motion)
+    public static SetMotionAction make(Object activation, Object multiTargets, DynamicCtxVar<Vec3> motion)
     {
-        return new SetMotionAction(SpellActionTypes.SET_MOTION.get(), activation, multiTargets, motion);
+        return new SetMotionAction(SpellActionTypes.SET_MOTION.get(), activation.toString(), multiTargets.toString(), motion);
     }
     
     protected DynamicCtxVar<Vec3> motion;

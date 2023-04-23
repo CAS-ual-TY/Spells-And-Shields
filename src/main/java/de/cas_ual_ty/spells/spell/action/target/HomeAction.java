@@ -33,9 +33,9 @@ public class HomeAction extends AffectSingleTypeAction<PositionTarget>
         ).apply(instance, (activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination) -> new HomeAction(type, activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination)));
     }
     
-    public static HomeAction make(String activation, String source, String target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)
+    public static HomeAction make(Object activation, Object source, Object target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)
     {
-        return new HomeAction(SpellActionTypes.HOME.get(), activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination);
+        return new HomeAction(SpellActionTypes.HOME.get(), activation.toString(), source.toString(), target.toString(), velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination);
     }
     
     protected String target;

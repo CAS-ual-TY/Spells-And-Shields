@@ -17,9 +17,9 @@ public class JumpAction extends SpellAction
         ).apply(instance, (activation, label) -> new JumpAction(type, activation, label)));
     }
     
-    public static JumpAction make(String activation, String label)
+    public static JumpAction make(Object activation, String label)
     {
-        return new JumpAction(SpellActionTypes.JUMP.get(), activation, label);
+        return new JumpAction(SpellActionTypes.JUMP.get(), activation.toString(), label);
     }
     
     protected String label;

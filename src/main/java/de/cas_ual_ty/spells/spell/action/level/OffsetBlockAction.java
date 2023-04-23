@@ -28,9 +28,9 @@ public class OffsetBlockAction extends AffectTypeAction<PositionTarget>
         ).apply(instance, (activation, multiTargets, result, offset) -> new OffsetBlockAction(type, activation, multiTargets, result, offset)));
     }
     
-    public static OffsetBlockAction make(String activation, String multiTargets, String result, DynamicCtxVar<Vec3> offset)
+    public static OffsetBlockAction make(Object activation, Object multiTargets, String result, DynamicCtxVar<Vec3> offset)
     {
-        return new OffsetBlockAction(SpellActionTypes.OFFSET_BLOCK.get(), activation, multiTargets, result, offset);
+        return new OffsetBlockAction(SpellActionTypes.OFFSET_BLOCK.get(), activation.toString(), multiTargets.toString(), result, offset);
     }
     
     protected String result;

@@ -38,9 +38,9 @@ public class LookAtTargetAction extends AffectSingleTypeAction<EntityTarget>
         ).apply(instance, (activation, source, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation) -> new LookAtTargetAction(type, activation, source, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation)));
     }
     
-    public static LookAtTargetAction make(String activation, String source, DynamicCtxVar<Double> range, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid, String blockHitActivation, String entityHitActivation, String missActivation)
+    public static LookAtTargetAction make(Object activation, Object source, DynamicCtxVar<Double> range, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid, String blockHitActivation, String entityHitActivation, String missActivation)
     {
-        return new LookAtTargetAction(SpellActionTypes.LOOK_AT_TARGET.get(), activation, source, range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation);
+        return new LookAtTargetAction(SpellActionTypes.LOOK_AT_TARGET.get(), activation.toString(), source.toString(), range, bbInflation, block, fluid, blockHitActivation, entityHitActivation, missActivation);
     }
     
     protected DynamicCtxVar<Double> range;

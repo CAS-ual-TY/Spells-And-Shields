@@ -29,9 +29,9 @@ public class RemoveAttributeModifierAction extends AffectTypeAction<LivingEntity
         ).apply(instance, (activation, multiTargets, attribute, uuid) -> new RemoveAttributeModifierAction(type, activation, multiTargets, attribute, uuid)));
     }
     
-    public static RemoveAttributeModifierAction make(String activation, String multiTargets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> uuid)
+    public static RemoveAttributeModifierAction make(Object activation, Object multiTargets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> uuid)
     {
-        return new RemoveAttributeModifierAction(SpellActionTypes.REMOVE_ATTRIBUTE_MODIFIER.get(), activation, multiTargets, attribute, uuid);
+        return new RemoveAttributeModifierAction(SpellActionTypes.REMOVE_ATTRIBUTE_MODIFIER.get(), activation.toString(), multiTargets.toString(), attribute, uuid);
     }
     
     protected DynamicCtxVar<String> attribute;

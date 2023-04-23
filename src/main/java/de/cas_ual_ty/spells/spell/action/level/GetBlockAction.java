@@ -30,9 +30,9 @@ public class GetBlockAction extends AffectSingleTypeAction<PositionTarget>
         ).apply(instance, (activation, singleTarget, block, blockState, isAir) -> new GetBlockAction(type, activation, singleTarget, block, blockState, isAir)));
     }
     
-    public static GetBlockAction make(String activation, String singleTarget, String block, String blockState, String isAir)
+    public static GetBlockAction make(Object activation, Object singleTarget, String block, String blockState, String isAir)
     {
-        return new GetBlockAction(SpellActionTypes.GET_BLOCK.get(), activation, singleTarget, block, blockState, isAir);
+        return new GetBlockAction(SpellActionTypes.GET_BLOCK.get(), activation.toString(), singleTarget.toString(), block, blockState, isAir);
     }
     
     protected String block;

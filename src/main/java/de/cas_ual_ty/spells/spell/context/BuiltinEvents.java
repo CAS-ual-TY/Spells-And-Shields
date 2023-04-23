@@ -14,4 +14,10 @@ public enum BuiltinEvents
     {
         this.activation = activation;
     }
+    
+    @Override
+    public String toString()
+    {
+        return activation;
+    }
 }

@@ -24,9 +24,9 @@ public class PositionToTargetAction extends SpellAction
         ).apply(instance, (activation, result, position) -> new PositionToTargetAction(type, activation, result, position)));
     }
     
-    public static PositionToTargetAction make(String activation, String result, DynamicCtxVar<Vec3> position)
+    public static PositionToTargetAction make(Object activation, String result, DynamicCtxVar<Vec3> position)
     {
-        return new PositionToTargetAction(SpellActionTypes.POSITION_TO_TARGET.get(), activation, result, position);
+        return new PositionToTargetAction(SpellActionTypes.POSITION_TO_TARGET.get(), activation.toString(), result, position);
     }
     
     protected String result;

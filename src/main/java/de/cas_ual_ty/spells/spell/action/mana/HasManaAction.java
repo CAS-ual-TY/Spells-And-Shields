@@ -25,9 +25,9 @@ public class HasManaAction extends AffectSingleTypeAction<PlayerTarget>
         ).apply(instance, (activation, singleTarget, amount) -> new HasManaAction(type, activation, singleTarget, amount)));
     }
     
-    public static HasManaAction make(String activation, String singleTarget, DynamicCtxVar<Double> amount)
+    public static HasManaAction make(Object activation, Object singleTarget, DynamicCtxVar<Double> amount)
     {
-        return new HasManaAction(SpellActionTypes.HAS_MANA.get(), activation, singleTarget, amount);
+        return new HasManaAction(SpellActionTypes.HAS_MANA.get(), activation.toString(), singleTarget.toString(), amount);
     }
     
     protected DynamicCtxVar<Double> amount;
