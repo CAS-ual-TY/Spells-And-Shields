@@ -179,12 +179,6 @@
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:consume_item",
-      "activation": "shoot",
-      "d/int/amount": 1,
-      "ts/targets": "item"
-    },
-    {
       "type": "spells_and_shields:item_equals",
       "activation": "spectral",
       "d/boolean/ignore_tag": true,
@@ -221,8 +215,26 @@
       "ts/targets": "owner"
     },
     {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "consume",
+      "activation": "shoot"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "consume",
+      "activation": "spectral"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "consume",
+      "activation": "consume",
+      "d/boolean/activate_if_true": false,
+      "d/boolean/deactivate_if_false": true,
+      "d/boolean/input": "<< item_costs() >>"
+    },
+    {
       "type": "spells_and_shields:consume_item",
-      "activation": "spectral",
+      "activation": "consume",
       "d/int/amount": 1,
       "ts/targets": "item"
     }

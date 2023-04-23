@@ -116,8 +116,16 @@
       "var/item": "item"
     },
     {
-      "type": "spells_and_shields:override_item",
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "consume",
       "activation": "shoot",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< item_costs() >>"
+    },
+    {
+      "type": "spells_and_shields:override_item",
+      "activation": "consume",
       "d/compound_tag/tag": "<<item_tag>>",
       "d/int/amount": "<<amount>>",
       "d/int/damage": "<<damage>>",

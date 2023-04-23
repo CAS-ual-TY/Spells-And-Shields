@@ -112,7 +112,7 @@
       "activation": "active",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": false,
-      "d/boolean/input": "<< nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= get_nbt_int(amounts, item_id) >>"
+      "d/boolean/input": "<< nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= (item_costs() ? 1 : get_nbt_int(amounts, item_id)) >>"
     },
     {
       "type": "spells_and_shields:activate",
@@ -166,8 +166,16 @@
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:consume_item",
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "consume",
       "activation": "spawn",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< item_costs() >>"
+    },
+    {
+      "type": "spells_and_shields:consume_item",
+      "activation": "consume",
       "d/int/amount": "<< get_nbt_int(amounts, item_id) >>",
       "ts/targets": "item"
     },
