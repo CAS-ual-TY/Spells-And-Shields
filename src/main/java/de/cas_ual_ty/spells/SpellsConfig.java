@@ -72,8 +72,8 @@ public class SpellsConfig
     
     public static void registerGlobals()
     {
-        Compiler.registerSupplier("item_costs", CtxVarTypes.BOOLEAN.get(), GLOBAL_ITEM_COSTS);
-        Compiler.registerSupplier("terrain_damage", CtxVarTypes.BOOLEAN.get(), GLOBAL_TERRAIN_DAMAGE);
-        Compiler.registerSupplier("pvp", CtxVarTypes.BOOLEAN.get(), GLOBAL_PVP);
+        Compiler.registerSupplier("item_costs", CtxVarTypes.BOOLEAN, GLOBAL_ITEM_COSTS);
+        Compiler.registerSupplier("terrain_damage", CtxVarTypes.BOOLEAN, GLOBAL_TERRAIN_DAMAGE);
+        Compiler.registerSupplier("pvp", CtxVarTypes.BOOLEAN, GLOBAL_PVP);
     }
 }

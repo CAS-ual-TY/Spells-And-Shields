@@ -68,16 +68,17 @@ public class SpellsAndShields
         
         SpellsEvents.registerEvents();
         
+        Compiler.registerSuppliers();
+        SpellsConfig.registerGlobals();
+        UnaryOperation.registerToCompiler();
+        BinaryOperation.registerToCompiler();
+        TernaryOperation.registerToCompiler();
+        
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> de.cas_ual_ty.spells.client.SpellsClientUtil::onModConstruct);
     }
     
     private void setup(FMLCommonSetupEvent event)
     {
         BuiltinRegistries.addPotionRecipes();
-        Compiler.registerSuppliers();
-        SpellsConfig.registerGlobals();
-        UnaryOperation.registerToCompiler();
-        BinaryOperation.registerToCompiler();
-        TernaryOperation.registerToCompiler();
     }
 }

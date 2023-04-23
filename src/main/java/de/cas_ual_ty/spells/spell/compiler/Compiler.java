@@ -26,21 +26,21 @@ public class Compiler
     
     public static <T> void registerSuppliers()
     {
-        registerSupplier("pi", CtxVarTypes.DOUBLE.get(), () -> Math.PI);
+        registerSupplier("pi", CtxVarTypes.DOUBLE, () -> Math.PI);
         
         double sqrt2 = Math.sqrt(2D);
-        registerSupplier("sqrt2", CtxVarTypes.DOUBLE.get(), () -> sqrt2);
+        registerSupplier("sqrt2", CtxVarTypes.DOUBLE, () -> sqrt2);
         
-        registerSupplier("random_int", CtxVarTypes.INT.get(), RANDOM::nextInt);
-        registerSupplier("random_double", CtxVarTypes.DOUBLE.get(), RANDOM::nextDouble);
-        registerSupplier("random_uuid", CtxVarTypes.STRING.get(), () -> UUID.randomUUID().toString());
+        registerSupplier("random_int", CtxVarTypes.INT, RANDOM::nextInt);
+        registerSupplier("random_double", CtxVarTypes.DOUBLE, RANDOM::nextDouble);
+        registerSupplier("random_uuid", CtxVarTypes.STRING, () -> UUID.randomUUID().toString());
         
-        registerSupplier("new_tag", CtxVarTypes.TAG.get(), () -> new CompoundTag());
+        registerSupplier("new_tag", CtxVarTypes.TAG, () -> new CompoundTag());
     }
     
-    public static <T> void registerSupplier(String name, CtxVarType<T> type, Supplier<T> value)
+    public static <T> void registerSupplier(String name, Supplier<CtxVarType<T>> type, Supplier<T> value)
     {
-        SUPPLIERS.put(name, () -> new CtxVar<>(type, value.get()));
+        SUPPLIERS.put(name, () -> new CtxVar<>(type.get(), value.get()));
     }
     
     public static void registerUnaryFunction(String name, UnaryOperation op)
