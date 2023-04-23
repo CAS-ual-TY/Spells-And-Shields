@@ -32,32 +32,35 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(PlayerHasItemsAction::getItem),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(PlayerHasItemsAction::getAmount),
                 CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(PlayerHasItemsAction::getTag),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(PlayerHasItemsAction::getMustBeInHand)
-        ).apply(instance, (activation, source, item, amount, tag, mustBeInHand) -> new PlayerHasItemsAction(type, activation, source, item, amount, tag, mustBeInHand)));
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(PlayerHasItemsAction::getMustBeInHand),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("creative_bypass")).forGetter(PlayerHasItemsAction::getCreativeBypass)
+        ).apply(instance, (activation, source, item, amount, tag, mustBeInHand, creativeBypass) -> new PlayerHasItemsAction(type, activation, source, item, amount, tag, mustBeInHand, creativeBypass)));
     }
     
-    public static PlayerHasItemsAction make(String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public static PlayerHasItemsAction make(String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand, DynamicCtxVar<Boolean> creativeBypass)
     {
-        return new PlayerHasItemsAction(SpellActionTypes.PLAYER_HAS_ITEMS.get(), activation, source, item, amount, tag, mustBeInHand);
+        return new PlayerHasItemsAction(SpellActionTypes.PLAYER_HAS_ITEMS.get(), activation, source, item, amount, tag, mustBeInHand, creativeBypass);
     }
     
     protected DynamicCtxVar<String> item;
     protected DynamicCtxVar<Integer> amount;
     protected DynamicCtxVar<CompoundTag> tag;
     protected DynamicCtxVar<Boolean> mustBeInHand;
+    protected DynamicCtxVar<Boolean> creativeBypass;
     
     public PlayerHasItemsAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public PlayerHasItemsAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public PlayerHasItemsAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand, DynamicCtxVar<Boolean> creativeBypass)
     {
         super(type, activation, source);
         this.item = item;
         this.amount = amount;
         this.tag = tag;
         this.mustBeInHand = mustBeInHand;
+        this.creativeBypass = creativeBypass;
     }
     
     public DynamicCtxVar<String> getItem()
@@ -80,6 +83,11 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
         return mustBeInHand;
     }
     
+    public DynamicCtxVar<Boolean> getCreativeBypass()
+    {
+        return creativeBypass;
+    }
+    
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
@@ -89,38 +97,46 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
             {
                 mustBeInHand.getValue(ctx).ifPresent(mustBeInHand ->
                 {
-                    Player player = playerTarget.getPlayer();
-                    
-                    List<ItemStack> items;
-                    if(mustBeInHand)
+                    creativeBypass.getValue(ctx).ifPresent(creativeBypass ->
                     {
-                        items = List.of(player.getMainHandItem(), player.getOffhandItem());
-                    }
-                    else
-                    {
-                        items = new ArrayList<>(player.getInventory().items.size());
-                        items.addAll(player.getInventory().items);
-                        items.addAll(player.getInventory().offhand);
-                    }
-                    
-                    CompoundTag tag = this.tag.getValue(ctx).orElse(null);
-                    
-                    int count = 0;
-                    
-                    for(ItemStack i : items)
-                    {
-                        if(i.getItem() == item && (tag == null || tag.isEmpty() || (i.getTag() != null && tag.equals(i.getTag()))))
-                        {
-                            count += i.getCount();
-                        }
+                        Player player = playerTarget.getPlayer();
                         
-                        if(count >= amount)
+                        if(creativeBypass && player.isCreative())
                         {
                             return;
                         }
-                    }
-                    
-                    ctx.deactivate(activation);
+    
+                        List<ItemStack> items;
+                        if(mustBeInHand)
+                        {
+                            items = List.of(player.getMainHandItem(), player.getOffhandItem());
+                        }
+                        else
+                        {
+                            items = new ArrayList<>(player.getInventory().items.size());
+                            items.addAll(player.getInventory().items);
+                            items.addAll(player.getInventory().offhand);
+                        }
+    
+                        CompoundTag tag = this.tag.getValue(ctx).orElse(null);
+    
+                        int count = 0;
+    
+                        for(ItemStack i : items)
+                        {
+                            if(i.getItem() == item && (tag == null || tag.isEmpty() || (i.getTag() != null && tag.equals(i.getTag()))))
+                            {
+                                count += i.getCount();
+                            }
+        
+                            if(count >= amount)
+                            {
+                                return;
+                            }
+                        }
+    
+                        ctx.deactivate(activation);
+                    });
                 });
             });
         });

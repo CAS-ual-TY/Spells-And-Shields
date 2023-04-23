@@ -53,6 +53,7 @@
     {
       "type": "spells_and_shields:player_has_items",
       "activation": "active",
+      "d/boolean/creative_bypass": true,
       "d/boolean/must_be_in_hand": true,
       "d/compound_tag/tag": {},
       "d/int/amount": 1,

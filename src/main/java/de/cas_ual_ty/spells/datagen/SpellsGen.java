@@ -1006,7 +1006,7 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.RANDOM_TELEPORT, new Spell(modId, "random_teleport", Spells.KEY_RANDOM_TELEPORT, 5F)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
-                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 
                 .addAction(PutVarAction.makeInt(ACTIVE.activation, INT.get().reference("max_attempts"), "attempts"))
                 .addAction(LabelAction.make(ACTIVE.activation, "loop"))
@@ -1060,7 +1060,7 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.FORCED_TELEPORT, new Spell(modId, "forced_teleport", Spells.KEY_FORCED_TELEPORT, 10F)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
-                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("target_range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "fail", "on_entity_hit", "fail"))
                 .addAction(CopyTargetsAction.make("on_entity_hit", "player", ENTITY_HIT.targetGroup))
                 .addAction(DeactivateAction.make("fail", ACTIVE.activation))
@@ -1116,7 +1116,7 @@ public class SpellsGen implements DataProvider
         );
         
         addSpell(Spells.TELEPORT, new Spell(modId, "teleport", Spells.KEY_TELEPORT, 10F)
-                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(ManaCheckAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("range"), 0.5F, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, "on_block_hit", "on_entity_hit", "on_miss"))
                 .addAction(CopyTargetsAction.make("on_entity_hit", "teleport_position", ENTITY_HIT.targetGroup))
@@ -1180,7 +1180,7 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.GROWTH, new Spell(modId, "growth", Spells.KEY_GROWTH, 4F)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
-                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ConsumePlayerItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
                 .addAction(CubeBlockTargetsAction.make(ACTIVE.activation, OWNER.targetGroup, "blocks", Compiler.compileString(" vec3(-range, -1, -range) ", VEC3.get()), Compiler.compileString(" vec3(range, 1, range) ", VEC3.get())))
@@ -1220,7 +1220,7 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.ENDER_ARMY, new Spell(modId, "ender_army", Spells.KEY_ENDER_ARMY, 20F)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
-                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.DRAGON_HEAD, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.DRAGON_HEAD, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(LookAtTargetAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference("target_range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "", "on_entity_hit", ""))
                 .addAction(BurnManaAction.make("on_entity_hit", OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ConsumePlayerItemsAction.make("on_entity_hit", OWNER.targetGroup, SpellsUtil.objectToString(Items.DRAGON_HEAD, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
@@ -1313,7 +1313,7 @@ public class SpellsGen implements DataProvider
         
         addSpell(Spells.POCKET_ROCKET, new Spell(ItemSpellIcon.make(new ItemStack(Items.FIREWORK_ROCKET)), Spells.KEY_POCKET_ROCKET, 8F)
                 .addAction(HasManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
-                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.GUNPOWDER, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
+                .addAction(PlayerHasItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.GUNPOWDER, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true), BOOLEAN.get().immediate(true)))
                 .addAction(BurnManaAction.make(ACTIVE.activation, OWNER.targetGroup, DOUBLE.get().reference(MANA_COST.name)))
                 .addAction(ConsumePlayerItemsAction.make(ACTIVE.activation, OWNER.targetGroup, SpellsUtil.objectToString(Items.GUNPOWDER, ForgeRegistries.ITEMS), INT.get().immediate(1), TAG.get().immediate(new CompoundTag()), BOOLEAN.get().immediate(true)))
                 .addAction(LabelAction.make(ACTIVE.activation, "loop"))
