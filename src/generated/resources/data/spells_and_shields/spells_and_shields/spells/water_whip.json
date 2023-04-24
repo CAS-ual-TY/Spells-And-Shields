@@ -195,9 +195,24 @@
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:damage",
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "no_pvp",
+      "activation": "on_entity_hit",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !pvp() >>"
+    },
+    {
+      "type": "spells_and_shields:move_player_targets",
+      "activation": "no_pvp",
+      "td/destination": "entity_hit",
+      "ts/source": ""
+    },
+    {
+      "type": "spells_and_shields:sourced_damage",
       "activation": "on_entity_hit",
       "d/double/damage": 10.0,
+      "t/source": "projectile",
       "ts/targets": "entity_hit"
     },
     {

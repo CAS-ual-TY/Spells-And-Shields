@@ -237,6 +237,20 @@
       "ts/targets": "player"
     },
     {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "no_pvp",
+      "activation": "on_entity_hit",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !pvp() >>"
+    },
+    {
+      "type": "spells_and_shields:move_player_targets",
+      "activation": "no_pvp",
+      "td/destination": "entity_hit",
+      "ts/source": ""
+    },
+    {
       "type": "spells_and_shields:set_on_fire",
       "activation": "on_entity_hit",
       "d/int/fire_seconds": "<<fire_seconds>>",

@@ -40,6 +40,20 @@
       "ts/source": "owner"
     },
     {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "no_pvp",
+      "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !pvp() >>"
+    },
+    {
+      "type": "spells_and_shields:move_player_targets",
+      "activation": "no_pvp",
+      "td/destination": "targets",
+      "ts/source": ""
+    },
+    {
       "type": "spells_and_shields:sourced_knockback",
       "activation": "active",
       "d/double/strength": "<<knockback_strength>>",

@@ -46,12 +46,9 @@
       "t/target": "owner"
     },
     {
-      "type": "spells_and_shields:boolean_activation",
-      "a/to_activate": "success",
-      "activation": "active",
-      "d/boolean/activate_if_true": true,
-      "d/boolean/deactivate_if_false": false,
-      "d/boolean/input": "<< !item_costs() >>"
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "bypass",
+      "activation": "active"
     },
     {
       "type": "spells_and_shields:player_has_items",
@@ -64,44 +61,57 @@
       "t/source": "owner"
     },
     {
-      "type": "spells_and_shields:activate",
-      "a/to_activate": "success",
-      "activation": "active"
-    },
-    {
-      "type": "spells_and_shields:burn_mana",
-      "activation": "success",
-      "d/double/mana_amount": "<<mana_cost>>",
-      "ts/targets": "owner"
-    },
-    {
       "type": "spells_and_shields:boolean_activation",
-      "a/to_activate": "consume",
-      "activation": "success",
+      "a/to_activate": "active",
+      "activation": "bypass",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": false,
-      "d/boolean/input": "<< item_costs() >>"
-    },
-    {
-      "type": "spells_and_shields:consume_player_items",
-      "activation": "consume",
-      "d/boolean/must_be_in_hand": true,
-      "d/compound_tag/tag": {},
-      "d/int/amount": 1,
-      "d/string/item": "minecraft:copper_ingot",
-      "t/source": "owner"
+      "d/boolean/input": "<< !item_costs() >>"
     },
     {
       "type": "spells_and_shields:look_at_target",
-      "a/block_hit_activation": "on_block_hit",
+      "a/block_hit_activation": "",
       "a/entity_hit_activation": "on_entity_hit",
       "a/miss_activation": "",
-      "activation": "success",
-      "block_clip_context": "outline",
-      "d/double/range": "<<range>>",
+      "activation": "active",
+      "block_clip_context": "collider",
+      "d/double/range": "<<target_range>>",
       "double/bb_inflation": 0.5,
-      "fluid_clip_context": "any",
+      "fluid_clip_context": "none",
       "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "no_pvp",
+      "activation": "on_entity_hit",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !pvp() >>"
+    },
+    {
+      "type": "spells_and_shields:move_player_targets",
+      "activation": "no_pvp",
+      "td/destination": "entity_hit",
+      "ts/source": ""
+    },
+    {
+      "type": "spells_and_shields:get_target_group_size",
+      "activation": "no_pvp",
+      "td/source": "entity_hit",
+      "var/result": "target_size"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "fail",
+      "activation": "no_pvp",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< target_size <= 0 >>"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "on_entity_hit",
+      "activation": "fail"
     },
     {
       "type": "spells_and_shields:copy_targets",
@@ -124,6 +134,29 @@
       "type": "spells_and_shields:activate",
       "a/to_activate": "on_hit",
       "activation": "on_entity_hit"
+    },
+    {
+      "type": "spells_and_shields:burn_mana",
+      "activation": "on_hit",
+      "d/double/mana_amount": "<<mana_cost>>",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "consume",
+      "activation": "on_hit",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< item_costs() >>"
+    },
+    {
+      "type": "spells_and_shields:consume_player_items",
+      "activation": "consume",
+      "d/boolean/must_be_in_hand": true,
+      "d/compound_tag/tag": {},
+      "d/int/amount": 1,
+      "d/string/item": "minecraft:copper_ingot",
+      "t/source": "owner"
     },
     {
       "type": "spells_and_shields:spawn_entity",
