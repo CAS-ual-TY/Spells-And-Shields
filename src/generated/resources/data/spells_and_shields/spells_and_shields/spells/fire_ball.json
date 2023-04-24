@@ -51,17 +51,12 @@
       "t/target": "owner"
     },
     {
-      "type": "spells_and_shields:activate",
-      "a/to_activate": "shoot",
-      "activation": "active"
-    },
-    {
       "type": "spells_and_shields:boolean_activation",
       "a/to_activate": "consume",
       "activation": "active",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": false,
-      "d/boolean/input": "<< item_costs() >>"
+      "d/boolean/input": "<< !item_costs() >>"
     },
     {
       "type": "spells_and_shields:player_has_items",
@@ -85,7 +80,7 @@
     },
     {
       "type": "spells_and_shields:burn_mana",
-      "activation": "consume",
+      "activation": "shoot",
       "d/double/mana_amount": "<<mana_cost>>",
       "ts/targets": "owner"
     },

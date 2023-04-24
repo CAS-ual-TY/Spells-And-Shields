@@ -46,24 +46,54 @@
       "t/target": "owner"
     },
     {
-      "type": "spells_and_shields:item_check",
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "success",
       "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !item_costs() >>"
+    },
+    {
+      "type": "spells_and_shields:player_has_items",
+      "activation": "active",
+      "d/boolean/creative_bypass": true,
       "d/boolean/must_be_in_hand": true,
-      "item": {
-        "Count": 1,
-        "id": "minecraft:fire_charge"
-      },
-      "t/target": "owner"
+      "d/compound_tag/tag": {},
+      "d/int/amount": 1,
+      "d/string/item": "minecraft:fire_charge",
+      "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "success",
+      "activation": "active"
     },
     {
       "type": "spells_and_shields:burn_mana",
-      "activation": "active",
+      "activation": "success",
       "d/double/mana_amount": "<<mana_cost>>",
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:add_delayed_spell",
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "success",
       "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< item_costs() >>"
+    },
+    {
+      "type": "spells_and_shields:consume_player_items",
+      "activation": "success",
+      "d/boolean/must_be_in_hand": true,
+      "d/compound_tag/tag": {},
+      "d/int/amount": 1,
+      "d/string/item": "minecraft:fire_charge",
+      "t/source": "consume"
+    },
+    {
+      "type": "spells_and_shields:add_delayed_spell",
+      "activation": "success",
       "ad/on_remove": "sound",
       "d/compound_tag/extra_data": {},
       "d/int/tick_time": 10,
@@ -72,7 +102,7 @@
     },
     {
       "type": "spells_and_shields:add_delayed_spell",
-      "activation": "active",
+      "activation": "success",
       "ad/on_remove": "shoot",
       "d/compound_tag/extra_data": {},
       "d/int/tick_time": 20,
@@ -86,15 +116,6 @@
       "d/double/volume": 1.0,
       "sound_event": "minecraft:entity.ghast.warn",
       "ts/targets": "holder"
-    },
-    {
-      "type": "spells_and_shields:put_tag",
-      "activation": "shoot",
-      "d/tag/source": {
-        "crit": 1,
-        "pickup": 1
-      },
-      "var/result": "tag"
     },
     {
       "type": "spells_and_shields:get_entity_uuid",
@@ -113,7 +134,7 @@
     {
       "type": "spells_and_shields:put_tag",
       "activation": "shoot",
-      "d/tag/source": "<< put_nbt_uuid(tag, 'Owner', uuid) >>",
+      "d/tag/source": "<< put_nbt_uuid(new_tag(), 'Owner', uuid) >>",
       "var/result": "tag"
     },
     {

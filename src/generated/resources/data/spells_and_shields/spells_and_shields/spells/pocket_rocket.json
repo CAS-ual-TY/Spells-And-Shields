@@ -38,6 +38,14 @@
       "t/target": "owner"
     },
     {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "success",
+      "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !item_costs() >>"
+    },
+    {
       "type": "spells_and_shields:player_has_items",
       "activation": "active",
       "d/boolean/creative_bypass": true,
@@ -48,14 +56,27 @@
       "t/source": "owner"
     },
     {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "success",
+      "activation": "active"
+    },
+    {
       "type": "spells_and_shields:burn_mana",
-      "activation": "active",
+      "activation": "success",
       "d/double/mana_amount": "<<mana_cost>>",
       "ts/targets": "owner"
     },
     {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "consume",
+      "activation": "success",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< item_costs() >>"
+    },
+    {
       "type": "spells_and_shields:consume_player_items",
-      "activation": "active",
+      "activation": "consume",
       "d/boolean/must_be_in_hand": true,
       "d/compound_tag/tag": {},
       "d/int/amount": 1,
@@ -64,18 +85,18 @@
     },
     {
       "type": "spells_and_shields:label",
-      "activation": "active",
+      "activation": "success",
       "label": "loop"
     },
     {
       "type": "spells_and_shields:put_int",
-      "activation": "active",
+      "activation": "success",
       "d/int/source": "<< repetitions - 1 >>",
       "var/result": "repetitions"
     },
     {
       "type": "spells_and_shields:add_delayed_spell",
-      "activation": "active",
+      "activation": "success",
       "ad/on_remove": "fire",
       "d/compound_tag/extra_data": {},
       "d/int/tick_time": "<< repetitions * time_delay_ticks >>",
@@ -84,13 +105,13 @@
     },
     {
       "type": "spells_and_shields:branch",
-      "activation": "active",
+      "activation": "success",
       "d/boolean/conditional": "<< repetitions > 1 >>",
       "label": "loop"
     },
     {
       "type": "spells_and_shields:copy_targets",
-      "activation": "active",
+      "activation": "success",
       "td/destination": "player",
       "ts/source": "owner"
     },
@@ -103,7 +124,7 @@
     {
       "type": "spells_and_shields:activate",
       "a/to_activate": "fire",
-      "activation": "active"
+      "activation": "success"
     },
     {
       "type": "spells_and_shields:use_item",

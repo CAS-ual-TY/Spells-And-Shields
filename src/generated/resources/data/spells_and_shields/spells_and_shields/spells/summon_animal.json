@@ -112,7 +112,7 @@
       "activation": "active",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": false,
-      "d/boolean/input": "<< nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= (item_costs() ? 1 : get_nbt_int(amounts, item_id)) >>"
+      "d/boolean/input": "<< nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= (!item_costs() ? 1 : get_nbt_int(amounts, item_id)) >>"
     },
     {
       "type": "spells_and_shields:activate",

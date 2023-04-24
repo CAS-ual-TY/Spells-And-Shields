@@ -61,6 +61,11 @@
       "t/target": "owner"
     },
     {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "bypass",
+      "activation": "active"
+    },
+    {
       "type": "spells_and_shields:player_has_items",
       "activation": "active",
       "d/boolean/creative_bypass": true,
@@ -69,6 +74,14 @@
       "d/int/amount": 1,
       "d/string/item": "minecraft:chorus_fruit",
       "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "active",
+      "activation": "bypass",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !item_costs() >>"
     },
     {
       "type": "spells_and_shields:look_at_target",
@@ -277,8 +290,16 @@
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:consume_player_items",
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "consume",
       "activation": "success",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< item_costs() >>"
+    },
+    {
+      "type": "spells_and_shields:consume_player_items",
+      "activation": "consume",
       "d/boolean/must_be_in_hand": true,
       "d/compound_tag/tag": {},
       "d/int/amount": 1,

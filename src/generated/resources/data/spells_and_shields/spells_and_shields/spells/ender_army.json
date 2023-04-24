@@ -51,6 +51,14 @@
       "t/target": "owner"
     },
     {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "success",
+      "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !item_costs() >>"
+    },
+    {
       "type": "spells_and_shields:player_has_items",
       "activation": "active",
       "d/boolean/creative_bypass": true,
@@ -61,11 +69,16 @@
       "t/source": "owner"
     },
     {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "success",
+      "activation": "active"
+    },
+    {
       "type": "spells_and_shields:look_at_target",
       "a/block_hit_activation": "",
       "a/entity_hit_activation": "on_entity_hit",
       "a/miss_activation": "",
-      "activation": "active",
+      "activation": "success",
       "block_clip_context": "collider",
       "d/double/range": "<<target_range>>",
       "double/bb_inflation": 0.5,
@@ -79,8 +92,16 @@
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:consume_player_items",
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "consume",
       "activation": "on_entity_hit",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< item_costs() >>"
+    },
+    {
+      "type": "spells_and_shields:consume_player_items",
+      "activation": "consume",
       "d/boolean/must_be_in_hand": true,
       "d/compound_tag/tag": {},
       "d/int/amount": 1,
