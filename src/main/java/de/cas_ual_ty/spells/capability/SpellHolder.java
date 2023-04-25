@@ -9,6 +9,7 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
+import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -118,7 +119,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
     public SpellsSyncMessage makeSyncMessage()
     {
         Registry<Spell> registry = Spells.getRegistry(player.getLevel());
-        return new SpellsSyncMessage(player.getId(), Arrays.stream(slots).map(s -> s != null ? s.getSpell().unwrap().map(ResourceKey::location, registry::getKey) : null).toArray(ResourceLocation[]::new));
+        return new SpellsSyncMessage(player.getId(), Arrays.stream(slots).map(s -> s != null ? s.getSpell().unwrap().map(ResourceKey::location, registry::getKey) : null).toArray(ResourceLocation[]::new), Arrays.stream(slots).map(s -> s != null ? s.getNodeId() : null).toArray(SpellNodeId[]::new));
     }
     
     @Override

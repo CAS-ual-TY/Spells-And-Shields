@@ -19,6 +19,7 @@ public class SpellsClientConfig
     public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_OFFSET_X;
     public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_OFFSET_Y;
     public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_SPACING;
+    public static final ForgeConfigSpec.BooleanValue SHOW_IDS;
     
     static
     {
@@ -73,6 +74,12 @@ public class SpellsClientConfig
                 .defineInRange("spacing", 1, 0, 10);
         builder.pop();
         
+        builder.pop();
+        
+        builder.comment("Settings relevant for data pack creators.").push("technical");
+        SHOW_IDS = builder
+                .comment("Show spell and spell node IDs.")
+                .define("showIds", false);
         builder.pop();
         
         CLIENT_SPEC = builder.build();

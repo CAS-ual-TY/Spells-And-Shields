@@ -27,6 +27,11 @@ public record SpellNodeId(ResourceLocation treeId, int nodeId)
         return node == null ? null : node.getSpellInstance();
     }
     
+    public String getIDText()
+    {
+        return treeId + " " + nodeId;
+    }
+    
     public void toNbt(CompoundTag nbt)
     {
         nbt.putString("treeId", treeId().toString());

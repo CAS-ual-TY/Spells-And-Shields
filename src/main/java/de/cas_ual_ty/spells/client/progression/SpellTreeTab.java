@@ -6,10 +6,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
+import de.cas_ual_ty.spells.client.SpellsClientConfig;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
@@ -124,7 +126,14 @@ public class SpellTreeTab extends GuiComponent
     
     public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return spellTree.getTooltip(spellProgressionHolder, access);
+        List<Component> list = spellTree.getTooltip(spellProgressionHolder, access);
+        
+        if(SpellsClientConfig.SHOW_IDS.get())
+        {
+            list.add(Component.literal(spellTree.getId().toString()).withStyle(ChatFormatting.DARK_GRAY));
+        }
+        
+        return list;
     }
     
     public void drawTab(PoseStack poseStack, int x, int y, boolean selected)

@@ -61,7 +61,6 @@ public class SpellTreeSerializer
         buf.writeInt(spellNode.getLevelCost());
         encodeRequirements(spellNode.getHiddenRequirements(), buf);
         encodeRequirements(spellNode.getLearnRequirements(), buf);
-        buf.writeResourceLocation(spellNode.getNodeId().treeId());
         buf.writeInt(spellNode.getNodeId().nodeId());
         buf.writeByte(spellNode.getFrame());
         buf.writeFloat(spellNode.getSpellInstance().getManaCost());
@@ -93,7 +92,10 @@ public class SpellTreeSerializer
             }
         }
         
-        return builder.icon(icon).finish().setId(id);
+        SpellTree tree = builder.icon(icon).finish().setId(id);
+        tree.assignNodeIds(id);
+        
+        return tree;
     }
     
     private static List<Requirement> decodeRequirements(FriendlyByteBuf buf)
@@ -115,7 +117,7 @@ public class SpellTreeSerializer
         int levelCost = buf.readInt();
         List<Requirement> hiddenRequirements = decodeRequirements(buf);
         List<Requirement> learnRequirements = decodeRequirements(buf);
-        SpellNodeId id = new SpellNodeId(buf.readResourceLocation(), buf.readInt());
+        SpellNodeId id = new SpellNodeId(null, buf.readInt());
         int frame = buf.readByte();
         float manaCost = buf.readFloat();
         

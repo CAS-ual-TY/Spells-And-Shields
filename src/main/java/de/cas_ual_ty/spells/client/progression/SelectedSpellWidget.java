@@ -3,13 +3,20 @@ package de.cas_ual_ty.spells.client.progression;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
+import de.cas_ual_ty.spells.client.SpellsClientConfig;
+import de.cas_ual_ty.spells.client.SpellsClientUtil;
+import de.cas_ual_ty.spells.registers.Spells;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import java.util.List;
@@ -83,6 +90,17 @@ public class SelectedSpellWidget extends GuiComponent
                 
                 List<Component> tooltip = spellInstance.getSpell().get().makeTooltipList(null);
                 Optional<TooltipComponent> tooltipComponent = clickedWidget.spellNode.getSpellInstance().getTooltipComponent();
+                
+                if(SpellsClientConfig.SHOW_IDS.get())
+                {
+                    Registry<Spell> spellRegistry = Spells.getRegistry(SpellsClientUtil.getClientLevel());
+                    tooltip.add(Component.literal(spellInstance.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString()).withStyle(ChatFormatting.DARK_GRAY));
+                    
+                    if(clickedWidget.spellNode.getNodeId() != null)
+                    {
+                        tooltip.add(Component.literal(clickedWidget.spellNode.getNodeId().getIDText()).withStyle(ChatFormatting.DARK_GRAY));
+                    }
+                }
                 
                 screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);
                 

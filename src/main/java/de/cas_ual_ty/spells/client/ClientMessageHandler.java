@@ -55,7 +55,14 @@ public class ClientMessageHandler
                 {
                     if(msg.spells()[i] != null)
                     {
-                        spellHolder.setSpell(i, new SpellInstance(registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, msg.spells()[i]))));
+                        SpellInstance spellInst = new SpellInstance(registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, msg.spells()[i])));
+                        
+                        if(msg.nodeIds()[i] != null)
+                        {
+                            spellInst.initId(msg.nodeIds()[i]);
+                        }
+                        
+                        spellHolder.setSpell(i, spellInst);
                     }
                     else
                     {

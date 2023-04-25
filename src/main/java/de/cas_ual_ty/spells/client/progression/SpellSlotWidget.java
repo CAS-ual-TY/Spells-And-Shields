@@ -5,6 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.client.SpellKeyBindings;
+import de.cas_ual_ty.spells.client.SpellsClientConfig;
+import de.cas_ual_ty.spells.client.SpellsClientUtil;
+import de.cas_ual_ty.spells.registers.Spells;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import net.minecraft.ChatFormatting;
@@ -12,7 +16,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -112,6 +118,16 @@ public class SpellSlotWidget extends Button
                     Component keyBindTooltip = SpellKeyBindings.getBaseTooltip().append(": ").append(SpellKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
                     List<Component> tooltip = spell.getSpell().get().makeTooltipList(keyBindTooltip);
                     Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
+                    
+                    if(SpellsClientConfig.SHOW_IDS.get())
+                    {
+                        Registry<Spell> spellRegistry = Spells.getRegistry(SpellsClientUtil.getClientLevel());
+                        tooltip.add(Component.literal(spell.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString()).withStyle(ChatFormatting.DARK_GRAY));
+                        if(spell.getNodeId() != null)
+                        {
+                            tooltip.add(Component.literal(spell.getNodeId().getIDText()).withStyle(ChatFormatting.DARK_GRAY));
+                        }
+                    }
                     
                     screen.renderTooltip(poseStack, tooltip, tooltipComponent, mouseX, mouseY);
                     
