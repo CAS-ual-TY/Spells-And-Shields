@@ -135,7 +135,7 @@ public class SpellTree
         
         forEach(spellNode ->
         {
-            spellNode.setNodeId(spellTreeId, i.getAndIncrement());
+            spellNode.setNodeId(spellTreeId, i.incrementAndGet());
         });
     }
     
