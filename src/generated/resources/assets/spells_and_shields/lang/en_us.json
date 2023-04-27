@@ -79,6 +79,7 @@
   "requirement.spells_and_shields.advancement": "Advancement: %s",
   "requirement.spells_and_shields.advancement.error": "Unknown Advancement (config error): %s",
   "requirement.spells_and_shields.bookshelves": "%s/%s Bookshelves",
+  "requirement.spells_and_shields.config": "Disabled by Configuration File",
   "requirement.spells_and_shields.item": "%s (Not Consumed)",
   "requirement.spells_and_shields.item.consumed": "%s (Consumed)",
   "requirement.spells_and_shields.item.consumed.multiple": "%sx %s (Consumed)",

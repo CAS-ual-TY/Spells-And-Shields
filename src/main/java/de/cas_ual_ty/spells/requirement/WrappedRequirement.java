@@ -9,6 +9,7 @@ import de.cas_ual_ty.spells.registers.RequirementTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
@@ -81,7 +82,16 @@ public class WrappedRequirement extends Requirement
     public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
         this.status = RequirementStatus.decide(passes(spellProgressionHolder, access));
-        this.component = Component.literal("- ").append(makeDescription(spellProgressionHolder, access).withStyle(hidden ? ChatFormatting.DARK_GRAY : (status.passes ? ChatFormatting.GREEN : ChatFormatting.RED)));
+        MutableComponent c = makeDescription(spellProgressionHolder, access);
+        
+        if(c.getContents() != ComponentContents.EMPTY)
+        {
+            this.component = Component.literal("- ").append(c.withStyle(hidden ? ChatFormatting.DARK_GRAY : (status.passes ? ChatFormatting.GREEN : ChatFormatting.RED)));
+        }
+        else
+        {
+            this.component = Component.empty();
+        }
     }
     
     @Override

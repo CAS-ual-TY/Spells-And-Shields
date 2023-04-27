@@ -100,6 +100,7 @@ public class LangGen extends LanguageProvider
         addRequirement(RequirementTypes.ITEM, ItemRequirement.CONSUMED_SUFFIX, "%s (Consumed)");
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_CONSUMED_SUFFIX, "%sx %s (Consumed)");
+        addRequirement(RequirementTypes.CONFIG, "Disabled by Configuration File");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         

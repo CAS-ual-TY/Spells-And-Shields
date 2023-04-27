@@ -1,10 +1,7 @@
 package de.cas_ual_ty.spells.registers;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
-import de.cas_ual_ty.spells.requirement.BookshelvesRequirement;
-import de.cas_ual_ty.spells.requirement.ItemRequirement;
-import de.cas_ual_ty.spells.requirement.Requirement;
+import de.cas_ual_ty.spells.requirement.*;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
@@ -72,7 +69,7 @@ public class SpellTrees
     {
         return SpellTree.builder(Component.translatable(KEY_NETHER))
                 .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/fire_resistance.png")))
-                .add(spellGetter.apply(Spells.FIRE_BALL)).levelCost(15).learnRequirements(bookshelves(28))
+                .add(spellGetter.apply(Spells.FIRE_BALL)).levelCost(15).learnRequirements(bookshelves(28)).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.TOGGLE_LAVA_WALKER)).levelCost(20).learnRequirements(bookshelves(19))
                 .add(spellGetter.apply(Spells.TOGGLE_FIRE_RESISTANCE)).levelCost(30).learnRequirements(bookshelves(30))
                 .leaf()
@@ -88,7 +85,7 @@ public class SpellTrees
     {
         return SpellTree.builder(Component.translatable(KEY_OCEAN))
                 .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/dolphins_grace.png")))
-                .add(spellGetter.apply(Spells.TOGGLE_WATER_BREATHING)).levelCost(10)
+                .add(spellGetter.apply(Spells.TOGGLE_WATER_BREATHING)).levelCost(10).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.TOGGLE_REGENERATION)).levelCost(20).learnRequirements(bookshelves(20))
                 .add(spellGetter.apply(Spells.GROWTH)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
@@ -114,7 +111,7 @@ public class SpellTrees
     {
         return SpellTree.builder(Component.translatable(KEY_MINING))
                 .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/haste.png")))
-                .add(spellGetter.apply(Spells.BLAST_SMELT)).levelCost(5).learnRequirements(bookshelves(8))
+                .add(spellGetter.apply(Spells.BLAST_SMELT)).levelCost(5).learnRequirements(bookshelves(8)).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.SILENCE_TARGET)).levelCost(25).learnRequirements(bookshelves(26))
                 .add(spellGetter.apply(Spells.TOGGLE_MAGIC_IMMUNE)).levelCost(25).learnRequirements(bookshelves(26))
                 .leaf()
@@ -131,7 +128,7 @@ public class SpellTrees
     {
         return SpellTree.builder(Component.translatable(KEY_MOVEMENT))
                 .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/jump_boost.png")))
-                .add(spellGetter.apply(Spells.TOGGLE_JUMP_BOOST)).levelCost(15).learnRequirements(bookshelves(12))
+                .add(spellGetter.apply(Spells.TOGGLE_JUMP_BOOST)).levelCost(15).learnRequirements(bookshelves(12)).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.LEAP)).levelCost(10).learnRequirements(bookshelves(14))
                 .add(spellGetter.apply(Spells.TOGGLE_SPEED)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
@@ -154,7 +151,7 @@ public class SpellTrees
     {
         return SpellTree.builder(Component.translatable(KEY_END))
                 .icon(DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/teleport.png")))
-                .add(spellGetter.apply(Spells.RANDOM_TELEPORT)).levelCost(20).learnRequirements(bookshelves(28)).hiddenRequirements(advancement("end/root"))
+                .add(spellGetter.apply(Spells.RANDOM_TELEPORT)).levelCost(20).learnRequirements(bookshelves(28)).hiddenRequirements(advancement("end/root")).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.FORCED_TELEPORT)).levelCost(30).learnRequirements(bookshelves(28))
                 .leaf()
                 .add(spellGetter.apply(Spells.TELEPORT)).levelCost(30).learnRequirements(bookshelves(28), advancement("end/respawn_dragon"))
@@ -175,5 +172,10 @@ public class SpellTrees
     public static Requirement item(Item item, int count, boolean consume)
     {
         return new ItemRequirement(RequirementTypes.ITEM.get(), new ItemStack(item, count), consume);
+    }
+    
+    public static Requirement config()
+    {
+        return new ConfigRequirement(RequirementTypes.CONFIG.get());
     }
 }

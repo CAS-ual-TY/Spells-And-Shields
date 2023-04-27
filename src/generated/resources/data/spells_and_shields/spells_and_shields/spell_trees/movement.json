@@ -10,6 +10,11 @@
     "n1/spell_id": "spells_and_shields:toggle_jump_boost",
     "n2/node_id": 1,
     "n4/level_cost": 15,
+    "n5/hidden_requirements": [
+      {
+        "type": "spells_and_shields:config"
+      }
+    ],
     "n6/learn_requirements": [
       {
         "type": "spells_and_shields:bookshelves",

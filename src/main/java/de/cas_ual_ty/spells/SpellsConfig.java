@@ -23,6 +23,7 @@ public class SpellsConfig
     public static final ForgeConfigSpec.BooleanValue GLOBAL_ITEM_COSTS;
     public static final ForgeConfigSpec.BooleanValue GLOBAL_TERRAIN_DAMAGE;
     public static final ForgeConfigSpec.BooleanValue GLOBAL_PVP;
+    public static final ForgeConfigSpec.BooleanValue SPELL_TREES;
     
     static
     {
@@ -63,8 +64,11 @@ public class SpellsConfig
                 .comment("Switch to turn off terrain damage. Fire may still be spawned.")
                 .define("terrainDamage", true);
         GLOBAL_PVP = configBuilder
-                .comment("Switch to turn off PvP for spells. Any negative aspects are not applied to the player anymore if they come from a player source.")//TODO
+                .comment("Switch to turn off PvP for spells. Any negative aspects are not applied to the player anymore if they come from a player source.")
                 .define("pvp", true);
+        SPELL_TREES = configBuilder
+                .comment("Switch to turn off all default spell trees. This is a convenience method so you do not have to manually remove them from the mod file.")
+                .define("spellTrees", true);
         configBuilder.pop();
         
         GENERAL_SPEC = configBuilder.build();

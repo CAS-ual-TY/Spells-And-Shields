@@ -10,6 +10,11 @@
     "n1/spell_id": "spells_and_shields:toggle_water_breathing",
     "n2/node_id": 1,
     "n4/level_cost": 10,
+    "n5/hidden_requirements": [
+      {
+        "type": "spells_and_shields:config"
+      }
+    ],
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:toggle_regeneration",

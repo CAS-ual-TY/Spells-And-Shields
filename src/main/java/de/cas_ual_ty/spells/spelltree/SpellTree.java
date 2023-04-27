@@ -6,10 +6,10 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -58,7 +58,7 @@ public class SpellTree
     {
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getTitle());
-        getRequirements().forEach(requirement -> tooltips.add(requirement.makeDescription(spellProgressionHolder, access).withStyle(ChatFormatting.GRAY)));
+        getRequirements().stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> c.getContents() != ComponentContents.EMPTY).forEach(tooltips::add);
         return tooltips;
     }
     
