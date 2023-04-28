@@ -29,7 +29,6 @@ import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
@@ -101,7 +100,6 @@ public class SpellsGen implements DataProvider
     public static final CtxVarType<Integer> INT = CtxVarTypes.INT.get();
     public static final CtxVarType<Double> DOUBLE = CtxVarTypes.DOUBLE.get();
     public static final CtxVarType<Vec3> VEC3 = CtxVarTypes.VEC3.get();
-    public static final CtxVarType<BlockPos> BLOCK_POS = CtxVarTypes.BLOCK_POS.get();
     public static final CtxVarType<Boolean> BOOLEAN = CtxVarTypes.BOOLEAN.get();
     public static final CtxVarType<CompoundTag> TAG = CtxVarTypes.TAG.get();
     public static final CtxVarType<String> STRING = CtxVarTypes.STRING.get();

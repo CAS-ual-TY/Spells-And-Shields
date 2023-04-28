@@ -27,7 +27,6 @@ import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.compiler.TernaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
 import de.cas_ual_ty.spells.util.SpellsUtil;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
@@ -163,7 +162,6 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
     public static final RegistryObject<SpellActionType<PutVarAction<Double>>> PUT_DOUBLE = DEFERRED_REGISTER.register("put_double", () -> PutVarAction.makeType(CtxVarTypes.DOUBLE));
     public static final RegistryObject<SpellActionType<PutVarAction<Vec3>>> PUT_VEC3 = DEFERRED_REGISTER.register("put_vec3", () -> PutVarAction.makeType(CtxVarTypes.VEC3));
-    public static final RegistryObject<SpellActionType<PutVarAction<BlockPos>>> PUT_BLOCK_POS = DEFERRED_REGISTER.register("put_block_pos", () -> PutVarAction.makeType(CtxVarTypes.BLOCK_POS));
     public static final RegistryObject<SpellActionType<PutVarAction<Boolean>>> PUT_BOOLEAN = DEFERRED_REGISTER.register("put_boolean", () -> PutVarAction.makeType(CtxVarTypes.BOOLEAN));
     public static final RegistryObject<SpellActionType<PutVarAction<CompoundTag>>> PUT_TAG = DEFERRED_REGISTER.register("put_tag", () -> PutVarAction.makeType(CtxVarTypes.TAG));
     public static final RegistryObject<SpellActionType<PutVarAction<String>>> PUT_STRING = DEFERRED_REGISTER.register("put_string", () -> PutVarAction.makeType(CtxVarTypes.STRING));
@@ -262,12 +260,9 @@ public class SpellActionTypes
         
         UnaryOperation.SQRT.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x) -> x < 0 ? null : Math.sqrt(x));
         
-        UnaryOperation.GET_X.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.x())
-                .register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), (x) -> x.getX());
-        UnaryOperation.GET_Y.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.y())
-                .register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), (x) -> x.getY());
-        UnaryOperation.GET_Z.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.z())
-                .register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), (x) -> x.getZ());
+        UnaryOperation.GET_X.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.x());
+        UnaryOperation.GET_Y.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.y());
+        UnaryOperation.GET_Z.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.z());
         
         UnaryOperation.LENGTH.register(CtxVarTypes.VEC3.get(), CtxVarTypes.DOUBLE.get(), (x) -> x.length());
         UnaryOperation.NORMALIZE.register(CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), (x) -> x.normalize());
@@ -300,13 +295,11 @@ public class SpellActionTypes
         BinaryOperation.EQ.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.equals(y))
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.equals(y))
                 .register(CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.equals(y))
-                .register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.equals(y))
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x == y)
                 .register(CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.equals(y));
         BinaryOperation.NEQ.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> !Objects.equals(x, y))
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> !Objects.equals(x, y))
                 .register(CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> !x.equals(y))
-                .register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> !x.equals(y))
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x != y);
         BinaryOperation.GT.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x > y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x > y);
@@ -324,10 +317,6 @@ public class SpellActionTypes
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> Math.min(x, y));
         BinaryOperation.MAX.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> Math.max(x, y))
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> Math.max(x, y));
-        
-        BinaryOperation.MOVE_X.register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y) -> x.east(y));
-        BinaryOperation.MOVE_Y.register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y) -> x.above(y));
-        BinaryOperation.MOVE_Z.register(CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y) -> x.south(y));
         
         BinaryOperation.NBT_CONTAINS.register(CtxVarTypes.TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x.contains(y));
         BinaryOperation.GET_NBT_INT.register(CtxVarTypes.TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.INT.get(), (x, y) -> x.contains(y, Tag.TAG_ANY_NUMERIC) ? x.getInt(y) : null);
@@ -353,11 +342,9 @@ public class SpellActionTypes
         TernaryOperation.CONDITIONAL.register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y, z) -> x ? y : z)
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y, z) -> x ? y : z)
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), (x, y, z) -> x ? y : z)
-                .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.BLOCK_POS.get(), CtxVarTypes.BLOCK_POS.get(), (x, y, z) -> x ? y : z)
                 .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), (x, y, z) -> x ? y : z);
         
         TernaryOperation.VEC3.register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.VEC3.get(), (x, y, z) -> new Vec3(x, y, z));
-        TernaryOperation.BLOCK_POS.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.BLOCK_POS.get(), (x, y, z) -> new BlockPos(x, y, z));
         
         TernaryOperation.PUT_NBT_INT.register(CtxVarTypes.TAG.get(), CtxVarTypes.STRING.get(), CtxVarTypes.INT.get(), CtxVarTypes.TAG.get(), (x, y, z) -> {
             x.putInt(y, z);

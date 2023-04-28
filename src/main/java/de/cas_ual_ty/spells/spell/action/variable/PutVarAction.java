@@ -11,7 +11,6 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
 
@@ -71,21 +70,6 @@ public class PutVarAction<T> extends SpellAction
     public static PutVarAction<Vec3> makeVec3(Object activation, Vec3 value, Object dst)
     {
         return new PutVarAction<>(SpellActionTypes.PUT_VEC3.get(), activation.toString(), CtxVarTypes.VEC3.get().immediate(value), dst.toString(), CtxVarTypes.VEC3.get());
-    }
-    
-    public static PutVarAction<BlockPos> makeBlockPos(Object activation, DynamicCtxVar<BlockPos> src, Object dst)
-    {
-        return new PutVarAction<>(SpellActionTypes.PUT_BLOCK_POS.get(), activation.toString(), src, dst.toString(), CtxVarTypes.BLOCK_POS.get());
-    }
-    
-    public static PutVarAction<BlockPos> moveBlockPos(Object activation, Object src, Object dst)
-    {
-        return new PutVarAction<>(SpellActionTypes.PUT_BLOCK_POS.get(), activation.toString(), Compiler.compileString(src.toString(), CtxVarTypes.BLOCK_POS.get()), dst.toString(), CtxVarTypes.BLOCK_POS.get());
-    }
-    
-    public static PutVarAction<BlockPos> makeBlockPos(Object activation, BlockPos value, Object dst)
-    {
-        return new PutVarAction<>(SpellActionTypes.PUT_BLOCK_POS.get(), activation.toString(), CtxVarTypes.BLOCK_POS.get().immediate(value), dst.toString(), CtxVarTypes.BLOCK_POS.get());
     }
     
     public static PutVarAction<Boolean> makeBoolean(Object activation, DynamicCtxVar<Boolean> src, Object dst)
