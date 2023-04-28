@@ -92,10 +92,10 @@ public class SelectedSpellWidget extends GuiComponent
             int x = this.x;
             int y = this.y;
             
-            this.blit(poseStack, x, y, 0, titleIcon * FRAME_HEIGHT, w1, FRAME_HEIGHT);
-            this.blit(poseStack, x + w1, y, BAR_WIDTH - w2, titleIcon * FRAME_HEIGHT, w2, FRAME_HEIGHT);
+            blit(poseStack, x, y, 0, titleIcon * FRAME_HEIGHT, w1, FRAME_HEIGHT);
+            blit(poseStack, x + w1, y, BAR_WIDTH - w2, titleIcon * FRAME_HEIGHT, w2, FRAME_HEIGHT);
             
-            this.blit(poseStack, this.x + TITLE_PADDING_LEFT, this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+            blit(poseStack, this.x + TITLE_PADDING_LEFT, this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
             this.font.drawShadow(poseStack, title, (float) (this.x + TITLE_X), (float) (this.y + TITLE_Y), 0xFFFFFFFF);
             
             RenderSystem.setShaderTexture(0, spellTexture.getTexture());

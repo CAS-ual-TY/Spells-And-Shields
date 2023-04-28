@@ -37,7 +37,7 @@ public class ManaClientTooltipComponent extends ManaTooltipComponent implements 
     }
     
     @Override
-    public void renderImage(Font font, int left, int top, PoseStack poseStack, ItemRenderer itemRenderer, int p_194053_)
+    public void renderImage(Font font, int left, int top, PoseStack poseStack, ItemRenderer itemRenderer)
     {
         int v = 0;
         int totalUnits = Mth.ceil(20 / 2F);

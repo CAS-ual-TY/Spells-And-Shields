@@ -4,6 +4,7 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.spell.IEventSpell;
 import de.cas_ual_ty.spells.spell.base.PassiveSpell;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -12,7 +13,7 @@ public class ManaSolesSpell extends PassiveSpell implements IEventSpell
 {
     public void livingHurt(LivingHurtEvent event)
     {
-        if(event.getSource().isFall() && event.getEntity() instanceof Player player)
+        if(event.getSource().is(DamageTypeTags.IS_FALL) && event.getEntity() instanceof Player player)
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {

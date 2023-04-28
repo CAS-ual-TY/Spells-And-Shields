@@ -11,7 +11,6 @@ import de.cas_ual_ty.spells.spell.base.SpellProjectile;
 import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -69,7 +68,7 @@ public class SpitMetalSpell extends HandIngredientSpell implements IProjectileSp
         Entity hit = entityHitResult.getEntity();
         if(hit instanceof LivingEntity livingEntity)
         {
-            livingEntity.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), entity.getSpellDataTag().getFloat("materialDamage"));
+            livingEntity.hurt(livingEntity.damageSources().indirectMagic(entity, entity.getOwner()), entity.getSpellDataTag().getFloat("materialDamage"));
         }
         IProjectileSpell.super.projectileHitEntity(entity, entityHitResult);
     }

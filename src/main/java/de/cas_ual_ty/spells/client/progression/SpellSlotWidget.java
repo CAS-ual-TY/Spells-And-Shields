@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.spell.ISpell;
 import de.cas_ual_ty.spells.spell.base.SpellIcon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -42,17 +43,17 @@ public class SpellSlotWidget extends Button
         if(!active || isMouseOver(mouseX, mouseY))
         {
             // gold frame
-            this.blit(poseStack, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128 + SpellNodeWidget.FRAME_HEIGHT, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            blit(poseStack, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128 + SpellNodeWidget.FRAME_HEIGHT, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
         else
         {
             // white frame
-            this.blit(poseStack, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            blit(poseStack, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
     }
     
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
     {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);

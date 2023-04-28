@@ -20,7 +20,7 @@ public class SpellInteractButton extends Button
     }
     
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
     {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -30,9 +30,8 @@ public class SpellInteractButton extends Button
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        this.blit(poseStack, this.getX(), this.getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
-        this.blit(poseStack, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
-        this.renderBg(poseStack, minecraft, mouseX, mouseY);
+        blit(poseStack, this.getX(), this.getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
+        blit(poseStack, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
         Font font = minecraft.font;
         this.renderTitle(poseStack, mouseX, mouseY, deltaTick, font);
     }

@@ -16,6 +16,7 @@ import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -423,7 +424,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, WINDOW_LOCATION);
-        this.blit(poseStack, offX, offY, 0, 0, GUI_WIDTH, GUI_HEIGHT);
+        blit(poseStack, offX, offY, 0, 0, GUI_WIDTH, GUI_HEIGHT);
         if(this.tabs.size() > 1)
         {
             RenderSystem.setShaderTexture(0, TABS_LOCATION);

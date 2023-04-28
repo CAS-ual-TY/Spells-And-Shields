@@ -9,7 +9,6 @@ import de.cas_ual_ty.spells.util.SpellsFileUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -102,7 +101,7 @@ public class FireBallSpell extends BaseIngredientsSpell implements IProjectileSp
         Entity hit = entityHitResult.getEntity();
         if(hit instanceof LivingEntity livingEntity)
         {
-            livingEntity.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), damage);
+            livingEntity.hurt(livingEntity.level.damageSources().indirectMagic(entity, entity.getOwner()), damage);
             livingEntity.setSecondsOnFire(fireSeconds);
         }
         IProjectileSpell.super.projectileHitEntity(entity, entityHitResult);

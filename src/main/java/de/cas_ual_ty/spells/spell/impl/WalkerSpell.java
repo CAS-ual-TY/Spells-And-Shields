@@ -57,9 +57,9 @@ public class WalkerSpell extends PassiveSpell implements IEventSpell
         if(!level.isClientSide && livingEntity.isOnGround())
         {
             BlockPos pos = livingEntity.blockPosition();
-            double r = Math.min(16, 2 + extraRadius);
+            int r = Math.min(16, 2 + extraRadius);
             
-            for(BlockPos currentPos : BlockPos.betweenClosed(pos.offset(-r, -1D, -r), pos.offset(r, -1D, r)))
+            for(BlockPos currentPos : BlockPos.betweenClosed(pos.offset(-r, -1, -r), pos.offset(r, -1, r)))
             {
                 if(currentPos.closerToCenterThan(livingEntity.position(), r))
                 {

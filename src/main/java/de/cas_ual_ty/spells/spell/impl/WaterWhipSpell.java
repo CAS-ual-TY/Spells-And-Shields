@@ -11,7 +11,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -98,7 +97,7 @@ public class WaterWhipSpell extends HandIngredientSpell implements IReturnProjec
     {
         if(entityHitResult.getEntity() instanceof LivingEntity hit)
         {
-            hit.hurt(DamageSource.indirectMagic(entity, entity.getOwner()), damage);
+            hit.hurt(hit.damageSources().indirectMagic(entity, entity.getOwner()), damage);
         }
         
         entity.discard();

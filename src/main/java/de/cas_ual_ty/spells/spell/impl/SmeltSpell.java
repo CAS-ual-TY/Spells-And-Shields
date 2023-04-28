@@ -34,7 +34,7 @@ public class SmeltSpell extends HandIngredientSpell
         
         if(manaHolder.getPlayer() instanceof Player player && blastingRecipe.isPresent())
         {
-            player.getInventory().placeItemBackInInventory(blastingRecipe.get().getResultItem().copy());
+            player.getInventory().placeItemBackInInventory(blastingRecipe.get().getResultItem(manaHolder.getPlayer().level.registryAccess()).copy());
         }
         
         Vec3 position = manaHolder.getPlayer().position().add(0D, manaHolder.getPlayer().getEyeHeight() * 0.5D, 0D);
