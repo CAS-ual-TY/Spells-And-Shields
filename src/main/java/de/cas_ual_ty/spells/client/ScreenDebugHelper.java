@@ -9,12 +9,9 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ScreenDebugHelper
 {
-    //@SubscribeEvent
     public static void event(ScreenEvent.Render.Post event)
     {
         if(event.getScreen() instanceof AbstractContainerScreen s && (event.getScreen() instanceof InventoryScreen || event.getScreen() instanceof CreativeModeInventoryScreen))

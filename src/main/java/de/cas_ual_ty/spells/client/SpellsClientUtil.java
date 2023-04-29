@@ -69,6 +69,7 @@ public class SpellsClientUtil
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::levelTick);
+        //MinecraftForge.EVENT_BUS.addListener(ScreenDebugHelper::event);
     }
     
     private static void clientSetup(FMLClientSetupEvent event)
