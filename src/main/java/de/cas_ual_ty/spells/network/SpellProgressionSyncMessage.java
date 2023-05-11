@@ -3,11 +3,13 @@ package de.cas_ual_ty.spells.network;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.registers.Spells;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
@@ -48,9 +50,11 @@ public record SpellProgressionSyncMessage(BlockPos blockPos, List<SpellTree> spe
         int size = buf.readInt();
         List<SpellTree> spellTrees = new ArrayList<>(size);
         
+        Registry<Spell> registry = Spells.getRegistry(SpellsUtil.getClientLevel());
+        
         for(int i = 0; i < size; ++i)
         {
-            spellTrees.add(SpellTreeSerializer.decodeTree(Spells.getRegistry(level), buf));
+            spellTrees.add(SpellTreeSerializer.decodeTree(registry, buf));
         }
         
         size = buf.readInt();

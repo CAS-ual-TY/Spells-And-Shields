@@ -4,6 +4,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
@@ -21,7 +22,12 @@ public class Spells
     
     public static Registry<Spell> getRegistry(LevelAccessor level)
     {
-        return level.registryAccess().registryOrThrow(REGISTRY_KEY);
+        return getRegistry(level.registryAccess());
+    }
+    
+    public static Registry<Spell> getRegistry(RegistryAccess access)
+    {
+        return access.registryOrThrow(REGISTRY_KEY);
     }
     
     public static final ResourceLocation DUMMY = rl("dummy");
@@ -354,7 +360,7 @@ public class Spells
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).dataPackRegistry(SpellsCodecs.SPELL_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spells"))
+        REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).dataPackRegistry(SpellsCodecs.SPELL_CONTENTS, SpellsCodecs.SPELL_SYNC).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spells"))
                 .onCreate((registry, stage) -> REGISTRY_KEY = registry.getRegistryKey())
         );
     }

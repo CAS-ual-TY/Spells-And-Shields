@@ -37,9 +37,14 @@ public class Spell
         this.events = events;
     }
     
-    public Spell(SpellIcon icon, Component title, float manaCost)
+    public Spell(SpellIcon icon, Component title, List<Component> tooltip, float manaCost)
     {
         this(new ArrayList<>(), icon, title, new LinkedList<>(), manaCost, new LinkedList<>(), new LinkedList<>());
+    }
+    
+    public Spell(SpellIcon icon, Component title, float manaCost)
+    {
+        this(icon, title, new LinkedList<>(), manaCost);
     }
     
     public Spell(SpellIcon icon, String titleKey, float manaCost)

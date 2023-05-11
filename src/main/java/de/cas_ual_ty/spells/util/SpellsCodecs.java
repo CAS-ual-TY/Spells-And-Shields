@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.util;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
@@ -24,6 +25,8 @@ import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.RegistryFixedCodec;
@@ -55,6 +58,7 @@ public class SpellsCodecs
     public static Codec<SpellTree> SPELL_TREE_CONTENTS;
     
     public static Codec<Spell> SPELL_CONTENTS;
+    public static Codec<Spell> SPELL_SYNC;
     
     public static Codec<Component> COMPONENT; // json only, no NBT support
     public static Codec<Map<String, String>> STRING_MAP;
@@ -103,6 +107,13 @@ public class SpellsCodecs
                 Codec.STRING.listOf().fieldOf("s5/spell_events").forGetter(Spell::getEventsList)
         ).apply(instance, Spell::new)));
         
+        SPELL_SYNC = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
+                ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("s2/icon").forGetter(Spell::getIcon),
+                COMPONENT.fieldOf("s1/title").forGetter(Spell::getTitle),
+                COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(s -> s.getTooltip().isEmpty() ? ImmutableList.of(Component.empty()) : s.getTooltip()),
+                Codec.FLOAT.fieldOf("s3/mana_cost").xmap(f -> Math.max(0, f), f -> Math.max(0, f)).forGetter(Spell::getManaCost)
+        ).apply(instance, Spell::new)));
+        
         COMPONENT = ExtraCodecs.lazyInitializedCodec(() -> new PrimitiveCodec<>()
         {
             @Override
@@ -112,6 +123,11 @@ public class SpellsCodecs
                 {
                     JsonElement input = (JsonElement) input0;
                     return DataResult.success(Component.Serializer.fromJson(input));
+                }
+                else if(ops == NbtOps.INSTANCE || ops instanceof NbtOps)
+                {
+                    StringTag input = (StringTag) input0;
+                    return DataResult.success(Component.Serializer.fromJson(input.getAsString()));
                 }
                 
                 return DataResult.error("Codec only works on JsonOps");
@@ -123,6 +139,10 @@ public class SpellsCodecs
                 if(ops == JsonOps.INSTANCE || ops == JsonOps.COMPRESSED || ops instanceof RegistryOps)
                 {
                     return (T) Component.Serializer.toJsonTree(value);
+                }
+                else if(ops == NbtOps.INSTANCE || ops instanceof NbtOps)
+                {
+                    return (T) StringTag.valueOf(Component.Serializer.toJson(value));
                 }
                 
                 return ops.empty();

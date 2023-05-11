@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +33,12 @@ public class SpellTrees
     
     public static Registry<SpellTree> getRegistry(LevelAccessor level)
     {
-        return level.registryAccess().registryOrThrow(REGISTRY_KEY);
+        return getRegistry(level.registryAccess());
+    }
+    
+    public static Registry<SpellTree> getRegistry(RegistryAccess access)
+    {
+        return access.registryOrThrow(REGISTRY_KEY);
     }
     
     public static final String KEY_NETHER = "spell_tree." + SpellsAndShields.MOD_ID + ".nether";
