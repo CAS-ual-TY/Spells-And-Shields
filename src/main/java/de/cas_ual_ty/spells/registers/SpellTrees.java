@@ -55,7 +55,7 @@ public class SpellTrees
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).dataPackRegistry(SpellsCodecs.SPELL_TREE_CONTENTS).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees"))
+        REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).dataPackRegistry(SpellsCodecs.SPELL_TREE_CONTENTS, SpellsCodecs.SPELL_TREE_SYNC).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees"))
                 .onCreate((registry, stage) -> REGISTRY_KEY = registry.getRegistryKey())
         );
     }

@@ -56,6 +56,7 @@ public class SpellsCodecs
     
     public static Codec<SpellNode> SPELL_NODE;
     public static Codec<SpellTree> SPELL_TREE_CONTENTS;
+    public static Codec<SpellTree> SPELL_TREE_SYNC;
     
     public static Codec<Spell> SPELL_CONTENTS;
     public static Codec<Spell> SPELL_SYNC;
@@ -96,6 +97,8 @@ public class SpellsCodecs
                 COMPONENT.fieldOf("t1/title").forGetter(SpellTree::getTitle),
                 SPELL_ICON.fieldOf("t2/icon").forGetter(SpellTree::getIcon)
         ).apply(instance, SpellTree::new)));
+        
+        SPELL_TREE_SYNC = Codec.unit(() -> new SpellTree());
         
         SPELL_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_ACTION).listOf().fieldOf("s7/spell_actions").forGetter(Spell::getSpellActions),

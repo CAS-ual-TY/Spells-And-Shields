@@ -39,6 +39,8 @@ public class SpellTree
         id = null;
     }
     
+    public SpellTree() {}
+    
     public ResourceLocation getId(Registry<SpellTree> registry)
     {
         return registry.getKey(this);
