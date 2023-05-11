@@ -216,7 +216,7 @@
       "activation": "on_entity_hit",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
-      "sound_event": "minecraft:entity.enderman.scream",
+      "d/string/sound_event": "minecraft:entity.enderman.scream",
       "ts/targets": "owner"
     },
     {
@@ -224,7 +224,7 @@
       "activation": "on_entity_hit",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
-      "sound_event": "minecraft:entity.enderman.scream",
+      "d/string/sound_event": "minecraft:entity.enderman.scream",
       "ts/targets": "entity_hit"
     }
   ]

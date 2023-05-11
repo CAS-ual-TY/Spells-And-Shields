@@ -67,7 +67,7 @@
       "activation": "active",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
-      "sound_event": "minecraft:entity.ender_dragon.flap",
+      "d/string/sound_event": "minecraft:entity.ender_dragon.flap",
       "ts/targets": "owner"
     }
   ]

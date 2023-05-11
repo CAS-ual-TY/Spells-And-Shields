@@ -167,7 +167,7 @@
       "activation": "shoot",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
-      "sound_event": "minecraft:item.bottle.empty",
+      "d/string/sound_event": "minecraft:item.bottle.empty",
       "ts/targets": "owner"
     },
     {

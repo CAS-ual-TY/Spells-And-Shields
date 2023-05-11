@@ -13,9 +13,11 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class PlaySoundAction extends AffectTypeAction<PositionTarget>
 {
@@ -24,18 +26,23 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 multiTargetsCodec(),
-                SoundEvent.CODEC.fieldOf("sound_event").forGetter(PlaySoundAction::getSoundEvent),
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("sound_event")).forGetter(PlaySoundAction::getSoundEvent),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("volume")).forGetter(PlaySoundAction::getVolume),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("pitch")).forGetter(PlaySoundAction::getPitch)
         ).apply(instance, (activation, multiTargets, particle, count, spread) -> new PlaySoundAction(type, activation, multiTargets, particle, count, spread)));
     }
     
-    public static PlaySoundAction make(Object activation, Object multiTargets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
+    public static PlaySoundAction make(Object activation, Object multiTargets, DynamicCtxVar<String> soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
     {
         return new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), activation.toString(), multiTargets.toString(), soundEvent, volume, pitch);
     }
     
-    protected SoundEvent soundEvent;
+    public static PlaySoundAction make(Object activation, Object multiTargets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
+    {
+        return new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), activation.toString(), multiTargets.toString(), SpellsUtil.objectToString(soundEvent, ForgeRegistries.SOUND_EVENTS), volume, pitch);
+    }
+    
+    protected DynamicCtxVar<String> soundEvent;
     protected DynamicCtxVar<Double> volume;
     protected DynamicCtxVar<Double> pitch;
     
@@ -44,7 +51,7 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
         super(type);
     }
     
-    public PlaySoundAction(SpellActionType<?> type, String activation, String multiTargets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
+    public PlaySoundAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<String> soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
     {
         super(type, activation, multiTargets);
         this.soundEvent = soundEvent;
@@ -52,7 +59,7 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
         this.pitch = pitch;
     }
     
-    public SoundEvent getSoundEvent()
+    public DynamicCtxVar<String> getSoundEvent()
     {
         return soundEvent;
     }
@@ -80,19 +87,22 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
         {
             pitch.getValue(ctx).ifPresent(pitch ->
             {
-                if(positionTarget.getLevel() instanceof ServerLevel level)
+                SpellsUtil.stringToObject(ctx, soundEvent, ForgeRegistries.SOUND_EVENTS).ifPresent(soundEvent ->
                 {
-                    level.playSound(
-                            null,
-                            positionTarget.getPosition().x(),
-                            positionTarget.getPosition().y(),
-                            positionTarget.getPosition().z(),
-                            soundEvent,
-                            SoundSource.PLAYERS,
-                            volume.floatValue(),
-                            pitch.floatValue()
-                    );
-                }
+                    if(positionTarget.getLevel() instanceof ServerLevel level)
+                    {
+                        level.playSound(
+                                null,
+                                positionTarget.getPosition().x(),
+                                positionTarget.getPosition().y(),
+                                positionTarget.getPosition().z(),
+                                soundEvent,
+                                SoundSource.PLAYERS,
+                                volume.floatValue(),
+                                pitch.floatValue()
+                        );
+                    }
+                });
             });
         });
     }

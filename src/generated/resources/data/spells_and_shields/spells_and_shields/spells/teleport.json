@@ -146,7 +146,7 @@
       "activation": "teleport",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
-      "sound_event": "minecraft:entity.enderman.teleport",
+      "d/string/sound_event": "minecraft:entity.enderman.teleport",
       "ts/targets": "owner"
     },
     {
@@ -160,7 +160,7 @@
       "activation": "teleport",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
-      "sound_event": "minecraft:entity.enderman.teleport",
+      "d/string/sound_event": "minecraft:entity.enderman.teleport",
       "ts/targets": "owner"
     }
   ]

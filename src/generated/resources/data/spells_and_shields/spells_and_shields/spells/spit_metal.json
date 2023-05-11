@@ -172,7 +172,7 @@
       "activation": "active",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
-      "sound_event": "minecraft:entity.llama.spit",
+      "d/string/sound_event": "minecraft:entity.llama.spit",
       "ts/targets": "owner"
     },
     {

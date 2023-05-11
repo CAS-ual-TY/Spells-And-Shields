@@ -194,7 +194,7 @@
       "activation": "spawn",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
-      "sound_event": "minecraft:entity.chicken.egg",
+      "d/string/sound_event": "minecraft:entity.chicken.egg",
       "ts/targets": "owner"
     }
   ]

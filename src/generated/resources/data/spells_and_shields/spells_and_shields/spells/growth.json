@@ -131,7 +131,7 @@
       "activation": "success",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
-      "sound_event": "minecraft:item.bone_meal.use",
+      "d/string/sound_event": "minecraft:item.bone_meal.use",
       "ts/targets": "owner"
     }
   ]
