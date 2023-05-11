@@ -64,7 +64,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<GetIsCreativeAction>> GET_IS_CREATIVE = DEFERRED_REGISTER.register("get_is_creative", () -> new SpellActionType<>(GetIsCreativeAction::new, GetIsCreativeAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetPositionAction>> GET_POSITION = DEFERRED_REGISTER.register("get_position", () -> new SpellActionType<>(GetPositionAction::new, GetPositionAction::makeCodec));
     
-    // control
+    // control flow
     public static final RegistryObject<SpellActionType<ActivateAction>> ACTIVATE = DEFERRED_REGISTER.register("activate", () -> new SpellActionType<>(ActivateAction::new, ActivateAction::makeCodec));
     public static final RegistryObject<SpellActionType<BooleanActivationAction>> BOOLEAN_ACTIVATION = DEFERRED_REGISTER.register("boolean_activation", () -> new SpellActionType<>(BooleanActivationAction::new, BooleanActivationAction::makeCodec));
     public static final RegistryObject<SpellActionType<BranchAction>> BRANCH = DEFERRED_REGISTER.register("branch", () -> new SpellActionType<>(BranchAction::new, BranchAction::makeCodec));
@@ -126,7 +126,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<UseItemAction>> USE_ITEM = DEFERRED_REGISTER.register("use_item", () -> new SpellActionType<>(UseItemAction::new, UseItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<UseItemOnBlocksAction>> USE_ITEM_ON_BLOCK = DEFERRED_REGISTER.register("use_item_on_block", () -> new SpellActionType<>(UseItemOnBlocksAction::new, UseItemOnBlocksAction::makeCodec));
     
-    // level
+    // level (world)
     public static final RegistryObject<SpellActionType<CubeBlockTargetsAction>> CUBE_BLOCK_TARGETS = DEFERRED_REGISTER.register("cube_block_targets", () -> new SpellActionType<>(CubeBlockTargetsAction::new, CubeBlockTargetsAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetBlockAction>> GET_BLOCK = DEFERRED_REGISTER.register("get_block", () -> new SpellActionType<>(GetBlockAction::new, GetBlockAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetBlockAttributesAction>> GET_BLOCK_ATTRIBUTES = DEFERRED_REGISTER.register("get_block_attributes", () -> new SpellActionType<>(GetBlockAttributesAction::new, GetBlockAttributesAction::makeCodec));
@@ -166,7 +166,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<PutVarAction<CompoundTag>>> PUT_TAG = DEFERRED_REGISTER.register("put_tag", () -> PutVarAction.makeType(CtxVarTypes.TAG));
     public static final RegistryObject<SpellActionType<PutVarAction<String>>> PUT_STRING = DEFERRED_REGISTER.register("put_string", () -> PutVarAction.makeType(CtxVarTypes.STRING));
     
-    // variable / mapped unary
+    // variable / mapped unary functions
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NEGATE = DEFERRED_REGISTER.register("negate", () -> MappedUnaryVarAction.makeType(UnaryOperation.NEGATE));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NOT = DEFERRED_REGISTER.register("not", () -> MappedUnaryVarAction.makeType(UnaryOperation.NOT));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> ROUND = DEFERRED_REGISTER.register("round", () -> MappedUnaryVarAction.makeType(UnaryOperation.ROUND));
@@ -187,7 +187,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> UUID_FROM_STRING = DEFERRED_REGISTER.register("uuid_from_string", () -> MappedUnaryVarAction.makeType(UnaryOperation.UUID_FROM_STRING));
     public static final RegistryObject<SpellActionType<MappedUnaryVarAction>> NEXT_INT = DEFERRED_REGISTER.register("next_int", () -> MappedUnaryVarAction.makeType(UnaryOperation.NEXT_INT));
     
-    // variable / mapped binary
+    // variable / mapped binary functions
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> ADD = DEFERRED_REGISTER.register("add", () -> MappedBinaryVarAction.makeType(BinaryOperation.ADD));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> SUB = DEFERRED_REGISTER.register("sub", () -> MappedBinaryVarAction.makeType(BinaryOperation.SUB));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> MUL = DEFERRED_REGISTER.register("mul", () -> MappedBinaryVarAction.makeType(BinaryOperation.MUL));
@@ -213,7 +213,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_UUID = DEFERRED_REGISTER.register("get_nbt_uuid", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_UUID));
     public static final RegistryObject<SpellActionType<MappedBinaryVarAction>> GET_NBT_VEC3 = DEFERRED_REGISTER.register("get_nbt_vec3", () -> MappedBinaryVarAction.makeType(BinaryOperation.GET_NBT_VEC3));
     
-    // variable / mapped ternary
+    // variable / mapped ternary functions
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> CONDITIONAL = DEFERRED_REGISTER.register("conditional", () -> MappedTernaryVarAction.makeType(TernaryOperation.CONDITIONAL));
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> VEC3 = DEFERRED_REGISTER.register("vec3", () -> MappedTernaryVarAction.makeType(TernaryOperation.VEC3));
     public static final RegistryObject<SpellActionType<MappedTernaryVarAction>> BLOCK_POS = DEFERRED_REGISTER.register("block_pos", () -> MappedTernaryVarAction.makeType(TernaryOperation.BLOCK_POS));
