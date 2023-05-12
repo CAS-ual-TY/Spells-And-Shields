@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTarget>
 {
@@ -112,13 +113,16 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
                     {
                         operation.getValue(ctx).map(SpellsUtil::operationFromString).ifPresent(op ->
                         {
-                            this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresentOrElse(uuid ->
+                            UUID uuid = this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).orElse(null);
+                            
+                            if(uuid != null)
                             {
                                 a.addPermanentModifier(new AttributeModifier(uuid, name, amount, op));
-                            }, () ->
+                            }
+                            else
                             {
                                 a.addPermanentModifier(new AttributeModifier(name, amount, op));
-                            });
+                            }
                         });
                     });
                 });
