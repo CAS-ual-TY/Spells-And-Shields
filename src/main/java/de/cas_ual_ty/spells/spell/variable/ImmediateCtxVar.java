@@ -14,7 +14,7 @@ public class ImmediateCtxVar<T> extends DynamicCtxVar<T>
     {
         super(type);
         imm = value;
-        optional = Optional.of(value);
+        optional = Optional.ofNullable(value);
     }
     
     @Override

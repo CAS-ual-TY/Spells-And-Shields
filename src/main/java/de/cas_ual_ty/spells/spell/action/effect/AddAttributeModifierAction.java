@@ -18,6 +18,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
+
 public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTarget>
 {
     public static Codec<AddAttributeModifierAction> makeCodec(SpellActionType<AddAttributeModifierAction> type)
@@ -26,16 +28,21 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
                 activationCodec(),
                 multiTargetsCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("attribute")).forGetter(AddAttributeModifierAction::getAttribute),
-                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddAttributeModifierAction::getUuid),
+                CtxVarTypes.STRING.get().optionalRefCodec(ParamNames.paramString("uuid")).forGetter(AddAttributeModifierAction::getUuid),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("name")).forGetter(AddAttributeModifierAction::getName),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("amount")).forGetter(AddAttributeModifierAction::getAmount),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("operation")).forGetter(AddAttributeModifierAction::getOperation)
         ).apply(instance, (activation, targets, attribute, uuid, name, amount, operation) -> new AddAttributeModifierAction(type, activation, targets, attribute, uuid, name, amount, operation)));
     }
     
-    public static AddAttributeModifierAction make(Object activation, Object targets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> uuid, DynamicCtxVar<String> name, DynamicCtxVar<Double> amount, DynamicCtxVar<String> operation)
+    public static AddAttributeModifierAction make(Object activation, Object targets, DynamicCtxVar<String> attribute, @Nullable DynamicCtxVar<String> uuid, DynamicCtxVar<String> name, DynamicCtxVar<Double> amount, DynamicCtxVar<String> operation)
     {
         return new AddAttributeModifierAction(SpellActionTypes.ADD_ATTRIBUTE_MODIFIER.get(), activation.toString(), targets.toString(), attribute, uuid, name, amount, operation);
+    }
+    
+    public static AddAttributeModifierAction make(Object activation, Object targets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> name, DynamicCtxVar<Double> amount, DynamicCtxVar<String> operation)
+    {
+        return make(activation, targets, attribute, null, name, amount, operation);
     }
     
     protected DynamicCtxVar<String> attribute;

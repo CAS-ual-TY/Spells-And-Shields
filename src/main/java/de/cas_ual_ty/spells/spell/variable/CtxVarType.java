@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.spell.variable;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.util.ParamNames;
@@ -8,6 +9,7 @@ import de.cas_ual_ty.spells.util.ParamNames;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class CtxVarType<T>
@@ -75,6 +77,16 @@ public class CtxVarType<T>
     public Codec<DynamicCtxVar<T>> refCodec()
     {
         return DynamicCtxVar.makeCodec(this);
+    }
+    
+    public MapCodec<DynamicCtxVar<T>> optionalRefCodec(String field, T replacement)
+    {
+        return Codec.optionalField(field, DynamicCtxVar.makeCodec(this)).xmap(o -> o.orElse(immediate(replacement)), Optional::ofNullable);
+    }
+    
+    public MapCodec<DynamicCtxVar<T>> optionalRefCodec(String field)
+    {
+        return optionalRefCodec(field, null);
     }
     
     public DynamicCtxVar<T> immediate(T value)
