@@ -107,44 +107,41 @@ public class SpawnEntityAction extends SpellAction
         {
             if(entityType != EntityType.PLAYER)
             {
-                ctx.getTargetGroup(this.position).getSingleTarget(target ->
+                ctx.getTargetGroup(this.position).getSingleType(TargetTypes.POSITION.get(), position ->
                 {
-                    TargetTypes.POSITION.get().ifType(target, position ->
+                    Vec3 direction = this.direction.getValue(ctx).orElse(Vec3.ZERO);
+                    Vec3 motion = this.motion.getValue(ctx).orElse(Vec3.ZERO);
+                    Entity entity = entityType.create(ctx.getLevel());
+                    
+                    if(entity != null)
                     {
-                        Vec3 direction = this.direction.getValue(ctx).orElse(Vec3.ZERO);
-                        Vec3 motion = this.motion.getValue(ctx).orElse(Vec3.ZERO);
-                        Entity entity = entityType.create(ctx.getLevel());
-                        
-                        if(entity != null)
+                        this.tag.getValue(ctx).ifPresent(tag0 ->
                         {
-                            this.tag.getValue(ctx).ifPresent(tag0 ->
+                            CompoundTag tag = entity.saveWithoutId(new CompoundTag());
+                            for(String key : tag0.getAllKeys())
                             {
-                                CompoundTag tag = entity.saveWithoutId(new CompoundTag());
-                                for(String key : tag0.getAllKeys())
-                                {
-                                    Tag t = tag0.get(key);
-                                    
-                                    if(t != null)
-                                    {
-                                        tag.put(key, t);
-                                    }
-                                }
+                                Tag t = tag0.get(key);
                                 
-                                entity.load(tag);
-                            });
+                                if(t != null)
+                                {
+                                    tag.put(key, t);
+                                }
+                            }
                             
-                            entity.setPos(position.getPosition());
-                            
-                            // TODO doesnt quite work
-                            entity.setYRot((float) (Mth.atan2(direction.x, direction.z) * (double) (180F / (float) Math.PI)));
-                            entity.setXRot((float) (Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI)));
-                            
-                            entity.setDeltaMovement(motion);
-                            
-                            ctx.getLevel().addFreshEntity(entity);
-                            ctx.getOrCreateTargetGroup(this.entity).addTargets(Target.of(entity));
-                        }
-                    });
+                            entity.load(tag);
+                        });
+                        
+                        entity.setPos(position.getPosition());
+                        
+                        // TODO doesnt quite work
+                        entity.setYRot((float) (Mth.atan2(direction.x, direction.z) * (double) (180F / (float) Math.PI)));
+                        entity.setXRot((float) (Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI)));
+                        
+                        entity.setDeltaMovement(motion);
+                        
+                        ctx.getLevel().addFreshEntity(entity);
+                        ctx.getOrCreateTargetGroup(this.entity).addTargets(Target.of(entity));
+                    }
                 });
             }
         });

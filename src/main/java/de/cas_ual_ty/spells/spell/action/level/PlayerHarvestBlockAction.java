@@ -75,7 +75,7 @@ public class PlayerHarvestBlockAction extends AffectSingleTypeAction<PlayerTarge
         {
             Level level = ctx.level;
             
-            ctx.getTargetGroup(blocks).forEachTarget(target -> TargetTypes.POSITION.get().ifType(target, positionTarget ->
+            ctx.getTargetGroup(blocks).forEachType(TargetTypes.POSITION.get(), positionTarget ->
             {
                 BlockPos pos = positionTarget.getBlockPos();
                 BlockState block = level.getBlockState(pos);
@@ -91,7 +91,7 @@ public class PlayerHarvestBlockAction extends AffectSingleTypeAction<PlayerTarge
                 {
                     player.gameMode.destroyBlock(pos);
                 }
-            }));
+            });
         }
     }
 }

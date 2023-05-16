@@ -29,7 +29,7 @@ public abstract class AffectAction extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
-        ctx.forTargetGroup(targets, targetGroup -> targetGroup.forEachTarget(t -> affectTarget(ctx, targetGroup, t)));
+        ctx.forTargetGroup(targets, targetGroup -> targetGroup.forEachTargetSafe(t -> affectTarget(ctx, targetGroup, t)));
     }
     
     public abstract void affectTarget(SpellContext ctx, TargetGroup group, Target t);

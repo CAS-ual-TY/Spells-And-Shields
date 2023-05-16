@@ -44,7 +44,7 @@ public class MovePlayerTargetsAction extends SrcDstTargetAction
     {
         List<Target> list = new LinkedList<>();
         
-        source.forEachTarget(target ->
+        source.forEachTargetSafe(target ->
         {
             if(TargetTypes.PLAYER.get().isType(target))
             {

@@ -85,13 +85,10 @@ public class UseItemOnBlocksAction extends AffectSingleTypeAction<PlayerTarget>
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
-        ctx.getTargetGroup(blocks).forEachTarget(t ->
+        ctx.getTargetGroup(blocks).forEachType(TargetTypes.POSITION.get(), positionTarget ->
         {
-            TargetTypes.POSITION.get().ifType(t, positionTarget ->
-            {
-                ItemStack item = this.item.copy();
-                item.useOn(new UseOnContext(ctx.level, null, offhand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, item, new BlockHitResult(positionTarget.getPosition(), direction, positionTarget.getBlockPos(), false)));
-            });
+            ItemStack item = this.item.copy();
+            item.useOn(new UseOnContext(ctx.level, null, offhand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, item, new BlockHitResult(positionTarget.getPosition(), direction, positionTarget.getBlockPos(), false)));
         });
     }
 }

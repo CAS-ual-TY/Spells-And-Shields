@@ -54,19 +54,19 @@ public class RangedEntityTargetsAction extends SrcDstTargetAction
     @Override
     public void findTargets(SpellContext ctx, TargetGroup source, TargetGroup destination)
     {
-        source.getSingleTarget(target -> TargetTypes.POSITION.get().ifType(target, position ->
+        source.getSingleType(TargetTypes.POSITION.get(), position ->
         {
             range.getValue(ctx).ifPresent(range ->
             {
                 if(ctx.level instanceof ServerLevel level)
                 {
                     range = range * 2;
-                    Entity entity = TargetTypes.ENTITY.get().ifType(target).map(EntityTarget::getEntity).orElse(null);
+                    Entity entity = TargetTypes.ENTITY.get().ifType(position).map(EntityTarget::getEntity).orElse(null);
                     level.getEntities(entity, AABB.ofSize(position.getPosition(), range, range, range)).stream()
                             .map(Target::of)
                             .forEach(destination::addTargets);
                 }
             });
-        }));
+        });
     }
 }

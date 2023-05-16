@@ -107,20 +107,17 @@ public class HomeAction extends AffectSingleTypeAction<PositionTarget>
         {
             timeout.getValue(ctx).ifPresent(timeout ->
             {
-                ctx.getTargetGroup(target).forEachTarget(target1 ->
+                ctx.getTargetGroup(target).forEachTypeSafe(TargetTypes.ENTITY.get(), target ->
                 {
-                    TargetTypes.ENTITY.get().ifType(target1, target ->
+                    HomingSpellProjectile e = HomingSpellProjectile.home(ctx.level, source1.getPosition(), null, target.getEntity(), ctx.spell, velocity.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+                    if(e != null)
                     {
-                        HomingSpellProjectile e = HomingSpellProjectile.home(ctx.level, source1.getPosition(), null, target.getEntity(), ctx.spell, velocity.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation);
-                        if(e != null)
+                        ctx.getOrCreateTargetGroup(projectileDestination).addTargets(Target.of(e));
+                        TargetTypes.ENTITY.get().ifType(source1, source ->
                         {
-                            ctx.getOrCreateTargetGroup(projectileDestination).addTargets(Target.of(e));
-                            TargetTypes.ENTITY.get().ifType(source1, source ->
-                            {
-                                e.setOwner(source.getEntity());
-                            });
-                        }
-                    });
+                            e.setOwner(source.getEntity());
+                        });
+                    }
                 });
             });
         });

@@ -68,12 +68,9 @@ public class SourcedDamageAction extends AffectTypeAction<LivingEntityTarget>
     {
         damage.getValue(ctx).ifPresent(damage ->
         {
-            ctx.getTargetGroup(source).getSingleTarget(source ->
+            ctx.getTargetGroup(source).getSingleType(TargetTypes.ENTITY.get(), entityTarget ->
             {
-                TargetTypes.ENTITY.get().ifType(source, entityTarget ->
-                {
-                    target.getLivingEntity().hurt(DamageSource.indirectMagic(entityTarget.getEntity(), null), damage.floatValue());
-                });
+                target.getLivingEntity().hurt(DamageSource.indirectMagic(entityTarget.getEntity(), null), damage.floatValue());
             });
         });
     }

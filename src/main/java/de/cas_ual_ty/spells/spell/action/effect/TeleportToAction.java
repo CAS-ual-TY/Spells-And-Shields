@@ -56,10 +56,10 @@ public class TeleportToAction extends AffectTypeAction<EntityTarget>
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, EntityTarget target)
     {
-        ctx.getTargetGroup(position).getSingleTarget(t -> TargetTypes.POSITION.get().ifType(t, position ->
+        ctx.getTargetGroup(position).getSingleType(TargetTypes.POSITION.get(), position ->
         {
             Vec3 pos = position.getPosition();
             target.getEntity().teleportTo(pos.x, pos.y, pos.z);
-        }));
+        });
     }
 }

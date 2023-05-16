@@ -50,7 +50,7 @@ public abstract class AffectTypeAction<T extends Target> extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
-        ctx.forTargetGroup(multiTargets, targetGroup -> targetGroup.forEachType(getAffectedType(), t -> affectTarget(ctx, targetGroup, getAffectedType().asType(t))));
+        ctx.forTargetGroup(multiTargets, targetGroup -> targetGroup.forEachTypeSafe(getAffectedType(), t -> affectTarget(ctx, targetGroup, getAffectedType().asType(t))));
     }
     
     public abstract void affectTarget(SpellContext ctx, TargetGroup group, T t);

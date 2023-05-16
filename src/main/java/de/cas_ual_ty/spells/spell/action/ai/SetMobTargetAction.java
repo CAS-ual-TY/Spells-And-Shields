@@ -56,15 +56,12 @@ public class SetMobTargetAction extends AffectSingleTypeAction<LivingEntityTarge
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget target)
     {
-        ctx.getTargetGroup(mobs).forEachTarget(t ->
+        ctx.getTargetGroup(mobs).forEachType(TargetTypes.LIVING_ENTITY.get(), mob ->
         {
-            TargetTypes.LIVING_ENTITY.get().ifType(t, mob ->
+            if(mob.getLivingEntity() instanceof Mob mob1)
             {
-                if(mob.getLivingEntity() instanceof Mob mob1)
-                {
-                    mob1.setTarget(target.getLivingEntity());
-                }
-            });
+                mob1.setTarget(target.getLivingEntity());
+            }
         });
     }
 }

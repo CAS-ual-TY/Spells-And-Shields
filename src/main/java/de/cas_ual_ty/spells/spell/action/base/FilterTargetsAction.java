@@ -22,6 +22,11 @@ public abstract class FilterTargetsAction extends SrcDstTargetAction
     @Override
     public void findTargets(SpellContext ctx, TargetGroup source, TargetGroup destination)
     {
+        if(source == destination)
+        {
+            return;
+        }
+        
         source.forEachTarget(t ->
         {
             if(acceptTarget(ctx, t))

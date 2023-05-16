@@ -29,9 +29,26 @@ public class TargetGroup
         targetsList.forEach(consumer);
     }
     
+    public void forEachTargetSafe(Consumer<Target> consumer)
+    {
+        List<Target> copy = new ArrayList<>(targetsList);
+        copy.forEach(consumer);
+    }
+    
     public <T extends Target> void forEachType(ITargetType<T> type, Consumer<T> consumer)
     {
         forEachTarget(target ->
+        {
+            if(type.isType(target))
+            {
+                consumer.accept(type.asType(target));
+            }
+        });
+    }
+    
+    public <T extends Target> void forEachTypeSafe(ITargetType<T> type, Consumer<T> consumer)
+    {
+        forEachTargetSafe(target ->
         {
             if(type.isType(target))
             {
@@ -80,6 +97,17 @@ public class TargetGroup
         if(isSingleTarget())
         {
             consumer.accept(targetsList.get(0));
+        }
+    }
+    
+    public <T extends Target> void getSingleType(ITargetType<T> type, Consumer<T> consumer)
+    {
+        if(isSingleTarget())
+        {
+            if(type.isType(targetsList.get(0)))
+            {
+                consumer.accept(type.asType(targetsList.get(0)));
+            }
         }
     }
     
