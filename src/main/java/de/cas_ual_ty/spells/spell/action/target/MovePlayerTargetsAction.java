@@ -56,7 +56,7 @@ public class MovePlayerTargetsAction extends SrcDstTargetAction
             }
         });
         
-        destination.clear();
-        destination.addTargets(list);
+        source.clear();
+        source.addTargets(list);
     }
 }
