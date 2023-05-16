@@ -20,6 +20,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
+
 public class SpawnEntityAction extends SpellAction
 {
     public static Codec<SpawnEntityAction> makeCodec(SpellActionType<SpawnEntityAction> type)
@@ -31,13 +33,18 @@ public class SpawnEntityAction extends SpellAction
                 Codec.STRING.fieldOf(ParamNames.singleTarget("position")).forGetter(SpawnEntityAction::getPosition),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("direction")).forGetter(SpawnEntityAction::getDirection),
                 CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("motion")).forGetter(SpawnEntityAction::getMotion),
-                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(SpawnEntityAction::getTag)
+                CtxVarTypes.TAG.get().optionalRefCodec(ParamNames.paramCompoundTag("tag")).forGetter(SpawnEntityAction::getTag)
         ).apply(instance, (activation, entity, entityType, position, direction, motion, tag) -> new SpawnEntityAction(type, activation, entity, entityType, position, direction, motion, tag)));
     }
     
-    public static SpawnEntityAction make(Object activation, String entity, DynamicCtxVar<String> entityType, Object position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, DynamicCtxVar<CompoundTag> tag)
+    public static SpawnEntityAction make(Object activation, String entity, DynamicCtxVar<String> entityType, Object position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion, @Nullable DynamicCtxVar<CompoundTag> tag)
     {
         return new SpawnEntityAction(SpellActionTypes.SPAWN_ENTITY.get(), activation.toString(), entity, entityType, position.toString(), direction, motion, tag);
+    }
+    
+    public static SpawnEntityAction make(Object activation, String entity, DynamicCtxVar<String> entityType, Object position, DynamicCtxVar<Vec3> direction, DynamicCtxVar<Vec3> motion)
+    {
+        return make(activation, entity, entityType, position, direction, motion, null);
     }
     
     protected String entity;
@@ -110,14 +117,6 @@ public class SpawnEntityAction extends SpellAction
                         
                         if(entity != null)
                         {
-                            entity.setPos(position.getPosition());
-                            
-                            // doesnt quite work
-                            entity.setYRot((float) (Mth.atan2(direction.x, direction.z) * (double) (180F / (float) Math.PI)));
-                            entity.setXRot((float) (Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI)));
-                            
-                            entity.setDeltaMovement(motion);
-                            
                             this.tag.getValue(ctx).ifPresent(tag0 ->
                             {
                                 CompoundTag tag = entity.saveWithoutId(new CompoundTag());
@@ -133,6 +132,14 @@ public class SpawnEntityAction extends SpellAction
                                 
                                 entity.load(tag);
                             });
+                            
+                            entity.setPos(position.getPosition());
+                            
+                            // TODO doesnt quite work
+                            entity.setYRot((float) (Mth.atan2(direction.x, direction.z) * (double) (180F / (float) Math.PI)));
+                            entity.setXRot((float) (Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI)));
+                            
+                            entity.setDeltaMovement(motion);
                             
                             ctx.getLevel().addFreshEntity(entity);
                             ctx.getOrCreateTargetGroup(this.entity).addTargets(Target.of(entity));
