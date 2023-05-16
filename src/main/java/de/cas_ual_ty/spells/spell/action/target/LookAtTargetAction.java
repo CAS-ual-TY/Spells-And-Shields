@@ -21,6 +21,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
+import java.util.Optional;
+
 public class LookAtTargetAction extends AffectSingleTypeAction<EntityTarget>
 {
     public static Codec<LookAtTargetAction> makeCodec(SpellActionType<LookAtTargetAction> type)
@@ -29,9 +31,9 @@ public class LookAtTargetAction extends AffectSingleTypeAction<EntityTarget>
                 activationCodec(),
                 sourceCodec(),
                 CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("range")).forGetter(LookAtTargetAction::getRange),
-                Codec.FLOAT.fieldOf(ParamNames.paramDoubleImm("bb_inflation")).forGetter(LookAtTargetAction::getBbInflation),
-                SpellsUtil.namedEnumCodec(SpellsUtil::blockFromString, SpellsUtil::blockToString).fieldOf("block_clip_context").forGetter(LookAtTargetAction::getBlock),
-                SpellsUtil.namedEnumCodec(SpellsUtil::fluidFromString, SpellsUtil::fluidToString).fieldOf("fluid_clip_context").forGetter(LookAtTargetAction::getFluid),
+                Codec.optionalField(ParamNames.paramDoubleImm("bb_inflation"), Codec.FLOAT).xmap(o -> o.orElse(0F), Optional::of).forGetter(LookAtTargetAction::getBbInflation),
+                Codec.optionalField("block_clip_context", SpellsUtil.namedEnumCodec(SpellsUtil::blockFromString, SpellsUtil::blockToString)).xmap(o -> o.orElse(ClipContext.Block.COLLIDER), Optional::ofNullable).forGetter(LookAtTargetAction::getBlock),
+                Codec.optionalField("fluid_clip_context", SpellsUtil.namedEnumCodec(SpellsUtil::fluidFromString, SpellsUtil::fluidToString)).xmap(o -> o.orElse(ClipContext.Fluid.NONE), Optional::ofNullable).forGetter(LookAtTargetAction::getFluid),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("block_hit_activation")).forGetter(LookAtTargetAction::getBlockHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("entity_hit_activation")).forGetter(LookAtTargetAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.interactedActivation("miss_activation")).forGetter(LookAtTargetAction::getMissActivation)
