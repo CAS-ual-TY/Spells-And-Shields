@@ -5,7 +5,6 @@ public enum BuiltinEvents
     ACTIVE("active"),
     ON_EQUIP("on_equip"),
     ON_UNEQUIP("on_unequip"),
-    PLAYER_BREAK_SPEED("player_break_speed"),
     LIVING_HURT("living_hurt");
     
     public final String activation;

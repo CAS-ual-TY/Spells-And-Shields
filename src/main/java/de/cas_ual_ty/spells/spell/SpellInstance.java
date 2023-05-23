@@ -133,7 +133,7 @@ public class SpellInstance
     
     public boolean run(Level level, @Nullable Player owner, String activation, boolean force, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)
     {
-        if(spell.get().getEventsList().contains(activation) || force)
+        if((spell.get().getEventsList().contains(activation) || force) && !level.isClientSide)
         {
             SpellContext ctx = initializeContext(level, owner, activation);
             preRun.accept(ctx);

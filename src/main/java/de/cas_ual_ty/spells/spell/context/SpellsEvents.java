@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 
@@ -29,18 +28,13 @@ public class SpellsEvents
     
     public static void registerEvents()
     {
-        register(BuiltinEvents.PLAYER_BREAK_SPEED.activation, PlayerEvent.BreakSpeed.class, true)
-                .addTargetLink(e -> e.getPosition().map(pos -> Target.of(e.getEntity().level, pos)).orElse(null), "block_position")
-                .addVariableLink(e -> (double) e.getOriginalSpeed(), CtxVarTypes.DOUBLE, "original_speed")
-                .addVariableLink(e -> (double) e.getNewSpeed(), (e, c) -> e.setNewSpeed(c.floatValue()), CtxVarTypes.DOUBLE, "new_speed");
-        
-        register(BuiltinEvents.LIVING_HURT.activation, LivingHurtEvent.class, false)
+        register(BuiltinEvents.LIVING_HURT.activation, LivingHurtEvent.class)
                 //TODO source player/entity
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
     }
     
-    public static <E extends EntityEvent> RegisteredEvent<E> register(String eventId, Class<E> eventClass, boolean includeClient)
+    public static <E extends EntityEvent> RegisteredEvent<E> register(String eventId, Class<E> eventClass)
     {
         RegisteredEvent<E> registeredEvent = new RegisteredEvent<>(eventId, eventClass);
         NAME_TO_ENTRY.put(eventId, registeredEvent);
@@ -70,7 +64,7 @@ public class SpellsEvents
                 delayedSpellHolder.activateEvent(eventId, toContext, fromContext);
             });
             
-            if(event.getEntity() instanceof Player player && (includeClient || !event.getEntity().level.isClientSide))
+            if(event.getEntity() instanceof Player player && !event.getEntity().level.isClientSide)
             {
                 SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
                 {
