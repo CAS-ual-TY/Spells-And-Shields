@@ -9,6 +9,7 @@ import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -28,6 +29,11 @@ public class SpellsEvents
     
     public static void registerEvents()
     {
+        register(BuiltinEvents.LIVING_ATTACK.activation, LivingAttackEvent.class)
+                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "damage_source")
+                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
+                .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
+        
         register(BuiltinEvents.LIVING_HURT.activation, LivingHurtEvent.class)
                 //TODO source player/entity
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
