@@ -300,7 +300,8 @@ public class SpellActionTypes
         BinaryOperation.NEQ.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> !Objects.equals(x, y))
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> !Objects.equals(x, y))
                 .register(CtxVarTypes.VEC3.get(), CtxVarTypes.VEC3.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> !x.equals(y))
-                .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x != y);
+                .register(CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x != y)
+                .register(CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> !x.equals(y));
         BinaryOperation.GT.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x > y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x > y);
         BinaryOperation.GEQ.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.BOOLEAN.get(), (x, y) -> x >= y)
