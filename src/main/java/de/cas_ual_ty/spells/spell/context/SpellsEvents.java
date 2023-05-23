@@ -35,7 +35,7 @@ public class SpellsEvents
                 .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
         
         register(BuiltinEvents.LIVING_HURT.activation, LivingHurtEvent.class)
-                //TODO source player/entity
+                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "damage_source")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
     }
