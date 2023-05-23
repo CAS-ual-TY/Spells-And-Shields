@@ -781,17 +781,6 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_WATER_LEAP_DESC))
         );
         
-        ResourceLocation hasteRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.DIG_SPEED);
-        ResourceLocation waterBreathingRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.WATER_BREATHING);
-        addSpell(Spells.PERMANENT_AQUA_AFFINITY, new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(hasteRL.getNamespace(), "textures/mob_effect/" + hasteRL.getPath() + ".png")), DefaultSpellIcon.make(new ResourceLocation(waterBreathingRL.getNamespace(), "textures/mob_effect/" + waterBreathingRL.getPath() + ".png")))), Spells.KEY_PERMANENT_AQUA_AFFINITY, 0F)
-                .addAction(GetEntityEyePositionAction.make(PLAYER_BREAK_SPEED, OWNER, "eye_pos"))
-                .addAction(GetBlockAction.make(PLAYER_BREAK_SPEED, "eye_pos", "block_type", "", ""))
-                .addAction(BooleanActivationAction.make(PLAYER_BREAK_SPEED, "boost", Compiler.compileString(" block_type == '" + ForgeRegistries.BLOCKS.getKey(Blocks.WATER) + "' ", BOOLEAN), TRUE, TRUE))
-                .addAction(PutVarAction.makeDouble("boost", Compiler.compileString(" new_speed * 5 ", DOUBLE), "new_speed"))
-                .addEventHook(PLAYER_BREAK_SPEED)
-                .addTooltip(Component.translatable(Spells.KEY_PERMANENT_AQUA_AFFINITY_DESC))
-        );
-        
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
                 .addParameter(DOUBLE, "damage", 10.0)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
