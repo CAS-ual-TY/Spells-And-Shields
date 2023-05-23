@@ -73,6 +73,10 @@ public class Spells
     public static final String KEY_WATER_LEAP = key(WATER_LEAP);
     public static final String KEY_WATER_LEAP_DESC = descKey(WATER_LEAP);
     
+    public static final ResourceLocation PERMANENT_AQUA_RESISTANCE = rl("permanent_aqua_resistance");
+    public static final String KEY_PERMANENT_AQUA_RESISTANCE = key(PERMANENT_AQUA_RESISTANCE);
+    public static final String KEY_PERMANENT_AQUA_RESISTANCE_DESC = descKey(PERMANENT_AQUA_RESISTANCE);
+    
     //TODO fx
     public static final ResourceLocation WATER_WHIP = rl("water_whip");
     public static final String KEY_WATER_WHIP = key(WATER_WHIP);

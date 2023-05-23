@@ -40,7 +40,7 @@
             "n9/child_nodes": []
           },
           {
-            "n1/spell_id": "spells_and_shields:dummy",
+            "n1/spell_id": "spells_and_shields:permanent_aqua_resistance",
             "n2/node_id": 257,
             "n4/level_cost": 20,
             "n6/learn_requirements": [

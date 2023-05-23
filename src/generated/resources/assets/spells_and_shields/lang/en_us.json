@@ -130,6 +130,8 @@
   "spell.spells_and_shields.mana_boost.desc": "Increases your maximum mana.",
   "spell.spells_and_shields.mana_soles": "Mana Soles",
   "spell.spells_and_shields.mana_soles.desc": "Consumes mana to reduce or cancel fall damage.",
+  "spell.spells_and_shields.permanent_aqua_resistance": "Perm. Aqua Resistance",
+  "spell.spells_and_shields.permanent_aqua_resistance.desc": "Take less damage from most mobs while underwater.",
   "spell.spells_and_shields.permanent_conduit_power": "Perm. %s",
   "spell.spells_and_shields.permanent_conduit_power.desc": "Applies the %s effect while this spell is equipped.",
   "spell.spells_and_shields.permanent_dolphins_grace": "Perm. %s",

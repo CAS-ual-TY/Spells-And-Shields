@@ -95,7 +95,7 @@ public class SpellTrees
                 .add(spellGetter.apply(Spells.TOGGLE_REGENERATION)).levelCost(20).learnRequirements(bookshelves(20))
                 .add(spellGetter.apply(Spells.GROWTH)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
-                .add(spellGetter.apply(Spells.DUMMY)).levelCost(20).learnRequirements(bookshelves(20))
+                .add(spellGetter.apply(Spells.PERMANENT_AQUA_RESISTANCE)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.WATER_LEAP)).levelCost(5).learnRequirements(bookshelves(10))

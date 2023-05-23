@@ -781,6 +781,19 @@ public class SpellsGen implements DataProvider
                 .addTooltip(Component.translatable(Spells.KEY_WATER_LEAP_DESC))
         );
         
+        ResourceLocation resistanceRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.DAMAGE_RESISTANCE);
+        ResourceLocation waterBreathingRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.WATER_BREATHING);
+        addSpell(Spells.PERMANENT_AQUA_RESISTANCE, new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(resistanceRL.getNamespace(), "textures/mob_effect/" + resistanceRL.getPath() + ".png")), DefaultSpellIcon.make(new ResourceLocation(waterBreathingRL.getNamespace(), "textures/mob_effect/" + waterBreathingRL.getPath() + ".png")))), Spells.KEY_PERMANENT_AQUA_RESISTANCE, 0F)
+                .addAction(ConditionalDeactivationAction.make(LIVING_HURT, Compiler.compileString(" damage_type == 'mob' ", BOOLEAN)))
+                .addAction(GetEntityEyePositionAction.make(LIVING_HURT, OWNER, "eye_pos"))
+                .addAction(GetFluidAction.make(LIVING_HURT, "eye_pos", "fluid_type", "", "", ""))
+                .addAction(ConditionalDeactivationAction.make(LIVING_HURT, Compiler.compileString(" fluid_type == '" + ForgeRegistries.FLUID_TYPES.get().getKey(Fluids.WATER.getFluidType()) + "' ", BOOLEAN)))
+                .addAction(PutVarAction.makeDouble(LIVING_HURT, Compiler.compileString(" damage_amount * factor ", DOUBLE), "damage_amount"))
+                .addParameter(DOUBLE, "factor", 0.75D)
+                .addEventHook(LIVING_HURT)
+                .addTooltip(Component.translatable(Spells.KEY_PERMANENT_AQUA_RESISTANCE_DESC))
+        );
+        
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
                 .addParameter(DOUBLE, "damage", 10.0)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
