@@ -6,18 +6,18 @@ import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -29,63 +29,91 @@ public class SpellsEvents
     
     public static void registerEvents()
     {
-        register(BuiltinEvents.LIVING_ATTACK_VICTIM.activation, LivingAttackEvent.class)
-                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "damage_source")
+        register(BuiltinEvents.LIVING_ATTACK_ATTACKER.activation, LivingAttackEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
+                .addTargetLink(e -> Target.of(e.getEntity()), "victim")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
         
+        register(BuiltinEvents.LIVING_ATTACK_VICTIM.activation, LivingAttackEvent.class)
+                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "attacker")
+                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
+                .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
+        
+        register(BuiltinEvents.LIVING_HURT_ATTACKER.activation, LivingHurtEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
+                .addTargetLink(e -> Target.of(e.getEntity()), "victim")
+                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
+                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
+        
         register(BuiltinEvents.LIVING_HURT_VICTIM.activation, LivingHurtEvent.class)
-                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "damage_source")
+                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "attacker")
+                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
+                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
+        
+        register(BuiltinEvents.LIVING_DAMAGE_ATTACKER.activation, LivingDamageEvent.class)
+                .addTargetLink(e -> Target.of(e.getEntity()), "victim")
+                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
+                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
+        
+        register(BuiltinEvents.LIVING_DAMAGE_VICTIM.activation, LivingDamageEvent.class)
+                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
     }
     
-    public static <E extends EntityEvent> RegisteredEvent<E> register(String eventId, Class<E> eventClass)
+    public static <E extends Event> RegisteredEvent<E> register(String eventId, Class<E> eventClass, Function<E, Optional<Entity>> playerGetter)
     {
         RegisteredEvent<E> registeredEvent = new RegisteredEvent<>(eventId, eventClass);
         NAME_TO_ENTRY.put(eventId, registeredEvent);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, true, eventClass, event ->
         {
-            Consumer<SpellContext> toContext = ctx ->
+            playerGetter.apply(event).ifPresent(entity ->
             {
-                if(event.isCancelable())
+                Consumer<SpellContext> toContext = ctx ->
                 {
-                    ctx.setCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name, event.isCanceled());
-                }
-                registeredEvent.getTargetLinks().forEach(link -> link.toContext(ctx, event));
-                registeredEvent.getVariableLinks().forEach(link -> link.toContext(ctx, event));
-            };
-            
-            Consumer<SpellContext> fromContext = ctx ->
-            {
-                if(event.isCancelable())
-                {
-                    ctx.getCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name).ifPresent(event::setCanceled);
-                }
-                registeredEvent.getVariableLinks().forEach(link -> link.fromContext(ctx, event));
-            };
-            
-            DelayedSpellHolder.getHolder(event.getEntity()).ifPresent(delayedSpellHolder ->
-            {
-                delayedSpellHolder.activateEvent(eventId, toContext, fromContext);
-            });
-            
-            if(event.getEntity() instanceof Player player && !event.getEntity().level.isClientSide)
-            {
-                SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
-                {
-                    for(int i = 0; i < spellHolder.getSlots(); i++)
+                    if(event.isCancelable())
                     {
-                        SpellInstance spell = spellHolder.getSpell(i);
-                        if(spell != null)
-                        {
-                            spell.run(player, eventId, toContext, fromContext);
-                        }
+                        ctx.setCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name, event.isCanceled());
                     }
+                    registeredEvent.getTargetLinks().forEach(link -> link.toContext(ctx, event));
+                    registeredEvent.getVariableLinks().forEach(link -> link.toContext(ctx, event));
+                };
+                
+                Consumer<SpellContext> fromContext = ctx ->
+                {
+                    if(event.isCancelable())
+                    {
+                        ctx.getCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name).ifPresent(event::setCanceled);
+                    }
+                    registeredEvent.getVariableLinks().forEach(link -> link.fromContext(ctx, event));
+                };
+                
+                DelayedSpellHolder.getHolder(entity).ifPresent(delayedSpellHolder ->
+                {
+                    delayedSpellHolder.activateEvent(eventId, toContext, fromContext);
                 });
-            }
+                
+                if(entity instanceof Player player && !entity.level.isClientSide)
+                {
+                    SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
+                    {
+                        for(int i = 0; i < spellHolder.getSlots(); i++)
+                        {
+                            SpellInstance spell = spellHolder.getSpell(i);
+                            if(spell != null)
+                            {
+                                spell.run(player, eventId, toContext, fromContext);
+                            }
+                        }
+                    });
+                }
+            });
         });
         return registeredEvent;
+    }
+    
+    public static <E extends EntityEvent> RegisteredEvent<E> register(String eventId, Class<E> eventClass)
+    {
+        return register(eventId, eventClass, event -> Optional.of(event.getEntity()));
     }
     
     private static class RegisteredEvent<E extends Event>
