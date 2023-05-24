@@ -784,13 +784,13 @@ public class SpellsGen implements DataProvider
         ResourceLocation resistanceRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.DAMAGE_RESISTANCE);
         ResourceLocation waterBreathingRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.WATER_BREATHING);
         addSpell(Spells.PERMANENT_AQUA_RESISTANCE, new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(resistanceRL.getNamespace(), "textures/mob_effect/" + resistanceRL.getPath() + ".png")), DefaultSpellIcon.make(new ResourceLocation(waterBreathingRL.getNamespace(), "textures/mob_effect/" + waterBreathingRL.getPath() + ".png")))), Spells.KEY_PERMANENT_AQUA_RESISTANCE, 0F)
-                .addAction(ConditionalDeactivationAction.make(LIVING_HURT, Compiler.compileString(" damage_type == 'mob' ", BOOLEAN)))
-                .addAction(GetEntityEyePositionAction.make(LIVING_HURT, OWNER, "eye_pos"))
-                .addAction(GetFluidAction.make(LIVING_HURT, "eye_pos", "fluid_type", "", "", ""))
-                .addAction(ConditionalDeactivationAction.make(LIVING_HURT, Compiler.compileString(" fluid_type == '" + ForgeRegistries.FLUID_TYPES.get().getKey(Fluids.WATER.getFluidType()) + "' ", BOOLEAN)))
-                .addAction(PutVarAction.makeDouble(LIVING_HURT, Compiler.compileString(" damage_amount * factor ", DOUBLE), "damage_amount"))
+                .addAction(ConditionalDeactivationAction.make(LIVING_HURT_VICTIM, Compiler.compileString(" damage_type == 'mob' ", BOOLEAN)))
+                .addAction(GetEntityEyePositionAction.make(LIVING_HURT_VICTIM, OWNER, "eye_pos"))
+                .addAction(GetFluidAction.make(LIVING_HURT_VICTIM, "eye_pos", "fluid_type", "", "", ""))
+                .addAction(ConditionalDeactivationAction.make(LIVING_HURT_VICTIM, Compiler.compileString(" fluid_type == '" + ForgeRegistries.FLUID_TYPES.get().getKey(Fluids.WATER.getFluidType()) + "' ", BOOLEAN)))
+                .addAction(PutVarAction.makeDouble(LIVING_HURT_VICTIM, Compiler.compileString(" damage_amount * factor ", DOUBLE), "damage_amount"))
                 .addParameter(DOUBLE, "factor", 0.75D)
-                .addEventHook(LIVING_HURT)
+                .addEventHook(LIVING_HURT_VICTIM)
                 .addTooltip(Component.translatable(Spells.KEY_PERMANENT_AQUA_RESISTANCE_DESC))
         );
         
@@ -902,13 +902,13 @@ public class SpellsGen implements DataProvider
         );
         
         addSpell(Spells.MANA_SOLES, new Spell(modId, "mana_soles", Spells.KEY_MANA_SOLES, 0F)
-                .addAction(BooleanActivationAction.make(LIVING_HURT, "reduce", Compiler.compileString(" damage_type == '" + DamageSource.FALL.getMsgId() + "' ", BOOLEAN), TRUE, TRUE))
+                .addAction(BooleanActivationAction.make(LIVING_HURT_VICTIM, "reduce", Compiler.compileString(" damage_type == '" + DamageSource.FALL.getMsgId() + "' ", BOOLEAN), TRUE, TRUE))
                 .addAction(GetManaAction.make("reduce", OWNER, "mana"))
                 .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" min(mana, damage_amount) ", DOUBLE), "reduce_amount"))
                 .addAction(PutVarAction.makeBoolean("reduce", Compiler.compileString(" " + EVENT_IS_CANCELED.toString() + " || (reduce_amount >= damage_amount) ", BOOLEAN), EVENT_IS_CANCELED))
                 .addAction(BurnManaAction.make("reduce", OWNER, DOUBLE.reference("reduce_amount")))
                 .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" damage_amount - reduce_amount ", DOUBLE), "damage_amount"))
-                .addEventHook(LIVING_HURT)
+                .addEventHook(LIVING_HURT_VICTIM)
                 .addTooltip(Component.translatable(Spells.KEY_MANA_SOLES_DESC))
         );
         

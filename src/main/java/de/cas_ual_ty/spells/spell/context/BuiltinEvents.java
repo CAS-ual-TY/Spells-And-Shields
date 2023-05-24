@@ -5,8 +5,8 @@ public enum BuiltinEvents
     ACTIVE("active"),
     ON_EQUIP("on_equip"),
     ON_UNEQUIP("on_unequip"),
-    LIVING_ATTACK("living_attack"),
-    LIVING_HURT("living_hurt");
+    LIVING_ATTACK_VICTIM("living_attack_victim"),
+    LIVING_HURT_VICTIM("living_hurt_victim");
     
     public final String activation;
     

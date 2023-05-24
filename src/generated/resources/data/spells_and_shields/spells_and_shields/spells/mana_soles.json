@@ -13,14 +13,14 @@
     }
   ],
   "s5/spell_events": [
-    "living_hurt"
+    "living_hurt_victim"
   ],
   "s6/spell_parameters": [],
   "s7/spell_actions": [
     {
       "type": "spells_and_shields:boolean_activation",
       "a/to_activate": "reduce",
-      "activation": "living_hurt",
+      "activation": "living_hurt_victim",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": true,
       "d/boolean/input": "<< damage_type == 'fall' >>"

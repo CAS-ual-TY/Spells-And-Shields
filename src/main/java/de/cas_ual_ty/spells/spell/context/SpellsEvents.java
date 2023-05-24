@@ -29,12 +29,12 @@ public class SpellsEvents
     
     public static void registerEvents()
     {
-        register(BuiltinEvents.LIVING_ATTACK.activation, LivingAttackEvent.class)
+        register(BuiltinEvents.LIVING_ATTACK_VICTIM.activation, LivingAttackEvent.class)
                 .addTargetLink(e -> Target.of(e.getSource().getEntity()), "damage_source")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
         
-        register(BuiltinEvents.LIVING_HURT.activation, LivingHurtEvent.class)
+        register(BuiltinEvents.LIVING_HURT_VICTIM.activation, LivingHurtEvent.class)
                 .addTargetLink(e -> Target.of(e.getSource().getEntity()), "damage_source")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");

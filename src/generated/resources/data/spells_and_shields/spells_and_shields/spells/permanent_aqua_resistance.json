@@ -22,7 +22,7 @@
     }
   ],
   "s5/spell_events": [
-    "living_hurt"
+    "living_hurt_victim"
   ],
   "s6/spell_parameters": [
     {
@@ -34,18 +34,18 @@
   "s7/spell_actions": [
     {
       "type": "spells_and_shields:conditional_deactivation",
-      "activation": "living_hurt",
+      "activation": "living_hurt_victim",
       "d/boolean/condition": "<< damage_type == 'mob' >>"
     },
     {
       "type": "spells_and_shields:get_entity_eye_position",
-      "activation": "living_hurt",
+      "activation": "living_hurt_victim",
       "t/source": "owner",
       "td/eye_position": "eye_pos"
     },
     {
       "type": "spells_and_shields:get_fluid",
-      "activation": "living_hurt",
+      "activation": "living_hurt_victim",
       "t/target": "eye_pos",
       "var/fluid": "fluid_type",
       "var/fluid_state": "",
@@ -54,12 +54,12 @@
     },
     {
       "type": "spells_and_shields:conditional_deactivation",
-      "activation": "living_hurt",
+      "activation": "living_hurt_victim",
       "d/boolean/condition": "<< fluid_type == 'minecraft:water' >>"
     },
     {
       "type": "spells_and_shields:put_double",
-      "activation": "living_hurt",
+      "activation": "living_hurt_victim",
       "d/double/source": "<< damage_amount * factor >>",
       "var/result": "damage_amount"
     }
