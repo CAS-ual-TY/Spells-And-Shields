@@ -49,7 +49,7 @@ public class SpellsEvents
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
         
-        register(BuiltinEvents.LIVING_DAMAGE_ATTACKER.activation, LivingDamageEvent.class)
+        register(BuiltinEvents.LIVING_DAMAGE_ATTACKER.activation, LivingDamageEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
                 .addTargetLink(e -> Target.of(e.getEntity()), "victim")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
