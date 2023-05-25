@@ -19,8 +19,8 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 
-version = '1.18.2-2.9.0-BETA'
-group = 'de.cas_ual_ty.spells' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = '1.18.2-2.10.0-BETA'
+group = 'de.cas_ual_ty.spells_and_shields' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'spells_and_shields'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
