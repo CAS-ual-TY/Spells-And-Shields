@@ -34,7 +34,7 @@
   "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",
-      "value": 20.0,
+      "value": 200.0,
       "var/name": "range"
     }
   ],
@@ -55,7 +55,6 @@
       "activation": "active",
       "d/boolean/creative_bypass": true,
       "d/boolean/must_be_in_hand": true,
-      "d/compound_tag/tag": {},
       "d/int/amount": 1,
       "d/string/item": "minecraft:copper_ingot",
       "t/source": "owner"
@@ -70,12 +69,12 @@
     },
     {
       "type": "spells_and_shields:look_at_target",
-      "a/block_hit_activation": "",
+      "a/block_hit_activation": "on_block_hit",
       "a/entity_hit_activation": "on_entity_hit",
       "a/miss_activation": "",
       "activation": "active",
       "block_clip_context": "collider",
-      "d/double/range": "<<target_range>>",
+      "d/double/range": "<<range>>",
       "double/bb_inflation": 0.5,
       "fluid_clip_context": "none",
       "t/source": "owner"
@@ -153,7 +152,6 @@
       "type": "spells_and_shields:consume_player_items",
       "activation": "consume",
       "d/boolean/must_be_in_hand": true,
-      "d/compound_tag/tag": {},
       "d/int/amount": 1,
       "d/string/item": "minecraft:copper_ingot",
       "t/source": "owner"
@@ -161,7 +159,6 @@
     {
       "type": "spells_and_shields:spawn_entity",
       "activation": "on_hit",
-      "d/compound_tag/tag": {},
       "d/string/entity_type": "minecraft:lightning_bolt",
       "d/vec3/direction": [
         0.0,

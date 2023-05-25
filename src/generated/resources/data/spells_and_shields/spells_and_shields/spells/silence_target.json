@@ -44,7 +44,6 @@
       "activation": "active",
       "d/boolean/creative_bypass": true,
       "d/boolean/must_be_in_hand": true,
-      "d/compound_tag/tag": {},
       "d/int/amount": 1,
       "d/string/item": "minecraft:amethyst_shard",
       "t/source": "owner"
@@ -64,7 +63,7 @@
       "a/miss_activation": "",
       "activation": "active",
       "block_clip_context": "collider",
-      "d/double/range": "<<target_range>>",
+      "d/double/range": "<<range>>",
       "double/bb_inflation": 0.5,
       "fluid_clip_context": "none",
       "t/source": "owner"
@@ -120,7 +119,6 @@
       "type": "spells_and_shields:consume_player_items",
       "activation": "consume",
       "d/boolean/must_be_in_hand": true,
-      "d/compound_tag/tag": {},
       "d/int/amount": 1,
       "d/string/item": "minecraft:amethyst_shard",
       "t/source": "owner"
