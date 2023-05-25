@@ -167,7 +167,6 @@
     {
       "type": "spells_and_shields:give_item",
       "activation": "smelt",
-      "d/compound_tag/tag": {},
       "d/int/amount": 1,
       "d/int/damage": 0,
       "item": "<< get_nbt_string(recipes, item_id) >>",

@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +32,13 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
                 sourceCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(PlayerHasItemsAction::getItem),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(PlayerHasItemsAction::getAmount),
-                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(PlayerHasItemsAction::getTag),
+                CtxVarTypes.TAG.get().optionalRefCodec(ParamNames.paramCompoundTag("tag")).forGetter(PlayerHasItemsAction::getTag),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(PlayerHasItemsAction::getMustBeInHand),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("creative_bypass")).forGetter(PlayerHasItemsAction::getCreativeBypass)
         ).apply(instance, (activation, source, item, amount, tag, mustBeInHand, creativeBypass) -> new PlayerHasItemsAction(type, activation, source, item, amount, tag, mustBeInHand, creativeBypass)));
     }
     
-    public static PlayerHasItemsAction make(Object activation, Object source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand, DynamicCtxVar<Boolean> creativeBypass)
+    public static PlayerHasItemsAction make(Object activation, Object source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, @Nullable DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand, DynamicCtxVar<Boolean> creativeBypass)
     {
         return new PlayerHasItemsAction(SpellActionTypes.PLAYER_HAS_ITEMS.get(), activation.toString(), source.toString(), item, amount, tag, mustBeInHand, creativeBypass);
     }

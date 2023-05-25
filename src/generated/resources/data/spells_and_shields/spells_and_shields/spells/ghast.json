@@ -58,7 +58,6 @@
       "activation": "active",
       "d/boolean/creative_bypass": true,
       "d/boolean/must_be_in_hand": true,
-      "d/compound_tag/tag": {},
       "d/int/amount": 1,
       "d/string/item": "minecraft:fire_charge",
       "t/source": "owner"
@@ -86,7 +85,6 @@
       "type": "spells_and_shields:consume_player_items",
       "activation": "success",
       "d/boolean/must_be_in_hand": true,
-      "d/compound_tag/tag": {},
       "d/int/amount": 1,
       "d/string/item": "minecraft:fire_charge",
       "t/source": "consume"

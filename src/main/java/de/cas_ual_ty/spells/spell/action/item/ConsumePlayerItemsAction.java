@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +32,12 @@ public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarge
                 sourceCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(ConsumePlayerItemsAction::getItem),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(ConsumePlayerItemsAction::getAmount),
-                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("tag")).forGetter(ConsumePlayerItemsAction::getTag),
+                CtxVarTypes.TAG.get().optionalRefCodec(ParamNames.paramCompoundTag("tag")).forGetter(ConsumePlayerItemsAction::getTag),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(ConsumePlayerItemsAction::getMustBeInHand)
         ).apply(instance, (activation, source, item, amount, tag, mustBeInHand) -> new ConsumePlayerItemsAction(type, activation, source, item, amount, tag, mustBeInHand)));
     }
     
-    public static ConsumePlayerItemsAction make(Object activation, Object source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public static ConsumePlayerItemsAction make(Object activation, Object source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, @Nullable DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
     {
         return new ConsumePlayerItemsAction(SpellActionTypes.CONSUME_PLAYER_ITEMS.get(), activation.toString(), source.toString(), item, amount, tag, mustBeInHand);
     }
