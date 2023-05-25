@@ -12,7 +12,7 @@ import net.minecraftforge.client.event.ScreenEvent;
 
 public class ScreenDebugHelper
 {
-    public static void event(ScreenEvent.Render.Post event)
+    public static void event(ScreenEvent.DrawScreenEvent.Post event)
     {
         if(event.getScreen() instanceof AbstractContainerScreen s && (event.getScreen() instanceof InventoryScreen || event.getScreen() instanceof CreativeModeInventoryScreen))
         {

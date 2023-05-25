@@ -13,13 +13,12 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
-import net.minecraft.commands.CommandBuildContext;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
@@ -64,13 +63,13 @@ public class SpellCommand
     public static final String ARG_NODE_ID = "node_id";
     public static final String ARG_SLOT = "slot";
     
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext cbx)
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher)
     {
         dispatcher.register(Commands.literal("spells").requires(css -> css.hasPermission(2))
                 .then(Commands.literal("progression")
                         .then(Commands.literal("learn")
                                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players())
-                                        .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx))
+                                        .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree())
                                                 .then(Commands.argument(ARG_NODE_ID, IntegerArgumentType.integer(1))
                                                         .executes(SpellCommand::spellsProgressionLearn)
                                                 )
@@ -85,8 +84,8 @@ public class SpellCommand
                         )
                         .then(Commands.literal("forget")
                                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players())
-                                        .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx))
-                                                .then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx))
+                                        .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree())
+                                                .then(Commands.argument(ARG_SPELL, SpellArgument.spell())
                                                         .executes(SpellCommand::spellsProgressionForget)
                                                 )
                                                 .then(Commands.argument("all", StringArgumentType.string())
@@ -104,8 +103,8 @@ public class SpellCommand
                         .then(Commands.literal("set")
                                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players())
                                         .then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS))
-                                                .then(Commands.literal("direct").then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx)).executes(SpellCommand::spellsSlotSetDirect)))
-                                                .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx)).then(Commands.argument(ARG_NODE_ID, IntegerArgumentType.integer()).executes(SpellCommand::spellsSlotSet)))
+                                                .then(Commands.literal("direct").then(Commands.argument(ARG_SPELL, SpellArgument.spell()).executes(SpellCommand::spellsSlotSetDirect)))
+                                                .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree()).then(Commands.argument(ARG_NODE_ID, IntegerArgumentType.integer()).executes(SpellCommand::spellsSlotSet)))
                                         )
                                 )
                         )
@@ -131,7 +130,7 @@ public class SpellCommand
         
         if(node == null)
         {
-            context.getSource().sendFailure(Component.translatable(UNKNOWN_NODE, spellTree.getTitle(), nodeId));
+            context.getSource().sendFailure(SpellsDowngrade.translatable(UNKNOWN_NODE, spellTree.getTitle(), nodeId));
             return 0;
         }
         
@@ -155,16 +154,16 @@ public class SpellCommand
         {
             if(changed.get())
             {
-                context.getSource().sendSuccess(Component.translatable(singleKey, node.getSpellDirect().getTitle(), players.iterator().next().getDisplayName()), true);
+                context.getSource().sendSuccess(SpellsDowngrade.translatable(singleKey, node.getSpellDirect().getTitle(), players.iterator().next().getDisplayName()), true);
             }
             else
             {
-                context.getSource().sendFailure(Component.translatable(singleFailedKey, node.getSpellDirect().getTitle(), players.iterator().next().getDisplayName()));
+                context.getSource().sendFailure(SpellsDowngrade.translatable(singleFailedKey, node.getSpellDirect().getTitle(), players.iterator().next().getDisplayName()));
             }
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(multipleKey, node.getSpellDirect().getTitle(), players.size()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(multipleKey, node.getSpellDirect().getTitle(), players.size()), true);
         }
         
         return players.size();
@@ -204,16 +203,16 @@ public class SpellCommand
         {
             if(changed.get() > 0)
             {
-                context.getSource().sendSuccess(Component.translatable(singleKey, spellTree.getTitle(), players.iterator().next().getDisplayName()), true);
+                context.getSource().sendSuccess(SpellsDowngrade.translatable(singleKey, spellTree.getTitle(), players.iterator().next().getDisplayName()), true);
             }
             else
             {
-                context.getSource().sendFailure(Component.translatable(singleFailedKey, spellTree.getTitle(), players.iterator().next().getDisplayName()));
+                context.getSource().sendFailure(SpellsDowngrade.translatable(singleFailedKey, spellTree.getTitle(), players.iterator().next().getDisplayName()));
             }
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(multipleKey, spellTree.getTitle(), players.size()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(multipleKey, spellTree.getTitle(), players.size()), true);
         }
         
         return players.size();
@@ -260,16 +259,16 @@ public class SpellCommand
         {
             if(learned.get() > 0)
             {
-                context.getSource().sendSuccess(Component.translatable(singleKey, learned.get(), totalTrees, players.iterator().next().getDisplayName()), true);
+                context.getSource().sendSuccess(SpellsDowngrade.translatable(singleKey, learned.get(), totalTrees, players.iterator().next().getDisplayName()), true);
             }
             else
             {
-                context.getSource().sendFailure(Component.translatable(singleFailedKey, players.iterator().next().getDisplayName()));
+                context.getSource().sendFailure(SpellsDowngrade.translatable(singleFailedKey, players.iterator().next().getDisplayName()));
             }
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(multipleKey, totalSpells, totalTrees, players.size()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(multipleKey, totalSpells, totalTrees, players.size()), true);
         }
         
         return players.size();
@@ -330,11 +329,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_RESET_SINGLE, players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_PROGRESSION_RESET_SINGLE, players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_RESET_MULTIPLE, players.size()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_PROGRESSION_RESET_MULTIPLE, players.size()), true);
         }
         
         return 0;
@@ -363,11 +362,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_DIRECT_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_SLOT_SET_DIRECT_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_DIRECT_MULTIPLE, slot, players.size(), spell.getTitle()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_SLOT_SET_DIRECT_MULTIPLE, slot, players.size(), spell.getTitle()), true);
         }
         
         return players.size();
@@ -390,7 +389,7 @@ public class SpellCommand
         
         if(spellNode == null)
         {
-            context.getSource().sendFailure(Component.translatable(UNKNOWN_NODE, spellTree.getTitle(), nodeId));
+            context.getSource().sendFailure(SpellsDowngrade.translatable(UNKNOWN_NODE, spellTree.getTitle(), nodeId));
             return 0;
         }
         
@@ -407,11 +406,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle(), spellTree.getTitle()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle(), spellTree.getTitle()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getTitle(), spellTree.getTitle()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getTitle(), spellTree.getTitle()), true);
         }
         
         return players.size();
@@ -439,11 +438,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_REMOVE_SINGLE, slot, players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_SLOT_REMOVE_SINGLE, slot, players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_REMOVE_MULTIPLE, slot, players.size()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_SLOT_REMOVE_MULTIPLE, slot, players.size()), true);
         }
         
         return players.size();
@@ -469,11 +468,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_CLEAR_SINGLE, players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_SLOT_CLEAR_SINGLE, players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_CLEAR_MULTIPLE, players.size()), true);
+            context.getSource().sendSuccess(SpellsDowngrade.translatable(SPELLS_SLOT_CLEAR_MULTIPLE, players.size()), true);
         }
         
         return players.size();

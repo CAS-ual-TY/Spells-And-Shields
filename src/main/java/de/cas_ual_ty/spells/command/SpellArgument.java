@@ -1,70 +1,42 @@
 package de.cas_ual_ty.spells.command;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
-import net.minecraft.commands.CommandBuildContext;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.network.chat.Component;
+import net.minecraft.commands.arguments.ResourceKeyArgument;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
-public class SpellArgument implements ArgumentType<Spell>
+public class SpellArgument
 {
-    public static final SimpleCommandExceptionType UNKNOWN_SPELL = new SimpleCommandExceptionType(Component.translatable("argument.spell.id.invalid"));
+    public static final SimpleCommandExceptionType UNKNOWN_SPELL = new SimpleCommandExceptionType(SpellsDowngrade.translatable("argument.spell.id.invalid"));
     
-    private final HolderLookup<Spell> spells;
-    
-    public SpellArgument(CommandBuildContext cbx)
+    public static ResourceKeyArgument<Spell> spell()
     {
-        spells = cbx.holderLookup(Spells.REGISTRY_KEY);
+        return ResourceKeyArgument.key(Spells.REGISTRY_KEY);
     }
     
-    public static SpellArgument spell(CommandBuildContext cbx)
+    private static <T> ResourceKey<T> getRegistryType(CommandContext<CommandSourceStack> css, String name, ResourceKey<Registry<T>> registryKey, SimpleCommandExceptionType exception) throws CommandSyntaxException
     {
-        return new SpellArgument(cbx);
+        ResourceKey<?> resourceKey = css.getArgument(name, ResourceKey.class);
+        Optional<ResourceKey<T>> optional = resourceKey.cast(registryKey);
+        return optional.orElseThrow(exception::create);
     }
     
-    @Override
-    public Spell parse(StringReader reader) throws CommandSyntaxException
+    private static <T> Registry<T> getRegistry(CommandContext<CommandSourceStack> pContext, ResourceKey<? extends Registry<T>> pRegistryKey)
     {
-        ResourceLocation resourceLocation = ResourceLocation.read(reader);
-        Optional<Holder<Spell>> spell = spells.get(ResourceKey.create(Spells.REGISTRY_KEY, resourceLocation));
-        
-        return spell.orElseThrow(UNKNOWN_SPELL::create).get();
+        return pContext.getSource().registryAccess().registryOrThrow(pRegistryKey);
     }
     
-    @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder)
+    public static Spell getSpell(CommandContext<CommandSourceStack> css, String pName) throws CommandSyntaxException
     {
-        String s = builder.getRemaining();
-        
-        spells.listElements().forEach(resourceKey ->
-        {
-            String spellStr = resourceKey.location().toString();
-            
-            if(spellStr.startsWith(s))
-            {
-                builder.suggest(spellStr);
-            }
-        });
-        
-        return builder.buildFuture();
-    }
-    
-    public static Spell getSpell(CommandContext<CommandSourceStack> context, String argument)
-    {
-        return context.getArgument(argument, Spell.class);
+        ResourceKey<Spell> resourceKey = getRegistryType(css, pName, Spells.REGISTRY_KEY, UNKNOWN_SPELL);
+        return Spells.getRegistry(css.getSource().registryAccess()).getHolder(resourceKey).orElseThrow(UNKNOWN_SPELL::create).value();
     }
 }

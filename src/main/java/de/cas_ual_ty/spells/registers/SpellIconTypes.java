@@ -28,6 +28,7 @@ public class SpellIconTypes
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<SpellIconType<?>>().setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spell_icons")));
+        SpellIconType<SpellIcon> classObj = new SpellIconType<>();
+        REGISTRY = event.create(new RegistryBuilder<SpellIconType<?>>().setType((Class<SpellIconType<?>>) classObj.getClass()).setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spell_icons")));
     }
 }

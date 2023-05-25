@@ -10,7 +10,6 @@ import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
@@ -31,11 +30,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -47,7 +48,7 @@ public class SpellsUtil
     
     public static final Container EMPTY_CONTAINER = new SimpleContainer(0);
     
-    public static final RandomSource RANDOM = RandomSource.create();
+    public static final Random RANDOM = new Random();
     
     public static HitResult rayTrace(Level level, Entity source, double maxDist, Predicate<Entity> filter, float bbInflation, ClipContext.Block block, ClipContext.Fluid fluid)
     {
@@ -286,12 +287,12 @@ public class SpellsUtil
                 };
     }
     
-    public static <T> DynamicCtxVar<String> objectToString(T object, IForgeRegistry<T> registry)
+    public static <T extends IForgeRegistryEntry<T>> DynamicCtxVar<String> objectToString(T object, IForgeRegistry<T> registry)
     {
         return CtxVarTypes.STRING.get().immediate(registry.getKey(object).toString());
     }
     
-    public static <T> Optional<T> stringToObject(SpellContext ctx, DynamicCtxVar<String> s, IForgeRegistry<T> registry)
+    public static <T extends IForgeRegistryEntry<T>> Optional<T> stringToObject(SpellContext ctx, DynamicCtxVar<String> s, IForgeRegistry<T> registry)
     {
         return s.getValue(ctx).map(id -> registry.getValue(new ResourceLocation(id)));
     }

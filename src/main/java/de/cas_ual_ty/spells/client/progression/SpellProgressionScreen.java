@@ -16,6 +16,7 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -68,8 +69,8 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     public static final int TAB_FRAME_HEIGHT = 32;
     public static final int TAB_FRAME_HEIGHT_S = 28;
     
-    public static final Component VERY_SAD_LABEL = Component.translatable("advancements.sad_label");
-    public static final Component NO_ADVANCEMENTS_LABEL = Component.translatable("advancements.empty");
+    public static final Component VERY_SAD_LABEL = SpellsDowngrade.translatable("advancements.sad_label");
+    public static final Component NO_ADVANCEMENTS_LABEL = SpellsDowngrade.translatable("advancements.empty");
     
     private final Map<SpellNode, SpellTreeTab> tabs;
     
@@ -162,8 +163,8 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         
         if(this.tabs.size() > MAX_TABS)
         {
-            addRenderableWidget(new Button(getGuiLeft(), getGuiTop() - 50, 20, 20, Component.literal("<"), b -> tabPage = Math.max(tabPage - 1, 0)));
-            addRenderableWidget(new Button(getGuiLeft() + GUI_WIDTH - 20, getGuiTop() - 50, 20, 20, Component.literal(">"), b -> tabPage = Math.min(tabPage + 1, maxPages)));
+            addRenderableWidget(new Button(getGuiLeft(), getGuiTop() - 50, 20, 20, SpellsDowngrade.literal("<"), b -> tabPage = Math.max(tabPage - 1, 0)));
+            addRenderableWidget(new Button(getGuiLeft() + GUI_WIDTH - 20, getGuiTop() - 50, 20, 20, SpellsDowngrade.literal(">"), b -> tabPage = Math.min(tabPage + 1, maxPages)));
             maxPages = this.tabs.size() / MAX_TABS;
         }
         
@@ -173,7 +174,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         
         this.selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT, leftW);
         
-        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_LEARN), this::buttonClicked, 1, this::learnButtonTooltip)
+        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, SpellsDowngrade.translatable(KEY_LEARN), this::buttonClicked, 1, this::learnButtonTooltip)
         {
             @Override
             public void render(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
@@ -201,9 +202,9 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                 }
             }
         };
-        this.equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_EQUIP), this::buttonClicked, 0);
-        this.unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_UNAVAILABLE), this::buttonClicked, 2);
-        this.chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_CHOOSE_SLOT), this::buttonClicked, 2);
+        this.equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, SpellsDowngrade.translatable(KEY_EQUIP), this::buttonClicked, 0);
+        this.unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, SpellsDowngrade.translatable(KEY_UNAVAILABLE), this::buttonClicked, 2);
+        this.chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, SpellsDowngrade.translatable(KEY_CHOOSE_SLOT), this::buttonClicked, 2);
         this.unavailableButton.active = false;
         this.chooseButton.active = false;
         
@@ -360,7 +361,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         this.renderBackground(poseStack);
         if(maxPages != 0)
         {
-            Component page = Component.literal(String.format("%d / %d", tabPage + 1, maxPages + 1));
+            Component page = SpellsDowngrade.literal(String.format("%d / %d", tabPage + 1, maxPages + 1));
             int width = this.font.width(page);
             this.font.drawShadow(poseStack, page.getVisualOrderText(), getGuiLeft() + (GUI_WIDTH / 2F) - (width / 2F), getGuiTop() - 44, -1);
         }

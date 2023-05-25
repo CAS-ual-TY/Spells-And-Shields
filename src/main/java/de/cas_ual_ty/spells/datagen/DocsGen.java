@@ -10,9 +10,9 @@ import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.HashCache;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -157,11 +157,12 @@ public class DocsGen implements DataProvider
     }
     
     @Override
-    public void run(CachedOutput pOutput) throws IOException
+    public void run(HashCache pOutput) throws IOException
     {
         generateSingleFiles(modId);
         generateBigFile(modId);
     }
+    
     
     @Override
     public String getName()

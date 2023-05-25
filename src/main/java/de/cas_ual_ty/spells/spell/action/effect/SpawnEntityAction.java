@@ -103,7 +103,7 @@ public class SpawnEntityAction extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
-        SpellsUtil.stringToObject(ctx, entityType, ForgeRegistries.ENTITY_TYPES).ifPresent(entityType ->
+        SpellsUtil.stringToObject(ctx, entityType, ForgeRegistries.ENTITIES).ifPresent(entityType ->
         {
             if(entityType != EntityType.PLAYER)
             {

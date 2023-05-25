@@ -2,28 +2,32 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
+import de.cas_ual_ty.spells.util.SpellsCodecs;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.HashCache;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.JsonCodecProvider;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SpellTreesGen implements DataProvider
 {
+    
     protected Map<ResourceLocation, SpellTree> spellTrees;
     
     protected DataGenerator gen;
@@ -43,7 +47,6 @@ public class SpellTreesGen implements DataProvider
         this.registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
         
         spellTrees = new HashMap<>();
-        registry = registryOps.registry(Spells.REGISTRY_KEY).orElseThrow();
     }
     
     public void addSpellTree(String key, SpellTree spellTree)
@@ -71,11 +74,32 @@ public class SpellTreesGen implements DataProvider
     }
     
     @Override
-    public void run(CachedOutput pOutput) throws IOException
+    public void run(HashCache pOutput) throws IOException
     {
+        registry = registryOps.registry(Spells.REGISTRY_KEY).orElseThrow();
         addSpellTrees();
-        JsonCodecProvider<SpellTree> provider = JsonCodecProvider.forDatapackRegistry(gen, exFileHelper, modId, registryOps, SpellTrees.REGISTRY_KEY, spellTrees);
-        provider.run(pOutput);
+        save(pOutput);
+    }
+    
+    private void save(HashCache pOutput)
+    {
+        Path path = gen.getOutputFolder();
+        spellTrees.forEach((rl, spellTree) -> {
+            Path path1 = createPath(path, rl);
+            try
+            {
+                DataProvider.save(SpellsDowngrade.GSON, pOutput, SpellsCodecs.SPELL_TREE_CONTENTS.encodeStart(JsonOps.INSTANCE, spellTree).getOrThrow(false, SpellsAndShields.LOGGER::error), path1);
+            }
+            catch(IOException ioexception)
+            {
+                SpellsAndShields.LOGGER.error("Couldn't save spell tree {}", path1, ioexception);
+            }
+        });
+    }
+    
+    private static Path createPath(Path pPath, ResourceLocation pId)
+    {
+        return pPath.resolve("data/" + pId.getNamespace() + "/" + SpellsAndShields.MOD_ID + "/spell_trees/" + pId.getPath() + ".json");
     }
     
     @Override

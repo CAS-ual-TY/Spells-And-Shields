@@ -28,6 +28,7 @@ public class RequirementTypes
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<RequirementType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
+        RequirementType<Requirement> classObj = new RequirementType<>();
+        REGISTRY = event.create(new RegistryBuilder<RequirementType<?>>().setType((Class<RequirementType<?>>) classObj.getClass()).setMaxID(256).setName(new ResourceLocation(MOD_ID, "requirements")));
     }
 }

@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -130,7 +131,7 @@ public class SpellTreeTab extends GuiComponent
         
         if(SpellsClientConfig.SHOW_IDS.get())
         {
-            list.add(Component.literal(spellTree.getId().toString()).withStyle(ChatFormatting.DARK_GRAY));
+            list.add(SpellsDowngrade.literal(spellTree.getId().toString()).withStyle(ChatFormatting.DARK_GRAY));
         }
         
         return list;

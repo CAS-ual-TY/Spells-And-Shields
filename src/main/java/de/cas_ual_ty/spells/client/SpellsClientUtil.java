@@ -33,8 +33,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
@@ -63,12 +63,13 @@ public class SpellsClientUtil
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::entityRenderers);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::registerClientTooltipComponent);
         
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, SpellsClientUtil::rightClickBlock);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::renderScreen);
         MinecraftForge.EVENT_BUS.addListener(SpellsClientUtil::levelTick);
+        
+        MinecraftForgeClient.registerTooltipComponentFactory(ManaTooltipComponent.class, tooltip -> new ManaClientTooltipComponent(tooltip.mana));
         //MinecraftForge.EVENT_BUS.addListener(ScreenDebugHelper::event);
     }
     
@@ -113,7 +114,7 @@ public class SpellsClientUtil
     
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
     
-    private static void initScreen(ScreenEvent.Init.Post event)
+    private static void initScreen(ScreenEvent.InitScreenEvent.Post event)
     {
         if(Minecraft.getInstance().player != null && event.getScreen() instanceof AbstractContainerScreen screen)
         {
@@ -270,7 +271,7 @@ public class SpellsClientUtil
         }
     }
     
-    private static void renderScreen(ScreenEvent.Render.Post event)
+    private static void renderScreen(ScreenEvent.DrawScreenEvent.Post event)
     {
         if(event.getScreen() instanceof AbstractContainerScreen screen && (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen))
         {
@@ -283,14 +284,9 @@ public class SpellsClientUtil
         }
     }
     
-    private static void registerClientTooltipComponent(RegisterClientTooltipComponentFactoriesEvent event)
+    private static void levelTick(TickEvent.WorldTickEvent event)
     {
-        event.register(ManaTooltipComponent.class, tooltip -> new ManaClientTooltipComponent(tooltip.mana));
-    }
-    
-    private static void levelTick(TickEvent.LevelTickEvent event)
-    {
-        if(event.phase == TickEvent.Phase.END && event.level instanceof ClientLevel level)
+        if(event.phase == TickEvent.Phase.END && event.world instanceof ClientLevel level)
         {
             for(Entity entity : level.getEntities().getAll())
             {

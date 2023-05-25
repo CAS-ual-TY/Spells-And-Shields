@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -28,7 +29,7 @@ import java.util.List;
 
 public class SpellProgressionMenu extends AbstractContainerMenu
 {
-    public static Component TITLE = Component.translatable("container." + SpellsAndShields.MOD_ID + ".spell_progression");
+    public static Component TITLE = SpellsDowngrade.translatable("container." + SpellsAndShields.MOD_ID + ".spell_progression");
     
     public final ContainerLevelAccess access;
     public final Player player;

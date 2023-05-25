@@ -93,7 +93,7 @@ public class SpellInstance
     
     public float getAppliedManaCost()
     {
-        return manaCost >= 0 ? manaCost : spell.get().getManaCost();
+        return manaCost >= 0 ? manaCost : spell.value().getManaCost();
     }
     
     public Optional<TooltipComponent> getTooltipComponent()
@@ -133,7 +133,7 @@ public class SpellInstance
     
     public boolean run(Level level, @Nullable Player owner, String activation, boolean force, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)
     {
-        if((spell.get().getEventsList().contains(activation) || force) && !level.isClientSide)
+        if((spell.value().getEventsList().contains(activation) || force) && !level.isClientSide)
         {
             SpellContext ctx = initializeContext(level, owner, activation);
             preRun.accept(ctx);
@@ -158,7 +158,7 @@ public class SpellInstance
             ctx.getOrCreateTargetGroup(BuiltinTargetGroups.OWNER.targetGroup).addTargets(Target.of(owner));
         }
         
-        spell.get().getParameters().forEach(ctx::initCtxVar);
+        spell.value().getParameters().forEach(ctx::initCtxVar);
         parameters.forEach(ctx::initCtxVar);
         
         return ctx;

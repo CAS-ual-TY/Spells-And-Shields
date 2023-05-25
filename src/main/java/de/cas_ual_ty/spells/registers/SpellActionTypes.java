@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.registers;
 
+import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.ai.ClearMobTargetAction;
@@ -244,7 +245,8 @@ public class SpellActionTypes
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<SpellActionType<?>>().setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spell_actions")));
+        SpellActionType<SpellAction> classObj = new SpellActionType<>();
+        REGISTRY = event.create(new RegistryBuilder<SpellActionType<?>>().setType((Class<SpellActionType<?>>) classObj.getClass()).setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spell_actions")));
     }
     
     private static void setup(FMLCommonSetupEvent event)

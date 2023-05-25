@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryManager;
 
 public class CheckTagAction extends SpellAction
@@ -80,7 +81,7 @@ public class CheckTagAction extends SpellAction
         });
     }
     
-    protected <V> boolean isTag(String registryRL, String tagRL, String entryRL)
+    protected <V extends IForgeRegistryEntry<V>> boolean isTag(String registryRL, String tagRL, String entryRL)
     {
         IForgeRegistry<V> registry = RegistryManager.ACTIVE.getRegistry(new ResourceLocation(registryRL));
         

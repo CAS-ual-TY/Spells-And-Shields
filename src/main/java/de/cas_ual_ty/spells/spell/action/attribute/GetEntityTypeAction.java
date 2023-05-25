@@ -50,7 +50,7 @@ public class GetEntityTypeAction extends GetTargetAttributeAction<EntityTarget>
         
         if(!entityType.isEmpty())
         {
-            addVariableAttribute(e -> ForgeRegistries.ENTITY_TYPES.getKey(e.getEntity().getType()).toString(), CtxVarTypes.STRING.get(), entityType);
+            addVariableAttribute(e -> ForgeRegistries.ENTITIES.getKey(e.getEntity().getType()).toString(), CtxVarTypes.STRING.get(), entityType);
         }
         
         if(!isLiving.isEmpty())

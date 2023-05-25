@@ -14,12 +14,12 @@ public class TargetTypes
     public static Supplier<IForgeRegistry<ITargetType<?>>> REGISTRY;
     private static final DeferredRegister<ITargetType<?>> DEFERRED_REGISTER = DeferredRegister.create(new ResourceLocation(MOD_ID, "targets"), MOD_ID);
     
-    public static final RegistryObject<ITargetType<EntityTarget>> ENTITY = DEFERRED_REGISTER.register("entity", () -> (t -> t instanceof EntityTarget));
-    public static final RegistryObject<ITargetType<LivingEntityTarget>> LIVING_ENTITY = DEFERRED_REGISTER.register("living_entity", () -> (t -> t instanceof LivingEntityTarget));
-    public static final RegistryObject<ITargetType<PlayerTarget>> PLAYER = DEFERRED_REGISTER.register("player", () -> (t -> t instanceof PlayerTarget));
-    public static final RegistryObject<ITargetType<ItemTarget>> ITEM = DEFERRED_REGISTER.register("item", () -> (t -> t instanceof ItemTarget));
-    public static final RegistryObject<ITargetType<PositionTarget>> POSITION = DEFERRED_REGISTER.register("position", () -> (t -> t instanceof PositionTarget));
-    public static final RegistryObject<ITargetType<StaticTarget>> STATIC = DEFERRED_REGISTER.register("static", () -> (t -> t instanceof StaticTarget));
+    public static final RegistryObject<ITargetType<EntityTarget>> ENTITY = DEFERRED_REGISTER.register("entity", () -> new ITargetType<>(t -> t instanceof EntityTarget));
+    public static final RegistryObject<ITargetType<LivingEntityTarget>> LIVING_ENTITY = DEFERRED_REGISTER.register("living_entity", () -> new ITargetType<>(t -> t instanceof LivingEntityTarget));
+    public static final RegistryObject<ITargetType<PlayerTarget>> PLAYER = DEFERRED_REGISTER.register("player", () -> new ITargetType<>(t -> t instanceof PlayerTarget));
+    public static final RegistryObject<ITargetType<ItemTarget>> ITEM = DEFERRED_REGISTER.register("item", () -> new ITargetType<>(t -> t instanceof ItemTarget));
+    public static final RegistryObject<ITargetType<PositionTarget>> POSITION = DEFERRED_REGISTER.register("position", () -> new ITargetType<>(t -> t instanceof PositionTarget));
+    public static final RegistryObject<ITargetType<StaticTarget>> STATIC = DEFERRED_REGISTER.register("static", () -> new ITargetType<>(t -> t instanceof StaticTarget));
     
     public static void register()
     {
@@ -29,6 +29,7 @@ public class TargetTypes
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<ITargetType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "targets")));
+        ITargetType<?> classObj = new ITargetType<>();
+        REGISTRY = event.create(new RegistryBuilder<ITargetType<?>>().setType((Class<ITargetType<?>>) classObj.getClass()).setMaxID(256).setName(new ResourceLocation(MOD_ID, "targets")));
     }
 }

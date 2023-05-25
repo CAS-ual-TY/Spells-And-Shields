@@ -94,7 +94,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
         for(int i = 0; i < SPELL_SLOTS; ++i)
         {
             SpellInstance spellInstance = getSpell(i);
-            if(spellInstance != null && spellInstance.getSpell().get() == spell)
+            if(spellInstance != null && spellInstance.getSpell().value() == spell)
             {
                 amount++;
             }

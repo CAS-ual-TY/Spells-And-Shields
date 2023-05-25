@@ -1,15 +1,21 @@
 package de.cas_ual_ty.spells.requirement;
 
 import com.mojang.serialization.Codec;
-import de.cas_ual_ty.spells.registers.RequirementTypes;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.function.Function;
 
-public class RequirementType<R extends Requirement>
+public class RequirementType<R extends Requirement> extends ForgeRegistryEntry<RequirementType<?>>
 {
     private Function<RequirementType<R>, R> constructor;
     private Codec<R> codec;
+    
+    // 1.19.2 -> 1.18.2 downgrade
+    public RequirementType()
+    {
+    
+    }
     
     public RequirementType(Function<RequirementType<R>, R> constructor, Function<RequirementType<R>, Codec<R>> codec)
     {
@@ -29,7 +35,7 @@ public class RequirementType<R extends Requirement>
     
     public static void writeToBuf(FriendlyByteBuf buf, Requirement requirement)
     {
-        buf.writeRegistryId(RequirementTypes.REGISTRY.get(), requirement.getType());
+        buf.writeRegistryId(requirement.getType());
         requirement.writeToBuf(buf);
     }
     

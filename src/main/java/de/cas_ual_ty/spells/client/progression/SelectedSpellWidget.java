@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -88,17 +89,17 @@ public class SelectedSpellWidget extends GuiComponent
                 poseStack.pushPose();
                 poseStack.translate(0, 0, 400D);
                 
-                List<Component> tooltip = spellInstance.getSpell().get().makeTooltipList(null);
+                List<Component> tooltip = spellInstance.getSpell().value().makeTooltipList(null);
                 Optional<TooltipComponent> tooltipComponent = clickedWidget.spellNode.getSpellInstance().getTooltipComponent();
                 
                 if(SpellsClientConfig.SHOW_IDS.get())
                 {
                     Registry<Spell> spellRegistry = Spells.getRegistry(SpellsClientUtil.getClientLevel());
-                    tooltip.add(Component.literal(spellInstance.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString()).withStyle(ChatFormatting.DARK_GRAY));
+                    tooltip.add(SpellsDowngrade.literal(spellInstance.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString()).withStyle(ChatFormatting.DARK_GRAY));
                     
                     if(clickedWidget.spellNode.getNodeId() != null)
                     {
-                        tooltip.add(Component.literal(clickedWidget.spellNode.getNodeId().getIDText()).withStyle(ChatFormatting.DARK_GRAY));
+                        tooltip.add(SpellsDowngrade.literal(clickedWidget.spellNode.getNodeId().getIDText()).withStyle(ChatFormatting.DARK_GRAY));
                     }
                 }
                 

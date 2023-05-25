@@ -3,9 +3,9 @@ package de.cas_ual_ty.spells.requirement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -48,7 +48,7 @@ public class BookshelvesRequirement extends Requirement
     public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         int amount = access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0);
-        return Component.translatable(descriptionId, amount, bookshelves);
+        return SpellsDowngrade.translatable(descriptionId, amount, bookshelves);
     }
     
     @Override

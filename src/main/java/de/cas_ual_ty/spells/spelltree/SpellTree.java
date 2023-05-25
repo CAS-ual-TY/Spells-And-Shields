@@ -6,13 +6,14 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -22,7 +23,7 @@ import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-public class SpellTree
+public class SpellTree extends ForgeRegistryEntry<SpellTree>
 {
     private SpellNode root;
     private Component title;
@@ -60,7 +61,7 @@ public class SpellTree
     {
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getTitle());
-        getRequirements().stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> c.getContents() != ComponentContents.EMPTY).forEach(tooltips::add);
+        getRequirements().stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> !SpellsDowngrade.isEmpty(c)).forEach(tooltips::add);
         return tooltips;
     }
     
@@ -350,7 +351,7 @@ public class SpellTree
         
         public SpellTree finish()
         {
-            return new SpellTree(root, title, icon != null ? icon : root.getSpellInstance().getSpell().get().getIcon());
+            return new SpellTree(root, title, icon != null ? icon : root.getSpellInstance().getSpell().value().getIcon());
         }
     }
 }

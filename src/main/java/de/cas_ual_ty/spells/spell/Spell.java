@@ -6,17 +6,18 @@ import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Spell
+public class Spell extends ForgeRegistryEntry<Spell>
 {
     protected List<SpellAction> spellActions;
     protected SpellIcon icon;
@@ -49,7 +50,7 @@ public class Spell
     
     public Spell(SpellIcon icon, String titleKey, float manaCost)
     {
-        this(icon, Component.translatable(titleKey), manaCost);
+        this(icon, SpellsDowngrade.translatable(titleKey), manaCost);
     }
     
     public Spell(ResourceLocation icon, Component title, float manaCost)
@@ -59,7 +60,7 @@ public class Spell
     
     public Spell(String modId, String icon, String titleKey, float manaCost)
     {
-        this(new ResourceLocation(modId, "textures/spell/" + icon + ".png"), Component.translatable(titleKey), manaCost);
+        this(new ResourceLocation(modId, "textures/spell/" + icon + ".png"), SpellsDowngrade.translatable(titleKey), manaCost);
     }
     
     public Spell addTooltip(Component component)
@@ -129,8 +130,7 @@ public class Spell
     public List<Component> makeTooltipList(@Nullable Component keyBindTooltip)
     {
         List<Component> tooltip = new LinkedList<>();
-        
-        tooltip.add(MutableComponent.create(getTitle().getContents()).withStyle(ChatFormatting.YELLOW));
+        tooltip.add(getTitle().copy().withStyle(ChatFormatting.YELLOW));
         
         if(keyBindTooltip != null)
         {

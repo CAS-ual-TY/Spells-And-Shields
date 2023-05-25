@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -35,7 +36,7 @@ public class SpellSlotWidget extends Button
     
     public SpellSlotWidget(int x, int y, int slot, IntConsumer onPress, OnTooltip tooltip)
     {
-        super(x, y, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, Component.empty(), (b) -> onPress.accept(slot), tooltip);
+        super(x, y, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, SpellsDowngrade.empty(), (b) -> onPress.accept(slot), tooltip);
         this.slot = slot;
     }
     
@@ -75,7 +76,7 @@ public class SpellSlotWidget extends Button
                 
                 if(spell != null && spell.getSpell() != null)
                 {
-                    SpellIcon icon = spell.getSpell().get().getIcon();
+                    SpellIcon icon = spell.getSpell().value().getIcon();
                     SpellIconRegistry.render(icon, poseStack, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, x, y, deltaTick);
                 }
             });
@@ -116,16 +117,16 @@ public class SpellSlotWidget extends Button
                     poseStack.translate(0, 0, 10D);
                     
                     Component keyBindTooltip = SpellKeyBindings.getBaseTooltip().append(": ").append(SpellKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
-                    List<Component> tooltip = spell.getSpell().get().makeTooltipList(keyBindTooltip);
+                    List<Component> tooltip = spell.getSpell().value().makeTooltipList(keyBindTooltip);
                     Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
                     
                     if(SpellsClientConfig.SHOW_IDS.get())
                     {
                         Registry<Spell> spellRegistry = Spells.getRegistry(SpellsClientUtil.getClientLevel());
-                        tooltip.add(Component.literal(spell.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString()).withStyle(ChatFormatting.DARK_GRAY));
+                        tooltip.add(SpellsDowngrade.literal(spell.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString()).withStyle(ChatFormatting.DARK_GRAY));
                         if(spell.getNodeId() != null)
                         {
-                            tooltip.add(Component.literal(spell.getNodeId().getIDText()).withStyle(ChatFormatting.DARK_GRAY));
+                            tooltip.add(SpellsDowngrade.literal(spell.getNodeId().getIDText()).withStyle(ChatFormatting.DARK_GRAY));
                         }
                     }
                     

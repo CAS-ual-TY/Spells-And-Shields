@@ -85,7 +85,7 @@ public class GetFluidAction extends AffectSingleTypeAction<PositionTarget>
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PositionTarget positionTarget)
     {
         FluidState fluidState = ctx.level.getFluidState(positionTarget.getBlockPos());
-        ResourceLocation id = ForgeRegistries.FLUID_TYPES.get().getKey(fluidState.getFluidType());
+        ResourceLocation id = ForgeRegistries.FLUIDS.getKey(fluidState.getType());
         
         if(id == null)
         {

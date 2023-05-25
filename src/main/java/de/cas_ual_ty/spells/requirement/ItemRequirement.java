@@ -3,9 +3,9 @@ package de.cas_ual_ty.spells.requirement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -76,22 +76,22 @@ public class ItemRequirement extends Requirement
         {
             if(consume)
             {
-                return Component.translatable(getDescriptionId() + CONSUMED_SUFFIX, itemStack.getHoverName());
+                return SpellsDowngrade.translatable(getDescriptionId() + CONSUMED_SUFFIX, itemStack.getHoverName());
             }
             else
             {
-                return Component.translatable(getDescriptionId(), itemStack.getHoverName());
+                return SpellsDowngrade.translatable(getDescriptionId(), itemStack.getHoverName());
             }
         }
         else
         {
             if(consume)
             {
-                return Component.translatable(getDescriptionId() + MULTIPLE_CONSUMED_SUFFIX, itemStack.getCount(), itemStack.getHoverName());
+                return SpellsDowngrade.translatable(getDescriptionId() + MULTIPLE_CONSUMED_SUFFIX, itemStack.getCount(), itemStack.getHoverName());
             }
             else
             {
-                return Component.translatable(getDescriptionId() + MULTIPLE_SUFFIX, itemStack.getCount(), itemStack.getHoverName());
+                return SpellsDowngrade.translatable(getDescriptionId() + MULTIPLE_SUFFIX, itemStack.getCount(), itemStack.getHoverName());
             }
         }
     }

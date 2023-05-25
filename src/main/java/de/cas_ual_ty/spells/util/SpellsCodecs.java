@@ -66,7 +66,7 @@ public class SpellsCodecs
     
     public static void makeCodecs()
     {
-        SPELL = ExtraCodecs.lazyInitializedCodec(() -> RegistryFileCodec.create(Spells.REGISTRY_KEY, ExtraCodecs.lazyInitializedCodec(() -> SPELL_CONTENTS), false));
+        SPELL = ExtraCodecs.lazyInitializedCodec(() -> RegistryFileCodec.create(Spells.REGISTRY_KEY, ExtraCodecs.lazyInitializedCodec(() -> SPELL_CONTENTS)));
         SPELL_TREE = ExtraCodecs.lazyInitializedCodec(() -> RegistryFixedCodec.create(SpellTrees.REGISTRY_KEY));
         
         REQUIREMENT_TYPE = ExtraCodecs.lazyInitializedCodec(() -> RequirementTypes.REGISTRY.get().getCodec());
@@ -113,7 +113,7 @@ public class SpellsCodecs
         SPELL_SYNC = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("s2/icon").forGetter(Spell::getIcon),
                 COMPONENT.fieldOf("s1/title").forGetter(Spell::getTitle),
-                COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(s -> s.getTooltip().isEmpty() ? ImmutableList.of(Component.empty()) : s.getTooltip()),
+                COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(s -> s.getTooltip().isEmpty() ? ImmutableList.of(SpellsDowngrade.empty()) : s.getTooltip()),
                 Codec.FLOAT.fieldOf("s3/mana_cost").xmap(f -> Math.max(0, f), f -> Math.max(0, f)).forGetter(Spell::getManaCost)
         ).apply(instance, Spell::new)));
         

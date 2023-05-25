@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.spell.icon;
 
-import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import net.minecraft.network.FriendlyByteBuf;
 
 public abstract class SpellIcon
@@ -23,7 +22,7 @@ public abstract class SpellIcon
     
     public static void iconToBuf(FriendlyByteBuf buf, SpellIcon icon)
     {
-        buf.writeRegistryId(SpellIconTypes.REGISTRY.get(), icon.getType());
+        buf.writeRegistryId(icon.getType());
         icon.writeToBuf(buf);
     }
     

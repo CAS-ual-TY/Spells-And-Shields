@@ -107,7 +107,7 @@ public class SpellsCapabilities
         
         if(!event.isWasDeath())
         {
-            SpellProgressionHolder.getSpellProgressionHolder(event.getEntity()).ifPresent(current ->
+            SpellProgressionHolder.getSpellProgressionHolder(event.getPlayer()).ifPresent(current ->
             {
                 SpellProgressionHolder.getSpellProgressionHolder(event.getOriginal()).ifPresent(original ->
                 {
@@ -115,7 +115,7 @@ public class SpellsCapabilities
                 });
             });
             
-            ManaHolder.getManaHolder(event.getEntity()).ifPresent(current ->
+            ManaHolder.getManaHolder(event.getPlayer()).ifPresent(current ->
             {
                 ManaHolder.getManaHolder(event.getOriginal()).ifPresent(original ->
                 {
@@ -125,7 +125,7 @@ public class SpellsCapabilities
                 current.sendSync();
             });
             
-            SpellHolder.getSpellHolder(event.getEntity()).ifPresent(current ->
+            SpellHolder.getSpellHolder(event.getPlayer()).ifPresent(current ->
             {
                 SpellHolder.getSpellHolder(event.getOriginal()).ifPresent(original ->
                 {
@@ -161,7 +161,7 @@ public class SpellsCapabilities
         }
         else
         {
-            SpellProgressionHolder.getSpellProgressionHolder(event.getEntity()).ifPresent(current ->
+            SpellProgressionHolder.getSpellProgressionHolder(event.getPlayer()).ifPresent(current ->
             {
                 SpellProgressionHolder.getSpellProgressionHolder(event.getOriginal()).ifPresent(original ->
                 {
@@ -180,7 +180,7 @@ public class SpellsCapabilities
                 }
             });
             
-            ManaHolder.getManaHolder(event.getEntity()).ifPresent(manaHolder ->
+            ManaHolder.getManaHolder(event.getPlayer()).ifPresent(manaHolder ->
             {
                 if(SpellsConfig.RESPAWN_WITH_FULL_MANA.get())
                 {
@@ -192,7 +192,7 @@ public class SpellsCapabilities
             
             if(!SpellsConfig.CLEAR_SLOTS_ON_DEATH.get() && !SpellsConfig.FORGET_SPELLS_ON_DEATH.get())
             {
-                SpellHolder.getSpellHolder(event.getEntity()).ifPresent(current ->
+                SpellHolder.getSpellHolder(event.getPlayer()).ifPresent(current ->
                 {
                     SpellHolder.getSpellHolder(event.getOriginal()).ifPresent(original ->
                     {
@@ -253,11 +253,11 @@ public class SpellsCapabilities
         }
     }
     
-    private static void levelTick(TickEvent.LevelTickEvent event)
+    private static void levelTick(TickEvent.WorldTickEvent event)
     {
         if(event.phase == TickEvent.Phase.END)
         {
-            if(event.level instanceof ServerLevel level)
+            if(event.world instanceof ServerLevel level)
             {
                 List<Entity> entities = new LinkedList<>();
                 for(Entity e : level.getAllEntities())

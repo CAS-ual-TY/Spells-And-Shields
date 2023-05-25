@@ -20,7 +20,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.LinkedList;
 
@@ -198,7 +197,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             buf.writeFloat((float) offset.x);
             buf.writeFloat((float) offset.y);
             buf.writeFloat((float) offset.z);
-            buf.writeRegistryId(ForgeRegistries.PARTICLE_TYPES, particle.getType());
+            buf.writeRegistryId(particle.getType());
             particle.writeToNetwork(buf);
             buf.writeInt(time);
         }
@@ -211,10 +210,16 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             double spread = buf.readFloat();
             boolean motionSpread = buf.readBoolean();
             Vec3 offset = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
-            ParticleType<P> particleType = buf.readRegistryId();
-            P particle = particleType.getDeserializer().fromNetwork(particleType, buf);
+            ParticleType<?> particleType = buf.readRegistryId();
+            ParticleOptions particle = particleFromNetwork(particleType, buf);
             int time = buf.readInt();
             return new ParticleEmitter(duration, delay, amount, spread, motionSpread, offset, particle, time);
+        }
+        
+        // made for downgrade 1.19.2 -> 1.18.2
+        private static <P extends ParticleOptions> P particleFromNetwork(ParticleType<P> type, FriendlyByteBuf buf)
+        {
+            return type.getDeserializer().fromNetwork(type, buf);
         }
         
         @Override

@@ -3,9 +3,9 @@ package de.cas_ual_ty.spells.requirement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
+import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,15 +69,15 @@ public class AdvancementRequirement extends Requirement
             
             if(a != null)
             {
-                return Component.translatable(descriptionId, a.getDisplay().getTitle());
+                return SpellsDowngrade.translatable(descriptionId, a.getDisplay().getTitle());
             }
             else
             {
-                return Component.translatable(descriptionId + ERROR_SUFFIX, advancementRL.toString());
+                return SpellsDowngrade.translatable(descriptionId + ERROR_SUFFIX, advancementRL.toString());
             }
         }
         
-        return Component.empty();
+        return SpellsDowngrade.empty();
     }
     
     @Override

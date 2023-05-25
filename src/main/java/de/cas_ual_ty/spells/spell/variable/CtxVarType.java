@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -12,13 +13,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class CtxVarType<T>
+public class CtxVarType<T> extends ForgeRegistryEntry<CtxVarType<?>>
 {
     private Function<T, T> copyFunc;
     private Codec<T> immCodec;
     private Codec<CtxVar<T>> codec;
     
     private Map<CtxVarType<?>, Function<T, ?>> converters;
+    
+    // 1.19.2 -> 1.18.2 downgrade
+    public CtxVarType()
+    {
+    
+    }
     
     public CtxVarType(Function<T, T> copyFunc, Codec<T> immCodec)
     {

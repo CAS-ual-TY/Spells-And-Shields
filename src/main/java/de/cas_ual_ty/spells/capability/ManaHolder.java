@@ -13,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
@@ -137,7 +138,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
             if(s.getType() == EquipmentSlot.Type.ARMOR)
             {
                 ItemStack itemStack = player.getItemBySlot(s);
-                int level = itemStack.getEnchantmentLevel(BuiltinRegistries.MAX_MANA_ENCHANTMENT.get());
+                int level = EnchantmentHelper.getItemEnchantmentLevel(BuiltinRegistries.MAX_MANA_ENCHANTMENT.get(), itemStack);
                 double increase = BuiltinRegistries.MAX_MANA_ENCHANTMENT.get().getAttributeIncrease(level, s);
                 attribute += increase;
             }
@@ -179,7 +180,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
             if(s.getType() == EquipmentSlot.Type.ARMOR)
             {
                 ItemStack itemStack = player.getItemBySlot(s);
-                int level = itemStack.getEnchantmentLevel(BuiltinRegistries.MANA_REGENERATION_ENCHANTMENT.get());
+                int level = EnchantmentHelper.getItemEnchantmentLevel(BuiltinRegistries.MANA_REGENERATION_ENCHANTMENT.get(), itemStack);
                 double increase = BuiltinRegistries.MANA_REGENERATION_ENCHANTMENT.get().getAttributeIncrease(level, s);
                 attribute += increase;
             }

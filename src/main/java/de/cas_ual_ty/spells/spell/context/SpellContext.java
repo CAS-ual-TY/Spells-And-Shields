@@ -226,7 +226,7 @@ public class SpellContext
     
     public void run()
     {
-        Spell spell = this.spell.getSpell().get();
+        Spell spell = this.spell.getSpell().value();
         ResourceLocation spellRl = null;
         
         if(SpellsConfig.DEBUG_SPELLS.get())

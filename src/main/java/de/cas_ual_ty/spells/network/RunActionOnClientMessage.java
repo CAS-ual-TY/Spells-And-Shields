@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
-import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.spell.action.IClientAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
@@ -14,7 +13,7 @@ public record RunActionOnClientMessage(SyncedSpellActionType<?, ?> actionType, I
 {
     public static void encode(RunActionOnClientMessage msg, FriendlyByteBuf buf)
     {
-        buf.writeRegistryId(SpellActionTypes.REGISTRY.get(), msg.actionType());
+        buf.writeRegistryId(msg.actionType());
         msg.action().writeToBuf(buf);
     }
     

@@ -10,15 +10,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.OverlayRegistry;
 
 import java.util.Random;
 
-public class ManaRenderer implements IGuiOverlay
+public class ManaRenderer implements IIngameOverlay
 {
     public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/gui/spells_icons.png");
     
@@ -44,7 +42,7 @@ public class ManaRenderer implements IGuiOverlay
     }
     
     @Override
-    public void render(ForgeGui gui, PoseStack mStack, float partialTicks, int width, int height)
+    public void render(ForgeIngameGui gui, PoseStack mStack, float partialTicks, int width, int height)
     {
         if(above == SpellsClientConfig.MANA_ABOVE_FOOD.get() && right == !SpellsClientConfig.MANA_BY_HEALTH.get() && !Minecraft.getInstance().options.hideGui && gui.shouldDrawSurvivalElements())
         {
@@ -53,7 +51,7 @@ public class ManaRenderer implements IGuiOverlay
         }
     }
     
-    public void renderMana(ForgeGui gui, int width, int height, PoseStack pStack)
+    public void renderMana(ForgeIngameGui gui, int width, int height, PoseStack pStack)
     {
         if(minecraft.getCameraEntity() instanceof Player player)
         {
@@ -118,7 +116,7 @@ public class ManaRenderer implements IGuiOverlay
                 
                 int left = right ? width / 2 + 10 : width / 2 - 91;
                 
-                int top = height - (right ? gui.rightHeight : gui.leftHeight);
+                int top = height - (right ? gui.right_height : gui.left_height);
                 
                 if(!right && above && player.getArmorValue() <= 0)
                 {
@@ -138,11 +136,11 @@ public class ManaRenderer implements IGuiOverlay
                 
                 if(right)
                 {
-                    gui.rightHeight += change;
+                    gui.right_height += change;
                 }
                 else
                 {
-                    gui.leftHeight += change;
+                    gui.left_height += change;
                 }
             });
             
@@ -150,7 +148,7 @@ public class ManaRenderer implements IGuiOverlay
         }
     }
     
-    protected void renderUnit(ForgeGui gui, PoseStack poseStack, Player player, int left, int top, int rowHeight, int regen, float manaMax, int mana, int manaLast, int extra, boolean highlight)
+    protected void renderUnit(ForgeIngameGui gui, PoseStack poseStack, Player player, int left, int top, int rowHeight, int regen, float manaMax, int mana, int manaLast, int extra, boolean highlight)
     {
         UnitType unitType = UnitType.forPlayer(player);
         
@@ -205,7 +203,7 @@ public class ManaRenderer implements IGuiOverlay
         }
     }
     
-    private void renderUnit(ForgeGui gui, PoseStack poseStack, UnitType unitType, int x, int y, int v, boolean highlight, boolean half)
+    private void renderUnit(ForgeIngameGui gui, PoseStack poseStack, UnitType unitType, int x, int y, int v, boolean highlight, boolean half)
     {
         gui.blit(poseStack, x, y, unitType.getU(half, highlight), v, 9, 9);
     }
@@ -255,16 +253,11 @@ public class ManaRenderer implements IGuiOverlay
         }
     }
     
-    private static void registerGuiOverlays(RegisterGuiOverlaysEvent event)
-    {
-        event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), "player_mana_above_hunger", new ManaRenderer(true, true));
-        event.registerBelow(VanillaGuiOverlay.FOOD_LEVEL.id(), "player_mana_below_hunger", new ManaRenderer(true, false));
-        event.registerAbove(VanillaGuiOverlay.PLAYER_HEALTH.id(), "player_mana_above_health", new ManaRenderer(false, true));
-        event.registerBelow(VanillaGuiOverlay.PLAYER_HEALTH.id(), "player_mana_below_health", new ManaRenderer(false, false));
-    }
-    
     public static void register()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ManaRenderer::registerGuiOverlays);
+        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "player_mana_above_hunger", new ManaRenderer(true, true));
+        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "player_mana_below_hunger", new ManaRenderer(true, false));
+        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.PLAYER_HEALTH_ELEMENT, "player_mana_above_health", new ManaRenderer(false, true));
+        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.PLAYER_HEALTH_ELEMENT, "player_mana_below_health", new ManaRenderer(false, false));
     }
 }

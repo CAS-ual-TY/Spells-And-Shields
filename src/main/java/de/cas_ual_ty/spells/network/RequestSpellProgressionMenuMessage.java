@@ -64,7 +64,7 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                             
                             Registry<Spell> registry = Spells.getRegistry(level);
                             
-                            NetworkHooks.openScreen(player, new MenuProvider()
+                            NetworkHooks.openGui(player, new MenuProvider()
                             {
                                 @Override
                                 public Component getDisplayName()
