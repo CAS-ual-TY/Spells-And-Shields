@@ -23,6 +23,8 @@ public class SpellKeyBindings
     public static KeyMapping[] slotKeys;
     public static int[] cooldowns;
     
+    public static KeyMapping radialMenu;
+    
     private static void registerKeyMappings(RegisterKeyMappingsEvent event)
     {
         slotKeys = new KeyMapping[SpellHolder.SPELL_SLOTS];
@@ -33,11 +35,19 @@ public class SpellKeyBindings
             slotKeys[i] = new KeyMapping(key(i), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
             event.register(slotKeys[i]);
         }
+        
+        radialMenu = new KeyMapping(keyRadialMenu(), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+        event.register(radialMenu);
     }
     
     public static String key(int slot)
     {
         return "key." + SpellsAndShields.MOD_ID + ".key.slot_" + (slot + 1);
+    }
+    
+    public static String keyRadialMenu()
+    {
+        return "key." + SpellsAndShields.MOD_ID + ".key.radial_menu";
     }
     
     public static MutableComponent getBaseTooltip()
@@ -56,6 +66,12 @@ public class SpellKeyBindings
         
         if(event.phase == TickEvent.Phase.END && player != null)
         {
+            if(radialMenu.isDown() && Minecraft.getInstance().screen == null)
+            {
+                Minecraft.getInstance().setScreen(new RadialMenu());
+                return;
+            }
+            
             for(int i = 0; i < slotKeys.length; ++i)
             {
                 if(cooldowns[i] > 0)

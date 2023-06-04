@@ -92,6 +92,7 @@ public class LangGen extends LanguageProvider
         {
             add(SpellKeyBindings.key(i), "Spell Slot " + (i + 1));
         }
+        add(SpellKeyBindings.keyRadialMenu(), "Radial Menu");
         
         addRequirement(RequirementTypes.BOOKSHELVES, "%s/%s Bookshelves");
         addRequirement(RequirementTypes.ADVANCEMENT, "Advancement: %s");
