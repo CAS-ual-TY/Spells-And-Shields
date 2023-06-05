@@ -24,6 +24,8 @@ public class SpellKeyBindings
     public static KeyMapping[] slotKeys;
     public static int[] cooldowns;
     
+    public static KeyMapping radialMenu;
+    
     private static void clientSetup(FMLClientSetupEvent event)
     {
         slotKeys = new KeyMapping[SpellHolder.SPELL_SLOTS];
@@ -34,11 +36,19 @@ public class SpellKeyBindings
             slotKeys[i] = new KeyMapping(key(i), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
             ClientRegistry.registerKeyBinding(slotKeys[i]);
         }
+        
+        radialMenu = new KeyMapping(keyRadialMenu(), KeyConflictContext.IN_GAME, InputConstants.getKey(InputConstants.KEY_V, 0), CATEGORY);
+        ClientRegistry.registerKeyBinding(radialMenu);
     }
     
     public static String key(int slot)
     {
         return "key." + SpellsAndShields.MOD_ID + ".key.slot_" + (slot + 1);
+    }
+    
+    public static String keyRadialMenu()
+    {
+        return "key." + SpellsAndShields.MOD_ID + ".key.radial_menu";
     }
     
     public static MutableComponent getBaseTooltip()
@@ -53,10 +63,31 @@ public class SpellKeyBindings
     
     private static void clientTick(TickEvent.ClientTickEvent event)
     {
+        if(event.phase != TickEvent.Phase.END)
+        {
+            return;
+        }
+        
         Player player = Minecraft.getInstance().player;
         
-        if(event.phase == TickEvent.Phase.END && player != null)
+        if(player != null)
         {
+            if(radialMenu.isDown())
+            {
+                if(Minecraft.getInstance().screen == null && !RadialMenu.wasClosed)
+                {
+                    Minecraft.getInstance().setScreen(new RadialMenu());
+                }
+                return;
+            }
+            else
+            {
+                if(RadialMenu.wasClosed)
+                {
+                    RadialMenu.wasClosed = false;
+                }
+            }
+            
             for(int i = 0; i < slotKeys.length; ++i)
             {
                 if(cooldowns[i] > 0)
