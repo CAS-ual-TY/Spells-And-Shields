@@ -62,14 +62,29 @@ public class SpellKeyBindings
     
     private static void clientTick(TickEvent.ClientTickEvent event)
     {
+        if(event.phase != TickEvent.Phase.END)
+        {
+            return;
+        }
+        
         Player player = Minecraft.getInstance().player;
         
-        if(event.phase == TickEvent.Phase.END && player != null)
+        if(player != null)
         {
-            if(radialMenu.isDown() && Minecraft.getInstance().screen == null)
+            if(radialMenu.isDown())
             {
-                Minecraft.getInstance().setScreen(new RadialMenu());
+                if(Minecraft.getInstance().screen == null && !RadialMenu.wasClosed)
+                {
+                    Minecraft.getInstance().setScreen(new RadialMenu());
+                }
                 return;
+            }
+            else
+            {
+                if(RadialMenu.wasClosed)
+                {
+                    RadialMenu.wasClosed = false;
+                }
             }
             
             for(int i = 0; i < slotKeys.length; ++i)
