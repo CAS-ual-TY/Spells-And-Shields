@@ -36,7 +36,7 @@ public class SpellKeyBindings
             event.register(slotKeys[i]);
         }
         
-        radialMenu = new KeyMapping(keyRadialMenu(), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+        radialMenu = new KeyMapping(keyRadialMenu(), KeyConflictContext.IN_GAME, InputConstants.getKey(InputConstants.KEY_V, 0), CATEGORY);
         event.register(radialMenu);
     }
     
