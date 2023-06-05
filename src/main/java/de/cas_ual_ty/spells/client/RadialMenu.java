@@ -13,6 +13,7 @@ import net.minecraft.world.phys.Vec2;
 
 public class RadialMenu extends Screen
 {
+    private int slots;
     private Vec2[] outerPoints;
     private Vec2 innerPoint;
     private Vec2[][] smallOuterPoints;
@@ -44,10 +45,7 @@ public class RadialMenu extends Screen
             return;
         }
         
-        //TODO cache all the math of this. Also, it is a little rushed
-        // maybe calculate everything in init()
-        
-        int slots = holder.getSlots();
+        slots = holder.getSlots();
         
         outerPoints = new Vec2[slots];
         innerPoint = new Vec2(width * 0.5F, height * 0.5F);
@@ -119,11 +117,6 @@ public class RadialMenu extends Screen
         {
             return;
         }
-        
-        //TODO cache all the math of this. Also, it is a little rushed
-        // maybe calculate everything in init()
-        
-        int slots = holder.getSlots();
         
         // cheap way of checking which triangle is hovered
         Vec2 relMouseVec = new Vec2(pMouseX, pMouseY).add(innerPoint.scale(-1F));
