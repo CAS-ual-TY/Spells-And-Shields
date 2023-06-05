@@ -13,6 +13,15 @@ import net.minecraft.world.phys.Vec2;
 
 public class RadialMenu extends Screen
 {
+    private Vec2[] outerPoints;
+    private Vec2 innerPoint;
+    private Vec2[][] smallOuterPoints;
+    private Vec2[] smallInnerPoints;
+    private Vec2[] iconPositionPoints;
+    
+    private float size = 80F;
+    private float innerMargin = 4F;
+    
     public RadialMenu()
     {
         super(Component.empty());
@@ -22,6 +31,70 @@ public class RadialMenu extends Screen
     protected void init()
     {
         super.init();
+        
+        if(getMinecraft().player == null)
+        {
+            return;
+        }
+        
+        SpellHolder holder = SpellHolder.getSpellHolder(getMinecraft().player).orElse(null);
+        
+        if(holder == null)
+        {
+            return;
+        }
+        
+        //TODO cache all the math of this. Also, it is a little rushed
+        // maybe calculate everything in init()
+        
+        int slots = holder.getSlots();
+        
+        outerPoints = new Vec2[slots];
+        innerPoint = new Vec2(width * 0.5F, height * 0.5F);
+        smallOuterPoints = new Vec2[slots][2];
+        smallInnerPoints = new Vec2[slots];
+        iconPositionPoints = new Vec2[slots];
+        
+        double angle = (2 * Math.PI) / slots;
+        
+        // outer pentagon points
+        Vec2[] points = new Vec2[slots];
+        for(int i = 0; i < slots; i++)
+        {
+            double a = i * angle;
+            double x = -Math.sin(a);
+            double y = -Math.cos(a);
+            points[i] = new Vec2((float) x, (float) y);
+            outerPoints[i] = points[i].scale(size).add(innerPoint);
+        }
+        
+        // vectors pointing from center to the middle of triangles of pentagon
+        Vec2[] halfVecs = new Vec2[slots];
+        for(int i = 0; i < slots; i++)
+        {
+            Vec2 vec1 = points[i];
+            Vec2 vec2 = points[(i + 1) % slots];
+            halfVecs[i] = vec1.add(vec2).normalized();
+            smallInnerPoints[i] = halfVecs[i].scale(innerMargin).add(innerPoint);
+        }
+        
+        // spell icon positions
+        float halfSize = size * 0.5F;
+        Vec2 iconOff = new Vec2(-SpellNodeWidget.SPELL_WIDTH * 0.5F, -SpellNodeWidget.SPELL_HEIGHT * 0.5F);
+        for(int i = 0; i < slots; i++)
+        {
+            iconPositionPoints[i] = halfVecs[i].scale(halfSize).add(iconOff).add(innerPoint);
+        }
+        
+        for(int i = 0; i < slots; i++)
+        {
+            Vec2 vec1 = points[i];
+            Vec2 vec2 = points[(i + 1) % slots];
+            
+            // inner triangle margin
+            smallOuterPoints[i][0] = vec1.scale(size).add(vec1.scale(-1F).add(vec1.scale(-1F).add(vec2).normalized()).normalized().scale(innerMargin)).add(innerPoint);
+            smallOuterPoints[i][1] = vec2.scale(size).add(vec2.scale(-1F).add(vec2.scale(-1F).add(vec1).normalized()).normalized().scale(innerMargin)).add(innerPoint);
+        }
     }
     
     @Override
@@ -52,57 +125,22 @@ public class RadialMenu extends Screen
         
         int slots = holder.getSlots();
         
-        int midX = width / 2;
-        int midY = height / 2;
-        
-        
-        double angle = (2 * Math.PI) / slots;
-        float size = 80F;
-        float innerMargin = 4F;
-        
-        // outer pentagon points
-        Vec2[] points = new Vec2[slots];
-        for(int i = 0; i < slots; i++)
-        {
-            double a = i * angle;
-            double x = -Math.sin(a);
-            double y = -Math.cos(a);
-            points[i] = new Vec2((float) x, (float) y);
-        }
-        
-        // vectors pointing from center to the middle of triangles of pentagon
-        Vec2[] halfVecs = new Vec2[slots];
-        for(int i = 0; i < slots; i++)
-        {
-            Vec2 vec1 = points[i];
-            Vec2 vec2 = points[(i + 1) % slots];
-            halfVecs[i] = vec1.add(vec2).normalized();
-        }
-        
         // cheap way of checking which triangle is hovered
-        Vec2 mouseVec = new Vec2(pMouseX - midX, pMouseY - midY);
+        Vec2 relMouseVec = new Vec2(pMouseX, pMouseY).add(innerPoint.scale(-1F));
         float minDist = Float.MAX_VALUE;
         int hovered = -1;
-        if(mouseVec.lengthSquared() >= innerMargin)
+        if(relMouseVec.lengthSquared() >= innerMargin * innerMargin)
         {
+            Vec2 mouseVec = new Vec2(pMouseX, pMouseY);
             for(int i = 0; i < slots; i++)
             {
-                float dist = mouseVec.scale(10).distanceToSqr(halfVecs[i].scale(10));
+                float dist = mouseVec.distanceToSqr(smallInnerPoints[i]);
                 if(dist < minDist)
                 {
                     hovered = i;
                     minDist = dist;
                 }
             }
-        }
-        
-        // spell icon positions
-        float halfSize = size * 0.5F;
-        Vec2[] iconPositions = new Vec2[slots];
-        Vec2 iconOff = new Vec2(-SpellNodeWidget.SPELL_WIDTH * 0.5F, -SpellNodeWidget.SPELL_HEIGHT * 0.5F);
-        for(int i = 0; i < slots; i++)
-        {
-            iconPositions[i] = halfVecs[i].scale(halfSize).add(iconOff);
         }
         
         Matrix4f pose = pPoseStack.last().pose();
@@ -116,8 +154,8 @@ public class RadialMenu extends Screen
         
         for(int i = 0; i < slots; i++)
         {
-            Vec2 vec1 = points[i].scale(size);
-            Vec2 vec2 = points[(i + 1) % slots].scale(size);
+            Vec2 vec1 = outerPoints[i];
+            Vec2 vec2 = outerPoints[(i + 1) % slots];
             
             float outsideC = 0F;
             float insideC = 0.75F;
@@ -131,32 +169,31 @@ public class RadialMenu extends Screen
             
             // render dark background
             bufferbuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-            bufferbuilder.vertex(pose, midX, midY, 0).color(outsideC, outsideC, outsideC, 0.25F).endVertex();
-            bufferbuilder.vertex(pose, midX + vec1.x, midY + vec1.y, 0).color(outsideC, outsideC, outsideC, 0.25F).endVertex();
-            bufferbuilder.vertex(pose, midX + vec2.x, midY + vec2.y, 0).color(outsideC, outsideC, outsideC, 0.25F).endVertex();
+            bufferbuilder.vertex(pose, innerPoint.x, innerPoint.y, 0).color(outsideC, outsideC, outsideC, 0.25F).endVertex();
+            bufferbuilder.vertex(pose, vec1.x, vec1.y, 0).color(outsideC, outsideC, outsideC, 0.25F).endVertex();
+            bufferbuilder.vertex(pose, vec2.x, vec2.y, 0).color(outsideC, outsideC, outsideC, 0.25F).endVertex();
             BufferUploader.drawWithShader(bufferbuilder.end());
             
-            // inner triangle margin
-            Vec2 vec0 = halfVecs[i].scale(innerMargin);
-            vec1 = vec1.add(vec1.scale(-1F).normalized().add(vec1.scale(-1F).add(vec2).normalized()).normalized().scale(innerMargin));
-            vec2 = vec2.add(vec2.scale(-1F).normalized().add(vec2.scale(-1F).add(vec1).normalized()).normalized().scale(innerMargin));
+            Vec2 smallInnerPoint = smallInnerPoints[i];
+            Vec2 smallVec1 = smallOuterPoints[i][0];
+            Vec2 smallVec2 = smallOuterPoints[i][1];
             
             // render inner triangle
             bufferbuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-            bufferbuilder.vertex(pose, midX + vec0.x, midY + vec0.y, 0).color(insideC, insideC, insideC, 0.5F).endVertex();
-            bufferbuilder.vertex(pose, midX + vec1.x, midY + vec1.y, 0).color(insideC, insideC, insideC, 0.5F).endVertex();
-            bufferbuilder.vertex(pose, midX + vec2.x, midY + vec2.y, 0).color(insideC, insideC, insideC, 0.5F).endVertex();
+            bufferbuilder.vertex(pose, smallInnerPoint.x, smallInnerPoint.y, 0).color(insideC, insideC, insideC, 0.5F).endVertex();
+            bufferbuilder.vertex(pose, smallVec1.x, smallVec1.y, 0).color(insideC, insideC, insideC, 0.5F).endVertex();
+            bufferbuilder.vertex(pose, smallVec2.x, smallVec2.y, 0).color(insideC, insideC, insideC, 0.5F).endVertex();
             BufferUploader.drawWithShader(bufferbuilder.end());
             
             if(holder.getSpell(i) == null)
             {
                 // render icon background for empty slots
-                Vec2 iconVec = iconPositions[i];
+                Vec2 iconVec = iconPositionPoints[i];
                 bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                bufferbuilder.vertex(pose, midX + iconVec.x, midY + iconVec.y, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                bufferbuilder.vertex(pose, midX + iconVec.x, midY + iconVec.y + SpellNodeWidget.SPELL_HEIGHT, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                bufferbuilder.vertex(pose, midX + iconVec.x + SpellNodeWidget.SPELL_WIDTH, midY + iconVec.y + SpellNodeWidget.SPELL_HEIGHT, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                bufferbuilder.vertex(pose, midX + iconVec.x + SpellNodeWidget.SPELL_WIDTH, midY + iconVec.y, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
+                bufferbuilder.vertex(pose, iconVec.x, iconVec.y, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
+                bufferbuilder.vertex(pose, iconVec.x, iconVec.y + SpellNodeWidget.SPELL_HEIGHT, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
+                bufferbuilder.vertex(pose, iconVec.x + SpellNodeWidget.SPELL_WIDTH, iconVec.y + SpellNodeWidget.SPELL_HEIGHT, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
+                bufferbuilder.vertex(pose, iconVec.x + SpellNodeWidget.SPELL_WIDTH, iconVec.y, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
                 BufferUploader.drawWithShader(bufferbuilder.end());
             }
         }
@@ -171,8 +208,8 @@ public class RadialMenu extends Screen
             
             if(spell != null)
             {
-                Vec2 pos = iconPositions[i];
-                SpellIconRegistry.render(spell.getSpell().get().getIcon(), pPoseStack, SpellNodeWidget.SPELL_WIDTH, SpellNodeWidget.SPELL_HEIGHT, midX + Math.round(pos.x), midY + Math.round(pos.y), pPartialTick);
+                Vec2 pos = iconPositionPoints[i];
+                SpellIconRegistry.render(spell.getSpell().get().getIcon(), pPoseStack, SpellNodeWidget.SPELL_WIDTH, SpellNodeWidget.SPELL_HEIGHT, Math.round(pos.x), Math.round(pos.y), pPartialTick);
             }
         }
     }
