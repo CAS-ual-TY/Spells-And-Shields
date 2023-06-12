@@ -609,13 +609,12 @@ public class SpellsGen implements DataProvider
         animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.PORKCHOP).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.PIG).toString());
         animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.MUTTON).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.SHEEP).toString());
         CompoundTag amountsTag = new CompoundTag();
-        animalsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.BEEF).toString(), 8);
-        animalsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.CHICKEN).toString(), 8);
-        animalsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.PORKCHOP).toString(), 8);
-        animalsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.MUTTON).toString(), 8);
+        amountsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.BEEF).toString(), 8);
+        amountsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.CHICKEN).toString(), 8);
+        amountsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.PORKCHOP).toString(), 8);
+        amountsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.MUTTON).toString(), 8);
         addSpell(Spells.SUMMON_ANIMAL, new Spell(modId, "summon_animal", Spells.KEY_SUMMON_ANIMAL, 4F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
-                .addAction(ActivateAction.make(ACTIVE, "cow"))
                 .addAction(MainhandItemTargetAction.make(ACTIVE, OWNER, "item"))
                 .addAction(GetItemAttributesAction.make(ACTIVE, "item", "item_id", "amount", "", ""))
                 .addAction(BooleanActivationAction.make(ACTIVE, "spawn", Compiler.compileString(" nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= (!item_costs() ? 1 : get_nbt_int(amounts, item_id)) ", BOOLEAN), TRUE, FALSE))
@@ -624,7 +623,7 @@ public class SpellsGen implements DataProvider
                 .addAction(ClearTargetsAction.make("offhand", "item"))
                 .addAction(OffhandItemTargetAction.make("offhand", OWNER, "item"))
                 .addAction(BooleanActivationAction.make("offhand", "spawn", Compiler.compileString(" nbt_contains(animals, item_id) && nbt_contains(amounts, item_id) && amount >= get_nbt_int(amounts, item_id) ", BOOLEAN), TRUE, FALSE))
-                .addAction(SpawnEntityAction.make("spawn", "baby", SpellsUtil.objectToString(EntityType.SHEEP, ForgeRegistries.ENTITY_TYPES), OWNER, Compiler.compileString(" -direction ", VEC3), ZERO_VEC3, TAG.immediate(childTag)))
+                .addAction(SpawnEntityAction.make("spawn", "baby", Compiler.compileString(" get_nbt_string(animals, item_id) ", STRING), OWNER, Compiler.compileString(" -direction ", VEC3), ZERO_VEC3, TAG.immediate(childTag)))
                 .addAction(BurnManaAction.make("spawn", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("spawn", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
                 .addAction(ConsumeItemAction.make("consume", "item", Compiler.compileString(" get_nbt_int(amounts, item_id) ", INT)))
