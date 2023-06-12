@@ -66,16 +66,21 @@
     {
       "type": "spells_and_shields:tag",
       "value": {
-        "minecraft:beef": 8,
-        "minecraft:chicken": 8,
-        "minecraft:mutton": 8,
-        "minecraft:porkchop": 8
+        "minecraft:beef": "minecraft:cow",
+        "minecraft:chicken": "minecraft:chicken",
+        "minecraft:mutton": "minecraft:sheep",
+        "minecraft:porkchop": "minecraft:pig"
       },
       "var/name": "animals"
     },
     {
       "type": "spells_and_shields:tag",
-      "value": {},
+      "value": {
+        "minecraft:beef": 8,
+        "minecraft:chicken": 8,
+        "minecraft:mutton": 8,
+        "minecraft:porkchop": 8
+      },
       "var/name": "amounts"
     }
   ],
@@ -85,11 +90,6 @@
       "activation": "active",
       "amount": "<<mana_cost>>",
       "t/target": "owner"
-    },
-    {
-      "type": "spells_and_shields:activate",
-      "a/to_activate": "cow",
-      "activation": "active"
     },
     {
       "type": "spells_and_shields:mainhand_item_target",
@@ -149,7 +149,7 @@
       "d/compound_tag/tag": {
         "Age": -24000
       },
-      "d/string/entity_type": "minecraft:sheep",
+      "d/string/entity_type": "<< get_nbt_string(animals, item_id) >>",
       "d/vec3/direction": "<< -direction >>",
       "d/vec3/motion": [
         0.0,
