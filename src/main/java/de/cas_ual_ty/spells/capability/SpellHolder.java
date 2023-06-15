@@ -53,16 +53,16 @@ public class SpellHolder implements INBTSerializable<ListTag>
     
     public void setSpell(int slot, @Nullable SpellInstance spell)
     {
-        if(!player.level.isClientSide)
+        if(!player.level().isClientSide)
         {
             if(slots[slot] != null)
             {
-                slots[slot].run(player.level, player, BuiltinEvents.ON_UNEQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                slots[slot].run(player.level(), player, BuiltinEvents.ON_UNEQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
             }
             
             if(spell != null)
             {
-                spell.run(player.level, player, BuiltinEvents.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                spell.run(player.level(), player, BuiltinEvents.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
             }
         }
         
@@ -82,7 +82,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
             if(s != null)
             {
                 final int slot = i;
-                s.run(player.level, player, activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                s.run(player.level(), player, activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
             }
         }
     }
@@ -118,14 +118,14 @@ public class SpellHolder implements INBTSerializable<ListTag>
     
     public SpellsSyncMessage makeSyncMessage()
     {
-        Registry<Spell> registry = Spells.getRegistry(player.getLevel());
+        Registry<Spell> registry = Spells.getRegistry(player.level());
         return new SpellsSyncMessage(player.getId(), Arrays.stream(slots).map(s -> s != null ? s.getSpell().unwrap().map(ResourceKey::location, registry::getKey) : null).toArray(ResourceLocation[]::new), Arrays.stream(slots).map(s -> s != null ? s.getNodeId() : null).toArray(SpellNodeId[]::new));
     }
     
     @Override
     public ListTag serializeNBT()
     {
-        Registry<Spell> spellRegistry = Spells.getRegistry(player.getLevel());
+        Registry<Spell> spellRegistry = Spells.getRegistry(player.level());
         
         ListTag list = new ListTag();
         for(int i = 0; i < SPELL_SLOTS; ++i)
@@ -145,8 +145,8 @@ public class SpellHolder implements INBTSerializable<ListTag>
     @Override
     public void deserializeNBT(ListTag tag)
     {
-        Registry<SpellTree> spellTreeRegistry = SpellTrees.getRegistry(player.getLevel());
-        Registry<Spell> spellRegistry = Spells.getRegistry(player.getLevel());
+        Registry<SpellTree> spellTreeRegistry = SpellTrees.getRegistry(player.level());
+        Registry<Spell> spellRegistry = Spells.getRegistry(player.level());
         
         if(tag.getElementType() != Tag.TAG_COMPOUND)
         {

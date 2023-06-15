@@ -47,7 +47,7 @@ public class ClientMessageHandler
         
         if(level != null && level.getEntity(msg.entityId()) instanceof Player player)
         {
-            Registry<Spell> registry = Spells.getRegistry(player.level);
+            Registry<Spell> registry = Spells.getRegistry(player.level());
             
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {

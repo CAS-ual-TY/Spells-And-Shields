@@ -68,7 +68,7 @@ public class ManaBladeEnchantment extends Enchantment
                     float damage = Math.min(manaHolder.getMana(), (float) level * 2F);
                     
                     manaHolder.burn(5F);
-                    livingEntity.hurt(livingEntity.level.damageSources().indirectMagic(user, null), damage);
+                    livingEntity.hurt(livingEntity.level().damageSources().indirectMagic(user, null), damage);
                     
                     RandomSource random = user.getRandom();
                     
@@ -80,7 +80,7 @@ public class ManaBladeEnchantment extends Enchantment
                     
                     for(i = 0; i < 10; i++)
                     {
-                        livingEntity.level.addParticle(ParticleTypes.ENCHANTED_HIT, eyes.x + random.nextGaussian() * spread.x, eyes.y + random.nextGaussian() * spread.y, eyes.z + random.nextGaussian() * spread.z, 0, 0, 0);
+                        livingEntity.level().addParticle(ParticleTypes.ENCHANTED_HIT, eyes.x + random.nextGaussian() * spread.x, eyes.y + random.nextGaussian() * spread.y, eyes.z + random.nextGaussian() * spread.z, 0, 0, 0);
                     }
                 }
             });

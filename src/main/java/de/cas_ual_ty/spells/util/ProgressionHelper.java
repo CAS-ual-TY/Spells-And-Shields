@@ -135,7 +135,7 @@ public class ProgressionHelper
     
     public static List<SpellTree> getStrippedSpellTrees(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level);
+        Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level());
         return stripSpellTrees(spellProgressionHolder, access, registry);
     }
     
@@ -160,7 +160,7 @@ public class ProgressionHelper
         
         AtomicBoolean found = new AtomicBoolean(false);
         
-        Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level);
+        Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level());
         
         menu.spellTrees.stream().filter(tree -> tree.getId().equals(nodeId.treeId())).findFirst().ifPresent(spellTree ->
         {

@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.ParticleEmitterHolder;
@@ -18,6 +17,7 @@ import de.cas_ual_ty.spells.spell.projectile.SpellProjectile;
 import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -107,7 +107,7 @@ public class SpellsClientUtil
     private static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
         lastRightClickedBlockPos = event.getPos();
-        lastRightClickedBlock = event.getEntity().level.getBlockState(event.getPos()).getBlock();
+        lastRightClickedBlock = event.getEntity().level().getBlockState(event.getPos()).getBlock();
     }
     
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
@@ -223,7 +223,7 @@ public class SpellsClientUtil
                     SpellSlotWidget s = new SpellSlotWidget(0, y1, i, (j) -> {})
                     {
                         @Override
-                        public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick)
+                        public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick)
                         {
                             this.visible = hasSpellLearned.getAsBoolean();
                             
@@ -258,7 +258,7 @@ public class SpellsClientUtil
                                 }
                             }
                             
-                            super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+                            super.render(guiGraphics, pMouseX, pMouseY, pPartialTick);
                         }
                     };
                     spellSlotWidgets.add(s);
@@ -277,7 +277,7 @@ public class SpellsClientUtil
             {
                 if(s.isMouseOver(event.getMouseX(), event.getMouseY()))
                 {
-                    SpellSlotWidget.spellSlotToolTip(screen, event.getPoseStack(), event.getMouseX(), event.getMouseY(), s.slot);
+                    SpellSlotWidget.spellSlotToolTip(screen, event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), s.slot);
                 }
             }
         }

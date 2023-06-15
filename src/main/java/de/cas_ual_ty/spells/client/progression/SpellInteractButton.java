@@ -1,9 +1,9 @@
 package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -20,26 +20,25 @@ public class SpellInteractButton extends Button
     }
     
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick)
     {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, SpellNodeWidget.WIDGETS_LOCATION);
         RenderSystem.setShaderColor(1F, 1F, 1F, this.alpha);
         int i = this.isHoveredOrFocused() && active ? this.v : 2;
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        blit(poseStack, this.getX(), this.getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
-        blit(poseStack, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
+        guiGraphics.blit(WIDGETS_LOCATION, this.getX(), this.getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
+        guiGraphics.blit(WIDGETS_LOCATION, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
         Font font = minecraft.font;
-        this.renderTitle(poseStack, mouseX, mouseY, deltaTick, font);
+        this.renderTitle(guiGraphics, mouseX, mouseY, deltaTick, font);
     }
     
-    public void renderTitle(PoseStack poseStack, int mouseX, int mouseY, float deltaTick, Font font)
+    public void renderTitle(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick, Font font)
     {
         int color = getFGColor();
-        drawCenteredString(poseStack, font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, color | Mth.ceil(this.alpha * 255F) << 24);
+        guiGraphics.drawCenteredString(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, color | Mth.ceil(this.alpha * 255F) << 24);
     }
     
     @Override

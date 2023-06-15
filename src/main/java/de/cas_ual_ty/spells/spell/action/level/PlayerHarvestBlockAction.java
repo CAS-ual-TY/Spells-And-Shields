@@ -83,7 +83,7 @@ public class PlayerHarvestBlockAction extends AffectSingleTypeAction<PlayerTarge
                 PlayerInteractEvent.LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, pos, direction);
                 
                 if(!event.isCanceled() &&
-                        !block.isAir() && player.canInteractWith(pos, 2D) &&
+                        !block.isAir() && player.canReach(pos, 2D) &&
                         pos.getY() <= level.getMaxBuildHeight() &&
                         level.mayInteract(player, pos) &&
                         !player.blockActionRestricted(level, pos, player.gameMode.getGameModeForPlayer()) &&

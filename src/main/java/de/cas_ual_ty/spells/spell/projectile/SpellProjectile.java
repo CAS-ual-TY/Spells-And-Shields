@@ -78,11 +78,11 @@ public class SpellProjectile extends AbstractHurtingProjectile
     {
         super.tick();
         
-        if(spell != null && !level.isClientSide())
+        if(spell != null && !level().isClientSide())
         {
             if(tickCount >= timeout)
             {
-                spell.forceRun(level, getPlayerOwner(), timeoutActivation, (ctx) ->
+                spell.forceRun(level(), getPlayerOwner(), timeoutActivation, (ctx) ->
                 {
                     ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 });
@@ -94,15 +94,15 @@ public class SpellProjectile extends AbstractHurtingProjectile
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult)
     {
-        if(spell != null && !level.isClientSide() && !(entityHitResult.getEntity() instanceof SpellProjectile))
+        if(spell != null && !level().isClientSide() && !(entityHitResult.getEntity() instanceof SpellProjectile))
         {
-            spell.forceRun(level, getPlayerOwner(), entityHitActivation, (ctx) ->
+            spell.forceRun(level(), getPlayerOwner(), entityHitActivation, (ctx) ->
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.ENTITY_HIT.targetGroup).addTargets(Target.of(entityHitResult.getEntity()));
                 
                 Vec3 clip = entityHitResult.getEntity().getBoundingBox().clip(position().subtract(getDeltaMovement()), position().add(getDeltaMovement())).orElse(entityHitResult.getEntity().getEyePosition());
-                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level, clip));
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level(), clip));
             });
             
             discard();
@@ -112,13 +112,13 @@ public class SpellProjectile extends AbstractHurtingProjectile
     @Override
     protected void onHitBlock(BlockHitResult blockHitResult)
     {
-        if(spell != null && !level.isClientSide())
+        if(spell != null && !level().isClientSide())
         {
-            spell.forceRun(level, getPlayerOwner(), blockHitActivation, (ctx) ->
+            spell.forceRun(level(), getPlayerOwner(), blockHitActivation, (ctx) ->
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
-                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.BLOCK_HIT.targetGroup).addTargets(Target.of(level, blockHitResult.getBlockPos()));
-                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level, blockHitResult.getLocation()));
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.BLOCK_HIT.targetGroup).addTargets(Target.of(level(), blockHitResult.getBlockPos()));
+                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level(), blockHitResult.getLocation()));
             });
             
             discard();
@@ -176,7 +176,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
             }
             else
             {
-                Registry<Spell> spellRegistry = Spells.getRegistry(level);
+                Registry<Spell> spellRegistry = Spells.getRegistry(level());
                 nbt.putString("spellId", spell.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString());
             }
         }
@@ -202,11 +202,11 @@ public class SpellProjectile extends AbstractHurtingProjectile
             
             if(spellNodeId != null)
             {
-                this.spell = spellNodeId.getSpellInstance(SpellTrees.getRegistry(this.level));
+                this.spell = spellNodeId.getSpellInstance(SpellTrees.getRegistry(this.level()));
             }
             else if(nbt.contains("spellId", Tag.TAG_STRING))
             {
-                Registry<Spell> spellRegistry = Spells.getRegistry(level);
+                Registry<Spell> spellRegistry = Spells.getRegistry(level());
                 Holder<Spell> holder = spellRegistry.getHolder(ResourceKey.create(Spells.REGISTRY_KEY, new ResourceLocation(nbt.getString("spellId")))).orElse(null);
                 
                 if(holder != null)
@@ -230,7 +230,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
     
     public static SpellProjectile shoot(Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        if(source.level instanceof ServerLevel level)
+        if(source.level() instanceof ServerLevel level)
         {
             SpellProjectile projectile = new SpellProjectile(BuiltinRegistries.SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
             projectile.setOwner(source);

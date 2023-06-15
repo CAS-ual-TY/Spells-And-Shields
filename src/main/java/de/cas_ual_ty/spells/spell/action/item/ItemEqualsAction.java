@@ -106,7 +106,7 @@ public class ItemEqualsAction extends AffectSingleTypeAction<ItemTarget>
                         return;
                     }
                     
-                    if(!ignoreTag && !ItemStack.tagMatches(item, itemTarget.getItem()))
+                    if(!ignoreTag && !ItemStack.isSameItemSameTags(item, itemTarget.getItem()))
                     {
                         ctx.deactivate(activation);
                     }

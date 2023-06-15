@@ -1,12 +1,10 @@
 package de.cas_ual_ty.spells.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
@@ -37,7 +35,7 @@ public class ManaClientTooltipComponent extends ManaTooltipComponent implements 
     }
     
     @Override
-    public void renderImage(Font font, int left, int top, PoseStack poseStack, ItemRenderer itemRenderer)
+    public void renderImage(Font font, int left, int top, GuiGraphics guiGraphics)
     {
         int v = 0;
         int totalUnits = Mth.ceil(20 / 2F);
@@ -56,11 +54,11 @@ public class ManaClientTooltipComponent extends ManaTooltipComponent implements 
             RenderSystem.setShaderTexture(0, ManaRenderer.GUI_ICONS_LOCATION);
             RenderSystem.enableBlend();
             
-            Screen.blit(poseStack, x, y, 9, 9, ManaRenderer.UnitType.CONTAINER.getU(false, false), 0, 9, 9, 256, 256);
+            guiGraphics.blit(ManaRenderer.GUI_ICONS_LOCATION, x, y, 9, 9, ManaRenderer.UnitType.CONTAINER.getU(false, false), 0, 9, 9, 256, 256);
             
             if(idx2 < mana)
             {
-                Screen.blit(poseStack, x, y, 9, 9, ManaRenderer.UnitType.NORMAL.getU(half, false), 0, 9, 9, 256, 256);
+                guiGraphics.blit(ManaRenderer.GUI_ICONS_LOCATION, x, y, 9, 9, ManaRenderer.UnitType.NORMAL.getU(half, false), 0, 9, 9, 256, 256);
             }
             
             RenderSystem.disableBlend();

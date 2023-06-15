@@ -92,7 +92,7 @@ public class SpellsEvents
                     delayedSpellHolder.activateEvent(eventId, toContext, fromContext);
                 });
                 
-                if(entity instanceof Player player && !entity.level.isClientSide)
+                if(entity instanceof Player player && !entity.level().isClientSide)
                 {
                     SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
                     {

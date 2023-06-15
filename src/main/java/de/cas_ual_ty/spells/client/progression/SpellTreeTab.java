@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.client.progression;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.client.SpellsClientConfig;
@@ -13,7 +12,7 @@ import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class SpellTreeTab extends GuiComponent
+public class SpellTreeTab
 {
     public static ResourceLocation background = new ResourceLocation("textures/block/obsidian.png");
     
@@ -136,7 +135,7 @@ public class SpellTreeTab extends GuiComponent
         return list;
     }
     
-    public void drawTab(PoseStack poseStack, int x, int y, boolean selected)
+    public void drawTab(GuiGraphics guiGraphics, int x, int y, boolean selected)
     {
         int i = 0;
         
@@ -152,34 +151,33 @@ public class SpellTreeTab extends GuiComponent
         
         int j = selected ? 32 : 0;
         
-        blit(poseStack, x + 32 * index, y - 28, i, j, 28, 32);
+        guiGraphics.blit(SpellProgressionScreen.TABS_LOCATION, x + 32 * index, y - 28, i, j, 28, 32);
     }
     
-    public void drawIcon(PoseStack poseStack, int x, int y, float deltaTick)
+    public void drawIcon(GuiGraphics guiGraphics, int x, int y, float deltaTick)
     {
-        SpellIconRegistry.render(icon, poseStack, SpellNodeWidget.SPELL_WIDTH, SpellNodeWidget.SPELL_HEIGHT, x + 32 * index + 5, y - 28 + 9, deltaTick);
+        SpellIconRegistry.render(icon, guiGraphics, SpellNodeWidget.SPELL_WIDTH, SpellNodeWidget.SPELL_HEIGHT, x + 32 * index + 5, y - 28 + 9, deltaTick);
     }
     
-    public void drawContents(PoseStack poseStack, float deltaTick)
+    public void drawContents(GuiGraphics guiGraphics, float deltaTick)
     {
-        poseStack.pushPose();
-        poseStack.translate(0D, 0D, 950D);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0D, 0D, 950D);
         
         RenderSystem.enableDepthTest();
         RenderSystem.colorMask(false, false, false, false);
         
-        fill(poseStack, 4680, 2260, -4680, -2260, 0xFF000000);
+        guiGraphics.fill(4680, 2260, -4680, -2260, 0xFF000000);
         
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthFunc(518);
         
-        poseStack.translate(0D, 0D, -950D);
+        guiGraphics.pose().translate(0D, 0D, -950D);
         
-        fill(poseStack, SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, 0, 0, 0xFF000000);
+        guiGraphics.fill(SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, 0, 0, 0xFF000000);
         
         RenderSystem.depthFunc(515);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, background);
         
         int scrollX = Mth.floor(this.scrollX);
         int scrollY = Mth.floor(this.scrollY);
@@ -191,48 +189,48 @@ public class SpellTreeTab extends GuiComponent
         {
             for(int bgY = -1; bgY <= SpellProgressionScreen.BACKGROUND_TILE_COUNT_Y + 1; ++bgY)
             {
-                blit(poseStack, scrollX16 + 16 * bgX, scrollY16 + 16 * bgY, 0F, 0F, 16, 16, 16, 16);
+                guiGraphics.blit(background, scrollX16 + 16 * bgX, scrollY16 + 16 * bgY, 0F, 0F, 16, 16, 16, 16);
             }
         }
         
         if(this.root != null)
         {
-            this.root.drawBackgroundConnectivity(poseStack, scrollX, scrollY);
-            this.root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFFFFFFFF, s -> true);
-            this.root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFF036A96 + 0x00202020, s -> s.parent.spellStatus.isAvailable());
-            this.root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFFB98F2C + 0x00202020, s -> s.parent.spellStatus.isAvailable() && s.spellStatus.isAvailable());
+            this.root.drawBackgroundConnectivity(guiGraphics, scrollX, scrollY);
+            this.root.drawLinkedConnectivity(guiGraphics, scrollX, scrollY, 0xFFFFFFFF, s -> true);
+            this.root.drawLinkedConnectivity(guiGraphics, scrollX, scrollY, 0xFF036A96 + 0x00202020, s -> s.parent.spellStatus.isAvailable());
+            this.root.drawLinkedConnectivity(guiGraphics, scrollX, scrollY, 0xFFB98F2C + 0x00202020, s -> s.parent.spellStatus.isAvailable() && s.spellStatus.isAvailable());
             
-            this.root.draw(poseStack, scrollX, scrollY, deltaTick);
+            this.root.draw(guiGraphics, scrollX, scrollY, deltaTick);
         }
         
         // DEBUGGING scrollX scrollY minX maxX minY maxY
-        /*vLine(poseStack, minX, -10, SpellProgressionScreen.WINDOW_INSIDE_HEIGHT + 10, 0xFFFF0000);
-        vLine(poseStack, maxX, -10, SpellProgressionScreen.WINDOW_INSIDE_HEIGHT + 10, 0xFFFF0000);
-        hLine(poseStack, -10, SpellProgressionScreen.WINDOW_INSIDE_WIDTH + 10, minY, 0xFFFF0000);
-        hLine(poseStack, -10, SpellProgressionScreen.WINDOW_INSIDE_WIDTH + 10, maxY, 0xFFFF0000);
+        /*vLine(guiGraphics, minX, -10, SpellProgressionScreen.WINDOW_INSIDE_HEIGHT + 10, 0xFFFF0000);
+        vLine(guiGraphics, maxX, -10, SpellProgressionScreen.WINDOW_INSIDE_HEIGHT + 10, 0xFFFF0000);
+        hLine(guiGraphics, -10, SpellProgressionScreen.WINDOW_INSIDE_WIDTH + 10, minY, 0xFFFF0000);
+        hLine(guiGraphics, -10, SpellProgressionScreen.WINDOW_INSIDE_WIDTH + 10, maxY, 0xFFFF0000);
     
-        vLine(poseStack, (int) scrollX, (int) (scrollY - 10), (int) (scrollY + 10), 0xFF0000FF);
-        hLine(poseStack, (int) (scrollX - 10), (int) (scrollX + 10), (int) scrollY, 0xFF0000FF);*/
+        vLine(guiGraphics, (int) scrollX, (int) (scrollY - 10), (int) (scrollY + 10), 0xFF0000FF);
+        hLine(guiGraphics, (int) (scrollX - 10), (int) (scrollX + 10), (int) scrollY, 0xFF0000FF);*/
         
-        poseStack.translate(0D, 0D, -950D);
+        guiGraphics.pose().translate(0D, 0D, -950D);
         
         RenderSystem.depthFunc(GlConst.GL_GEQUAL);
         RenderSystem.colorMask(false, false, false, false);
         
-        fill(poseStack, 4680, 2260, -4680, -2260, 0xFF000000);
+        guiGraphics.fill(4680, 2260, -4680, -2260, 0xFF000000);
         
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthFunc(GlConst.GL_LEQUAL);
         
-        poseStack.popPose();
+        guiGraphics.pose().popPose();
     }
     
-    public void drawTooltips(PoseStack poseStack, int mouseX, int mouseY, int offX, int offY, float deltaTick)
+    public void drawTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY, int offX, int offY, float deltaTick)
     {
-        poseStack.pushPose();
-        poseStack.translate(0D, 0D, -200D);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0D, 0D, -200D);
         
-        fill(poseStack, 0, 0, SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, Mth.floor(this.fade * 255F) << 24);
+        guiGraphics.fill(0, 0, SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, Mth.floor(this.fade * 255F) << 24);
         
         boolean found = false;
         
@@ -246,13 +244,13 @@ public class SpellTreeTab extends GuiComponent
                 if(w.isMouseOver(scrollX, scrollY, mouseX, mouseY))
                 {
                     found = true;
-                    w.drawHover(poseStack, scrollX, scrollY, offX, offY, deltaTick);
+                    w.drawHover(guiGraphics, scrollX, scrollY, offX, offY, deltaTick);
                     break;
                 }
             }
         }
         
-        poseStack.popPose();
+        guiGraphics.pose().popPose();
         
         if(found)
         {

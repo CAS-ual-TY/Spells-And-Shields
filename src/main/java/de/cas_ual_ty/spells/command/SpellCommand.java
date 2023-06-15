@@ -155,7 +155,7 @@ public class SpellCommand
         {
             if(changed.get())
             {
-                context.getSource().sendSuccess(Component.translatable(singleKey, node.getSpellDirect().getTitle(), players.iterator().next().getDisplayName()), true);
+                context.getSource().sendSuccess(() -> Component.translatable(singleKey, node.getSpellDirect().getTitle(), players.iterator().next().getDisplayName()), true);
             }
             else
             {
@@ -164,7 +164,7 @@ public class SpellCommand
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(multipleKey, node.getSpellDirect().getTitle(), players.size()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(multipleKey, node.getSpellDirect().getTitle(), players.size()), true);
         }
         
         return players.size();
@@ -204,7 +204,7 @@ public class SpellCommand
         {
             if(changed.get() > 0)
             {
-                context.getSource().sendSuccess(Component.translatable(singleKey, spellTree.getTitle(), players.iterator().next().getDisplayName()), true);
+                context.getSource().sendSuccess(() -> Component.translatable(singleKey, spellTree.getTitle(), players.iterator().next().getDisplayName()), true);
             }
             else
             {
@@ -213,7 +213,7 @@ public class SpellCommand
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(multipleKey, spellTree.getTitle(), players.size()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(multipleKey, spellTree.getTitle(), players.size()), true);
         }
         
         return players.size();
@@ -260,7 +260,7 @@ public class SpellCommand
         {
             if(learned.get() > 0)
             {
-                context.getSource().sendSuccess(Component.translatable(singleKey, learned.get(), totalTrees, players.iterator().next().getDisplayName()), true);
+                context.getSource().sendSuccess(() -> Component.translatable(singleKey, learned.get(), totalTrees, players.iterator().next().getDisplayName()), true);
             }
             else
             {
@@ -269,7 +269,7 @@ public class SpellCommand
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(multipleKey, totalSpells, totalTrees, players.size()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(multipleKey, totalSpells, totalTrees, players.size()), true);
         }
         
         return players.size();
@@ -330,11 +330,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_RESET_SINGLE, players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_PROGRESSION_RESET_SINGLE, players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_PROGRESSION_RESET_MULTIPLE, players.size()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_PROGRESSION_RESET_MULTIPLE, players.size()), true);
         }
         
         return 0;
@@ -363,11 +363,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_DIRECT_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_SLOT_SET_DIRECT_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_DIRECT_MULTIPLE, slot, players.size(), spell.getTitle()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_SLOT_SET_DIRECT_MULTIPLE, slot, players.size(), spell.getTitle()), true);
         }
         
         return players.size();
@@ -407,11 +407,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle(), spellTree.getTitle()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_SLOT_SET_SINGLE, slot, players.iterator().next().getDisplayName(), spell.getTitle(), spellTree.getTitle()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getTitle(), spellTree.getTitle()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_SLOT_SET_MULTIPLE, slot, players.size(), spell.getTitle(), spellTree.getTitle()), true);
         }
         
         return players.size();
@@ -439,11 +439,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_REMOVE_SINGLE, slot, players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_SLOT_REMOVE_SINGLE, slot, players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_REMOVE_MULTIPLE, slot, players.size()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_SLOT_REMOVE_MULTIPLE, slot, players.size()), true);
         }
         
         return players.size();
@@ -469,11 +469,11 @@ public class SpellCommand
         
         if(players.size() == 1)
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_CLEAR_SINGLE, players.iterator().next().getDisplayName()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_SLOT_CLEAR_SINGLE, players.iterator().next().getDisplayName()), true);
         }
         else
         {
-            context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_CLEAR_MULTIPLE, players.size()), true);
+            context.getSource().sendSuccess(() -> Component.translatable(SPELLS_SLOT_CLEAR_MULTIPLE, players.size()), true);
         }
         
         return players.size();

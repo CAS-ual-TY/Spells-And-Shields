@@ -10,7 +10,7 @@ public class EntityTarget extends PositionTarget
     
     public EntityTarget(ITargetType<?> type, Entity entity)
     {
-        super(type, entity.getLevel());
+        super(type, entity.level());
         this.entity = entity;
     }
     

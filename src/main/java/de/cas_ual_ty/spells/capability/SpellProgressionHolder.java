@@ -46,7 +46,7 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
     @Override
     public ListTag serializeNBT()
     {
-        Registry<Spell> registry = Spells.getRegistry(player.getLevel());
+        Registry<Spell> registry = Spells.getRegistry(player.level());
         
         ListTag list = new ListTag();
         
@@ -71,7 +71,7 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
             return;
         }
         
-        Registry<Spell> registry = Spells.getRegistry(player.getLevel());
+        Registry<Spell> registry = Spells.getRegistry(player.level());
         
         for(int i = 0; i < nbt.size(); ++i)
         {

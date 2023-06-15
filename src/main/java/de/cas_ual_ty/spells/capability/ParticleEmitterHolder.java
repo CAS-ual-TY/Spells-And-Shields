@@ -37,7 +37,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
     
     public void addParticleEmitter(ParticleEmitter emitter)
     {
-        if(!holder.level.isClientSide)
+        if(!holder.level().isClientSide)
         {
             sendSync(emitter);
         }
@@ -65,7 +65,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
                     double y = pos.y + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
                     double z = pos.z + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
                     
-                    holder.level.addParticle(e.particle, x, y, z, 0, 0, 0);
+                    holder.level().addParticle(e.particle, x, y, z, 0, 0, 0);
                 }
             }
             
@@ -86,7 +86,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
     @Override
     public ListTag serializeNBT()
     {
-        Registry<Spell> spellRegistry = Spells.getRegistry(holder.level);
+        Registry<Spell> spellRegistry = Spells.getRegistry(holder.level());
         ListTag tag = new ListTag();
         list.stream().map(ParticleEmitter::serializeNBT).forEach(tag::add);
         return tag;

@@ -278,7 +278,7 @@ public class SpellsCapabilities
     
     private static void playerTick(TickEvent.PlayerTickEvent event)
     {
-        if(event.phase == TickEvent.Phase.END && !event.player.level.isClientSide)
+        if(event.phase == TickEvent.Phase.END && !event.player.level().isClientSide)
         {
             ManaHolder.getManaHolder(event.player).ifPresent(ManaHolder::tick);
         }

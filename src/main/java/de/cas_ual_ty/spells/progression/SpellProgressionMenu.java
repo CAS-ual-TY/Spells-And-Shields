@@ -77,7 +77,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
             {
                 SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
                 {
-                    SpellNode node = nodeId.getSpellNode(SpellTrees.getRegistry(player.level));
+                    SpellNode node = nodeId.getSpellNode(SpellTrees.getRegistry(player.level()));
                     
                     if(node != null)
                     {
@@ -113,7 +113,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
         try
         {
             SpellProgressionSyncMessage msg = SpellProgressionSyncMessage.decode(extraData);
-            return new SpellProgressionMenu(id, inventory, ContainerLevelAccess.create(inventory.player.level, msg.blockPos()), msg.spellTrees(), msg.map());
+            return new SpellProgressionMenu(id, inventory, ContainerLevelAccess.create(inventory.player.level(), msg.blockPos()), msg.spellTrees(), msg.map());
         }
         catch(Exception e)
         {

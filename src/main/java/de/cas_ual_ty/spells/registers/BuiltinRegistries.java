@@ -129,7 +129,7 @@ public class BuiltinRegistries
     
     private static void livingHurt(LivingHurtEvent event)
     {
-        if(!event.getEntity().level.isClientSide && event.getSource().is(DamageTypes.MAGIC) && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && event.getEntity().hasEffect(BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get()))
+        if(!event.getEntity().level().isClientSide && event.getSource().is(DamageTypes.MAGIC) && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && event.getEntity().hasEffect(BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get()))
         {
             event.setCanceled(true);
         }

@@ -57,7 +57,7 @@ public class EntityUUIDTargetAction extends DstTargetAction
             uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid ->
             {
                 Entity e = level.getEntity(uuid);
-                if(e != null && e.level == ctx.level)
+                if(e != null && e.level() == ctx.level)
                 {
                     destination.addTargets(Target.of(e));
                 }

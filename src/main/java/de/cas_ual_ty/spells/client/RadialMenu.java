@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.client.progression.SpellNodeWidget;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.util.SpellHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -114,9 +115,9 @@ public class RadialMenu extends Screen
     }
     
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick)
+    public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick)
     {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        super.render(guiGraphics, pMouseX, pMouseY, pPartialTick);
         
         if(getMinecraft().player == null)
         {
@@ -132,7 +133,7 @@ public class RadialMenu extends Screen
         
         int hovered = getHoveredSection(pMouseX, pMouseY);
         
-        Matrix4f pose = pPoseStack.last().pose();
+        Matrix4f pose = guiGraphics.pose().last().pose();
         
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -199,7 +200,7 @@ public class RadialMenu extends Screen
             if(spell != null)
             {
                 Vec2 pos = iconPositionPoints[i];
-                SpellIconRegistry.render(spell.getSpell().get().getIcon(), pPoseStack, iconWidth, iconHeight, Math.round(pos.x), Math.round(pos.y), pPartialTick);
+                SpellIconRegistry.render(spell.getSpell().get().getIcon(), guiGraphics, iconWidth, iconHeight, Math.round(pos.x), Math.round(pos.y), pPartialTick);
             }
         }
     }

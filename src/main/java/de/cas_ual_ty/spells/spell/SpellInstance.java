@@ -108,7 +108,7 @@ public class SpellInstance
     
     public boolean run(Player owner, String activation)
     {
-        return run(owner.level, owner, activation);
+        return run(owner.level(), owner, activation);
     }
     
     public boolean run(Level level, @Nullable Player owner, String activation)
@@ -128,7 +128,7 @@ public class SpellInstance
     
     public boolean run(Player owner, String event, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
     {
-        return run(owner.level, owner, event, false, toContext, fromContext);
+        return run(owner.level(), owner, event, false, toContext, fromContext);
     }
     
     public boolean run(Level level, @Nullable Player owner, String activation, boolean force, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)

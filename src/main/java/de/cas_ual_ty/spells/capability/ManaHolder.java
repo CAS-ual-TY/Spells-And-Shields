@@ -204,7 +204,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
             lastSentMana = mana;
             lastSentExtraMana = extraMana;
             
-            if(player.level.isClientSide)
+            if(player.level().isClientSide)
             {
                 return;
             }

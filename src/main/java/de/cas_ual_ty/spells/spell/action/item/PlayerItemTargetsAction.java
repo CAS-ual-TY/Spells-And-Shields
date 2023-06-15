@@ -87,8 +87,8 @@ public class PlayerItemTargetsAction extends AffectSingleTypeAction<PlayerTarget
         
         if(hands)
         {
-            items.addTargets(Target.of(player.level, player.getMainHandItem(), (i) -> player.setItemInHand(InteractionHand.MAIN_HAND, i), player.isCreative()));
-            items.addTargets(Target.of(player.level, player.getOffhandItem(), (i) -> player.setItemInHand(InteractionHand.OFF_HAND, i), player.isCreative()));
+            items.addTargets(Target.of(player.level(), player.getMainHandItem(), (i) -> player.setItemInHand(InteractionHand.MAIN_HAND, i), player.isCreative()));
+            items.addTargets(Target.of(player.level(), player.getOffhandItem(), (i) -> player.setItemInHand(InteractionHand.OFF_HAND, i), player.isCreative()));
         }
         
         if(inventory)
@@ -101,7 +101,7 @@ public class PlayerItemTargetsAction extends AffectSingleTypeAction<PlayerTarget
                 }
                 
                 int finalI = i;
-                items.addTargets(Target.of(player.level, player.getInventory().items.get(i), (j) -> player.getInventory().items.set(finalI, j), player.isCreative()));
+                items.addTargets(Target.of(player.level(), player.getInventory().items.get(i), (j) -> player.getInventory().items.set(finalI, j), player.isCreative()));
             }
         }
         
@@ -115,7 +115,7 @@ public class PlayerItemTargetsAction extends AffectSingleTypeAction<PlayerTarget
                 }
                 
                 int finalI = i;
-                items.addTargets(Target.of(player.level, player.getInventory().armor.get(i), (j) -> player.getInventory().armor.set(finalI, j), player.isCreative()));
+                items.addTargets(Target.of(player.level(), player.getInventory().armor.get(i), (j) -> player.getInventory().armor.set(finalI, j), player.isCreative()));
             }
         }
     }

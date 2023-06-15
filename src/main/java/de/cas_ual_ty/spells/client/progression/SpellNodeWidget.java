@@ -1,7 +1,6 @@
 package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
@@ -10,7 +9,7 @@ import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -23,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class SpellNodeWidget extends GuiComponent
+public class SpellNodeWidget
 {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
     public static final int[] TEXT_OFFSETS = new int[] {0, 10, -10, 25, -25};
@@ -125,7 +124,7 @@ public class SpellNodeWidget extends GuiComponent
         return candidate;
     }
     
-    public void drawLinkedConnectivity(PoseStack poseStack, int x, int y, int color, Predicate<SpellNodeWidget> childPredicate)
+    public void drawLinkedConnectivity(GuiGraphics guiGraphics, int x, int y, int color, Predicate<SpellNodeWidget> childPredicate)
     {
         //TODO make and use proper constants
         
@@ -141,7 +140,7 @@ public class SpellNodeWidget extends GuiComponent
                 // multiple children, require horizontal and vertical line(s)
                 int hY = bot + 10;
                 
-                vLine(poseStack, xMid, bot, hY, color);
+                guiGraphics.vLine(xMid, bot, hY, color);
                 
                 for(SpellNodeWidget child : children)
                 {
@@ -153,8 +152,8 @@ public class SpellNodeWidget extends GuiComponent
                     int childX = x + child.x + xOff;
                     int childTop = y + child.y + 1;
                     
-                    vLine(poseStack, childX, childTop, hY, color);
-                    hLine(poseStack, childX, xMid, hY, color);
+                    guiGraphics.vLine(childX, childTop, hY, color);
+                    guiGraphics.hLine(childX, xMid, hY, color);
                 }
             }
             else
@@ -167,7 +166,7 @@ public class SpellNodeWidget extends GuiComponent
                     int childX = x + child.x + xOff;
                     int childTop = y + child.y + 1;
                     
-                    vLine(poseStack, childX, childTop, bot, color);
+                    guiGraphics.vLine(childX, childTop, bot, color);
                 }
             }
             
@@ -175,13 +174,13 @@ public class SpellNodeWidget extends GuiComponent
             {
                 if(childPredicate.test(spellNodeWidget))
                 {
-                    spellNodeWidget.drawLinkedConnectivity(poseStack, x, y, color, childPredicate);
+                    spellNodeWidget.drawLinkedConnectivity(guiGraphics, x, y, color, childPredicate);
                 }
             }
         }
     }
     
-    public void drawBackgroundConnectivity(PoseStack poseStack, int x, int y)
+    public void drawBackgroundConnectivity(GuiGraphics guiGraphics, int x, int y)
     {
         //TODO make and use proper constants
         
@@ -200,18 +199,18 @@ public class SpellNodeWidget extends GuiComponent
                 int hX2 = x + children.getLast().x + xOff;
                 int hY = bot + 10;
                 
-                vLine(poseStack, xMid - 1, bot, hY + 1, color);
-                vLine(poseStack, xMid + 1, bot, hY + 1, color);
+                guiGraphics.vLine(xMid - 1, bot, hY + 1, color);
+                guiGraphics.vLine(xMid + 1, bot, hY + 1, color);
                 
-                hLine(poseStack, hX1 - 1, hX2 + 1, hY - 1, color);
-                hLine(poseStack, hX1 - 1, hX2 + 1, hY + 1, color);
+                guiGraphics.hLine(hX1 - 1, hX2 + 1, hY - 1, color);
+                guiGraphics.hLine(hX1 - 1, hX2 + 1, hY + 1, color);
                 
                 for(SpellNodeWidget child : children)
                 {
                     int childX = x + child.x + xOff;
                     int childTop = y + child.y + 1;
-                    vLine(poseStack, childX - 1, childTop, hY - 1, color);
-                    vLine(poseStack, childX + 1, childTop, hY - 1, color);
+                    guiGraphics.vLine(childX - 1, childTop, hY - 1, color);
+                    guiGraphics.vLine(childX + 1, childTop, hY - 1, color);
                 }
             }
             else
@@ -221,34 +220,33 @@ public class SpellNodeWidget extends GuiComponent
                 int childX = x + child.x + xOff;
                 int childTop = y + child.y + 1;
                 
-                vLine(poseStack, childX - 1, childTop, bot, color);
-                vLine(poseStack, childX + 1, childTop, bot, color);
+                guiGraphics.vLine(childX - 1, childTop, bot, color);
+                guiGraphics.vLine(childX + 1, childTop, bot, color);
             }
             
             for(SpellNodeWidget spellNodeWidget : this.children)
             {
-                spellNodeWidget.drawBackgroundConnectivity(poseStack, x, y);
+                spellNodeWidget.drawBackgroundConnectivity(guiGraphics, x, y);
             }
         }
     }
     
-    public void draw(PoseStack poseStack, int x, int y, float deltaTick)
+    public void draw(GuiGraphics guiGraphics, int x, int y, float deltaTick)
     {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableBlend();
         
         // frame icon
-        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-        blit(poseStack, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        guiGraphics.blit(WIDGETS_LOCATION, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         // spell icon
-        SpellIconRegistry.render(spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, this.x + x + FRAME_OFF_X, this.y + y + FRAME_OFF_Y, deltaTick);
+        SpellIconRegistry.render(spellTexture, guiGraphics, SPELL_WIDTH, SPELL_HEIGHT, this.x + x + FRAME_OFF_X, this.y + y + FRAME_OFF_Y, deltaTick);
         
         RenderSystem.disableBlend();
         
         for(SpellNodeWidget spellNodeWidget : this.children)
         {
-            spellNodeWidget.draw(poseStack, x, y, deltaTick);
+            spellNodeWidget.draw(guiGraphics, x, y, deltaTick);
         }
     }
     
@@ -262,7 +260,7 @@ public class SpellNodeWidget extends GuiComponent
         this.children.add(spellNodeWidget);
     }
     
-    public void drawHover(PoseStack poseStack, int scrollX, int scrollY, int width, int height, float deltaTick)
+    public void drawHover(GuiGraphics guiGraphics, int scrollX, int scrollY, int width, int height, float deltaTick)
     {
         boolean drawLeft = width + scrollX + this.x + this.width + FRAME_WIDTH >= this.tab.getScreen().width;
         
@@ -273,28 +271,26 @@ public class SpellNodeWidget extends GuiComponent
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.enableBlend();
         
-        RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-        
         int renderY = scrollY + this.y;
         int renderX = scrollX + this.x + (drawLeft ? 6 - this.width + FRAME_WIDTH : 0);
         
         // wide back frame
-        blit(poseStack, renderX, renderY, 0, titleIcon * BAR_HEIGHT, left, BAR_HEIGHT);
-        blit(poseStack, renderX + left, renderY, BAR_WIDTH - right, titleIcon * BAR_HEIGHT, right, BAR_HEIGHT);
+        guiGraphics.blit(WIDGETS_LOCATION, renderX, renderY, 0, titleIcon * BAR_HEIGHT, left, BAR_HEIGHT);
+        guiGraphics.blit(WIDGETS_LOCATION, renderX + left, renderY, BAR_WIDTH - right, titleIcon * BAR_HEIGHT, right, BAR_HEIGHT);
         
         // front frame icon
-        blit(poseStack, scrollX + this.x + TITLE_PADDING_LEFT, scrollY + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        guiGraphics.blit(WIDGETS_LOCATION, scrollX + this.x + TITLE_PADDING_LEFT, scrollY + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         if(drawLeft)
         {
-            this.font.drawShadow(poseStack, this.title, (float) (renderX + 5), (float) (scrollY + this.y + TITLE_Y), 0xFFFFFFFF);
+            guiGraphics.drawString(this.font, this.title, (float) (renderX + 5), (float) (scrollY + this.y + TITLE_Y), 0xFFFFFFFF, true);
         }
         else
         {
-            this.font.drawShadow(poseStack, this.title, (float) (scrollX + this.x + TITLE_X), (float) (scrollY + this.y + TITLE_Y), 0xFFFFFFFF);
+            guiGraphics.drawString(this.font, this.title, (float) (scrollX + this.x + TITLE_X), (float) (scrollY + this.y + TITLE_Y), 0xFFFFFFFF, true);
         }
         
-        SpellIconRegistry.render(spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, scrollX + this.x + FRAME_OFF_X, scrollY + this.y + FRAME_OFF_Y, deltaTick);
+        SpellIconRegistry.render(spellTexture, guiGraphics, SPELL_WIDTH, SPELL_HEIGHT, scrollX + this.x + FRAME_OFF_X, scrollY + this.y + FRAME_OFF_Y, deltaTick);
     }
     
     public boolean isMouseOver(int x, int y, int mouseX, int mouseY)

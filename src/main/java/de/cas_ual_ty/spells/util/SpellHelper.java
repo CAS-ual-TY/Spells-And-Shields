@@ -19,7 +19,7 @@ public class SpellHelper
 {
     public static void fireSpellSlot(Player player, int slot)
     {
-        if(player.level.isClientSide)
+        if(player.level().isClientSide)
         {
             SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new FireSpellMessage(slot));
         }
@@ -33,11 +33,11 @@ public class SpellHelper
                 {
                     try
                     {
-                        spell.run(spellHolder.getPlayer().level, spellHolder.getPlayer(), BuiltinEvents.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                        spell.run(spellHolder.getPlayer().level(), spellHolder.getPlayer(), BuiltinEvents.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
                     }
                     catch(Exception e)
                     {
-                        SpellsAndShields.LOGGER.info("Error when firing spell: " + spell.getSpell().unwrap().map(ResourceKey::location, s -> Spells.getRegistry(serverPlayer.level).getKey(s)));
+                        SpellsAndShields.LOGGER.info("Error when firing spell: " + spell.getSpell().unwrap().map(ResourceKey::location, s -> Spells.getRegistry(serverPlayer.level()).getKey(s)));
                         if(SpellsConfig.DEBUG_SPELLS.get())
                         {
                             e.printStackTrace();

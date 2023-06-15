@@ -64,7 +64,7 @@ public class HomingSpellProjectile extends SpellProjectile
         {
             return this.cachedTarget;
         }
-        else if(this.targetUUID != null && this.level instanceof ServerLevel serverLevel)
+        else if(this.targetUUID != null && this.level() instanceof ServerLevel serverLevel)
         {
             return this.cachedTarget = serverLevel.getEntity(this.targetUUID);
         }
@@ -118,6 +118,6 @@ public class HomingSpellProjectile extends SpellProjectile
     
     public static HomingSpellProjectile home(Entity source, Entity target, SpellInstance spell, float velocity, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        return home(source.level, source.getEyePosition(), source, target, spell, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+        return home(source.level(), source.getEyePosition(), source, target, spell, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
 }

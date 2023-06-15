@@ -54,7 +54,7 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
                 
                 toContext.accept(ctx);
             };
-            s.run(holder.level, null, activation, true, toContextExt, fromContext);
+            s.run(holder.level(), null, activation, true, toContextExt, fromContext);
         }
     }
     
@@ -144,7 +144,7 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
     @Override
     public ListTag serializeNBT()
     {
-        Registry<Spell> spellRegistry = Spells.getRegistry(holder.level);
+        Registry<Spell> spellRegistry = Spells.getRegistry(holder.level());
         ListTag tag = new ListTag();
         spells.stream().map(ds -> ds.serializeNBT(spellRegistry)).forEach(tag::add);
         return tag;
@@ -153,8 +153,8 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
     @Override
     public void deserializeNBT(ListTag nbt)
     {
-        Registry<SpellTree> spellTreeRegistry = SpellTrees.getRegistry(holder.level);
-        Registry<Spell> spellRegistry = Spells.getRegistry(holder.level);
+        Registry<SpellTree> spellTreeRegistry = SpellTrees.getRegistry(holder.level());
+        Registry<Spell> spellRegistry = Spells.getRegistry(holder.level());
         nbt.stream()
                 .filter(t -> t instanceof CompoundTag)
                 .map(t -> new DelayedSpell((CompoundTag) t, spellTreeRegistry, spellRegistry))
