@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
@@ -221,7 +220,7 @@ public class SpellsClientUtil
                             + offY + i * slotsPosition.incrementY(SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, margin);
                     
                     int slot = i;
-                    SpellSlotWidget s = new SpellSlotWidget(0, y1, i, (j) -> {}, (b, pS, mX, mY) -> SpellSlotWidget.spellSlotToolTip(screen, pS, mX, mY, slot))
+                    SpellSlotWidget s = new SpellSlotWidget(0, y1, i, (j) -> {})
                     {
                         @Override
                         public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick)
@@ -232,7 +231,7 @@ public class SpellsClientUtil
                             {
                                 if(isRecipeBookClosed.getAsBoolean())
                                 {
-                                    this.x = x1 + slotsPosition.startPositionX(screen.width, screen.height, screen.getGuiLeft(), screen.getGuiTop(), screen.getXSize(), screen.getYSize(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, SpellHolder.SPELL_SLOTS, margin);
+                                    this.setX(x1 + slotsPosition.startPositionX(screen.width, screen.height, screen.getGuiLeft(), screen.getGuiTop(), screen.getXSize(), screen.getYSize(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, SpellHolder.SPELL_SLOTS, margin));
                                 }
                                 else
                                 {
@@ -255,7 +254,7 @@ public class SpellsClientUtil
                                         }
                                     }
                                     
-                                    this.x = x1 + x2;
+                                    this.setX(x1 + x2);
                                 }
                             }
                             
@@ -276,9 +275,10 @@ public class SpellsClientUtil
         {
             for(SpellSlotWidget s : spellSlotWidgets)
             {
-                RenderSystem.disableDepthTest();
-                s.renderToolTip(event.getPoseStack(), event.getMouseX(), event.getMouseY());
-                RenderSystem.enableDepthTest();
+                if(s.isMouseOver(event.getMouseX(), event.getMouseY()))
+                {
+                    SpellSlotWidget.spellSlotToolTip(screen, event.getPoseStack(), event.getMouseX(), event.getMouseY(), s.slot);
+                }
             }
         }
     }

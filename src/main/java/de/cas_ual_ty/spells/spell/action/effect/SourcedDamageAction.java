@@ -13,7 +13,6 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-import net.minecraft.world.damagesource.DamageSource;
 
 public class SourcedDamageAction extends AffectTypeAction<LivingEntityTarget>
 {
@@ -70,7 +69,7 @@ public class SourcedDamageAction extends AffectTypeAction<LivingEntityTarget>
         {
             ctx.getTargetGroup(source).getSingleType(TargetTypes.ENTITY.get(), entityTarget ->
             {
-                target.getLivingEntity().hurt(DamageSource.indirectMagic(entityTarget.getEntity(), null), damage.floatValue());
+                target.getLivingEntity().hurt(ctx.level.damageSources().indirectMagic(entityTarget.getEntity(), null), damage.floatValue());
             });
         });
     }

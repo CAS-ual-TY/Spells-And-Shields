@@ -141,7 +141,7 @@ public class SpellNodeWidget extends GuiComponent
                 // multiple children, require horizontal and vertical line(s)
                 int hY = bot + 10;
                 
-                this.vLine(poseStack, xMid, bot, hY, color);
+                vLine(poseStack, xMid, bot, hY, color);
                 
                 for(SpellNodeWidget child : children)
                 {
@@ -153,8 +153,8 @@ public class SpellNodeWidget extends GuiComponent
                     int childX = x + child.x + xOff;
                     int childTop = y + child.y + 1;
                     
-                    this.vLine(poseStack, childX, childTop, hY, color);
-                    this.hLine(poseStack, childX, xMid, hY, color);
+                    vLine(poseStack, childX, childTop, hY, color);
+                    hLine(poseStack, childX, xMid, hY, color);
                 }
             }
             else
@@ -167,7 +167,7 @@ public class SpellNodeWidget extends GuiComponent
                     int childX = x + child.x + xOff;
                     int childTop = y + child.y + 1;
                     
-                    this.vLine(poseStack, childX, childTop, bot, color);
+                    vLine(poseStack, childX, childTop, bot, color);
                 }
             }
             
@@ -200,18 +200,18 @@ public class SpellNodeWidget extends GuiComponent
                 int hX2 = x + children.getLast().x + xOff;
                 int hY = bot + 10;
                 
-                this.vLine(poseStack, xMid - 1, bot, hY + 1, color);
-                this.vLine(poseStack, xMid + 1, bot, hY + 1, color);
+                vLine(poseStack, xMid - 1, bot, hY + 1, color);
+                vLine(poseStack, xMid + 1, bot, hY + 1, color);
                 
-                this.hLine(poseStack, hX1 - 1, hX2 + 1, hY - 1, color);
-                this.hLine(poseStack, hX1 - 1, hX2 + 1, hY + 1, color);
+                hLine(poseStack, hX1 - 1, hX2 + 1, hY - 1, color);
+                hLine(poseStack, hX1 - 1, hX2 + 1, hY + 1, color);
                 
                 for(SpellNodeWidget child : children)
                 {
                     int childX = x + child.x + xOff;
                     int childTop = y + child.y + 1;
-                    this.vLine(poseStack, childX - 1, childTop, hY - 1, color);
-                    this.vLine(poseStack, childX + 1, childTop, hY - 1, color);
+                    vLine(poseStack, childX - 1, childTop, hY - 1, color);
+                    vLine(poseStack, childX + 1, childTop, hY - 1, color);
                 }
             }
             else
@@ -221,8 +221,8 @@ public class SpellNodeWidget extends GuiComponent
                 int childX = x + child.x + xOff;
                 int childTop = y + child.y + 1;
                 
-                this.vLine(poseStack, childX - 1, childTop, bot, color);
-                this.vLine(poseStack, childX + 1, childTop, bot, color);
+                vLine(poseStack, childX - 1, childTop, bot, color);
+                vLine(poseStack, childX + 1, childTop, bot, color);
             }
             
             for(SpellNodeWidget spellNodeWidget : this.children)
@@ -239,7 +239,7 @@ public class SpellNodeWidget extends GuiComponent
         
         // frame icon
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-        this.blit(poseStack, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        blit(poseStack, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         // spell icon
         SpellIconRegistry.render(spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, this.x + x + FRAME_OFF_X, this.y + y + FRAME_OFF_Y, deltaTick);
@@ -279,11 +279,11 @@ public class SpellNodeWidget extends GuiComponent
         int renderX = scrollX + this.x + (drawLeft ? 6 - this.width + FRAME_WIDTH : 0);
         
         // wide back frame
-        this.blit(poseStack, renderX, renderY, 0, titleIcon * BAR_HEIGHT, left, BAR_HEIGHT);
-        this.blit(poseStack, renderX + left, renderY, BAR_WIDTH - right, titleIcon * BAR_HEIGHT, right, BAR_HEIGHT);
+        blit(poseStack, renderX, renderY, 0, titleIcon * BAR_HEIGHT, left, BAR_HEIGHT);
+        blit(poseStack, renderX + left, renderY, BAR_WIDTH - right, titleIcon * BAR_HEIGHT, right, BAR_HEIGHT);
         
         // front frame icon
-        this.blit(poseStack, scrollX + this.x + TITLE_PADDING_LEFT, scrollY + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        blit(poseStack, scrollX + this.x + TITLE_PADDING_LEFT, scrollY + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         if(drawLeft)
         {

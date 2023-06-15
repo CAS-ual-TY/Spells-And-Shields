@@ -76,8 +76,10 @@ public class CubeBlockTargetsAction extends AffectSingleTypeAction<PositionTarge
         {
             corner2.getValue(ctx).ifPresent(corner2 ->
             {
-                BlockPos p1 = new BlockPos(positionTarget.getPosition().add(corner1));
-                BlockPos p2 = new BlockPos(positionTarget.getPosition().add(corner2));
+                Vec3 p1v = positionTarget.getPosition().add(corner1);
+                Vec3 p2v = positionTarget.getPosition().add(corner2);
+                BlockPos p1 = new BlockPos((int) p1v.x, (int) p1v.y, (int) p1v.z);
+                BlockPos p2 = new BlockPos((int) p2v.x, (int) p2v.y, (int) p2v.z);
                 
                 int minX = Math.min(p1.getX(), p2.getX());
                 int maxX = Math.max(p1.getX(), p2.getX());

@@ -19,6 +19,7 @@ import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -162,8 +163,8 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         
         if(this.tabs.size() > MAX_TABS)
         {
-            addRenderableWidget(new Button(getGuiLeft(), getGuiTop() - 50, 20, 20, Component.literal("<"), b -> tabPage = Math.max(tabPage - 1, 0)));
-            addRenderableWidget(new Button(getGuiLeft() + GUI_WIDTH - 20, getGuiTop() - 50, 20, 20, Component.literal(">"), b -> tabPage = Math.min(tabPage + 1, maxPages)));
+            addRenderableWidget(Button.builder(Component.literal("<"), b -> tabPage = Math.max(tabPage - 1, 0)).bounds(getGuiLeft(), getGuiTop() - 50, 20, 20).build());
+            addRenderableWidget(Button.builder(Component.literal(">"), b -> tabPage = Math.min(tabPage + 1, maxPages)).bounds(getGuiLeft() + GUI_WIDTH - 20, getGuiTop() - 50, 20, 20).build());
             maxPages = this.tabs.size() / MAX_TABS;
         }
         
@@ -173,7 +174,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         
         this.selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT, leftW);
         
-        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_LEARN), this::buttonClicked, 1, this::learnButtonTooltip)
+        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_LEARN), this::buttonClicked, 1)
         {
             @Override
             public void render(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)
@@ -195,8 +196,8 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                     int color = this.active ? 0x80FF20 : 0x407F10;
                     
                     String costStr = String.valueOf(cost);
-                    int x = this.x + this.width - font.width(costStr) - 2;
-                    int y = this.y + this.height - font.lineHeight - 4;
+                    int x = this.getX() + this.width - font.width(costStr) - 2;
+                    int y = this.getY() + this.height - font.lineHeight - 4;
                     font.draw(poseStack, costStr, x, y, color);
                 }
             }
@@ -218,8 +219,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         {
             int x = getGuiLeft() - SpellNodeWidget.FRAME_WIDTH;
             int y = getGuiTop() + i * (SpellNodeWidget.FRAME_HEIGHT + 1);
-            int slot = i;
-            spellSlotButtons[i] = new SpellSlotWidget(x, y, i, this::slotChosen, (b, pS, mX, mY) -> SpellSlotWidget.spellSlotToolTip(this, pS, mX, mY, slot));
+            spellSlotButtons[i] = new SpellSlotWidget(x, y, i, this::slotChosen);
         }
         
         disableSlotButtons();
@@ -430,7 +430,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, WINDOW_LOCATION);
-        this.blit(poseStack, offX, offY, 0, 0, GUI_WIDTH, GUI_HEIGHT);
+        blit(poseStack, offX, offY, 0, 0, GUI_WIDTH, GUI_HEIGHT);
         if(this.tabs.size() > 0)
         {
             RenderSystem.setShaderTexture(0, TABS_LOCATION);
@@ -477,7 +477,10 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         
         for(SpellSlotWidget b : this.spellSlotButtons)
         {
-            b.renderToolTip(poseStack, mouseX, mouseY);
+            if(b.isMouseOver(mouseX, mouseY))
+            {
+                SpellSlotWidget.spellSlotToolTip(this, poseStack, mouseX, mouseY, b.slot);
+            }
         }
         
         if(this.tabs.size() > 0)
@@ -491,7 +494,10 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             }
         }
         
-        learnButton.renderToolTip(poseStack, mouseX, mouseY);
+        if(learnButton.isMouseOver(mouseX, mouseY))
+        {
+            this.learnButtonTooltip(this.learnButton, poseStack, mouseX, mouseY);
+        }
     }
     
     private void renderBottom(PoseStack poseStack, int mouseX, int mouseY, float deltaTick)

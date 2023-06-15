@@ -1,8 +1,6 @@
 package de.cas_ual_ty.spells.datagen;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
@@ -32,16 +30,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -59,12 +55,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.JsonCodecProvider;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +67,7 @@ import static de.cas_ual_ty.spells.spell.context.BuiltinEvents.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.*;
 
-public class SpellsGen implements DataProvider
+public class SpellsGen
 {
     public static final ResourceLocation PERMANENT_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/permanent.png");
     public static final ResourceLocation TEMPORARY_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/temporary.png");
@@ -89,13 +82,8 @@ public class SpellsGen implements DataProvider
     public static final String KEY_ITEM_COST_SINGLE = "spell.generic.item_cost.single";
     public static final String KEY_ITEM_COST_TEXT = "spell.generic.item_cost.text";
     
-    protected Map<ResourceLocation, Spell> spells;
-    
-    protected DataGenerator gen;
     protected String modId;
-    protected ExistingFileHelper exFileHelper;
-    protected RegistryAccess registryAccess;
-    protected RegistryOps<JsonElement> registryOps;
+    protected final BootstapContext<Spell> context;
     
     public static final CtxVarType<Integer> INT = CtxVarTypes.INT.get();
     public static final CtxVarType<Double> DOUBLE = CtxVarTypes.DOUBLE.get();
@@ -113,15 +101,12 @@ public class SpellsGen implements DataProvider
     public final DynamicCtxVar<Vec3> ZERO_VEC3 = VEC3.immediate(Vec3.ZERO);
     public final DynamicCtxVar<CompoundTag> EMPTY_TAG = TAG.immediate(new CompoundTag());
     
-    public SpellsGen(DataGenerator gen, String modId, ExistingFileHelper exFileHelper)
+    public SpellsGen(String modId, BootstapContext<Spell> context)
     {
-        this.gen = gen;
         this.modId = modId;
-        this.exFileHelper = exFileHelper;
-        this.registryAccess = RegistryAccess.builtinCopy();
-        this.registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        this.context = context;
         
-        spells = new HashMap<>();
+        addSpells();
     }
     
     public void dummy(ResourceLocation rl)
@@ -149,7 +134,7 @@ public class SpellsGen implements DataProvider
     
     public void addSpell(ResourceLocation key, Spell spell)
     {
-        spells.put(key, spell);
+        context.register(ResourceKey.create(Spells.REGISTRY_KEY, key), spell);
     }
     
     public void addPermanentEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, int duration, int amplifier)
@@ -901,7 +886,7 @@ public class SpellsGen implements DataProvider
         );
         
         addSpell(Spells.MANA_SOLES, new Spell(modId, "mana_soles", Spells.KEY_MANA_SOLES, 0F)
-                .addAction(BooleanActivationAction.make(LIVING_HURT_VICTIM, "reduce", Compiler.compileString(" damage_type == '" + DamageSource.FALL.getMsgId() + "' ", BOOLEAN), TRUE, TRUE))
+                .addAction(BooleanActivationAction.make(LIVING_HURT_VICTIM, "reduce", Compiler.compileString(" damage_type == '" + DamageTypes.FALL.location().toString() + "' ", BOOLEAN), TRUE, TRUE))
                 .addAction(GetManaAction.make("reduce", OWNER, "mana"))
                 .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" min(mana, damage_amount) ", DOUBLE), "reduce_amount"))
                 .addAction(PutVarAction.makeBoolean("reduce", Compiler.compileString(" " + EVENT_IS_CANCELED.toString() + " || (reduce_amount >= damage_amount) ", BOOLEAN), EVENT_IS_CANCELED))
@@ -1508,15 +1493,6 @@ public class SpellsGen implements DataProvider
         addToggleEffectSpell(Spells.TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER_DESC, MobEffects.CONDUIT_POWER, 4F, 50, 0);
     }
     
-    @Override
-    public void run(CachedOutput pOutput) throws IOException
-    {
-        addSpells();
-        JsonCodecProvider<Spell> provider = JsonCodecProvider.forDatapackRegistry(gen, exFileHelper, modId, registryOps, Spells.REGISTRY_KEY, spells);
-        provider.run(pOutput);
-    }
-    
-    @Override
     public String getName()
     {
         return "Spells & Shields Spells Files";
@@ -1574,12 +1550,12 @@ public class SpellsGen implements DataProvider
     
     // yes this is stupid but I do not know how to access these without a level
     // so I print this as code to console and then copy paste it into actual code
-    public static void printBlastingRecipes(Level level)
+    public static void printBlastingRecipes(Level level, RegistryAccess access)
     {
         System.out.println("ABCDEFG=".repeat(50));
         level.getRecipeManager().getAllRecipesFor(RecipeType.BLASTING).forEach(r ->
         {
-            String out = ForgeRegistries.ITEMS.getKey(r.getResultItem().getItem()).toString();
+            String out = ForgeRegistries.ITEMS.getKey(r.getResultItem(access).getItem()).toString();
             r.getIngredients().forEach(i ->
             {
                 Arrays.stream(i.getItems()).map(it -> ForgeRegistries.ITEMS.getKey(it.getItem()).toString()).forEach(item ->

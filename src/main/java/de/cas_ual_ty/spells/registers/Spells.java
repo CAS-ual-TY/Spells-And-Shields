@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -18,7 +19,7 @@ import java.util.function.Supplier;
 public class Spells
 {
     private static Supplier<IForgeRegistry<Spell>> REGISTRY;
-    public static ResourceKey<Registry<Spell>> REGISTRY_KEY;
+    public static ResourceKey<Registry<Spell>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(SpellsAndShields.MOD_ID, "spells"));
     
     public static Registry<Spell> getRegistry(LevelAccessor level)
     {
@@ -356,13 +357,17 @@ public class Spells
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Spells::newRegistry);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(Spells::newDataPackRegistry);
     }
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).dataPackRegistry(SpellsCodecs.SPELL_CONTENTS, SpellsCodecs.SPELL_SYNC).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spells"))
-                .onCreate((registry, stage) -> REGISTRY_KEY = registry.getRegistryKey())
-        );
+        REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).setName(REGISTRY_KEY.location()));
+    }
+    
+    private static void newDataPackRegistry(DataPackRegistryEvent.NewRegistry event)
+    {
+        event.dataPackRegistry(REGISTRY_KEY, SpellsCodecs.SPELL_CONTENTS, SpellsCodecs.SPELL_SYNC);
     }
     
     private static ResourceLocation rl(String path)

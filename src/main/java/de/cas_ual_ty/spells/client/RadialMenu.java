@@ -2,7 +2,6 @@ package de.cas_ual_ty.spells.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.progression.SpellNodeWidget;
 import de.cas_ual_ty.spells.spell.SpellInstance;
@@ -13,6 +12,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
+import org.joml.Matrix4f;
 
 public class RadialMenu extends Screen
 {
@@ -134,7 +134,6 @@ public class RadialMenu extends Screen
         
         Matrix4f pose = pPoseStack.last().pose();
         
-        RenderSystem.disableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
@@ -191,7 +190,6 @@ public class RadialMenu extends Screen
         }
         
         RenderSystem.disableBlend();
-        RenderSystem.enableTexture();
         
         // render spell icons
         for(int i = 0; i < slots; i++)

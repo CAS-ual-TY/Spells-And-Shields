@@ -69,7 +69,7 @@ public class Compiler
         }
         catch(InlineCompilationException e)
         {
-            return DataResult.error(e.getMessage());
+            return DataResult.error(e::getMessage);
         }
     }
     

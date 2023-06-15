@@ -4,7 +4,6 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -69,7 +68,7 @@ public class ManaBladeEnchantment extends Enchantment
                     float damage = Math.min(manaHolder.getMana(), (float) level * 2F);
                     
                     manaHolder.burn(5F);
-                    livingEntity.hurt(DamageSource.indirectMagic(user, null), damage);
+                    livingEntity.hurt(livingEntity.level.damageSources().indirectMagic(user, null), damage);
                     
                     RandomSource random = user.getRandom();
                     

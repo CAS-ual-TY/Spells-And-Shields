@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -207,7 +208,7 @@ public class ManaRenderer implements IGuiOverlay
     
     private void renderUnit(ForgeGui gui, PoseStack poseStack, UnitType unitType, int x, int y, int v, boolean highlight, boolean half)
     {
-        gui.blit(poseStack, x, y, unitType.getU(half, highlight), v, 9, 9);
+        GuiComponent.blit(poseStack, x, y, unitType.getU(half, highlight), v, 9, 9);
     }
     
     public enum UnitType

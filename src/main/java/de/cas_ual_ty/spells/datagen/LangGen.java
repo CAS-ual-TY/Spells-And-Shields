@@ -30,7 +30,7 @@ public class LangGen extends LanguageProvider
 {
     public LangGen(DataGenerator dataGen, String locale)
     {
-        super(dataGen, SpellsAndShields.MOD_ID, locale);
+        super(dataGen.getPackOutput(), SpellsAndShields.MOD_ID, locale);
     }
     
     public static final String PERMANENT_EFFECT_NAME = "Perm. %s";

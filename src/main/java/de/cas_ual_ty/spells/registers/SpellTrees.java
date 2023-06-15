@@ -19,6 +19,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -29,7 +30,7 @@ import java.util.function.Supplier;
 public class SpellTrees
 {
     private static Supplier<IForgeRegistry<SpellTree>> REGISTRY;
-    public static ResourceKey<Registry<SpellTree>> REGISTRY_KEY;
+    public static ResourceKey<Registry<SpellTree>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees"));
     
     public static Registry<SpellTree> getRegistry(LevelAccessor level)
     {
@@ -50,14 +51,18 @@ public class SpellTrees
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellTrees::newRegistry);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellTrees::newDataPackRegistry);
         MinecraftForge.EVENT_BUS.addListener(SpellTrees::levelLoad);
     }
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).dataPackRegistry(SpellsCodecs.SPELL_TREE_CONTENTS, SpellsCodecs.SPELL_TREE_SYNC).setName(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees"))
-                .onCreate((registry, stage) -> REGISTRY_KEY = registry.getRegistryKey())
-        );
+        REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).setName(REGISTRY_KEY.location()));
+    }
+    
+    private static void newDataPackRegistry(DataPackRegistryEvent.NewRegistry event)
+    {
+        event.dataPackRegistry(REGISTRY_KEY, SpellsCodecs.SPELL_TREE_CONTENTS, SpellsCodecs.SPELL_TREE_SYNC);
     }
     
     private static void levelLoad(LevelEvent.Load event)

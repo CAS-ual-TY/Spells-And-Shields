@@ -9,10 +9,10 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class DocsGen implements DataProvider
@@ -37,7 +38,6 @@ public class DocsGen implements DataProvider
     protected DataGenerator gen;
     protected String modId;
     protected ExistingFileHelper exFileHelper;
-    protected RegistryAccess registryAccess;
     protected RegistryOps<JsonElement> registryOps;
     
     public DocsGen(DataGenerator gen, String modId, ExistingFileHelper exFileHelper)
@@ -45,8 +45,7 @@ public class DocsGen implements DataProvider
         this.gen = gen;
         this.modId = modId;
         this.exFileHelper = exFileHelper;
-        this.registryAccess = RegistryAccess.builtinCopy();
-        this.registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        this.registryOps = RegistryOps.create(JsonOps.INSTANCE, VanillaRegistries.createLookup());
     }
     
     public static void generateSingleFiles(String modId)
@@ -157,10 +156,12 @@ public class DocsGen implements DataProvider
     }
     
     @Override
-    public void run(CachedOutput pOutput) throws IOException
+    public CompletableFuture<?> run(CachedOutput p_236071_)
     {
         generateSingleFiles(modId);
         generateBigFile(modId);
+        
+        return CompletableFuture.allOf();
     }
     
     @Override

@@ -133,7 +133,7 @@ public class SpellsCodecs
                     return DataResult.success(Component.Serializer.fromJson(input.getAsString()));
                 }
                 
-                return DataResult.error("Codec only works on JsonOps");
+                return DataResult.error(() -> "Codec only works on JsonOps");
             }
             
             @Override
@@ -173,7 +173,7 @@ public class SpellsCodecs
                             }
                             else
                             {
-                                return DataResult.error("Value with key " + key + " is not a string");
+                                return DataResult.error(() -> "Value with key " + key + " is not a string");
                             }
                         }
                         
@@ -181,11 +181,11 @@ public class SpellsCodecs
                     }
                     else
                     {
-                        DataResult.error("Not a json object");
+                        DataResult.error(() -> "Not a json object");
                     }
                 }
                 
-                return DataResult.error("Codec only works on JsonOps");
+                return DataResult.error(() -> "Codec only works on JsonOps");
             }
             
             @Override

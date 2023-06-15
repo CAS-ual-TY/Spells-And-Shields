@@ -1,6 +1,8 @@
 package de.cas_ual_ty.spells.enchantment;
 
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
@@ -37,11 +39,11 @@ public class MagicProtectionEnchantment extends Enchantment
     @Override
     public int getDamageProtection(int level, DamageSource damageSource)
     {
-        if(damageSource.isBypassInvul())
+        if(damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
         {
             return 0;
         }
-        else if(damageSource.isMagic())
+        else if(damageSource.is(DamageTypes.MAGIC))
         {
             return level * 2;
         }

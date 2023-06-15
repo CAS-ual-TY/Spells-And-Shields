@@ -18,7 +18,7 @@ public class StaticTarget extends PositionTarget
     
     public StaticTarget(ITargetType<?> type, Level level, Vec3 position)
     {
-        this(type, level, position, new BlockPos(position));
+        this(type, level, position, new BlockPos((int) position.x, (int) position.y, (int) position.z));
     }
     
     public StaticTarget(ITargetType<?> type, Level level, BlockPos blockPos)

@@ -40,7 +40,7 @@ public class SpellTreeArgument implements ArgumentType<SpellTree>
     public SpellTree parse(StringReader reader) throws CommandSyntaxException
     {
         ResourceLocation resourceLocation = ResourceLocation.read(reader);
-        Optional<Holder<SpellTree>> spell = spellTrees.get(ResourceKey.create(SpellTrees.REGISTRY_KEY, resourceLocation));
+        Optional<Holder.Reference<SpellTree>> spell = spellTrees.get(ResourceKey.create(SpellTrees.REGISTRY_KEY, resourceLocation));
         
         return spell.orElseThrow(UNKNOWN_SPELL_TREE::create).get();
     }
@@ -52,7 +52,7 @@ public class SpellTreeArgument implements ArgumentType<SpellTree>
         
         spellTrees.listElements().forEach(resourceKey ->
         {
-            String spellStr = resourceKey.location().toString();
+            String spellStr = resourceKey.key().toString();
             
             if(spellStr.startsWith(s))
             {

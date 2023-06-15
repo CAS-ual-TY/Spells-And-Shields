@@ -40,7 +40,7 @@ public class SpellArgument implements ArgumentType<Spell>
     public Spell parse(StringReader reader) throws CommandSyntaxException
     {
         ResourceLocation resourceLocation = ResourceLocation.read(reader);
-        Optional<Holder<Spell>> spell = spells.get(ResourceKey.create(Spells.REGISTRY_KEY, resourceLocation));
+        Optional<Holder.Reference<Spell>> spell = spells.get(ResourceKey.create(Spells.REGISTRY_KEY, resourceLocation));
         
         return spell.orElseThrow(UNKNOWN_SPELL::create).get();
     }
@@ -52,7 +52,7 @@ public class SpellArgument implements ArgumentType<Spell>
         
         spells.listElements().forEach(resourceKey ->
         {
-            String spellStr = resourceKey.location().toString();
+            String spellStr = resourceKey.key().toString();
             
             if(spellStr.startsWith(s))
             {

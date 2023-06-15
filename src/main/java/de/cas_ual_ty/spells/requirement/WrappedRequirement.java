@@ -20,7 +20,7 @@ public class WrappedRequirement extends Requirement
         @Override
         public <T> DataResult<WrappedRequirement> read(DynamicOps<T> ops, T input)
         {
-            return DataResult.error("Can not (de)serialize a wrapped requirement");
+            return DataResult.error(() -> "Can not (de)serialize a wrapped requirement");
         }
         
         @Override
