@@ -23,7 +23,6 @@ public class DataGen
         event.getGenerator().addProvider(event.includeServer(), new DocsGen(event.getGenerator(), SpellsAndShields.MOD_ID, event.getExistingFileHelper()));
         
         event.getGenerator().addProvider(
-                // Tell generator to run only when server data are generating
                 event.includeServer(),
                 (DataProvider.Factory<DatapackBuiltinEntriesProvider>) (PackOutput output) -> new DatapackBuiltinEntriesProvider(
                         output,
@@ -32,20 +31,7 @@ public class DataGen
                         new RegistrySetBuilder()
                                 .add(Spells.REGISTRY_KEY, context -> {
                                     new SpellsGen(SpellsAndShields.MOD_ID, context);
-                                }),
-                        // Generate dynamic registry objects for this mod
-                        Set.of(SpellsAndShields.MOD_ID)
-                )
-        );
-        
-        event.getGenerator().addProvider(
-                // Tell generator to run only when server data are generating
-                event.includeServer(),
-                (DataProvider.Factory<DatapackBuiltinEntriesProvider>) (PackOutput output) -> new DatapackBuiltinEntriesProvider(
-                        output,
-                        event.getLookupProvider(),
-                        // The objects to generate
-                        new RegistrySetBuilder()
+                                })
                                 .add(SpellTrees.REGISTRY_KEY, context -> {
                                     new SpellTreesGen(SpellsAndShields.MOD_ID, context);
                                 }),
