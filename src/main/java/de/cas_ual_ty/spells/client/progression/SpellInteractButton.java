@@ -7,10 +7,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class SpellInteractButton extends Button
 {
+    public static final ResourceLocation ADVANCEMENT_WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
+    
     public final int v;
     
     public SpellInteractButton(int x, int y, int width, int height, Component component, OnPress onPress, int v)
@@ -29,8 +32,8 @@ public class SpellInteractButton extends Button
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        guiGraphics.blit(WIDGETS_LOCATION, this.getX(), this.getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
-        guiGraphics.blit(WIDGETS_LOCATION, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
+        guiGraphics.blit(ADVANCEMENT_WIDGETS_LOCATION, this.getX(), this.getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
+        guiGraphics.blit(ADVANCEMENT_WIDGETS_LOCATION, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
         Font font = minecraft.font;
         this.renderTitle(guiGraphics, mouseX, mouseY, deltaTick, font);
     }
