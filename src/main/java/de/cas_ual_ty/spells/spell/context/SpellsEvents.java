@@ -35,7 +35,7 @@ public class SpellsEvents
                 .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
         
         register(BuiltinEvents.LIVING_ATTACK_VICTIM.activation, LivingAttackEvent.class)
-                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "attacker")
+                .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
         
@@ -45,7 +45,7 @@ public class SpellsEvents
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
         
         register(BuiltinEvents.LIVING_HURT_VICTIM.activation, LivingHurtEvent.class)
-                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "attacker")
+                .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
         
@@ -55,7 +55,7 @@ public class SpellsEvents
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
         
         register(BuiltinEvents.LIVING_DAMAGE_VICTIM.activation, LivingDamageEvent.class)
-                .addTargetLink(e -> Target.of(e.getSource().getEntity()), "attacker")
+                .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
     }
