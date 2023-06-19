@@ -374,7 +374,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY)
     {
-        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752);
+        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
     }
     
     @Override
@@ -412,12 +412,14 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
         else
         {
-            PoseStack posestack = RenderSystem.getModelViewStack();
+            PoseStack posestack = guiGraphics.pose();
+            guiGraphics.enableScissor(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, offX + WINDOW_OFF_X + WINDOW_WIDTH, offY + WINDOW_OFF_Y + WINDOW_HEIGHT);
             posestack.pushPose();
             posestack.translate(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, 0D);
             RenderSystem.applyModelViewMatrix();
             tab.drawContents(guiGraphics, deltaTick);
             posestack.popPose();
+            guiGraphics.disableScissor();
             RenderSystem.applyModelViewMatrix();
             RenderSystem.depthFunc(GlConst.GL_LEQUAL);
             RenderSystem.disableDepthTest();

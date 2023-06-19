@@ -13,6 +13,7 @@ import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.advancements.AdvancementTab;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -161,9 +162,6 @@ public class SpellTreeTab
     
     public void drawContents(GuiGraphics guiGraphics, float deltaTick)
     {
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0D, 0D, 950D);
-        
         RenderSystem.enableDepthTest();
         RenderSystem.colorMask(false, false, false, false);
         
@@ -171,8 +169,6 @@ public class SpellTreeTab
         
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthFunc(518);
-        
-        guiGraphics.pose().translate(0D, 0D, -950D);
         
         guiGraphics.fill(SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, 0, 0, 0xFF000000);
         
@@ -212,8 +208,6 @@ public class SpellTreeTab
         vLine(guiGraphics, (int) scrollX, (int) (scrollY - 10), (int) (scrollY + 10), 0xFF0000FF);
         hLine(guiGraphics, (int) (scrollX - 10), (int) (scrollX + 10), (int) scrollY, 0xFF0000FF);*/
         
-        guiGraphics.pose().translate(0D, 0D, -950D);
-        
         RenderSystem.depthFunc(GlConst.GL_GEQUAL);
         RenderSystem.colorMask(false, false, false, false);
         
@@ -221,8 +215,6 @@ public class SpellTreeTab
         
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.depthFunc(GlConst.GL_LEQUAL);
-        
-        guiGraphics.pose().popPose();
     }
     
     public void drawTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY, int offX, int offY, float deltaTick)
