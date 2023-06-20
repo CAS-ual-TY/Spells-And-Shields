@@ -1,14 +1,15 @@
 modLoader="javafml"
-loaderVersion="[43,)"
-license="MIT License"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
 issueTrackerURL="https://github.com/CAS-ual-TY/Spells-And-Shields/issues"
 
 [[mods]]
-    modId="spells_and_shields"
-    version="${file.jarVersion}"
-    displayName="Spells & Shields"
+    modId="${mod_id}"
+    version="${mod_version}"
+    displayName="${mod_name}"
     displayURL="https://github.com/CAS-ual-TY/Spells-And-Shields"
     logoFile="logo.png"
     credits="Mojang and the Minecraft Forge Team"
-    authors="CAS_ual_TY"
-    description='''Vanilla+ style magic extension that adds mana and spell trees. Fully data driven.'''
+    authors="${mod_authors}"
+    displayTest="MATCH_VERSION"
+    description='''${mod_description}'''
