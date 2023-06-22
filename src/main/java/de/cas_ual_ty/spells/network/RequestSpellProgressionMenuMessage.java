@@ -51,7 +51,7 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
             
             try
             {
-                if(player.containerMenu != null && SpellsUtil.isEnchantingTable(player.level().getBlockState(msg.pos()).getBlock()))
+                if(player.hasContainerOpen() && SpellsUtil.isEnchantingTable(player.level().getBlockState(msg.pos()).getBlock()))
                 {
                     ContainerLevelAccess access = ContainerLevelAccess.create(player.level(), msg.pos());
                     

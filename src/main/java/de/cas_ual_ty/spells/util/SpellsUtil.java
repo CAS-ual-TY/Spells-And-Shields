@@ -180,7 +180,27 @@ public class SpellsUtil
     
     public static boolean isEnchantingTable(ResourceLocation key)
     {
+        return isTrueEnchantingTable(key) || isAltEnchantingTable(key);
+    }
+    
+    public static boolean isTrueEnchantingTable(Block block)
+    {
+        return block != null && isTrueEnchantingTable(ForgeRegistries.BLOCKS.getKey(block));
+    }
+    
+    public static boolean isTrueEnchantingTable(ResourceLocation key)
+    {
         return key != null && SpellsConfig.ENCHANTING_TABLE.get().stream().anyMatch(rl -> rl.equals(key.toString()));
+    }
+    
+    public static boolean isAltEnchantingTable(Block block)
+    {
+        return block != null && isAltEnchantingTable(ForgeRegistries.BLOCKS.getKey(block));
+    }
+    
+    public static boolean isAltEnchantingTable(ResourceLocation key)
+    {
+        return key != null && SpellsConfig.PROGRESSION_BLOCK.get().stream().anyMatch(rl -> rl.equals(key.toString()));
     }
     
     public static Level getClientLevel()

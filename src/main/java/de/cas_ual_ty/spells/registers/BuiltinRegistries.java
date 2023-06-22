@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.registers;
 
+import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.command.SpellArgument;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.command.SpellTreeArgument;
@@ -8,15 +9,26 @@ import de.cas_ual_ty.spells.effect.InstantManaMobEffect;
 import de.cas_ual_ty.spells.effect.ManaMobEffect;
 import de.cas_ual_ty.spells.effect.SimpleEffect;
 import de.cas_ual_ty.spells.enchantment.*;
+import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
+import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.projectile.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.projectile.SpellProjectile;
+import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.SpellTree;
+import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -27,7 +39,11 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Items;
@@ -41,11 +57,17 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.IContainerFactory;
+import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.HashMap;
+import java.util.List;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
@@ -135,10 +157,54 @@ public class BuiltinRegistries
         }
     }
     
+    private static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
+    {
+        BlockPos pos = event.getPos();
+        
+        if(!event.getLevel().isClientSide && event.getEntity() instanceof ServerPlayer player && !player.hasContainerOpen() && SpellsUtil.isAltEnchantingTable(player.level().getBlockState(pos).getBlock()))
+        {
+            event.setUseBlock(Event.Result.DENY);
+            event.setUseItem(Event.Result.DENY);
+            
+            ContainerLevelAccess access = ContainerLevelAccess.create(player.level(), pos);
+            
+            SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
+            {
+                access.execute((level, blockPos) ->
+                {
+                    List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
+                    HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
+                    
+                    Registry<Spell> registry = Spells.getRegistry(level);
+                    
+                    NetworkHooks.openScreen(player, new MenuProvider()
+                    {
+                        @Override
+                        public Component getDisplayName()
+                        {
+                            return SpellProgressionMenu.TITLE;
+                        }
+                        
+                        @Override
+                        public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
+                        {
+                            return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
+                        }
+                    }, buf ->
+                    {
+                        SpellProgressionSyncMessage data = new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression, level);
+                        SpellProgressionSyncMessage.encode(data, buf);
+                    });
+                });
+            });
+        }
+    }
+    
     public static void registerEvents()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(BuiltinRegistries::entityAttributeModification);
         MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::registerCommands);
         MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::livingHurt);
+        MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::rightClickBlock);
     }
 }

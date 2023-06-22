@@ -106,8 +106,11 @@ public class SpellsClientUtil
     
     private static void rightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
-        lastRightClickedBlockPos = event.getPos();
-        lastRightClickedBlock = event.getEntity().level().getBlockState(event.getPos()).getBlock();
+        if(event.getLevel().isClientSide)
+        {
+            lastRightClickedBlockPos = event.getPos();
+            lastRightClickedBlock = event.getEntity().level().getBlockState(event.getPos()).getBlock();
+        }
     }
     
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
@@ -116,7 +119,7 @@ public class SpellsClientUtil
     {
         if(Minecraft.getInstance().player != null && event.getScreen() instanceof AbstractContainerScreen screen)
         {
-            if(SpellsUtil.isEnchantingTable(lastRightClickedBlock))
+            if(SpellsUtil.isTrueEnchantingTable(lastRightClickedBlock))
             {
                 lastRightClickedBlock = null;
                 event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, Math.min(176, screen.width), SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,

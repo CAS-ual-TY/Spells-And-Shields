@@ -16,6 +16,7 @@ public class SpellsConfig
     public static final ForgeConfigSpec.BooleanValue FORGET_SPELLS_ON_DEATH;
     
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANTING_TABLE;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> PROGRESSION_BLOCK;
     
     public static final ForgeConfigSpec.BooleanValue DEBUG_SPELLS;
     public static final ForgeConfigSpec.IntValue ACTION_JUMP_LIMIT;
@@ -43,8 +44,11 @@ public class SpellsConfig
         
         configBuilder.push("misc");
         ENCHANTING_TABLE = configBuilder
-                .comment("Resource location of the enchanting table. Some mods could change that.")
+                .comment("Resource location of the enchanting table. Some mods could change that. These are the blocks that already have some sort of GUI where the spell progression button is injected.")
                 .defineList("enchantingTables", ImmutableList.of("minecraft:enchanting_table", "quark:matrix_enchanter"), s -> true);
+        PROGRESSION_BLOCK = configBuilder
+                .comment("For modpack authors. Resource location of blocks that do not have a GUI but should be changed to open the spell progression GUI on right click. Any other functionality derived from right-clicking the block is cancelled.")
+                .defineList("altProgressionBlocks", ImmutableList.of(), s -> true);
         configBuilder.pop();
         
         configBuilder.comment("Settings relevant for data pack creators.").push("technical");
