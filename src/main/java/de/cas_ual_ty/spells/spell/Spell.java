@@ -39,7 +39,7 @@ public class Spell
     
     public Spell(SpellIcon icon, Component title, List<Component> tooltip, float manaCost)
     {
-        this(new ArrayList<>(), icon, title, new LinkedList<>(), manaCost, new LinkedList<>(), new LinkedList<>());
+        this(new ArrayList<>(), icon, title, tooltip, manaCost, new LinkedList<>(), new LinkedList<>());
     }
     
     public Spell(SpellIcon icon, Component title, float manaCost)
