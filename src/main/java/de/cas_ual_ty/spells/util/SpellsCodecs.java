@@ -25,8 +25,6 @@ import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.RegistryFixedCodec;
@@ -61,7 +59,6 @@ public class SpellsCodecs
     public static Codec<Spell> SPELL_CONTENTS;
     public static Codec<Spell> SPELL_SYNC;
     
-    public static Codec<Component> COMPONENT; // json only, no NBT support
     public static Codec<Map<String, String>> STRING_MAP;
     
     public static void makeCodecs()
@@ -94,7 +91,7 @@ public class SpellsCodecs
         
         SPELL_TREE_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 SPELL_NODE.fieldOf("t3/root_node").forGetter(SpellTree::getRoot),
-                COMPONENT.fieldOf("t1/title").forGetter(SpellTree::getTitle),
+                ExtraCodecs.COMPONENT.fieldOf("t1/title").forGetter(SpellTree::getTitle),
                 SPELL_ICON.fieldOf("t2/icon").forGetter(SpellTree::getIcon)
         ).apply(instance, SpellTree::new)));
         
@@ -103,8 +100,8 @@ public class SpellsCodecs
         SPELL_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_ACTION).listOf().fieldOf("s7/spell_actions").forGetter(Spell::getSpellActions),
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("s2/icon").forGetter(Spell::getIcon),
-                COMPONENT.fieldOf("s1/title").forGetter(Spell::getTitle),
-                COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(Spell::getTooltip),
+                ExtraCodecs.COMPONENT.fieldOf("s1/title").forGetter(Spell::getTitle),
+                ExtraCodecs.COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(Spell::getTooltip),
                 Codec.FLOAT.fieldOf("s3/mana_cost").xmap(f -> Math.max(0, f), f -> Math.max(0, f)).forGetter(Spell::getManaCost),
                 CTX_VAR.listOf().fieldOf("s6/spell_parameters").forGetter(Spell::getParameters),
                 Codec.STRING.listOf().fieldOf("s5/spell_events").forGetter(Spell::getEventsList)
@@ -112,45 +109,10 @@ public class SpellsCodecs
         
         SPELL_SYNC = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("s2/icon").forGetter(Spell::getIcon),
-                COMPONENT.fieldOf("s1/title").forGetter(Spell::getTitle),
-                COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(s -> s.getTooltip().isEmpty() ? ImmutableList.of(Component.empty()) : s.getTooltip()),
+                ExtraCodecs.COMPONENT.fieldOf("s1/title").forGetter(Spell::getTitle),
+                ExtraCodecs.COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(s -> s.getTooltip().isEmpty() ? ImmutableList.of(Component.empty()) : s.getTooltip()),
                 Codec.FLOAT.fieldOf("s3/mana_cost").xmap(f -> Math.max(0, f), f -> Math.max(0, f)).forGetter(Spell::getManaCost)
         ).apply(instance, Spell::new)));
-        
-        COMPONENT = ExtraCodecs.lazyInitializedCodec(() -> new PrimitiveCodec<>()
-        {
-            @Override
-            public <T> DataResult<Component> read(DynamicOps<T> ops, T input0)
-            {
-                if(ops == JsonOps.INSTANCE || ops == JsonOps.COMPRESSED || ops instanceof RegistryOps)
-                {
-                    JsonElement input = (JsonElement) input0;
-                    return DataResult.success(Component.Serializer.fromJson(input));
-                }
-                else if(ops == NbtOps.INSTANCE || ops instanceof NbtOps)
-                {
-                    StringTag input = (StringTag) input0;
-                    return DataResult.success(Component.Serializer.fromJson(input.getAsString()));
-                }
-                
-                return DataResult.error(() -> "Codec only works on JsonOps");
-            }
-            
-            @Override
-            public <T> T write(DynamicOps<T> ops, Component value)
-            {
-                if(ops == JsonOps.INSTANCE || ops == JsonOps.COMPRESSED || ops instanceof RegistryOps)
-                {
-                    return (T) Component.Serializer.toJsonTree(value);
-                }
-                else if(ops == NbtOps.INSTANCE || ops instanceof NbtOps)
-                {
-                    return (T) StringTag.valueOf(Component.Serializer.toJson(value));
-                }
-                
-                return ops.empty();
-            }
-        });
         
         STRING_MAP = new PrimitiveCodec<>()
         {
