@@ -64,7 +64,10 @@ public class UseItemAction extends AffectSingleTypeAction<PlayerTarget>
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PlayerTarget playerTarget)
     {
+        boolean instabuild = playerTarget.getPlayer().getAbilities().instabuild;
+        playerTarget.getPlayer().getAbilities().instabuild = true; // to stop item consumption
         ItemStack item = this.item.copy();
         item.use(ctx.level, playerTarget.getPlayer(), offhand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+        playerTarget.getPlayer().getAbilities().instabuild = instabuild;
     }
 }
