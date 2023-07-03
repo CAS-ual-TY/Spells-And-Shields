@@ -52,7 +52,7 @@ public class SpellArgument implements ArgumentType<Spell>
         
         spells.listElements().forEach(resourceKey ->
         {
-            String spellStr = resourceKey.key().toString();
+            String spellStr = resourceKey.key().location().toString();
             
             if(spellStr.startsWith(s))
             {
