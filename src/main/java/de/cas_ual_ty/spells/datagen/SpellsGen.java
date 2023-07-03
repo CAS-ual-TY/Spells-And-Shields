@@ -1422,6 +1422,7 @@ public class SpellsGen
                 .addParameter(INT, "time_delay_ticks", 30)
                 .addEventHook(ACTIVE)
                 .addTooltip(Component.translatable(Spells.KEY_POCKET_ROCKET_DESC))
+                .addTooltip(itemCostComponent(Items.GUNPOWDER))
         );
         
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);

@@ -13,6 +13,15 @@
   "s4/tooltip": [
     {
       "translate": "spell.spells_and_shields.pocket_rocket.desc"
+    },
+    {
+      "color": "yellow",
+      "translate": "spell.generic.item_cost.single",
+      "with": [
+        {
+          "translate": "item.minecraft.gunpowder"
+        }
+      ]
     }
   ],
   "s5/spell_events": [
