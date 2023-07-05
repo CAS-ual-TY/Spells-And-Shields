@@ -12,6 +12,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
@@ -24,7 +25,7 @@ public class RangedEntityTargetsAction extends SrcDstTargetAction
                 activationCodec(),
                 dstCodec(),
                 srcCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("range").forGetter(RangedEntityTargetsAction::getRange)
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("range")).forGetter(RangedEntityTargetsAction::getRange)
         ).apply(instance, (activation, dst, src, range) -> new RangedEntityTargetsAction(type, activation, dst, src, range)));
     }
     

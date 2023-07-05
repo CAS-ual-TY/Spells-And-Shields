@@ -1298,8 +1298,8 @@ public class SpellsGen implements DataProvider
                 .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
                 .addAction(ActivateAction.make(ACTIVE, "success"))
                 .addAction(BurnManaAction.make("success", OWNER, DOUBLE.reference(MANA_COST)))
-                .addAction(BooleanActivationAction.make(ACTIVE, "success", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("success", "consume", SpellsUtil.objectToString(Items.FIRE_CHARGE, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(BooleanActivationAction.make("success", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, ForgeRegistries.ITEMS), ONE, null, TRUE))
                 .addAction(AddDelayedSpellAction.make("success", OWNER, "sound", INT.immediate(10), STRING.immediate(""), EMPTY_TAG, new HashMap<>()))
                 .addAction(AddDelayedSpellAction.make("success", OWNER, "shoot", INT.immediate(20), STRING.immediate(""), EMPTY_TAG, new HashMap<>()))
                 .addAction(PlaySoundAction.make("sound", HOLDER, SoundEvents.GHAST_WARN, ONE_D, ONE_D))
@@ -1440,6 +1440,7 @@ public class SpellsGen implements DataProvider
                 .addParameter(INT, "time_delay_ticks", 30)
                 .addEventHook(ACTIVE)
                 .addTooltip(SpellsDowngrade.translatable(Spells.KEY_POCKET_ROCKET_DESC))
+                .addTooltip(itemCostComponent(Items.GUNPOWDER))
         );
         
         addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);

@@ -75,19 +75,19 @@
     },
     {
       "type": "spells_and_shields:boolean_activation",
-      "a/to_activate": "success",
-      "activation": "active",
+      "a/to_activate": "consume",
+      "activation": "success",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": false,
       "d/boolean/input": "<< item_costs() >>"
     },
     {
       "type": "spells_and_shields:consume_player_items",
-      "activation": "success",
+      "activation": "consume",
       "d/boolean/must_be_in_hand": true,
       "d/int/amount": 1,
       "d/string/item": "minecraft:fire_charge",
-      "t/source": "consume"
+      "t/source": "owner"
     },
     {
       "type": "spells_and_shields:add_delayed_spell",

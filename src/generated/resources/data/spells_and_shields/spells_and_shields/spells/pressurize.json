@@ -35,7 +35,7 @@
     {
       "type": "spells_and_shields:ranged_entity_targets",
       "activation": "active",
-      "range": "<<range>>",
+      "d/double/range": "<<range>>",
       "td/destination": "targets",
       "ts/source": "owner"
     },

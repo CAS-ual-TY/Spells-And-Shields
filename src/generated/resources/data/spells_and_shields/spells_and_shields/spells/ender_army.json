@@ -142,7 +142,7 @@
     {
       "type": "spells_and_shields:ranged_entity_targets",
       "activation": "on_entity_hit",
-      "range": "<<enderman_range>>",
+      "d/double/range": "<<enderman_range>>",
       "td/destination": "targets",
       "ts/source": "entity_hit"
     },
