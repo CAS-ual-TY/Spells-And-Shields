@@ -55,6 +55,7 @@ public class SpellActionTypes
     
     // attribute
     public static final RegistryObject<SpellActionType<CheckTagAction>> CHECK_TAG = DEFERRED_REGISTER.register("check_tag", () -> new SpellActionType<>(CheckTagAction::new, CheckTagAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetAttributeValueAction>> GET_ATTRIBUTE_VALUE = DEFERRED_REGISTER.register("get_attribute_value", () -> new SpellActionType<>(GetAttributeValueAction::new, GetAttributeValueAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityExtraTagAction>> GET_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("get_entity_extra_tag", () -> new SpellActionType<>(GetEntityExtraTagAction::new, GetEntityExtraTagAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityEyePositionAction>> GET_ENTITY_EYE_POSITION = DEFERRED_REGISTER.register("get_entity_eye_position", () -> new SpellActionType<>(GetEntityEyePositionAction::new, GetEntityEyePositionAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityPositionDirectionMotionAction>> GET_ENTITY_POSITION_DIRECTION_MOTION = DEFERRED_REGISTER.register("get_entity_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionMotionAction::new, GetEntityPositionDirectionMotionAction::makeCodec));
@@ -157,6 +158,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<PickTargetAction>> PICK_TARGET = DEFERRED_REGISTER.register("pick_target", () -> new SpellActionType<>(PickTargetAction::new, PickTargetAction::makeCodec2));
     public static final RegistryObject<SpellActionType<RangedEntityTargetsAction>> RANGED_ENTITY_TARGETS = DEFERRED_REGISTER.register("ranged_entity_targets", () -> new SpellActionType<>(RangedEntityTargetsAction::new, RangedEntityTargetsAction::makeCodec));
     public static final RegistryObject<SpellActionType<ShootAction>> SHOOT = DEFERRED_REGISTER.register("shoot", () -> new SpellActionType<>(ShootAction::new, ShootAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ShootAltAction>> SHOOT_ALT = DEFERRED_REGISTER.register("shoot_alt", () -> new SpellActionType<>(ShootAltAction::new, ShootAltAction::makeCodec));
     
     // variable
     public static final RegistryObject<SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));

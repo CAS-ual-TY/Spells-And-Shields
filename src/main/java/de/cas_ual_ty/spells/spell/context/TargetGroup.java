@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.spell.target.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class TargetGroup
@@ -97,6 +98,18 @@ public class TargetGroup
         if(isSingleTarget())
         {
             consumer.accept(targetsList.get(0));
+        }
+    }
+    
+    public Optional<Target> getSingleTarget()
+    {
+        if(isSingleTarget())
+        {
+            return Optional.of(targetsList.get(0));
+        }
+        else
+        {
+            return Optional.empty();
         }
     }
     

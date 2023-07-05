@@ -227,9 +227,9 @@ public class SpellProjectile extends AbstractHurtingProjectile
         timeoutActivation = nbt.getString("TimeoutActivation");
     }
     
-    public static SpellProjectile shoot(Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+    public static SpellProjectile shoot(Level level0, Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        if(source.level instanceof ServerLevel level)
+        if(level0 instanceof ServerLevel level)
         {
             SpellProjectile projectile = new SpellProjectile(BuiltinRegistries.SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
             projectile.setOwner(source);
@@ -247,6 +247,6 @@ public class SpellProjectile extends AbstractHurtingProjectile
     
     public static SpellProjectile shoot(Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
     {
-        return shoot(source.getEyePosition(), source.getLookAngle().normalize(), source, spell, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+        return shoot(source.level, source.getEyePosition(), source.getLookAngle().normalize(), source, spell, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
     }
 }
