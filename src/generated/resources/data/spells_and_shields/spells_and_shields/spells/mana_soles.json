@@ -23,7 +23,7 @@
       "activation": "living_hurt_victim",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": true,
-      "d/boolean/input": "<< damage_type == 'minecraft:fall' >>"
+      "d/boolean/input": "<< damage_type == 'fall' >>"
     },
     {
       "type": "spells_and_shields:get_mana",

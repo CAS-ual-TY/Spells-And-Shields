@@ -886,7 +886,7 @@ public class SpellsGen
         );
         
         addSpell(Spells.MANA_SOLES, new Spell(modId, "mana_soles", Spells.KEY_MANA_SOLES, 0F)
-                .addAction(BooleanActivationAction.make(LIVING_HURT_VICTIM, "reduce", Compiler.compileString(" damage_type == '" + DamageTypes.FALL.location().toString() + "' ", BOOLEAN), TRUE, TRUE))
+                .addAction(BooleanActivationAction.make(LIVING_HURT_VICTIM, "reduce", Compiler.compileString(" damage_type == '" + DamageTypes.FALL.location().getPath() + "' ", BOOLEAN), TRUE, TRUE))
                 .addAction(GetManaAction.make("reduce", OWNER, "mana"))
                 .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" min(mana, damage_amount) ", DOUBLE), "reduce_amount"))
                 .addAction(PutVarAction.makeBoolean("reduce", Compiler.compileString(" " + EVENT_IS_CANCELED.toString() + " || (reduce_amount >= damage_amount) ", BOOLEAN), EVENT_IS_CANCELED))
