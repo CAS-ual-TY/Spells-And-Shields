@@ -156,7 +156,7 @@
     {
       "type": "spells_and_shields:mana_check",
       "activation": "apply",
-      "amount": "<< (mana_cost * duration) / 100 >>",
+      "d/double/amount": "<< (mana_cost * duration) / 100 >>",
       "t/target": "player"
     },
     {

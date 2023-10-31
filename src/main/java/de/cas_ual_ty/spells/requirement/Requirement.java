@@ -29,7 +29,18 @@ public abstract class Requirement
         return type;
     }
     
-    public abstract boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access);
+    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return spellProgressionHolder.getPlayer().isCreative() ? (creativeModePasses() || doesPlayerPass(spellProgressionHolder, access)) : doesPlayerPass(spellProgressionHolder, access);
+    }
+    
+    
+    protected abstract boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access);
+    
+    public boolean creativeModePasses()
+    {
+        return true;
+    }
     
     public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {

@@ -13,6 +13,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import de.cas_ual_ty.spells.util.ParamNames;
 
 public class ManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
 {
@@ -21,7 +22,7 @@ public class ManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf("amount").forGetter(ManaCheckAction::getAmount)
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("amount")).forGetter(ManaCheckAction::getAmount)
         ).apply(instance, (activation, singleTarget, amount) -> new ManaCheckAction(type, activation, singleTarget, amount)));
     }
     

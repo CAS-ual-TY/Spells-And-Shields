@@ -89,7 +89,7 @@
     {
       "type": "spells_and_shields:has_mana",
       "activation": "active",
-      "amount": "<<mana_cost>>",
+      "d/double/amount": "<<mana_cost>>",
       "t/target": "owner"
     },
     {
@@ -169,7 +169,7 @@
       "activation": "smelt",
       "d/int/amount": 1,
       "d/int/damage": 0,
-      "item": "<< get_nbt_string(recipes, item_id) >>",
+      "d/string/item": "<< get_nbt_string(recipes, item_id) >>",
       "ts/targets": "owner"
     }
   ]

@@ -21,9 +21,15 @@ public class ConfigRequirement extends Requirement
     }
     
     @Override
-    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         return SpellsConfig.SPELL_TREES.get();
+    }
+    
+    @Override
+    public boolean creativeModePasses()
+    {
+        return false;
     }
     
     @Override

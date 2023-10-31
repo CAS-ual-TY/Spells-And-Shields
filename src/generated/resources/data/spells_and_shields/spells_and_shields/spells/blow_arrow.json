@@ -54,7 +54,7 @@
     {
       "type": "spells_and_shields:has_mana",
       "activation": "active",
-      "amount": "<<mana_cost>>",
+      "d/double/amount": "<<mana_cost>>",
       "t/target": "owner"
     },
     {
@@ -193,7 +193,7 @@
     {
       "type": "spells_and_shields:has_mana",
       "activation": "spectral",
-      "amount": "<<mana_cost>>",
+      "d/double/amount": "<<mana_cost>>",
       "t/target": "owner"
     },
     {
