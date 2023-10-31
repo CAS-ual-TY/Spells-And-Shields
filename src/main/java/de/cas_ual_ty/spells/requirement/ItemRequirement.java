@@ -51,7 +51,7 @@ public class ItemRequirement extends Requirement
     }
     
     @Override
-    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         Inventory inventory = spellProgressionHolder.getPlayer().getInventory();
         return inventory.clearOrCountMatchingItems(item -> item.getItem() == itemStack.getItem(), 0, SpellsUtil.EMPTY_CONTAINER) >= itemStack.getCount();

@@ -129,7 +129,7 @@ public class SpellNode
     
     public boolean passesLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return hiddenRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access)) && learnRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
+        return hiddenRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access)) && learnRequirements.stream().allMatch(requirement -> requirement.doesPlayerPass(spellProgressionHolder, access));
     }
     
     public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
@@ -140,12 +140,12 @@ public class SpellNode
     
     public boolean canSee(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return spellProgressionHolder.getPlayer().isCreative() || passesHidden(spellProgressionHolder, access);
+        return passesHidden(spellProgressionHolder, access);
     }
     
     public boolean canLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return spellProgressionHolder.getPlayer().isCreative() || (spellProgressionHolder.getPlayer().experienceLevel >= this.levelCost && passesLearn(spellProgressionHolder, access));
+        return spellProgressionHolder.getPlayer().experienceLevel >= this.levelCost && passesLearn(spellProgressionHolder, access);
     }
     
     public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)

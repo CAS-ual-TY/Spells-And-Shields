@@ -68,9 +68,9 @@ public class WrappedRequirement extends Requirement
     }
     
     @Override
-    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return status.isDecided() ? status.passes : requirement.passes(spellProgressionHolder, access);
+        return status.isDecided() ? status.passes : requirement.doesPlayerPass(spellProgressionHolder, access);
     }
     
     @Override
@@ -81,7 +81,7 @@ public class WrappedRequirement extends Requirement
     
     public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
-        this.status = RequirementStatus.decide(passes(spellProgressionHolder, access));
+        this.status = RequirementStatus.decide(doesPlayerPass(spellProgressionHolder, access));
         MutableComponent c = makeDescription(spellProgressionHolder, access);
         
         if(c.getContents() != ComponentContents.EMPTY)
