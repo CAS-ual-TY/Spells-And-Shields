@@ -125,7 +125,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<TryConsumeItemAction>> TRY_CONSUME_ITEM = DEFERRED_REGISTER.register("try_consume_item", () -> new SpellActionType<>(TryConsumeItemAction::new, TryConsumeItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<TryDamageItemAction>> TRY_DAMAGE_ITEM = DEFERRED_REGISTER.register("try_damage_item", () -> new SpellActionType<>(TryDamageItemAction::new, TryDamageItemAction::makeCodec));
     public static final RegistryObject<SpellActionType<UseItemAction>> USE_ITEM = DEFERRED_REGISTER.register("use_item", () -> new SpellActionType<>(UseItemAction::new, UseItemAction::makeCodec));
-    public static final RegistryObject<SpellActionType<UseItemOnBlocksAction>> USE_ITEM_ON_BLOCK = DEFERRED_REGISTER.register("use_item_on_block", () -> new SpellActionType<>(UseItemOnBlocksAction::new, UseItemOnBlocksAction::makeCodec));
+    public static final RegistryObject<SpellActionType<UseItemOnBlockAction>> USE_ITEM_ON_BLOCK = DEFERRED_REGISTER.register("use_item_on_block", () -> new SpellActionType<>(UseItemOnBlockAction::new, UseItemOnBlockAction::makeCodec));
     
     // level (world)
     public static final RegistryObject<SpellActionType<CubeBlockTargetsAction>> CUBE_BLOCK_TARGETS = DEFERRED_REGISTER.register("cube_block_targets", () -> new SpellActionType<>(CubeBlockTargetsAction::new, CubeBlockTargetsAction::makeCodec));

@@ -1262,7 +1262,7 @@ public class SpellsGen
                 .addAction(BooleanActivationAction.make("success", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
                 .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), ONE, null, TRUE))
                 .addAction(CubeBlockTargetsAction.make("success", OWNER, "blocks", Compiler.compileString(" vec3(-range, -1, -range) ", VEC3), Compiler.compileString(" vec3(range, 1, range) ", VEC3)))
-                .addAction(UseItemOnBlocksAction.make("success", OWNER, "blocks", new ItemStack(Items.BONE_MEAL), false, Direction.UP))
+                .addAction(UseItemOnBlockAction.make("success", OWNER, "blocks", new ItemStack(Items.BONE_MEAL), false, Direction.UP))
                 .addAction(SpawnParticlesAction.make("success", "blocks", ParticleTypes.POOF, ONE, DOUBLE.immediate(0.25D)))
                 .addAction(PlaySoundAction.make("success", OWNER, SoundEvents.BONE_MEAL_USE, ONE_D, ONE_D))
                 .addParameter(INT, "range", 3)
