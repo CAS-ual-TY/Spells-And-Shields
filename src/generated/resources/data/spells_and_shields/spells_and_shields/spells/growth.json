@@ -47,7 +47,7 @@
     {
       "type": "spells_and_shields:has_mana",
       "activation": "active",
-      "amount": "<<mana_cost>>",
+      "d/double/amount": "<<mana_cost>>",
       "t/target": "owner"
     },
     {
@@ -105,12 +105,12 @@
     {
       "type": "spells_and_shields:use_item_on_block",
       "activation": "success",
+      "boolean/offhand": false,
       "direction": "up",
       "item": {
         "Count": 1,
         "id": "minecraft:bone_meal"
       },
-      "offhand": false,
       "t/source": "owner",
       "ts/blocks": "blocks"
     },

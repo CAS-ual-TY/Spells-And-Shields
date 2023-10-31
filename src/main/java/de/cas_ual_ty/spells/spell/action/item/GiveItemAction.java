@@ -30,7 +30,7 @@ public class GiveItemAction extends AffectTypeAction<PlayerTarget>
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(GiveItemAction::getAmount),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("damage")).forGetter(GiveItemAction::getDamage),
                 CtxVarTypes.TAG.get().optionalRefCodec(ParamNames.paramCompoundTag("tag")).forGetter(GiveItemAction::getTag),
-                CtxVarTypes.STRING.get().refCodec().fieldOf("item").forGetter(GiveItemAction::getItem)
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(GiveItemAction::getItem)
         ).apply(instance, (activation, multiTargets, amount, damage, tag, item) -> new GiveItemAction(type, activation, multiTargets, amount, damage, tag, item)));
     }
     

@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
+import de.cas_ual_ty.spells.util.ParamNames;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
@@ -21,7 +22,7 @@ public class UseItemAction extends AffectSingleTypeAction<PlayerTarget>
                 activationCodec(),
                 sourceCodec(),
                 ItemStack.CODEC.fieldOf("item").forGetter(UseItemAction::getItem),
-                Codec.BOOL.fieldOf("offhand").forGetter(UseItemAction::getOffhand)
+                Codec.BOOL.fieldOf(ParamNames.paramBooleanImm("offhand")).forGetter(UseItemAction::getOffhand)
         ).apply(instance, (activation, source, item, offhand) -> new UseItemAction(type, activation, source, item, offhand)));
     }
     
