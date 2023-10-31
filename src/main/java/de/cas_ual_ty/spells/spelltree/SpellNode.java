@@ -129,7 +129,7 @@ public class SpellNode
     
     public boolean passesLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return hiddenRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access)) && learnRequirements.stream().allMatch(requirement -> requirement.doesPlayerPass(spellProgressionHolder, access));
+        return hiddenRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access)) && learnRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
     }
     
     public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
