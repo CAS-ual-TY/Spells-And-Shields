@@ -39,7 +39,7 @@ public class BookshelvesRequirement extends Requirement
     }
     
     @Override
-    public boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         return access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0) >= this.bookshelves;
     }

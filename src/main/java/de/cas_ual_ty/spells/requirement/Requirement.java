@@ -35,7 +35,7 @@ public abstract class Requirement
     }
     
     
-    public abstract boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access);
+    protected abstract boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access);
     
     public boolean creativeModePasses()
     {
