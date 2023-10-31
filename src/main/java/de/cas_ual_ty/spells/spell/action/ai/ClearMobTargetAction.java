@@ -49,7 +49,7 @@ public class ClearMobTargetAction extends AffectTypeAction<LivingEntityTarget>
     {
         if(target.getLivingEntity() instanceof Mob mob)
         {
-            mob.setTarget(target.getLivingEntity());
+            mob.setTarget(null);
         }
     }
 }

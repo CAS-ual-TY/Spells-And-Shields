@@ -67,7 +67,7 @@ public class WrappedRequirement extends Requirement
     }
     
     @Override
-    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         return status.isDecided() ? status.passes : requirement.passes(spellProgressionHolder, access);
     }

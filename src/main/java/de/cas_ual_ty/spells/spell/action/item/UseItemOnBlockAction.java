@@ -18,23 +18,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class UseItemOnBlocksAction extends AffectSingleTypeAction<PlayerTarget>
+public class UseItemOnBlockAction extends AffectSingleTypeAction<PlayerTarget>
 {
-    public static Codec<UseItemOnBlocksAction> makeCodec(SpellActionType<UseItemOnBlocksAction> type)
+    public static Codec<UseItemOnBlockAction> makeCodec(SpellActionType<UseItemOnBlockAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
-                Codec.STRING.fieldOf(ParamNames.multiTarget("blocks")).forGetter(UseItemOnBlocksAction::getBlocks),
-                ItemStack.CODEC.fieldOf("item").forGetter(UseItemOnBlocksAction::getItem),
-                Codec.BOOL.fieldOf("offhand").forGetter(UseItemOnBlocksAction::getOffhand),
-                SpellsUtil.namedEnumCodec(Direction::byName, Direction::getName).fieldOf("direction").forGetter(UseItemOnBlocksAction::getDirection)
-        ).apply(instance, (activation, source, blocks, item, offhand, direction) -> new UseItemOnBlocksAction(type, activation, source, blocks, item, offhand, direction)));
+                Codec.STRING.fieldOf(ParamNames.multiTarget("blocks")).forGetter(UseItemOnBlockAction::getBlocks),
+                ItemStack.CODEC.fieldOf("item").forGetter(UseItemOnBlockAction::getItem),
+                Codec.BOOL.fieldOf(ParamNames.paramBooleanImm("offhand")).forGetter(UseItemOnBlockAction::getOffhand),
+                SpellsUtil.namedEnumCodec(Direction::byName, Direction::getName).fieldOf("direction").forGetter(UseItemOnBlockAction::getDirection)
+        ).apply(instance, (activation, source, blocks, item, offhand, direction) -> new UseItemOnBlockAction(type, activation, source, blocks, item, offhand, direction)));
     }
     
-    public static UseItemOnBlocksAction make(Object activation, Object source, String blocks, ItemStack item, boolean offhand, Direction direction)
+    public static UseItemOnBlockAction make(Object activation, Object source, String blocks, ItemStack item, boolean offhand, Direction direction)
     {
-        return new UseItemOnBlocksAction(SpellActionTypes.USE_ITEM_ON_BLOCK.get(), activation.toString(), source.toString(), blocks, item, offhand, direction);
+        return new UseItemOnBlockAction(SpellActionTypes.USE_ITEM_ON_BLOCK.get(), activation.toString(), source.toString(), blocks, item, offhand, direction);
     }
     
     protected String blocks;
@@ -42,12 +42,12 @@ public class UseItemOnBlocksAction extends AffectSingleTypeAction<PlayerTarget>
     protected boolean offhand;
     protected Direction direction;
     
-    public UseItemOnBlocksAction(SpellActionType<?> type)
+    public UseItemOnBlockAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public UseItemOnBlocksAction(SpellActionType<?> type, String activation, String source, String blocks, ItemStack item, boolean offhand, Direction direction)
+    public UseItemOnBlockAction(SpellActionType<?> type, String activation, String source, String blocks, ItemStack item, boolean offhand, Direction direction)
     {
         super(type, activation, source);
         this.blocks = blocks;

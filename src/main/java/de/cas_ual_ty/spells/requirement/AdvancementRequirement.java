@@ -41,7 +41,7 @@ public class AdvancementRequirement extends Requirement
     }
     
     @Override
-    public boolean passes(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         if(spellProgressionHolder.getPlayer() instanceof ServerPlayer player)
         {
