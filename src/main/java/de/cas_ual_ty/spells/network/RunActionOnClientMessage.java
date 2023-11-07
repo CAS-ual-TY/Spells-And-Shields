@@ -6,9 +6,7 @@ import de.cas_ual_ty.spells.spell.action.IClientAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public record RunActionOnClientMessage(SyncedSpellActionType<?, ?> actionType, IClientAction action)
 {
@@ -32,9 +30,9 @@ public record RunActionOnClientMessage(SyncedSpellActionType<?, ?> actionType, I
         return new RunActionOnClientMessage(null, null);
     }
     
-    public static void handle(RunActionOnClientMessage msg, Supplier<NetworkEvent.Context> context)
+    public static void handle(RunActionOnClientMessage msg, NetworkEvent.Context context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleSpellAction(msg));
-        context.get().setPacketHandled(true);
+        context.enqueueWork(() -> ClientMessageHandler.handleSpellAction(msg));
+        context.setPacketHandled(true);
     }
 }

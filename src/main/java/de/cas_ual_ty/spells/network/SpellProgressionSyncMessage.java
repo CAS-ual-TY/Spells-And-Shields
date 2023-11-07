@@ -12,13 +12,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public record SpellProgressionSyncMessage(BlockPos blockPos, List<SpellTree> spellTrees,
                                           HashMap<SpellNodeId, SpellStatus> map, Level level)
@@ -70,9 +69,9 @@ public record SpellProgressionSyncMessage(BlockPos blockPos, List<SpellTree> spe
         return new SpellProgressionSyncMessage(blockPos, spellTrees, map, level);
     }
     
-    public static void handle(SpellProgressionSyncMessage msg, Supplier<NetworkEvent.Context> context)
+    public static void handle(SpellProgressionSyncMessage msg, NetworkEvent.Context context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleSpellProgressionSync(msg));
-        context.get().setPacketHandled(true);
+        context.enqueueWork(() -> ClientMessageHandler.handleSpellProgressionSync(msg));
+        context.setPacketHandled(true);
     }
 }

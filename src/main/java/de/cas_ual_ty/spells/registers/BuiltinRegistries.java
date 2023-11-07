@@ -53,18 +53,18 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.IContainerFactory;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.Event;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.network.IContainerFactory;
+import net.neoforged.neoforge.network.NetworkHooks;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -203,8 +203,8 @@ public class BuiltinRegistries
     public static void registerEvents()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(BuiltinRegistries::entityAttributeModification);
-        MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::registerCommands);
-        MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::livingHurt);
-        MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::rightClickBlock);
+        NeoForge.EVENT_BUS.addListener(BuiltinRegistries::registerCommands);
+        NeoForge.EVENT_BUS.addListener(BuiltinRegistries::livingHurt);
+        NeoForge.EVENT_BUS.addListener(BuiltinRegistries::rightClickBlock);
     }
 }

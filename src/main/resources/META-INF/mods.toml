@@ -9,7 +9,22 @@ issueTrackerURL="https://github.com/CAS-ual-TY/Spells-And-Shields/issues"
     displayName="${mod_name}"
     displayURL="https://github.com/CAS-ual-TY/Spells-And-Shields"
     logoFile="logo.png"
-    credits="Mojang and the Minecraft Forge Team"
+    credits="Mojang and the NeoForged Team"
     authors="${mod_authors}"
     displayTest="MATCH_VERSION"
     description='''${mod_description}'''
+
+[[dependencies.${mod_id}]] #optional
+    modId="neoforge" #mandatory
+    mandatory=true #mandatory
+    versionRange="${neo_version_range}" #mandatory
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+

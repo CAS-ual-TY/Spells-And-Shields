@@ -14,11 +14,12 @@ import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 public class PlayerHarvestBlockAction extends AffectSingleTypeAction<PlayerTarget>
 {
@@ -80,9 +81,10 @@ public class PlayerHarvestBlockAction extends AffectSingleTypeAction<PlayerTarge
                 BlockPos pos = positionTarget.getBlockPos();
                 BlockState block = level.getBlockState(pos);
                 
-                PlayerInteractEvent.LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, pos, direction);
+                PlayerInteractEvent.LeftClickBlock event1 = CommonHooks.onLeftClickBlock(player, pos, direction, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK);
+                PlayerInteractEvent.LeftClickBlock event2 = CommonHooks.onLeftClickBlock(player, pos, direction, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK);
                 
-                if(!event.isCanceled() &&
+                if(!event1.isCanceled() && !event2.isCanceled() &&
                         !block.isAir() && player.canReach(pos, 2D) &&
                         pos.getY() <= level.getMaxBuildHeight() &&
                         level.mayInteract(player, pos) &&

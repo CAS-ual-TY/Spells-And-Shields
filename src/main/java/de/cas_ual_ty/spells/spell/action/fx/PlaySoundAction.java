@@ -17,7 +17,7 @@ import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class PlaySoundAction extends AffectTypeAction<PositionTarget>
 {

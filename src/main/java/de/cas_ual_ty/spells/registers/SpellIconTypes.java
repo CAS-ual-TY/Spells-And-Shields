@@ -2,8 +2,8 @@ package de.cas_ual_ty.spells.registers;
 
 import de.cas_ual_ty.spells.spell.icon.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.*;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.registries.*;
 
 import java.util.function.Supplier;
 

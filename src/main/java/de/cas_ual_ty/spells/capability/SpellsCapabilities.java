@@ -13,15 +13,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.*;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.capabilities.*;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -287,13 +287,13 @@ public class SpellsCapabilities
     public static void registerEvents()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsCapabilities::registerCapabilities);
-        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, SpellsCapabilities::attachCapabilities);
-        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerClone);
-        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerLoggedIn);
-        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerRespawn);
-        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerChangedDimensions);
-        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::startTracking);
-        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::levelTick);
-        MinecraftForge.EVENT_BUS.addListener(SpellsCapabilities::playerTick);
+        NeoForge.EVENT_BUS.addGenericListener(Entity.class, SpellsCapabilities::attachCapabilities);
+        NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerClone);
+        NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerLoggedIn);
+        NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerRespawn);
+        NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerChangedDimensions);
+        NeoForge.EVENT_BUS.addListener(SpellsCapabilities::startTracking);
+        NeoForge.EVENT_BUS.addListener(SpellsCapabilities::levelTick);
+        NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerTick);
     }
 }

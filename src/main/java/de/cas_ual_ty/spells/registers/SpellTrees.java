@@ -16,13 +16,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DataPackRegistryEvent;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.NewRegistryEvent;
-import net.minecraftforge.registries.RegistryBuilder;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.IForgeRegistry;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -52,7 +52,7 @@ public class SpellTrees
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellTrees::newRegistry);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellTrees::newDataPackRegistry);
-        MinecraftForge.EVENT_BUS.addListener(SpellTrees::levelLoad);
+        NeoForge.EVENT_BUS.addListener(SpellTrees::levelLoad);
     }
     
     private static void newRegistry(NewRegistryEvent event)

@@ -19,12 +19,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkHooks;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Supplier;
 
 public record RequestSpellProgressionMenuMessage(BlockPos pos)
 {
@@ -38,11 +37,11 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
         return new RequestSpellProgressionMenuMessage(buf.readBlockPos());
     }
     
-    public static void handle(RequestSpellProgressionMenuMessage msg, Supplier<NetworkEvent.Context> context)
+    public static void handle(RequestSpellProgressionMenuMessage msg, NetworkEvent.Context context)
     {
-        context.get().enqueueWork(() ->
+        context.enqueueWork(() ->
         {
-            ServerPlayer player = context.get().getSender();
+            ServerPlayer player = context.getSender();
             
             if(player == null)
             {
@@ -92,6 +91,6 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
             }
         });
         
-        context.get().setPacketHandled(true);
+        context.setPacketHandled(true);
     }
 }

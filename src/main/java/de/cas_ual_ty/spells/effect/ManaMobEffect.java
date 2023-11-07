@@ -5,7 +5,7 @@ import de.cas_ual_ty.spells.registers.BuiltinRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.LazyOptional;
 
 public class ManaMobEffect extends MobEffect
 {
@@ -38,7 +38,7 @@ public class ManaMobEffect extends MobEffect
     }
     
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier)
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier)
     {
         if(this == BuiltinRegistries.REPLENISHMENT_EFFECT.get())
         {

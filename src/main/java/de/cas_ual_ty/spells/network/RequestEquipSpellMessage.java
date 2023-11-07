@@ -4,9 +4,7 @@ import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId)
 {
@@ -22,11 +20,11 @@ public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId)
         return new RequestEquipSpellMessage(buf.readByte(), new SpellNodeId(buf.readResourceLocation(), buf.readShort()));
     }
     
-    public static void handle(RequestEquipSpellMessage msg, Supplier<NetworkEvent.Context> context)
+    public static void handle(RequestEquipSpellMessage msg, NetworkEvent.Context context)
     {
-        context.get().enqueueWork(() ->
+        context.enqueueWork(() ->
         {
-            ServerPlayer player = context.get().getSender();
+            ServerPlayer player = context.getSender();
             
             if(player == null)
             {
@@ -39,6 +37,6 @@ public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId)
             }
         });
         
-        context.get().setPacketHandled(true);
+        context.setPacketHandled(true);
     }
 }

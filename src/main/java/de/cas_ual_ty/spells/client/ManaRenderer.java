@@ -10,11 +10,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
 
 import java.util.Random;
 
@@ -44,7 +44,7 @@ public class ManaRenderer implements IGuiOverlay
     }
     
     @Override
-    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTicks, int width, int height)
+    public void render(ExtendedGui gui, GuiGraphics guiGraphics, float partialTicks, int width, int height)
     {
         if(above == SpellsClientConfig.MANA_ABOVE_FOOD.get() && right == !SpellsClientConfig.MANA_BY_HEALTH.get() && !Minecraft.getInstance().options.hideGui && gui.shouldDrawSurvivalElements())
         {
@@ -53,7 +53,7 @@ public class ManaRenderer implements IGuiOverlay
         }
     }
     
-    public void renderMana(ForgeGui gui, int width, int height, GuiGraphics guiGraphics)
+    public void renderMana(ExtendedGui gui, int width, int height, GuiGraphics guiGraphics)
     {
         if(minecraft.getCameraEntity() instanceof Player player)
         {
@@ -149,7 +149,7 @@ public class ManaRenderer implements IGuiOverlay
         }
     }
     
-    protected void renderUnit(ForgeGui gui, GuiGraphics guiGraphics, Player player, int left, int top, int rowHeight, int regen, float manaMax, int mana, int manaLast, int extra, boolean highlight)
+    protected void renderUnit(ExtendedGui gui, GuiGraphics guiGraphics, Player player, int left, int top, int rowHeight, int regen, float manaMax, int mana, int manaLast, int extra, boolean highlight)
     {
         UnitType unitType = UnitType.forPlayer(player);
         
@@ -204,7 +204,7 @@ public class ManaRenderer implements IGuiOverlay
         }
     }
     
-    private void renderUnit(ForgeGui gui, GuiGraphics guiGraphics, UnitType unitType, int x, int y, int v, boolean highlight, boolean half)
+    private void renderUnit(ExtendedGui gui, GuiGraphics guiGraphics, UnitType unitType, int x, int y, int v, boolean highlight, boolean half)
     {
         guiGraphics.blit(GUI_ICONS_LOCATION, x, y, unitType.getU(half, highlight), v, 9, 9);
     }

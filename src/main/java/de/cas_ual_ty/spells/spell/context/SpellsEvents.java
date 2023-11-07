@@ -9,13 +9,14 @@ import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.ICancellableEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -64,15 +65,15 @@ public class SpellsEvents
     {
         RegisteredEvent<E> registeredEvent = new RegisteredEvent<>(eventId, eventClass);
         NAME_TO_ENTRY.put(eventId, registeredEvent);
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, true, eventClass, event ->
+        NeoForge.EVENT_BUS.addListener(EventPriority.NORMAL, true, eventClass, event ->
         {
             playerGetter.apply(event).ifPresent(entity ->
             {
                 Consumer<SpellContext> toContext = ctx ->
                 {
-                    if(event.isCancelable())
+                    if(event instanceof ICancellableEvent ce)
                     {
-                        ctx.setCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name, event.isCanceled());
+                        ctx.setCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name, ce.isCanceled());
                     }
                     registeredEvent.getTargetLinks().forEach(link -> link.toContext(ctx, event));
                     registeredEvent.getVariableLinks().forEach(link -> link.toContext(ctx, event));
@@ -80,9 +81,9 @@ public class SpellsEvents
                 
                 Consumer<SpellContext> fromContext = ctx ->
                 {
-                    if(event.isCancelable())
+                    if(event instanceof ICancellableEvent ce)
                     {
-                        ctx.getCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name).ifPresent(event::setCanceled);
+                        ctx.getCtxVar(CtxVarTypes.BOOLEAN.get(), BuiltinVariables.EVENT_IS_CANCELED.name).ifPresent(ce::setCanceled);
                     }
                     registeredEvent.getVariableLinks().forEach(link -> link.fromContext(ctx, event));
                 };

@@ -1,29 +1,29 @@
 package de.cas_ual_ty.spells.client;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class SpellsClientConfig
 {
-    public static final ForgeConfigSpec CLIENT_SPEC;
+    public static final ModConfigSpec CLIENT_SPEC;
     
-    public static final ForgeConfigSpec.IntValue MANA_HIDE_DELAY;
-    public static final ForgeConfigSpec.BooleanValue MANA_ABOVE_FOOD;
-    public static final ForgeConfigSpec.BooleanValue MANA_BY_HEALTH;
-    public static final ForgeConfigSpec.BooleanValue MANA_JITTER;
-    public static final ForgeConfigSpec.BooleanValue ALWAYS_SHOW_SPELL_SLOTS;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL_OFFSET_X;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL_OFFSET_Y;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL_SPACING;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_OFFSET_X;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_OFFSET_Y;
-    public static final ForgeConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_SPACING;
-    public static final ForgeConfigSpec.BooleanValue SHOW_IDS;
+    public static final ModConfigSpec.IntValue MANA_HIDE_DELAY;
+    public static final ModConfigSpec.BooleanValue MANA_ABOVE_FOOD;
+    public static final ModConfigSpec.BooleanValue MANA_BY_HEALTH;
+    public static final ModConfigSpec.BooleanValue MANA_JITTER;
+    public static final ModConfigSpec.BooleanValue ALWAYS_SHOW_SPELL_SLOTS;
+    public static final ModConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL;
+    public static final ModConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL_OFFSET_X;
+    public static final ModConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL_OFFSET_Y;
+    public static final ModConfigSpec.IntValue SPELL_SLOTS_POSITION_SURVIVAL_SPACING;
+    public static final ModConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE;
+    public static final ModConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_OFFSET_X;
+    public static final ModConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_OFFSET_Y;
+    public static final ModConfigSpec.IntValue SPELL_SLOTS_POSITION_CREATIVE_SPACING;
+    public static final ModConfigSpec.BooleanValue SHOW_IDS;
     
     static
     {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         
         builder.push("mana");
         MANA_HIDE_DELAY = builder

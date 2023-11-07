@@ -3,11 +3,10 @@ package de.cas_ual_ty.spells.network;
 import de.cas_ual_ty.spells.capability.ParticleEmitterHolder;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public record ParticleEmitterSyncMessage(int entityId, boolean clear, List<ParticleEmitterHolder.ParticleEmitter> list)
 {
@@ -36,9 +35,9 @@ public record ParticleEmitterSyncMessage(int entityId, boolean clear, List<Parti
         return new ParticleEmitterSyncMessage(entityId, clear, list);
     }
     
-    public static void handle(ParticleEmitterSyncMessage msg, Supplier<NetworkEvent.Context> context)
+    public static void handle(ParticleEmitterSyncMessage msg, NetworkEvent.Context context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleParticleEmitterSync(msg));
-        context.get().setPacketHandled(true);
+        context.enqueueWork(() -> ClientMessageHandler.handleParticleEmitterSync(msg));
+        context.setPacketHandled(true);
     }
 }

@@ -4,7 +4,6 @@ import de.cas_ual_ty.spells.capability.ManaHolder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 
 public class ExtraManaMobEffect extends MobEffect
 {
@@ -14,16 +13,15 @@ public class ExtraManaMobEffect extends MobEffect
     }
     
     @Override
-    public void removeAttributeModifiers(LivingEntity livingEntity, AttributeMap attributeMap, int amplifier)
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier)
     {
-        ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder -> manaHolder.setExtraMana(manaHolder.getExtraMana() - (float) (4 * (amplifier + 1))));
-        super.removeAttributeModifiers(livingEntity, attributeMap, amplifier);
+        return true;
     }
     
     @Override
-    public void addAttributeModifiers(LivingEntity livingEntity, AttributeMap attributeMap, int amplifier)
+    public void onEffectStarted(LivingEntity livingEntity, int amplifier)
     {
+        super.onEffectStarted(livingEntity, amplifier);
         ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder -> manaHolder.setExtraMana(manaHolder.getExtraMana() + (float) (4 * (amplifier + 1))));
-        super.addAttributeModifiers(livingEntity, attributeMap, amplifier);
     }
 }

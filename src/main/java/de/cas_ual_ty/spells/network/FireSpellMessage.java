@@ -3,9 +3,7 @@ package de.cas_ual_ty.spells.network;
 import de.cas_ual_ty.spells.util.SpellHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public record FireSpellMessage(int spell)
 {
@@ -19,11 +17,11 @@ public record FireSpellMessage(int spell)
         return new FireSpellMessage(buf.readInt());
     }
     
-    public static void handle(FireSpellMessage msg, Supplier<NetworkEvent.Context> context)
+    public static void handle(FireSpellMessage msg, NetworkEvent.Context context)
     {
-        context.get().enqueueWork(() ->
+        context.enqueueWork(() ->
         {
-            ServerPlayer player = context.get().getSender();
+            ServerPlayer player = context.getSender();
             
             if(player != null)
             {
@@ -31,6 +29,6 @@ public record FireSpellMessage(int spell)
             }
         });
         
-        context.get().setPacketHandled(true);
+        context.setPacketHandled(true);
     }
 }

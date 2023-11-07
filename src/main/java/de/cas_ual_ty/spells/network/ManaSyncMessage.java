@@ -2,9 +2,7 @@ package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public record ManaSyncMessage(int entityId, float mana, float extraMana)
 {
@@ -20,9 +18,9 @@ public record ManaSyncMessage(int entityId, float mana, float extraMana)
         return new ManaSyncMessage(buf.readInt(), buf.readFloat(), buf.readFloat());
     }
     
-    public static void handle(ManaSyncMessage msg, Supplier<NetworkEvent.Context> context)
+    public static void handle(ManaSyncMessage msg, NetworkEvent.Context context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleManaSync(msg));
-        context.get().setPacketHandled(true);
+        context.enqueueWork(() -> ClientMessageHandler.handleManaSync(msg));
+        context.setPacketHandled(true);
     }
 }

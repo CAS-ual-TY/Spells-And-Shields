@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.requirement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -45,7 +45,7 @@ public class AdvancementRequirement extends Requirement
     {
         if(spellProgressionHolder.getPlayer() instanceof ServerPlayer player)
         {
-            Advancement a = player.server.getAdvancements().getAdvancement(advancementRL);
+            AdvancementHolder a = player.server.getAdvancements().get(advancementRL);
             
             if(a != null)
             {
@@ -65,11 +65,11 @@ public class AdvancementRequirement extends Requirement
     {
         if(spellProgressionHolder.getPlayer() instanceof ServerPlayer player)
         {
-            Advancement a = player.server.getAdvancements().getAdvancement(advancementRL);
+            AdvancementHolder a = player.server.getAdvancements().get(advancementRL);
             
             if(a != null)
             {
-                return Component.translatable(descriptionId, a.getDisplay().getTitle());
+                return Component.translatable(descriptionId, a.value().display().get().getTitle());
             }
             else
             {

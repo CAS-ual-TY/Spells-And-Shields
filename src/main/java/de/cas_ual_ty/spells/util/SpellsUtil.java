@@ -27,10 +27,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.IForgeRegistry;
 
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
@@ -205,7 +204,7 @@ public class SpellsUtil
     
     public static Level getClientLevel()
     {
-        return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> de.cas_ual_ty.spells.client.SpellsClientUtil.getClientLevel());
+        return FMLEnvironment.dist.isClient() ? de.cas_ual_ty.spells.client.SpellsClientUtil.getClientLevel() : null;
     }
     
     public static <E extends Enum<E>> Codec<E> namedEnumCodec(Function<String, E> stringToEnum, Function<E, String> enumToString)

@@ -6,7 +6,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 
@@ -24,7 +24,7 @@ public class InstantManaMobEffect extends MobEffect
     }
     
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier)
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier)
     {
         return duration >= 1;
     }

@@ -2,8 +2,8 @@ package de.cas_ual_ty.spells.capability;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.LazyOptional;
 
 public class ExtraTagHolder implements INBTSerializable<CompoundTag>
 {

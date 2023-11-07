@@ -4,9 +4,7 @@ import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, SpellNodeId[] nodeIds)
 {
@@ -77,9 +75,9 @@ public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, SpellNo
         return new SpellsSyncMessage(entityId, spells, ids);
     }
     
-    public static void handle(SpellsSyncMessage msg, Supplier<NetworkEvent.Context> context)
+    public static void handle(SpellsSyncMessage msg, NetworkEvent.Context context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleSpellsSync(msg));
-        context.get().setPacketHandled(true);
+        context.enqueueWork(() -> ClientMessageHandler.handleSpellsSync(msg));
+        context.setPacketHandled(true);
     }
 }

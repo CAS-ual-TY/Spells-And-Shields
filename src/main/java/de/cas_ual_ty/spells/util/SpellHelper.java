@@ -13,7 +13,7 @@ import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class SpellHelper
 {

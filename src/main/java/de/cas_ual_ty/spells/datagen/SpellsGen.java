@@ -38,6 +38,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.AttributeModifierTemplate;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -48,6 +49,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -55,8 +57,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -174,11 +176,13 @@ public class SpellsGen
             spell.addTooltip(Component.empty());
             spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
             
-            for(Map.Entry<Attribute, AttributeModifier> e : mobEffect.getAttributeModifiers().entrySet())
+            for(Map.Entry<Attribute, AttributeModifierTemplate> e : mobEffect.getAttributeModifiers().entrySet())
             {
+                AttributeModifier am = e.getValue().create(amplifier);
+                
                 Attribute attribute = e.getKey();
-                AttributeModifier.Operation op = e.getValue().getOperation();
-                double value = e.getValue().getAmount();
+                AttributeModifier.Operation op = am.getOperation();
+                double value = am.getAmount();
                 
                 double d;
                 if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
@@ -233,11 +237,13 @@ public class SpellsGen
             spell.addTooltip(Component.empty());
             spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
             
-            for(Map.Entry<Attribute, AttributeModifier> e : mobEffect.getAttributeModifiers().entrySet())
+            for(Map.Entry<Attribute, AttributeModifierTemplate> e : mobEffect.getAttributeModifiers().entrySet())
             {
+                AttributeModifier am = e.getValue().create(amplifier);
+                
                 Attribute attribute = e.getKey();
-                AttributeModifier.Operation op = e.getValue().getOperation();
-                double value = e.getValue().getAmount();
+                AttributeModifier.Operation op = am.getOperation();
+                double value = am.getAmount();
                 
                 double d;
                 if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
@@ -311,11 +317,13 @@ public class SpellsGen
             spell.addTooltip(Component.empty());
             spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
             
-            for(Map.Entry<Attribute, AttributeModifier> e : mobEffect.getAttributeModifiers().entrySet())
+            for(Map.Entry<Attribute, AttributeModifierTemplate> e : mobEffect.getAttributeModifiers().entrySet())
             {
+                AttributeModifier am = e.getValue().create(amplifier);
+                
                 Attribute attribute = e.getKey();
-                AttributeModifier.Operation op = e.getValue().getOperation();
-                double value = e.getValue().getAmount();
+                AttributeModifier.Operation op = am.getOperation();
+                double value = am.getAmount();
                 
                 double d;
                 if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
@@ -1554,7 +1562,7 @@ public class SpellsGen
     public static void printBlastingRecipes(Level level, RegistryAccess access)
     {
         System.out.println("ABCDEFG=".repeat(50));
-        level.getRecipeManager().getAllRecipesFor(RecipeType.BLASTING).forEach(r ->
+        level.getRecipeManager().getAllRecipesFor(RecipeType.BLASTING).stream().map(RecipeHolder::value).forEach(r ->
         {
             String out = ForgeRegistries.ITEMS.getKey(r.getResultItem(access).getItem()).toString();
             r.getIngredients().forEach(i ->

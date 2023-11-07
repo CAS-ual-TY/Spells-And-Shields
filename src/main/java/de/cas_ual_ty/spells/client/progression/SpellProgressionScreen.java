@@ -28,7 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -357,7 +357,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float deltaTick, int mouseX, int mouseY)
     {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, deltaTick);
         if(maxPages != 0)
         {
             Component page = Component.literal(String.format("%d / %d", tabPage + 1, maxPages + 1));

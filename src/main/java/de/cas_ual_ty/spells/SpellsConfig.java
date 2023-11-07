@@ -3,32 +3,32 @@ package de.cas_ual_ty.spells;
 import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
 
 public class SpellsConfig
 {
-    public static final ForgeConfigSpec GENERAL_SPEC;
+    public static final ModConfigSpec GENERAL_SPEC;
     
-    public static final ForgeConfigSpec.BooleanValue RESPAWN_WITH_FULL_MANA;
-    public static final ForgeConfigSpec.BooleanValue CLEAR_SLOTS_ON_DEATH;
-    public static final ForgeConfigSpec.BooleanValue FORGET_SPELLS_ON_DEATH;
+    public static final ModConfigSpec.BooleanValue RESPAWN_WITH_FULL_MANA;
+    public static final ModConfigSpec.BooleanValue CLEAR_SLOTS_ON_DEATH;
+    public static final ModConfigSpec.BooleanValue FORGET_SPELLS_ON_DEATH;
     
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANTING_TABLE;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> PROGRESSION_BLOCK;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> ENCHANTING_TABLE;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> PROGRESSION_BLOCK;
     
-    public static final ForgeConfigSpec.BooleanValue DEBUG_SPELLS;
-    public static final ForgeConfigSpec.IntValue ACTION_JUMP_LIMIT;
+    public static final ModConfigSpec.BooleanValue DEBUG_SPELLS;
+    public static final ModConfigSpec.IntValue ACTION_JUMP_LIMIT;
     
-    public static final ForgeConfigSpec.BooleanValue GLOBAL_ITEM_COSTS;
-    public static final ForgeConfigSpec.BooleanValue GLOBAL_TERRAIN_DAMAGE;
-    public static final ForgeConfigSpec.BooleanValue GLOBAL_PVP;
-    public static final ForgeConfigSpec.BooleanValue SPELL_TREES;
+    public static final ModConfigSpec.BooleanValue GLOBAL_ITEM_COSTS;
+    public static final ModConfigSpec.BooleanValue GLOBAL_TERRAIN_DAMAGE;
+    public static final ModConfigSpec.BooleanValue GLOBAL_PVP;
+    public static final ModConfigSpec.BooleanValue SPELL_TREES;
     
     static
     {
-        ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder configBuilder = new ModConfigSpec.Builder();
         
         configBuilder.comment("Settings related to when a player dies.").push("onDeath");
         RESPAWN_WITH_FULL_MANA = configBuilder
