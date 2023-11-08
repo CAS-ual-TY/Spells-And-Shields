@@ -65,6 +65,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<GetEntityTypeAction>> GET_ENTITY_TYPE = DEFERRED_REGISTER.register("get_entity_type", () -> new SpellActionType<>(GetEntityTypeAction::new, GetEntityTypeAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityUUIDAction>> GET_ENTITY_UUID = DEFERRED_REGISTER.register("get_entity_uuid", () -> new SpellActionType<>(GetEntityUUIDAction::new, GetEntityUUIDAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetIsCreativeAction>> GET_IS_CREATIVE = DEFERRED_REGISTER.register("get_is_creative", () -> new SpellActionType<>(GetIsCreativeAction::new, GetIsCreativeAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetPlayerNameAction>> GET_PLAYER_NAME = DEFERRED_REGISTER.register("get_player_name", () -> new SpellActionType<>(GetPlayerNameAction::new, GetPlayerNameAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetPositionAction>> GET_POSITION = DEFERRED_REGISTER.register("get_position", () -> new SpellActionType<>(GetPositionAction::new, GetPositionAction::makeCodec));
     
     // control flow
