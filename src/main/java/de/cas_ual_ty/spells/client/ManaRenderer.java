@@ -79,7 +79,7 @@ public class ManaRenderer implements IGuiOverlay
                     }
                     
                     int hideManaTime = SpellsClientConfig.MANA_HIDE_DELAY.get();
-                    if(hideManaTime != 0 && UnitType.forPlayer(player) == UnitType.NORMAL && (Util.getMillis() - this.lastManaChangeTime) >= hideManaTime * 50L)
+                    if(hideManaTime != 0 && UnitType.forPlayer(player) == UnitType.NORMAL && (Util.getMillis() - lastManaChangeTime) >= hideManaTime * 50L)
                     {
                         return;
                     }
@@ -87,26 +87,26 @@ public class ManaRenderer implements IGuiOverlay
                 
                 boolean highlight = manaBlinkTime > (long) gui.getGuiTicks() && (manaBlinkTime - (long) gui.getGuiTicks()) / 3L % 2L == 1L;
                 
-                if(mana < this.lastMana && manaHolder.changeTime > 0)
+                if(mana < lastMana && manaHolder.changeTime > 0)
                 {
-                    this.lastManaTime = Util.getMillis();
-                    this.manaBlinkTime = gui.getGuiTicks() + 20;
+                    lastManaTime = Util.getMillis();
+                    manaBlinkTime = gui.getGuiTicks() + 20;
                 }
-                else if(mana > this.lastMana && manaHolder.changeTime > 0)
+                else if(mana > lastMana && manaHolder.changeTime > 0)
                 {
-                    this.lastManaTime = Util.getMillis();
-                    this.manaBlinkTime = gui.getGuiTicks() + 10;
-                }
-                
-                if(Util.getMillis() - this.lastManaTime > 1000L)
-                {
-                    this.lastMana = mana;
-                    this.displayMana = mana;
-                    this.lastManaTime = Util.getMillis();
+                    lastManaTime = Util.getMillis();
+                    manaBlinkTime = gui.getGuiTicks() + 10;
                 }
                 
-                this.lastMana = mana;
-                int manaLast = this.displayMana;
+                if(Util.getMillis() - lastManaTime > 1000L)
+                {
+                    lastMana = mana;
+                    displayMana = mana;
+                    lastManaTime = Util.getMillis();
+                }
+                
+                lastMana = mana;
+                int manaLast = displayMana;
                 
                 float manaMax = Math.max(maxMana, Math.max(manaLast, mana));
                 int extra = Mth.ceil(manaHolder.getExtraMana());
@@ -114,7 +114,7 @@ public class ManaRenderer implements IGuiOverlay
                 int rows = Mth.ceil((manaMax + extra) / 2F / 10F);
                 int rowHeight = Math.max(10 - (rows - 2), 3);
                 
-                this.random.setSeed(gui.getGuiTicks() * 27L);
+                random.setSeed(gui.getGuiTicks() * 27L);
                 
                 int left = right ? width / 2 + 10 : width / 2 - 91;
                 
@@ -132,7 +132,7 @@ public class ManaRenderer implements IGuiOverlay
                     regen = gui.getGuiTicks() % Mth.ceil(manaMax + 5F);
                 }
                 
-                this.renderUnit(gui, pStack, player, left, top, rowHeight, regen, manaMax, mana, manaLast, extra, highlight);
+                renderUnit(gui, pStack, player, left, top, rowHeight, regen, manaMax, mana, manaLast, extra, highlight);
                 
                 int change = (rows * rowHeight) + (rowHeight != 10 ? 10 - rowHeight : 0);
                 
@@ -168,7 +168,7 @@ public class ManaRenderer implements IGuiOverlay
             
             if(SpellsClientConfig.MANA_JITTER.get() && mana + extra <= 4)
             {
-                y += this.random.nextInt(2);
+                y += random.nextInt(2);
             }
             
             if(idx < totalUnits && idx == regen)
@@ -176,7 +176,7 @@ public class ManaRenderer implements IGuiOverlay
                 y -= 2;
             }
             
-            this.renderUnit(gui, poseStack, UnitType.CONTAINER, x, y, v, highlight, false);
+            renderUnit(gui, poseStack, UnitType.CONTAINER, x, y, v, highlight, false);
             
             int idx2 = idx * 2;
             boolean renderExtra = idx >= totalUnits;
@@ -187,20 +187,20 @@ public class ManaRenderer implements IGuiOverlay
                 if(i < extra)
                 {
                     boolean half = i + 1 == extra;
-                    this.renderUnit(gui, poseStack, UnitType.EXTRA, x, y, v, false, half);
+                    renderUnit(gui, poseStack, UnitType.EXTRA, x, y, v, false, half);
                 }
             }
             
             if(highlight && idx2 < manaLast)
             {
                 boolean half = idx2 + 1 == manaLast;
-                this.renderUnit(gui, poseStack, unitType, x, y, v, true, half);
+                renderUnit(gui, poseStack, unitType, x, y, v, true, half);
             }
             
             if(idx2 < mana)
             {
                 boolean half = idx2 + 1 == mana;
-                this.renderUnit(gui, poseStack, unitType, x, y, v, false, half);
+                renderUnit(gui, poseStack, unitType, x, y, v, false, half);
             }
         }
     }
@@ -223,7 +223,7 @@ public class ManaRenderer implements IGuiOverlay
         UnitType(int index, boolean canBlink)
         {
             this.index = index;
-            this.whiteFlash = canBlink;
+            whiteFlash = canBlink;
         }
         
         public int getU(boolean half, boolean highlight)
@@ -236,10 +236,10 @@ public class ManaRenderer implements IGuiOverlay
             }
             else
             {
-                i = (half ? 1 : 0) + (this.whiteFlash && highlight ? 2 : 0);
+                i = (half ? 1 : 0) + (whiteFlash && highlight ? 2 : 0);
             }
             
-            return (this.index * 2 + i) * 9;
+            return (index * 2 + i) * 9;
         }
         
         static UnitType forPlayer(Player player)

@@ -41,7 +41,7 @@ public class BookshelvesRequirement extends Requirement
     @Override
     protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0) >= this.bookshelves;
+        return access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0) >= bookshelves;
     }
     
     @Override
@@ -54,13 +54,13 @@ public class BookshelvesRequirement extends Requirement
     @Override
     public void writeToBuf(FriendlyByteBuf buf)
     {
-        buf.writeInt(this.bookshelves);
+        buf.writeInt(bookshelves);
     }
     
     @Override
     public void readFromBuf(FriendlyByteBuf buf)
     {
-        this.bookshelves = buf.readInt();
+        bookshelves = buf.readInt();
     }
     
     public static float getEnchantingPower(Level level, BlockPos pos)

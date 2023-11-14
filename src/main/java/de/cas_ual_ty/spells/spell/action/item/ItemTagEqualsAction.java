@@ -80,7 +80,7 @@ public class ItemTagEqualsAction extends AffectSingleTypeAction<ItemTarget>
         {
             minimumDurability.getValue(ctx).ifPresent(minimumDurability ->
             {
-                if(!itemTarget.getItem().is(this.itemTag))
+                if(!itemTarget.getItem().is(itemTag))
                 {
                     ctx.deactivate(activation);
                     return;

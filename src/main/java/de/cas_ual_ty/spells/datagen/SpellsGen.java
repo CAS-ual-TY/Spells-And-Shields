@@ -118,8 +118,8 @@ public class SpellsGen implements DataProvider
         this.gen = gen;
         this.modId = modId;
         this.exFileHelper = exFileHelper;
-        this.registryAccess = RegistryAccess.builtinCopy();
-        this.registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        registryAccess = RegistryAccess.builtinCopy();
+        registryOps = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
         
         spells = new HashMap<>();
     }

@@ -41,7 +41,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
         lastSentMana = -1F;
         lastSentExtraMana = -1F;
         regenTime = 0;
-        ticksUntilNextReg = this.calcTicksUntilReg();
+        ticksUntilNextReg = calcTicksUntilReg();
         changeTime = -1;
         this.player = player;
     }
@@ -49,7 +49,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
     public void setMana(float mana)
     {
         this.mana = mana;
-        this.checkSyncStatus();
+        checkSyncStatus();
     }
     
     public float getMana()
@@ -66,7 +66,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
             this.extraMana = 0F;
         }
         
-        this.checkSyncStatus();
+        checkSyncStatus();
     }
     
     public float getExtraMana()
@@ -84,12 +84,12 @@ public class ManaHolder implements INBTSerializable<ListTag>
             mana = maxMana;
         }
         
-        this.checkSyncStatus();
+        checkSyncStatus();
     }
     
     public void burn(float amount)
     {
-        boolean wasFull = this.mana >= this.getMaxMana();
+        boolean wasFull = mana >= getMaxMana();
         
         if(extraMana > 0F)
         {
@@ -115,10 +115,10 @@ public class ManaHolder implements INBTSerializable<ListTag>
         
         if(wasFull)
         {
-            this.regenTime = 0;
+            regenTime = 0;
         }
         
-        this.checkSyncStatus();
+        checkSyncStatus();
     }
     
     public LivingEntity getPlayer()
@@ -155,7 +155,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
         
         ++regenTime;
         
-        if(regenTime >= ticksUntilNextReg || this.getMana() > this.getMaxMana())
+        if(regenTime >= ticksUntilNextReg || getMana() > getMaxMana())
         {
             replenish(1F);
             regenTime = 0;
@@ -241,7 +241,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
     {
         if(player instanceof ServerPlayer serverPlayer)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayer), this.makeSyncMessage());
+            SpellsAndShields.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayer), makeSyncMessage());
         }
     }
     

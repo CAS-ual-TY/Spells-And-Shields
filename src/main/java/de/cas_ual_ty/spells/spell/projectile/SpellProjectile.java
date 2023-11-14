@@ -43,11 +43,11 @@ public class SpellProjectile extends AbstractHurtingProjectile
     public SpellProjectile(EntityType<? extends SpellProjectile> entityType, Level level)
     {
         super(entityType, level);
-        this.spell = null;
-        this.timeout = -1;
-        this.blockHitActivation = null;
-        this.entityHitActivation = null;
-        this.timeoutActivation = null;
+        spell = null;
+        timeout = -1;
+        blockHitActivation = null;
+        entityHitActivation = null;
+        timeoutActivation = null;
     }
     
     public SpellProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, SpellInstance spell, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
@@ -133,7 +133,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
     @Nullable
     public SpellInstance getSpell()
     {
-        return this.spell;
+        return spell;
     }
     
     public void setSpell(SpellInstance spell)
@@ -201,7 +201,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
             
             if(spellNodeId != null)
             {
-                this.spell = spellNodeId.getSpellInstance(SpellTrees.getRegistry(this.level));
+                spell = spellNodeId.getSpellInstance(SpellTrees.getRegistry(level));
             }
             else if(nbt.contains("spellId", Tag.TAG_STRING))
             {
@@ -210,7 +210,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
                 
                 if(holder != null)
                 {
-                    this.spell = new SpellInstance(holder);
+                    spell = new SpellInstance(holder);
                 }
             }
         }

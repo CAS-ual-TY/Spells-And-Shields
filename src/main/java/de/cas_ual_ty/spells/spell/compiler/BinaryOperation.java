@@ -149,11 +149,11 @@ public class BinaryOperation
             {
                 operant2.tryGetAs(this.operant2).ifPresent(op2 ->
                 {
-                    X value = (X) this.function.apply(op1, op2);
+                    X value = (X) function.apply(op1, op2);
                     
                     if(value != null)
                     {
-                        result.accept((CtxVarType<X>) this.result(), value);
+                        result.accept((CtxVarType<X>) result(), value);
                         success.set(true);
                     }
                 });

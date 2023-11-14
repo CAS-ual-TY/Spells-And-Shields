@@ -61,7 +61,7 @@ public class CheckHasDelayedSpellAction extends AffectSingleTypeAction<EntityTar
     {
         DelayedSpellHolder.getHolder(target.getEntity()).ifPresent(holder ->
         {
-            this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid1 ->
+            uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid1 ->
             {
                 if(!holder.hasDelayedSpell(uuid1))
                 {

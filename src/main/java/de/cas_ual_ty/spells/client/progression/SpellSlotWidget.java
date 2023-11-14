@@ -46,12 +46,12 @@ public class SpellSlotWidget extends Button
         if(!active || isMouseOver(mouseX, mouseY))
         {
             // gold frame
-            this.blit(poseStack, x, y, 2 * SpellNodeWidget.FRAME_WIDTH, 128 + SpellNodeWidget.FRAME_HEIGHT, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            blit(poseStack, x, y, 2 * SpellNodeWidget.FRAME_WIDTH, 128 + SpellNodeWidget.FRAME_HEIGHT, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
         else
         {
             // white frame
-            this.blit(poseStack, x, y, 2 * SpellNodeWidget.FRAME_WIDTH, 128, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            blit(poseStack, x, y, 2 * SpellNodeWidget.FRAME_WIDTH, 128, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
     }
     
@@ -87,13 +87,13 @@ public class SpellSlotWidget extends Button
     @Override
     public boolean isMouseOver(double mouseX, double mouseY)
     {
-        return this.visible && mouseX >= (double) this.x && mouseY >= (double) this.y && mouseX < (double) (this.x + this.width) && mouseY < (double) (this.y + this.height);
+        return visible && mouseX >= (double) x && mouseY >= (double) y && mouseX < (double) (x + width) && mouseY < (double) (y + height);
     }
     
     @Override
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY)
     {
-        if(this.visible && this.isMouseOver(mouseX, mouseY))
+        if(visible && isMouseOver(mouseX, mouseY))
         {
             super.renderToolTip(poseStack, mouseX, mouseY);
         }
