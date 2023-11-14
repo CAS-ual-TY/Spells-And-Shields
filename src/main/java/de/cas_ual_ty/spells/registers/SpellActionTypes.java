@@ -18,6 +18,8 @@ import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
 import de.cas_ual_ty.spells.spell.action.level.*;
 import de.cas_ual_ty.spells.spell.action.mana.*;
+import de.cas_ual_ty.spells.spell.action.server.ExecuteCommandAction;
+import de.cas_ual_ty.spells.spell.action.server.ExecutePlayerCommandAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedTernaryVarAction;
@@ -64,6 +66,7 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<GetEntityTypeAction>> GET_ENTITY_TYPE = DEFERRED_REGISTER.register("get_entity_type", () -> new SpellActionType<>(GetEntityTypeAction::new, GetEntityTypeAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetEntityUUIDAction>> GET_ENTITY_UUID = DEFERRED_REGISTER.register("get_entity_uuid", () -> new SpellActionType<>(GetEntityUUIDAction::new, GetEntityUUIDAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetIsCreativeAction>> GET_IS_CREATIVE = DEFERRED_REGISTER.register("get_is_creative", () -> new SpellActionType<>(GetIsCreativeAction::new, GetIsCreativeAction::makeCodec));
+    public static final RegistryObject<SpellActionType<GetPlayerNameAction>> GET_PLAYER_NAME = DEFERRED_REGISTER.register("get_player_name", () -> new SpellActionType<>(GetPlayerNameAction::new, GetPlayerNameAction::makeCodec));
     public static final RegistryObject<SpellActionType<GetPositionAction>> GET_POSITION = DEFERRED_REGISTER.register("get_position", () -> new SpellActionType<>(GetPositionAction::new, GetPositionAction::makeCodec));
     
     // control flow
@@ -147,6 +150,10 @@ public class SpellActionTypes
     public static final RegistryObject<SpellActionType<ManaCheckAction>> MANA_CHECK = DEFERRED_REGISTER.register("mana_check", () -> new SpellActionType<>(ManaCheckAction::new, ManaCheckAction::makeCodec));
     public static final RegistryObject<SpellActionType<ReplenishManaAction>> REPLENISH_MANA = DEFERRED_REGISTER.register("replenish_mana", () -> new SpellActionType<>(ReplenishManaAction::new, ReplenishManaAction::makeCodec));
     public static final RegistryObject<SpellActionType<SimpleManaCheckAction>> SIMPLE_MANA_CHECK = DEFERRED_REGISTER.register("simple_mana_check", () -> new SpellActionType<>(SimpleManaCheckAction::new, SimpleManaCheckAction::makeCodec));
+    
+    // server
+    public static final RegistryObject<SpellActionType<ExecuteCommandAction>> EXECUTE_COMMAND = DEFERRED_REGISTER.register("execute_command", () -> new SpellActionType<>(ExecuteCommandAction::new, ExecuteCommandAction::makeCodec));
+    public static final RegistryObject<SpellActionType<ExecutePlayerCommandAction>> EXECUTE_PLAYER_COMMAND = DEFERRED_REGISTER.register("execute_player_command", () -> new SpellActionType<>(ExecutePlayerCommandAction::new, ExecutePlayerCommandAction::makeCodec));
     
     // target
     public static final RegistryObject<SpellActionType<ClearTargetsAction>> CLEAR_TARGETS = DEFERRED_REGISTER.register("clear_targets", () -> new SpellActionType<>(ClearTargetsAction::new, ClearTargetsAction::makeCodec));
