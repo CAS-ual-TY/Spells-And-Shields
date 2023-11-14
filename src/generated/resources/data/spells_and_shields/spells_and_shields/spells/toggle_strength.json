@@ -37,6 +37,16 @@
     {
       "color": "dark_purple",
       "translate": "potion.whenDrank"
+    },
+    {
+      "color": "blue",
+      "translate": "attribute.modifier.plus.0",
+      "with": [
+        "3",
+        {
+          "translate": "effect.minecraft.strength"
+        }
+      ]
     }
   ],
   "s5/spell_events": [
