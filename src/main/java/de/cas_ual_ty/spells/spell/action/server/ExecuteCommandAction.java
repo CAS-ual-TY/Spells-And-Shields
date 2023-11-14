@@ -24,7 +24,7 @@ public class ExecuteCommandAction extends SpellAction
     
     public static ExecuteCommandAction make(Object activation, DynamicCtxVar<String> command)
     {
-        return new ExecuteCommandAction(SpellActionTypes.HEAL.get(), activation.toString(), command);
+        return new ExecuteCommandAction(SpellActionTypes.EXECUTE_COMMAND.get(), activation.toString(), command);
     }
     
     protected DynamicCtxVar<String> command;

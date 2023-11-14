@@ -35,7 +35,7 @@ public class ExecutePlayerCommandAction extends AffectTypeAction<PlayerTarget>
     
     public static ExecutePlayerCommandAction make(Object activation, Object multiTargets, DynamicCtxVar<String> command, int permissionLevel)
     {
-        return new ExecutePlayerCommandAction(SpellActionTypes.HEAL.get(), activation.toString(), multiTargets.toString(), command, permissionLevel);
+        return new ExecutePlayerCommandAction(SpellActionTypes.EXECUTE_PLAYER_COMMAND.get(), activation.toString(), multiTargets.toString(), command, permissionLevel);
     }
     
     protected DynamicCtxVar<String> command;

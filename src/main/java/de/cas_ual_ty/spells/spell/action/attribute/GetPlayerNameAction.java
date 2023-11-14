@@ -24,7 +24,7 @@ public class GetPlayerNameAction extends GetTargetAttributeAction<PlayerTarget>
     
     public static GetPlayerNameAction make(Object activation, Object source, String playerName)
     {
-        return new GetPlayerNameAction(SpellActionTypes.GET_ENTITY_TAG.get(), activation.toString(), source.toString(), playerName);
+        return new GetPlayerNameAction(SpellActionTypes.GET_PLAYER_NAME.get(), activation.toString(), source.toString(), playerName);
     }
     
     protected String playerName;
