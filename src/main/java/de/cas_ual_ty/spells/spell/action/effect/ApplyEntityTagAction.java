@@ -55,7 +55,7 @@ public class ApplyEntityTagAction extends AffectTypeAction<EntityTarget>
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, EntityTarget target)
     {
-        this.tag.getValue(ctx).ifPresent(tag0 ->
+        tag.getValue(ctx).ifPresent(tag0 ->
         {
             Entity entity = target.getEntity();
             

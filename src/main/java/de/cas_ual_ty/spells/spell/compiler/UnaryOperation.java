@@ -122,11 +122,11 @@ public class UnaryOperation
             
             operant.tryGetAs(this.operant).ifPresent(op ->
             {
-                X value = (X) this.function.apply(op);
+                X value = (X) function.apply(op);
                 
                 if(value != null)
                 {
-                    result.accept((CtxVarType<X>) this.result(), value);
+                    result.accept((CtxVarType<X>) result(), value);
                     success.set(true);
                 }
             });

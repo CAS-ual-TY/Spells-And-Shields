@@ -70,27 +70,27 @@ public class SpellNodeWidget extends GuiComponent
     
     public SpellNodeWidget(SpellTreeTab skillTreeTab, SpellNode spell, SpellStatus spellStatus)
     {
-        this.tab = skillTreeTab;
-        this.spellNode = spell;
+        tab = skillTreeTab;
+        spellNode = spell;
         this.spellStatus = spellStatus;
         
-        this.font = Minecraft.getInstance().font;
+        font = Minecraft.getInstance().font;
         
-        this.spellTexture = spell.getSpellDirect().getIcon();
-        this.title = Language.getInstance().getVisualOrder(this.font.substrByWidth(spell.getSpellDirect().getTitle(), TITLE_MAX_WIDTH));
+        spellTexture = spell.getSpellDirect().getIcon();
+        title = Language.getInstance().getVisualOrder(font.substrByWidth(spell.getSpellDirect().getTitle(), TITLE_MAX_WIDTH));
         
         // Position fixup later, after all widgets are done, in SpellTreeTab
-        this.x = 0;
-        this.y = 0;
+        x = 0;
+        y = 0;
         
-        this.width = 29 + this.font.width(this.title) + TITLE_PADDING_LEFT + TITLE_PADDING_RIGHT;
+        width = 29 + font.width(title) + TITLE_PADDING_LEFT + TITLE_PADDING_RIGHT;
         
-        this.frameIcon = spell.getFrame();
+        frameIcon = spell.getFrame();
         
         // 0 = gold = available
         // 1 = blue = buyable
         // 2 = black = not available & not buyable
-        this.titleIcon = (spellStatus == SpellStatus.LEARNED ? 0 : ProgressionHelper.isFullyLinked(spell, tab.getScreen().getMenu().spellProgression) ? 1 : 2);
+        titleIcon = (spellStatus == SpellStatus.LEARNED ? 0 : ProgressionHelper.isFullyLinked(spell, tab.getScreen().getMenu().spellProgression) ? 1 : 2);
     }
     
     private static float getMaxWidth(StringSplitter stringSplitter, List<FormattedText> list)
@@ -100,7 +100,7 @@ public class SpellNodeWidget extends GuiComponent
     
     private List<FormattedText> findOptimalLines(Component component, int w)
     {
-        StringSplitter splitter = this.font.getSplitter();
+        StringSplitter splitter = font.getSplitter();
         List<FormattedText> candidate = null;
         
         float smallest = Float.MAX_VALUE;
@@ -131,7 +131,7 @@ public class SpellNodeWidget extends GuiComponent
         
         final int xOff = 15;
         
-        if(!this.children.isEmpty() && children.stream().anyMatch(childPredicate))
+        if(!children.isEmpty() && children.stream().anyMatch(childPredicate))
         {
             int xMid = x + this.x + xOff;
             int bot = y + this.y + 23;
@@ -141,7 +141,7 @@ public class SpellNodeWidget extends GuiComponent
                 // multiple children, require horizontal and vertical line(s)
                 int hY = bot + 10;
                 
-                this.vLine(poseStack, xMid, bot, hY, color);
+                vLine(poseStack, xMid, bot, hY, color);
                 
                 for(SpellNodeWidget child : children)
                 {
@@ -153,25 +153,25 @@ public class SpellNodeWidget extends GuiComponent
                     int childX = x + child.x + xOff;
                     int childTop = y + child.y + 1;
                     
-                    this.vLine(poseStack, childX, childTop, hY, color);
-                    this.hLine(poseStack, childX, xMid, hY, color);
+                    vLine(poseStack, childX, childTop, hY, color);
+                    hLine(poseStack, childX, xMid, hY, color);
                 }
             }
             else
             {
                 // single child, requires only 1 vertical line
-                SpellNodeWidget child = this.children.getFirst();
+                SpellNodeWidget child = children.getFirst();
                 
                 if(childPredicate.test(child))
                 {
                     int childX = x + child.x + xOff;
                     int childTop = y + child.y + 1;
                     
-                    this.vLine(poseStack, childX, childTop, bot, color);
+                    vLine(poseStack, childX, childTop, bot, color);
                 }
             }
             
-            for(SpellNodeWidget spellNodeWidget : this.children)
+            for(SpellNodeWidget spellNodeWidget : children)
             {
                 if(childPredicate.test(spellNodeWidget))
                 {
@@ -187,7 +187,7 @@ public class SpellNodeWidget extends GuiComponent
         
         final int xOff = 15;
         
-        if(!this.children.isEmpty())
+        if(!children.isEmpty())
         {
             int xMid = x + this.x + xOff;
             int bot = y + this.y + 23;
@@ -200,32 +200,32 @@ public class SpellNodeWidget extends GuiComponent
                 int hX2 = x + children.getLast().x + xOff;
                 int hY = bot + 10;
                 
-                this.vLine(poseStack, xMid - 1, bot, hY + 1, color);
-                this.vLine(poseStack, xMid + 1, bot, hY + 1, color);
+                vLine(poseStack, xMid - 1, bot, hY + 1, color);
+                vLine(poseStack, xMid + 1, bot, hY + 1, color);
                 
-                this.hLine(poseStack, hX1 - 1, hX2 + 1, hY - 1, color);
-                this.hLine(poseStack, hX1 - 1, hX2 + 1, hY + 1, color);
+                hLine(poseStack, hX1 - 1, hX2 + 1, hY - 1, color);
+                hLine(poseStack, hX1 - 1, hX2 + 1, hY + 1, color);
                 
                 for(SpellNodeWidget child : children)
                 {
                     int childX = x + child.x + xOff;
                     int childTop = y + child.y + 1;
-                    this.vLine(poseStack, childX - 1, childTop, hY - 1, color);
-                    this.vLine(poseStack, childX + 1, childTop, hY - 1, color);
+                    vLine(poseStack, childX - 1, childTop, hY - 1, color);
+                    vLine(poseStack, childX + 1, childTop, hY - 1, color);
                 }
             }
             else
             {
-                SpellNodeWidget child = this.children.getFirst();
+                SpellNodeWidget child = children.getFirst();
                 
                 int childX = x + child.x + xOff;
                 int childTop = y + child.y + 1;
                 
-                this.vLine(poseStack, childX - 1, childTop, bot, color);
-                this.vLine(poseStack, childX + 1, childTop, bot, color);
+                vLine(poseStack, childX - 1, childTop, bot, color);
+                vLine(poseStack, childX + 1, childTop, bot, color);
             }
             
-            for(SpellNodeWidget spellNodeWidget : this.children)
+            for(SpellNodeWidget spellNodeWidget : children)
             {
                 spellNodeWidget.drawBackgroundConnectivity(poseStack, x, y);
             }
@@ -239,14 +239,14 @@ public class SpellNodeWidget extends GuiComponent
         
         // frame icon
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
-        this.blit(poseStack, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        blit(poseStack, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         // spell icon
         SpellIconRegistry.render(spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, this.x + x + FRAME_OFF_X, this.y + y + FRAME_OFF_Y, deltaTick);
         
         RenderSystem.disableBlend();
         
-        for(SpellNodeWidget spellNodeWidget : this.children)
+        for(SpellNodeWidget spellNodeWidget : children)
         {
             spellNodeWidget.draw(poseStack, x, y, deltaTick);
         }
@@ -254,17 +254,17 @@ public class SpellNodeWidget extends GuiComponent
     
     public int getWidth()
     {
-        return this.width;
+        return width;
     }
     
     public void addChild(SpellNodeWidget spellNodeWidget)
     {
-        this.children.add(spellNodeWidget);
+        children.add(spellNodeWidget);
     }
     
     public void drawHover(PoseStack poseStack, int scrollX, int scrollY, int width, int height, float deltaTick)
     {
-        boolean drawLeft = width + scrollX + this.x + this.width + FRAME_WIDTH >= this.tab.getScreen().width;
+        boolean drawLeft = width + scrollX + x + this.width + FRAME_WIDTH >= tab.getScreen().width;
         
         int left = this.width / 2;
         int right = this.width - left;
@@ -275,26 +275,26 @@ public class SpellNodeWidget extends GuiComponent
         
         RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
         
-        int renderY = scrollY + this.y;
-        int renderX = scrollX + this.x + (drawLeft ? 6 - this.width + FRAME_WIDTH : 0);
+        int renderY = scrollY + y;
+        int renderX = scrollX + x + (drawLeft ? 6 - this.width + FRAME_WIDTH : 0);
         
         // wide back frame
-        this.blit(poseStack, renderX, renderY, 0, titleIcon * BAR_HEIGHT, left, BAR_HEIGHT);
-        this.blit(poseStack, renderX + left, renderY, BAR_WIDTH - right, titleIcon * BAR_HEIGHT, right, BAR_HEIGHT);
+        blit(poseStack, renderX, renderY, 0, titleIcon * BAR_HEIGHT, left, BAR_HEIGHT);
+        blit(poseStack, renderX + left, renderY, BAR_WIDTH - right, titleIcon * BAR_HEIGHT, right, BAR_HEIGHT);
         
         // front frame icon
-        this.blit(poseStack, scrollX + this.x + TITLE_PADDING_LEFT, scrollY + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        blit(poseStack, scrollX + x + TITLE_PADDING_LEFT, scrollY + y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         if(drawLeft)
         {
-            this.font.drawShadow(poseStack, this.title, (float) (renderX + 5), (float) (scrollY + this.y + TITLE_Y), 0xFFFFFFFF);
+            font.drawShadow(poseStack, title, (float) (renderX + 5), (float) (scrollY + y + TITLE_Y), 0xFFFFFFFF);
         }
         else
         {
-            this.font.drawShadow(poseStack, this.title, (float) (scrollX + this.x + TITLE_X), (float) (scrollY + this.y + TITLE_Y), 0xFFFFFFFF);
+            font.drawShadow(poseStack, title, (float) (scrollX + x + TITLE_X), (float) (scrollY + y + TITLE_Y), 0xFFFFFFFF);
         }
         
-        SpellIconRegistry.render(spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, scrollX + this.x + FRAME_OFF_X, scrollY + this.y + FRAME_OFF_Y, deltaTick);
+        SpellIconRegistry.render(spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, scrollX + x + FRAME_OFF_X, scrollY + y + FRAME_OFF_Y, deltaTick);
     }
     
     public boolean isMouseOver(int x, int y, int mouseX, int mouseY)
@@ -309,13 +309,13 @@ public class SpellNodeWidget extends GuiComponent
     
     public void attachToParent()
     {
-        if(this.parent == null && this.spellNode.getParent() != null)
+        if(parent == null && spellNode.getParent() != null)
         {
-            this.parent = this.tab.getWidget(this.spellNode.getParent());
+            parent = tab.getWidget(spellNode.getParent());
             
-            if(this.parent != null)
+            if(parent != null)
             {
-                this.parent.addChild(this);
+                parent.addChild(this);
             }
         }
     }
@@ -328,11 +328,11 @@ public class SpellNodeWidget extends GuiComponent
     
     public int getX()
     {
-        return this.x;
+        return x;
     }
     
     public int getY()
     {
-        return this.y;
+        return y;
     }
 }

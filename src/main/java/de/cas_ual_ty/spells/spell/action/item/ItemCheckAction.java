@@ -75,7 +75,7 @@ public class ItemCheckAction extends AffectSingleTypeAction<PlayerTarget>
             {
                 for(ItemStack itemStack : player.getHandSlots())
                 {
-                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= item.getCount() && itemStack.areShareTagsEqual(item))
                     {
                         if(!player.isCreative())
                         {
@@ -97,7 +97,7 @@ public class ItemCheckAction extends AffectSingleTypeAction<PlayerTarget>
                 
                 for(ItemStack itemStack : player.getInventory().items)
                 {
-                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= item.getCount() && itemStack.areShareTagsEqual(item))
                     {
                         itemStack.shrink(item.getCount());
                         return;
@@ -105,7 +105,7 @@ public class ItemCheckAction extends AffectSingleTypeAction<PlayerTarget>
                 }
                 
                 ItemStack itemStack = player.getOffhandItem();
-                if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+                if(itemStack.is(item.getItem()) && itemStack.getCount() >= item.getCount() && itemStack.areShareTagsEqual(item))
                 {
                     itemStack.shrink(item.getCount());
                     return;

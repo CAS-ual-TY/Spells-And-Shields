@@ -227,13 +227,13 @@ public class SpellsClientUtil
                         @Override
                         public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick)
                         {
-                            this.visible = hasSpellLearned.getAsBoolean();
+                            visible = hasSpellLearned.getAsBoolean();
                             
-                            if(this.visible)
+                            if(visible)
                             {
                                 if(isRecipeBookClosed.getAsBoolean())
                                 {
-                                    this.x = x1 + slotsPosition.startPositionX(screen.width, screen.height, screen.getGuiLeft(), screen.getGuiTop(), screen.getXSize(), screen.getYSize(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, SpellHolder.SPELL_SLOTS, margin);
+                                    x = x1 + slotsPosition.startPositionX(screen.width, screen.height, screen.getGuiLeft(), screen.getGuiTop(), screen.getXSize(), screen.getYSize(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, SpellHolder.SPELL_SLOTS, margin);
                                 }
                                 else
                                 {
@@ -256,7 +256,7 @@ public class SpellsClientUtil
                                         }
                                     }
                                     
-                                    this.x = x1 + x2;
+                                    x = x1 + x2;
                                 }
                             }
                             

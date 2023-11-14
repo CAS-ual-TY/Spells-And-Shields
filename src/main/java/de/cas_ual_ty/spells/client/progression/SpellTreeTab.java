@@ -49,14 +49,14 @@ public class SpellTreeTab extends GuiComponent
     public SpellTreeTab(Minecraft minecraft, SpellProgressionScreen mainScreen, int index, SpellTree spellTree)
     {
         this.minecraft = minecraft;
-        this.screen = mainScreen;
+        screen = mainScreen;
         this.index = index;
         this.spellTree = spellTree;
-        this.spellNode = spellTree.getRoot();
-        this.icon = spellTree.getIcon();
+        spellNode = spellTree.getRoot();
+        icon = spellTree.getIcon();
         
-        spellTree.forEach(spellNode -> this.addNode(spellNode, mainScreen.getMenu().spellProgression.getOrDefault(spellNode.getNodeId(), SpellStatus.LOCKED)));
-        this.root = this.widgets.get(spellTree.getRoot());
+        spellTree.forEach(spellNode -> addNode(spellNode, mainScreen.getMenu().spellProgression.getOrDefault(spellNode.getNodeId(), SpellStatus.LOCKED)));
+        root = widgets.get(spellTree.getRoot());
         fixPositions();
         
         // centralize, add extra FRAME_WIDTH to give more room to drag around
@@ -92,8 +92,8 @@ public class SpellTreeTab extends GuiComponent
         minY += offY;
         maxY -= offY;
         
-        this.scrollX = (minX + maxX) / 2F;
-        this.scrollY = h > SpellProgressionScreen.WINDOW_HEIGHT ? 0 : (minY + maxY) / 2F;
+        scrollX = (minX + maxX) / 2F;
+        scrollY = h > SpellProgressionScreen.WINDOW_HEIGHT ? 0 : (minY + maxY) / 2F;
         
         // call this to make sure the values are clamped anyways (should not do anything)
         scroll(0, 0);
@@ -112,17 +112,17 @@ public class SpellTreeTab extends GuiComponent
     
     public int getIndex()
     {
-        return this.index;
+        return index;
     }
     
     public SpellNode getSpellNode()
     {
-        return this.spellNode;
+        return spellNode;
     }
     
     public Component getTitle()
     {
-        return this.spellTree.getTitle();
+        return spellTree.getTitle();
     }
     
     public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
@@ -196,14 +196,14 @@ public class SpellTreeTab extends GuiComponent
             }
         }
         
-        if(this.root != null)
+        if(root != null)
         {
-            this.root.drawBackgroundConnectivity(poseStack, scrollX, scrollY);
-            this.root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFFFFFFFF, s -> true);
-            this.root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFF036A96 + 0x00202020, s -> s.parent.spellStatus.isAvailable());
-            this.root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFFB98F2C + 0x00202020, s -> s.parent.spellStatus.isAvailable() && s.spellStatus.isAvailable());
+            root.drawBackgroundConnectivity(poseStack, scrollX, scrollY);
+            root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFFFFFFFF, s -> true);
+            root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFF036A96 + 0x00202020, s -> s.parent.spellStatus.isAvailable());
+            root.drawLinkedConnectivity(poseStack, scrollX, scrollY, 0xFFB98F2C + 0x00202020, s -> s.parent.spellStatus.isAvailable() && s.spellStatus.isAvailable());
             
-            this.root.draw(poseStack, scrollX, scrollY, deltaTick);
+            root.draw(poseStack, scrollX, scrollY, deltaTick);
         }
         
         // DEBUGGING scrollX scrollY minX maxX minY maxY
@@ -233,7 +233,7 @@ public class SpellTreeTab extends GuiComponent
         poseStack.pushPose();
         poseStack.translate(0D, 0D, -200D);
         
-        fill(poseStack, 0, 0, SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, Mth.floor(this.fade * 255F) << 24);
+        fill(poseStack, 0, 0, SpellProgressionScreen.WINDOW_WIDTH, SpellProgressionScreen.WINDOW_HEIGHT, Mth.floor(fade * 255F) << 24);
         
         boolean found = false;
         
@@ -242,7 +242,7 @@ public class SpellTreeTab extends GuiComponent
         
         if(mouseX > 0 && mouseX < SpellProgressionScreen.WINDOW_WIDTH && mouseY > 0 && mouseY < SpellProgressionScreen.WINDOW_HEIGHT)
         {
-            for(SpellNodeWidget w : this.widgets.values())
+            for(SpellNodeWidget w : widgets.values())
             {
                 if(w.isMouseOver(scrollX, scrollY, mouseX, mouseY))
                 {
@@ -257,11 +257,11 @@ public class SpellTreeTab extends GuiComponent
         
         if(found)
         {
-            this.fade = Mth.clamp(this.fade + 0.02F, 0F, 0.3F);
+            fade = Mth.clamp(fade + 0.02F, 0F, 0.3F);
         }
         else
         {
-            this.fade = Mth.clamp(this.fade - 0.04F, 0F, 1F);
+            fade = Mth.clamp(fade - 0.04F, 0F, 1F);
         }
     }
     
@@ -274,31 +274,31 @@ public class SpellTreeTab extends GuiComponent
     
     public void scroll(double scrollX, double scrollY)
     {
-        this.scrollX = Mth.clamp(this.scrollX + scrollX, this.minX, this.maxX);
-        this.scrollY = Mth.clamp(this.scrollY + scrollY, this.minY, this.maxY);
+        this.scrollX = Mth.clamp(this.scrollX + scrollX, minX, maxX);
+        this.scrollY = Mth.clamp(this.scrollY + scrollY, minY, maxY);
     }
     
     public void addNode(SpellNode spellNode, SpellStatus spellStatus)
     {
         SpellNodeWidget spellNodeWidget = new SpellNodeWidget(this, spellNode, spellStatus);
-        this.addWidget(spellNodeWidget, spellNode);
+        addWidget(spellNodeWidget, spellNode);
     }
     
     private void addWidget(SpellNodeWidget spellNodeWidget, SpellNode spellNode)
     {
-        this.widgets.put(spellNode, spellNodeWidget);
+        widgets.put(spellNode, spellNodeWidget);
         spellNodeWidget.attachToParent();
     }
     
     @Nullable
     public SpellNodeWidget getWidget(SpellNode spellNode)
     {
-        return this.widgets.get(spellNode);
+        return widgets.get(spellNode);
     }
     
     public SpellProgressionScreen getScreen()
     {
-        return this.screen;
+        return screen;
     }
     
     private void fixPositions()

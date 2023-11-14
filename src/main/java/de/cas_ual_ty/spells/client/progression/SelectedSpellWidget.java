@@ -42,7 +42,7 @@ public class SelectedSpellWidget extends GuiComponent
         this.y = y;
         this.w = w;
         
-        this.font = Minecraft.getInstance().font;
+        font = Minecraft.getInstance().font;
         
         clickedWidget = null;
     }
@@ -57,7 +57,7 @@ public class SelectedSpellWidget extends GuiComponent
         if(active && clickedWidget != null)
         {
             int w1 = 60;
-            int w2 = this.w - 60;
+            int w2 = w - 60;
             
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
@@ -67,11 +67,11 @@ public class SelectedSpellWidget extends GuiComponent
             int x = this.x;
             int y = this.y;
             
-            this.blit(poseStack, x, y, 0, clickedWidget.titleIcon * FRAME_HEIGHT, w1, FRAME_HEIGHT);
-            this.blit(poseStack, x + w1, y, BAR_WIDTH - w2, clickedWidget.titleIcon * FRAME_HEIGHT, w2, FRAME_HEIGHT);
+            blit(poseStack, x, y, 0, clickedWidget.titleIcon * FRAME_HEIGHT, w1, FRAME_HEIGHT);
+            blit(poseStack, x + w1, y, BAR_WIDTH - w2, clickedWidget.titleIcon * FRAME_HEIGHT, w2, FRAME_HEIGHT);
             
-            this.blit(poseStack, this.x + TITLE_PADDING_LEFT, this.y, clickedWidget.frameIcon * FRAME_WIDTH, 128 + (clickedWidget.spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
-            this.font.drawShadow(poseStack, clickedWidget.title, (float) (this.x + TITLE_X), (float) (this.y + TITLE_Y), 0xFFFFFFFF);
+            blit(poseStack, this.x + TITLE_PADDING_LEFT, this.y, clickedWidget.frameIcon * FRAME_WIDTH, 128 + (clickedWidget.spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+            font.drawShadow(poseStack, clickedWidget.title, (float) (this.x + TITLE_X), (float) (this.y + TITLE_Y), 0xFFFFFFFF);
             
             SpellIconRegistry.render(clickedWidget.spellTexture, poseStack, SPELL_WIDTH, SPELL_HEIGHT, this.x + SpellNodeWidget.FRAME_OFF_X, this.y + FRAME_OFF_Y, deltaTick);
         }
@@ -79,7 +79,7 @@ public class SelectedSpellWidget extends GuiComponent
     
     public void drawTooltip(PoseStack poseStack, int mouseX, int mouseY, Screen screen)
     {
-        if(active && clickedWidget != null && clickedWidget.spellNode != null && mouseX >= this.x && mouseX < this.x + this.w && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
+        if(active && clickedWidget != null && clickedWidget.spellNode != null && mouseX >= x && mouseX < x + w && mouseY >= y && mouseY < y + FRAME_HEIGHT)
         {
             SpellInstance spellInstance = clickedWidget.spellNode.getSpellInstance();
             

@@ -88,7 +88,7 @@ public class ItemEqualsAction extends AffectSingleTypeAction<ItemTarget>
             {
                 ignoreTag.getValue(ctx).ifPresent(ignoreTag ->
                 {
-                    if(!itemTarget.getItem().is(this.item.getItem()))
+                    if(!itemTarget.getItem().is(item.getItem()))
                     {
                         ctx.deactivate(activation);
                         return;

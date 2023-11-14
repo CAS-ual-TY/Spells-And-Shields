@@ -107,7 +107,7 @@ public class SpawnEntityAction extends SpellAction
         {
             if(entityType != EntityType.PLAYER)
             {
-                ctx.getTargetGroup(this.position).getSingleType(TargetTypes.POSITION.get(), position ->
+                ctx.getTargetGroup(position).getSingleType(TargetTypes.POSITION.get(), position ->
                 {
                     Vec3 direction = this.direction.getValue(ctx).orElse(Vec3.ZERO);
                     Vec3 motion = this.motion.getValue(ctx).orElse(Vec3.ZERO);
@@ -115,7 +115,7 @@ public class SpawnEntityAction extends SpellAction
                     
                     if(entity != null)
                     {
-                        this.tag.getValue(ctx).ifPresent(tag0 ->
+                        tag.getValue(ctx).ifPresent(tag0 ->
                         {
                             CompoundTag tag = entity.saveWithoutId(new CompoundTag());
                             for(String key : tag0.getAllKeys())

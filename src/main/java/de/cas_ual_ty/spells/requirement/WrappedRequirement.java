@@ -80,23 +80,23 @@ public class WrappedRequirement extends Requirement
     
     public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
-        this.status = RequirementStatus.decide(passes(spellProgressionHolder, access));
+        status = RequirementStatus.decide(passes(spellProgressionHolder, access));
         MutableComponent c = makeDescription(spellProgressionHolder, access);
         
         if(!SpellsDowngrade.isEmpty(c))
         {
-            this.component = SpellsDowngrade.literal("- ").append(c.withStyle(hidden ? ChatFormatting.DARK_GRAY : (status.passes ? ChatFormatting.GREEN : ChatFormatting.RED)));
+            component = SpellsDowngrade.literal("- ").append(c.withStyle(hidden ? ChatFormatting.DARK_GRAY : (status.passes ? ChatFormatting.GREEN : ChatFormatting.RED)));
         }
         else
         {
-            this.component = SpellsDowngrade.empty();
+            component = SpellsDowngrade.empty();
         }
     }
     
     @Override
     public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return this.component != null ? this.component : requirement.makeDescription(spellProgressionHolder, access);
+        return component != null ? component : requirement.makeDescription(spellProgressionHolder, access);
     }
     
     @Override
@@ -109,8 +109,8 @@ public class WrappedRequirement extends Requirement
     @Override
     public void readFromBuf(FriendlyByteBuf buf)
     {
-        this.status = RequirementStatus.values()[buf.readByte()];
-        this.component = (MutableComponent) buf.readComponent();
+        status = RequirementStatus.values()[buf.readByte()];
+        component = (MutableComponent) buf.readComponent();
     }
     
     public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)

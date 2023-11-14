@@ -40,7 +40,7 @@ public class SimpleManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
     public SimpleManaCheckAction(SpellActionType<?> type, String activation)
     {
         super(type, activation, BuiltinTargetGroups.OWNER.targetGroup);
-        this.amount = CtxVarTypes.DOUBLE.get().reference(BuiltinVariables.MANA_COST.name);
+        amount = CtxVarTypes.DOUBLE.get().reference(BuiltinVariables.MANA_COST.name);
     }
     
     @Override

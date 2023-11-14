@@ -40,7 +40,7 @@ public class InstantManaMobEffect extends MobEffect
         
         if(!manaHolder.isPresent())
         {
-            this.applyEffectTick(entity, level);
+            applyEffectTick(entity, level);
         }
         
         ManaHolder.getManaHolder(entity).ifPresent(manaHolder1 ->
@@ -57,7 +57,7 @@ public class InstantManaMobEffect extends MobEffect
             }
             else
             {
-                this.applyEffectTick(entity, level);
+                applyEffectTick(entity, level);
             }
         });
     }
