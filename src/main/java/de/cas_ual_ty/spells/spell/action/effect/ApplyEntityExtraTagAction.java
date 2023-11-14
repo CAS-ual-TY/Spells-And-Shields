@@ -53,7 +53,7 @@ public class ApplyEntityExtraTagAction extends AffectTypeAction<EntityTarget>
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, EntityTarget target)
     {
-        this.tag.getValue(ctx).ifPresent(tag0 ->
+        tag.getValue(ctx).ifPresent(tag0 ->
         {
             ExtraTagHolder.getHolder(target.getEntity()).ifPresent(extraTagHolder ->
             {

@@ -11,7 +11,7 @@ public class ExtraTagHolder implements INBTSerializable<CompoundTag>
     
     public ExtraTagHolder()
     {
-        this.tag = new CompoundTag();
+        tag = new CompoundTag();
     }
     
     public void applyExtraTag(CompoundTag tag)

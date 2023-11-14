@@ -128,8 +128,8 @@ public class SpellsEvents
         {
             this.eventId = eventId;
             this.eventClass = eventClass;
-            this.targetLinks = new LinkedList<>();
-            this.variableLinks = new LinkedList<>();
+            targetLinks = new LinkedList<>();
+            variableLinks = new LinkedList<>();
         }
         
         public <C extends Target> RegisteredEvent<E> addTargetLink(Function<E, C> getter, String targetGroup)

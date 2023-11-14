@@ -85,7 +85,7 @@ public class SpellSlotWidget extends Button
     @Override
     public boolean isMouseOver(double mouseX, double mouseY)
     {
-        return this.visible && mouseX >= (double) getX() && mouseY >= (double) getY() && mouseX < (double) (getX() + this.width) && mouseY < (double) (getY() + this.height);
+        return visible && mouseX >= (double) getX() && mouseY >= (double) getY() && mouseX < (double) (getX() + width) && mouseY < (double) (getY() + height);
     }
     
     public static void spellSlotToolTip(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, int slot)

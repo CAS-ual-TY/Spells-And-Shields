@@ -40,7 +40,7 @@ public class SelectedSpellWidget
         this.y = y;
         this.w = w;
         
-        this.font = Minecraft.getInstance().font;
+        font = Minecraft.getInstance().font;
         
         clickedWidget = null;
     }
@@ -55,7 +55,7 @@ public class SelectedSpellWidget
         if(active && clickedWidget != null)
         {
             int w1 = 60;
-            int w2 = this.w - 60;
+            int w2 = w - 60;
             
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
@@ -68,7 +68,7 @@ public class SelectedSpellWidget
             guiGraphics.blit(WIDGETS_LOCATION, x + w1, y, BAR_WIDTH - w2, clickedWidget.titleIcon * FRAME_HEIGHT, w2, FRAME_HEIGHT);
             
             guiGraphics.blit(WIDGETS_LOCATION, this.x + TITLE_PADDING_LEFT, this.y, clickedWidget.frameIcon * FRAME_WIDTH, 128 + (clickedWidget.spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
-            guiGraphics.drawString(this.font, clickedWidget.title, (float) (this.x + TITLE_X), (float) (this.y + TITLE_Y), 0xFFFFFFFF, true);
+            guiGraphics.drawString(font, clickedWidget.title, (float) (this.x + TITLE_X), (float) (this.y + TITLE_Y), 0xFFFFFFFF, true);
             
             SpellIconRegistry.render(clickedWidget.spellTexture, guiGraphics, SPELL_WIDTH, SPELL_HEIGHT, this.x + SpellNodeWidget.FRAME_OFF_X, this.y + FRAME_OFF_Y, deltaTick);
         }
@@ -76,7 +76,7 @@ public class SelectedSpellWidget
     
     public void drawTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY, Screen screen)
     {
-        if(active && clickedWidget != null && clickedWidget.spellNode != null && mouseX >= this.x && mouseX < this.x + this.w && mouseY >= this.y && mouseY < this.y + FRAME_HEIGHT)
+        if(active && clickedWidget != null && clickedWidget.spellNode != null && mouseX >= x && mouseX < x + w && mouseY >= y && mouseY < y + FRAME_HEIGHT)
         {
             SpellInstance spellInstance = clickedWidget.spellNode.getSpellInstance();
             
@@ -100,7 +100,7 @@ public class SelectedSpellWidget
                     }
                 }
                 
-                guiGraphics.renderTooltip(this.font, tooltip, tooltipComponent, mouseX, mouseY);
+                guiGraphics.renderTooltip(font, tooltip, tooltipComponent, mouseX, mouseY);
                 
                 guiGraphics.pose().popPose();
             }

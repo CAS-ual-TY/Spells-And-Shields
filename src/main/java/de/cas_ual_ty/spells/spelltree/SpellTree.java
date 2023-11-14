@@ -222,12 +222,12 @@ public class SpellTree
             root = null;
             icon = null;
             
-            this.stack = new Stack<>();
+            stack = new Stack<>();
         }
         
         public Builder icon(SpellIcon spell)
         {
-            this.icon = spell;
+            icon = spell;
             return this;
         }
         

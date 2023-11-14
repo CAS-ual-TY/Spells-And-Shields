@@ -21,7 +21,7 @@ public abstract class Requirement
         this.type = type;
         
         ResourceLocation rl = RequirementTypes.REGISTRY.get().getKey(type);
-        this.descriptionId = "requirement." + rl.getNamespace() + "." + rl.getPath();
+        descriptionId = "requirement." + rl.getNamespace() + "." + rl.getPath();
     }
     
     public RequirementType<?> getType()

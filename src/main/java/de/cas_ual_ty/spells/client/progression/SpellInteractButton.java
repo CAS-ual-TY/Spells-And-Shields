@@ -27,26 +27,26 @@ public class SpellInteractButton extends Button
     {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1F, 1F, 1F, this.alpha);
-        int i = this.isHoveredOrFocused() && active ? this.v : 2;
+        RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
+        int i = isHoveredOrFocused() && active ? v : 2;
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        guiGraphics.blit(ADVANCEMENT_WIDGETS_LOCATION, this.getX(), this.getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
-        guiGraphics.blit(ADVANCEMENT_WIDGETS_LOCATION, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, i * SpellNodeWidget.FRAME_HEIGHT, this.width / 2, this.height);
+        guiGraphics.blit(ADVANCEMENT_WIDGETS_LOCATION, getX(), getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, width / 2, height);
+        guiGraphics.blit(ADVANCEMENT_WIDGETS_LOCATION, getX() + width / 2, getY(), 200 - width / 2, i * SpellNodeWidget.FRAME_HEIGHT, width / 2, height);
         Font font = minecraft.font;
-        this.renderTitle(guiGraphics, mouseX, mouseY, deltaTick, font);
+        renderTitle(guiGraphics, mouseX, mouseY, deltaTick, font);
     }
     
     public void renderTitle(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick, Font font)
     {
         int color = getFGColor();
-        guiGraphics.drawCenteredString(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, color | Mth.ceil(this.alpha * 255F) << 24);
+        guiGraphics.drawCenteredString(font, getMessage(), getX() + width / 2, getY() + (height - 8) / 2, color | Mth.ceil(alpha * 255F) << 24);
     }
     
     @Override
     public boolean isMouseOver(double mouseX, double mouseY)
     {
-        return this.visible && mouseX >= (double) this.getX() && mouseY >= (double) this.getY() && mouseX < (double) (this.getX() + this.width) && mouseY < (double) (this.getY() + this.height);
+        return visible && mouseX >= (double) getX() && mouseY >= (double) getY() && mouseX < (double) (getX() + width) && mouseY < (double) (getY() + height);
     }
 }

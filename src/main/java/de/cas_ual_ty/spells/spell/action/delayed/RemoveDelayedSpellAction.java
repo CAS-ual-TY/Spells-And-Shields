@@ -69,7 +69,7 @@ public class RemoveDelayedSpellAction extends AffectTypeAction<EntityTarget>
     {
         DelayedSpellHolder.getHolder(target.getEntity()).ifPresent(holder ->
         {
-            this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid1 ->
+            uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid1 ->
             {
                 boolean force = forceActivate.getValue(ctx).orElse(false);
                 holder.removeDelayedSpell(uuid1, force);

@@ -21,7 +21,7 @@ public class SpellTreesGen
     {
         this.modId = modId;
         this.context = context;
-        this.spellGetter = context.lookup(Spells.REGISTRY_KEY);
+        spellGetter = context.lookup(Spells.REGISTRY_KEY);
         addSpellTrees();
     }
     

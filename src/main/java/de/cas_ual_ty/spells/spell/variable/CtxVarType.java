@@ -24,8 +24,8 @@ public class CtxVarType<T>
     {
         this.copyFunc = copyFunc;
         this.immCodec = immCodec;
-        this.converters = new HashMap<>();
-        this.codec = RecordCodecBuilder.create(instance -> instance.group(
+        converters = new HashMap<>();
+        codec = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.STRING.fieldOf(ParamNames.var("name")).forGetter(CtxVar::getName),
                 getImmCodec().fieldOf("value").forGetter(CtxVar::getValue)
         ).apply(instance, (name, value) -> new CtxVar<>(this, name, value)));
