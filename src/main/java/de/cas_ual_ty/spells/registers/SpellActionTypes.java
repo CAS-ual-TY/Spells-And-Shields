@@ -17,6 +17,8 @@ import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
 import de.cas_ual_ty.spells.spell.action.level.*;
 import de.cas_ual_ty.spells.spell.action.mana.*;
+import de.cas_ual_ty.spells.spell.action.server.ExecuteCommandAction;
+import de.cas_ual_ty.spells.spell.action.server.ExecutePlayerCommandAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedTernaryVarAction;
