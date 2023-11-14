@@ -66,13 +66,13 @@ public class CtxVar<T>
     
     public <U> Optional<U> tryGetAs(CtxVarType<U> type)
     {
-        return Optional.ofNullable(this.type.convertTo(type, this.value));
+        return Optional.ofNullable(this.type.convertTo(type, value));
     }
     
     @Nullable
     public <U> U tryConvertTo(CtxVarType<U> type)
     {
-        return this.type.convertTo(type, this.value);
+        return this.type.convertTo(type, value);
     }
     
     public CtxVar<T> copy()

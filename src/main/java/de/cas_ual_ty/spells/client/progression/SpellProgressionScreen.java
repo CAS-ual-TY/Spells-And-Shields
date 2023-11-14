@@ -95,12 +95,12 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     public SpellProgressionScreen(SpellProgressionMenu menu, Inventory inventory, Component component)
     {
         super(menu, inventory, component);
-        this.tabs = Maps.newLinkedHashMap();
-        this.minecraft = Minecraft.getInstance();
+        tabs = Maps.newLinkedHashMap();
+        minecraft = Minecraft.getInstance();
         imageWidth = GUI_WIDTH;
         imageHeight = GUI_HEIGHT;
         tabPage = 0;
-        this.spellProgressionHolder = SpellProgressionHolder.getSpellProgressionHolder(menu.player).orElse(null);
+        spellProgressionHolder = SpellProgressionHolder.getSpellProgressionHolder(menu.player).orElse(null);
         spellRegistry = Spells.getRegistry(SpellsUtil.getClientLevel());
     }
     
@@ -112,10 +112,10 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     @Override
     protected void init()
     {
-        this.tabs.clear();
-        SpellTreeTab previous = this.selectedTab;
-        this.selectedTab = null;
-        this.clearWidgets();
+        tabs.clear();
+        SpellTreeTab previous = selectedTab;
+        selectedTab = null;
+        clearWidgets();
         
         super.init();
         
@@ -131,7 +131,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             }
         }
         
-        if(!this.tabs.isEmpty())
+        if(!tabs.isEmpty())
         {
             if(previous != null)
             {
@@ -161,25 +161,25 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             selectedTab = tabs.values().iterator().next();
         }
         
-        if(this.tabs.size() > MAX_TABS)
+        if(tabs.size() > MAX_TABS)
         {
             addRenderableWidget(Button.builder(Component.literal("<"), b -> tabPage = Math.max(tabPage - 1, 0)).bounds(getGuiLeft(), getGuiTop() - 50, 20, 20).build());
             addRenderableWidget(Button.builder(Component.literal(">"), b -> tabPage = Math.min(tabPage + 1, maxPages)).bounds(getGuiLeft() + GUI_WIDTH - 20, getGuiTop() - 50, 20, 20).build());
-            maxPages = this.tabs.size() / MAX_TABS;
+            maxPages = tabs.size() / MAX_TABS;
         }
         
         int totalW = 280;
         int leftW = 150;
         int rightW = totalW - 180;
         
-        this.selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT, leftW);
+        selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT, leftW);
         
-        this.learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_LEARN), this::buttonClicked, 1)
+        learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_LEARN), this::buttonClicked, 1)
         {
             @Override
             public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick)
             {
-                this.active = selectedSpellWidget.clickedWidget != null && selectedSpellWidget.clickedWidget.spellNode.canLearn(spellProgressionHolder, menu.access);
+                active = selectedSpellWidget.clickedWidget != null && selectedSpellWidget.clickedWidget.spellNode.canLearn(spellProgressionHolder, menu.access);
                 super.render(guiGraphics, mouseX, mouseY, deltaTick);
             }
             
@@ -193,20 +193,20 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                     int cost = selectedSpellWidget.clickedWidget.spellNode.getLevelCost();
                     
                     // active ? lime green : dark green
-                    int color = this.active ? 0x80FF20 : 0x407F10;
+                    int color = active ? 0x80FF20 : 0x407F10;
                     
                     String costStr = String.valueOf(cost);
-                    int x = this.getX() + this.width - font.width(costStr) - 2;
-                    int y = this.getY() + this.height - font.lineHeight - 4;
+                    int x = getX() + width - font.width(costStr) - 2;
+                    int y = getY() + height - font.lineHeight - 4;
                     guiGraphics.drawString(font, costStr, x, y, color);
                 }
             }
         };
-        this.equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_EQUIP), this::buttonClicked, 0);
-        this.unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_UNAVAILABLE), this::buttonClicked, 2);
-        this.chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_CHOOSE_SLOT), this::buttonClicked, 2);
-        this.unavailableButton.active = false;
-        this.chooseButton.active = false;
+        equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_EQUIP), this::buttonClicked, 0);
+        unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_UNAVAILABLE), this::buttonClicked, 2);
+        chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_CHOOSE_SLOT), this::buttonClicked, 2);
+        unavailableButton.active = false;
+        chooseButton.active = false;
         
         addWidget(learnButton);
         addWidget(equipButton);
@@ -224,14 +224,14 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         
         disableSlotButtons();
         
-        this.spellClicked(null);
+        spellClicked(null);
     }
     
     private void learnButtonTooltip(Button button, GuiGraphics guiGraphics, int mouseX, int mouseY)
     {
         if(selectedSpellWidget.clickedWidget != null && button.isMouseOver(mouseX, mouseY))
         {
-            guiGraphics.renderTooltip(this.font, selectedSpellWidget.clickedWidget.spellNode.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(font, selectedSpellWidget.clickedWidget.spellNode.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
         }
     }
     
@@ -240,8 +240,8 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         if(button == equipButton)
         {
             enableSlotButtons();
-            this.equipButton.visible = false;
-            this.chooseButton.visible = true;
+            equipButton.visible = false;
+            chooseButton.visible = true;
         }
         else if(button == learnButton && selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
@@ -254,14 +254,14 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         if(selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
             SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.spellNode.getNodeId()));
-            this.spellClicked(null);
+            spellClicked(null);
         }
     }
     
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton)
     {
-        if(this.learnButton.isMouseOver(mouseX, mouseY) || this.equipButton.isMouseOver(mouseX, mouseY) || this.unavailableButton.isMouseOver(mouseX, mouseY))
+        if(learnButton.isMouseOver(mouseX, mouseY) || equipButton.isMouseOver(mouseX, mouseY) || unavailableButton.isMouseOver(mouseX, mouseY))
         {
             return super.mouseClicked(mouseX, mouseY, mouseButton);
         }
@@ -274,17 +274,17 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             }
         }
         
-        this.spellClicked(null);
+        spellClicked(null);
         
         if(mouseButton == 0)
         {
-            for(SpellTreeTab tab : this.tabs.values())
+            for(SpellTreeTab tab : tabs.values())
             {
                 if(tab.getPage() == tabPage)
                 {
                     if(tab.isMouseOver(getGuiLeft(), getGuiTop(), mouseX, mouseY))
                     {
-                        this.selectedTab = tab;
+                        selectedTab = tab;
                         break;
                     }
                     else if(tab == selectedTab)
@@ -318,23 +318,23 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     {
         disableSlotButtons();
         
-        this.chooseButton.visible = false;
+        chooseButton.visible = false;
         
         if(w == null)
         {
-            this.selectedSpellWidget.active = false;
-            this.learnButton.visible = false;
-            this.equipButton.visible = false;
-            this.unavailableButton.visible = false;
+            selectedSpellWidget.active = false;
+            learnButton.visible = false;
+            equipButton.visible = false;
+            unavailableButton.visible = false;
         }
         else
         {
-            this.selectedSpellWidget.setClickedWidget(w);
-            this.selectedSpellWidget.active = true;
+            selectedSpellWidget.setClickedWidget(w);
+            selectedSpellWidget.active = true;
             
-            this.learnButton.visible = ProgressionHelper.isFullyLinked(w.spellNode, menu.spellProgression) && (w.spellStatus == SpellStatus.LOCKED || w.spellStatus == SpellStatus.FORGOTTEN);
-            this.equipButton.visible = w.spellStatus == SpellStatus.LEARNED;
-            this.unavailableButton.visible = !this.learnButton.visible && !this.equipButton.visible;
+            learnButton.visible = ProgressionHelper.isFullyLinked(w.spellNode, menu.spellProgression) && (w.spellStatus == SpellStatus.LOCKED || w.spellStatus == SpellStatus.FORGOTTEN);
+            equipButton.visible = w.spellStatus == SpellStatus.LEARNED;
+            unavailableButton.visible = !learnButton.visible && !equipButton.visible;
         }
     }
     
@@ -357,24 +357,24 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float deltaTick, int mouseX, int mouseY)
     {
-        this.renderBackground(guiGraphics);
+        renderBackground(guiGraphics);
         if(maxPages != 0)
         {
             Component page = Component.literal(String.format("%d / %d", tabPage + 1, maxPages + 1));
-            int width = this.font.width(page);
-            guiGraphics.drawString(this.font, page.getVisualOrderText(), getGuiLeft() + (GUI_WIDTH / 2F) - (width / 2F), getGuiTop() - 44, -1, true);
+            int width = font.width(page);
+            guiGraphics.drawString(font, page.getVisualOrderText(), getGuiLeft() + (GUI_WIDTH / 2F) - (width / 2F), getGuiTop() - 44, -1, true);
         }
-        this.renderBottom(guiGraphics, mouseX, mouseY, deltaTick);
-        this.renderSpellSlots(guiGraphics, mouseX, mouseY, deltaTick);
-        this.renderInside(guiGraphics, mouseX, mouseY, getGuiLeft(), getGuiTop(), deltaTick);
-        this.renderWindow(guiGraphics, deltaTick, getGuiLeft(), getGuiTop());
-        this.renderTooltips(guiGraphics, mouseX, mouseY, getGuiLeft(), getGuiTop(), deltaTick);
+        renderBottom(guiGraphics, mouseX, mouseY, deltaTick);
+        renderSpellSlots(guiGraphics, mouseX, mouseY, deltaTick);
+        renderInside(guiGraphics, mouseX, mouseY, getGuiLeft(), getGuiTop(), deltaTick);
+        renderWindow(guiGraphics, deltaTick, getGuiLeft(), getGuiTop());
+        renderTooltips(guiGraphics, mouseX, mouseY, getGuiLeft(), getGuiTop(), deltaTick);
     }
     
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY)
     {
-        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
+        guiGraphics.drawString(font, title, titleLabelX, titleLabelY, 4210752, false);
     }
     
     @Override
@@ -382,18 +382,18 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     {
         if(mouseButton != 0)
         {
-            this.isScrolling = false;
+            isScrolling = false;
             return false;
         }
         else
         {
-            if(!this.isScrolling)
+            if(!isScrolling)
             {
-                this.isScrolling = true;
+                isScrolling = true;
             }
-            else if(this.selectedTab != null)
+            else if(selectedTab != null)
             {
-                this.selectedTab.scroll(dragX, dragY);
+                selectedTab.scroll(dragX, dragY);
             }
             
             return true;
@@ -402,13 +402,13 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     
     private void renderInside(GuiGraphics guiGraphics, int mouseX, int mouseY, int offX, int offY, float deltaTick)
     {
-        SpellTreeTab tab = this.selectedTab;
+        SpellTreeTab tab = selectedTab;
         if(tab == null)
         {
             guiGraphics.fill(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, offX + WINDOW_OFF_X + WINDOW_WIDTH, offY + WINDOW_OFF_Y + WINDOW_HEIGHT, 0xFF000000);
             int i = offX + WINDOW_OFF_X + WINDOW_WIDTH / 2;
-            guiGraphics.drawCenteredString(this.font, NO_ADVANCEMENTS_LABEL, i, offY + WINDOW_OFF_Y + WINDOW_HEIGHT / 2 - WINDOW_OFF_X / 2, -1);
-            guiGraphics.drawCenteredString(this.font, VERY_SAD_LABEL, i, offY + WINDOW_OFF_Y + WINDOW_HEIGHT - WINDOW_OFF_X, -1);
+            guiGraphics.drawCenteredString(font, NO_ADVANCEMENTS_LABEL, i, offY + WINDOW_OFF_Y + WINDOW_HEIGHT / 2 - WINDOW_OFF_X / 2, -1);
+            guiGraphics.drawCenteredString(font, VERY_SAD_LABEL, i, offY + WINDOW_OFF_Y + WINDOW_HEIGHT - WINDOW_OFF_X, -1);
         }
         else
         {
@@ -432,21 +432,21 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         guiGraphics.blit(WINDOW_LOCATION, offX, offY, 0, 0, GUI_WIDTH, GUI_HEIGHT);
-        if(this.tabs.size() > 0)
+        if(tabs.size() > 0)
         {
             RenderSystem.setShaderTexture(0, TABS_LOCATION);
             
-            for(SpellTreeTab tab : this.tabs.values())
+            for(SpellTreeTab tab : tabs.values())
             {
                 if(tab.getPage() == tabPage)
                 {
-                    tab.drawTab(guiGraphics, offX, offY, tab == this.selectedTab);
+                    tab.drawTab(guiGraphics, offX, offY, tab == selectedTab);
                 }
             }
             
             RenderSystem.defaultBlendFunc();
             
-            for(SpellTreeTab tab : this.tabs.values())
+            for(SpellTreeTab tab : tabs.values())
             {
                 if(tab.getPage() == tabPage)
                 {
@@ -461,22 +461,22 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY, int offX, int offY, float deltaTick)
     {
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        if(this.selectedTab != null)
+        if(selectedTab != null)
         {
             PoseStack posestack = RenderSystem.getModelViewStack();
             posestack.pushPose();
             posestack.translate(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, 400D);
             RenderSystem.applyModelViewMatrix();
             RenderSystem.enableDepthTest();
-            this.selectedTab.drawTooltips(guiGraphics, mouseX - offX - WINDOW_OFF_X, mouseY - offY - WINDOW_OFF_Y, offX, offY, deltaTick);
+            selectedTab.drawTooltips(guiGraphics, mouseX - offX - WINDOW_OFF_X, mouseY - offY - WINDOW_OFF_Y, offX, offY, deltaTick);
             RenderSystem.disableDepthTest();
             posestack.popPose();
             RenderSystem.applyModelViewMatrix();
         }
         
-        this.selectedSpellWidget.drawTooltip(guiGraphics, mouseX, mouseY, this);
+        selectedSpellWidget.drawTooltip(guiGraphics, mouseX, mouseY, this);
         
-        for(SpellSlotWidget b : this.spellSlotButtons)
+        for(SpellSlotWidget b : spellSlotButtons)
         {
             if(b.isMouseOver(mouseX, mouseY))
             {
@@ -484,20 +484,20 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             }
         }
         
-        if(this.tabs.size() > 0)
+        if(tabs.size() > 0)
         {
-            for(SpellTreeTab tab : this.tabs.values())
+            for(SpellTreeTab tab : tabs.values())
             {
                 if(tab.getPage() == tabPage && tab.isMouseOver(offX, offY, mouseX, mouseY))
                 {
-                    guiGraphics.renderTooltip(this.font, tab.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
+                    guiGraphics.renderTooltip(font, tab.getTooltip(spellProgressionHolder, menu.access), Optional.empty(), mouseX, mouseY);
                 }
             }
         }
         
         if(learnButton.isMouseOver(mouseX, mouseY))
         {
-            this.learnButtonTooltip(this.learnButton, guiGraphics, mouseX, mouseY);
+            learnButtonTooltip(learnButton, guiGraphics, mouseX, mouseY);
         }
     }
     
@@ -512,7 +512,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     
     private void renderSpellSlots(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick)
     {
-        for(SpellSlotWidget w : this.spellSlotButtons)
+        for(SpellSlotWidget w : spellSlotButtons)
         {
             w.render(guiGraphics, mouseX, mouseY, deltaTick);
         }

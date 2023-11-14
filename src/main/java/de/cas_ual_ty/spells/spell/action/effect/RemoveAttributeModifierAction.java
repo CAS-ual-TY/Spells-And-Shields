@@ -74,7 +74,7 @@ public class RemoveAttributeModifierAction extends AffectTypeAction<LivingEntity
             
             if(a != null)
             {
-                this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid ->
+                uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid ->
                 {
                     a.removePermanentModifier(uuid);
                 });

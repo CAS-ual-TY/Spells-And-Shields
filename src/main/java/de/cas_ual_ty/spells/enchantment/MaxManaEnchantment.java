@@ -18,7 +18,7 @@ public class MaxManaEnchantment extends ManaArmorEnchantment
     @Override
     public int getMaxCost(int level)
     {
-        return this.getMinCost(level) + 5;
+        return getMinCost(level) + 5;
     }
     
     @Override

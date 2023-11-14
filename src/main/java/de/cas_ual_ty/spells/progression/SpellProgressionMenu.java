@@ -39,8 +39,8 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     public SpellProgressionMenu(int id, Inventory inventory, ContainerLevelAccess containerLevelAccess, List<SpellTree> spellTrees, HashMap<SpellNodeId, SpellStatus> spellProgression)
     {
         super(BuiltinRegistries.SPELL_PROGRESSION_MENU.get(), id);
-        this.access = containerLevelAccess;
-        this.player = inventory.player;
+        access = containerLevelAccess;
+        player = inventory.player;
         
         this.spellTrees = spellTrees;
         this.spellProgression = spellProgression;
@@ -48,7 +48,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     
     public void buySpellRequest(SpellNodeId nodeId)
     {
-        if(this.player instanceof ServerPlayer player)
+        if(player instanceof ServerPlayer player)
         {
             SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
             {
@@ -60,8 +60,8 @@ public class SpellProgressionMenu extends AbstractContainerMenu
                         level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1F, level.random.nextFloat() * 0.1F + 0.9F);
                     }
                     
-                    this.spellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
-                    this.spellProgression = spellProgressionHolder.getProgression();
+                    spellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
+                    spellProgression = spellProgressionHolder.getProgression();
                     
                     SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SpellProgressionSyncMessage(blockPos, spellTrees, spellProgression, level));
                 });
@@ -71,7 +71,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     
     public void equipSpellRequest(int slot, SpellNodeId nodeId)
     {
-        if(this.player instanceof ServerPlayer player)
+        if(player instanceof ServerPlayer player)
         {
             SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
             {

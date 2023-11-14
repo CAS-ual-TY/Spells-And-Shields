@@ -181,12 +181,12 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
             this.tickTime = tickTime;
             this.tag = tag;
             this.eventsMap = eventsMap;
-            this.time = 0;
+            time = 0;
         }
         
         public DelayedSpell(CompoundTag tag, Registry<SpellTree> spellTreeRegistry, Registry<Spell> spellRegistry)
         {
-            this.spell = SpellInstance.fromNbt(tag, spellTreeRegistry, spellRegistry);
+            spell = SpellInstance.fromNbt(tag, spellTreeRegistry, spellRegistry);
             
             if(tag.hasUUID("uuid"))
             {

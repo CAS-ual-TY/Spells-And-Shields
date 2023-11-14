@@ -93,7 +93,7 @@ public class FindItemAction extends AffectTypeAction<PlayerTarget>
                     
                     ItemStack itemStack = player.getItemBySlot(slot);
                     
-                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= item.getCount() && itemStack.areShareTagsEqual(item))
                     {
                         foundItems.addTargets(ItemTarget.of(ctx.level, itemStack, newItem -> player.setItemSlot(slot, newItem), player.isCreative()));
                     }
@@ -105,7 +105,7 @@ public class FindItemAction extends AffectTypeAction<PlayerTarget>
                 {
                     ItemStack itemStack = player.getInventory().getItem(i);
                     
-                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= item.getCount() && itemStack.areShareTagsEqual(item))
                     {
                         final int finalI = i;
                         foundItems.addTargets(ItemTarget.of(ctx.level, itemStack, newItem -> player.getInventory().setItem(finalI, newItem), player.isCreative()));
@@ -121,7 +121,7 @@ public class FindItemAction extends AffectTypeAction<PlayerTarget>
                     
                     ItemStack itemStack = player.getItemBySlot(slot);
                     
-                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= this.item.getCount() && itemStack.areShareTagsEqual(item))
+                    if(itemStack.is(item.getItem()) && itemStack.getCount() >= item.getCount() && itemStack.areShareTagsEqual(item))
                     {
                         foundItems.addTargets(ItemTarget.of(ctx.level, itemStack, newItem -> player.setItemSlot(slot, newItem), player.isCreative()));
                     }

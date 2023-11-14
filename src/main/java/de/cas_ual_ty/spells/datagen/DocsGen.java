@@ -45,7 +45,7 @@ public class DocsGen implements DataProvider
         this.gen = gen;
         this.modId = modId;
         this.exFileHelper = exFileHelper;
-        this.registryOps = RegistryOps.create(JsonOps.INSTANCE, VanillaRegistries.createLookup());
+        registryOps = RegistryOps.create(JsonOps.INSTANCE, VanillaRegistries.createLookup());
     }
     
     public static void generateSingleFiles(String modId)

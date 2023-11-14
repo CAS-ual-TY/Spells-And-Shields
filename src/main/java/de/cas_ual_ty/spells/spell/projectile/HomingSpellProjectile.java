@@ -30,20 +30,20 @@ public class HomingSpellProjectile extends SpellProjectile
     
     public void setOwnerAndTarget(Entity owner, Entity target)
     {
-        this.setOwner(owner);
-        this.setTarget(target);
+        setOwner(owner);
+        setTarget(target);
     }
     
     public void home(float velocity)
     {
-        Vec3 direction = cachedTarget.getEyePosition().subtract(this.position()).normalize();
+        Vec3 direction = cachedTarget.getEyePosition().subtract(position()).normalize();
         shoot(direction.x, direction.y, direction.z, velocity, 0F);
     }
     
     @Override
     public void tick()
     {
-        if(this.getTarget() != null && !this.getTarget().isRemoved())
+        if(getTarget() != null && !getTarget().isRemoved())
         {
             Vec3 movement = getDeltaMovement();
             home((float) movement.length());
@@ -54,19 +54,19 @@ public class HomingSpellProjectile extends SpellProjectile
     
     public void setTarget(Entity target)
     {
-        this.targetUUID = target.getUUID();
-        this.cachedTarget = target;
+        targetUUID = target.getUUID();
+        cachedTarget = target;
     }
     
     public Entity getTarget()
     {
-        if(this.cachedTarget != null && !this.cachedTarget.isRemoved())
+        if(cachedTarget != null && !cachedTarget.isRemoved())
         {
-            return this.cachedTarget;
+            return cachedTarget;
         }
-        else if(this.targetUUID != null && this.level() instanceof ServerLevel serverLevel)
+        else if(targetUUID != null && level() instanceof ServerLevel serverLevel)
         {
-            return this.cachedTarget = serverLevel.getEntity(this.targetUUID);
+            return cachedTarget = serverLevel.getEntity(targetUUID);
         }
         else
         {
@@ -79,9 +79,9 @@ public class HomingSpellProjectile extends SpellProjectile
     {
         super.addAdditionalSaveData(pCompound);
         
-        if(this.targetUUID != null)
+        if(targetUUID != null)
         {
-            pCompound.putUUID("Target", this.targetUUID);
+            pCompound.putUUID("Target", targetUUID);
         }
     }
     
@@ -92,7 +92,7 @@ public class HomingSpellProjectile extends SpellProjectile
         
         if(pCompound.hasUUID("Target"))
         {
-            this.targetUUID = pCompound.getUUID("Target");
+            targetUUID = pCompound.getUUID("Target");
         }
     }
     

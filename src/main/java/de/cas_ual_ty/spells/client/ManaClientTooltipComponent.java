@@ -17,9 +17,9 @@ public class ManaClientTooltipComponent extends ManaTooltipComponent implements 
     public ManaClientTooltipComponent(float mana)
     {
         super(mana);
-        this.rows = Mth.ceil(mana / 20F);
-        this.rowHeight = Math.max(10 - (rows - 2), 3);
-        this.leftOver = this.mana % 20;
+        rows = Mth.ceil(mana / 20F);
+        rowHeight = Math.max(10 - (rows - 2), 3);
+        leftOver = this.mana % 20;
     }
     
     @Override

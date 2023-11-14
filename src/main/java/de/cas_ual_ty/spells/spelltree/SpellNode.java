@@ -69,7 +69,7 @@ public class SpellNode
     
     public int getLevelCost()
     {
-        return this.levelCost;
+        return levelCost;
     }
     
     public void setLevelCost(int levelCost)
@@ -99,22 +99,22 @@ public class SpellNode
     
     public void addHiddenRequirement(Requirement requirement)
     {
-        this.hiddenRequirements.add(requirement);
+        hiddenRequirements.add(requirement);
     }
     
     public void addLearnRequirement(Requirement requirement)
     {
-        this.learnRequirements.add(requirement);
+        learnRequirements.add(requirement);
     }
     
     public void setHiddenRequirements(List<Requirement> requirements)
     {
-        this.hiddenRequirements = requirements;
+        hiddenRequirements = requirements;
     }
     
     public void setLearnRequirements(List<Requirement> requirements)
     {
-        this.learnRequirements = requirements;
+        learnRequirements = requirements;
     }
     
     public Spell getSpellDirect()
@@ -145,7 +145,7 @@ public class SpellNode
     
     public boolean canLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return spellProgressionHolder.getPlayer().experienceLevel >= this.levelCost && passesLearn(spellProgressionHolder, access);
+        return spellProgressionHolder.getPlayer().experienceLevel >= levelCost && passesLearn(spellProgressionHolder, access);
     }
     
     public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
@@ -190,14 +190,14 @@ public class SpellNode
     
     public void setNodeId(ResourceLocation sourceTree, int id)
     {
-        if(this.nodeId != null)
+        if(nodeId != null)
         {
-            this.nodeId = new SpellNodeId(sourceTree, this.nodeId.nodeId());
+            nodeId = new SpellNodeId(sourceTree, nodeId.nodeId());
         }
         else
         {
-            this.nodeId = new SpellNodeId(sourceTree, id);
+            nodeId = new SpellNodeId(sourceTree, id);
         }
-        this.spell.initId(this.nodeId);
+        spell.initId(nodeId);
     }
 }

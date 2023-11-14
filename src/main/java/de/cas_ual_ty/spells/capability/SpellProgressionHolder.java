@@ -25,7 +25,7 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
     public SpellProgressionHolder(Player player)
     {
         this.player = player;
-        this.progression = new HashMap<>();
+        progression = new HashMap<>();
     }
     
     public boolean isSpellAvailable(SpellNodeId spell)

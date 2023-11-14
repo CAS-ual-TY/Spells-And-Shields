@@ -35,7 +35,7 @@ public class ManaBladeEnchantment extends Enchantment
     @Override
     public int getMaxCost(int level)
     {
-        return this.getMinCost(level) + LEVEL_COST_SPAN;
+        return getMinCost(level) + LEVEL_COST_SPAN;
     }
     
     @Override
