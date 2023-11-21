@@ -42,7 +42,7 @@ public class SpellArgument implements ArgumentType<Spell>
         ResourceLocation resourceLocation = ResourceLocation.read(reader);
         Optional<Holder.Reference<Spell>> spell = spells.get(ResourceKey.create(Spells.REGISTRY_KEY, resourceLocation));
         
-        return spell.orElseThrow(UNKNOWN_SPELL::create).get();
+        return spell.orElseThrow(UNKNOWN_SPELL::create).value();
     }
     
     @Override

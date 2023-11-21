@@ -14,10 +14,10 @@ import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class PlaySoundAction extends AffectTypeAction<PositionTarget>
 {
@@ -39,7 +39,7 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
     
     public static PlaySoundAction make(Object activation, Object multiTargets, SoundEvent soundEvent, DynamicCtxVar<Double> volume, DynamicCtxVar<Double> pitch)
     {
-        return new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), activation.toString(), multiTargets.toString(), SpellsUtil.objectToString(soundEvent, ForgeRegistries.SOUND_EVENTS), volume, pitch);
+        return new PlaySoundAction(SpellActionTypes.PLAY_SOUND.get(), activation.toString(), multiTargets.toString(), SpellsUtil.objectToString(soundEvent, BuiltInRegistries.SOUND_EVENT), volume, pitch);
     }
     
     protected DynamicCtxVar<String> soundEvent;
@@ -87,7 +87,7 @@ public class PlaySoundAction extends AffectTypeAction<PositionTarget>
         {
             pitch.getValue(ctx).ifPresent(pitch ->
             {
-                SpellsUtil.stringToObject(ctx, soundEvent, ForgeRegistries.SOUND_EVENTS).ifPresent(soundEvent ->
+                SpellsUtil.stringToObject(ctx, soundEvent, BuiltInRegistries.SOUND_EVENT).ifPresent(soundEvent ->
                 {
                     if(positionTarget.getLevel() instanceof ServerLevel level)
                     {

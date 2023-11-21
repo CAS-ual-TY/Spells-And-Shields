@@ -53,7 +53,7 @@ public class DocsGen implements DataProvider
         ROOT.mkdirs();
         SpellsAndShields.LOGGER.info("Generated reduced json files for docs in: " + ROOT.getAbsolutePath());
         
-        for(Map.Entry<ResourceKey<SpellActionType<?>>, SpellActionType<?>> entry : SpellActionTypes.REGISTRY.get().getEntries())
+        for(Map.Entry<ResourceKey<SpellActionType<?>>, SpellActionType<?>> entry : SpellActionTypes.REGISTRY.entrySet())
         {
             ResourceLocation rl = entry.getKey().location();
             
@@ -76,7 +76,7 @@ public class DocsGen implements DataProvider
         
         try(FileWriter fw = new FileWriter(full))
         {
-            for(Map.Entry<ResourceKey<SpellActionType<?>>, SpellActionType<?>> entry : SpellActionTypes.REGISTRY.get().getEntries())
+            for(Map.Entry<ResourceKey<SpellActionType<?>>, SpellActionType<?>> entry : SpellActionTypes.REGISTRY.entrySet())
             {
                 ResourceLocation rl = entry.getKey().location();
                 

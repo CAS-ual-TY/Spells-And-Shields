@@ -13,9 +13,9 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class GetBlockAction extends AffectSingleTypeAction<PositionTarget>
 {
@@ -77,7 +77,7 @@ public class GetBlockAction extends AffectSingleTypeAction<PositionTarget>
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PositionTarget positionTarget)
     {
         BlockState blockState = ctx.level.getBlockState(positionTarget.getBlockPos());
-        ResourceLocation id = ForgeRegistries.BLOCKS.getKey(blockState.getBlock());
+        ResourceLocation id = BuiltInRegistries.BLOCK.getKey(blockState.getBlock());
         
         if(id == null)
         {

@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.advancements.AdvancementWidgetType;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Registry;
@@ -37,7 +38,6 @@ import java.util.Optional;
 public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgressionMenu>
 {
     public static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("textures/gui/advancements/window.png");
-    public static final ResourceLocation TABS_LOCATION = new ResourceLocation("textures/gui/advancements/tabs.png");
     
     public static final String KEY_LEARN = "spell_progression.learn";
     public static final String KEY_EQUIP = "spell_progression.equip";
@@ -174,7 +174,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         
         selectedSpellWidget = new SelectedSpellWidget(getGuiLeft(), getGuiTop() + GUI_HEIGHT, leftW);
         
-        learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_LEARN), this::buttonClicked, 1)
+        learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_LEARN), this::buttonClicked, AdvancementWidgetType.UNOBTAINED.boxSprite())
         {
             @Override
             public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick)
@@ -202,9 +202,9 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
                 }
             }
         };
-        equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_EQUIP), this::buttonClicked, 0);
-        unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_UNAVAILABLE), this::buttonClicked, 2);
-        chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_CHOOSE_SLOT), this::buttonClicked, 2);
+        equipButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_EQUIP), this::buttonClicked, AdvancementWidgetType.OBTAINED.boxSprite());
+        unavailableButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_UNAVAILABLE), this::buttonClicked);
+        chooseButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_CHOOSE_SLOT), this::buttonClicked);
         unavailableButton.active = false;
         chooseButton.active = false;
         
@@ -357,7 +357,6 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float deltaTick, int mouseX, int mouseY)
     {
-        renderBackground(guiGraphics, mouseX, mouseY, deltaTick);
         if(maxPages != 0)
         {
             Component page = Component.literal(String.format("%d / %d", tabPage + 1, maxPages + 1));
@@ -434,7 +433,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         guiGraphics.blit(WINDOW_LOCATION, offX, offY, 0, 0, GUI_WIDTH, GUI_HEIGHT);
         if(tabs.size() > 0)
         {
-            RenderSystem.setShaderTexture(0, TABS_LOCATION);
+            //RenderSystem.setShaderTexture(0, TABS_LOCATION);
             
             for(SpellTreeTab tab : tabs.values())
             {

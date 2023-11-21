@@ -13,11 +13,11 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class ItemTagCheckAction extends AffectTypeAction<PlayerTarget>
 {
@@ -27,7 +27,7 @@ public class ItemTagCheckAction extends AffectTypeAction<PlayerTarget>
                 activationCodec(),
                 singleTargetCodec(),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(ItemTagCheckAction::getMustBeInHand),
-                TagKey.codec(ForgeRegistries.ITEMS.getRegistryKey()).fieldOf("item_tag").forGetter(ItemTagCheckAction::getItemTag),
+                TagKey.codec(BuiltInRegistries.ITEM.key()).fieldOf("item_tag").forGetter(ItemTagCheckAction::getItemTag),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramBoolean("count")).forGetter(ItemTagCheckAction::getCount)
         ).apply(instance, (activation, target, mustBeInHand, itemTag, count) -> new ItemTagCheckAction(type, activation, target, mustBeInHand, itemTag, count)));
     }

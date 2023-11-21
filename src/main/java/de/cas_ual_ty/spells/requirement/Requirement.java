@@ -20,7 +20,7 @@ public abstract class Requirement
     {
         this.type = type;
         
-        ResourceLocation rl = RequirementTypes.REGISTRY.get().getKey(type);
+        ResourceLocation rl = RequirementTypes.REGISTRY.getKey(type);
         descriptionId = "requirement." + rl.getNamespace() + "." + rl.getPath();
     }
     

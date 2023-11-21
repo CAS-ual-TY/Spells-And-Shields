@@ -23,13 +23,13 @@ public abstract class SpellIcon
     
     public static void iconToBuf(FriendlyByteBuf buf, SpellIcon icon)
     {
-        buf.writeRegistryId(SpellIconTypes.REGISTRY.get(), icon.getType());
+        buf.writeById(SpellIconTypes.REGISTRY::getId, icon.getType());
         icon.writeToBuf(buf);
     }
     
     public static SpellIcon iconFromBuf(FriendlyByteBuf buf)
     {
-        SpellIconType<?> iconType = buf.readRegistryId();
+        SpellIconType<?> iconType = buf.readById(SpellIconTypes.REGISTRY::byId);
         SpellIcon icon = iconType.makeInstance();
         icon.readFromBuf(buf);
         return icon;

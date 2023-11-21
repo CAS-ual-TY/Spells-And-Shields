@@ -20,17 +20,15 @@ import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
-import net.neoforged.neoforge.registries.IForgeRegistry;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
-import net.neoforged.neoforge.registries.RegistryBuilder;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
+
+import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class SpellTrees
 {
-    private static Supplier<IForgeRegistry<SpellTree>> REGISTRY;
-    public static ResourceKey<Registry<SpellTree>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(SpellsAndShields.MOD_ID, "spell_trees"));
+    public static final ResourceKey<Registry<SpellTree>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MOD_ID, "spell_trees"));
     
     public static Registry<SpellTree> getRegistry(LevelAccessor level)
     {
@@ -57,7 +55,7 @@ public class SpellTrees
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<SpellTree>().setMaxID(1024).setName(REGISTRY_KEY.location()));
+        //event.create(new RegistryBuilder<>(REGISTRY_KEY).maxId(1024));
     }
     
     private static void newDataPackRegistry(DataPackRegistryEvent.NewRegistry event)

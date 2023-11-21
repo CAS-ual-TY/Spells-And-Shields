@@ -29,13 +29,13 @@ public class RequirementType<R extends Requirement>
     
     public static void writeToBuf(FriendlyByteBuf buf, Requirement requirement)
     {
-        buf.writeRegistryId(RequirementTypes.REGISTRY.get(), requirement.getType());
+        buf.writeById(RequirementTypes.REGISTRY::getId, requirement.getType());
         requirement.writeToBuf(buf);
     }
     
     public static Requirement readFromBuf(FriendlyByteBuf buf)
     {
-        RequirementType<?> type = buf.readRegistryId();
+        RequirementType<?> type = buf.readById(RequirementTypes.REGISTRY::byId);
         Requirement requirement = type.makeInstance();
         requirement.readFromBuf(buf);
         return requirement;

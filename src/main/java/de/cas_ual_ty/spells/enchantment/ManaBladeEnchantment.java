@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.enchantment;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,7 +23,7 @@ public class ManaBladeEnchantment extends Enchantment
     
     public ManaBladeEnchantment(Enchantment.Rarity rarity, EquipmentSlot... equipmentSlots)
     {
-        super(rarity, BuiltinRegistries.SWORD_OR_AXE_ENCHANTMENT_CATEGORY, equipmentSlots);
+        super(rarity, BuiltInRegisters.SWORD_OR_AXE_ENCHANTMENT_CATEGORY, equipmentSlots);
     }
     
     @Override

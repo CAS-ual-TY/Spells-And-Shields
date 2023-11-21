@@ -226,7 +226,7 @@ public class SpellContext
     
     public void run()
     {
-        Spell spell = this.spell.getSpell().get();
+        Spell spell = this.spell.getSpell().value();
         ResourceLocation spellRl = null;
         
         if(SpellsConfig.DEBUG_SPELLS.get())
@@ -254,7 +254,7 @@ public class SpellContext
                 
                 if(SpellsConfig.DEBUG_SPELLS.get())
                 {
-                    actionRl = SpellActionTypes.REGISTRY.get().getKey(spellAction.getType());
+                    actionRl = SpellActionTypes.REGISTRY.getKey(spellAction.getType());
                     SpellsAndShields.LOGGER.info("Starting action " + actionRl);
                 }
                 
@@ -293,7 +293,7 @@ public class SpellContext
         SpellsAndShields.LOGGER.info("  Context variables:");
         for(CtxVar<?> v : ctxVars.values())
         {
-            SpellsAndShields.LOGGER.info("   - " + CtxVarTypes.REGISTRY.get().getKey(v.getType()) + " " + v.getName() + " / " + v.getValue().toString());
+            SpellsAndShields.LOGGER.info("   - " + CtxVarTypes.REGISTRY.getKey(v.getType()) + " " + v.getName() + " / " + v.getValue().toString());
         }
     }
     
@@ -303,7 +303,7 @@ public class SpellContext
         for(Map.Entry<String, TargetGroup> entry : targetGroups.entrySet())
         {
             SpellsAndShields.LOGGER.info("    " + entry.getKey() + " / " + entry.getValue().size() + ":");
-            entry.getValue().forEachTarget(target -> SpellsAndShields.LOGGER.info("      - " + TargetTypes.REGISTRY.get().getKey(target.type)));
+            entry.getValue().forEachTarget(target -> SpellsAndShields.LOGGER.info("      - " + TargetTypes.REGISTRY.getKey(target.type)));
         }
     }
     

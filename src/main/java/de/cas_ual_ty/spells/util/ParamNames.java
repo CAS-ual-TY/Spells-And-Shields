@@ -60,7 +60,7 @@ public class ParamNames
     
     public static String paramImm(String name, CtxVarType<?> type)
     {
-        return CtxVarTypes.REGISTRY.get().getKey(type).getPath() + "/" + name;
+        return CtxVarTypes.REGISTRY.getKey(type).getPath() + "/" + name;
     }
     
     public static String paramInt(String name)

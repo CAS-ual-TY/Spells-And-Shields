@@ -10,9 +10,9 @@ import de.cas_ual_ty.spells.spell.action.base.GetTargetAttributeAction;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class GetEntityTypeAction extends GetTargetAttributeAction<EntityTarget>
 {
@@ -50,7 +50,7 @@ public class GetEntityTypeAction extends GetTargetAttributeAction<EntityTarget>
         
         if(!entityType.isEmpty())
         {
-            addVariableAttribute(e -> ForgeRegistries.ENTITY_TYPES.getKey(e.getEntity().getType()).toString(), CtxVarTypes.STRING.get(), entityType);
+            addVariableAttribute(e -> BuiltInRegistries.ENTITY_TYPE.getKey(e.getEntity().getType()).toString(), CtxVarTypes.STRING.get(), entityType);
         }
         
         if(!isLiving.isEmpty())

@@ -12,13 +12,13 @@ import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
@@ -103,7 +103,7 @@ public class SpawnEntityAction extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
-        SpellsUtil.stringToObject(ctx, entityType, ForgeRegistries.ENTITY_TYPES).ifPresent(entityType ->
+        SpellsUtil.stringToObject(ctx, entityType, BuiltInRegistries.ENTITY_TYPE).ifPresent(entityType ->
         {
             if(entityType != EntityType.PLAYER)
             {

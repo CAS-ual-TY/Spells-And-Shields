@@ -200,7 +200,7 @@ public class RadialMenu extends Screen
             if(spell != null)
             {
                 Vec2 pos = iconPositionPoints[i];
-                SpellIconRegistry.render(spell.getSpell().get().getIcon(), guiGraphics, iconWidth, iconHeight, Math.round(pos.x), Math.round(pos.y), pPartialTick);
+                SpellIconRegistry.render(spell.getSpell().value().getIcon(), guiGraphics, iconWidth, iconHeight, Math.round(pos.x), Math.round(pos.y), pPartialTick);
             }
         }
     }

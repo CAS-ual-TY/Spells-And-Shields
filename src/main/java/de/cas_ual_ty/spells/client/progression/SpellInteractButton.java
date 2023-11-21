@@ -12,15 +12,21 @@ import net.minecraft.util.Mth;
 
 public class SpellInteractButton extends Button
 {
-    public static final ResourceLocation ADVANCEMENT_WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
+    private static final ResourceLocation TITLE_BOX_SPRITE = new ResourceLocation("advancements/title_box");
     
-    public final int v;
+    public final ResourceLocation v;
     
-    public SpellInteractButton(int x, int y, int width, int height, Component component, OnPress onPress, int v)
+    public SpellInteractButton(int x, int y, int width, int height, Component component, OnPress onPress, ResourceLocation v)
     {
         super(x, y, width, height, component, onPress, DEFAULT_NARRATION);
         this.v = v;
     }
+    
+    public SpellInteractButton(int x, int y, int width, int height, Component component, OnPress onPress)
+    {
+        this(x, y, width, height, component, onPress, TITLE_BOX_SPRITE);
+    }
+    
     
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick)
@@ -28,12 +34,11 @@ public class SpellInteractButton extends Button
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
-        int i = isHoveredOrFocused() && active ? v : 2;
+        ResourceLocation sprite = isHoveredOrFocused() && active ? v : TITLE_BOX_SPRITE;
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        guiGraphics.blit(ADVANCEMENT_WIDGETS_LOCATION, getX(), getY(), 0, i * SpellNodeWidget.FRAME_HEIGHT, width / 2, height);
-        guiGraphics.blit(ADVANCEMENT_WIDGETS_LOCATION, getX() + width / 2, getY(), 200 - width / 2, i * SpellNodeWidget.FRAME_HEIGHT, width / 2, height);
+        guiGraphics.blitSprite(sprite, getX(), getY(), width, height);
         Font font = minecraft.font;
         renderTitle(guiGraphics, mouseX, mouseY, deltaTick, font);
     }

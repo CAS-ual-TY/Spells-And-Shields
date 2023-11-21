@@ -14,8 +14,8 @@ import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class ApplyMobEffectAction extends AffectTypeAction<LivingEntityTarget>
 {
@@ -100,7 +100,7 @@ public class ApplyMobEffectAction extends AffectTypeAction<LivingEntityTarget>
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget target)
     {
-        SpellsUtil.stringToObject(ctx, mobEffect, ForgeRegistries.MOB_EFFECTS).ifPresent(mobEffect ->
+        SpellsUtil.stringToObject(ctx, mobEffect, BuiltInRegistries.MOB_EFFECT).ifPresent(mobEffect ->
         {
             duration.getValue(ctx).ifPresent(duration ->
             {

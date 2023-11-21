@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
@@ -30,6 +30,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -58,7 +59,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -146,7 +147,7 @@ public class SpellsGen
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
-        ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
+        ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect);
         String uuidCode = " uuid_from_string('permanent' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(PERMANENT_ICON_RL))), Component.translatable(key, component), 0F)
                 .addAction(CopyTargetsAction.make(ON_EQUIP, "player", OWNER))
@@ -161,7 +162,7 @@ public class SpellsGen
                 .addAction(ActivateAction.make("apply", "renew"))
                 .addAction(ApplyMobEffectAction.make("apply", "player", STRING.reference("mob_effect"), INT.reference("duration+1"), INT.reference("amplifier"), BOOLEAN.reference("ambient"), BOOLEAN.reference("visible"), BOOLEAN.reference("show_icon")))
                 .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("duration"), STRING.reference("uuid"), EMPTY_TAG, eventHookMap()))
-                .addParameter(STRING, "mob_effect", ForgeRegistries.MOB_EFFECTS.getKey(mobEffect).toString())
+                .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect).toString())
                 .addParameter(INT, "duration", duration)
                 .addParameter(INT, "amplifier", amplifier)
                 .addParameter(BOOLEAN, "ambient", false)
@@ -216,14 +217,14 @@ public class SpellsGen
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
-        ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
+        ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect);
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), Component.translatable(key, component), manaCost)
                 .addAction(ManaCheckAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ApplyMobEffectAction.make(ACTIVE, OWNER, STRING.reference("mob_effect"), INT.reference("duration+1"), INT.reference("amplifier"), BOOLEAN.reference("ambient"), BOOLEAN.reference("visible"), BOOLEAN.reference("show_icon")))
                 .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
                 .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
-                .addParameter(STRING, "mob_effect", ForgeRegistries.MOB_EFFECTS.getKey(mobEffect).toString())
+                .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect).toString())
                 .addParameter(INT, "duration", duration)
                 .addParameter(INT, "amplifier", amplifier)
                 .addParameter(BOOLEAN, "ambient", false)
@@ -277,7 +278,7 @@ public class SpellsGen
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
-        ResourceLocation mobEffectRL = ForgeRegistries.MOB_EFFECTS.getKey(mobEffect);
+        ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect);
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), Component.translatable(key, component), manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
@@ -302,7 +303,7 @@ public class SpellsGen
                 .addAction(DeactivateAction.make(ACTIVE, "anti_sound"))
                 .addAction(DeactivateAction.make("anti_sound", "sound"))
                 .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
-                .addParameter(STRING, "mob_effect", ForgeRegistries.MOB_EFFECTS.getKey(mobEffect).toString())
+                .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect).toString())
                 .addParameter(INT, "duration", duration)
                 .addParameter(INT, "amplifier", amplifier)
                 .addParameter(BOOLEAN, "ambient", false)
@@ -353,14 +354,14 @@ public class SpellsGen
     public void addPermanentAttributeSpell(ResourceLocation rl, String key, String descKey, SpellIcon spellIcon, Attribute attribute, AttributeModifier.Operation op, double value)
     {
         MutableComponent component = Component.translatable(attribute.getDescriptionId());
-        ResourceLocation attributeRL = ForgeRegistries.ATTRIBUTES.getKey(attribute);
+        ResourceLocation attributeRL = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
         String opString = SpellsUtil.operationToString(op);
         
         String uuidCode = " uuid_from_string('attribute' + '%s' + %s + %s + %s) ".formatted(attributeRL.getPath(), SPELL_SLOT, "operation", "value");
         
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(spellIcon, DefaultSpellIcon.make(PERMANENT_ICON_RL))), Component.translatable(key, component), 0F)
-                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING), STRING.immediate(attributeRL.getPath()), DOUBLE.immediate(value), STRING.immediate(opString)))
-                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP, OWNER, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING)))
+                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute, BuiltInRegistries.ATTRIBUTE), Compiler.compileString(uuidCode, STRING), STRING.immediate(attributeRL.getPath()), DOUBLE.immediate(value), STRING.immediate(opString)))
+                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP, OWNER, SpellsUtil.objectToString(attribute, BuiltInRegistries.ATTRIBUTE), Compiler.compileString(uuidCode, STRING)))
                 .addParameter(DOUBLE, "value", value)
                 .addParameter(STRING, "operation", opString)
                 .addEventHook(ON_EQUIP)
@@ -395,8 +396,8 @@ public class SpellsGen
     
     public void addPermanentWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, boolean tick)
     {
-        ResourceLocation fromRL = ForgeRegistries.FLUID_TYPES.get().getKey(from);
-        ResourceLocation toRL = ForgeRegistries.BLOCKS.getKey(to.getBlock());
+        ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
+        ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('permanent_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(PERMANENT_ICON_RL))), key, 0F)
                 .addAction(CopyTargetsAction.make(ON_EQUIP, "player", OWNER))
@@ -457,8 +458,8 @@ public class SpellsGen
     
     public void addTemporaryWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, float manaCost, boolean tick, int duration)
     {
-        ResourceLocation fromRL = ForgeRegistries.FLUID_TYPES.get().getKey(from);
-        ResourceLocation toRL = ForgeRegistries.BLOCKS.getKey(to.getBlock());
+        ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
+        ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('temporary_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), key, manaCost)
                 .addAction(ManaCheckAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
@@ -517,8 +518,8 @@ public class SpellsGen
     
     public void addToggleWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, float manaCost, boolean tick)
     {
-        ResourceLocation fromRL = ForgeRegistries.FLUID_TYPES.get().getKey(from);
-        ResourceLocation toRL = ForgeRegistries.BLOCKS.getKey(to.getBlock());
+        ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
+        ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('toggle_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), key, manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
@@ -597,15 +598,15 @@ public class SpellsGen
         CompoundTag childTag = new CompoundTag();
         childTag.putInt("Age", -24000);
         CompoundTag animalsTag = new CompoundTag();
-        animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.BEEF).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.COW).toString());
-        animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.CHICKEN).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.CHICKEN).toString());
-        animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.PORKCHOP).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.PIG).toString());
-        animalsTag.putString(ForgeRegistries.ITEMS.getKey(Items.MUTTON).toString(), ForgeRegistries.ENTITY_TYPES.getKey(EntityType.SHEEP).toString());
+        animalsTag.putString(BuiltInRegistries.ITEM.getKey(Items.BEEF).toString(), BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.COW).toString());
+        animalsTag.putString(BuiltInRegistries.ITEM.getKey(Items.CHICKEN).toString(), BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.CHICKEN).toString());
+        animalsTag.putString(BuiltInRegistries.ITEM.getKey(Items.PORKCHOP).toString(), BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIG).toString());
+        animalsTag.putString(BuiltInRegistries.ITEM.getKey(Items.MUTTON).toString(), BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.SHEEP).toString());
         CompoundTag amountsTag = new CompoundTag();
-        amountsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.BEEF).toString(), 8);
-        amountsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.CHICKEN).toString(), 8);
-        amountsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.PORKCHOP).toString(), 8);
-        amountsTag.putInt(ForgeRegistries.ITEMS.getKey(Items.MUTTON).toString(), 8);
+        amountsTag.putInt(BuiltInRegistries.ITEM.getKey(Items.BEEF).toString(), 8);
+        amountsTag.putInt(BuiltInRegistries.ITEM.getKey(Items.CHICKEN).toString(), 8);
+        amountsTag.putInt(BuiltInRegistries.ITEM.getKey(Items.PORKCHOP).toString(), 8);
+        amountsTag.putInt(BuiltInRegistries.ITEM.getKey(Items.MUTTON).toString(), 8);
         addSpell(Spells.SUMMON_ANIMAL, new Spell(modId, "summon_animal", Spells.KEY_SUMMON_ANIMAL, 4F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(MainhandItemTargetAction.make(ACTIVE, OWNER, "item"))
@@ -639,12 +640,12 @@ public class SpellsGen
                 .addParameter(INT, "fire_seconds", 2)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make(ACTIVE, "consume", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.BLAZE_POWDER, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.BLAZE_POWDER, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(ActivateAction.make(ACTIVE, "consume"))
                 .addAction(ActivateAction.make("consume", "shoot"))
                 .addAction(BurnManaAction.make("shoot", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("consume", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), FALSE, TRUE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.BLAZE_POWDER, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.BLAZE_POWDER, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(3D), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
                 .addAction(PlaySoundAction.make("shoot", OWNER, SoundEvents.BLAZE_SHOOT, ONE_D, ONE_D))
                 .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(2), INT.immediate(3), DOUBLE.immediate(0.2D), TRUE, ZERO_VEC3, ParticleTypes.LARGE_SMOKE))
@@ -732,11 +733,11 @@ public class SpellsGen
                 .addAction(PutVarAction.makeCompoundTag("potion", Compiler.compileString(" put_nbt_string(tag, 'Potion', get_nbt_string(potion_tag, 'Potion')) ", TAG), "tag"))
                 .addAction(ActivateAction.make("potion", "shoot"))
                 .addAction(BurnManaAction.make("shoot", OWNER, DOUBLE.reference(MANA_COST)))
-                .addAction(SpawnEntityAction.make("shoot", "arrow", SpellsUtil.objectToString(EntityType.ARROW, ForgeRegistries.ENTITY_TYPES), "position", VEC3.reference("direction"), Compiler.compileString(" 3 * direction ", VEC3), TAG.reference("tag")))
+                .addAction(SpawnEntityAction.make("shoot", "arrow", SpellsUtil.objectToString(EntityType.ARROW, BuiltInRegistries.ENTITY_TYPE), "position", VEC3.reference("direction"), Compiler.compileString(" 3 * direction ", VEC3), TAG.reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", OWNER, SoundEvents.ARROW_SHOOT, ONE_D, ONE_D))
                 .addAction(ItemEqualsAction.make("spectral", "item", new ItemStack(Items.SPECTRAL_ARROW), TRUE, ONE, INT.immediate(-1)))
                 .addAction(HasManaAction.make("spectral", OWNER, DOUBLE.reference(MANA_COST)))
-                .addAction(SpawnEntityAction.make("spectral", "arrow", SpellsUtil.objectToString(EntityType.SPECTRAL_ARROW, ForgeRegistries.ENTITY_TYPES), "position", VEC3.reference("direction"), Compiler.compileString(" 3 * direction ", VEC3), TAG.reference("tag")))
+                .addAction(SpawnEntityAction.make("spectral", "arrow", SpellsUtil.objectToString(EntityType.SPECTRAL_ARROW, BuiltInRegistries.ENTITY_TYPE), "position", VEC3.reference("direction"), Compiler.compileString(" 3 * direction ", VEC3), TAG.reference("tag")))
                 .addAction(PlaySoundAction.make("spectral", OWNER, SoundEvents.ARROW_SHOOT, ONE_D, ONE_D))
                 .addAction(ActivateAction.make("shoot", "consume"))
                 .addAction(ActivateAction.make("spectral", "consume"))
@@ -751,9 +752,9 @@ public class SpellsGen
                 .addTooltip(itemCostComponent(new ItemStack(Items.SPECTRAL_ARROW)))
         );
         
-        addPermanentAttributeSpell(Spells.HEALTH_BOOST, Spells.KEY_HEALTH_BOOST, Spells.KEY_HEALTH_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/" + ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.HEALTH_BOOST).getPath() + ".png")), Attributes.MAX_HEALTH, AttributeModifier.Operation.ADDITION, 4D);
+        addPermanentAttributeSpell(Spells.HEALTH_BOOST, Spells.KEY_HEALTH_BOOST, Spells.KEY_HEALTH_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/" + BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.HEALTH_BOOST).getPath() + ".png")), Attributes.MAX_HEALTH, AttributeModifier.Operation.ADDITION, 4D);
         
-        addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltinRegistries.MAX_MANA_ATTRIBUTE.get(), AttributeModifier.Operation.ADDITION, 4D);
+        addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltInRegisters.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltInRegisters.MAX_MANA_ATTRIBUTE.get(), AttributeModifier.Operation.ADDITION, 4D);
         
         addSpell(Spells.WATER_LEAP, new Spell(modId, "water_leap", Spells.KEY_WATER_LEAP, 5F)
                 .addParameter(DOUBLE, "speed", 2.5)
@@ -761,7 +762,7 @@ public class SpellsGen
                 .addAction(GetEntityEyePositionAction.make(ACTIVE, OWNER, "eye_pos"))
                 .addAction(GetBlockAction.make(ACTIVE, OWNER, "feet_block", "", ""))
                 .addAction(GetBlockAction.make(ACTIVE, "eye_pos", "eye_block", "", ""))
-                .addAction(BooleanActivationAction.make(ACTIVE, ACTIVE, Compiler.compileString(" feet_block == '" + ForgeRegistries.BLOCKS.getKey(Blocks.WATER).toString() + "' && eye_block == '" + ForgeRegistries.BLOCKS.getKey(Blocks.WATER).toString() + "' ", BOOLEAN), FALSE, TRUE))
+                .addAction(BooleanActivationAction.make(ACTIVE, ACTIVE, Compiler.compileString(" feet_block == '" + BuiltInRegistries.BLOCK.getKey(Blocks.WATER).toString() + "' && eye_block == '" + BuiltInRegistries.BLOCK.getKey(Blocks.WATER).toString() + "' ", BOOLEAN), FALSE, TRUE))
                 .addAction(BurnManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ResetFallDistanceAction.make(ACTIVE, OWNER))
                 .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE, OWNER, "", "look", ""))
@@ -773,13 +774,13 @@ public class SpellsGen
                 .addTooltip(Component.translatable(Spells.KEY_WATER_LEAP_DESC))
         );
         
-        ResourceLocation resistanceRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.DAMAGE_RESISTANCE);
-        ResourceLocation waterBreathingRL = ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.WATER_BREATHING);
+        ResourceLocation resistanceRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.DAMAGE_RESISTANCE);
+        ResourceLocation waterBreathingRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WATER_BREATHING);
         addSpell(Spells.PERMANENT_AQUA_RESISTANCE, new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(resistanceRL.getNamespace(), "textures/mob_effect/" + resistanceRL.getPath() + ".png")), DefaultSpellIcon.make(new ResourceLocation(waterBreathingRL.getNamespace(), "textures/mob_effect/" + waterBreathingRL.getPath() + ".png")))), Spells.KEY_PERMANENT_AQUA_RESISTANCE, 0F)
                 .addAction(ConditionalDeactivationAction.make(LIVING_HURT_VICTIM, Compiler.compileString(" damage_type == 'mob' ", BOOLEAN)))
                 .addAction(GetEntityEyePositionAction.make(LIVING_HURT_VICTIM, OWNER, "eye_pos"))
                 .addAction(GetFluidAction.make(LIVING_HURT_VICTIM, "eye_pos", "fluid_type", "", "", ""))
-                .addAction(ConditionalDeactivationAction.make(LIVING_HURT_VICTIM, Compiler.compileString(" fluid_type == '" + ForgeRegistries.FLUID_TYPES.get().getKey(Fluids.WATER.getFluidType()) + "' ", BOOLEAN)))
+                .addAction(ConditionalDeactivationAction.make(LIVING_HURT_VICTIM, Compiler.compileString(" fluid_type == '" + NeoForgeRegistries.FLUID_TYPES.getKey(Fluids.WATER.getFluidType()) + "' ", BOOLEAN)))
                 .addAction(PutVarAction.makeDouble(LIVING_HURT_VICTIM, Compiler.compileString(" damage_amount * factor ", DOUBLE), "damage_amount"))
                 .addParameter(DOUBLE, "factor", 0.75D)
                 .addEventHook(LIVING_HURT_VICTIM)
@@ -800,7 +801,7 @@ public class SpellsGen
                 .addAction(ItemEqualsAction.make("shoot", "item", new ItemStack(Items.WATER_BUCKET), TRUE, ONE, INT.immediate(-1)))
                 .addAction(GetItemAttributesAction.make("shoot", "item", "item", "amount", "damage", "item_tag"))
                 .addAction(BooleanActivationAction.make("shoot", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(OverrideItemAction.make("consume", "item", INT.reference("amount"), INT.reference("damage"), TAG.reference("item_tag"), SpellsUtil.objectToString(Items.BUCKET, ForgeRegistries.ITEMS)))
+                .addAction(OverrideItemAction.make("consume", "item", INT.reference("amount"), INT.reference("damage"), TAG.reference("item_tag"), SpellsUtil.objectToString(Items.BUCKET, BuiltInRegistries.ITEM)))
                 .addAction(GetEntityUUIDAction.make("shoot", OWNER, "owner_uuid_return"))
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(new_tag(), 'owner_uuid_return', owner_uuid_return) ", TAG), "tag"))
                 .addAction(BurnManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
@@ -836,8 +837,8 @@ public class SpellsGen
                 .addAction(ActivateAction.make("refill_offhand", "do_refill"))
                 .addAction(ItemEqualsAction.make("do_refill", "item", new ItemStack(Items.BUCKET), TRUE, ONE, INT.immediate(-1)))
                 .addAction(GetItemAttributesAction.make("do_refill", "item", "item", "amount", "damage", "item_tag"))
-                .addAction(OverrideItemAction.make("do_refill", "item", ONE, INT.reference("amount"), TAG.reference("item_tag"), SpellsUtil.objectToString(Items.WATER_BUCKET, ForgeRegistries.ITEMS)))
-                .addAction(GiveItemAction.make("do_refill", "item", Compiler.compileString(" amount - 1 ", INT), INT.reference("amount"), TAG.reference("item_tag"), SpellsUtil.objectToString(Items.BUCKET, ForgeRegistries.ITEMS)))
+                .addAction(OverrideItemAction.make("do_refill", "item", ONE, INT.reference("amount"), TAG.reference("item_tag"), SpellsUtil.objectToString(Items.WATER_BUCKET, BuiltInRegistries.ITEM)))
+                .addAction(GiveItemAction.make("do_refill", "item", Compiler.compileString(" amount - 1 ", INT), INT.reference("amount"), TAG.reference("item_tag"), SpellsUtil.objectToString(Items.BUCKET, BuiltInRegistries.ITEM)))
                 .addAction(PlaySoundAction.make("do_refill", OWNER, SoundEvents.BUCKET_FILL, ONE_D, ONE_D))
                 .addEventHook(ACTIVE)
                 .addTooltip(Component.translatable(Spells.KEY_WATER_WHIP_DESC))
@@ -860,7 +861,7 @@ public class SpellsGen
                 .addAction(ItemEqualsAction.make("shoot", "item", new ItemStack(Items.POTION), TRUE, ONE, INT.immediate(-1)))
                 .addAction(GetItemAttributesAction.make("shoot", "item", "item", "amount", "damage", "item_tag"))
                 .addAction(BooleanActivationAction.make("shoot", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(OverrideItemAction.make("consume", "item", INT.reference("amount"), INT.reference("damage"), TAG.reference("item_tag"), SpellsUtil.objectToString(Items.GLASS_BOTTLE, ForgeRegistries.ITEMS)))
+                .addAction(OverrideItemAction.make("consume", "item", INT.reference("amount"), INT.reference("damage"), TAG.reference("item_tag"), SpellsUtil.objectToString(Items.GLASS_BOTTLE, BuiltInRegistries.ITEM)))
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_string(new_tag(), 'Potion', get_nbt_string(item_tag, 'Potion')) ", TAG), "tag"))
                 .addAction(BurnManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(2D), ZERO_D, INT.immediate(100), "", "on_entity_hit", "", "projectile"))
@@ -907,18 +908,18 @@ public class SpellsGen
         addSpell(Spells.FIRE_CHARGE, new Spell(ItemSpellIcon.make(new ItemStack(Items.FIRE_CHARGE)), Spells.KEY_FIRE_CHARGE, 5F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make(ACTIVE, "consume", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(ActivateAction.make(ACTIVE, "consume"))
                 .addAction(ActivateAction.make("consume", "shoot"))
                 .addAction(BurnManaAction.make("consume", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("consume", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), FALSE, TRUE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(GetEntityUUIDAction.make("shoot", OWNER, "uuid"))
                 .addAction(GetEntityPositionDirectionMotionAction.make("shoot", OWNER, "", "direction", ""))
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(new_tag(), 'Owner', uuid) ", TAG), "tag"))
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_vec3(tag, 'power', direction * 2.0 * 0.1) ", TAG), "tag"))
                 .addAction(GetEntityEyePositionAction.make("shoot", OWNER, "position"))
-                .addAction(SpawnEntityAction.make("shoot", "fire_charge", SpellsUtil.objectToString(EntityType.FIREBALL, ForgeRegistries.ENTITY_TYPES), "position", VEC3.reference("direction"), ZERO_VEC3, TAG.reference("tag")))
+                .addAction(SpawnEntityAction.make("shoot", "fire_charge", SpellsUtil.objectToString(EntityType.FIREBALL, BuiltInRegistries.ENTITY_TYPE), "position", VEC3.reference("direction"), ZERO_VEC3, TAG.reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", OWNER, SoundEvents.BLAZE_SHOOT, ONE_D, ONE_D))
                 .addEventHook(ACTIVE)
                 .addTooltip(Component.translatable(Spells.KEY_FIRE_CHARGE_DESC))
@@ -957,8 +958,8 @@ public class SpellsGen
         );
         
         CompoundTag metalMap = new CompoundTag();
-        metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.IRON_NUGGET).toString(), Tiers.IRON.getAttackDamageBonus());
-        metalMap.putDouble(ForgeRegistries.ITEMS.getKey(Items.GOLD_NUGGET).toString(), Tiers.GOLD.getAttackDamageBonus());
+        metalMap.putDouble(BuiltInRegistries.ITEM.getKey(Items.IRON_NUGGET).toString(), Tiers.IRON.getAttackDamageBonus());
+        metalMap.putDouble(BuiltInRegistries.ITEM.getKey(Items.GOLD_NUGGET).toString(), Tiers.GOLD.getAttackDamageBonus());
         addSpell(Spells.SPIT_METAL, new Spell(modId, "spit_metal", Spells.KEY_SPIT_METAL, 4F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(MainhandItemTargetAction.make(ACTIVE, OWNER, "item"))
@@ -994,13 +995,13 @@ public class SpellsGen
         addSpell(Spells.FLAMETHROWER, new Spell(modId, "flamethrower", Spells.KEY_FLAMETHROWER, 7F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make(ACTIVE, "success", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.BLAZE_POWDER, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.BLAZE_POWDER, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(ActivateAction.make(ACTIVE, "success"))
                 .addAction(ActivateAction.make("success", "shoot"))
                 .addAction(CopyTargetsAction.make("success", "player", OWNER))
                 .addAction(BurnManaAction.make("success", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("success", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.BLAZE_POWDER, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.BLAZE_POWDER, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(CopyTargetsAction.make("on_timeout", "player", HOLDER))
                 .addAction(PutVarAction.makeInt("on_timeout", Compiler.compileString(" get_nbt_int(" + DELAY_TAG + ", 'repetitions') ", INT), "repetitions"))
                 .addAction(ActivateAction.make("on_timeout", "shoot"))
@@ -1033,10 +1034,10 @@ public class SpellsGen
         addTemporaryWalkerSpell(Spells.TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER_DESC, "lava_walker", Fluids.LAVA.getFluidType(), Blocks.OBSIDIAN.defaultBlockState(), 16F, false, 400);
         addToggleWalkerSpell(Spells.TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER_DESC, "lava_walker", Fluids.LAVA.getFluidType(), Blocks.OBSIDIAN.defaultBlockState(), 5F, false);
         
-        addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(new ResourceLocation(BuiltinRegistries.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
+        addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(new ResourceLocation(BuiltInRegisters.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltInRegisters.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ActivateAction.make(ACTIVE, "bypass"))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.AMETHYST_SHARD, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.AMETHYST_SHARD, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(BooleanActivationAction.make("bypass", ACTIVE, Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
                 .addAction(LookAtTargetAction.make(ACTIVE, OWNER, DOUBLE.reference("range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "", "on_entity_hit", ""))
                 
@@ -1048,8 +1049,8 @@ public class SpellsGen
                 
                 .addAction(BurnManaAction.make("on_entity_hit", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("on_entity_hit", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.AMETHYST_SHARD, ForgeRegistries.ITEMS), ONE, null, TRUE))
-                .addAction(ApplyMobEffectAction.make("on_entity_hit", ENTITY_HIT, STRING.immediate(BuiltinRegistries.SILENCE_EFFECT.getId().toString()), INT.reference("silence_seconds"), ZERO, FALSE, TRUE, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.AMETHYST_SHARD, BuiltInRegistries.ITEM), ONE, null, TRUE))
+                .addAction(ApplyMobEffectAction.make("on_entity_hit", ENTITY_HIT, STRING.immediate(BuiltInRegisters.SILENCE_EFFECT.getId().toString()), INT.reference("silence_seconds"), ZERO, FALSE, TRUE, TRUE))
                 .addAction(PlaySoundAction.make("on_entity_hit", OWNER, SoundEvents.AMETHYST_CLUSTER_HIT, ONE_D, ONE_D))
                 .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT, SoundEvents.AMETHYST_CLUSTER_BREAK, ONE_D, ONE_D))
                 .addAction(SpawnParticlesAction.make("on_entity_hit", HIT_POSITION, ParticleTypes.POOF, INT.immediate(3), DOUBLE.immediate(0.2)))
@@ -1062,7 +1063,7 @@ public class SpellsGen
         addSpell(Spells.RANDOM_TELEPORT, new Spell(modId, "random_teleport", Spells.KEY_RANDOM_TELEPORT, 5F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ActivateAction.make(ACTIVE, "bypass"))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(BooleanActivationAction.make("bypass", ACTIVE, Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
                 
                 .addAction(PutVarAction.makeInt(ACTIVE, INT.reference("max_attempts"), "attempts"))
@@ -1097,7 +1098,7 @@ public class SpellsGen
                 .addAction(BranchAction.make(ACTIVE, "loop", Compiler.compileString(" attempts > 0 ", BOOLEAN)))
                 .addAction(BurnManaAction.make("success", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("success", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(GetPositionAction.make("success", "feet", "feet_pos"))
                 .addAction(PutVarAction.makeDouble("success", Compiler.compileString(" get_y(feet_pos) - floor(get_y(feet_pos))", DOUBLE), "feet_pos_floor"))
                 .addAction(OffsetBlockAction.make("success", "feet", "teleport_position", Compiler.compileString("vec3(0, -feet_pos_floor, 0)", VEC3)))
@@ -1119,7 +1120,7 @@ public class SpellsGen
         addSpell(Spells.FORCED_TELEPORT, new Spell(modId, "forced_teleport", Spells.KEY_FORCED_TELEPORT, 10F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ActivateAction.make(ACTIVE, "bypass"))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(BooleanActivationAction.make("bypass", ACTIVE, Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
                 .addAction(LookAtTargetAction.make(ACTIVE, OWNER, DOUBLE.reference("target_range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "fail", "on_entity_hit", "fail"))
                 .addAction(CopyTargetsAction.make("on_entity_hit", "player", ENTITY_HIT))
@@ -1162,7 +1163,7 @@ public class SpellsGen
                 .addAction(BranchAction.make(ACTIVE, "loop", Compiler.compileString(" attempts > 0 ", BOOLEAN)))
                 .addAction(BurnManaAction.make("success", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("success", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(GetPositionAction.make("success", "feet", "feet_pos"))
                 .addAction(PutVarAction.makeDouble("success", Compiler.compileString(" get_y(feet_pos) - floor(get_y(feet_pos))", DOUBLE), "feet_pos_floor"))
                 .addAction(OffsetBlockAction.make("success", "feet", "teleport_position", Compiler.compileString("vec3(0, -feet_pos_floor, 0)", VEC3)))
@@ -1185,7 +1186,7 @@ public class SpellsGen
         addSpell(Spells.TELEPORT, new Spell(modId, "teleport", Spells.KEY_TELEPORT, 10F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make(ACTIVE, "success", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(ActivateAction.make(ACTIVE, "success"))
                 .addAction(LookAtTargetAction.make("success", OWNER, DOUBLE.reference("range"), 0.5F, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, "on_block_hit", "on_entity_hit", "on_miss"))
                 .addAction(CopyTargetsAction.make("on_entity_hit", "teleport_position", ENTITY_HIT))
@@ -1196,7 +1197,7 @@ public class SpellsGen
                 .addAction(ActivateAction.make("on_miss", "teleport"))
                 .addAction(BurnManaAction.make("teleport", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("teleport", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.CHORUS_FRUIT, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(PlaySoundAction.make("teleport", OWNER, SoundEvents.ENDERMAN_TELEPORT, ONE_D, ONE_D))
                 .addAction(TeleportToAction.make("teleport", OWNER, "teleport_position"))
                 .addAction(PlaySoundAction.make("teleport", OWNER, SoundEvents.ENDERMAN_TELEPORT, ONE_D, ONE_D))
@@ -1211,7 +1212,7 @@ public class SpellsGen
         addSpell(Spells.LIGHTNING_STRIKE, new Spell(modId, "lightning_strike", Spells.KEY_LIGHTNING_STRIKE, 8F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ActivateAction.make(ACTIVE, "bypass"))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.COPPER_INGOT, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.COPPER_INGOT, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(BooleanActivationAction.make("bypass", ACTIVE, Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
                 .addAction(LookAtTargetAction.make(ACTIVE, OWNER, DOUBLE.reference("range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "on_block_hit", "on_entity_hit", ""))
                 
@@ -1228,8 +1229,8 @@ public class SpellsGen
                 
                 .addAction(BurnManaAction.make("on_hit", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("on_hit", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.COPPER_INGOT, ForgeRegistries.ITEMS), ONE, null, TRUE))
-                .addAction(SpawnEntityAction.make("on_hit", "", SpellsUtil.objectToString(EntityType.LIGHTNING_BOLT, ForgeRegistries.ENTITY_TYPES), "position", ZERO_VEC3, ZERO_VEC3, null))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.COPPER_INGOT, BuiltInRegistries.ITEM), ONE, null, TRUE))
+                .addAction(SpawnEntityAction.make("on_hit", "", SpellsUtil.objectToString(EntityType.LIGHTNING_BOLT, BuiltInRegistries.ENTITY_TYPE), "position", ZERO_VEC3, ZERO_VEC3, null))
                 .addParameter(DOUBLE, "range", 200D)
                 .addEventHook(ACTIVE)
                 .addTooltip(Component.translatable(Spells.KEY_LIGHTNING_STRIKE_DESC))
@@ -1245,14 +1246,14 @@ public class SpellsGen
                 .addAction(ClearTargetsAction.make("on_block_hit", "block_to_check"))
                 .addAction(PickTargetAction.make("on_block_hit", "block_to_check", "blocks", true, true))
                 .addAction(GetBlockAction.make("on_block_hit", "block_to_check", "block_type", "", ""))
-                .addAction(BooleanActivationAction.make("on_block_hit", "success", Compiler.compileString(" block_type == '" + ForgeRegistries.BLOCKS.getKey(Blocks.FIRE).toString() + "' || block_type == '" + ForgeRegistries.BLOCKS.getKey(Blocks.SOUL_FIRE) + "' ", BOOLEAN), TRUE, FALSE))
+                .addAction(BooleanActivationAction.make("on_block_hit", "success", Compiler.compileString(" block_type == '" + BuiltInRegistries.BLOCK.getKey(Blocks.FIRE).toString() + "' || block_type == '" + BuiltInRegistries.BLOCK.getKey(Blocks.SOUL_FIRE) + "' ", BOOLEAN), TRUE, FALSE))
                 .addAction(DeactivateAction.make("success", "on_block_hit"))
                 .addAction(JumpAction.make("on_block_hit", "loop"))
                 .addAction(RemoveBlockAction.make("success", "block_to_check"))
                 .addAction(PlaySoundAction.make("success", OWNER, SoundEvents.FIRE_EXTINGUISH, ONE_D, ONE_D))
                 .addAction(PlaySoundAction.make("success", "block_to_check", SoundEvents.FIRE_EXTINGUISH, ONE_D, ONE_D))
                 .addAction(HomeAction.make("success", "block_to_check", OWNER, ONE_D, INT.immediate(100), "", "owner_hit", "", ""))
-                .addAction(ApplyMobEffectAction.make("owner_hit", ENTITY_HIT, SpellsUtil.objectToString(BuiltinRegistries.REPLENISHMENT_EFFECT.get(), ForgeRegistries.MOB_EFFECTS), INT.reference("replenishment_duration"), ZERO, FALSE, TRUE, TRUE))
+                .addAction(ApplyMobEffectAction.make("owner_hit", ENTITY_HIT, SpellsUtil.objectToString(BuiltInRegisters.REPLENISHMENT_EFFECT.get(), BuiltInRegistries.MOB_EFFECT), INT.reference("replenishment_duration"), ZERO, FALSE, TRUE, TRUE))
                 .addAction(PlaySoundAction.make("owner_hit", ENTITY_HIT, SoundEvents.FIRE_AMBIENT, ONE_D, ONE_D))
                 .addParameter(DOUBLE, "range", 50D)
                 .addParameter(INT, "replenishment_duration", 100)
@@ -1264,11 +1265,11 @@ public class SpellsGen
         addSpell(Spells.GROWTH, new Spell(modId, "growth", Spells.KEY_GROWTH, 4F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make(ACTIVE, "success", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.BONE_MEAL, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(BurnManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ActivateAction.make(ACTIVE, "success"))
                 .addAction(BooleanActivationAction.make("success", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.BONE_MEAL, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.BONE_MEAL, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(CubeBlockTargetsAction.make("success", OWNER, "blocks", Compiler.compileString(" vec3(-range, -1, -range) ", VEC3), Compiler.compileString(" vec3(range, 1, range) ", VEC3)))
                 .addAction(UseItemOnBlockAction.make("success", OWNER, "blocks", new ItemStack(Items.BONE_MEAL), false, Direction.UP))
                 .addAction(SpawnParticlesAction.make("success", "blocks", ParticleTypes.POOF, ONE, DOUBLE.immediate(0.25D)))
@@ -1285,11 +1286,11 @@ public class SpellsGen
         addSpell(Spells.GHAST, new Spell(AdvancedSpellIcon.make(new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32), Spells.KEY_GHAST, 4F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make(ACTIVE, "success", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(ActivateAction.make(ACTIVE, "success"))
                 .addAction(BurnManaAction.make("success", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("success", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(AddDelayedSpellAction.make("success", OWNER, "sound", INT.immediate(10), STRING.immediate(""), EMPTY_TAG, eventHookMap()))
                 .addAction(AddDelayedSpellAction.make("success", OWNER, "shoot", INT.immediate(20), STRING.immediate(""), EMPTY_TAG, eventHookMap()))
                 .addAction(PlaySoundAction.make("sound", HOLDER, SoundEvents.GHAST_WARN, ONE_D, ONE_D))
@@ -1298,7 +1299,7 @@ public class SpellsGen
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(new_tag(), 'Owner', uuid) ", TAG), "tag"))
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_vec3(tag, 'power', direction * 2.0 * 0.1) ", TAG), "tag"))
                 .addAction(GetEntityEyePositionAction.make("shoot", HOLDER, "position"))
-                .addAction(SpawnEntityAction.make("shoot", "fire_charge", SpellsUtil.objectToString(EntityType.FIREBALL, ForgeRegistries.ENTITY_TYPES), "position", VEC3.reference("direction"), ZERO_VEC3, TAG.reference("tag")))
+                .addAction(SpawnEntityAction.make("shoot", "fire_charge", SpellsUtil.objectToString(EntityType.FIREBALL, BuiltInRegistries.ENTITY_TYPE), "position", VEC3.reference("direction"), ZERO_VEC3, TAG.reference("tag")))
                 .addAction(PlaySoundAction.make("shoot", HOLDER, SoundEvents.GHAST_SHOOT, ONE_D, ONE_D))
                 .addEventHook(ACTIVE)
                 .addTooltip(Component.translatable(Spells.KEY_GHAST_DESC))
@@ -1310,7 +1311,7 @@ public class SpellsGen
         addSpell(Spells.ENDER_ARMY, new Spell(modId, "ender_army", Spells.KEY_ENDER_ARMY, 20F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make(ACTIVE, "success", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.DRAGON_HEAD, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.DRAGON_HEAD, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(ActivateAction.make(ACTIVE, "success"))
                 .addAction(LookAtTargetAction.make("success", OWNER, DOUBLE.reference("target_range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "", "on_entity_hit", ""))
                 
@@ -1322,13 +1323,13 @@ public class SpellsGen
                 
                 .addAction(BurnManaAction.make("on_entity_hit", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("on_entity_hit", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.DRAGON_HEAD, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.DRAGON_HEAD, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(RangedEntityTargetsAction.make("on_entity_hit", "targets", ENTITY_HIT, DOUBLE.reference("enderman_range")))
                 .addAction(LabelAction.make("on_entity_hit", "loop"))
                 .addAction(ClearTargetsAction.make("on_entity_hit", "to_check"))
                 .addAction(PickTargetAction.make("on_entity_hit", "to_check", "targets", true, false))
                 .addAction(GetEntityTypeAction.make("on_entity_hit", "to_check", "type", "", ""))
-                .addAction(BooleanActivationAction.make("on_entity_hit", "move_entity", Compiler.compileString(" type == '" + ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ENDERMAN).toString() + "' ", BOOLEAN), TRUE, FALSE))
+                .addAction(BooleanActivationAction.make("on_entity_hit", "move_entity", Compiler.compileString(" type == '" + BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ENDERMAN).toString() + "' ", BOOLEAN), TRUE, FALSE))
                 .addAction(CopyTargetsAction.make("move_entity", "endermen", "to_check"))
                 .addAction(DeactivateAction.make("move_entity", "move_entity"))
                 .addAction(GetTargetGroupSizeAction.make("on_entity_hit", "targets", "size"))
@@ -1393,7 +1394,7 @@ public class SpellsGen
                         .addAction(ClearTargetsAction.make("success", "above"))
                         .addAction(PositionToTargetAction.make("success", "above", Compiler.compileString(" vec3(x, y + 1, z) ", VEC3)))
                         .addAction(PutVarAction.makeCompoundTag("success", Compiler.compileString(" put_nbt_int(tag, 'Warmup', fang) ", TAG), "delayed_tag"))
-                        .addAction(SpawnEntityAction.make("success", "", STRING.immediate(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.EVOKER_FANGS).toString()), "above", VEC3.reference("look"), ZERO_VEC3, TAG.reference("delayed_tag")))
+                        .addAction(SpawnEntityAction.make("success", "", STRING.immediate(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.EVOKER_FANGS).toString()), "above", VEC3.reference("look"), ZERO_VEC3, TAG.reference("delayed_tag")))
                         .addAction(PutVarAction.makeInt("success", Compiler.compileString(" fangs_spawned + 1 ", INT), "fangs_spawned"))
                         
                         .addAction(DeactivateAction.make("success", "repeat"))
@@ -1413,11 +1414,11 @@ public class SpellsGen
         addSpell(Spells.POCKET_ROCKET, new Spell(ItemSpellIcon.make(new ItemStack(Items.FIREWORK_ROCKET)), Spells.KEY_POCKET_ROCKET, 8F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make(ACTIVE, "success", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.GUNPOWDER, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
+                .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.GUNPOWDER, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
                 .addAction(ActivateAction.make(ACTIVE, "success"))
                 .addAction(BurnManaAction.make("success", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("success", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.GUNPOWDER, ForgeRegistries.ITEMS), ONE, null, TRUE))
+                .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.GUNPOWDER, BuiltInRegistries.ITEM), ONE, null, TRUE))
                 .addAction(LabelAction.make("success", "loop"))
                 .addAction(PutVarAction.makeInt("success", Compiler.compileString(" repetitions - 1 ", INT), "repetitions"))
                 .addAction(AddDelayedSpellAction.make("success", OWNER, "fire", Compiler.compileString(" repetitions * time_delay_ticks ", INT), STRING.immediate(""), EMPTY_TAG, eventHookMap()))
@@ -1433,13 +1434,13 @@ public class SpellsGen
                 .addTooltip(itemCostComponent(Items.GUNPOWDER))
         );
         
-        addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);
-        addTemporaryEffectSpell(Spells.TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 13F, 400, 0);
-        addToggleEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 4F, 50, 0);
+        addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT.get(), 50, 0);
+        addTemporaryEffectSpell(Spells.TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT.get(), 13F, 400, 0);
+        addToggleEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT.get(), 4F, 50, 0);
         
-        addPermanentEffectSpell(Spells.PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE_DESC, BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get(), 50, 0);
-        addTemporaryEffectSpell(Spells.TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE_DESC, BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get(), 13F, 400, 0);
-        addToggleEffectSpell(Spells.TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE_DESC, BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get(), 4F, 50, 0);
+        addPermanentEffectSpell(Spells.PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get(), 50, 0);
+        addTemporaryEffectSpell(Spells.TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get(), 13F, 400, 0);
+        addToggleEffectSpell(Spells.TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get(), 4F, 50, 0);
         
         addPermanentEffectSpell(Spells.PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 50, 0);
         addTemporaryEffectSpell(Spells.TEMPORARY_SPEED, Spells.KEY_TEMPORARY_SPEED, Spells.KEY_TEMPORARY_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 13F, 400, 0);
@@ -1564,10 +1565,10 @@ public class SpellsGen
         System.out.println("ABCDEFG=".repeat(50));
         level.getRecipeManager().getAllRecipesFor(RecipeType.BLASTING).stream().map(RecipeHolder::value).forEach(r ->
         {
-            String out = ForgeRegistries.ITEMS.getKey(r.getResultItem(access).getItem()).toString();
+            String out = BuiltInRegistries.ITEM.getKey(r.getResultItem(access).getItem()).toString();
             r.getIngredients().forEach(i ->
             {
-                Arrays.stream(i.getItems()).map(it -> ForgeRegistries.ITEMS.getKey(it.getItem()).toString()).forEach(item ->
+                Arrays.stream(i.getItems()).map(it -> BuiltInRegistries.ITEM.getKey(it.getItem()).toString()).forEach(item ->
                 {
                     System.out.printf("blastRecipes.putString(\"%s\", \"%s\");\n", item, out);
                 });

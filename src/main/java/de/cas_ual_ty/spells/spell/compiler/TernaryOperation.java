@@ -66,7 +66,7 @@ public class TernaryOperation
         
         if(entry == null && SpellsConfig.DEBUG_SPELLS.get())
         {
-            SpellsAndShields.LOGGER.info("Can not execute ternary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.get().getKey(operant1) + ", " + CtxVarTypes.REGISTRY.get().getKey(operant2) + ", " + CtxVarTypes.REGISTRY.get().getKey(operant3));
+            SpellsAndShields.LOGGER.info("Can not execute ternary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.getKey(operant1) + ", " + CtxVarTypes.REGISTRY.getKey(operant2) + ", " + CtxVarTypes.REGISTRY.getKey(operant3));
         }
         
         return entry;

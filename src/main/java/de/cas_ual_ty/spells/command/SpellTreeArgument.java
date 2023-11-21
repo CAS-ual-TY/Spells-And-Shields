@@ -42,7 +42,7 @@ public class SpellTreeArgument implements ArgumentType<SpellTree>
         ResourceLocation resourceLocation = ResourceLocation.read(reader);
         Optional<Holder.Reference<SpellTree>> spell = spellTrees.get(ResourceKey.create(SpellTrees.REGISTRY_KEY, resourceLocation));
         
-        return spell.orElseThrow(UNKNOWN_SPELL_TREE::create).get();
+        return spell.orElseThrow(UNKNOWN_SPELL_TREE::create).value();
     }
     
     @Override

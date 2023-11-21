@@ -12,13 +12,13 @@ public record RunActionOnClientMessage(SyncedSpellActionType<?, ?> actionType, I
 {
     public static void encode(RunActionOnClientMessage msg, FriendlyByteBuf buf)
     {
-        buf.writeRegistryId(SpellActionTypes.REGISTRY.get(), msg.actionType());
+        buf.writeById(SpellActionTypes.REGISTRY::getId, msg.actionType());
         msg.action().writeToBuf(buf);
     }
     
     public static RunActionOnClientMessage decode(FriendlyByteBuf buf)
     {
-        SpellActionType<?> type = buf.readRegistryId();
+        SpellActionType<?> type = buf.readById(SpellActionTypes.REGISTRY::byId);
         
         if(type instanceof SyncedSpellActionType<?, ?> syncedType)
         {

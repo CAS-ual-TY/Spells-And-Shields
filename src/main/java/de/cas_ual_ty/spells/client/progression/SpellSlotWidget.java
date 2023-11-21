@@ -11,15 +11,16 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.advancements.AdvancementWidgetType;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
@@ -29,8 +30,6 @@ import java.util.function.IntConsumer;
 
 public class SpellSlotWidget extends Button
 {
-    public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
-    
     public final int slot;
     
     public SpellSlotWidget(int x, int y, int slot, IntConsumer onPress)
@@ -43,13 +42,15 @@ public class SpellSlotWidget extends Button
     {
         if(!active || isMouseOver(mouseX, mouseY))
         {
-            // gold frame
-            guiGraphics.blit(WIDGETS_LOCATION, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128 + SpellNodeWidget.FRAME_HEIGHT, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            // white frame
+            guiGraphics.blitSprite(AdvancementWidgetType.UNOBTAINED.frameSprite(FrameType.GOAL), getX(), getY(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            //guiGraphics.blit(WIDGETS_LOCATION, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128 + SpellNodeWidget.FRAME_HEIGHT, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
         else
         {
-            // white frame
-            guiGraphics.blit(WIDGETS_LOCATION, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            // gold frame
+            guiGraphics.blitSprite(AdvancementWidgetType.OBTAINED.frameSprite(FrameType.GOAL), getX(), getY(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
+            //guiGraphics.blit(WIDGETS_LOCATION, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
     }
     
@@ -73,7 +74,7 @@ public class SpellSlotWidget extends Button
                 
                 if(spell != null && spell.getSpell() != null)
                 {
-                    SpellIcon icon = spell.getSpell().get().getIcon();
+                    SpellIcon icon = spell.getSpell().value().getIcon();
                     SpellIconRegistry.render(icon, guiGraphics, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, getX(), getY(), deltaTick);
                 }
             });
@@ -105,7 +106,7 @@ public class SpellSlotWidget extends Button
                     guiGraphics.pose().translate(0, 0, 10D);
                     
                     Component keyBindTooltip = SpellKeyBindings.getBaseTooltip().append(": ").append(SpellKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
-                    List<Component> tooltip = spell.getSpell().get().makeTooltipList(keyBindTooltip);
+                    List<Component> tooltip = spell.getSpell().value().makeTooltipList(keyBindTooltip);
                     Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
                     
                     if(SpellsClientConfig.SHOW_IDS.get())

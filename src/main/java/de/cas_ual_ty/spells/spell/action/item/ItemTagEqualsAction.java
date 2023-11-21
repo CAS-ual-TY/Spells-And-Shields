@@ -13,9 +13,9 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class ItemTagEqualsAction extends AffectSingleTypeAction<ItemTarget>
 {
@@ -24,7 +24,7 @@ public class ItemTagEqualsAction extends AffectSingleTypeAction<ItemTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                TagKey.codec(ForgeRegistries.ITEMS.getRegistryKey()).fieldOf("item_tag").forGetter(ItemTagEqualsAction::getItemTag),
+                TagKey.codec(BuiltInRegistries.ITEM.key()).fieldOf("item_tag").forGetter(ItemTagEqualsAction::getItemTag),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_count")).forGetter(ItemTagEqualsAction::getMinimumCount),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("minimum_durability")).forGetter(ItemTagEqualsAction::getMinimumDurability)
         ).apply(instance, (activation, singleTarget, itemTag, minimumCount, minimumDurability) -> new ItemTagEqualsAction(type, activation, singleTarget, itemTag, minimumCount, minimumDurability)));

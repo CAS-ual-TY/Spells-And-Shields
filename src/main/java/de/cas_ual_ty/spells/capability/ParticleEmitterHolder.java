@@ -11,6 +11,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -20,7 +21,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.LinkedList;
 
@@ -198,7 +198,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             buf.writeFloat((float) offset.x);
             buf.writeFloat((float) offset.y);
             buf.writeFloat((float) offset.z);
-            buf.writeRegistryId(ForgeRegistries.PARTICLE_TYPES, particle.getType());
+            buf.writeById(BuiltInRegistries.PARTICLE_TYPE::getId, particle.getType());
             particle.writeToNetwork(buf);
             buf.writeInt(time);
         }
@@ -211,7 +211,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             double spread = buf.readFloat();
             boolean motionSpread = buf.readBoolean();
             Vec3 offset = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
-            ParticleType<P> particleType = buf.readRegistryId();
+            ParticleType<P> particleType = (ParticleType<P>) buf.readById(BuiltInRegistries.PARTICLE_TYPE::byId);
             P particle = particleType.getDeserializer().fromNetwork(particleType, buf);
             int time = buf.readInt();
             return new ParticleEmitter(duration, delay, amount, spread, motionSpread, offset, particle, time);

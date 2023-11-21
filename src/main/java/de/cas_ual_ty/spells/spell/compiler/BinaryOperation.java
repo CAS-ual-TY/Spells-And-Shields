@@ -106,7 +106,7 @@ public class BinaryOperation
         
         if(entry == null && SpellsConfig.DEBUG_SPELLS.get())
         {
-            SpellsAndShields.LOGGER.info("Can not execute binary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.get().getKey(operant1) + ", " + CtxVarTypes.REGISTRY.get().getKey(operant2));
+            SpellsAndShields.LOGGER.info("Can not execute binary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.getKey(operant1) + ", " + CtxVarTypes.REGISTRY.getKey(operant2));
         }
         
         return entry;

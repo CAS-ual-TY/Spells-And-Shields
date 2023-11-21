@@ -10,16 +10,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
-import net.neoforged.neoforge.registries.IForgeRegistry;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
-import net.neoforged.neoforge.registries.RegistryBuilder;
 
-import java.util.function.Supplier;
+import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class Spells
 {
-    private static Supplier<IForgeRegistry<Spell>> REGISTRY;
-    public static ResourceKey<Registry<Spell>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(SpellsAndShields.MOD_ID, "spells"));
+    public static final ResourceKey<Registry<Spell>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MOD_ID, "spells"));
     
     public static Registry<Spell> getRegistry(LevelAccessor level)
     {
@@ -362,7 +359,7 @@ public class Spells
     
     private static void newRegistry(NewRegistryEvent event)
     {
-        REGISTRY = event.create(new RegistryBuilder<Spell>().setMaxID(2048).setName(REGISTRY_KEY.location()));
+        //event.create(new RegistryBuilder<>(REGISTRY_KEY).maxId(2048));
     }
     
     private static void newDataPackRegistry(DataPackRegistryEvent.NewRegistry event)

@@ -64,10 +64,12 @@ public class SelectedSpellWidget
             int x = this.x;
             int y = this.y;
             
-            guiGraphics.blit(WIDGETS_LOCATION, x, y, 0, clickedWidget.titleIcon * FRAME_HEIGHT, w1, FRAME_HEIGHT);
-            guiGraphics.blit(WIDGETS_LOCATION, x + w1, y, BAR_WIDTH - w2, clickedWidget.titleIcon * FRAME_HEIGHT, w2, FRAME_HEIGHT);
+            guiGraphics.blitSprite(clickedWidget.titleIcon, x, y, w, FRAME_HEIGHT);
+            //guiGraphics.blit(WIDGETS_LOCATION, x, y, 0, clickedWidget.titleIcon * FRAME_HEIGHT, w1, FRAME_HEIGHT);
+            //guiGraphics.blit(WIDGETS_LOCATION, x + w1, y, BAR_WIDTH - w2, clickedWidget.titleIcon * FRAME_HEIGHT, w2, FRAME_HEIGHT);
             
-            guiGraphics.blit(WIDGETS_LOCATION, this.x + TITLE_PADDING_LEFT, this.y, clickedWidget.frameIcon * FRAME_WIDTH, 128 + (clickedWidget.spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+            guiGraphics.blitSprite(clickedWidget.frameIcon, this.x + TITLE_PADDING_LEFT, this.y, FRAME_WIDTH, FRAME_HEIGHT);
+            //guiGraphics.blit(WIDGETS_LOCATION, this.x + TITLE_PADDING_LEFT, this.y, clickedWidget.frameIcon * FRAME_WIDTH, 128 + (clickedWidget.spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
             guiGraphics.drawString(font, clickedWidget.title, (float) (this.x + TITLE_X), (float) (this.y + TITLE_Y), 0xFFFFFFFF, true);
             
             SpellIconRegistry.render(clickedWidget.spellTexture, guiGraphics, SPELL_WIDTH, SPELL_HEIGHT, this.x + SpellNodeWidget.FRAME_OFF_X, this.y + FRAME_OFF_Y, deltaTick);
@@ -86,7 +88,7 @@ public class SelectedSpellWidget
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(0, 0, 400D);
                 
-                List<Component> tooltip = spellInstance.getSpell().get().makeTooltipList(null);
+                List<Component> tooltip = spellInstance.getSpell().value().makeTooltipList(null);
                 Optional<TooltipComponent> tooltipComponent = clickedWidget.spellNode.getSpellInstance().getTooltipComponent();
                 
                 if(SpellsClientConfig.SHOW_IDS.get())

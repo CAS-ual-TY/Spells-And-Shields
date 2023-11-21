@@ -10,7 +10,7 @@ import de.cas_ual_ty.spells.spell.action.base.GetTargetAttributeAction;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.util.ParamNames;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget>
 {
@@ -51,7 +51,7 @@ public class GetItemAttributesAction extends GetTargetAttributeAction<ItemTarget
         
         if(!item.isEmpty())
         {
-            addVariableAttribute(i -> ForgeRegistries.ITEMS.getKey(i.getItem().getItem()).toString(), CtxVarTypes.STRING.get(), item);
+            addVariableAttribute(i -> BuiltInRegistries.ITEM.getKey(i.getItem().getItem()).toString(), CtxVarTypes.STRING.get(), item);
         }
         
         if(!amount.isEmpty())

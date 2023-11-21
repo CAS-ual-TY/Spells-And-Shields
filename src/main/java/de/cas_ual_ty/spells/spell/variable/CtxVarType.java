@@ -102,6 +102,6 @@ public class CtxVarType<T>
     @Override
     public String toString()
     {
-        return CtxVarTypes.REGISTRY.get().getKey(this).toString();
+        return CtxVarTypes.REGISTRY.getKey(this).toString();
     }
 }

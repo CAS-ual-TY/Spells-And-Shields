@@ -350,7 +350,7 @@ public class SpellTree
         
         public SpellTree finish()
         {
-            return new SpellTree(root, title, icon != null ? icon : root.getSpellInstance().getSpell().get().getIcon());
+            return new SpellTree(root, title, icon != null ? icon : root.getSpellInstance().getSpell().value().getIcon());
         }
     }
 }

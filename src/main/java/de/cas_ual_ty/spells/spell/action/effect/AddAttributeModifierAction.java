@@ -14,9 +14,9 @@ import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -101,7 +101,7 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget target)
     {
-        SpellsUtil.stringToObject(ctx, attribute, ForgeRegistries.ATTRIBUTES).ifPresent(attribute ->
+        SpellsUtil.stringToObject(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
         {
             AttributeInstance a = target.getLivingEntity().getAttribute(attribute);
             

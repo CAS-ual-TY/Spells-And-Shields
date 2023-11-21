@@ -84,7 +84,7 @@ public class UnaryOperation
         
         if(entry == null && SpellsConfig.DEBUG_SPELLS.get())
         {
-            SpellsAndShields.LOGGER.info("Can not execute unary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.get().getKey(operant));
+            SpellsAndShields.LOGGER.info("Can not execute unary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.getKey(operant));
         }
         
         return entry;

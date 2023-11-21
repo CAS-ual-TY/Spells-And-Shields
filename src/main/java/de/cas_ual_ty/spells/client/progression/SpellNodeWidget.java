@@ -6,10 +6,12 @@ import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
+import net.minecraft.advancements.FrameType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.advancements.AdvancementWidgetType;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -24,7 +26,7 @@ import java.util.function.Predicate;
 
 public class SpellNodeWidget
 {
-    public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/advancements/widgets.png");
+    public static final ResourceLocation TITLE_BOX_SPRITE = new ResourceLocation("advancements/title_box");
     public static final int[] TEXT_OFFSETS = new int[] {0, 10, -10, 25, -25};
     
     public static final int BAR_WIDTH = 200;
@@ -64,8 +66,8 @@ public class SpellNodeWidget
     protected int x;
     protected int y;
     
-    public final int frameIcon;
-    public final int titleIcon;
+    public final ResourceLocation frameIcon;
+    public final ResourceLocation titleIcon;
     
     public SpellNodeWidget(SpellTreeTab skillTreeTab, SpellNode spell, SpellStatus spellStatus)
     {
@@ -84,12 +86,12 @@ public class SpellNodeWidget
         
         width = 29 + font.width(title) + TITLE_PADDING_LEFT + TITLE_PADDING_RIGHT;
         
-        frameIcon = spell.getFrame();
+        frameIcon = spellStatus == SpellStatus.LEARNED ? AdvancementWidgetType.OBTAINED.frameSprite(FrameType.values()[spell.getFrame()]) : AdvancementWidgetType.UNOBTAINED.frameSprite(FrameType.values()[spell.getFrame()]);
         
         // 0 = gold = available
         // 1 = blue = buyable
         // 2 = black = not available & not buyable
-        titleIcon = (spellStatus == SpellStatus.LEARNED ? 0 : ProgressionHelper.isFullyLinked(spell, tab.getScreen().getMenu().spellProgression) ? 1 : 2);
+        titleIcon = (spellStatus == SpellStatus.LEARNED ? AdvancementWidgetType.OBTAINED.boxSprite() : ProgressionHelper.isFullyLinked(spell, tab.getScreen().getMenu().spellProgression) ? AdvancementWidgetType.UNOBTAINED.boxSprite() : TITLE_BOX_SPRITE);
     }
     
     private static float getMaxWidth(StringSplitter stringSplitter, List<FormattedText> list)
@@ -237,7 +239,8 @@ public class SpellNodeWidget
         RenderSystem.enableBlend();
         
         // frame icon
-        guiGraphics.blit(WIDGETS_LOCATION, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        guiGraphics.blitSprite(frameIcon, x + this.x + TITLE_PADDING_LEFT, y + this.y, FRAME_WIDTH, FRAME_HEIGHT);
+        //guiGraphics.blit(WIDGETS_LOCATION, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         // spell icon
         SpellIconRegistry.render(spellTexture, guiGraphics, SPELL_WIDTH, SPELL_HEIGHT, this.x + x + FRAME_OFF_X, this.y + y + FRAME_OFF_Y, deltaTick);
@@ -275,11 +278,13 @@ public class SpellNodeWidget
         int renderX = scrollX + x + (drawLeft ? 6 - this.width + FRAME_WIDTH : 0);
         
         // wide back frame
-        guiGraphics.blit(WIDGETS_LOCATION, renderX, renderY, 0, titleIcon * BAR_HEIGHT, left, BAR_HEIGHT);
-        guiGraphics.blit(WIDGETS_LOCATION, renderX + left, renderY, BAR_WIDTH - right, titleIcon * BAR_HEIGHT, right, BAR_HEIGHT);
+        guiGraphics.blitSprite(titleIcon, renderX, renderY, this.width, BAR_HEIGHT);
+        //guiGraphics.blit(WIDGETS_LOCATION, renderX, renderY, 0, titleIcon * BAR_HEIGHT, left, BAR_HEIGHT);
+        //guiGraphics.blit(WIDGETS_LOCATION, renderX + left, renderY, BAR_WIDTH - right, titleIcon * BAR_HEIGHT, right, BAR_HEIGHT);
         
         // front frame icon
-        guiGraphics.blit(WIDGETS_LOCATION, scrollX + x + TITLE_PADDING_LEFT, scrollY + y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
+        guiGraphics.blitSprite(frameIcon, scrollX + x + TITLE_PADDING_LEFT, scrollY + y, FRAME_WIDTH, FRAME_HEIGHT);
+        //guiGraphics.blit(WIDGETS_LOCATION, scrollX + x + TITLE_PADDING_LEFT, scrollY + y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         if(drawLeft)
         {

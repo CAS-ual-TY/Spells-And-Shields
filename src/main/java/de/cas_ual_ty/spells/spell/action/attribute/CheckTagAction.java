@@ -9,12 +9,12 @@ import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.neoforged.neoforge.registries.IForgeRegistry;
-import net.neoforged.neoforge.registries.RegistryManager;
 
 public class CheckTagAction extends SpellAction
 {
@@ -82,16 +82,16 @@ public class CheckTagAction extends SpellAction
     
     protected <V> boolean isTag(String registryRL, String tagRL, String entryRL)
     {
-        IForgeRegistry<V> registry = RegistryManager.ACTIVE.getRegistry(new ResourceLocation(registryRL));
+        Registry<V> registry = (Registry<V>) BuiltInRegistries.REGISTRY.get(new ResourceLocation(registryRL));
         
-        if(registry == null || registry.tags() == null)
+        if(registry == null)
         {
             return false;
         }
         
-        ResourceKey<Registry<V>> registryKey = registry.getRegistryKey();
+        ResourceKey<? extends Registry<V>> registryKey = registry.key();
         TagKey<V> tagKey = TagKey.create(registryKey, new ResourceLocation(tagRL));
         
-        return registry.tags().getTag(tagKey).contains(registry.getValue(new ResourceLocation(entryRL)));
+        return registry.getTag(tagKey).map(tag -> tag.contains(Holder.direct(registry.get(new ResourceLocation(entryRL))))).orElse(false);
     }
 }

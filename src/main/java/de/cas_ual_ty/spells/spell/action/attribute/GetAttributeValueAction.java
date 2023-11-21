@@ -14,8 +14,8 @@ import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class GetAttributeValueAction extends AffectSingleTypeAction<LivingEntityTarget>
 {
@@ -76,7 +76,7 @@ public class GetAttributeValueAction extends AffectSingleTypeAction<LivingEntity
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget livingEntityTarget)
     {
-        SpellsUtil.stringToObject(ctx, attribute, ForgeRegistries.ATTRIBUTES).ifPresent(attribute ->
+        SpellsUtil.stringToObject(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
         {
             AttributeInstance a = livingEntityTarget.getLivingEntity().getAttribute(attribute);
             

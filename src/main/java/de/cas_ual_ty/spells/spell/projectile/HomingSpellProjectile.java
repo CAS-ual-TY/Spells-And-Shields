@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.spell.projectile;
 
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -102,7 +102,7 @@ public class HomingSpellProjectile extends SpellProjectile
         {
             Vec3 direction = target.getEyePosition().subtract(position).normalize();
             
-            HomingSpellProjectile projectile = new HomingSpellProjectile(BuiltinRegistries.HOMING_SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+            HomingSpellProjectile projectile = new HomingSpellProjectile(BuiltInRegisters.HOMING_SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
             projectile.setOwnerAndTarget(source, target);
             
             projectile.moveTo(position.x, position.y, position.z, 0F, 0F);

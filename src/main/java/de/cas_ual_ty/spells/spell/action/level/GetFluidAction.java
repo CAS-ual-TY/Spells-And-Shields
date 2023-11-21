@@ -15,7 +15,7 @@ import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class GetFluidAction extends AffectSingleTypeAction<PositionTarget>
 {
@@ -85,7 +85,7 @@ public class GetFluidAction extends AffectSingleTypeAction<PositionTarget>
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PositionTarget positionTarget)
     {
         FluidState fluidState = ctx.level.getFluidState(positionTarget.getBlockPos());
-        ResourceLocation id = ForgeRegistries.FLUID_TYPES.get().getKey(fluidState.getFluidType());
+        ResourceLocation id = NeoForgeRegistries.FLUID_TYPES.getKey(fluidState.getFluidType());
         
         if(id == null)
         {

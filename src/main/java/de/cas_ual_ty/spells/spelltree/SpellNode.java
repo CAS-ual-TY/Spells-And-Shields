@@ -119,7 +119,7 @@ public class SpellNode
     
     public Spell getSpellDirect()
     {
-        return spell.getSpell().get();
+        return spell.getSpell().value();
     }
     
     public boolean passesHidden(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)

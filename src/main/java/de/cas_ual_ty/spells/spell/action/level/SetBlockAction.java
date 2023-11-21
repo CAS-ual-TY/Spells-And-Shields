@@ -14,8 +14,8 @@ import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class SetBlockAction extends AffectTypeAction<PositionTarget>
 {
@@ -68,7 +68,7 @@ public class SetBlockAction extends AffectTypeAction<PositionTarget>
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, PositionTarget positionTarget)
     {
-        SpellsUtil.stringToObject(ctx, block, ForgeRegistries.BLOCKS).ifPresent(block ->
+        SpellsUtil.stringToObject(ctx, block, BuiltInRegistries.BLOCK).ifPresent(block ->
         {
             blockState.getValue(ctx).ifPresent(blockState ->
             {

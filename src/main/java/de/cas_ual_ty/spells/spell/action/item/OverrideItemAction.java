@@ -14,9 +14,9 @@ import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class OverrideItemAction extends AffectSingleTypeAction<ItemTarget>
 {
@@ -79,7 +79,7 @@ public class OverrideItemAction extends AffectSingleTypeAction<ItemTarget>
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, ItemTarget itemTarget)
     {
-        SpellsUtil.stringToObject(ctx, item, ForgeRegistries.ITEMS).ifPresent(item ->
+        SpellsUtil.stringToObject(ctx, item, BuiltInRegistries.ITEM).ifPresent(item ->
         {
             ItemStack newStack = new ItemStack(item);
             

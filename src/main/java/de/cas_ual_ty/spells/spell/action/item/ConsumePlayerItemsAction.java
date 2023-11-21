@@ -14,10 +14,10 @@ import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarge
             return;
         }
         
-        SpellsUtil.stringToObject(ctx, item, ForgeRegistries.ITEMS).ifPresent(item ->
+        SpellsUtil.stringToObject(ctx, item, BuiltInRegistries.ITEM).ifPresent(item ->
         {
             amount.getValue(ctx).ifPresent(amount ->
             {
