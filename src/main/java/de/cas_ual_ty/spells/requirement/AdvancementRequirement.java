@@ -89,6 +89,6 @@ public class AdvancementRequirement extends Requirement
     @Override
     public void readFromBuf(FriendlyByteBuf buf)
     {
-        advancementRL = buf.readRegistryId();
+        advancementRL = buf.readResourceLocation();
     }
 }
