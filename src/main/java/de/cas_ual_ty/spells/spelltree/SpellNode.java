@@ -145,7 +145,7 @@ public class SpellNode
     
     public boolean canLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return spellProgressionHolder.getPlayer().isCreative() || (spellProgressionHolder.getPlayer().experienceLevel >= levelCost && passesLearn(spellProgressionHolder, access));
+        return (spellProgressionHolder.getPlayer().experienceLevel >= levelCost || spellProgressionHolder.getPlayer().isCreative()) && passesLearn(spellProgressionHolder, access);
     }
     
     public List<Component> getTooltip(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
