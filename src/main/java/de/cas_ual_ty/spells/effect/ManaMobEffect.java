@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.effect;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,11 +26,11 @@ public class ManaMobEffect extends MobEffect
         
         ManaHolder.getManaHolder(entity).ifPresent(manaHolder1 ->
         {
-            if(this == BuiltinRegistries.REPLENISHMENT_EFFECT.get())
+            if(this == BuiltInRegisters.REPLENISHMENT_EFFECT.get())
             {
                 manaHolder1.replenish(1F);
             }
-            else if(this == BuiltinRegistries.LEAKING_MOB_EFFECT.get())
+            else if(this == BuiltInRegisters.LEAKING_MOB_EFFECT.get())
             {
                 manaHolder1.burn(1F);
             }
@@ -40,7 +40,7 @@ public class ManaMobEffect extends MobEffect
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier)
     {
-        if(this == BuiltinRegistries.REPLENISHMENT_EFFECT.get())
+        if(this == BuiltInRegisters.REPLENISHMENT_EFFECT.get())
         {
             int k = 50 >> amplifier;
             if(k > 0)
@@ -52,7 +52,7 @@ public class ManaMobEffect extends MobEffect
                 return true;
             }
         }
-        else if(this == BuiltinRegistries.LEAKING_MOB_EFFECT.get())
+        else if(this == BuiltInRegisters.LEAKING_MOB_EFFECT.get())
         {
             int j = 25 >> amplifier;
             if(j > 0)

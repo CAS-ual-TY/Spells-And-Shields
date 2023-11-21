@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.enchantment;
 
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
@@ -13,7 +13,7 @@ public class ManaShieldEnchantment extends Enchantment
     
     public ManaShieldEnchantment(Rarity rarity, EquipmentSlot... equipmentSlots)
     {
-        super(rarity, BuiltinRegistries.SHIELD_ENCHANTMENT_CATEGORY, equipmentSlots);
+        super(rarity, BuiltInRegisters.SHIELD_ENCHANTMENT_CATEGORY, equipmentSlots);
     }
     
     @Override

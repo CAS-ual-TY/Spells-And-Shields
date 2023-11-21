@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.effect;
 
 import de.cas_ual_ty.spells.capability.ManaHolder;
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
@@ -45,12 +45,12 @@ public class InstantManaMobEffect extends MobEffect
         
         ManaHolder.getManaHolder(entity).ifPresent(manaHolder1 ->
         {
-            if(this == BuiltinRegistries.INSTANT_MANA_EFFECT.get())
+            if(this == BuiltInRegisters.INSTANT_MANA_EFFECT.get())
             {
                 int health = (int) (strength * (double) (4 << level) + 0.5D);
                 manaHolder1.replenish(health);
             }
-            else if(this == BuiltinRegistries.MANA_BOMB_EFFECT.get())
+            else if(this == BuiltInRegisters.MANA_BOMB_EFFECT.get())
             {
                 int damage = (int) (strength * (double) (6 << level) + 0.5D);
                 manaHolder1.burn(damage);
