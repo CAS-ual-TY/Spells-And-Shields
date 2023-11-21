@@ -71,7 +71,7 @@ import java.util.List;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
-public class BuiltinRegistries
+public class BuiltInRegisters
 {
     private static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
     public static final RegistryObject<RangedAttribute> MAX_MANA_ATTRIBUTE = ATTRIBUTES.register("generic.max_mana", () -> (RangedAttribute) new RangedAttribute("attribute.name.generic.max_mana", 20D, 0D, 1024D).setSyncable(true));
@@ -133,15 +133,15 @@ public class BuiltinRegistries
     
     public static void addPotionRecipes()
     {
-        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltinRegistries.INSTANT_MANA.get(), BuiltinRegistries.STRONG_INSTANT_MANA.get(), null, Items.TUBE_CORAL, BuiltinRegistries.MANA_BOMB.get(), BuiltinRegistries.STRONG_MANA_BOMB.get(), null, Items.FERMENTED_SPIDER_EYE);
-        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltinRegistries.REPLENISHMENT.get(), BuiltinRegistries.STRONG_REPLENISHMENT.get(), BuiltinRegistries.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
-        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltinRegistries.LEAKING.get(), BuiltinRegistries.STRONG_LEAKING.get(), BuiltinRegistries.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltInRegisters.INSTANT_MANA.get(), BuiltInRegisters.STRONG_INSTANT_MANA.get(), null, Items.TUBE_CORAL, BuiltInRegisters.MANA_BOMB.get(), BuiltInRegisters.STRONG_MANA_BOMB.get(), null, Items.FERMENTED_SPIDER_EYE);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltInRegisters.REPLENISHMENT.get(), BuiltInRegisters.STRONG_REPLENISHMENT.get(), BuiltInRegisters.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltInRegisters.LEAKING.get(), BuiltInRegisters.STRONG_LEAKING.get(), BuiltInRegisters.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
     }
     
     private static void entityAttributeModification(EntityAttributeModificationEvent event)
     {
-        event.add(EntityType.PLAYER, BuiltinRegistries.MAX_MANA_ATTRIBUTE.get());
-        event.add(EntityType.PLAYER, BuiltinRegistries.MANA_REGENERATION_ATTRIBUTE.get());
+        event.add(EntityType.PLAYER, BuiltInRegisters.MAX_MANA_ATTRIBUTE.get());
+        event.add(EntityType.PLAYER, BuiltInRegisters.MANA_REGENERATION_ATTRIBUTE.get());
     }
     
     private static void registerCommands(RegisterCommandsEvent event)
@@ -151,7 +151,7 @@ public class BuiltinRegistries
     
     private static void livingHurt(LivingHurtEvent event)
     {
-        if(!event.getEntity().level().isClientSide && event.getSource().is(DamageTypes.MAGIC) && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && event.getEntity().hasEffect(BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get()))
+        if(!event.getEntity().level().isClientSide && event.getSource().is(DamageTypes.MAGIC) && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && event.getEntity().hasEffect(BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get()))
         {
             event.setCanceled(true);
         }
@@ -202,9 +202,9 @@ public class BuiltinRegistries
     
     public static void registerEvents()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(BuiltinRegistries::entityAttributeModification);
-        MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::registerCommands);
-        MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::livingHurt);
-        MinecraftForge.EVENT_BUS.addListener(BuiltinRegistries::rightClickBlock);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(BuiltInRegisters::entityAttributeModification);
+        MinecraftForge.EVENT_BUS.addListener(BuiltInRegisters::registerCommands);
+        MinecraftForge.EVENT_BUS.addListener(BuiltInRegisters::livingHurt);
+        MinecraftForge.EVENT_BUS.addListener(BuiltInRegisters::rightClickBlock);
     }
 }

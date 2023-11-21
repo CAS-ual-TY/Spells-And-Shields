@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -126,7 +126,7 @@ public class ManaRenderer implements IGuiOverlay
                 
                 int regen = -1;
                 
-                if(player.hasEffect(BuiltinRegistries.REPLENISHMENT_EFFECT.get()))
+                if(player.hasEffect(BuiltInRegisters.REPLENISHMENT_EFFECT.get()))
                 {
                     regen = gui.getGuiTicks() % Mth.ceil(manaMax + 5F);
                 }
@@ -243,7 +243,7 @@ public class ManaRenderer implements IGuiOverlay
         
         static UnitType forPlayer(Player player)
         {
-            if(player.hasEffect(BuiltinRegistries.LEAKING_MOB_EFFECT.get()))
+            if(player.hasEffect(BuiltInRegisters.LEAKING_MOB_EFFECT.get()))
             {
                 return DRAINED;
             }

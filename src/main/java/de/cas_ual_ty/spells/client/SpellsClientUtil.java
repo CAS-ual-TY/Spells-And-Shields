@@ -10,7 +10,7 @@ import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
 import de.cas_ual_ty.spells.client.progression.SpellSlotWidget;
 import de.cas_ual_ty.spells.network.RequestSpellProgressionMenuMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.spell.projectile.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.projectile.SpellProjectile;
@@ -73,7 +73,7 @@ public class SpellsClientUtil
     
     private static void clientSetup(FMLClientSetupEvent event)
     {
-        MenuScreens.register(BuiltinRegistries.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
+        MenuScreens.register(BuiltInRegisters.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
         SpellIconRegistry.register(SpellIconTypes.DEFAULT.get(), SpellIconRegistry.DEFAULT_RENDERER);
         SpellIconRegistry.register(SpellIconTypes.SIZED.get(), SpellIconRegistry.SIZED_RENDERER);
         SpellIconRegistry.register(SpellIconTypes.ADVANCED.get(), SpellIconRegistry.ADVANCED_RENDERER);
@@ -83,7 +83,7 @@ public class SpellsClientUtil
     
     private static void entityRenderers(EntityRenderersEvent.RegisterRenderers event)
     {
-        event.registerEntityRenderer(BuiltinRegistries.SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
+        event.registerEntityRenderer(BuiltInRegisters.SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
         {
             @Override
             public ResourceLocation getTextureLocation(SpellProjectile pEntity)
@@ -91,7 +91,7 @@ public class SpellsClientUtil
                 return null;
             }
         });
-        event.registerEntityRenderer(BuiltinRegistries.HOMING_SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
+        event.registerEntityRenderer(BuiltInRegisters.HOMING_SPELL_PROJECTILE.get(), (context) -> new EntityRenderer<>(context)
         {
             @Override
             public ResourceLocation getTextureLocation(HomingSpellProjectile pEntity)

@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.ManaSyncMessage;
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -128,7 +128,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
     
     public float getMaxMana()
     {
-        AttributeInstance attrMana = player.getAttribute(BuiltinRegistries.MAX_MANA_ATTRIBUTE.get());
+        AttributeInstance attrMana = player.getAttribute(BuiltInRegisters.MAX_MANA_ATTRIBUTE.get());
         
         double attribute = attrMana == null ? 0F : attrMana.getValue();
         
@@ -137,8 +137,8 @@ public class ManaHolder implements INBTSerializable<ListTag>
             if(s.getType() == EquipmentSlot.Type.ARMOR)
             {
                 ItemStack itemStack = player.getItemBySlot(s);
-                int level = itemStack.getEnchantmentLevel(BuiltinRegistries.MAX_MANA_ENCHANTMENT.get());
-                double increase = BuiltinRegistries.MAX_MANA_ENCHANTMENT.get().getAttributeIncrease(level, s);
+                int level = itemStack.getEnchantmentLevel(BuiltInRegisters.MAX_MANA_ENCHANTMENT.get());
+                double increase = BuiltInRegisters.MAX_MANA_ENCHANTMENT.get().getAttributeIncrease(level, s);
                 attribute += increase;
             }
         }
@@ -172,15 +172,15 @@ public class ManaHolder implements INBTSerializable<ListTag>
         
         Player player = (Player) this.player;
         
-        double attribute = player.getAttributeValue(BuiltinRegistries.MANA_REGENERATION_ATTRIBUTE.get());
+        double attribute = player.getAttributeValue(BuiltInRegisters.MANA_REGENERATION_ATTRIBUTE.get());
         
         for(EquipmentSlot s : EquipmentSlot.values())
         {
             if(s.getType() == EquipmentSlot.Type.ARMOR)
             {
                 ItemStack itemStack = player.getItemBySlot(s);
-                int level = itemStack.getEnchantmentLevel(BuiltinRegistries.MANA_REGENERATION_ENCHANTMENT.get());
-                double increase = BuiltinRegistries.MANA_REGENERATION_ENCHANTMENT.get().getAttributeIncrease(level, s);
+                int level = itemStack.getEnchantmentLevel(BuiltInRegisters.MANA_REGENERATION_ENCHANTMENT.get());
+                double increase = BuiltInRegisters.MANA_REGENERATION_ENCHANTMENT.get().getAttributeIncrease(level, s);
                 attribute += increase;
             }
         }

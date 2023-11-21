@@ -1,6 +1,6 @@
 package de.cas_ual_ty.spells.spell.projectile;
 
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
@@ -232,7 +232,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
     {
         if(level0 instanceof ServerLevel level)
         {
-            SpellProjectile projectile = new SpellProjectile(BuiltinRegistries.SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+            SpellProjectile projectile = new SpellProjectile(BuiltInRegisters.SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
             projectile.setOwner(source);
             
             projectile.moveTo(position.x, position.y, position.z, 0F, 0F);

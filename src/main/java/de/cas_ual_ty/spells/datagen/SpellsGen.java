@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.datagen;
 
 import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.registers.BuiltinRegistries;
+import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
@@ -745,7 +745,7 @@ public class SpellsGen
         
         addPermanentAttributeSpell(Spells.HEALTH_BOOST, Spells.KEY_HEALTH_BOOST, Spells.KEY_HEALTH_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/" + ForgeRegistries.MOB_EFFECTS.getKey(MobEffects.HEALTH_BOOST).getPath() + ".png")), Attributes.MAX_HEALTH, AttributeModifier.Operation.ADDITION, 4D);
         
-        addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltinRegistries.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltinRegistries.MAX_MANA_ATTRIBUTE.get(), AttributeModifier.Operation.ADDITION, 4D);
+        addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltInRegisters.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltInRegisters.MAX_MANA_ATTRIBUTE.get(), AttributeModifier.Operation.ADDITION, 4D);
         
         addSpell(Spells.WATER_LEAP, new Spell(modId, "water_leap", Spells.KEY_WATER_LEAP, 5F)
                 .addParameter(DOUBLE, "speed", 2.5)
@@ -1025,7 +1025,7 @@ public class SpellsGen
         addTemporaryWalkerSpell(Spells.TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER_DESC, "lava_walker", Fluids.LAVA.getFluidType(), Blocks.OBSIDIAN.defaultBlockState(), 16F, false, 400);
         addToggleWalkerSpell(Spells.TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER_DESC, "lava_walker", Fluids.LAVA.getFluidType(), Blocks.OBSIDIAN.defaultBlockState(), 5F, false);
         
-        addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(new ResourceLocation(BuiltinRegistries.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltinRegistries.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
+        addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(new ResourceLocation(BuiltInRegisters.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltInRegisters.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ActivateAction.make(ACTIVE, "bypass"))
                 .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.AMETHYST_SHARD, ForgeRegistries.ITEMS), ONE, null, TRUE, TRUE))
@@ -1041,7 +1041,7 @@ public class SpellsGen
                 .addAction(BurnManaAction.make("on_entity_hit", OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make("on_entity_hit", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
                 .addAction(ConsumePlayerItemsAction.make("consume", OWNER, SpellsUtil.objectToString(Items.AMETHYST_SHARD, ForgeRegistries.ITEMS), ONE, null, TRUE))
-                .addAction(ApplyMobEffectAction.make("on_entity_hit", ENTITY_HIT, STRING.immediate(BuiltinRegistries.SILENCE_EFFECT.getId().toString()), INT.reference("silence_seconds"), ZERO, FALSE, TRUE, TRUE))
+                .addAction(ApplyMobEffectAction.make("on_entity_hit", ENTITY_HIT, STRING.immediate(BuiltInRegisters.SILENCE_EFFECT.getId().toString()), INT.reference("silence_seconds"), ZERO, FALSE, TRUE, TRUE))
                 .addAction(PlaySoundAction.make("on_entity_hit", OWNER, SoundEvents.AMETHYST_CLUSTER_HIT, ONE_D, ONE_D))
                 .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT, SoundEvents.AMETHYST_CLUSTER_BREAK, ONE_D, ONE_D))
                 .addAction(SpawnParticlesAction.make("on_entity_hit", HIT_POSITION, ParticleTypes.POOF, INT.immediate(3), DOUBLE.immediate(0.2)))
@@ -1244,7 +1244,7 @@ public class SpellsGen
                 .addAction(PlaySoundAction.make("success", OWNER, SoundEvents.FIRE_EXTINGUISH, ONE_D, ONE_D))
                 .addAction(PlaySoundAction.make("success", "block_to_check", SoundEvents.FIRE_EXTINGUISH, ONE_D, ONE_D))
                 .addAction(HomeAction.make("success", "block_to_check", OWNER, ONE_D, INT.immediate(100), "", "owner_hit", "", ""))
-                .addAction(ApplyMobEffectAction.make("owner_hit", ENTITY_HIT, SpellsUtil.objectToString(BuiltinRegistries.REPLENISHMENT_EFFECT.get(), ForgeRegistries.MOB_EFFECTS), INT.reference("replenishment_duration"), ZERO, FALSE, TRUE, TRUE))
+                .addAction(ApplyMobEffectAction.make("owner_hit", ENTITY_HIT, SpellsUtil.objectToString(BuiltInRegisters.REPLENISHMENT_EFFECT.get(), ForgeRegistries.MOB_EFFECTS), INT.reference("replenishment_duration"), ZERO, FALSE, TRUE, TRUE))
                 .addAction(PlaySoundAction.make("owner_hit", ENTITY_HIT, SoundEvents.FIRE_AMBIENT, ONE_D, ONE_D))
                 .addParameter(DOUBLE, "range", 50D)
                 .addParameter(INT, "replenishment_duration", 100)
@@ -1425,13 +1425,13 @@ public class SpellsGen
                 .addTooltip(itemCostComponent(Items.GUNPOWDER))
         );
         
-        addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 50, 0);
-        addTemporaryEffectSpell(Spells.TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 13F, 400, 0);
-        addToggleEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltinRegistries.REPLENISHMENT_EFFECT.get(), 4F, 50, 0);
+        addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT.get(), 50, 0);
+        addTemporaryEffectSpell(Spells.TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT.get(), 13F, 400, 0);
+        addToggleEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT.get(), 4F, 50, 0);
         
-        addPermanentEffectSpell(Spells.PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE_DESC, BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get(), 50, 0);
-        addTemporaryEffectSpell(Spells.TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE_DESC, BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get(), 13F, 400, 0);
-        addToggleEffectSpell(Spells.TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE_DESC, BuiltinRegistries.MAGIC_IMMUNE_EFFECT.get(), 4F, 50, 0);
+        addPermanentEffectSpell(Spells.PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get(), 50, 0);
+        addTemporaryEffectSpell(Spells.TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get(), 13F, 400, 0);
+        addToggleEffectSpell(Spells.TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get(), 4F, 50, 0);
         
         addPermanentEffectSpell(Spells.PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 50, 0);
         addTemporaryEffectSpell(Spells.TEMPORARY_SPEED, Spells.KEY_TEMPORARY_SPEED, Spells.KEY_TEMPORARY_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 13F, 400, 0);
