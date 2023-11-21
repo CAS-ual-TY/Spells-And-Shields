@@ -41,7 +41,7 @@ public class SpellsAndShields
     {
         SpellsCodecs.makeCodecs();
         
-        BuiltinRegistries.register();
+        BuiltInRegisters.register();
         CtxVarTypes.register();
         RequirementTypes.register();
         SpellActionTypes.register();
@@ -53,7 +53,7 @@ public class SpellsAndShields
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common" + ".toml");
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        BuiltinRegistries.registerEvents();
+        BuiltInRegisters.registerEvents();
         SpellsCapabilities.registerEvents();
         
         CHANNEL.registerMessage(0, ManaSyncMessage.class, ManaSyncMessage::encode, ManaSyncMessage::decode, ManaSyncMessage::handle);
@@ -79,6 +79,6 @@ public class SpellsAndShields
     
     private void setup(FMLCommonSetupEvent event)
     {
-        BuiltinRegistries.addPotionRecipes();
+        BuiltInRegisters.addPotionRecipes();
     }
 }
