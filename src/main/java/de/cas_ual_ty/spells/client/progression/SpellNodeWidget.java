@@ -240,7 +240,6 @@ public class SpellNodeWidget
         
         // frame icon
         guiGraphics.blitSprite(frameIcon, x + this.x + TITLE_PADDING_LEFT, y + this.y, FRAME_WIDTH, FRAME_HEIGHT);
-        //guiGraphics.blit(WIDGETS_LOCATION, x + this.x + TITLE_PADDING_LEFT, y + this.y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         // spell icon
         SpellIconRegistry.render(spellTexture, guiGraphics, SPELL_WIDTH, SPELL_HEIGHT, this.x + x + FRAME_OFF_X, this.y + y + FRAME_OFF_Y, deltaTick);
@@ -279,12 +278,9 @@ public class SpellNodeWidget
         
         // wide back frame
         guiGraphics.blitSprite(titleIcon, renderX, renderY, this.width, BAR_HEIGHT);
-        //guiGraphics.blit(WIDGETS_LOCATION, renderX, renderY, 0, titleIcon * BAR_HEIGHT, left, BAR_HEIGHT);
-        //guiGraphics.blit(WIDGETS_LOCATION, renderX + left, renderY, BAR_WIDTH - right, titleIcon * BAR_HEIGHT, right, BAR_HEIGHT);
         
         // front frame icon
         guiGraphics.blitSprite(frameIcon, scrollX + x + TITLE_PADDING_LEFT, scrollY + y, FRAME_WIDTH, FRAME_HEIGHT);
-        //guiGraphics.blit(WIDGETS_LOCATION, scrollX + x + TITLE_PADDING_LEFT, scrollY + y, frameIcon * FRAME_WIDTH, 128 + (spellStatus.isAvailable() ? 0 : 1) * FRAME_HEIGHT, FRAME_WIDTH, FRAME_HEIGHT);
         
         if(drawLeft)
         {

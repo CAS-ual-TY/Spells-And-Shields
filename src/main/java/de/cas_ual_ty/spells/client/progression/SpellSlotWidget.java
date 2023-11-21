@@ -44,13 +44,11 @@ public class SpellSlotWidget extends Button
         {
             // white frame
             guiGraphics.blitSprite(AdvancementWidgetType.UNOBTAINED.frameSprite(FrameType.GOAL), getX(), getY(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
-            //guiGraphics.blit(WIDGETS_LOCATION, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128 + SpellNodeWidget.FRAME_HEIGHT, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
         else
         {
             // gold frame
             guiGraphics.blitSprite(AdvancementWidgetType.OBTAINED.frameSprite(FrameType.GOAL), getX(), getY(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
-            //guiGraphics.blit(WIDGETS_LOCATION, getX(), getY(), 2 * SpellNodeWidget.FRAME_WIDTH, 128, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
     }
     

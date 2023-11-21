@@ -20,7 +20,6 @@ import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.util.function.Function;
 
@@ -48,14 +47,8 @@ public class SpellTrees
     
     public static void register()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellTrees::newRegistry);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellTrees::newDataPackRegistry);
         NeoForge.EVENT_BUS.addListener(SpellTrees::levelLoad);
-    }
-    
-    private static void newRegistry(NewRegistryEvent event)
-    {
-        //event.create(new RegistryBuilder<>(REGISTRY_KEY).maxId(1024));
     }
     
     private static void newDataPackRegistry(DataPackRegistryEvent.NewRegistry event)

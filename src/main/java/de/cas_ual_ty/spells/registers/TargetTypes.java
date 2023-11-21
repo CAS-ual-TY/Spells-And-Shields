@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
@@ -26,12 +25,6 @@ public class TargetTypes
     
     public static void register()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(TargetTypes::newRegistry);
         DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
-    }
-    
-    private static void newRegistry(NewRegistryEvent event)
-    {
-        //REGISTRY = event.create(new RegistryBuilder<ITargetType<?>>().setMaxID(256).setName(new ResourceLocation(MOD_ID, "targets")));
     }
 }

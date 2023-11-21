@@ -11,7 +11,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
@@ -30,15 +29,9 @@ public class CtxVarTypes
     
     public static void register()
     {
-        //FMLJavaModLoadingContext.get().getModEventBus().addListener(CtxVarTypes::newRegistry);
         DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CtxVarTypes::setup);
-    }
-    
-    private static void newRegistry(NewRegistryEvent event)
-    {
-        event.register(REGISTRY);
     }
     
     private static void setup(FMLCommonSetupEvent event)

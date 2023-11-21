@@ -41,7 +41,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -249,15 +248,9 @@ public class SpellActionTypes
     
     public static void register()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellActionTypes::newRegistry);
         DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
         
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellActionTypes::setup);
-    }
-    
-    private static void newRegistry(NewRegistryEvent event)
-    {
-        //REGISTRY = event.create(new RegistryBuilder<SpellActionType<?>>().setMaxID(1024).setName(new ResourceLocation(MOD_ID, "spell_actions")));
     }
     
     private static void setup(FMLCommonSetupEvent event)

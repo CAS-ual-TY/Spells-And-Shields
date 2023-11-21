@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
@@ -353,13 +352,7 @@ public class Spells
     
     public static void register()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(Spells::newRegistry);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Spells::newDataPackRegistry);
-    }
-    
-    private static void newRegistry(NewRegistryEvent event)
-    {
-        //event.create(new RegistryBuilder<>(REGISTRY_KEY).maxId(2048));
     }
     
     private static void newDataPackRegistry(DataPackRegistryEvent.NewRegistry event)
