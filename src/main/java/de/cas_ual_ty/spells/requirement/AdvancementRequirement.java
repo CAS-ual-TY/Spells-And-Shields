@@ -6,10 +6,12 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+
+import java.util.List;
 
 public class AdvancementRequirement extends Requirement
 {
@@ -19,34 +21,45 @@ public class AdvancementRequirement extends Requirement
                 ResourceLocation.CODEC.fieldOf("advancement").forGetter(AdvancementRequirement::getAdvancementRL)
         ).apply(instance, (advancementRL) -> new AdvancementRequirement(type, advancementRL)));
     }
-    
+
     public static final String ERROR_SUFFIX = ".error";
-    
+
     protected ResourceLocation advancementRL;
-    
+    protected AdvancementHolder advancement;
+
     public AdvancementRequirement(RequirementType<?> type)
     {
         super(type);
     }
-    
+
     public AdvancementRequirement(RequirementType<?> type, ResourceLocation advancementRL)
     {
         this(type);
         this.advancementRL = advancementRL;
     }
-    
+
     public ResourceLocation getAdvancementRL()
     {
         return advancementRL;
     }
-    
+
+    public AdvancementHolder getAdvancement(MinecraftServer server)
+    {
+        if(advancement == null)
+        {
+            advancement = server.getAdvancements().get(advancementRL);
+        }
+
+        return advancement;
+    }
+
     @Override
     protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         if(spellProgressionHolder.getPlayer() instanceof ServerPlayer player)
         {
-            AdvancementHolder a = player.server.getAdvancements().get(advancementRL);
-            
+            AdvancementHolder a = getAdvancement(player.server);
+
             if(a != null)
             {
                 return player.getAdvancements().getOrStartProgress(a).isDone();
@@ -56,30 +69,28 @@ public class AdvancementRequirement extends Requirement
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     @Override
-    public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         if(spellProgressionHolder.getPlayer() instanceof ServerPlayer player)
         {
-            AdvancementHolder a = player.server.getAdvancements().get(advancementRL);
-            
+            AdvancementHolder a = getAdvancement(player.server);
+
             if(a != null)
             {
-                return Component.translatable(descriptionId, a.value().display().get().getTitle());
+                tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(descriptionId, a.value().display().get().getTitle())));
             }
             else
             {
-                return Component.translatable(descriptionId + ERROR_SUFFIX, advancementRL.toString());
+                tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(descriptionId + ERROR_SUFFIX, advancementRL.toString())));
             }
         }
-        
-        return Component.empty();
     }
-    
+
     @Override
     public void writeToBuf(RegistryFriendlyByteBuf buf)
     {

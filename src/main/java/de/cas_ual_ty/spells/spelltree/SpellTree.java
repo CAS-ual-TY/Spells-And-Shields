@@ -59,7 +59,7 @@ public class SpellTree
     {
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getTitle());
-        getRequirements().stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> !c.getString().isEmpty()).forEach(tooltips::add);
+        getRequirements().forEach(requirement -> requirement.makeDescription(tooltips, spellProgressionHolder, access));
         return tooltips;
     }
     

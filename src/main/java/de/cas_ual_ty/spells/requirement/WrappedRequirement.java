@@ -6,12 +6,14 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.registers.RequirementTypes;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WrappedRequirement extends Requirement
 {
@@ -22,98 +24,99 @@ public class WrappedRequirement extends Requirement
         {
             return DataResult.error(() -> "Can not (de)serialize a wrapped requirement");
         }
-        
+
         @Override
         public <T> T write(DynamicOps<T> ops, WrappedRequirement value)
         {
             return ops.empty();
         }
     };
-    
+
     protected Requirement requirement;
     protected RequirementStatus status;
-    protected MutableComponent component;
-    
+    protected List<Component> component;
+
     public WrappedRequirement(RequirementType<?> type)
     {
         super(type);
     }
-    
-    protected WrappedRequirement(RequirementType<?> type, Requirement requirement, RequirementStatus status, MutableComponent component)
+
+    protected WrappedRequirement(RequirementType<?> type, Requirement requirement, RequirementStatus status, List<Component> component)
     {
         this(type);
         this.requirement = requirement;
         this.status = status;
         this.component = component;
     }
-    
+
     public WrappedRequirement(RequirementType<?> type, Requirement requirement)
     {
         this(type, requirement, RequirementStatus.UNDECIDED, null);
     }
-    
+
     public Requirement getRequirement()
     {
         return requirement;
     }
-    
+
     public RequirementStatus getStatus()
     {
         return status;
     }
-    
-    public MutableComponent getComponent()
+
+    public List<Component> getComponent()
     {
         return component;
     }
-    
+
     @Override
     protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         return status.isDecided() ? status.passes : requirement.passes(spellProgressionHolder, access);
     }
-    
+
     @Override
     public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         requirement.onSpellLearned(spellProgressionHolder, access);
     }
-    
+
     public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
         status = RequirementStatus.decide(passes(spellProgressionHolder, access));
-        MutableComponent c = makeDescription(spellProgressionHolder, access);
-        
-        if(!c.getString().isEmpty())
-        {
-            component = Component.literal("- ").append(c.withStyle(hidden ? ChatFormatting.DARK_GRAY : (status.passes ? ChatFormatting.GREEN : ChatFormatting.RED)));
-        }
-        else
-        {
-            component = Component.empty();
-        }
+        component = new LinkedList<>();
+        requirement.makeDescription(component, spellProgressionHolder, access);
     }
-    
+
     @Override
-    public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return component != null ? component : requirement.makeDescription(spellProgressionHolder, access);
+        if(component != null)
+        {
+            tooltip.addAll(component);
+        }
     }
-    
+
     @Override
     public void writeToBuf(RegistryFriendlyByteBuf buf)
     {
         buf.writeByte(status.ordinal());
-        ComponentSerialization.STREAM_CODEC.encode(buf, component);
+        buf.writeInt(component.size());
+        component.forEach(c -> ComponentSerialization.STREAM_CODEC.encode(buf, c));
     }
 
     @Override
     public void readFromBuf(RegistryFriendlyByteBuf buf)
     {
         status = RequirementStatus.values()[buf.readByte()];
-        component = (MutableComponent) ComponentSerialization.STREAM_CODEC.decode(buf);
+        int size = buf.readInt();
+        component = new ArrayList<>(size);
+        for(int i = 0; i < size; i++)
+        {
+            component.add(ComponentSerialization.STREAM_CODEC.decode(buf));
+        }
     }
-    
+
     public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
         WrappedRequirement w = new WrappedRequirement(RequirementTypes.WRAPPED.get(), requirement);

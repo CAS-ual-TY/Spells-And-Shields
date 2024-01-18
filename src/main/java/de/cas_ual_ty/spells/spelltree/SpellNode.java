@@ -128,7 +128,7 @@ public class SpellNode
     
     public boolean passesLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return hiddenRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access)) && learnRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
+        return passesHidden(spellProgressionHolder, access) && learnRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
     }
     
     public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
@@ -151,8 +151,8 @@ public class SpellNode
     {
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getSpellDirect().getTitle());
-        hiddenRequirements.stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> !c.getString().isEmpty()).forEach(tooltips::add);
-        learnRequirements.stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> !c.getString().isEmpty()).forEach(tooltips::add);
+        hiddenRequirements.forEach(requirement -> requirement.makeDescription(tooltips, spellProgressionHolder, access));
+        learnRequirements.forEach(requirement -> requirement.makeDescription(tooltips, spellProgressionHolder, access));
         return tooltips;
     }
     
