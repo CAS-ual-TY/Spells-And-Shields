@@ -6,12 +6,13 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.registers.RequirementTypes;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WrappedRequirement extends Requirement
 {
@@ -32,14 +33,14 @@ public class WrappedRequirement extends Requirement
     
     protected Requirement requirement;
     protected RequirementStatus status;
-    protected MutableComponent component;
+    protected List<Component> component;
     
     public WrappedRequirement(RequirementType<?> type)
     {
         super(type);
     }
     
-    protected WrappedRequirement(RequirementType<?> type, Requirement requirement, RequirementStatus status, MutableComponent component)
+    protected WrappedRequirement(RequirementType<?> type, Requirement requirement, RequirementStatus status, List<Component> component)
     {
         this(type);
         this.requirement = requirement;
@@ -62,7 +63,7 @@ public class WrappedRequirement extends Requirement
         return status;
     }
     
-    public MutableComponent getComponent()
+    public List<Component> getComponent()
     {
         return component;
     }
@@ -82,36 +83,37 @@ public class WrappedRequirement extends Requirement
     public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
         status = RequirementStatus.decide(passes(spellProgressionHolder, access));
-        MutableComponent c = makeDescription(spellProgressionHolder, access);
-        
-        if(c.getContents() != ComponentContents.EMPTY)
-        {
-            component = Component.literal("- ").append(c.withStyle(hidden ? ChatFormatting.DARK_GRAY : (status.passes ? ChatFormatting.GREEN : ChatFormatting.RED)));
-        }
-        else
-        {
-            component = Component.empty();
-        }
+        component = new LinkedList<>();
+        requirement.makeDescription(component, spellProgressionHolder, access);
     }
     
     @Override
-    public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return component != null ? component : requirement.makeDescription(spellProgressionHolder, access);
+        if(component != null)
+        {
+            tooltip.addAll(component);
+        }
     }
     
     @Override
     public void writeToBuf(FriendlyByteBuf buf)
     {
         buf.writeByte(status.ordinal());
-        buf.writeComponent(component);
+        buf.writeInt(component.size());
+        component.forEach(buf::writeComponent);
     }
     
     @Override
     public void readFromBuf(FriendlyByteBuf buf)
     {
         status = RequirementStatus.values()[buf.readByte()];
-        component = (MutableComponent) buf.readComponent();
+        int size = buf.readInt();
+        component = new ArrayList<>(size);
+        for(int i = 0; i < size; i++)
+        {
+            component.add(buf.readComponent());
+        }
     }
     
     public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)

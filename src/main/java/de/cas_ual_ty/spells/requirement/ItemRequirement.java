@@ -6,10 +6,11 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 public class ItemRequirement extends Requirement
 {
@@ -68,7 +69,7 @@ public class ItemRequirement extends Requirement
     }
     
     @Override
-    public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         Inventory inventory = spellProgressionHolder.getPlayer().getInventory();
         
@@ -76,22 +77,22 @@ public class ItemRequirement extends Requirement
         {
             if(consume)
             {
-                return Component.translatable(getDescriptionId() + CONSUMED_SUFFIX, itemStack.getHoverName());
+                tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(getDescriptionId() + CONSUMED_SUFFIX, itemStack.getHoverName())));
             }
             else
             {
-                return Component.translatable(getDescriptionId(), itemStack.getHoverName());
+                tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(getDescriptionId(), itemStack.getHoverName())));
             }
         }
         else
         {
             if(consume)
             {
-                return Component.translatable(getDescriptionId() + MULTIPLE_CONSUMED_SUFFIX, itemStack.getCount(), itemStack.getHoverName());
+                tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(getDescriptionId() + MULTIPLE_CONSUMED_SUFFIX, itemStack.getCount(), itemStack.getHoverName())));
             }
             else
             {
-                return Component.translatable(getDescriptionId() + MULTIPLE_SUFFIX, itemStack.getCount(), itemStack.getHoverName());
+                tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(getDescriptionId() + MULTIPLE_SUFFIX, itemStack.getCount(), itemStack.getHoverName())));
             }
         }
     }

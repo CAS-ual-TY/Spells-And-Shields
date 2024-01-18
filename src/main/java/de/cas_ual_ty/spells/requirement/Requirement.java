@@ -2,11 +2,14 @@ package de.cas_ual_ty.spells.requirement;
 
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.registers.RequirementTypes;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+
+import java.util.List;
 
 public abstract class Requirement
 {
@@ -46,11 +49,16 @@ public abstract class Requirement
     {
     }
     
-    public abstract MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access);
+    public abstract void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access);
     
     public String getDescriptionId()
     {
         return descriptionId;
+    }
+    
+    public MutableComponent formatComponent(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, MutableComponent component)
+    {
+        return Component.literal("- ").append(component).withStyle(doesPlayerPass(spellProgressionHolder, access) ? ChatFormatting.GREEN : ChatFormatting.RED);
     }
     
     public abstract void writeToBuf(FriendlyByteBuf buf);

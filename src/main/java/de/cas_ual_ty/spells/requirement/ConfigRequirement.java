@@ -5,8 +5,9 @@ import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+
+import java.util.List;
 
 public class ConfigRequirement extends Requirement
 {
@@ -33,9 +34,12 @@ public class ConfigRequirement extends Requirement
     }
     
     @Override
-    public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return !SpellsConfig.SPELL_TREES.get() && spellProgressionHolder.getPlayer().isCreative() ? Component.translatable(descriptionId) : Component.empty();
+        if(!SpellsConfig.SPELL_TREES.get() && spellProgressionHolder.getPlayer().isCreative())
+        {
+            tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(descriptionId)));
+        }
     }
     
     @Override
