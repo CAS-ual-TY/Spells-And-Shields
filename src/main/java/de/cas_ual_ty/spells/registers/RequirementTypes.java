@@ -21,6 +21,7 @@ public class RequirementTypes
     public static final DeferredHolder<RequirementType<?>, RequirementType<AdvancementRequirement>> ADVANCEMENT = DEFERRED_REGISTER.register("advancement", () -> new RequirementType<>(AdvancementRequirement::new, AdvancementRequirement::makeCodec));
     public static final DeferredHolder<RequirementType<?>, RequirementType<ItemRequirement>> ITEM = DEFERRED_REGISTER.register("item", () -> new RequirementType<>(ItemRequirement::new, ItemRequirement::makeCodec));
     public static final DeferredHolder<RequirementType<?>, RequirementType<ConfigRequirement>> CONFIG = DEFERRED_REGISTER.register("config", () -> new RequirementType<>(ConfigRequirement::new, ConfigRequirement::makeCodec));
+    public static final DeferredHolder<RequirementType<?>, RequirementType<ListRequirement>> LIST = DEFERRED_REGISTER.register("list", () -> new RequirementType<>(ListRequirement::new, ListRequirement::makeCodec));
     
     public static void register(IEventBus modEventBus)
     {
