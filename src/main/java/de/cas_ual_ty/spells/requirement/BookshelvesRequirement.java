@@ -42,14 +42,19 @@ public class BookshelvesRequirement extends Requirement
     @Override
     protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0) >= bookshelves;
+        return getBookshelvesAmount(spellProgressionHolder, access) >= bookshelves;
     }
     
     @Override
     public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        int amount = access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0);
+        int amount = getBookshelvesAmount(spellProgressionHolder, access);
         tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(descriptionId, amount, bookshelves)));
+    }
+    
+    protected int getBookshelvesAmount(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0);
     }
     
     @Override
