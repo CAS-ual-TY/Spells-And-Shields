@@ -33,19 +33,19 @@ public class WrappedRequirement extends Requirement
     
     protected Requirement requirement;
     protected RequirementStatus status;
-    protected List<Component> component;
+    protected List<Component> cachedTooltip;
     
     public WrappedRequirement(RequirementType<?> type)
     {
         super(type);
     }
     
-    protected WrappedRequirement(RequirementType<?> type, Requirement requirement, RequirementStatus status, List<Component> component)
+    protected WrappedRequirement(RequirementType<?> type, Requirement requirement, RequirementStatus status, List<Component> cachedTooltip)
     {
         this(type);
         this.requirement = requirement;
         this.status = status;
-        this.component = component;
+        this.cachedTooltip = cachedTooltip;
     }
     
     public WrappedRequirement(RequirementType<?> type, Requirement requirement)
@@ -63,9 +63,9 @@ public class WrappedRequirement extends Requirement
         return status;
     }
     
-    public List<Component> getComponent()
+    public List<Component> getCachedTooltip()
     {
-        return component;
+        return cachedTooltip;
     }
     
     @Override
@@ -83,16 +83,16 @@ public class WrappedRequirement extends Requirement
     public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
         status = RequirementStatus.decide(passes(spellProgressionHolder, access));
-        component = new LinkedList<>();
-        requirement.makeDescription(component, spellProgressionHolder, access);
+        cachedTooltip = new LinkedList<>();
+        requirement.makeDescription(cachedTooltip, spellProgressionHolder, access);
     }
     
     @Override
     public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        if(component != null)
+        if(cachedTooltip != null)
         {
-            tooltip.addAll(component);
+            tooltip.addAll(cachedTooltip);
         }
     }
     
@@ -100,8 +100,8 @@ public class WrappedRequirement extends Requirement
     public void writeToBuf(FriendlyByteBuf buf)
     {
         buf.writeByte(status.ordinal());
-        buf.writeInt(component.size());
-        component.forEach(buf::writeComponent);
+        buf.writeInt(cachedTooltip.size());
+        cachedTooltip.forEach(buf::writeComponent);
     }
     
     @Override
@@ -109,10 +109,10 @@ public class WrappedRequirement extends Requirement
     {
         status = RequirementStatus.values()[buf.readByte()];
         int size = buf.readInt();
-        component = new ArrayList<>(size);
+        cachedTooltip = new ArrayList<>(size);
         for(int i = 0; i < size; i++)
         {
-            component.add(buf.readComponent());
+            cachedTooltip.add(buf.readComponent());
         }
     }
     
