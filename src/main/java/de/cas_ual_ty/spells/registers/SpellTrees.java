@@ -201,6 +201,11 @@ public class SpellTrees
         return list(list.length, list);
     }
     
+    public static Requirement not(Requirement requirement)
+    {
+        return new NotRequirement(RequirementTypes.NOT.get(), requirement);
+    }
+    
     public static Requirement config()
     {
         return new ConfigRequirement(RequirementTypes.CONFIG.get());
