@@ -60,11 +60,6 @@ public class SpellTree
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getTitle());
         getRequirements().forEach(requirement -> requirement.makeDescription(tooltips, spellProgressionHolder, access));
-        System.out.println("--------");
-        tooltips.forEach(t ->
-        {
-            System.out.println(t.getClass() + ": " + t);
-        });
         return tooltips;
     }
     
