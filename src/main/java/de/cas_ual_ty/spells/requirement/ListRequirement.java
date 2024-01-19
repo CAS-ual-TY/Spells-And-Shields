@@ -66,7 +66,7 @@ public class ListRequirement extends Requirement
         {
             tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(getDescriptionId() + ANY_SUFFIX)));
         }
-        else if(amount == minimum)
+        else if(minimum == list.size())
         {
             tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(getDescriptionId() + ALL_SUFFIX)));
         }

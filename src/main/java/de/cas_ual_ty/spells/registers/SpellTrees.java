@@ -22,6 +22,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
+import java.util.List;
 import java.util.function.Function;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
@@ -175,6 +176,21 @@ public class SpellTrees
     public static Requirement item(Item item, int count, boolean consume)
     {
         return new ItemRequirement(RequirementTypes.ITEM.get(), new ItemStack(item, count), consume);
+    }
+    
+    public static Requirement list(int minimum, Requirement... list)
+    {
+        return new ListRequirement(RequirementTypes.LIST.get(), List.of(list), minimum);
+    }
+    
+    public static Requirement any(Requirement... list)
+    {
+        return list(1, list);
+    }
+    
+    public static Requirement all(Requirement... list)
+    {
+        return list(list.length, list);
     }
     
     public static Requirement config()
