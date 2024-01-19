@@ -10,10 +10,7 @@ import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.RequirementTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
-import de.cas_ual_ty.spells.requirement.AdvancementRequirement;
-import de.cas_ual_ty.spells.requirement.ItemRequirement;
-import de.cas_ual_ty.spells.requirement.Requirement;
-import de.cas_ual_ty.spells.requirement.RequirementType;
+import de.cas_ual_ty.spells.requirement.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -102,6 +99,9 @@ public class LangGen extends LanguageProvider
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_CONSUMED_SUFFIX, "%sx %s (Consumed)");
         addRequirement(RequirementTypes.CONFIG, "Disabled by Configuration File");
+        addRequirement(RequirementTypes.LIST, "%s/%s of the following:");
+        addRequirement(RequirementTypes.LIST, ListRequirement.ANY_SUFFIX,"Any of the following:");
+        addRequirement(RequirementTypes.LIST, ListRequirement.ALL_SUFFIX,"All of the following:");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         

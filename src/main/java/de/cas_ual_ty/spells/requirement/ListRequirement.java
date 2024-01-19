@@ -54,7 +54,7 @@ public class ListRequirement extends Requirement
     @Override
     protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return getPassedAmount(spellProgressionHolder, access) > minimum;
+        return getPassedAmount(spellProgressionHolder, access) >= minimum;
     }
     
     @Override
@@ -66,7 +66,7 @@ public class ListRequirement extends Requirement
         {
             tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(getDescriptionId() + ANY_SUFFIX)));
         }
-        else if(amount == minimum)
+        else if(minimum == list.size())
         {
             tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(getDescriptionId() + ALL_SUFFIX)));
         }
@@ -89,7 +89,6 @@ public class ListRequirement extends Requirement
     public void writeToBuf(FriendlyByteBuf buf)
     {
         buf.writeInt(list.size());
-        list.forEach(r -> RequirementType.writeToBuf(buf, r));
         list.forEach(r -> RequirementType.writeToBuf(buf, r));
         
         buf.writeInt(minimum);

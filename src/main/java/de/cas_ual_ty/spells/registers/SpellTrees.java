@@ -24,6 +24,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -183,6 +184,21 @@ public class SpellTrees
     public static Requirement item(Item item, int count, boolean consume)
     {
         return new ItemRequirement(RequirementTypes.ITEM.get(), new ItemStack(item, count), consume);
+    }
+    
+    public static Requirement list(int minimum, Requirement... list)
+    {
+        return new ListRequirement(RequirementTypes.LIST.get(), List.of(list), minimum);
+    }
+    
+    public static Requirement any(Requirement... list)
+    {
+        return list(1, list);
+    }
+    
+    public static Requirement all(Requirement... list)
+    {
+        return list(list.length, list);
     }
     
     public static Requirement config()
