@@ -25,8 +25,8 @@ public class CubeBlockTargetsAction extends AffectSingleTypeAction<PositionTarge
                 activationCodec(),
                 sourceCodec(),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("targets")).forGetter(CubeBlockTargetsAction::getTargets),
-                CtxVarTypes.VEC3.get().refCodec().fieldOf("corner1").forGetter(CubeBlockTargetsAction::getCorner1),
-                CtxVarTypes.VEC3.get().refCodec().fieldOf("corner2").forGetter(CubeBlockTargetsAction::getCorner2)
+                CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("corner1")).forGetter(CubeBlockTargetsAction::getCorner1),
+                CtxVarTypes.VEC3.get().refCodec().fieldOf(ParamNames.paramVec3("corner2")).forGetter(CubeBlockTargetsAction::getCorner2)
         ).apply(instance, (activation, source, targets, corner1, corner2) -> new CubeBlockTargetsAction(type, activation, source, targets, corner1, corner2)));
     }
     

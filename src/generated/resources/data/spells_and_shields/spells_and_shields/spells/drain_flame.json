@@ -48,8 +48,8 @@
     {
       "type": "spells_and_shields:cube_block_targets",
       "activation": "on_block_hit",
-      "corner1": "<< vec3(-radius, -radius, -radius) >>",
-      "corner2": "<< vec3(radius, radius, radius) >>",
+      "d/vec3/corner1": "<< vec3(-radius, -radius, -radius) >>",
+      "d/vec3/corner2": "<< vec3(radius, radius, radius) >>",
       "t/source": "block_hit",
       "td/targets": "blocks"
     },
