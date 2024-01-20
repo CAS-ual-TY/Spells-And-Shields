@@ -6,10 +6,12 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+
+import java.util.List;
 
 public class AdvancementRequirement extends Requirement
 {
@@ -23,6 +25,7 @@ public class AdvancementRequirement extends Requirement
     public static final String ERROR_SUFFIX = ".error";
     
     protected ResourceLocation advancementRL;
+    protected Advancement advancement;
     
     public AdvancementRequirement(RequirementType<?> type)
     {
@@ -40,12 +43,22 @@ public class AdvancementRequirement extends Requirement
         return advancementRL;
     }
     
+    public Advancement getAdvancement(MinecraftServer server)
+    {
+        if(advancement == null)
+        {
+            advancement = server.getAdvancements().getAdvancement(advancementRL);
+        }
+        
+        return advancement;
+    }
+    
     @Override
     protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         if(spellProgressionHolder.getPlayer() instanceof ServerPlayer player)
         {
-            Advancement a = player.server.getAdvancements().getAdvancement(advancementRL);
+            Advancement a = getAdvancement(player.server);
             
             if(a != null)
             {
@@ -61,23 +74,21 @@ public class AdvancementRequirement extends Requirement
     }
     
     @Override
-    public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
         if(spellProgressionHolder.getPlayer() instanceof ServerPlayer player)
         {
-            Advancement a = player.server.getAdvancements().getAdvancement(advancementRL);
+            Advancement a = getAdvancement(player.server);
             
             if(a != null)
             {
-                return Component.translatable(descriptionId, a.getDisplay().getTitle());
+                tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(descriptionId, a.getDisplay().getTitle())));
             }
             else
             {
-                return Component.translatable(descriptionId + ERROR_SUFFIX, advancementRL.toString());
+                tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(descriptionId + ERROR_SUFFIX, advancementRL.toString())));
             }
         }
-        
-        return Component.empty();
     }
     
     @Override

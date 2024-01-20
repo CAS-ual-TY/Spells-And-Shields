@@ -36,6 +36,10 @@ public record RequestLearnSpellMessage(SpellNodeId nodeId)
             {
                 menu.buySpellRequest(msg.nodeId());
             }
+        }).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
         });
         
         context.get().setPacketHandled(true);

@@ -79,7 +79,11 @@ public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, SpellNo
     
     public static void handle(SpellsSyncMessage msg, Supplier<NetworkEvent.Context> context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleSpellsSync(msg));
+        context.get().enqueueWork(() -> ClientMessageHandler.handleSpellsSync(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
         context.get().setPacketHandled(true);
     }
 }

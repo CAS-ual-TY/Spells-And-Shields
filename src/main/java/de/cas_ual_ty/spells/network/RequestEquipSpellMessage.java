@@ -37,6 +37,10 @@ public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId)
             {
                 menu.equipSpellRequest(msg.slot(), msg.nodeId());
             }
+        }).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
         });
         
         context.get().setPacketHandled(true);

@@ -64,7 +64,7 @@ public class ManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
             {
                 ManaHolder.getManaHolder(target.getPlayer()).ifPresent(manaHolder ->
                 {
-                    if(manaHolder.getMana() >= amount)
+                    if(manaHolder.getUsableMana() >= amount)
                     {
                         manaHolder.burn(amount.floatValue());
                     }

@@ -69,10 +69,10 @@
     {
       "type": "spells_and_shields:add_attribute_modifier",
       "activation": "on_equip",
-      "d/double/amount": 4.0,
+      "d/double/amount": "<<value>>",
       "d/string/attribute": "spells_and_shields:generic.max_mana",
       "d/string/name": "generic.max_mana",
-      "d/string/operation": "addition",
+      "d/string/operation": "<<operation>>",
       "d/string/uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
       "ts/targets": "owner"
     },

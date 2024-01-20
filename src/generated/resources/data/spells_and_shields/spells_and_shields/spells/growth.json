@@ -97,8 +97,8 @@
     {
       "type": "spells_and_shields:cube_block_targets",
       "activation": "success",
-      "corner1": "<< vec3(-range, -1, -range) >>",
-      "corner2": "<< vec3(range, 1, range) >>",
+      "d/vec3/corner1": "<< vec3(-range, -1, -range) >>",
+      "d/vec3/corner2": "<< vec3(range, 1, range) >>",
       "t/source": "owner",
       "td/targets": "blocks"
     },

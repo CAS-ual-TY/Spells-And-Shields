@@ -8,9 +8,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
+import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
+import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.commands.CommandBuildContext;
@@ -56,6 +59,8 @@ public class SpellCommand
     public static final String SPELLS_SLOT_SET_MULTIPLE = "spells.slot.set.success.multiple";
     public static final String SPELLS_SLOT_CLEAR_SINGLE = "spells.slot.clear.success.single";
     public static final String SPELLS_SLOT_CLEAR_MULTIPLE = "spells.slot.clear.success.multiple";
+    public static final String SPELLS_CAST_DIRECT = "spells.cast.direct.success";
+    public static final String SPELLS_CAST = "spells.cast.success";
     public static final String UNKNOWN_NODE = "spells.node.failed";
     
     public static final String ARG_TARGETS = "targets";
@@ -111,6 +116,12 @@ public class SpellCommand
                         )
                         .then(Commands.literal("remove").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS)).executes(SpellCommand::spellsSlotRemove))))
                         .then(Commands.literal("clear").then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(SpellCommand::spellsSlotClear)))
+                )
+                .then(Commands.literal("cast")
+                        .then(Commands.argument(ARG_TARGETS, EntityArgument.player())
+                                .then(Commands.literal("direct").then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx)).executes(SpellCommand::spellsCastDirect)))
+                                .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx)).then(Commands.argument(ARG_NODE_ID, IntegerArgumentType.integer()).executes(SpellCommand::spellsCast)))
+                        )
                 )
         );
     }
@@ -475,6 +486,57 @@ public class SpellCommand
         {
             context.getSource().sendSuccess(Component.translatable(SPELLS_SLOT_CLEAR_MULTIPLE, players.size()), true);
         }
+        
+        return players.size();
+    }
+    
+    private static int spellsCastDirect(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
+    {
+        Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
+        
+        if(players.isEmpty())
+        {
+            return 0;
+        }
+        
+        ServerPlayer player = players.iterator().next();
+        
+        Spell spell = SpellArgument.getSpell(context, ARG_SPELL);
+        SpellInstance spellInstance = new SpellInstance(Holder.direct(spell));
+        
+        spellInstance.run(player.level, player, BuiltinEvents.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, -1));
+        
+        context.getSource().sendSuccess(Component.translatable(SPELLS_CAST_DIRECT, players.iterator().next().getDisplayName(), spell.getTitle()), true);
+        
+        return players.size();
+    }
+    
+    private static int spellsCast(CommandContext<CommandSourceStack> context) throws CommandSyntaxException
+    {
+        Collection<ServerPlayer> players = EntityArgument.getPlayers(context, ARG_TARGETS);
+        
+        if(players.isEmpty())
+        {
+            return 0;
+        }
+        
+        ServerPlayer player = players.iterator().next();
+        
+        SpellTree spellTree = SpellTreeArgument.getSpellTree(context, ARG_SPELL_TREE);
+        int nodeId = IntegerArgumentType.getInteger(context, ARG_NODE_ID);
+        
+        SpellNode spellNode = spellTree.findNode(nodeId);
+        
+        if(spellNode == null)
+        {
+            context.getSource().sendFailure(Component.translatable(UNKNOWN_NODE, spellTree.getTitle(), nodeId));
+            return 0;
+        }
+        
+        spellNode.getSpellInstance().run(player.level, player, BuiltinEvents.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, -1));
+        
+        Spell spell = spellNode.getSpellDirect();
+        context.getSource().sendSuccess(Component.translatable(SPELLS_CAST, players.iterator().next().getDisplayName(), spell.getTitle(), spellTree.getTitle()), true);
         
         return players.size();
     }

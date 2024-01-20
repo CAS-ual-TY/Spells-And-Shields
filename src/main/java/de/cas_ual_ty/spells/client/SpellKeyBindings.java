@@ -6,14 +6,21 @@ import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.util.SpellHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.lwjgl.glfw.GLFW;
 
 public class SpellKeyBindings
 {
@@ -102,9 +109,62 @@ public class SpellKeyBindings
         }
     }
     
+    private static void movementInputUpdate(MovementInputUpdateEvent event)
+    {
+        // Credit to gigaherz for giving guidance in the NeoForge Discord
+        
+        LocalPlayer localPlayer = Minecraft.getInstance().player;
+        
+        if(localPlayer != null && Minecraft.getInstance().screen instanceof RadialMenu)
+        {
+            Options options = Minecraft.getInstance().options;
+            Input input = event.getInput();
+            
+            //See KeyboardInput#tick
+            input.up = isKeyDown(options.keyUp);
+            input.down = isKeyDown(options.keyDown);
+            input.left = isKeyDown(options.keyLeft);
+            input.right = isKeyDown(options.keyRight);
+            
+            //See KeyboardInput#calculateImpulse
+            input.forwardImpulse = input.up == input.down ? 0F : (input.up ? 1F : -1F);
+            input.leftImpulse = input.left == input.right ? 0F : (input.left ? 1F : -1F);
+            input.jumping = isKeyDown(options.keyJump);
+            input.shiftKeyDown = isKeyDown(options.keyShift);
+            
+            //See source of KeyboardInput#tick call (inside LocalPlayer#aiStep)
+            if(localPlayer.isMovingSlowly())
+            {
+                float f = Mth.clamp(0.3F + EnchantmentHelper.getSneakingSpeedBonus(localPlayer), 0F, 1F);
+                input.leftImpulse *= f;
+                input.forwardImpulse *= f;
+            }
+        }
+    }
+    
+    private static boolean isKeyDown(KeyMapping key)
+    {
+        if(key.isUnbound())
+        {
+            return false;
+        }
+        
+        if(key.getKey().getType() == InputConstants.Type.KEYSYM)
+        {
+            return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), key.getKey().getValue());
+        }
+        else if(key.getKey().getType() == InputConstants.Type.MOUSE)
+        {
+            return GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), key.getKey().getValue()) == GLFW.GLFW_PRESS;
+        }
+        
+        return false;
+    }
+    
     public static void register()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellKeyBindings::registerKeyMappings);
         MinecraftForge.EVENT_BUS.addListener(SpellKeyBindings::clientTick);
+        MinecraftForge.EVENT_BUS.addListener(SpellKeyBindings::movementInputUpdate);
     }
 }

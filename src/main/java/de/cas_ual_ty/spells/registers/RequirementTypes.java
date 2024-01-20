@@ -19,6 +19,9 @@ public class RequirementTypes
     public static final RegistryObject<RequirementType<AdvancementRequirement>> ADVANCEMENT = DEFERRED_REGISTER.register("advancement", () -> new RequirementType<>(AdvancementRequirement::new, AdvancementRequirement::makeCodec));
     public static final RegistryObject<RequirementType<ItemRequirement>> ITEM = DEFERRED_REGISTER.register("item", () -> new RequirementType<>(ItemRequirement::new, ItemRequirement::makeCodec));
     public static final RegistryObject<RequirementType<ConfigRequirement>> CONFIG = DEFERRED_REGISTER.register("config", () -> new RequirementType<>(ConfigRequirement::new, ConfigRequirement::makeCodec));
+    public static final RegistryObject<RequirementType<MinRequirement>> MIN = DEFERRED_REGISTER.register("min", () -> new RequirementType<>(MinRequirement::new, MinRequirement::makeCodec));
+    public static final RegistryObject<RequirementType<MaxRequirement>> MAX = DEFERRED_REGISTER.register("max", () -> new RequirementType<>(MaxRequirement::new, MaxRequirement::makeCodec));
+    public static final RegistryObject<RequirementType<LearnedRequirement>> LEARNED = DEFERRED_REGISTER.register("learned", () -> new RequirementType<>(LearnedRequirement::new, LearnedRequirement::makeCodec));
     
     public static void register()
     {
