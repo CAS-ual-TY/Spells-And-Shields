@@ -9,13 +9,10 @@ import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import java.util.List;
@@ -74,7 +71,7 @@ public class LearnedRequirement extends Requirement
                 tooltip.add(formatComponent(spellProgressionHolder, access, Component.translatable(descriptionId + ERROR_TREE_SUFFIX, nodeId.treeId())));
                 return;
             }
-    
+            
             SpellNode node = tree.findNode(nodeId.nodeId());
             
             if(node == null)
