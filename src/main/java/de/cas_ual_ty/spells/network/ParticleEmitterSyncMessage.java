@@ -48,6 +48,10 @@ public record ParticleEmitterSyncMessage(int entityId, boolean clear, List<Parti
 
     public static void handle(ParticleEmitterSyncMessage msg, IPayloadContext context)
     {
-        context.enqueueWork(() -> ClientMessageHandler.handleParticleEmitterSync(msg));
+        context.enqueueWork(() -> ClientMessageHandler.handleParticleEmitterSync(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
     }
 }

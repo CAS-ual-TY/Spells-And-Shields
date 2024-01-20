@@ -29,6 +29,10 @@ public record ManaSyncMessage(int entityId, float mana, float extraMana) impleme
 
     public static void handle(ManaSyncMessage msg, IPayloadContext context)
     {
-        context.enqueueWork(() -> ClientMessageHandler.handleManaSync(msg));
+        context.enqueueWork(() -> ClientMessageHandler.handleManaSync(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
     }
 }

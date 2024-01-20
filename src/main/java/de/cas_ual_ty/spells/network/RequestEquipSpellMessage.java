@@ -38,6 +38,10 @@ public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId) implements
             {
                 menu.equipSpellRequest(msg.slot(), msg.nodeId());
             }
+        }).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
         });
     }
 }

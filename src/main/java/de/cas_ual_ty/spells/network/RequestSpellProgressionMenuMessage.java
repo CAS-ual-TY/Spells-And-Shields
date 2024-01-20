@@ -46,43 +46,43 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos) implements Custom
     {
         context.enqueueWork(() ->
         {
-            ServerPlayer player = (ServerPlayer) context.player();
-
-            try
+            if(!(context.player() instanceof ServerPlayer player))
             {
-                if(player.hasContainerOpen() && SpellsUtil.isEnchantingTable(player.level().getBlockState(msg.pos()).getBlock()))
+                return;
+            }
+
+            if(player.hasContainerOpen() && SpellsUtil.isEnchantingTable(player.level().getBlockState(msg.pos()).getBlock()))
+            {
+                ContainerLevelAccess access = ContainerLevelAccess.create(player.level(), msg.pos());
+
+                SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
                 {
-                    ContainerLevelAccess access = ContainerLevelAccess.create(player.level(), msg.pos());
-
-                    SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
+                    access.execute((level, blockPos) ->
                     {
-                        access.execute((level, blockPos) ->
+                        List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
+                        HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
+
+                        player.openMenu(new MenuProvider()
                         {
-                            List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
-                            HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
-
-                            player.openMenu(new MenuProvider()
+                            @Override
+                            public Component getDisplayName()
                             {
-                                @Override
-                                public Component getDisplayName()
-                                {
-                                    return SpellProgressionMenu.TITLE;
-                                }
+                                return SpellProgressionMenu.TITLE;
+                            }
 
-                                @Override
-                                public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
-                                {
-                                    return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
-                                }
-                            }, buf -> SpellProgressionSyncMessage.STREAM_CODEC.encode(buf, new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression)));
-                        });
+                            @Override
+                            public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
+                            {
+                                return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
+                            }
+                        }, buf -> SpellProgressionSyncMessage.STREAM_CODEC.encode(buf, new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression)));
                     });
-                }
+                });
             }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
+        }).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
         });
     }
 }

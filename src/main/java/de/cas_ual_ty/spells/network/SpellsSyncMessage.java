@@ -73,6 +73,10 @@ public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, SpellNo
 
     public static void handle(SpellsSyncMessage msg, IPayloadContext context)
     {
-        context.enqueueWork(() -> ClientMessageHandler.handleSpellsSync(msg));
+        context.enqueueWork(() -> ClientMessageHandler.handleSpellsSync(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
     }
 }

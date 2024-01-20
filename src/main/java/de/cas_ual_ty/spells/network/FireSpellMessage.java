@@ -27,8 +27,14 @@ public record FireSpellMessage(int spell) implements CustomPacketPayload
     {
         context.enqueueWork(() ->
         {
-            ServerPlayer player = (ServerPlayer) context.player();
-            SpellHelper.fireSpellSlot(player, msg.spell());
+            if(context.player() instanceof ServerPlayer player)
+            {
+                SpellHelper.fireSpellSlot(player, msg.spell());
+            }
+        }).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
         });
     }
 }

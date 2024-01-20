@@ -37,6 +37,10 @@ public record RequestLearnSpellMessage(SpellNodeId nodeId) implements CustomPack
             {
                 menu.buySpellRequest(msg.nodeId());
             }
+        }).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
         });
     }
 }

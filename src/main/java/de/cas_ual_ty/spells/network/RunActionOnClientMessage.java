@@ -42,6 +42,10 @@ public record RunActionOnClientMessage(SyncedSpellActionType<?, ?> actionType, I
 
     public static void handle(RunActionOnClientMessage msg, IPayloadContext context)
     {
-        context.enqueueWork(() -> ClientMessageHandler.handleSpellAction(msg));
+        context.enqueueWork(() -> ClientMessageHandler.handleSpellAction(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
     }
 }

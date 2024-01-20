@@ -82,6 +82,10 @@ public record SpellProgressionSyncMessage(BlockPos blockPos, List<SpellTree> spe
 
     public static void handle(SpellProgressionSyncMessage msg, IPayloadContext context)
     {
-        context.enqueueWork(() -> ClientMessageHandler.handleSpellProgressionSync(msg));
+        context.enqueueWork(() -> ClientMessageHandler.handleSpellProgressionSync(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
     }
 }
