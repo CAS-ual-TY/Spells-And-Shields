@@ -103,6 +103,9 @@ public class LangGen extends LanguageProvider
         addRequirement(RequirementTypes.LIST, ListRequirement.ANY_SUFFIX, "Any of the following:");
         addRequirement(RequirementTypes.LIST, ListRequirement.ALL_SUFFIX, "All of the following:");
         addRequirement(RequirementTypes.NOT, "Not the following:");
+        addRequirement(RequirementTypes.LEARNED, "Learn spell '%s' in spell tree '%s'");
+        addRequirement(RequirementTypes.LEARNED, LearnedRequirement.ERROR_TREE_SUFFIX, "Unknown spell tree '%s'");
+        addRequirement(RequirementTypes.LEARNED, LearnedRequirement.ERROR_NODE_SUFFIX, "Unknown node ID '%s' in spell tree '%s'");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         

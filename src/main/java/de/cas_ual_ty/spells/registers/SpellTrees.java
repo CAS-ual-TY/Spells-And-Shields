@@ -4,6 +4,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.requirement.*;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
+import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Holder;
@@ -204,6 +205,11 @@ public class SpellTrees
     public static Requirement not(Requirement requirement)
     {
         return new NotRequirement(RequirementTypes.NOT.get(), requirement);
+    }
+    
+    public static Requirement learned(ResourceLocation spellTree, int nodeId)
+    {
+        return new LearnedRequirement(RequirementTypes.LEARNED.get(), new SpellNodeId(spellTree, nodeId));
     }
     
     public static Requirement config()
