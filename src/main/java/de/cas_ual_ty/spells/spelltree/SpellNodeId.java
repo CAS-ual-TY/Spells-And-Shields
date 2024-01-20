@@ -27,6 +27,18 @@ public record SpellNodeId(ResourceLocation treeId, int nodeId)
         return node == null ? null : node.getSpellInstance();
     }
     
+    public boolean isValid(Registry<SpellTree> registry)
+    {
+        SpellTree tree = getSpellTree(registry);
+        
+        if(tree == null)
+        {
+            return false;
+        }
+        
+        return tree.findNode(nodeId) != null;
+    }
+    
     public String getIDText()
     {
         return treeId + " " + nodeId;
