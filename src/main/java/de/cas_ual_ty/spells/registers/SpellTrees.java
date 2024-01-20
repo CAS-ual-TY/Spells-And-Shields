@@ -187,24 +187,34 @@ public class SpellTrees
         return new ItemRequirement(RequirementTypes.ITEM.get(), new ItemStack(item, count), consume);
     }
     
-    public static Requirement list(int minimum, Requirement... list)
+    public static Requirement min(int minimum, Requirement... list)
     {
         return new MinRequirement(RequirementTypes.MIN.get(), List.of(list), minimum);
     }
     
     public static Requirement any(Requirement... list)
     {
-        return list(1, list);
+        return min(1, list);
     }
     
     public static Requirement all(Requirement... list)
     {
-        return list(list.length, list);
+        return min(list.length, list);
     }
     
-    public static Requirement not(Requirement requirement)
+    public static Requirement max(int maximum, Requirement... list)
     {
-        return new NotRequirement(RequirementTypes.NOT.get(), requirement);
+        return new MaxRequirement(RequirementTypes.MAX.get(), List.of(list), maximum);
+    }
+    
+    public static Requirement none(Requirement... list)
+    {
+        return max(0, list);
+    }
+    
+    public static Requirement not(Requirement... list)
+    {
+        return none(list);
     }
     
     public static Requirement learned(ResourceLocation spellTree, int nodeId)

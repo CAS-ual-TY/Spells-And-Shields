@@ -99,10 +99,12 @@ public class LangGen extends LanguageProvider
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_CONSUMED_SUFFIX, "%sx %s (Consumed)");
         addRequirement(RequirementTypes.CONFIG, "Disabled by Configuration File");
-        addRequirement(RequirementTypes.MIN, "%s/%s of the following:");
+        addRequirement(RequirementTypes.MIN, "Min. %2$s of the following (%1$s/%2$s):");
         addRequirement(RequirementTypes.MIN, MinRequirement.ANY_SUFFIX, "Any of the following:");
         addRequirement(RequirementTypes.MIN, MinRequirement.ALL_SUFFIX, "All of the following:");
-        addRequirement(RequirementTypes.NOT, "Not the following:");
+        addRequirement(RequirementTypes.MAX, "Max. %2$s of the following (%1$s/%2$s):");
+        addRequirement(RequirementTypes.MAX, MaxRequirement.NONE_SUFFIX, "None of the following:");
+        addRequirement(RequirementTypes.MAX, MaxRequirement.NOT_SUFFIX, "Not the following:");
         addRequirement(RequirementTypes.LEARNED, "Learn spell '%s' in spell tree '%s'");
         addRequirement(RequirementTypes.LEARNED, LearnedRequirement.ERROR_TREE_SUFFIX, "Unknown spell tree '%s'");
         addRequirement(RequirementTypes.LEARNED, LearnedRequirement.ERROR_NODE_SUFFIX, "Unknown node ID '%s' in spell tree '%s'");
