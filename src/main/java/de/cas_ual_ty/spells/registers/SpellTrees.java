@@ -189,7 +189,7 @@ public class SpellTrees
     
     public static Requirement list(int minimum, Requirement... list)
     {
-        return new ListRequirement(RequirementTypes.LIST.get(), List.of(list), minimum);
+        return new MinRequirement(RequirementTypes.MIN.get(), List.of(list), minimum);
     }
     
     public static Requirement any(Requirement... list)

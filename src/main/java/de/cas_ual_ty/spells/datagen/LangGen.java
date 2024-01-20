@@ -99,9 +99,9 @@ public class LangGen extends LanguageProvider
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_SUFFIX, "%sx %s (Not Consumed)");
         addRequirement(RequirementTypes.ITEM, ItemRequirement.MULTIPLE_CONSUMED_SUFFIX, "%sx %s (Consumed)");
         addRequirement(RequirementTypes.CONFIG, "Disabled by Configuration File");
-        addRequirement(RequirementTypes.LIST, "%s/%s of the following:");
-        addRequirement(RequirementTypes.LIST, ListRequirement.ANY_SUFFIX, "Any of the following:");
-        addRequirement(RequirementTypes.LIST, ListRequirement.ALL_SUFFIX, "All of the following:");
+        addRequirement(RequirementTypes.MIN, "%s/%s of the following:");
+        addRequirement(RequirementTypes.MIN, MinRequirement.ANY_SUFFIX, "Any of the following:");
+        addRequirement(RequirementTypes.MIN, MinRequirement.ALL_SUFFIX, "All of the following:");
         addRequirement(RequirementTypes.NOT, "Not the following:");
         addRequirement(RequirementTypes.LEARNED, "Learn spell '%s' in spell tree '%s'");
         addRequirement(RequirementTypes.LEARNED, LearnedRequirement.ERROR_TREE_SUFFIX, "Unknown spell tree '%s'");

@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListRequirement extends Requirement
+public class MinRequirement extends Requirement
 {
-    public static Codec<ListRequirement> makeCodec(RequirementType<ListRequirement> type)
+    public static Codec<MinRequirement> makeCodec(RequirementType<MinRequirement> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.lazyInitializedCodec(() -> SpellsCodecs.REQUIREMENT.listOf()).fieldOf("requirements").forGetter(ListRequirement::getList),
-                Codec.intRange(1, Integer.MAX_VALUE).fieldOf("minimum").forGetter(ListRequirement::getMinimum)
-        ).apply(instance, (list, minimum) -> new ListRequirement(type, list, minimum)));
+                ExtraCodecs.lazyInitializedCodec(() -> SpellsCodecs.REQUIREMENT.listOf()).fieldOf("requirements").forGetter(MinRequirement::getList),
+                Codec.intRange(1, Integer.MAX_VALUE).fieldOf("minimum").forGetter(MinRequirement::getMinimum)
+        ).apply(instance, (list, minimum) -> new MinRequirement(type, list, minimum)));
     }
     
     public static final String ANY_SUFFIX = ".any";
@@ -29,12 +29,12 @@ public class ListRequirement extends Requirement
     protected List<Requirement> list;
     protected int minimum;
     
-    public ListRequirement(RequirementType<?> type)
+    public MinRequirement(RequirementType<?> type)
     {
         super(type);
     }
     
-    public ListRequirement(RequirementType<?> type, List<Requirement> list, int minimum)
+    public MinRequirement(RequirementType<?> type, List<Requirement> list, int minimum)
     {
         this(type);
         this.list = list;
