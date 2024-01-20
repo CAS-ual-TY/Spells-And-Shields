@@ -6,10 +6,12 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 public class BookshelvesRequirement extends Requirement
 {
@@ -41,14 +43,19 @@ public class BookshelvesRequirement extends Requirement
     @Override
     protected boolean doesPlayerPass(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0) >= bookshelves;
+        return getBookshelvesAmount(spellProgressionHolder, access) >= bookshelves;
     }
     
     @Override
-    public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        int amount = access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0);
-        return SpellsDowngrade.translatable(descriptionId, amount, bookshelves);
+        int amount = getBookshelvesAmount(spellProgressionHolder, access);
+        tooltip.add(formatComponent(spellProgressionHolder, access, SpellsDowngrade.translatable(descriptionId, amount, bookshelves)));
+    }
+    
+    protected int getBookshelvesAmount(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    {
+        return access.evaluate(BookshelvesRequirement::getSurroundingEnchantingPower).orElse(0);
     }
     
     @Override

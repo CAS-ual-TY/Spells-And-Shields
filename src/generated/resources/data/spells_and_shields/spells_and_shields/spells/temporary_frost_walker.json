@@ -173,8 +173,8 @@
     {
       "type": "spells_and_shields:cube_block_targets",
       "activation": "apply",
-      "corner1": "<< vec3(-rect_radius, 0, -rect_radius) >>",
-      "corner2": "<< vec3(rect_radius, 0, rect_radius) >>",
+      "d/vec3/corner1": "<< vec3(-rect_radius, 0, -rect_radius) >>",
+      "d/vec3/corner2": "<< vec3(rect_radius, 0, rect_radius) >>",
       "t/source": "below",
       "td/targets": "blocks"
     },

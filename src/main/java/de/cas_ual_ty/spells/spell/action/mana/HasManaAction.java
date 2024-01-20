@@ -64,7 +64,7 @@ public class HasManaAction extends AffectSingleTypeAction<PlayerTarget>
             {
                 ManaHolder.getManaHolder(target.getPlayer()).ifPresent(manaHolder ->
                 {
-                    if(manaHolder.getMana() < amount)
+                    if(manaHolder.getUsableMana() < amount)
                     {
                         ctx.deactivate(activation);
                     }

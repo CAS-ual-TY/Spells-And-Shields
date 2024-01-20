@@ -38,7 +38,11 @@ public record ParticleEmitterSyncMessage(int entityId, boolean clear, List<Parti
     
     public static void handle(ParticleEmitterSyncMessage msg, Supplier<NetworkEvent.Context> context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleParticleEmitterSync(msg));
+        context.get().enqueueWork(() -> ClientMessageHandler.handleParticleEmitterSync(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
         context.get().setPacketHandled(true);
     }
 }

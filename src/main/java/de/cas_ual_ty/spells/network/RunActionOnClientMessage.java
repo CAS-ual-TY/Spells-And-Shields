@@ -33,7 +33,11 @@ public record RunActionOnClientMessage(SyncedSpellActionType<?, ?> actionType, I
     
     public static void handle(RunActionOnClientMessage msg, Supplier<NetworkEvent.Context> context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleSpellAction(msg));
+        context.get().enqueueWork(() -> ClientMessageHandler.handleSpellAction(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
         context.get().setPacketHandled(true);
     }
 }

@@ -369,7 +369,7 @@ public class SpellsGen implements DataProvider
         String uuidCode = " uuid_from_string('attribute' + '%s' + %s + %s + %s) ".formatted(attributeRL.getPath(), SPELL_SLOT, "operation", "value");
         
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(spellIcon, DefaultSpellIcon.make(PERMANENT_ICON_RL))), SpellsDowngrade.translatable(key, component), 0F)
-                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING), STRING.immediate(attributeRL.getPath()), DOUBLE.immediate(value), STRING.immediate(opString)))
+                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING), STRING.immediate(attributeRL.getPath()), DOUBLE.reference("value"), STRING.reference("operation")))
                 .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP, OWNER, SpellsUtil.objectToString(attribute, ForgeRegistries.ATTRIBUTES), Compiler.compileString(uuidCode, STRING)))
                 .addParameter(DOUBLE, "value", value)
                 .addParameter(STRING, "operation", opString)

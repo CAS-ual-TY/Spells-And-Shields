@@ -4,6 +4,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.requirement.*;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
+import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import de.cas_ual_ty.spells.util.SpellsDowngrade;
@@ -23,6 +24,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -178,6 +180,41 @@ public class SpellTrees
     public static Requirement item(Item item, int count, boolean consume)
     {
         return new ItemRequirement(RequirementTypes.ITEM.get(), new ItemStack(item, count), consume);
+    }
+    
+    public static Requirement min(int minimum, Requirement... list)
+    {
+        return new MinRequirement(RequirementTypes.MIN.get(), List.of(list), minimum);
+    }
+    
+    public static Requirement any(Requirement... list)
+    {
+        return min(1, list);
+    }
+    
+    public static Requirement all(Requirement... list)
+    {
+        return min(list.length, list);
+    }
+    
+    public static Requirement max(int maximum, Requirement... list)
+    {
+        return new MaxRequirement(RequirementTypes.MAX.get(), List.of(list), maximum);
+    }
+    
+    public static Requirement none(Requirement... list)
+    {
+        return max(0, list);
+    }
+    
+    public static Requirement not(Requirement... list)
+    {
+        return none(list);
+    }
+    
+    public static Requirement learned(ResourceLocation spellTree, int nodeId)
+    {
+        return new LearnedRequirement(RequirementTypes.LEARNED.get(), new SpellNodeId(spellTree, nodeId));
     }
     
     public static Requirement config()

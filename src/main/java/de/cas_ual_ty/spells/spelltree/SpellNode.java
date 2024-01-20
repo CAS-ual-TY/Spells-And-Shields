@@ -4,7 +4,6 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
-import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -129,7 +128,7 @@ public class SpellNode
     
     public boolean passesLearn(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return hiddenRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access)) && learnRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
+        return passesHidden(spellProgressionHolder, access) && learnRequirements.stream().allMatch(requirement -> requirement.passes(spellProgressionHolder, access));
     }
     
     public void onSpellLearned(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
@@ -152,8 +151,8 @@ public class SpellNode
     {
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getSpellDirect().getTitle());
-        hiddenRequirements.stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> !SpellsDowngrade.isEmpty(c)).forEach(tooltips::add);
-        learnRequirements.stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> !SpellsDowngrade.isEmpty(c)).forEach(tooltips::add);
+        hiddenRequirements.forEach(requirement -> requirement.makeDescription(tooltips, spellProgressionHolder, access));
+        learnRequirements.forEach(requirement -> requirement.makeDescription(tooltips, spellProgressionHolder, access));
         return tooltips;
     }
     

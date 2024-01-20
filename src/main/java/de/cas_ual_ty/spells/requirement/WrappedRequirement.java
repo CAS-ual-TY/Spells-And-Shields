@@ -6,11 +6,13 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.registers.RequirementTypes;
-import de.cas_ual_ty.spells.util.SpellsDowngrade;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WrappedRequirement extends Requirement
 {
@@ -31,19 +33,19 @@ public class WrappedRequirement extends Requirement
     
     protected Requirement requirement;
     protected RequirementStatus status;
-    protected MutableComponent component;
+    protected List<Component> cachedTooltip;
     
     public WrappedRequirement(RequirementType<?> type)
     {
         super(type);
     }
     
-    protected WrappedRequirement(RequirementType<?> type, Requirement requirement, RequirementStatus status, MutableComponent component)
+    protected WrappedRequirement(RequirementType<?> type, Requirement requirement, RequirementStatus status, List<Component> cachedTooltip)
     {
         this(type);
         this.requirement = requirement;
         this.status = status;
-        this.component = component;
+        this.cachedTooltip = cachedTooltip;
     }
     
     public WrappedRequirement(RequirementType<?> type, Requirement requirement)
@@ -61,9 +63,9 @@ public class WrappedRequirement extends Requirement
         return status;
     }
     
-    public MutableComponent getComponent()
+    public List<Component> getCachedTooltip()
     {
-        return component;
+        return cachedTooltip;
     }
     
     @Override
@@ -81,36 +83,37 @@ public class WrappedRequirement extends Requirement
     public void decide(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)
     {
         status = RequirementStatus.decide(passes(spellProgressionHolder, access));
-        MutableComponent c = makeDescription(spellProgressionHolder, access);
-        
-        if(!SpellsDowngrade.isEmpty(c))
-        {
-            component = SpellsDowngrade.literal("- ").append(c.withStyle(hidden ? ChatFormatting.DARK_GRAY : (status.passes ? ChatFormatting.GREEN : ChatFormatting.RED)));
-        }
-        else
-        {
-            component = SpellsDowngrade.empty();
-        }
+        cachedTooltip = new LinkedList<>();
+        requirement.makeDescription(cachedTooltip, spellProgressionHolder, access);
     }
     
     @Override
-    public MutableComponent makeDescription(SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
+    public void makeDescription(List<Component> tooltip, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access)
     {
-        return component != null ? component : requirement.makeDescription(spellProgressionHolder, access);
+        if(cachedTooltip != null)
+        {
+            tooltip.addAll(cachedTooltip);
+        }
     }
     
     @Override
     public void writeToBuf(FriendlyByteBuf buf)
     {
         buf.writeByte(status.ordinal());
-        buf.writeComponent(component);
+        buf.writeInt(cachedTooltip.size());
+        cachedTooltip.forEach(buf::writeComponent);
     }
     
     @Override
     public void readFromBuf(FriendlyByteBuf buf)
     {
         status = RequirementStatus.values()[buf.readByte()];
-        component = (MutableComponent) buf.readComponent();
+        int size = buf.readInt();
+        cachedTooltip = new ArrayList<>(size);
+        for(int i = 0; i < size; i++)
+        {
+            cachedTooltip.add(buf.readComponent());
+        }
     }
     
     public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)

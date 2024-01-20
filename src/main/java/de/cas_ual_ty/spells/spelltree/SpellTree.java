@@ -6,7 +6,6 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
-import de.cas_ual_ty.spells.util.SpellsDowngrade;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -61,7 +60,7 @@ public class SpellTree extends ForgeRegistryEntry<SpellTree>
     {
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getTitle());
-        getRequirements().stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> !SpellsDowngrade.isEmpty(c)).forEach(tooltips::add);
+        getRequirements().forEach(requirement -> requirement.makeDescription(tooltips, spellProgressionHolder, access));
         return tooltips;
     }
     
