@@ -86,6 +86,11 @@ public class ManaHolder implements INBTSerializable<ListTag>
         return extraMana;
     }
 
+    public float getUsableMana()
+    {
+        return mana + extraMana;
+    }
+
     public void replenish(float amount)
     {
         mana += amount;

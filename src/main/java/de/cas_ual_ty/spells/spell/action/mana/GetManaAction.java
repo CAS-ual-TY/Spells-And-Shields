@@ -42,7 +42,7 @@ public class GetManaAction extends GetTargetAttributeAction<LivingEntityTarget>
         
         if(!mana.isEmpty())
         {
-            addVariableAttribute(e -> ManaHolder.getManaHolder(e.getLivingEntity()).map(mh -> (double) mh.getMana()).orElse(null), CtxVarTypes.DOUBLE.get(), mana);
+            addVariableAttribute(e -> ManaHolder.getManaHolder(e.getLivingEntity()).map(mh -> (double) mh.getUsableMana()).orElse(null), CtxVarTypes.DOUBLE.get(), mana);
         }
     }
     
