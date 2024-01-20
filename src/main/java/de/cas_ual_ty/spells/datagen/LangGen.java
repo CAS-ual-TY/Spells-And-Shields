@@ -134,6 +134,8 @@ public class LangGen extends LanguageProvider
         add(SpellCommand.SPELLS_SLOT_SET_MULTIPLE, "Set active spell in slot %s of %s players to '%s' from spell tree '%s'");
         add(SpellCommand.SPELLS_SLOT_CLEAR_SINGLE, "Cleared active spells of %s");
         add(SpellCommand.SPELLS_SLOT_CLEAR_MULTIPLE, "Cleared active spells of %s players");
+        add(SpellCommand.SPELLS_CAST_DIRECT, "%s cast spell '%s'");
+        add(SpellCommand.SPELLS_CAST, "%s cast spell '%s' from spell tree '%s'");
         add(SpellCommand.UNKNOWN_NODE, "Spell tree '%s' does not have a spell node '%s'");
         
         add(SpellProgressionScreen.KEY_LEARN, "Learn");
