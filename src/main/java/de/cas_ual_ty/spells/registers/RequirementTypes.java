@@ -21,7 +21,7 @@ public class RequirementTypes
     public static final DeferredHolder<RequirementType<?>, RequirementType<AdvancementRequirement>> ADVANCEMENT = DEFERRED_REGISTER.register("advancement", () -> new RequirementType<>(AdvancementRequirement::new, AdvancementRequirement::makeCodec));
     public static final DeferredHolder<RequirementType<?>, RequirementType<ItemRequirement>> ITEM = DEFERRED_REGISTER.register("item", () -> new RequirementType<>(ItemRequirement::new, ItemRequirement::makeCodec));
     public static final DeferredHolder<RequirementType<?>, RequirementType<ConfigRequirement>> CONFIG = DEFERRED_REGISTER.register("config", () -> new RequirementType<>(ConfigRequirement::new, ConfigRequirement::makeCodec));
-    public static final DeferredHolder<RequirementType<?>, RequirementType<ListRequirement>> LIST = DEFERRED_REGISTER.register("list", () -> new RequirementType<>(ListRequirement::new, ListRequirement::makeCodec));
+    public static final DeferredHolder<RequirementType<?>, RequirementType<MinRequirement>> MIN = DEFERRED_REGISTER.register("min", () -> new RequirementType<>(MinRequirement::new, MinRequirement::makeCodec));
     public static final DeferredHolder<RequirementType<?>, RequirementType<NotRequirement>> NOT = DEFERRED_REGISTER.register("not", () -> new RequirementType<>(NotRequirement::new, NotRequirement::makeCodec));
     public static final DeferredHolder<RequirementType<?>, RequirementType<LearnedRequirement>> LEARNED = DEFERRED_REGISTER.register("learned", () -> new RequirementType<>(LearnedRequirement::new, LearnedRequirement::makeCodec));
     
