@@ -63,9 +63,9 @@ public class ManaBladeEnchantment extends Enchantment
         {
             ManaHolder.getManaHolder(user).ifPresent(manaHolder ->
             {
-                if(manaHolder.getMana() > 2F)
+                if(manaHolder.getUsableMana() > 2F)
                 {
-                    float damage = Math.min(manaHolder.getMana(), (float) level * 2F);
+                    float damage = Math.min(manaHolder.getUsableMana(), (float) level * 2F);
                     
                     manaHolder.burn(5F);
                     livingEntity.hurt(livingEntity.level().damageSources().indirectMagic(user, null), damage);
