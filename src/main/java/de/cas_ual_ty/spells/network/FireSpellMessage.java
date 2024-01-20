@@ -29,6 +29,10 @@ public record FireSpellMessage(int spell)
             {
                 SpellHelper.fireSpellSlot(player, msg.spell());
             }
+        }).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
         });
         
         context.get().setPacketHandled(true);

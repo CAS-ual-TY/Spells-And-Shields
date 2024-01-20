@@ -22,7 +22,11 @@ public record ManaSyncMessage(int entityId, float mana, float extraMana)
     
     public static void handle(ManaSyncMessage msg, Supplier<NetworkEvent.Context> context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleManaSync(msg));
+        context.get().enqueueWork(() -> ClientMessageHandler.handleManaSync(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
         context.get().setPacketHandled(true);
     }
 }

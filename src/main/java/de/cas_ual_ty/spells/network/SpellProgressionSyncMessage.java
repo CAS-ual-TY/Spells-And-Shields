@@ -72,7 +72,11 @@ public record SpellProgressionSyncMessage(BlockPos blockPos, List<SpellTree> spe
     
     public static void handle(SpellProgressionSyncMessage msg, Supplier<NetworkEvent.Context> context)
     {
-        context.get().enqueueWork(() -> ClientMessageHandler.handleSpellProgressionSync(msg));
+        context.get().enqueueWork(() -> ClientMessageHandler.handleSpellProgressionSync(msg)).exceptionally(e ->
+        {
+            e.printStackTrace();
+            return null;
+        });
         context.get().setPacketHandled(true);
     }
 }
