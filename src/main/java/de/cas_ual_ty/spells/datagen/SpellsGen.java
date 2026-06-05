@@ -186,7 +186,7 @@ public class SpellsGen
                 double value = am.getAmount();
                 
                 double d;
-                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
+                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 {
                     d = value;
                 }
@@ -247,7 +247,7 @@ public class SpellsGen
                 double value = am.getAmount();
                 
                 double d;
-                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
+                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 {
                     d = value;
                 }
@@ -327,7 +327,7 @@ public class SpellsGen
                 double value = am.getAmount();
                 
                 double d;
-                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
+                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 {
                     d = value;
                 }
@@ -356,14 +356,11 @@ public class SpellsGen
         MutableComponent component = Component.translatable(attribute.getDescriptionId());
         ResourceLocation attributeRL = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
         String opString = SpellsUtil.operationToString(op);
-        
-        String uuidCode = " uuid_from_string('attribute' + '%s' + %s + %s + %s) ".formatted(attributeRL.getPath(), SPELL_SLOT, "operation", "value");
-        
+        String nameCode = " '" + SpellsAndShields.MOD_ID + ":" + attributeRL.getPath() + "_' + " + SPELL_SLOT;
+
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(spellIcon, DefaultSpellIcon.make(PERMANENT_ICON_RL))), Component.translatable(key, component), 0F)
-                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute, BuiltInRegistries.ATTRIBUTE), Compiler.compileString(uuidCode, STRING), STRING.immediate(attributeRL.getPath()), DOUBLE.immediate(value), STRING.immediate(opString)))
-                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP, OWNER, SpellsUtil.objectToString(attribute, BuiltInRegistries.ATTRIBUTE), Compiler.compileString(uuidCode, STRING)))
-                .addParameter(DOUBLE, "value", value)
-                .addParameter(STRING, "operation", opString)
+                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute, BuiltInRegistries.ATTRIBUTE), Compiler.compileString(nameCode, STRING), DOUBLE.immediate(value), STRING.immediate(opString)))
+                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP, OWNER, SpellsUtil.objectToString(attribute, BuiltInRegistries.ATTRIBUTE), Compiler.compileString(nameCode, STRING)))
                 .addEventHook(ON_EQUIP)
                 .addEventHook(ON_UNEQUIP)
                 .addTooltip(Component.translatable(descKey, component.copy().withStyle(ChatFormatting.BLUE)));
@@ -372,7 +369,7 @@ public class SpellsGen
         spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
         
         double d;
-        if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.MULTIPLY_TOTAL)
+        if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
         {
             d = value;
         }

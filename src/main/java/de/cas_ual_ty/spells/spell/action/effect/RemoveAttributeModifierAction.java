@@ -15,6 +15,7 @@ import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
 public class RemoveAttributeModifierAction extends AffectTypeAction<LivingEntityTarget>
@@ -25,58 +26,58 @@ public class RemoveAttributeModifierAction extends AffectTypeAction<LivingEntity
                 activationCodec(),
                 multiTargetsCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("attribute")).forGetter(RemoveAttributeModifierAction::getAttribute),
-                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(RemoveAttributeModifierAction::getUuid)
-        ).apply(instance, (activation, multiTargets, attribute, uuid) -> new RemoveAttributeModifierAction(type, activation, multiTargets, attribute, uuid)));
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("id")).forGetter(RemoveAttributeModifierAction::getId)
+        ).apply(instance, (activation, multiTargets, attribute, id) -> new RemoveAttributeModifierAction(type, activation, multiTargets, attribute, id)));
     }
-    
-    public static RemoveAttributeModifierAction make(Object activation, Object multiTargets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> uuid)
+
+    public static RemoveAttributeModifierAction make(Object activation, Object multiTargets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> id)
     {
-        return new RemoveAttributeModifierAction(SpellActionTypes.REMOVE_ATTRIBUTE_MODIFIER.get(), activation.toString(), multiTargets.toString(), attribute, uuid);
+        return new RemoveAttributeModifierAction(SpellActionTypes.REMOVE_ATTRIBUTE_MODIFIER.get(), activation.toString(), multiTargets.toString(), attribute, id);
     }
-    
+
     protected DynamicCtxVar<String> attribute;
-    protected DynamicCtxVar<String> uuid;
-    
+    protected DynamicCtxVar<String> id;
+
     public RemoveAttributeModifierAction(SpellActionType<?> type)
     {
         super(type);
     }
-    
-    public RemoveAttributeModifierAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> uuid)
+
+    public RemoveAttributeModifierAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<String> attribute, DynamicCtxVar<String> id)
     {
         super(type, activation, multiTargets);
         this.attribute = attribute;
-        this.uuid = uuid;
+        this.id = id;
     }
-    
+
     public DynamicCtxVar<String> getAttribute()
     {
         return attribute;
     }
-    
-    public DynamicCtxVar<String> getUuid()
+
+    public DynamicCtxVar<String> getId()
     {
-        return uuid;
+        return id;
     }
-    
+
     @Override
     public ITargetType<LivingEntityTarget> getAffectedType()
     {
         return TargetTypes.LIVING_ENTITY.get();
     }
-    
+
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget target)
     {
         SpellsUtil.stringToObject(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
         {
             AttributeInstance a = target.getLivingEntity().getAttribute(attribute);
-            
+
             if(a != null)
             {
-                uuid.getValue(ctx).map(SpellsUtil::uuidFromString).ifPresent(uuid ->
+                id.getValue(ctx).ifPresent(id ->
                 {
-                    a.removePermanentModifier(uuid);
+                    a.removeModifier(ResourceLocation.parse(id));
                 });
             }
         });

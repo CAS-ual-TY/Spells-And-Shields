@@ -241,7 +241,7 @@ public class SpellsUtil
                 {
                     case ADDITION -> "addition";
                     case MULTIPLY_BASE -> "multiply_base";
-                    case MULTIPLY_TOTAL -> "multiply_total";
+                    case ADD_MULTIPLIED_TOTAL -> "multiply_total";
                     default -> null;
                 };
     }
@@ -252,7 +252,7 @@ public class SpellsUtil
                 {
                     case "addition" -> AttributeModifier.Operation.ADDITION;
                     case "multiply_base" -> AttributeModifier.Operation.MULTIPLY_BASE;
-                    case "multiply_total" -> AttributeModifier.Operation.MULTIPLY_TOTAL;
+                    case "multiply_total" -> AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
                     default -> null;
                 };
     }
