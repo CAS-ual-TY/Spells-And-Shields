@@ -50,12 +50,12 @@ public class SpellsEvents
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
         
-        register(BuiltinEvents.LIVING_DAMAGE_ATTACKER.activation, LivingDamageEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
+        register(BuiltinEvents.LIVING_DAMAGE_ATTACKER.activation, LivingDamageEvent.Pre.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
                 .addTargetLink(e -> Target.of(e.getEntity()), "victim")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
         
-        register(BuiltinEvents.LIVING_DAMAGE_VICTIM.activation, LivingDamageEvent.class)
+        register(BuiltinEvents.LIVING_DAMAGE_VICTIM.activation, LivingDamageEvent.Pre.class)
                 .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
