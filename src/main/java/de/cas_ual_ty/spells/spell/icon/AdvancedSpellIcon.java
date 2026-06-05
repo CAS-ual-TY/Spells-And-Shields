@@ -20,8 +20,8 @@ public class AdvancedSpellIcon extends SpellIcon
                 Codec.INT.fieldOf("height").forGetter(AdvancedSpellIcon::getHeight),
                 Codec.INT.fieldOf("textureWidth").forGetter(AdvancedSpellIcon::getTextureWidth),
                 Codec.INT.fieldOf("textureHeight").forGetter(AdvancedSpellIcon::getTextureHeight),
-                Codec.optionalField("offsetX", Codec.INT).xmap(optional -> optional.orElse(0), i -> i == 0 ? Optional.empty() : Optional.of(i)).forGetter(AdvancedSpellIcon::getOffsetX),
-                Codec.optionalField("offsetY", Codec.INT).xmap(optional -> optional.orElse(0), i -> i == 0 ? Optional.empty() : Optional.of(i)).forGetter(AdvancedSpellIcon::getOffsetY)
+                Codec.INT.optionalFieldOf("offsetX").xmap(optional -> optional.orElse(0), i -> i == 0 ? Optional.empty() : Optional.of(i)).forGetter(AdvancedSpellIcon::getOffsetX),
+                Codec.INT.optionalFieldOf("offsetY").xmap(optional -> optional.orElse(0), i -> i == 0 ? Optional.empty() : Optional.of(i)).forGetter(AdvancedSpellIcon::getOffsetY)
         ).apply(instance, (texture, u, v, width, height, textureWidth, textureHeight, offsetX, offsetY) -> new AdvancedSpellIcon(type, texture, u, v, width, height, textureWidth, textureHeight, offsetX, offsetY)));
     }
     

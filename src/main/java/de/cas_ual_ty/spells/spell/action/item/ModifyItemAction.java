@@ -13,8 +13,10 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 
 public class ModifyItemAction extends AffectSingleTypeAction<ItemTarget>
 {
@@ -87,7 +89,7 @@ public class ModifyItemAction extends AffectSingleTypeAction<ItemTarget>
             }
         });
         
-        tag.getValue(ctx).ifPresent(itemStack::setTag);
+        tag.getValue(ctx).ifPresent(t -> itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(t)));
     }
     
     @Override

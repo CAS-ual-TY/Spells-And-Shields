@@ -14,6 +14,7 @@ import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -125,7 +126,7 @@ public class PlayerHasItemsAction extends AffectSingleTypeAction<PlayerTarget>
                         
                         for(ItemStack i : items)
                         {
-                            if(i.getItem() == item && (tag == null || tag.isEmpty() || (i.getTag() != null && tag.equals(i.getTag()))))
+                            if(i.getItem() == item && (tag == null || tag.isEmpty() || (i.get(DataComponents.CUSTOM_DATA) != null && tag.equals(i.get(DataComponents.CUSTOM_DATA).copyTag()))))
                             {
                                 count += i.getCount();
                             }

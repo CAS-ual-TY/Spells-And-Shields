@@ -29,7 +29,7 @@ public class ExecutePlayerCommandAction extends AffectTypeAction<PlayerTarget>
                 activationCodec(),
                 multiTargetsCodec(),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("command")).forGetter(ExecutePlayerCommandAction::getCommand),
-                Codec.optionalField(ParamNames.paramIntImm("permission_level"), Codec.INT).xmap(o -> o.orElse(MAX_PERMISSION_LEVEL), Optional::ofNullable).forGetter(ExecutePlayerCommandAction::getPermissionLevel)
+                Codec.INT.optionalFieldOf(ParamNames.paramIntImm("permission_level")).xmap(o -> o.orElse(MAX_PERMISSION_LEVEL), Optional::ofNullable).forGetter(ExecutePlayerCommandAction::getPermissionLevel)
         ).apply(instance, (activation, multiTargets, command, permissionLevel) -> new ExecutePlayerCommandAction(type, activation, multiTargets, command, permissionLevel)));
     }
     

@@ -14,7 +14,9 @@ import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -104,7 +106,7 @@ public class OverrideItemAction extends AffectSingleTypeAction<ItemTarget>
                 }
             });
             
-            tag.getValue(ctx).ifPresent(newStack::setTag);
+            tag.getValue(ctx).ifPresent(t -> newStack.set(DataComponents.CUSTOM_DATA, CustomData.of(t)));
             
             itemTarget.modify(newStack);
         });

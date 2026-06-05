@@ -81,7 +81,7 @@ public class CtxVarType<T>
     
     public MapCodec<DynamicCtxVar<T>> optionalRefCodec(String field, T replacement)
     {
-        return Codec.optionalField(field, DynamicCtxVar.makeCodec(this)).xmap(o -> o.orElse(immediate(replacement)), Optional::ofNullable);
+        return DynamicCtxVar.makeCodec(this).optionalFieldOf(field).xmap(o -> o.orElse(immediate(replacement)), Optional::ofNullable);
     }
     
     public MapCodec<DynamicCtxVar<T>> optionalRefCodec(String field)

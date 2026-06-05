@@ -26,6 +26,7 @@ import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.RegistryOps;
@@ -80,19 +81,19 @@ public class SpellsCodecs
         
         SPELL_NODE = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL).fieldOf("n1/spell_id").forGetter(node -> node.getSpellInstance().getSpell()),
-                Codec.optionalField("n7/mana_cost", Codec.FLOAT).xmap(o -> o.orElse(-1F), manaCost -> manaCost >= 0 ? Optional.of(manaCost) : Optional.empty()).forGetter(node -> node.getSpellInstance().getManaCost()),
-                Codec.optionalField("n8/spell_parameters", ExtraCodecs.lazyInitializedCodec(() -> CTX_VAR).listOf()).xmap(o -> o.orElse(new LinkedList<>()), p -> Optional.of(p).map(l -> l.isEmpty() ? null : l)).forGetter(node -> node.getSpellInstance().getParameters()),
+                Codec.FLOAT.optionalFieldOf("n7/mana_cost").xmap(o -> o.orElse(-1F), manaCost -> manaCost >= 0 ? Optional.of(manaCost) : Optional.empty()).forGetter(node -> node.getSpellInstance().getManaCost()),
+                ExtraCodecs.lazyInitializedCodec(() -> CTX_VAR).listOf().optionalFieldOf("n8/spell_parameters").xmap(o -> o.orElse(new LinkedList<>()), p -> Optional.of(p).map(l -> l.isEmpty() ? null : l)).forGetter(node -> node.getSpellInstance().getParameters()),
                 Codec.INT.fieldOf("n4/level_cost").forGetter(SpellNode::getLevelCost),
-                Codec.optionalField("n5/hidden_requirements", REQUIREMENT.listOf()).xmap(o -> o.orElse(new LinkedList<>()), r -> Optional.of(r).map(l -> l.isEmpty() ? null : l)).forGetter(SpellNode::getHiddenRequirements),
-                Codec.optionalField("n6/learn_requirements", REQUIREMENT.listOf()).xmap(o -> o.orElse(new LinkedList<>()), r -> Optional.of(r).map(l -> l.isEmpty() ? null : l)).forGetter(SpellNode::getLearnRequirements),
+                REQUIREMENT.listOf().optionalFieldOf("n5/hidden_requirements").xmap(o -> o.orElse(new LinkedList<>()), r -> Optional.of(r).map(l -> l.isEmpty() ? null : l)).forGetter(SpellNode::getHiddenRequirements),
+                REQUIREMENT.listOf().optionalFieldOf("n6/learn_requirements").xmap(o -> o.orElse(new LinkedList<>()), r -> Optional.of(r).map(l -> l.isEmpty() ? null : l)).forGetter(SpellNode::getLearnRequirements),
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_NODE).listOf().fieldOf("n9/child_nodes").forGetter(SpellNode::getChildren),
-                Codec.optionalField("n2/node_id", Codec.INT).xmap(o -> o.map(i -> new SpellNodeId(null, i)).orElse(null), nodeId -> Optional.ofNullable(nodeId).map(SpellNodeId::nodeId)).forGetter(SpellNode::getNodeId),
-                Codec.optionalField("n3/node_frame", Codec.intRange(0, 2)).xmap(o -> o.orElse(0), f -> Optional.of(f).map(i -> i <= 0 ? null : i)).forGetter(SpellNode::getFrame)
+                Codec.INT.optionalFieldOf("n2/node_id").xmap(o -> o.map(i -> new SpellNodeId(null, i)).orElse(null), nodeId -> Optional.ofNullable(nodeId).map(SpellNodeId::nodeId)).forGetter(SpellNode::getNodeId),
+                Codec.intRange(0, 2).optionalFieldOf("n3/node_frame").xmap(o -> o.orElse(0), f -> Optional.of(f).map(i -> i <= 0 ? null : i)).forGetter(SpellNode::getFrame)
         ).apply(instance, (spell, manaCost, variables, levelCost, hiddenRequirements, learnRequirements, children, id, frame) -> new SpellNode(id, new SpellInstance(spell, manaCost, variables), levelCost, hiddenRequirements, learnRequirements, children, frame))));
         
         SPELL_TREE_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 SPELL_NODE.fieldOf("t3/root_node").forGetter(SpellTree::getRoot),
-                ExtraCodecs.COMPONENT.fieldOf("t1/title").forGetter(SpellTree::getTitle),
+                ComponentSerialization.CODEC.fieldOf("t1/title").forGetter(SpellTree::getTitle),
                 SPELL_ICON.fieldOf("t2/icon").forGetter(SpellTree::getIcon)
         ).apply(instance, SpellTree::new)));
         
@@ -101,8 +102,8 @@ public class SpellsCodecs
         SPELL_CONTENTS = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_ACTION).listOf().fieldOf("s7/spell_actions").forGetter(Spell::getSpellActions),
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("s2/icon").forGetter(Spell::getIcon),
-                ExtraCodecs.COMPONENT.fieldOf("s1/title").forGetter(Spell::getTitle),
-                ExtraCodecs.COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(Spell::getTooltip),
+                ComponentSerialization.CODEC.fieldOf("s1/title").forGetter(Spell::getTitle),
+                ComponentSerialization.CODEC.listOf().fieldOf("s4/tooltip").forGetter(Spell::getTooltip),
                 Codec.FLOAT.fieldOf("s3/mana_cost").xmap(f -> Math.max(0, f), f -> Math.max(0, f)).forGetter(Spell::getManaCost),
                 CTX_VAR.listOf().fieldOf("s6/spell_parameters").forGetter(Spell::getParameters),
                 Codec.STRING.listOf().fieldOf("s5/spell_events").forGetter(Spell::getEventsList)
@@ -110,8 +111,8 @@ public class SpellsCodecs
         
         SPELL_SYNC = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
                 ExtraCodecs.lazyInitializedCodec(() -> SPELL_ICON).fieldOf("s2/icon").forGetter(Spell::getIcon),
-                ExtraCodecs.COMPONENT.fieldOf("s1/title").forGetter(Spell::getTitle),
-                ExtraCodecs.COMPONENT.listOf().fieldOf("s4/tooltip").forGetter(s -> s.getTooltip().isEmpty() ? ImmutableList.of(Component.empty()) : s.getTooltip()),
+                ComponentSerialization.CODEC.fieldOf("s1/title").forGetter(Spell::getTitle),
+                ComponentSerialization.CODEC.listOf().fieldOf("s4/tooltip").forGetter(s -> s.getTooltip().isEmpty() ? ImmutableList.of(Component.empty()) : s.getTooltip()),
                 Codec.FLOAT.fieldOf("s3/mana_cost").xmap(f -> Math.max(0, f), f -> Math.max(0, f)).forGetter(Spell::getManaCost)
         ).apply(instance, Spell::new)));
         

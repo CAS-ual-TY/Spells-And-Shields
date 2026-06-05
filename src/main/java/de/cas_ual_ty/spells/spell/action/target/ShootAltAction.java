@@ -36,7 +36,7 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("entity_hit_activation")).forGetter(ShootAltAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("timeout_activation")).forGetter(ShootAltAction::getTimeoutActivation),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(ShootAltAction::getProjectileDestination),
-                Codec.optionalField(ParamNames.singleTarget("shooter"), Codec.STRING).xmap(o -> o.orElse(""), s -> s.isEmpty() ? Optional.empty() : Optional.ofNullable(s)).forGetter(ShootAltAction::getShooter)
+                Codec.STRING.optionalFieldOf(ParamNames.singleTarget("shooter")).xmap(o -> o.orElse(""), s -> s.isEmpty() ? Optional.empty() : Optional.ofNullable(s)).forGetter(ShootAltAction::getShooter)
         ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, shooter) -> new ShootAltAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, shooter)));
     }
     
