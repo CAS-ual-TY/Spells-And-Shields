@@ -23,7 +23,6 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -62,8 +61,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.network.IContainerFactory;
-import net.neoforged.neoforge.network.NetworkHooks;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -110,7 +108,7 @@ public class BuiltInRegisters
     public static final DeferredHolder<Potion, Potion> STRONG_LEAKING = POTIONS.register("strong_leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT.get(), 432, 1)));
     
     private static final DeferredRegister<MenuType<?>> CONTAINER_TYPES = DeferredRegister.create(BuiltInRegistries.MENU, MOD_ID);
-    public static final DeferredHolder<MenuType<?>, MenuType<SpellProgressionMenu>> SPELL_PROGRESSION_MENU = CONTAINER_TYPES.register("spell_progression", () -> new MenuType<>((IContainerFactory<SpellProgressionMenu>) SpellProgressionMenu::construct, FeatureFlags.DEFAULT_FLAGS));
+    public static final DeferredHolder<MenuType<?>, MenuType<SpellProgressionMenu>> SPELL_PROGRESSION_MENU = CONTAINER_TYPES.register("spell_progression", () -> IMenuTypeExtension.create(SpellProgressionMenu::construct, FeatureFlags.DEFAULT_FLAGS));
     
     private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MOD_ID);
     public static final DeferredHolder<EntityType<?>, EntityType<SpellProjectile>> SPELL_PROJECTILE = ENTITY_TYPES.register("spell_projectile", () -> EntityType.Builder.<SpellProjectile>of(SpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(10).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("spell_projectile"));
@@ -176,26 +174,20 @@ public class BuiltInRegisters
                     List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
                     HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
                     
-                    Registry<Spell> registry = Spells.getRegistry(level);
-                    
-                    NetworkHooks.openScreen(player, new MenuProvider()
+                    player.openMenu(new MenuProvider()
                     {
                         @Override
                         public Component getDisplayName()
                         {
                             return SpellProgressionMenu.TITLE;
                         }
-                        
+
                         @Override
                         public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
                         {
                             return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
                         }
-                    }, buf ->
-                    {
-                        SpellProgressionSyncMessage data = new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression, level);
-                        SpellProgressionSyncMessage.encode(data, buf);
-                    });
+                    }, buf -> SpellProgressionSyncMessage.STREAM_CODEC.encode(buf, new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression)));
                 });
             });
         }

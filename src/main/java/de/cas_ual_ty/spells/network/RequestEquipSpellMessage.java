@@ -1,42 +1,43 @@
 package de.cas_ual_ty.spells.network;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId)
+public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId) implements CustomPacketPayload
 {
-    public static void encode(RequestEquipSpellMessage msg, FriendlyByteBuf buf)
+    public static final Type<RequestEquipSpellMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "request_equip_spell"));
+    public static final StreamCodec<FriendlyByteBuf, RequestEquipSpellMessage> STREAM_CODEC = StreamCodec.of(
+            (buf, msg) ->
+            {
+                buf.writeByte(msg.slot());
+                buf.writeResourceLocation(msg.nodeId().treeId());
+                buf.writeShort(msg.nodeId().nodeId());
+            },
+            buf -> new RequestEquipSpellMessage(buf.readByte(), new SpellNodeId(buf.readResourceLocation(), buf.readShort()))
+    );
+
+    @Override
+    public Type<? extends CustomPacketPayload> type()
     {
-        buf.writeByte(msg.slot());
-        buf.writeResourceLocation(msg.nodeId().treeId());
-        buf.writeShort(msg.nodeId().nodeId());
+        return TYPE;
     }
-    
-    public static RequestEquipSpellMessage decode(FriendlyByteBuf buf)
-    {
-        return new RequestEquipSpellMessage(buf.readByte(), new SpellNodeId(buf.readResourceLocation(), buf.readShort()));
-    }
-    
-    public static void handle(RequestEquipSpellMessage msg, NetworkEvent.Context context)
+
+    public static void handle(RequestEquipSpellMessage msg, IPayloadContext context)
     {
         context.enqueueWork(() ->
         {
-            ServerPlayer player = context.getSender();
-            
-            if(player == null)
-            {
-                return;
-            }
-            
+            ServerPlayer player = (ServerPlayer) context.player();
             if(player.containerMenu instanceof SpellProgressionMenu menu)
             {
                 menu.equipSpellRequest(msg.slot(), msg.nodeId());
             }
         });
-        
-        context.setPacketHandled(true);
     }
 }

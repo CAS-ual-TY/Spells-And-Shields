@@ -163,7 +163,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
     {
         if(player instanceof ServerPlayer serverPlayer)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> serverPlayer), makeSyncMessage());
+            PacketDistributor.sendToPlayersTrackingEntityAndSelf(serverPlayer, makeSyncMessage());
         }
     }
     

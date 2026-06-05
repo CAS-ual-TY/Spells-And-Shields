@@ -245,7 +245,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
         else if(button == learnButton && selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestLearnSpellMessage(selectedSpellWidget.clickedWidget.spellNode.getNodeId()));
+            PacketDistributor.sendToServer(new RequestLearnSpellMessage(selectedSpellWidget.clickedWidget.spellNode.getNodeId()));
         }
     }
     
@@ -253,7 +253,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     {
         if(selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.spellNode.getNodeId()));
+            PacketDistributor.sendToServer(new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.spellNode.getNodeId()));
             spellClicked(null);
         }
     }

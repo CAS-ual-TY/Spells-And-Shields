@@ -126,7 +126,7 @@ public class SpellsClientUtil
                 event.addListener(new SpellInteractButton(screen.getGuiLeft(), screen.getGuiTop() - SpellNodeWidget.FRAME_HEIGHT, Math.min(176, screen.width), SpellNodeWidget.FRAME_HEIGHT, SpellProgressionMenu.TITLE,
                         (b) ->
                         {
-                            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new RequestSpellProgressionMenuMessage(lastRightClickedBlockPos));
+                            PacketDistributor.sendToServer(new RequestSpellProgressionMenuMessage(lastRightClickedBlockPos));
                         },
                         AdvancementWidgetType.OBTAINED.boxSprite()));
             }

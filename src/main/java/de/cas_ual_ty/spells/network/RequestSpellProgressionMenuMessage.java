@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.network;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
@@ -13,74 +14,67 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.NetworkHooks;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.HashMap;
 import java.util.List;
 
-public record RequestSpellProgressionMenuMessage(BlockPos pos)
+public record RequestSpellProgressionMenuMessage(BlockPos pos) implements CustomPacketPayload
 {
-    public static void encode(RequestSpellProgressionMenuMessage msg, FriendlyByteBuf buf)
+    public static final Type<RequestSpellProgressionMenuMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "request_progression_menu"));
+    public static final StreamCodec<FriendlyByteBuf, RequestSpellProgressionMenuMessage> STREAM_CODEC = StreamCodec.of(
+            (buf, msg) -> buf.writeBlockPos(msg.pos()),
+            buf -> new RequestSpellProgressionMenuMessage(buf.readBlockPos())
+    );
+
+    @Override
+    public Type<? extends CustomPacketPayload> type()
     {
-        buf.writeBlockPos(msg.pos());
+        return TYPE;
     }
-    
-    public static RequestSpellProgressionMenuMessage decode(FriendlyByteBuf buf)
-    {
-        return new RequestSpellProgressionMenuMessage(buf.readBlockPos());
-    }
-    
-    public static void handle(RequestSpellProgressionMenuMessage msg, NetworkEvent.Context context)
+
+    public static void handle(RequestSpellProgressionMenuMessage msg, IPayloadContext context)
     {
         context.enqueueWork(() ->
         {
-            ServerPlayer player = context.getSender();
-            
-            if(player == null)
-            {
-                return;
-            }
-            
+            ServerPlayer player = (ServerPlayer) context.player();
+
             try
             {
                 if(player.hasContainerOpen() && SpellsUtil.isEnchantingTable(player.level().getBlockState(msg.pos()).getBlock()))
                 {
                     ContainerLevelAccess access = ContainerLevelAccess.create(player.level(), msg.pos());
-                    
+
                     SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(spellProgressionHolder ->
                     {
                         access.execute((level, blockPos) ->
                         {
                             List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
                             HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
-                            
-                            Registry<Spell> registry = Spells.getRegistry(level);
-                            
-                            NetworkHooks.openScreen(player, new MenuProvider()
+
+                            player.openMenu(new MenuProvider()
                             {
                                 @Override
                                 public Component getDisplayName()
                                 {
                                     return SpellProgressionMenu.TITLE;
                                 }
-                                
+
                                 @Override
                                 public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player)
                                 {
                                     return new SpellProgressionMenu(id, inventory, access, availableSpellTrees, progression);
                                 }
-                            }, buf ->
-                            {
-                                SpellProgressionSyncMessage data = new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression, level);
-                                SpellProgressionSyncMessage.encode(data, buf);
-                            });
+                            }, buf -> SpellProgressionSyncMessage.STREAM_CODEC.encode(buf, new SpellProgressionSyncMessage(blockPos, availableSpellTrees, progression)));
                         });
                     });
                 }
@@ -90,7 +84,5 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos)
                 e.printStackTrace();
             }
         });
-        
-        context.setPacketHandled(true);
     }
 }

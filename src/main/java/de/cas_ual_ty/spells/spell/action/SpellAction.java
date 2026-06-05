@@ -2,8 +2,8 @@ package de.cas_ual_ty.spells.spell.action;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.RunActionOnClientMessage;
+import net.minecraft.world.entity.Entity;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
@@ -58,11 +58,11 @@ public abstract class SpellAction
     
     protected abstract void wasActivated(SpellContext ctx);
     
-    public void sendClientAction(PacketDistributor.PacketTarget packetTarget, IClientAction clientAction)
+    public void sendClientAction(Entity trackingEntity, IClientAction clientAction)
     {
         if(getType() instanceof SyncedSpellActionType<?, ?> syncedType)
         {
-            SpellsAndShields.CHANNEL.send(packetTarget, new RunActionOnClientMessage(syncedType, clientAction));
+            PacketDistributor.sendToPlayersTrackingEntityAndSelf(trackingEntity, new RunActionOnClientMessage(syncedType, clientAction));
         }
     }
 }

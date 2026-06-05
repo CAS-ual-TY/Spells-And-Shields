@@ -1,26 +1,34 @@
 package de.cas_ual_ty.spells.network;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record ManaSyncMessage(int entityId, float mana, float extraMana)
+public record ManaSyncMessage(int entityId, float mana, float extraMana) implements CustomPacketPayload
 {
-    public static void encode(ManaSyncMessage msg, FriendlyByteBuf buf)
+    public static final Type<ManaSyncMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "mana_sync"));
+    public static final StreamCodec<FriendlyByteBuf, ManaSyncMessage> STREAM_CODEC = StreamCodec.of(
+            (buf, msg) ->
+            {
+                buf.writeInt(msg.entityId());
+                buf.writeFloat(msg.mana());
+                buf.writeFloat(msg.extraMana());
+            },
+            buf -> new ManaSyncMessage(buf.readInt(), buf.readFloat(), buf.readFloat())
+    );
+
+    @Override
+    public Type<? extends CustomPacketPayload> type()
     {
-        buf.writeInt(msg.entityId());
-        buf.writeFloat(msg.mana());
-        buf.writeFloat(msg.extraMana());
+        return TYPE;
     }
-    
-    public static ManaSyncMessage decode(FriendlyByteBuf buf)
-    {
-        return new ManaSyncMessage(buf.readInt(), buf.readFloat(), buf.readFloat());
-    }
-    
-    public static void handle(ManaSyncMessage msg, NetworkEvent.Context context)
+
+    public static void handle(ManaSyncMessage msg, IPayloadContext context)
     {
         context.enqueueWork(() -> ClientMessageHandler.handleManaSync(msg));
-        context.setPacketHandled(true);
     }
 }

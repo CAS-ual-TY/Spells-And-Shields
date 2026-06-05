@@ -20,7 +20,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 public class SetMotionAction extends AffectTypeAction<EntityTarget>
 {
@@ -71,7 +70,7 @@ public class SetMotionAction extends AffectTypeAction<EntityTarget>
             
             if(entityTarget.getEntity() instanceof ServerPlayer player)
             {
-                sendClientAction(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new ClientAction(player.getId(), motion));
+                sendClientAction(player, new ClientAction(player.getId(), motion));
             }
         });
     }

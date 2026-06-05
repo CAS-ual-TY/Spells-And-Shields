@@ -109,7 +109,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
     
     public void sendSync(ParticleEmitter emitter)
     {
-        SpellsAndShields.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> holder), new ParticleEmitterSyncMessage(holder.getId(), false, ImmutableList.of(emitter)));
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(holder, new ParticleEmitterSyncMessage(holder.getId(), false, ImmutableList.of(emitter)));
     }
     
     public static class ParticleEmitter

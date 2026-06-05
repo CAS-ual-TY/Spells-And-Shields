@@ -21,7 +21,7 @@ public class SpellHelper
     {
         if(player.level().isClientSide)
         {
-            SpellsAndShields.CHANNEL.send(PacketDistributor.SERVER.noArg(), new FireSpellMessage(slot));
+            PacketDistributor.sendToServer(new FireSpellMessage(slot));
         }
         else if(player instanceof ServerPlayer serverPlayer && !isSilenced(player))
         {

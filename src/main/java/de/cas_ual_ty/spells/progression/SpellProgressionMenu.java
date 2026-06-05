@@ -11,7 +11,7 @@ import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -63,7 +63,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
                     spellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
                     spellProgression = spellProgressionHolder.getProgression();
                     
-                    SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SpellProgressionSyncMessage(blockPos, spellTrees, spellProgression, level));
+                    PacketDistributor.sendToPlayer(player, new SpellProgressionSyncMessage(blockPos, spellTrees, spellProgression));
                 });
             });
         }
@@ -107,12 +107,11 @@ public class SpellProgressionMenu extends AbstractContainerMenu
         }, true);
     }
     
-    public static SpellProgressionMenu construct(int id, Inventory inventory, FriendlyByteBuf extraData)
+    public static SpellProgressionMenu construct(int id, Inventory inventory, RegistryFriendlyByteBuf extraData)
     {
-        // client side construction
         try
         {
-            SpellProgressionSyncMessage msg = SpellProgressionSyncMessage.decode(extraData);
+            SpellProgressionSyncMessage msg = SpellProgressionSyncMessage.STREAM_CODEC.decode(extraData);
             return new SpellProgressionMenu(id, inventory, ContainerLevelAccess.create(inventory.player.level(), msg.blockPos()), msg.spellTrees(), msg.map());
         }
         catch(Exception e)

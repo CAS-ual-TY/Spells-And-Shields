@@ -240,15 +240,15 @@ public class SpellsCapabilities
     {
         if(event.getEntity() instanceof ServerPlayer serverPlayer)
         {
-            ParticleEmitterHolder.getHolder(event.getTarget()).ifPresent(particleEmitterHolder -> SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), particleEmitterHolder.makeSyncMessage()));
-            
+            ParticleEmitterHolder.getHolder(event.getTarget()).ifPresent(particleEmitterHolder -> PacketDistributor.sendToPlayer(serverPlayer, particleEmitterHolder.makeSyncMessage()));
+
             if(event.getTarget() instanceof LivingEntity livingEntity)
             {
-                ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder -> SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), manaHolder.makeSyncMessage()));
-                
+                ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder -> PacketDistributor.sendToPlayer(serverPlayer, manaHolder.makeSyncMessage()));
+
                 if(livingEntity instanceof Player target)
                 {
-                    SpellHolder.getSpellHolder(target).ifPresent((spellHolder -> SpellsAndShields.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), spellHolder.makeSyncMessage())));
+                    SpellHolder.getSpellHolder(target).ifPresent((spellHolder -> PacketDistributor.sendToPlayer(serverPlayer, spellHolder.makeSyncMessage())));
                 }
             }
         }
