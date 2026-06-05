@@ -8,14 +8,15 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
 import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class Spells
 {
-    public static final ResourceKey<Registry<Spell>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MOD_ID, "spells"));
+    public static final ResourceKey<Registry<Spell>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MOD_ID, "spells"));
     
     public static Registry<Spell> getRegistry(LevelAccessor level)
     {
@@ -350,9 +351,9 @@ public class Spells
     public static final String KEY_TOGGLE_CONDUIT_POWER = key(TOGGLE_CONDUIT_POWER);
     public static final String KEY_TOGGLE_CONDUIT_POWER_DESC = descKey(TOGGLE_CONDUIT_POWER);
     
-    public static void register()
+    public static void register(IEventBus modEventBus)
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(Spells::newDataPackRegistry);
+        modEventBus.addListener(Spells::newDataPackRegistry);
     }
     
     private static void newDataPackRegistry(DataPackRegistryEvent.NewRegistry event)
@@ -362,7 +363,7 @@ public class Spells
     
     private static ResourceLocation rl(String path)
     {
-        return new ResourceLocation(SpellsAndShields.MOD_ID, path);
+        return ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, path);
     }
     
     public static String key(ResourceLocation rl, String suffix)

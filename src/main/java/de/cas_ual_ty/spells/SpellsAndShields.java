@@ -10,14 +10,15 @@ import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
 import de.cas_ual_ty.spells.spell.context.SpellsEvents;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.network.NetworkRegistry;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.registration.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,30 +31,30 @@ public class SpellsAndShields
     
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(MOD_ID, "main"),
+            ResourceLocation.fromNamespaceAndPath(MOD_ID, "main"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
     );
     
-    public SpellsAndShields()
+    public SpellsAndShields(IEventBus modEventBus, ModContainer modContainer)
     {
-        SpellsCodecs.makeCodecs();
+        SpellsCodecs.makeCodecs(modEventBus);
         
-        BuiltInRegisters.register();
-        CtxVarTypes.register();
-        RequirementTypes.register();
-        SpellActionTypes.register();
-        SpellIconTypes.register();
-        Spells.register();
-        SpellTrees.register();
-        TargetTypes.register();
+        BuiltInRegisters.register(modEventBus);
+        CtxVarTypes.register(modEventBus);
+        RequirementTypes.register(modEventBus);
+        SpellActionTypes.register(modEventBus);
+        SpellIconTypes.register(modEventBus);
+        Spells.register(modEventBus);
+        SpellTrees.register(modEventBus);
+        TargetTypes.register(modEventBus);
         
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common" + ".toml");
         
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        BuiltInRegisters.registerEvents();
-        SpellsCapabilities.registerEvents();
+        modEventBus.addListener(this::setup);
+        BuiltInRegisters.registerEvents(modEventBus);
+        SpellsCapabilities.registerEvents(modEventBus);
         
         CHANNEL.registerMessage(0, ManaSyncMessage.class, ManaSyncMessage::encode, ManaSyncMessage::decode, ManaSyncMessage::handle);
         CHANNEL.registerMessage(1, SpellsSyncMessage.class, SpellsSyncMessage::encode, SpellsSyncMessage::decode, SpellsSyncMessage::handle);

@@ -10,7 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+
 import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
 import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
 import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class ManaRenderer implements IGuiOverlay
 {
-    public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/gui/spells_icons.png");
+    public static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "textures/gui/spells_icons.png");
     
     protected Minecraft minecraft;
     
@@ -264,6 +264,6 @@ public class ManaRenderer implements IGuiOverlay
     
     public static void register()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ManaRenderer::registerGuiOverlays);
+        modEventBus.addListener(ManaRenderer::registerGuiOverlays);
     }
 }

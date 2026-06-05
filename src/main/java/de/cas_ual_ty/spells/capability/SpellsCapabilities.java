@@ -13,7 +13,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.capabilities.*;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -98,7 +99,7 @@ public class SpellsCapabilities
             }
         };
         
-        event.addCapability(new ResourceLocation(SpellsAndShields.MOD_ID, name), provider);
+        event.addCapability(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, name), provider);
     }
     
     private static void playerClone(PlayerEvent.Clone event)
@@ -284,9 +285,9 @@ public class SpellsCapabilities
         }
     }
     
-    public static void registerEvents()
+    public static void registerEvents(IEventBus modEventBus)
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsCapabilities::registerCapabilities);
+        modEventBus.addListener(SpellsCapabilities::registerCapabilities);
         NeoForge.EVENT_BUS.addGenericListener(Entity.class, SpellsCapabilities::attachCapabilities);
         NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerClone);
         NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerLoggedIn);

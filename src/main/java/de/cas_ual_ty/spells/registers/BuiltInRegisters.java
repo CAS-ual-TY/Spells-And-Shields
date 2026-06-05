@@ -55,7 +55,8 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.neoforged.bus.api.Event;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
@@ -120,15 +121,15 @@ public class BuiltInRegisters
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> SPELL_ARGUMENT_TYPE = ARGUMENT_TYPES.register("spell", () -> ArgumentTypeInfos.registerByClass(SpellArgument.class, SingletonArgumentInfo.contextAware(SpellArgument::spell)));
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<?, ?>> SPELL_TREE_ARGUMENT_TYPE = ARGUMENT_TYPES.register("spell_tree", () -> ArgumentTypeInfos.registerByClass(SpellTreeArgument.class, SingletonArgumentInfo.contextAware(SpellTreeArgument::spellTree)));
     
-    public static void register()
+    public static void register(IEventBus modEventBus)
     {
-        MOB_EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        POTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ENCHANTMENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        CONTAINER_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ARGUMENT_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        MOB_EFFECTS.register(modEventBus);
+        POTIONS.register(modEventBus);
+        ATTRIBUTES.register(modEventBus);
+        ENCHANTMENTS.register(modEventBus);
+        CONTAINER_TYPES.register(modEventBus);
+        ENTITY_TYPES.register(modEventBus);
+        ARGUMENT_TYPES.register(modEventBus);
     }
     
     public static void addPotionRecipes()
@@ -200,9 +201,9 @@ public class BuiltInRegisters
         }
     }
     
-    public static void registerEvents()
+    public static void registerEvents(IEventBus modEventBus)
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(BuiltInRegisters::entityAttributeModification);
+        modEventBus.addListener(BuiltInRegisters::entityAttributeModification);
         NeoForge.EVENT_BUS.addListener(BuiltInRegisters::registerCommands);
         NeoForge.EVENT_BUS.addListener(BuiltInRegisters::livingHurt);
         NeoForge.EVENT_BUS.addListener(BuiltInRegisters::rightClickBlock);

@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
@@ -104,7 +104,7 @@ public class SpellKeyBindings
     
     public static void register()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellKeyBindings::registerKeyMappings);
+        modEventBus.addListener(SpellKeyBindings::registerKeyMappings);
         NeoForge.EVENT_BUS.addListener(SpellKeyBindings::clientTick);
     }
 }

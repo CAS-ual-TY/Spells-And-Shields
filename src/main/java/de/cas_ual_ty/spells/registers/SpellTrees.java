@@ -16,7 +16,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LevelAccessor;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
@@ -27,7 +28,7 @@ import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class SpellTrees
 {
-    public static final ResourceKey<Registry<SpellTree>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MOD_ID, "spell_trees"));
+    public static final ResourceKey<Registry<SpellTree>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MOD_ID, "spell_trees"));
     
     public static Registry<SpellTree> getRegistry(LevelAccessor level)
     {
@@ -45,9 +46,9 @@ public class SpellTrees
     public static final String KEY_MOVEMENT = "spell_tree." + SpellsAndShields.MOD_ID + ".movement";
     public static final String KEY_END = "spell_tree." + SpellsAndShields.MOD_ID + ".end";
     
-    public static void register()
+    public static void register(IEventBus modEventBus)
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellTrees::newDataPackRegistry);
+        modEventBus.addListener(SpellTrees::newDataPackRegistry);
         NeoForge.EVENT_BUS.addListener(SpellTrees::levelLoad);
     }
     
@@ -70,7 +71,7 @@ public class SpellTrees
     public static SpellTree fireTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_NETHER))
-                .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/fire_resistance.png")))
+                .icon(DefaultSpellIcon.make(ResourceLocation.withDefaultNamespace("textures/mob_effect/fire_resistance.png")))
                 .add(spellGetter.apply(Spells.FIRE_BALL)).levelCost(15).learnRequirements(bookshelves(28)).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.TOGGLE_LAVA_WALKER)).levelCost(20).learnRequirements(bookshelves(19))
                 .add(spellGetter.apply(Spells.TOGGLE_FIRE_RESISTANCE)).levelCost(30).learnRequirements(bookshelves(30))
@@ -86,7 +87,7 @@ public class SpellTrees
     public static SpellTree waterTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_OCEAN))
-                .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/dolphins_grace.png")))
+                .icon(DefaultSpellIcon.make(ResourceLocation.withDefaultNamespace("textures/mob_effect/dolphins_grace.png")))
                 .add(spellGetter.apply(Spells.TOGGLE_WATER_BREATHING)).levelCost(10).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.TOGGLE_REGENERATION)).levelCost(20).learnRequirements(bookshelves(20))
                 .add(spellGetter.apply(Spells.GROWTH)).levelCost(20).learnRequirements(bookshelves(20))
@@ -112,7 +113,7 @@ public class SpellTrees
     public static SpellTree earthTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_MINING))
-                .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/haste.png")))
+                .icon(DefaultSpellIcon.make(ResourceLocation.withDefaultNamespace("textures/mob_effect/haste.png")))
                 .add(spellGetter.apply(Spells.BLAST_SMELT)).levelCost(5).learnRequirements(bookshelves(8)).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.SILENCE_TARGET)).levelCost(25).learnRequirements(bookshelves(26))
                 .add(spellGetter.apply(Spells.TOGGLE_MAGIC_IMMUNE)).levelCost(25).learnRequirements(bookshelves(26))
@@ -129,7 +130,7 @@ public class SpellTrees
     public static SpellTree airTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_MOVEMENT))
-                .icon(DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/jump_boost.png")))
+                .icon(DefaultSpellIcon.make(ResourceLocation.withDefaultNamespace("textures/mob_effect/jump_boost.png")))
                 .add(spellGetter.apply(Spells.TOGGLE_JUMP_BOOST)).levelCost(15).learnRequirements(bookshelves(12)).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.LEAP)).levelCost(10).learnRequirements(bookshelves(14))
                 .add(spellGetter.apply(Spells.TOGGLE_SPEED)).levelCost(20).learnRequirements(bookshelves(20))
@@ -152,7 +153,7 @@ public class SpellTrees
     public static SpellTree enderTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_END))
-                .icon(DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/teleport.png")))
+                .icon(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "textures/spell/teleport.png")))
                 .add(spellGetter.apply(Spells.RANDOM_TELEPORT)).levelCost(20).learnRequirements(bookshelves(28)).hiddenRequirements(advancement("end/root")).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.FORCED_TELEPORT)).levelCost(30).learnRequirements(bookshelves(28))
                 .leaf()
@@ -168,7 +169,7 @@ public class SpellTrees
     
     public static Requirement advancement(String advancementRL)
     {
-        return new AdvancementRequirement(RequirementTypes.ADVANCEMENT.get(), new ResourceLocation(advancementRL));
+        return new AdvancementRequirement(RequirementTypes.ADVANCEMENT.get(), ResourceLocation.withDefaultNamespace(advancementRL));
     }
     
     public static Requirement item(Item item, int count, boolean consume)

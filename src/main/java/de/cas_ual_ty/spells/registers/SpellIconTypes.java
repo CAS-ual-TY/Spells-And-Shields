@@ -4,7 +4,8 @@ import de.cas_ual_ty.spells.spell.icon.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -12,7 +13,7 @@ import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class SpellIconTypes
 {
-    public static final ResourceKey<Registry<SpellIconType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MOD_ID, "spell_icons"));
+    public static final ResourceKey<Registry<SpellIconType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MOD_ID, "spell_icons"));
     private static final DeferredRegister<SpellIconType<?>> DEFERRED_REGISTER = DeferredRegister.create(REGISTRY_KEY, MOD_ID);
     public static final Registry<SpellIconType<?>> REGISTRY = DEFERRED_REGISTER.makeRegistry(builder -> builder.maxId(256));
     
@@ -22,8 +23,8 @@ public class SpellIconTypes
     public static final DeferredHolder<SpellIconType<?>, SpellIconType<ItemSpellIcon>> ITEM = DEFERRED_REGISTER.register("item", () -> new SpellIconType<>(ItemSpellIcon::new, ItemSpellIcon::makeCodec));
     public static final DeferredHolder<SpellIconType<?>, SpellIconType<LayeredSpellIcon>> LAYERED = DEFERRED_REGISTER.register("layered", () -> new SpellIconType<>(LayeredSpellIcon::new, LayeredSpellIcon::makeCodec));
     
-    public static void register()
+    public static void register(IEventBus modEventBus)
     {
-        DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        DEFERRED_REGISTER.register(modEventBus);
     }
 }

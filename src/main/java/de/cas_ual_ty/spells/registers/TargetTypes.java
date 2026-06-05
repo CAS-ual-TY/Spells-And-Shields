@@ -4,7 +4,8 @@ import de.cas_ual_ty.spells.spell.target.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -12,7 +13,7 @@ import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class TargetTypes
 {
-    public static final ResourceKey<Registry<ITargetType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MOD_ID, "targets"));
+    public static final ResourceKey<Registry<ITargetType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MOD_ID, "targets"));
     private static final DeferredRegister<ITargetType<?>> DEFERRED_REGISTER = DeferredRegister.create(REGISTRY_KEY, MOD_ID);
     public static final Registry<ITargetType<?>> REGISTRY = DEFERRED_REGISTER.makeRegistry(builder -> builder.maxId(256));
     
@@ -23,8 +24,8 @@ public class TargetTypes
     public static final DeferredHolder<ITargetType<?>, ITargetType<PositionTarget>> POSITION = DEFERRED_REGISTER.register("position", () -> (t -> t instanceof PositionTarget));
     public static final DeferredHolder<ITargetType<?>, ITargetType<StaticTarget>> STATIC = DEFERRED_REGISTER.register("static", () -> (t -> t instanceof StaticTarget));
     
-    public static void register()
+    public static void register(IEventBus modEventBus)
     {
-        DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        DEFERRED_REGISTER.register(modEventBus);
     }
 }

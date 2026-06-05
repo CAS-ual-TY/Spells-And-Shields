@@ -30,6 +30,7 @@ import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.ExtraCodecs;
+import net.neoforged.bus.api.IEventBus;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -61,7 +62,7 @@ public class SpellsCodecs
     
     public static Codec<Map<String, String>> STRING_MAP;
     
-    public static void makeCodecs()
+    public static void makeCodecs(IEventBus modEventBus)
     {
         SPELL = ExtraCodecs.lazyInitializedCodec(() -> RegistryFileCodec.create(Spells.REGISTRY_KEY, ExtraCodecs.lazyInitializedCodec(() -> SPELL_CONTENTS), false));
         SPELL_TREE = ExtraCodecs.lazyInitializedCodec(() -> RegistryFixedCodec.create(SpellTrees.REGISTRY_KEY));

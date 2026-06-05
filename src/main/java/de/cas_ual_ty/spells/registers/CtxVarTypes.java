@@ -7,8 +7,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -16,7 +16,7 @@ import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class CtxVarTypes
 {
-    public static final ResourceKey<Registry<CtxVarType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MOD_ID, "context_variables"));
+    public static final ResourceKey<Registry<CtxVarType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MOD_ID, "context_variables"));
     private static final DeferredRegister<CtxVarType<?>> DEFERRED_REGISTER = DeferredRegister.create(REGISTRY_KEY, MOD_ID);
     public static final Registry<CtxVarType<?>> REGISTRY = DEFERRED_REGISTER.makeRegistry(builder -> builder.maxId(256));
     
@@ -27,11 +27,11 @@ public class CtxVarTypes
     public static final DeferredHolder<CtxVarType<?>, CtxVarType<CompoundTag>> TAG = DEFERRED_REGISTER.register("tag", () -> new CtxVarType<>(CompoundTag::copy, CompoundTag.CODEC));
     public static final DeferredHolder<CtxVarType<?>, CtxVarType<String>> STRING = DEFERRED_REGISTER.register("string", () -> new CtxVarType<>(s -> s, Codec.STRING));
     
-    public static void register()
+    public static void register(IEventBus modEventBus)
     {
-        DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        DEFERRED_REGISTER.register(modEventBus);
         
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(CtxVarTypes::setup);
+        modEventBus.addListener(CtxVarTypes::setup);
     }
     
     private static void setup(FMLCommonSetupEvent event)

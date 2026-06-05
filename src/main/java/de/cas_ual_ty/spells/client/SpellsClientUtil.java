@@ -37,7 +37,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
@@ -61,9 +61,9 @@ public class SpellsClientUtil
         SpellKeyBindings.register();
         ManaRenderer.register();
         
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::clientSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::entityRenderers);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(SpellsClientUtil::registerClientTooltipComponent);
+        modEventBus.addListener(SpellsClientUtil::clientSetup);
+        modEventBus.addListener(SpellsClientUtil::entityRenderers);
+        modEventBus.addListener(SpellsClientUtil::registerClientTooltipComponent);
         
         NeoForge.EVENT_BUS.addListener(EventPriority.LOW, SpellsClientUtil::rightClickBlock);
         NeoForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);

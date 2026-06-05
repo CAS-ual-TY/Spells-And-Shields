@@ -72,9 +72,9 @@ import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.*;
 
 public class SpellsGen
 {
-    public static final ResourceLocation PERMANENT_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/permanent.png");
-    public static final ResourceLocation TEMPORARY_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/temporary.png");
-    public static final ResourceLocation TOGGLE_ICON_RL = new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/toggle.png");
+    public static final ResourceLocation PERMANENT_ICON_RL = ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "textures/spell/permanent.png");
+    public static final ResourceLocation TEMPORARY_ICON_RL = ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "textures/spell/temporary.png");
+    public static final ResourceLocation TOGGLE_ICON_RL = ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "textures/spell/toggle.png");
     
     public static final String KEY_HAND_ITEM_REQUIREMENT_TITLE = "spell.generic.title.item_requirement.hand";
     public static final String KEY_HAND_ITEM_COST_TITLE = "spell.generic.title.item_cost.hand";
@@ -754,7 +754,7 @@ public class SpellsGen
         
         addPermanentAttributeSpell(Spells.HEALTH_BOOST, Spells.KEY_HEALTH_BOOST, Spells.KEY_HEALTH_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/" + BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.HEALTH_BOOST).getPath() + ".png")), Attributes.MAX_HEALTH, AttributeModifier.Operation.ADDITION, 4D);
         
-        addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltInRegisters.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltInRegisters.MAX_MANA_ATTRIBUTE.get(), AttributeModifier.Operation.ADDITION, 4D);
+        addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltInRegisters.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltInRegisters.MAX_MANA_ATTRIBUTE.get(), AttributeModifier.Operation.ADDITION, 4D);
         
         addSpell(Spells.WATER_LEAP, new Spell(modId, "water_leap", Spells.KEY_WATER_LEAP, 5F)
                 .addParameter(DOUBLE, "speed", 2.5)

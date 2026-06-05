@@ -4,7 +4,7 @@ import de.cas_ual_ty.spells.requirement.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -12,7 +12,7 @@ import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 
 public class RequirementTypes
 {
-    public static final ResourceKey<Registry<RequirementType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MOD_ID, "requirements"));
+    public static final ResourceKey<Registry<RequirementType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MOD_ID, "requirements"));
     private static final DeferredRegister<RequirementType<?>> DEFERRED_REGISTER = DeferredRegister.create(REGISTRY_KEY, MOD_ID);
     public static final Registry<RequirementType<?>> REGISTRY = DEFERRED_REGISTER.makeRegistry(builder -> builder.maxId(256));
     
@@ -22,8 +22,8 @@ public class RequirementTypes
     public static final DeferredHolder<RequirementType<?>, RequirementType<ItemRequirement>> ITEM = DEFERRED_REGISTER.register("item", () -> new RequirementType<>(ItemRequirement::new, ItemRequirement::makeCodec));
     public static final DeferredHolder<RequirementType<?>, RequirementType<ConfigRequirement>> CONFIG = DEFERRED_REGISTER.register("config", () -> new RequirementType<>(ConfigRequirement::new, ConfigRequirement::makeCodec));
     
-    public static void register()
+    public static void register(IEventBus modEventBus)
     {
-        DEFERRED_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        DEFERRED_REGISTER.register(modEventBus);
     }
 }

@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class SpellIconRegistry
 {
-    private static final DefaultSpellIcon ERROR_FALLBACK = new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), new ResourceLocation(SpellsAndShields.MOD_ID, "textures/spell/default_fallback.png"));
+    private static final DefaultSpellIcon ERROR_FALLBACK = new DefaultSpellIcon(SpellIconTypes.DEFAULT.get(), ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "textures/spell/default_fallback.png"));
     
     public static final SpellIconRenderer<DefaultSpellIcon> DEFAULT_RENDERER = (icon, guiGraphics, width, height, x, y, partialTicks) -> {
         RenderSystem.enableBlend();
