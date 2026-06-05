@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -127,49 +129,49 @@ public class SpellsUtil
         return currentEntity == null ? null : new EntityHitResult(currentEntity);
     }
     
-    public static void addPotionRecipes(Potion base, Potion p, @Nullable Potion strongP, @Nullable Potion longP, Item ingredient, @Nullable Potion badP, @Nullable Potion badStrongP, @Nullable Potion badLongP, @Nullable Item badIngredient)
+    public static void addPotionRecipes(Holder<Potion> base, Holder<Potion> p, @Nullable Holder<Potion> strongP, @Nullable Holder<Potion> longP, Item ingredient, @Nullable Holder<Potion> badP, @Nullable Holder<Potion> badStrongP, @Nullable Holder<Potion> badLongP, @Nullable Item badIngredient, PotionBrewing.Builder builder)
     {
-        addPotionRecipe(ingredient, base, p);
-        
+        addPotionRecipe(ingredient, base, p, builder);
+
         if(badP != null && badIngredient != null)
         {
-            addPotionRecipe(badIngredient, p, badP);
-            
+            addPotionRecipe(badIngredient, p, badP, builder);
+
             if(badStrongP != null)
             {
-                addPotionRecipe(Items.GLOWSTONE_DUST, badP, badStrongP);
+                addPotionRecipe(Items.GLOWSTONE_DUST, badP, badStrongP, builder);
             }
-            
+
             if(badLongP != null)
             {
-                addPotionRecipe(Items.REDSTONE, badP, badLongP);
+                addPotionRecipe(Items.REDSTONE, badP, badLongP, builder);
             }
         }
-        
+
         if(strongP != null)
         {
-            addPotionRecipe(Items.GLOWSTONE_DUST, p, strongP);
-            
+            addPotionRecipe(Items.GLOWSTONE_DUST, p, strongP, builder);
+
             if(badStrongP != null && badIngredient != null)
             {
-                addPotionRecipe(badIngredient, strongP, badStrongP);
+                addPotionRecipe(badIngredient, strongP, badStrongP, builder);
             }
         }
-        
+
         if(longP != null)
         {
-            addPotionRecipe(Items.REDSTONE, p, longP);
-            
+            addPotionRecipe(Items.REDSTONE, p, longP, builder);
+
             if(badLongP != null && badIngredient != null)
             {
-                addPotionRecipe(badIngredient, longP, badLongP);
+                addPotionRecipe(badIngredient, longP, badLongP, builder);
             }
         }
     }
-    
-    public static void addPotionRecipe(Item ingredient, Potion from, Potion to)
+
+    public static void addPotionRecipe(Item ingredient, Holder<Potion> from, Holder<Potion> to, PotionBrewing.Builder builder)
     {
-        PotionBrewing.addMix(from, ingredient, to);
+        builder.addMix(from, Ingredient.of(ingredient), to);
     }
     
     public static boolean isEnchantingTable(Block block)

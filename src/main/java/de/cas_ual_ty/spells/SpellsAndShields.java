@@ -13,7 +13,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
@@ -42,8 +41,8 @@ public class SpellsAndShields
 
         modContainer.registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common.toml");
 
-        modEventBus.addListener(this::setup);
         modEventBus.addListener(SpellsAndShields::registerPayloadHandlers);
+        NeoForge.EVENT_BUS.addListener(BuiltInRegisters::addPotionRecipes);
         BuiltInRegisters.registerEvents(modEventBus);
         SpellsCapabilities.registerEvents(modEventBus);
 
@@ -77,8 +76,4 @@ public class SpellsAndShields
         registrar.playToServer(RequestEquipSpellMessage.TYPE, RequestEquipSpellMessage.STREAM_CODEC, RequestEquipSpellMessage::handle);
     }
 
-    private void setup(FMLCommonSetupEvent event)
-    {
-        BuiltInRegisters.addPotionRecipes();
-    }
 }

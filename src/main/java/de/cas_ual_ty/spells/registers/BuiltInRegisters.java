@@ -52,6 +52,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -61,6 +62,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -127,11 +129,12 @@ public class BuiltInRegisters
         ARGUMENT_TYPES.register(modEventBus);
     }
 
-    public static void addPotionRecipes()
+    public static void addPotionRecipes(RegisterBrewingRecipesEvent event)
     {
-        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltInRegisters.INSTANT_MANA.get(), BuiltInRegisters.STRONG_INSTANT_MANA.get(), null, Items.TUBE_CORAL, BuiltInRegisters.MANA_BOMB.get(), BuiltInRegisters.STRONG_MANA_BOMB.get(), null, Items.FERMENTED_SPIDER_EYE);
-        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltInRegisters.REPLENISHMENT.get(), BuiltInRegisters.STRONG_REPLENISHMENT.get(), BuiltInRegisters.LONG_REPLENISHMENT.get(), Items.TUBE_CORAL_FAN, null, null, null, null);
-        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltInRegisters.LEAKING.get(), BuiltInRegisters.STRONG_LEAKING.get(), BuiltInRegisters.LONG_LEAKING.get(), Items.DEAD_TUBE_CORAL_FAN, null, null, null, null);
+        PotionBrewing.Builder builder = event.getBuilder();
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltInRegisters.INSTANT_MANA, BuiltInRegisters.STRONG_INSTANT_MANA, null, Items.TUBE_CORAL, BuiltInRegisters.MANA_BOMB, BuiltInRegisters.STRONG_MANA_BOMB, null, Items.FERMENTED_SPIDER_EYE, builder);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltInRegisters.REPLENISHMENT, BuiltInRegisters.STRONG_REPLENISHMENT, BuiltInRegisters.LONG_REPLENISHMENT, Items.TUBE_CORAL_FAN, null, null, null, null, builder);
+        SpellsUtil.addPotionRecipes(Potions.AWKWARD, BuiltInRegisters.LEAKING, BuiltInRegisters.STRONG_LEAKING, BuiltInRegisters.LONG_LEAKING, Items.DEAD_TUBE_CORAL_FAN, null, null, null, null, builder);
     }
 
     private static void entityAttributeModification(EntityAttributeModificationEvent event)
