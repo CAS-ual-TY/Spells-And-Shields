@@ -7,11 +7,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -138,22 +136,8 @@ public class ManaHolder implements INBTSerializable<ListTag>
     public float getMaxMana()
     {
         if(player == null) return 0F;
-
         AttributeInstance attrMana = player.getAttribute(BuiltInRegisters.MAX_MANA_ATTRIBUTE.get());
-        double attribute = attrMana == null ? 0F : attrMana.getValue();
-
-        for(EquipmentSlot s : EquipmentSlot.values())
-        {
-            if(s.getType() == EquipmentSlot.Type.ARMOR)
-            {
-                ItemStack itemStack = player.getItemBySlot(s);
-                int level = itemStack.getEnchantmentLevel(BuiltInRegisters.MAX_MANA_ENCHANTMENT.get());
-                double increase = BuiltInRegisters.MAX_MANA_ENCHANTMENT.get().getAttributeIncrease(level, s);
-                attribute += increase;
-            }
-        }
-
-        return (float) attribute;
+        return (float) (attrMana == null ? 0F : attrMana.getValue());
     }
 
     public void tick()
@@ -182,17 +166,6 @@ public class ManaHolder implements INBTSerializable<ListTag>
 
         Player player = (Player) this.player;
         double attribute = player.getAttributeValue(BuiltInRegisters.MANA_REGENERATION_ATTRIBUTE.get());
-
-        for(EquipmentSlot s : EquipmentSlot.values())
-        {
-            if(s.getType() == EquipmentSlot.Type.ARMOR)
-            {
-                ItemStack itemStack = player.getItemBySlot(s);
-                int level = itemStack.getEnchantmentLevel(BuiltInRegisters.MANA_REGENERATION_ENCHANTMENT.get());
-                double increase = BuiltInRegisters.MANA_REGENERATION_ENCHANTMENT.get().getAttributeIncrease(level, s);
-                attribute += increase;
-            }
-        }
 
         if(attribute <= 0)
         {

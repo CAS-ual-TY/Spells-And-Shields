@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import java.util.function.Supplier;
@@ -53,16 +52,11 @@ public class LangGen extends LanguageProvider
         addAttribute(BuiltInRegisters.MAX_MANA_ATTRIBUTE, "Max Mana");
         addAttribute(BuiltInRegisters.MANA_REGENERATION_ATTRIBUTE, "Mana Regeneration");
         
-        // support JEI Enchantment Info
-        // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
-        add("enchantment." + SpellsAndShields.MOD_ID + ".type." + BuiltInRegisters.SHIELD_ENCHANTMENT_CATEGORY.name().toLowerCase(), "shields");
-        add("enchantment." + SpellsAndShields.MOD_ID + ".type." + BuiltInRegisters.SWORD_OR_AXE_ENCHANTMENT_CATEGORY.name().toLowerCase(), "axes, swords");
-        
-        addEnchantment(BuiltInRegisters.MAGIC_PROTECTION_ENCHANTMENT, "Magic Protection", "Reduces magic damage.");
-        addEnchantment(BuiltInRegisters.MANA_BLADE_ENCHANTMENT, "Mana Blade", "Consumes mana to increase damage.");
-        addEnchantment(BuiltInRegisters.MANA_SHIELD_ENCHANTMENT, "Mana Shield", "WIP"); //TODO mana shield ench description
-        addEnchantment(BuiltInRegisters.MAX_MANA_ENCHANTMENT, "Maximum Mana", "Increases your maximum mana while worn. More potent on chestplates and leggings than helmets and boots.");
-        addEnchantment(BuiltInRegisters.MANA_REGENERATION_ENCHANTMENT, "Mana Regeneration", "Increases your mana regeneration while worn. More potent on chestplates and leggings than helmets and boots.");
+        addEnchantmentByKey("magic_protection", "Magic Protection", "Reduces magic damage.");
+        addEnchantmentByKey("mana_blade", "Mana Blade", "Consumes mana to increase damage.");
+        addEnchantmentByKey("mana_shield", "Mana Shield", "WIP"); //TODO mana shield ench description
+        addEnchantmentByKey("max_mana", "Maximum Mana", "Increases your maximum mana while worn.");
+        addEnchantmentByKey("mana_regen", "Mana Regeneration", "Increases your mana regeneration while worn.");
         
         addEffect(BuiltInRegisters.INSTANT_MANA_EFFECT, "Instant Mana", "Replenishes mana; higher levels increase the effect potency.");
         addEffect(BuiltInRegisters.MANA_BOMB_EFFECT, "Mana Bomb", "Burns mana; higher levels increase the effect potency.");
@@ -355,14 +349,14 @@ public class LangGen extends LanguageProvider
         add(key.get().getDescriptionId(), name);
     }
     
-    public void addEnchantment(Supplier<? extends Enchantment> key, String name, String desc)
+    public void addEnchantmentByKey(String path, String name, String desc)
     {
-        // support JEI Enchantment Info
-        // https://www.curseforge.com/minecraft/mc-mods/jei-enchantment-info
-        super.addEnchantment(key, name);
-        add(key.get().getDescriptionId() + ".desc", desc);
+        String key = "enchantment." + SpellsAndShields.MOD_ID + "." + path;
+        add(key, name);
+        add(key + ".desc", desc);
     }
-    
+
+
     public void addEffect(Supplier<? extends MobEffect> key, String name, String desc)
     {
         // support Just Enough Effect Descriptions
