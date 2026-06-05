@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.ClientTickEvent;
 
 public class SpellKeyBindings
 {
@@ -60,12 +60,8 @@ public class SpellKeyBindings
         return Component.literal(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString());
     }
     
-    private static void clientTick(TickEvent.ClientTickEvent event)
+    private static void clientTick(ClientTickEvent.Post event)
     {
-        if(event.phase != TickEvent.Phase.END)
-        {
-            return;
-        }
         
         Player player = Minecraft.getInstance().player;
         

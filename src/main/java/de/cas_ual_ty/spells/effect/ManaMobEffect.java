@@ -5,7 +5,6 @@ import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.common.util.LazyOptional;
 
 public class ManaMobEffect extends MobEffect
 {
@@ -13,56 +12,35 @@ public class ManaMobEffect extends MobEffect
     {
         super(mobEffectCategory, color);
     }
-    
+
     @Override
     public void applyEffectTick(LivingEntity entity, int level)
     {
-        LazyOptional<ManaHolder> manaHolder = ManaHolder.getManaHolder(entity);
-        
-        if(!manaHolder.isPresent())
-        {
-            return;
-        }
-        
-        ManaHolder.getManaHolder(entity).ifPresent(manaHolder1 ->
+        ManaHolder.getManaHolder(entity).ifPresent(manaHolder ->
         {
             if(this == BuiltInRegisters.REPLENISHMENT_EFFECT.get())
             {
-                manaHolder1.replenish(1F);
+                manaHolder.replenish(1F);
             }
             else if(this == BuiltInRegisters.LEAKING_MOB_EFFECT.get())
             {
-                manaHolder1.burn(1F);
+                manaHolder.burn(1F);
             }
         });
     }
-    
+
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier)
     {
         if(this == BuiltInRegisters.REPLENISHMENT_EFFECT.get())
         {
             int k = 50 >> amplifier;
-            if(k > 0)
-            {
-                return duration % k == 0;
-            }
-            else
-            {
-                return true;
-            }
+            return k > 0 ? duration % k == 0 : true;
         }
         else if(this == BuiltInRegisters.LEAKING_MOB_EFFECT.get())
         {
             int j = 25 >> amplifier;
-            if(j > 0)
-            {
-                return duration % j == 0;
-            }
-            else
-            {
-                return true;
-            }
+            return j > 0 ? duration % j == 0 : true;
         }
         else
         {

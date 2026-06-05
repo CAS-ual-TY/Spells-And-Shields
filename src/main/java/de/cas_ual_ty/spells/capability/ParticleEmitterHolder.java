@@ -2,12 +2,8 @@ package de.cas_ual_ty.spells.capability;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.network.ParticleEmitterSyncMessage;
-import de.cas_ual_ty.spells.registers.Spells;
-import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.util.SpellsUtil;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
@@ -19,41 +15,54 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
 public class ParticleEmitterHolder implements INBTSerializable<ListTag>
 {
-    public final Entity holder;
+    public Entity holder;
     private LinkedList<ParticleEmitter> list;
-    
-    public ParticleEmitterHolder(Entity holder)
+
+    public ParticleEmitterHolder()
     {
-        this.holder = holder;
+        holder = null;
         list = new LinkedList<>();
     }
-    
+
+    public ParticleEmitterHolder(Entity holder)
+    {
+        this();
+        this.holder = holder;
+    }
+
+    public void initEntity(Entity entity)
+    {
+        if(this.holder == null)
+        {
+            this.holder = entity;
+        }
+    }
+
     public void addParticleEmitter(ParticleEmitter emitter)
     {
-        if(!holder.level().isClientSide)
+        if(holder != null && !holder.level().isClientSide)
         {
             sendSync(emitter);
         }
-        
         list.add(emitter);
     }
-    
+
     public void clear()
     {
         list.clear();
     }
-    
+
     public void tick(boolean emit)
     {
         LinkedList<ParticleEmitter> newList = new LinkedList<>();
-        
+
         for(ParticleEmitter e : list)
         {
             if(e.tick() && emit)
@@ -64,34 +73,31 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
                     double x = pos.x + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
                     double y = pos.y + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
                     double z = pos.z + (SpellsUtil.RANDOM.nextDouble() - 0.5D) * e.spread;
-                    
                     holder.level().addParticle(e.particle, x, y, z, 0, 0, 0);
                 }
             }
-            
             if(!e.remove())
             {
                 newList.add(e);
             }
         }
-        
+
         list = newList;
     }
-    
+
     public Entity getHolder()
     {
         return holder;
     }
-    
+
     @Override
     public ListTag serializeNBT()
     {
-        Registry<Spell> spellRegistry = Spells.getRegistry(holder.level());
         ListTag tag = new ListTag();
         list.stream().map(ParticleEmitter::serializeNBT).forEach(tag::add);
         return tag;
     }
-    
+
     @Override
     public void deserializeNBT(ListTag nbt)
     {
@@ -101,17 +107,24 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
                 .filter(e -> e.particle != null)
                 .forEach(list::add);
     }
-    
+
     public ParticleEmitterSyncMessage makeSyncMessage()
     {
         return new ParticleEmitterSyncMessage(holder.getId(), true, list);
     }
-    
+
     public void sendSync(ParticleEmitter emitter)
     {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(holder, new ParticleEmitterSyncMessage(holder.getId(), false, ImmutableList.of(emitter)));
     }
-    
+
+    public static Optional<ParticleEmitterHolder> getHolder(Entity entity)
+    {
+        ParticleEmitterHolder holder = entity.getData(SpellsCapabilities.PARTICLE_EMITTER_HOLDER.get());
+        holder.initEntity(entity);
+        return Optional.of(holder);
+    }
+
     public static class ParticleEmitter
     {
         public final int duration;
@@ -121,9 +134,9 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
         public final boolean motionSpread;
         public final Vec3 offset;
         public final ParticleOptions particle;
-        
+
         private int time;
-        
+
         public ParticleEmitter(int duration, int delay, int amount, double spread, boolean motionSpread, Vec3 offset, ParticleOptions particle, int time)
         {
             this.duration = duration;
@@ -135,12 +148,12 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             this.particle = particle;
             this.time = time;
         }
-        
+
         public ParticleEmitter(int duration, int delay, int amount, double spread, boolean motionSpread, Vec3 offset, ParticleOptions particle)
         {
             this(duration, delay, amount, spread, motionSpread, offset, particle, duration);
         }
-        
+
         public ParticleEmitter(CompoundTag tag)
         {
             this(
@@ -154,26 +167,25 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
                     tag.getInt("time")
             );
         }
-        
+
         public boolean tick()
         {
             return (time-- % delay) == 0;
         }
-        
+
         public boolean remove()
         {
             return time <= 0;
         }
-        
+
         public int getTime()
         {
             return time;
         }
-        
+
         public CompoundTag serializeNBT()
         {
             CompoundTag tag = new CompoundTag();
-            
             tag.putInt("duration", duration);
             tag.putInt("delay", delay);
             tag.putInt("amount", amount);
@@ -184,10 +196,9 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             tag.putDouble("offZ", offset.z);
             tag.put("particle", ParticleTypes.CODEC.encodeStart(NbtOps.INSTANCE, particle).get().map(t -> t, o -> new CompoundTag()));
             tag.putInt("time", time);
-            
             return tag;
         }
-        
+
         public void toByteBuf(FriendlyByteBuf buf)
         {
             buf.writeInt(duration);
@@ -202,7 +213,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             particle.writeToNetwork(buf);
             buf.writeInt(time);
         }
-        
+
         public static <P extends ParticleOptions> ParticleEmitter fromByteBuf(FriendlyByteBuf buf)
         {
             int duration = buf.readInt();
@@ -216,25 +227,13 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             int time = buf.readInt();
             return new ParticleEmitter(duration, delay, amount, spread, motionSpread, offset, particle, time);
         }
-        
+
         @Override
         public String toString()
         {
-            return "ParticleEmitter{" +
-                    "duration=" + duration +
-                    ", delay=" + delay +
-                    ", amount=" + amount +
-                    ", spread=" + spread +
-                    ", motionSpread=" + motionSpread +
-                    ", offset=" + offset +
-                    ", particle=" + particle +
-                    ", time=" + time +
-                    '}';
+            return "ParticleEmitter{duration=" + duration + ", delay=" + delay + ", amount=" + amount +
+                    ", spread=" + spread + ", motionSpread=" + motionSpread + ", offset=" + offset +
+                    ", particle=" + particle + ", time=" + time + '}';
         }
-    }
-    
-    public static LazyOptional<ParticleEmitterHolder> getHolder(Entity entity)
-    {
-        return entity.getCapability(SpellsCapabilities.PARTICLE_EMITTER_HOLDER_CAPABILITY).cast();
     }
 }

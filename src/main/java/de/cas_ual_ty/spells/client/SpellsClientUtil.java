@@ -42,9 +42,8 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
@@ -292,9 +291,9 @@ public class SpellsClientUtil
         event.register(ManaTooltipComponent.class, tooltip -> new ManaClientTooltipComponent(tooltip.mana));
     }
     
-    private static void levelTick(TickEvent.LevelTickEvent event)
+    private static void levelTick(LevelTickEvent.Post event)
     {
-        if(event.phase == TickEvent.Phase.END && event.level instanceof ClientLevel level)
+        if(event.getLevel() instanceof ClientLevel level)
         {
             for(Entity entity : level.getEntities().getAll())
             {
@@ -302,8 +301,8 @@ public class SpellsClientUtil
             }
         }
     }
-    
-    public static LazyOptional<ManaHolder> getClientManaHolder()
+
+    public static java.util.Optional<ManaHolder> getClientManaHolder()
     {
         if(Minecraft.getInstance().player != null)
         {
@@ -311,7 +310,7 @@ public class SpellsClientUtil
         }
         else
         {
-            return LazyOptional.empty();
+            return java.util.Optional.empty();
         }
     }
     

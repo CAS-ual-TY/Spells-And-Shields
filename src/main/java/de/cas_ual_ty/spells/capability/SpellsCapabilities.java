@@ -5,170 +5,88 @@ import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
 import de.cas_ual_ty.spells.spelltree.SpellNodeId;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
-
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.capabilities.*;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class SpellsCapabilities
 {
-    public static Capability<ManaHolder> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static Capability<SpellHolder> SPELLS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static Capability<SpellProgressionHolder> SPELL_PROGRESSION_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static Capability<ExtraTagHolder> EXTRA_TAG_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static Capability<DelayedSpellHolder> DELAYED_SPELL_HOLDER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static Capability<ParticleEmitterHolder> PARTICLE_EMITTER_HOLDER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    
-    private static void registerCapabilities(RegisterCapabilitiesEvent event)
-    {
-        event.register(ManaHolder.class);
-        event.register(SpellHolder.class);
-        event.register(SpellProgressionHolder.class);
-        event.register(ExtraTagHolder.class);
-        event.register(DelayedSpellHolder.class);
-        event.register(ParticleEmitterHolder.class);
-    }
-    
-    private static void attachCapabilities(AttachCapabilitiesEvent<Entity> event)
-    {
-        if(event.getObject() instanceof Player player)
-        {
-            ManaHolder manaHolder = new ManaHolder(player);
-            attachCapability(event, manaHolder, MANA_CAPABILITY, "mana_holder");
-            
-            SpellHolder spellHolder = new SpellHolder(player);
-            attachCapability(event, spellHolder, SPELLS_CAPABILITY, "spell_holder");
-            
-            SpellProgressionHolder spellProgressionHolder = new SpellProgressionHolder(player);
-            attachCapability(event, spellProgressionHolder, SPELL_PROGRESSION_CAPABILITY, "spell_progression_holder");
-        }
-        
-        ExtraTagHolder extraTagHolder = new ExtraTagHolder();
-        attachCapability(event, extraTagHolder, EXTRA_TAG_CAPABILITY, "extra_tag_holder");
-        
-        DelayedSpellHolder delayedSpellHolder = new DelayedSpellHolder(event.getObject());
-        attachCapability(event, delayedSpellHolder, DELAYED_SPELL_HOLDER_CAPABILITY, "delayed_spell_holder");
-        
-        ParticleEmitterHolder particleEmitterHolder = new ParticleEmitterHolder(event.getObject());
-        attachCapability(event, particleEmitterHolder, PARTICLE_EMITTER_HOLDER_CAPABILITY, "particle_emitter_holder");
-    }
-    
-    private static <T extends Tag, C extends INBTSerializable<T>> void attachCapability(AttachCapabilitiesEvent<?> event, C capData, Capability<C> capability, String name)
-    {
-        LazyOptional<C> optional = LazyOptional.of(() -> capData);
-        ICapabilitySerializable<T> provider = new ICapabilitySerializable<>()
-        {
-            @Override
-            public <S> LazyOptional<S> getCapability(Capability<S> cap, Direction side)
-            {
-                if(cap == capability)
-                {
-                    return optional.cast();
-                }
-                
-                return LazyOptional.empty();
-            }
-            
-            @Override
-            public T serializeNBT()
-            {
-                return capData.serializeNBT();
-            }
-            
-            @Override
-            public void deserializeNBT(T tag)
-            {
-                capData.deserializeNBT(tag);
-            }
-        };
-        
-        event.addCapability(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, name), provider);
-    }
-    
+    static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
+            DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, SpellsAndShields.MOD_ID);
+
+    public static final Supplier<AttachmentType<ManaHolder>> MANA_HOLDER =
+            ATTACHMENT_TYPES.register("mana_holder", () -> AttachmentType.serializable(ManaHolder::new).build());
+
+    public static final Supplier<AttachmentType<SpellHolder>> SPELL_HOLDER =
+            ATTACHMENT_TYPES.register("spell_holder", () -> AttachmentType.serializable(SpellHolder::new).build());
+
+    public static final Supplier<AttachmentType<SpellProgressionHolder>> SPELL_PROGRESSION_HOLDER =
+            ATTACHMENT_TYPES.register("spell_progression_holder", () -> AttachmentType.serializable(SpellProgressionHolder::new).build());
+
+    public static final Supplier<AttachmentType<ExtraTagHolder>> EXTRA_TAG_HOLDER =
+            ATTACHMENT_TYPES.register("extra_tag_holder", () -> AttachmentType.serializable(ExtraTagHolder::new).build());
+
+    public static final Supplier<AttachmentType<DelayedSpellHolder>> DELAYED_SPELL_HOLDER =
+            ATTACHMENT_TYPES.register("delayed_spell_holder", () -> AttachmentType.serializable(DelayedSpellHolder::new).build());
+
+    public static final Supplier<AttachmentType<ParticleEmitterHolder>> PARTICLE_EMITTER_HOLDER =
+            ATTACHMENT_TYPES.register("particle_emitter_holder", () -> AttachmentType.serializable(ParticleEmitterHolder::new).build());
+
     private static void playerClone(PlayerEvent.Clone event)
     {
-        event.getOriginal().reviveCaps();
-        
         if(!event.isWasDeath())
         {
             SpellProgressionHolder.getSpellProgressionHolder(event.getEntity()).ifPresent(current ->
-            {
-                SpellProgressionHolder.getSpellProgressionHolder(event.getOriginal()).ifPresent(original ->
-                {
-                    current.deserializeNBT(original.serializeNBT());
-                });
-            });
-            
+                    SpellProgressionHolder.getSpellProgressionHolder(event.getOriginal()).ifPresent(original ->
+                            current.deserializeNBT(original.serializeNBT())));
+
             ManaHolder.getManaHolder(event.getEntity()).ifPresent(current ->
             {
                 ManaHolder.getManaHolder(event.getOriginal()).ifPresent(original ->
-                {
-                    current.deserializeNBT(original.serializeNBT());
-                });
-                
+                        current.deserializeNBT(original.serializeNBT()));
                 current.sendSync();
             });
-            
+
             SpellHolder.getSpellHolder(event.getEntity()).ifPresent(current ->
             {
                 SpellHolder.getSpellHolder(event.getOriginal()).ifPresent(original ->
-                {
-                    current.deserializeNBT(original.serializeNBT());
-                });
-                
+                        current.deserializeNBT(original.serializeNBT()));
                 current.sendSync();
             });
-            
+
             ExtraTagHolder.getHolder(event.getEntity()).ifPresent(current ->
-            {
-                ExtraTagHolder.getHolder(event.getOriginal()).ifPresent(original ->
-                {
-                    current.deserializeNBT(original.serializeNBT());
-                });
-            });
-            
+                    ExtraTagHolder.getHolder(event.getOriginal()).ifPresent(original ->
+                            current.deserializeNBT(original.serializeNBT())));
+
             DelayedSpellHolder.getHolder(event.getEntity()).ifPresent(current ->
-            {
-                DelayedSpellHolder.getHolder(event.getOriginal()).ifPresent(original ->
-                {
-                    current.deserializeNBT(original.serializeNBT());
-                });
-            });
-            
+                    DelayedSpellHolder.getHolder(event.getOriginal()).ifPresent(original ->
+                            current.deserializeNBT(original.serializeNBT())));
+
             ParticleEmitterHolder.getHolder(event.getEntity()).ifPresent(current ->
-            {
-                ParticleEmitterHolder.getHolder(event.getOriginal()).ifPresent(original ->
-                {
-                    current.deserializeNBT(original.serializeNBT());
-                });
-            });
+                    ParticleEmitterHolder.getHolder(event.getOriginal()).ifPresent(original ->
+                            current.deserializeNBT(original.serializeNBT())));
         }
         else
         {
             SpellProgressionHolder.getSpellProgressionHolder(event.getEntity()).ifPresent(current ->
             {
                 SpellProgressionHolder.getSpellProgressionHolder(event.getOriginal()).ifPresent(original ->
-                {
-                    current.deserializeNBT(original.serializeNBT());
-                });
-                
+                        current.deserializeNBT(original.serializeNBT()));
+
                 if(SpellsConfig.FORGET_SPELLS_ON_DEATH.get())
                 {
                     for(SpellNodeId key : current.getProgression().keySet())
@@ -180,35 +98,29 @@ public class SpellsCapabilities
                     }
                 }
             });
-            
+
             ManaHolder.getManaHolder(event.getEntity()).ifPresent(manaHolder ->
             {
                 if(SpellsConfig.RESPAWN_WITH_FULL_MANA.get())
                 {
                     manaHolder.replenish(manaHolder.getMaxMana());
                 }
-                
                 manaHolder.sendSync();
             });
-            
+
             if(!SpellsConfig.CLEAR_SLOTS_ON_DEATH.get() && !SpellsConfig.FORGET_SPELLS_ON_DEATH.get())
             {
                 SpellHolder.getSpellHolder(event.getEntity()).ifPresent(current ->
                 {
                     SpellHolder.getSpellHolder(event.getOriginal()).ifPresent(original ->
-                    {
-                        current.deserializeNBT(original.serializeNBT());
-                    });
-                    
+                            current.deserializeNBT(original.serializeNBT()));
                     current.sendSync();
                     current.activateAll(BuiltinEvents.ON_EQUIP.activation);
                 });
             }
         }
-        
-        event.getOriginal().invalidateCaps();
     }
-    
+
     private static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
     {
         if(event.getEntity() instanceof ServerPlayer player)
@@ -217,7 +129,7 @@ public class SpellsCapabilities
             SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
         }
     }
-    
+
     private static void playerRespawn(PlayerEvent.PlayerRespawnEvent event)
     {
         if(event.getEntity() instanceof ServerPlayer player)
@@ -226,7 +138,7 @@ public class SpellsCapabilities
             SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
         }
     }
-    
+
     private static void playerChangedDimensions(PlayerEvent.PlayerChangedDimensionEvent event)
     {
         if(event.getEntity() instanceof ServerPlayer player)
@@ -235,60 +147,52 @@ public class SpellsCapabilities
             SpellHolder.getSpellHolder(player).ifPresent(SpellHolder::sendSync);
         }
     }
-    
+
     private static void startTracking(PlayerEvent.StartTracking event)
     {
         if(event.getEntity() instanceof ServerPlayer serverPlayer)
         {
-            ParticleEmitterHolder.getHolder(event.getTarget()).ifPresent(particleEmitterHolder -> PacketDistributor.sendToPlayer(serverPlayer, particleEmitterHolder.makeSyncMessage()));
+            ParticleEmitterHolder.getHolder(event.getTarget()).ifPresent(h ->
+                    PacketDistributor.sendToPlayer(serverPlayer, h.makeSyncMessage()));
 
             if(event.getTarget() instanceof LivingEntity livingEntity)
             {
-                ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder -> PacketDistributor.sendToPlayer(serverPlayer, manaHolder.makeSyncMessage()));
+                ManaHolder.getManaHolder(livingEntity).ifPresent(manaHolder ->
+                        PacketDistributor.sendToPlayer(serverPlayer, manaHolder.makeSyncMessage()));
 
                 if(livingEntity instanceof Player target)
                 {
-                    SpellHolder.getSpellHolder(target).ifPresent((spellHolder -> PacketDistributor.sendToPlayer(serverPlayer, spellHolder.makeSyncMessage())));
+                    SpellHolder.getSpellHolder(target).ifPresent(spellHolder ->
+                            PacketDistributor.sendToPlayer(serverPlayer, spellHolder.makeSyncMessage()));
                 }
             }
         }
     }
-    
-    private static void levelTick(TickEvent.LevelTickEvent event)
+
+    private static void levelTick(LevelTickEvent.Post event)
     {
-        if(event.phase == TickEvent.Phase.END)
+        if(event.getLevel() instanceof ServerLevel level)
         {
-            if(event.level instanceof ServerLevel level)
+            List<Entity> entities = List.copyOf(level.getAllEntities().toList());
+            entities.forEach(e ->
             {
-                List<Entity> entities = new LinkedList<>();
-                for(Entity e : level.getAllEntities())
-                {
-                    if(e != null)
-                    {
-                        entities.add(e);
-                    }
-                }
-                entities.forEach(e ->
-                {
-                    DelayedSpellHolder.getHolder(e).ifPresent(DelayedSpellHolder::tick);
-                    ParticleEmitterHolder.getHolder(e).ifPresent(h -> h.tick(false));
-                });
-            }
+                DelayedSpellHolder.getHolder(e).ifPresent(DelayedSpellHolder::tick);
+                ParticleEmitterHolder.getHolder(e).ifPresent(h -> h.tick(false));
+            });
         }
     }
-    
-    private static void playerTick(TickEvent.PlayerTickEvent event)
+
+    private static void playerTick(PlayerTickEvent.Post event)
     {
-        if(event.phase == TickEvent.Phase.END && !event.player.level().isClientSide)
+        if(!event.getEntity().level().isClientSide)
         {
-            ManaHolder.getManaHolder(event.player).ifPresent(ManaHolder::tick);
+            ManaHolder.getManaHolder(event.getEntity()).ifPresent(ManaHolder::tick);
         }
     }
-    
+
     public static void registerEvents(IEventBus modEventBus)
     {
-        modEventBus.addListener(SpellsCapabilities::registerCapabilities);
-        NeoForge.EVENT_BUS.addGenericListener(Entity.class, SpellsCapabilities::attachCapabilities);
+        ATTACHMENT_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerClone);
         NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerLoggedIn);
         NeoForge.EVENT_BUS.addListener(SpellsCapabilities::playerRespawn);
