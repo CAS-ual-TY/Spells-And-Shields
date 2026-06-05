@@ -34,7 +34,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.EventPriority;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -53,13 +54,13 @@ import java.util.function.BooleanSupplier;
 
 public class SpellsClientUtil
 {
-    public static void onModConstruct()
+    public static void onModConstruct(IEventBus modEventBus, ModContainer modContainer)
     {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SpellsClientConfig.CLIENT_SPEC, SpellsAndShields.MOD_ID + "/client" + ".toml");
-        
+        modContainer.registerConfig(ModConfig.Type.CLIENT, SpellsClientConfig.CLIENT_SPEC, SpellsAndShields.MOD_ID + "/client" + ".toml");
+
         SpellKeyBindings.register();
         ManaRenderer.register();
-        
+
         modEventBus.addListener(SpellsClientUtil::clientSetup);
         modEventBus.addListener(SpellsClientUtil::entityRenderers);
         modEventBus.addListener(SpellsClientUtil::registerClientTooltipComponent);

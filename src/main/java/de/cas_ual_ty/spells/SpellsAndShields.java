@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.spell.context.SpellsEvents;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -56,7 +57,7 @@ public class SpellsAndShields
 
         if(FMLEnvironment.dist.isClient())
         {
-            de.cas_ual_ty.spells.client.SpellsClientUtil.onModConstruct();
+            de.cas_ual_ty.spells.client.SpellsClientUtil.onModConstruct(modEventBus, modContainer);
         }
     }
 
