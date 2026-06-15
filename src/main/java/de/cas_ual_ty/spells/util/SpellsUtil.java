@@ -315,6 +315,11 @@ public class SpellsUtil
     {
         return s.getValue(ctx).map(id -> registry.get(ResourceLocation.parse(id)));
     }
+
+    public static <T> Optional<Holder<T>> stringToHolder(SpellContext ctx, DynamicCtxVar<String> s, Registry<T> registry)
+    {
+        return s.getValue(ctx).flatMap(id -> registry.getHolder(ResourceLocation.parse(id)).map(holder -> holder));
+    }
     
     public static BlockState tagToState(Block block, CompoundTag tag)
     {

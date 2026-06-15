@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
@@ -52,13 +52,13 @@ public class BookshelvesRequirement extends Requirement
     }
     
     @Override
-    public void writeToBuf(FriendlyByteBuf buf)
+    public void writeToBuf(RegistryFriendlyByteBuf buf)
     {
         buf.writeInt(bookshelves);
     }
-    
+
     @Override
-    public void readFromBuf(FriendlyByteBuf buf)
+    public void readFromBuf(RegistryFriendlyByteBuf buf)
     {
         bookshelves = buf.readInt();
     }

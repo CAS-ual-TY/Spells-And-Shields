@@ -10,7 +10,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
@@ -199,7 +198,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             return tag;
         }
 
-        public void toByteBuf(FriendlyByteBuf buf)
+        public void toByteBuf(RegistryFriendlyByteBuf buf)
         {
             buf.writeInt(duration);
             buf.writeShort(delay);
@@ -209,11 +208,11 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             buf.writeFloat((float) offset.x);
             buf.writeFloat((float) offset.y);
             buf.writeFloat((float) offset.z);
-            ParticleTypes.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, particle);
+            ParticleTypes.STREAM_CODEC.encode(buf, particle);
             buf.writeInt(time);
         }
 
-        public static ParticleEmitter fromByteBuf(FriendlyByteBuf buf)
+        public static ParticleEmitter fromByteBuf(RegistryFriendlyByteBuf buf)
         {
             int duration = buf.readInt();
             int delay = buf.readShort();
@@ -221,7 +220,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             double spread = buf.readFloat();
             boolean motionSpread = buf.readBoolean();
             Vec3 offset = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
-            ParticleOptions particle = ParticleTypes.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
+            ParticleOptions particle = ParticleTypes.STREAM_CODEC.decode(buf);
             int time = buf.readInt();
             return new ParticleEmitter(duration, delay, amount, spread, motionSpread, offset, particle, time);
         }

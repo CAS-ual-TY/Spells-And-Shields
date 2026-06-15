@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.requirement;
 
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.registers.RequirementTypes;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -53,7 +53,7 @@ public abstract class Requirement
         return descriptionId;
     }
     
-    public abstract void writeToBuf(FriendlyByteBuf buf);
-    
-    public abstract void readFromBuf(FriendlyByteBuf buf);
+    public abstract void writeToBuf(RegistryFriendlyByteBuf buf);
+
+    public abstract void readFromBuf(RegistryFriendlyByteBuf buf);
 }

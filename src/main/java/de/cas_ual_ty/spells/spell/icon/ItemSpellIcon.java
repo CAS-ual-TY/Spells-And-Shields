@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.spell.icon;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,14 +39,14 @@ public class ItemSpellIcon extends SpellIcon
     }
     
     @Override
-    public void readFromBuf(FriendlyByteBuf buf)
+    public void readFromBuf(RegistryFriendlyByteBuf buf)
     {
-        item = ItemStack.OPTIONAL_STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
+        item = ItemStack.OPTIONAL_STREAM_CODEC.decode(buf);
     }
 
     @Override
-    public void writeToBuf(FriendlyByteBuf buf)
+    public void writeToBuf(RegistryFriendlyByteBuf buf)
     {
-        ItemStack.OPTIONAL_STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, item);
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, item);
     }
 }

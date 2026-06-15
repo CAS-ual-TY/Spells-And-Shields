@@ -7,7 +7,6 @@ import com.mojang.serialization.codecs.PrimitiveCodec;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.registers.RequirementTypes;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -102,17 +101,17 @@ public class WrappedRequirement extends Requirement
     }
     
     @Override
-    public void writeToBuf(FriendlyByteBuf buf)
+    public void writeToBuf(RegistryFriendlyByteBuf buf)
     {
         buf.writeByte(status.ordinal());
-        ComponentSerialization.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, component);
+        ComponentSerialization.STREAM_CODEC.encode(buf, component);
     }
-    
+
     @Override
-    public void readFromBuf(FriendlyByteBuf buf)
+    public void readFromBuf(RegistryFriendlyByteBuf buf)
     {
         status = RequirementStatus.values()[buf.readByte()];
-        component = (MutableComponent) ComponentSerialization.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
+        component = (MutableComponent) ComponentSerialization.STREAM_CODEC.decode(buf);
     }
     
     public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)

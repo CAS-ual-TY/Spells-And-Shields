@@ -11,7 +11,6 @@ import de.cas_ual_ty.spells.spelltree.SpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -27,10 +26,10 @@ public class SpellTreeSerializer
     private static byte TYPE_SPELL = 1;
     private static byte TYPE_UP = 2;
     
-    public static void encodeTree(SpellTree spellTree, Registry<Spell> registry, FriendlyByteBuf buf)
+    public static void encodeTree(SpellTree spellTree, Registry<Spell> registry, RegistryFriendlyByteBuf buf)
     {
         buf.writeResourceLocation(spellTree.getId());
-        ComponentSerialization.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, spellTree.getTitle());
+        ComponentSerialization.STREAM_CODEC.encode(buf, spellTree.getTitle());
         SpellIcon.iconToBuf(buf, spellTree.getIcon());
         
         SpellNode spellNode = spellTree.getRoot();
@@ -38,7 +37,7 @@ public class SpellTreeSerializer
         buf.writeByte(TYPE_FINISH);
     }
     
-    private static void encodeTreeRec(SpellNode spellNode, Registry<Spell> registry, FriendlyByteBuf buf)
+    private static void encodeTreeRec(SpellNode spellNode, Registry<Spell> registry, RegistryFriendlyByteBuf buf)
     {
         buf.writeByte(TYPE_SPELL);
         encodeNode(spellNode, registry, buf);
@@ -51,13 +50,13 @@ public class SpellTreeSerializer
         buf.writeByte(TYPE_UP);
     }
     
-    private static void encodeRequirements(List<Requirement> list, FriendlyByteBuf buf)
+    private static void encodeRequirements(List<Requirement> list, RegistryFriendlyByteBuf buf)
     {
         buf.writeInt(list.size());
         list.forEach(requirement -> RequirementType.writeToBuf(buf, requirement));
     }
     
-    private static void encodeNode(SpellNode spellNode, Registry<Spell> registry, FriendlyByteBuf buf)
+    private static void encodeNode(SpellNode spellNode, Registry<Spell> registry, RegistryFriendlyByteBuf buf)
     {
         buf.writeResourceLocation(spellNode.getSpellInstance().getSpell().unwrap().map(ResourceKey::location, registry::getKey));
         buf.writeInt(spellNode.getLevelCost());
@@ -68,10 +67,10 @@ public class SpellTreeSerializer
         buf.writeFloat(spellNode.getSpellInstance().getManaCost());
     }
     
-    public static SpellTree decodeTree(Registry<Spell> registry, FriendlyByteBuf buf)
+    public static SpellTree decodeTree(Registry<Spell> registry, RegistryFriendlyByteBuf buf)
     {
         ResourceLocation id = buf.readResourceLocation();
-        Component title = ComponentSerialization.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
+        Component title = ComponentSerialization.STREAM_CODEC.decode(buf);
         SpellIcon icon = SpellIcon.iconFromBuf(buf);
         
         SpellTree.Builder builder = SpellTree.builder(title);
@@ -100,7 +99,7 @@ public class SpellTreeSerializer
         return tree;
     }
     
-    private static List<Requirement> decodeRequirements(FriendlyByteBuf buf)
+    private static List<Requirement> decodeRequirements(RegistryFriendlyByteBuf buf)
     {
         int size = buf.readInt();
         List<Requirement> list = new LinkedList<>();
@@ -113,7 +112,7 @@ public class SpellTreeSerializer
         return list;
     }
     
-    public static SpellNode decodeNode(Registry<Spell> registry, FriendlyByteBuf buf)
+    public static SpellNode decodeNode(Registry<Spell> registry, RegistryFriendlyByteBuf buf)
     {
         Holder<Spell> spell = registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, buf.readResourceLocation()));
         int levelCost = buf.readInt();

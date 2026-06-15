@@ -100,7 +100,7 @@ public class ApplyMobEffectAction extends AffectTypeAction<LivingEntityTarget>
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget target)
     {
-        SpellsUtil.stringToObject(ctx, mobEffect, BuiltInRegistries.MOB_EFFECT).ifPresent(mobEffect ->
+        SpellsUtil.stringToHolder(ctx, mobEffect, BuiltInRegistries.MOB_EFFECT).ifPresent(mobEffect ->
         {
             duration.getValue(ctx).ifPresent(duration ->
             {
@@ -112,7 +112,7 @@ public class ApplyMobEffectAction extends AffectTypeAction<LivingEntityTarget>
                         {
                             showIcon.getValue(ctx).ifPresent(showIcon ->
                             {
-                                target.getLivingEntity().addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(mobEffect), duration, amplifier, ambient, visible, showIcon));
+                                target.getLivingEntity().addEffect(new MobEffectInstance(mobEffect, duration, amplifier, ambient, visible, showIcon));
                             });
                         });
                     });

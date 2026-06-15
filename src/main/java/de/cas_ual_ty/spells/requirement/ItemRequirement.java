@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsUtil;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -98,16 +97,16 @@ public class ItemRequirement extends Requirement
     }
     
     @Override
-    public void writeToBuf(FriendlyByteBuf buf)
+    public void writeToBuf(RegistryFriendlyByteBuf buf)
     {
-        ItemStack.OPTIONAL_STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, itemStack);
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, itemStack);
         buf.writeBoolean(consume);
     }
-    
+
     @Override
-    public void readFromBuf(FriendlyByteBuf buf)
+    public void readFromBuf(RegistryFriendlyByteBuf buf)
     {
-        itemStack = ItemStack.OPTIONAL_STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
+        itemStack = ItemStack.OPTIONAL_STREAM_CODEC.decode(buf);
         consume = buf.readBoolean();
     }
 }

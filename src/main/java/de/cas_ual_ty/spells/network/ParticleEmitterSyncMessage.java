@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.network;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ParticleEmitterHolder;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +15,7 @@ import java.util.List;
 public record ParticleEmitterSyncMessage(int entityId, boolean clear, List<ParticleEmitterHolder.ParticleEmitter> list) implements CustomPacketPayload
 {
     public static final Type<ParticleEmitterSyncMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "particle_emitter_sync"));
-    public static final StreamCodec<FriendlyByteBuf, ParticleEmitterSyncMessage> STREAM_CODEC = StreamCodec.of(
+    public static final StreamCodec<RegistryFriendlyByteBuf, ParticleEmitterSyncMessage> STREAM_CODEC = StreamCodec.of(
             (buf, msg) ->
             {
                 buf.writeInt(msg.entityId());

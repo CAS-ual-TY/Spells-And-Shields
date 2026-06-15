@@ -76,9 +76,9 @@ public class GetAttributeValueAction extends AffectSingleTypeAction<LivingEntity
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget livingEntityTarget)
     {
-        SpellsUtil.stringToObject(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
+        SpellsUtil.stringToHolder(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
         {
-            AttributeInstance a = livingEntityTarget.getLivingEntity().getAttribute(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute));
+            AttributeInstance a = livingEntityTarget.getLivingEntity().getAttribute(attribute);
             
             if(a != null)
             {

@@ -69,9 +69,9 @@ public class RemoveAttributeModifierAction extends AffectTypeAction<LivingEntity
     @Override
     public void affectTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget target)
     {
-        SpellsUtil.stringToObject(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
+        SpellsUtil.stringToHolder(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
         {
-            AttributeInstance a = target.getLivingEntity().getAttribute(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute));
+            AttributeInstance a = target.getLivingEntity().getAttribute(attribute);
 
             if(a != null)
             {
