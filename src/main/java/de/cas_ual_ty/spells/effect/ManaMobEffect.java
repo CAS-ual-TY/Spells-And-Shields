@@ -14,7 +14,7 @@ public class ManaMobEffect extends MobEffect
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int level)
+    public boolean applyEffectTick(LivingEntity entity, int level)
     {
         ManaHolder.getManaHolder(entity).ifPresent(manaHolder ->
         {
@@ -27,6 +27,8 @@ public class ManaMobEffect extends MobEffect
                 manaHolder.burn(1F);
             }
         });
+
+        return true;
     }
 
     @Override

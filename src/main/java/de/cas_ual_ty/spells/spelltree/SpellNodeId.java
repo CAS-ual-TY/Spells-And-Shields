@@ -46,7 +46,7 @@ public record SpellNodeId(ResourceLocation treeId, int nodeId)
             return null;
         }
         
-        ResourceLocation treeId = new ResourceLocation(nbt.getString("treeId"));
+        ResourceLocation treeId = ResourceLocation.parse(nbt.getString("treeId"));
         int nodeId = nbt.getInt("nodeId");
         return new SpellNodeId(treeId, nodeId);
     }

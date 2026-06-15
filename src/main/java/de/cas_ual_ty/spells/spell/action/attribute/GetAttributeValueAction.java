@@ -78,7 +78,7 @@ public class GetAttributeValueAction extends AffectSingleTypeAction<LivingEntity
     {
         SpellsUtil.stringToObject(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
         {
-            AttributeInstance a = livingEntityTarget.getLivingEntity().getAttribute(attribute);
+            AttributeInstance a = livingEntityTarget.getLivingEntity().getAttribute(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute));
             
             if(a != null)
             {

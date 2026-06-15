@@ -14,6 +14,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.core.HolderLookup;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.*;
@@ -47,7 +48,7 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
             {
                 ListTag tag = pendingNBT;
                 pendingNBT = null;
-                deserializeNBT(tag);
+                deserializeNBT(null, tag);
             }
         }
     }
@@ -158,7 +159,7 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public ListTag serializeNBT()
+    public ListTag serializeNBT(HolderLookup.Provider provider)
     {
         if(holder == null)
         {
@@ -172,7 +173,7 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public void deserializeNBT(ListTag nbt)
+    public void deserializeNBT(HolderLookup.Provider provider, ListTag nbt)
     {
         if(holder == null)
         {

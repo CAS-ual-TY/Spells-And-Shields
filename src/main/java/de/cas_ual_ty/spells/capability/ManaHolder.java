@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.HolderLookup;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -136,7 +137,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
     public float getMaxMana()
     {
         if(player == null) return 0F;
-        AttributeInstance attrMana = player.getAttribute(BuiltInRegisters.MAX_MANA_ATTRIBUTE.get());
+        AttributeInstance attrMana = player.getAttribute(BuiltInRegisters.MAX_MANA_ATTRIBUTE);
         return (float) (attrMana == null ? 0F : attrMana.getValue());
     }
 
@@ -165,7 +166,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
         }
 
         Player player = (Player) this.player;
-        double attribute = player.getAttributeValue(BuiltInRegisters.MANA_REGENERATION_ATTRIBUTE.get());
+        double attribute = player.getAttributeValue(BuiltInRegisters.MANA_REGENERATION_ATTRIBUTE);
 
         if(attribute <= 0)
         {
@@ -200,7 +201,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public ListTag serializeNBT()
+    public ListTag serializeNBT(HolderLookup.Provider provider)
     {
         ListTag tag = new ListTag();
         tag.add(0, FloatTag.valueOf(mana));
@@ -209,7 +210,7 @@ public class ManaHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public void deserializeNBT(ListTag tag)
+    public void deserializeNBT(HolderLookup.Provider provider, ListTag tag)
     {
         if(tag.size() >= 2 && tag.get(0).getId() == Tag.TAG_FLOAT && tag.get(1).getId() == Tag.TAG_FLOAT)
         {

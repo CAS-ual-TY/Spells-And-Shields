@@ -82,7 +82,7 @@ public class CheckTagAction extends SpellAction
     
     protected <V> boolean isTag(String registryRL, String tagRL, String entryRL)
     {
-        Registry<V> registry = (Registry<V>) BuiltInRegistries.REGISTRY.get(new ResourceLocation(registryRL));
+        Registry<V> registry = (Registry<V>) BuiltInRegistries.REGISTRY.get(ResourceLocation.parse(registryRL));
         
         if(registry == null)
         {
@@ -90,8 +90,8 @@ public class CheckTagAction extends SpellAction
         }
         
         ResourceKey<? extends Registry<V>> registryKey = registry.key();
-        TagKey<V> tagKey = TagKey.create(registryKey, new ResourceLocation(tagRL));
+        TagKey<V> tagKey = TagKey.create(registryKey, ResourceLocation.parse(tagRL));
         
-        return registry.getTag(tagKey).map(tag -> tag.contains(Holder.direct(registry.get(new ResourceLocation(entryRL))))).orElse(false);
+        return registry.getTag(tagKey).map(tag -> tag.contains(Holder.direct(registry.get(ResourceLocation.parse(entryRL))))).orElse(false);
     }
 }

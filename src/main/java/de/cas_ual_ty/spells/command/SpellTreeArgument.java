@@ -28,7 +28,7 @@ public class SpellTreeArgument implements ArgumentType<SpellTree>
     
     public SpellTreeArgument(CommandBuildContext cbx)
     {
-        spellTrees = cbx.holderLookup(SpellTrees.REGISTRY_KEY);
+        spellTrees = cbx.lookupOrThrow(SpellTrees.REGISTRY_KEY);
     }
     
     public static SpellTreeArgument spellTree(CommandBuildContext cbx)

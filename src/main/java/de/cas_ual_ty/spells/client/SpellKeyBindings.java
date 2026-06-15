@@ -13,7 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.tick.ClientTickEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 public class SpellKeyBindings
 {
@@ -98,7 +99,7 @@ public class SpellKeyBindings
         }
     }
     
-    public static void register()
+    public static void register(IEventBus modEventBus)
     {
         modEventBus.addListener(SpellKeyBindings::registerKeyMappings);
         NeoForge.EVENT_BUS.addListener(SpellKeyBindings::clientTick);

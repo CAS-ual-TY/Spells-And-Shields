@@ -85,7 +85,7 @@ public class PlayerHarvestBlockAction extends AffectSingleTypeAction<PlayerTarge
                 PlayerInteractEvent.LeftClickBlock event2 = CommonHooks.onLeftClickBlock(player, pos, direction, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK);
                 
                 if(!event1.isCanceled() && !event2.isCanceled() &&
-                        !block.isAir() && player.canReach(pos, 2D) &&
+                        !block.isAir() && player.canInteractWithBlock(pos, 2D) &&
                         pos.getY() <= level.getMaxBuildHeight() &&
                         level.mayInteract(player, pos) &&
                         !player.blockActionRestricted(level, pos, player.gameMode.getGameModeForPlayer()) &&

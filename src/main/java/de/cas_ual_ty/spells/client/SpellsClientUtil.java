@@ -19,7 +19,6 @@ import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.advancements.AdvancementWidgetType;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -41,6 +40,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -58,12 +58,13 @@ public class SpellsClientUtil
     {
         modContainer.registerConfig(ModConfig.Type.CLIENT, SpellsClientConfig.CLIENT_SPEC, SpellsAndShields.MOD_ID + "/client" + ".toml");
 
-        SpellKeyBindings.register();
-        ManaRenderer.register();
+        SpellKeyBindings.register(modEventBus);
+        ManaRenderer.register(modEventBus);
 
         modEventBus.addListener(SpellsClientUtil::clientSetup);
         modEventBus.addListener(SpellsClientUtil::entityRenderers);
         modEventBus.addListener(SpellsClientUtil::registerClientTooltipComponent);
+        modEventBus.addListener(SpellsClientUtil::registerMenuScreens);
         
         NeoForge.EVENT_BUS.addListener(EventPriority.LOW, SpellsClientUtil::rightClickBlock);
         NeoForge.EVENT_BUS.addListener(SpellsClientUtil::initScreen);
@@ -74,7 +75,6 @@ public class SpellsClientUtil
     
     private static void clientSetup(FMLClientSetupEvent event)
     {
-        MenuScreens.register(BuiltInRegisters.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
         SpellIconRegistry.register(SpellIconTypes.DEFAULT.get(), SpellIconRegistry.DEFAULT_RENDERER);
         SpellIconRegistry.register(SpellIconTypes.SIZED.get(), SpellIconRegistry.SIZED_RENDERER);
         SpellIconRegistry.register(SpellIconTypes.ADVANCED.get(), SpellIconRegistry.ADVANCED_RENDERER);
@@ -227,7 +227,7 @@ public class SpellsClientUtil
                     SpellSlotWidget s = new SpellSlotWidget(0, y1, i, (j) -> {})
                     {
                         @Override
-                        public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick)
+                        public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick)
                         {
                             visible = hasSpellLearned.getAsBoolean();
                             
@@ -262,7 +262,7 @@ public class SpellsClientUtil
                                 }
                             }
                             
-                            super.render(guiGraphics, pMouseX, pMouseY, pPartialTick);
+                            super.renderWidget(guiGraphics, pMouseX, pMouseY, pPartialTick);
                         }
                     };
                     spellSlotWidgets.add(s);
@@ -291,12 +291,17 @@ public class SpellsClientUtil
     {
         event.register(ManaTooltipComponent.class, tooltip -> new ManaClientTooltipComponent(tooltip.mana));
     }
+
+    private static void registerMenuScreens(RegisterMenuScreensEvent event)
+    {
+        event.register(BuiltInRegisters.SPELL_PROGRESSION_MENU.get(), SpellProgressionScreen::new);
+    }
     
     private static void levelTick(LevelTickEvent.Post event)
     {
         if(event.getLevel() instanceof ClientLevel level)
         {
-            for(Entity entity : level.getEntities().getAll())
+            for(Entity entity : level.entitiesForRendering())
             {
                 ParticleEmitterHolder.getHolder(entity).ifPresent(h -> h.tick(true));
             }

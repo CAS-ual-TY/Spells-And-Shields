@@ -18,7 +18,7 @@ import org.joml.Matrix4f;
 public class RadialMenu extends Screen
 {
     public static boolean wasClosed = false;
-    
+
     private int slots;
     private Vec2[] outerPoints;
     private Vec2[] innerPoints;
@@ -26,51 +26,51 @@ public class RadialMenu extends Screen
     private Vec2[] iconPositionPoints;
     private Vec2[] iconBgPositionPoints;
     private Vec2[] mousePoints;
-    
+
     private float outerDist = 80F;
     private float innerDist = 20F;
     private float textureDist = (outerDist + innerDist) * 0.5F;
     private float minMouseDistSq = innerDist * innerDist * 0.5F;
-    
+
     private int iconWidth = SpellNodeWidget.SPELL_WIDTH;
     private int iconHeight = SpellNodeWidget.SPELL_HEIGHT;
     private int iconBgMargin = 1;
     private int iconBgWidth = iconWidth + iconBgMargin * 2;
     private int iconBgHeight = iconHeight + iconBgMargin * 2;
-    
+
     public RadialMenu()
     {
         super(Component.empty());
     }
-    
+
     @Override
     protected void init()
     {
         super.init();
-        
+
         if(getMinecraft().player == null)
         {
             return;
         }
-        
+
         SpellHolder holder = SpellHolder.getSpellHolder(getMinecraft().player).orElse(null);
-        
+
         if(holder == null)
         {
             return;
         }
-        
+
         slots = holder.getSlots();
-        
+
         outerPoints = new Vec2[slots];
         innerPoints = new Vec2[slots];
         center = new Vec2(width * 0.5F, height * 0.5F);
         iconPositionPoints = new Vec2[slots];
         iconBgPositionPoints = new Vec2[slots];
         mousePoints = new Vec2[slots];
-        
+
         double angle = (2 * Math.PI) / slots;
-        
+
         // outer pentagon points
         Vec2[] points = new Vec2[slots];
         for(int i = 0; i < slots; i++)
@@ -82,7 +82,7 @@ public class RadialMenu extends Screen
             outerPoints[i] = points[i].scale(outerDist).add(center);
             innerPoints[i] = points[i].scale(innerDist).add(center);
         }
-        
+
         // vectors pointing from center to the middle of triangles of pentagon
         // spell icon positions
         Vec2[] halfVecs = new Vec2[slots];
@@ -97,7 +97,7 @@ public class RadialMenu extends Screen
             iconBgPositionPoints[i] = iconPositionPoints[i].add(-iconBgMargin);
             mousePoints[i] = halfVecs[i].scale(innerDist).add(center);
         }
-        
+
         for(int i = 0; i < slots; i++)
         {
             outerPoints[i] = roundVec(outerPoints[i]);
@@ -107,96 +107,94 @@ public class RadialMenu extends Screen
             mousePoints[i] = roundVec(mousePoints[i]);
         }
     }
-    
+
     @Override
     public void tick()
     {
         super.tick();
     }
-    
+
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick)
     {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTick);
-        
+
         if(getMinecraft().player == null)
         {
             return;
         }
-        
+
         SpellHolder holder = SpellHolder.getSpellHolder(getMinecraft().player).orElse(null);
-        
+
         if(holder == null)
         {
             return;
         }
-        
+
         int hovered = getHoveredSection(pMouseX, pMouseY);
-        
+
         Matrix4f pose = guiGraphics.pose().last().pose();
-        
+
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        
+
         for(int i = 0; i < slots; i++)
         {
             Vec2 outer1 = outerPoints[i];
             Vec2 inner1 = innerPoints[i];
-            
+
             int i2 = (i + 1) % slots;
             Vec2 outer2 = outerPoints[i2];
             Vec2 inner2 = innerPoints[i2];
-            
+
             float color = 0.25F;
             float iconC = 0F;
-            
+
             if(i == hovered)
             {
                 color += 0.25;
             }
-            
+
             // render dark background
-            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-            bufferbuilder.vertex(pose, inner1.x, inner1.y, 0).color(color, color, color, 0.5F).endVertex();
-            bufferbuilder.vertex(pose, outer1.x, outer1.y, 0).color(color, color, color, 0.5F).endVertex();
-            bufferbuilder.vertex(pose, outer2.x, outer2.y, 0).color(color, color, color, 0.5F).endVertex();
-            bufferbuilder.vertex(pose, inner2.x, inner2.y, 0).color(color, color, color, 0.5F).endVertex();
-            BufferUploader.drawWithShader(bufferbuilder.end());
-            
+            BufferBuilder bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            bufferbuilder.addVertex(pose, inner1.x, inner1.y, 0f).setColor(color, color, color, 0.5F);
+            bufferbuilder.addVertex(pose, outer1.x, outer1.y, 0f).setColor(color, color, color, 0.5F);
+            bufferbuilder.addVertex(pose, outer2.x, outer2.y, 0f).setColor(color, color, color, 0.5F);
+            bufferbuilder.addVertex(pose, inner2.x, inner2.y, 0f).setColor(color, color, color, 0.5F);
+            BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
+
             if(holder.getSpell(i) != null)
             {
                 // render icon background for filled slots
                 Vec2 iconVec = iconBgPositionPoints[i];
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                bufferbuilder.vertex(pose, iconVec.x, iconVec.y, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                bufferbuilder.vertex(pose, iconVec.x, iconVec.y + iconBgHeight, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                bufferbuilder.vertex(pose, iconVec.x + iconBgWidth, iconVec.y + iconBgHeight, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                bufferbuilder.vertex(pose, iconVec.x + iconBgWidth, iconVec.y, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                BufferBuilder bufferbuilder2 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+                bufferbuilder2.addVertex(pose, iconVec.x, iconVec.y, 0f).setColor(iconC, iconC, iconC, 0.5F);
+                bufferbuilder2.addVertex(pose, iconVec.x, iconVec.y + iconBgHeight, 0f).setColor(iconC, iconC, iconC, 0.5F);
+                bufferbuilder2.addVertex(pose, iconVec.x + iconBgWidth, iconVec.y + iconBgHeight, 0f).setColor(iconC, iconC, iconC, 0.5F);
+                bufferbuilder2.addVertex(pose, iconVec.x + iconBgWidth, iconVec.y, 0f).setColor(iconC, iconC, iconC, 0.5F);
+                BufferUploader.drawWithShader(bufferbuilder2.buildOrThrow());
             }
             else
             {
                 // render icon background for empty slots
                 Vec2 iconVec = iconPositionPoints[i];
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                bufferbuilder.vertex(pose, iconVec.x, iconVec.y, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                bufferbuilder.vertex(pose, iconVec.x, iconVec.y + iconHeight, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                bufferbuilder.vertex(pose, iconVec.x + iconWidth, iconVec.y + iconHeight, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                bufferbuilder.vertex(pose, iconVec.x + iconWidth, iconVec.y, 0).color(iconC, iconC, iconC, 0.5F).endVertex();
-                BufferUploader.drawWithShader(bufferbuilder.end());
+                BufferBuilder bufferbuilder3 = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+                bufferbuilder3.addVertex(pose, iconVec.x, iconVec.y, 0f).setColor(iconC, iconC, iconC, 0.5F);
+                bufferbuilder3.addVertex(pose, iconVec.x, iconVec.y + iconHeight, 0f).setColor(iconC, iconC, iconC, 0.5F);
+                bufferbuilder3.addVertex(pose, iconVec.x + iconWidth, iconVec.y + iconHeight, 0f).setColor(iconC, iconC, iconC, 0.5F);
+                bufferbuilder3.addVertex(pose, iconVec.x + iconWidth, iconVec.y, 0f).setColor(iconC, iconC, iconC, 0.5F);
+                BufferUploader.drawWithShader(bufferbuilder3.buildOrThrow());
             }
         }
-        
+
         RenderSystem.disableBlend();
-        
+
         // render spell icons
         for(int i = 0; i < slots; i++)
         {
             SpellInstance spell = holder.getSpell(i);
-            
+
             if(spell != null)
             {
                 Vec2 pos = iconPositionPoints[i];
@@ -204,7 +202,7 @@ public class RadialMenu extends Screen
             }
         }
     }
-    
+
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton)
     {
@@ -212,7 +210,7 @@ public class RadialMenu extends Screen
         {
             Player player = Minecraft.getInstance().player;
             SpellHolder holder = SpellHolder.getSpellHolder(player).orElse(null);
-            
+
             if(holder != null)
             {
                 int hovered = getHoveredSection((float) pMouseX, (float) pMouseY);
@@ -230,7 +228,7 @@ public class RadialMenu extends Screen
         }
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
-    
+
     @Override
     public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers)
     {
@@ -241,20 +239,20 @@ public class RadialMenu extends Screen
         }
         return super.keyReleased(pKeyCode, pScanCode, pModifiers);
     }
-    
+
     @Override
     public boolean isPauseScreen()
     {
         return false;
     }
-    
+
     @Override
     public void onClose()
     {
         wasClosed = true;
         super.onClose();
     }
-    
+
     public int getHoveredSection(float pMouseX, float pMouseY)
     {
         // cheap way of checking which triangle is hovered
@@ -276,7 +274,7 @@ public class RadialMenu extends Screen
         }
         return hovered;
     }
-    
+
     private static Vec2 roundVec(Vec2 v)
     {
         return new Vec2(Math.round(v.x), Math.round(v.y));

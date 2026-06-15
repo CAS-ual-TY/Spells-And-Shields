@@ -13,7 +13,6 @@ import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.advancements.AdvancementTabType;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +25,7 @@ import java.util.Map;
 
 public class SpellTreeTab
 {
-    public static ResourceLocation background = new ResourceLocation("textures/block/obsidian.png");
+    public static ResourceLocation background = ResourceLocation.parse("textures/block/obsidian.png");
     
     private final Minecraft minecraft;
     private final SpellProgressionScreen screen;
@@ -152,8 +151,20 @@ public class SpellTreeTab
         
         int j = selected ? 32 : 0;
         
-        AdvancementTabType.ABOVE.draw(guiGraphics, x, y, selected, index);
-        //guiGraphics.blit(SpellProgressionScreen.TABS_LOCATION, x + 32 * index, y - 28, i, j, 28, 32);
+        ResourceLocation tabSprite;
+        if(index == 0)
+        {
+            tabSprite = ResourceLocation.withDefaultNamespace(selected ? "advancements/tab_above_left_selected" : "advancements/tab_above_left");
+        }
+        else if(index == 8 - 1)
+        {
+            tabSprite = ResourceLocation.withDefaultNamespace(selected ? "advancements/tab_above_right_selected" : "advancements/tab_above_right");
+        }
+        else
+        {
+            tabSprite = ResourceLocation.withDefaultNamespace(selected ? "advancements/tab_above_middle_selected" : "advancements/tab_above_middle");
+        }
+        guiGraphics.blitSprite(tabSprite, x + 32 * index, y - 28, 28, 32);
     }
     
     public void drawIcon(GuiGraphics guiGraphics, int x, int y, float deltaTick)

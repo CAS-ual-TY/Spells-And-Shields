@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.ExtraCodecs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,7 @@ public class LayeredSpellIcon extends SpellIcon
     public static Codec<LayeredSpellIcon> makeCodec(SpellIconType<LayeredSpellIcon> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                Codec.list(ExtraCodecs.lazyInitializedCodec(() -> SpellsCodecs.SPELL_ICON)).fieldOf("icons_list").forGetter(LayeredSpellIcon::getList)
+                Codec.list(Codec.lazyInitialized(() -> SpellsCodecs.SPELL_ICON)).fieldOf("icons_list").forGetter(LayeredSpellIcon::getList)
         ).apply(instance, (list) -> new LayeredSpellIcon(type, list)));
     }
     

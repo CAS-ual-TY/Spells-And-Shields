@@ -50,6 +50,6 @@ public class SpellHelper
     
     public static boolean isSilenced(Player player)
     {
-        return player.hasEffect(BuiltInRegisters.SILENCE_EFFECT.get());
+        return player.hasEffect(BuiltInRegisters.SILENCE_EFFECT);
     }
 }

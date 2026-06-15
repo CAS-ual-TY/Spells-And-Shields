@@ -13,7 +13,8 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
-import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 
 public class DamageItemAction extends AffectTypeAction<ItemTarget>
 {
@@ -56,7 +57,7 @@ public class DamageItemAction extends AffectTypeAction<ItemTarget>
         {
             if(!itemTarget.isCreative())
             {
-                itemTarget.getItem().hurt(damage, SpellsUtil.RANDOM, null);
+                itemTarget.getItem().hurtAndBreak(damage, (ServerLevel) itemTarget.getLevel(), (LivingEntity) null, item -> {});
             }
         });
         

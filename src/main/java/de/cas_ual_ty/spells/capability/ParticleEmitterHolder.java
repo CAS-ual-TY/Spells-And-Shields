@@ -4,14 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import de.cas_ual_ty.spells.network.ParticleEmitterSyncMessage;
 import de.cas_ual_ty.spells.util.SpellsUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
@@ -91,7 +91,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public ListTag serializeNBT()
+    public ListTag serializeNBT(HolderLookup.Provider provider)
     {
         ListTag tag = new ListTag();
         list.stream().map(ParticleEmitter::serializeNBT).forEach(tag::add);
@@ -99,7 +99,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public void deserializeNBT(ListTag nbt)
+    public void deserializeNBT(HolderLookup.Provider provider, ListTag nbt)
     {
         nbt.stream()
                 .filter(t -> t instanceof CompoundTag)
@@ -163,7 +163,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
                     tag.getDouble("spread"),
                     tag.getBoolean("motionSpread"),
                     new Vec3(tag.getDouble("offX"), tag.getDouble("offY"), tag.getDouble("offZ")),
-                    ParticleTypes.CODEC.decode(NbtOps.INSTANCE, tag.get("particle")).get().map(Pair::getFirst, o -> null),
+                    ParticleTypes.CODEC.decode(NbtOps.INSTANCE, tag.get("particle")).result().map(Pair::getFirst).orElse(null),
                     tag.getInt("time")
             );
         }
@@ -194,7 +194,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             tag.putDouble("offX", offset.x);
             tag.putDouble("offY", offset.y);
             tag.putDouble("offZ", offset.z);
-            tag.put("particle", ParticleTypes.CODEC.encodeStart(NbtOps.INSTANCE, particle).get().map(t -> t, o -> new CompoundTag()));
+            tag.put("particle", ParticleTypes.CODEC.encodeStart(NbtOps.INSTANCE, particle).result().orElseGet(CompoundTag::new));
             tag.putInt("time", time);
             return tag;
         }
@@ -209,12 +209,11 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             buf.writeFloat((float) offset.x);
             buf.writeFloat((float) offset.y);
             buf.writeFloat((float) offset.z);
-            buf.writeById(BuiltInRegistries.PARTICLE_TYPE::getId, particle.getType());
-            particle.writeToNetwork(buf);
+            ParticleTypes.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, particle);
             buf.writeInt(time);
         }
 
-        public static <P extends ParticleOptions> ParticleEmitter fromByteBuf(FriendlyByteBuf buf)
+        public static ParticleEmitter fromByteBuf(FriendlyByteBuf buf)
         {
             int duration = buf.readInt();
             int delay = buf.readShort();
@@ -222,8 +221,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
             double spread = buf.readFloat();
             boolean motionSpread = buf.readBoolean();
             Vec3 offset = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
-            ParticleType<P> particleType = (ParticleType<P>) buf.readById(BuiltInRegistries.PARTICLE_TYPE::byId);
-            P particle = particleType.getDeserializer().fromNetwork(particleType, buf);
+            ParticleOptions particle = ParticleTypes.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
             int time = buf.readInt();
             return new ParticleEmitter(duration, delay, amount, spread, motionSpread, offset, particle, time);
         }

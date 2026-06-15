@@ -17,7 +17,6 @@ import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.ExtraCodecs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("tick_time")).forGetter(AddDelayedSpellAction::getTickTime),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddDelayedSpellAction::getUuid),
                 CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("extra_data")).forGetter(AddDelayedSpellAction::getTag),
-                ExtraCodecs.lazyInitializedCodec(() -> SpellsCodecs.STRING_MAP).optionalFieldOf("events_map").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(AddDelayedSpellAction::getEventsMap)
+                Codec.lazyInitialized(() -> SpellsCodecs.STRING_MAP).optionalFieldOf("events_map").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(AddDelayedSpellAction::getEventsMap)
         ).apply(instance, (activation, multiTargets, removeActivation, tickTime, uuid, tag, eventsMap) -> new AddDelayedSpellAction(type, activation, multiTargets, removeActivation, tickTime, uuid, tag, eventsMap)));
     }
     

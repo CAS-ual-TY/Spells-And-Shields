@@ -37,7 +37,7 @@ import java.util.Optional;
 
 public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgressionMenu>
 {
-    public static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("textures/gui/advancements/window.png");
+    public static final ResourceLocation WINDOW_LOCATION = ResourceLocation.parse("textures/gui/advancements/window.png");
     
     public static final String KEY_LEARN = "spell_progression.learn";
     public static final String KEY_EQUIP = "spell_progression.equip";
@@ -177,10 +177,10 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         learnButton = new SpellInteractButton(getGuiLeft() + GUI_WIDTH - rightW, getGuiTop() + GUI_HEIGHT, rightW, SpellNodeWidget.FRAME_HEIGHT, Component.translatable(KEY_LEARN), this::buttonClicked, AdvancementWidgetType.UNOBTAINED.boxSprite())
         {
             @Override
-            public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick)
+            public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick)
             {
                 active = selectedSpellWidget.clickedWidget != null && selectedSpellWidget.clickedWidget.spellNode.canLearn(spellProgressionHolder, menu.access);
-                super.render(guiGraphics, mouseX, mouseY, deltaTick);
+                super.renderWidget(guiGraphics, mouseX, mouseY, deltaTick);
             }
             
             @Override
@@ -462,14 +462,14 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         if(selectedTab != null)
         {
-            PoseStack posestack = RenderSystem.getModelViewStack();
-            posestack.pushPose();
-            posestack.translate(offX + WINDOW_OFF_X, offY + WINDOW_OFF_Y, 400D);
+            org.joml.Matrix4fStack posestack = RenderSystem.getModelViewStack();
+            posestack.pushMatrix();
+            posestack.translate((float)(offX + WINDOW_OFF_X), (float)(offY + WINDOW_OFF_Y), 400f);
             RenderSystem.applyModelViewMatrix();
             RenderSystem.enableDepthTest();
             selectedTab.drawTooltips(guiGraphics, mouseX - offX - WINDOW_OFF_X, mouseY - offY - WINDOW_OFF_Y, offX, offY, deltaTick);
             RenderSystem.disableDepthTest();
-            posestack.popPose();
+            posestack.popMatrix();
             RenderSystem.applyModelViewMatrix();
         }
         

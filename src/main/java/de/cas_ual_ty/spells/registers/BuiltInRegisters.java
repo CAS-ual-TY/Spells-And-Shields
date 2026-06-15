@@ -45,7 +45,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
@@ -57,14 +56,14 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -97,19 +96,19 @@ public class BuiltInRegisters
     public static final DeferredHolder<MobEffect, MobEffect> MAGIC_IMMUNE_EFFECT = MOB_EFFECTS.register("magic_immune", () -> new SimpleEffect(MobEffectCategory.BENEFICIAL, 0xFFC636));
 
     private static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(BuiltInRegistries.POTION, MOD_ID);
-    public static final DeferredHolder<Potion, Potion> INSTANT_MANA = POTIONS.register("instant_mana", () -> new Potion(new MobEffectInstance(INSTANT_MANA_EFFECT.get(), 1)));
-    public static final DeferredHolder<Potion, Potion> STRONG_INSTANT_MANA = POTIONS.register("strong_instant_mana", () -> new Potion(new MobEffectInstance(INSTANT_MANA_EFFECT.get(), 1, 1)));
-    public static final DeferredHolder<Potion, Potion> MANA_BOMB = POTIONS.register("mana_bomb", () -> new Potion(new MobEffectInstance(MANA_BOMB_EFFECT.get(), 1)));
-    public static final DeferredHolder<Potion, Potion> STRONG_MANA_BOMB = POTIONS.register("strong_mana_bomb", () -> new Potion(new MobEffectInstance(MANA_BOMB_EFFECT.get(), 1, 1)));
-    public static final DeferredHolder<Potion, Potion> REPLENISHMENT = POTIONS.register("replenishment", () -> new Potion(new MobEffectInstance(REPLENISHMENT_EFFECT.get(), 900)));
-    public static final DeferredHolder<Potion, Potion> LONG_REPLENISHMENT = POTIONS.register("long_replenishment", () -> new Potion(new MobEffectInstance(REPLENISHMENT_EFFECT.get(), 1800)));
-    public static final DeferredHolder<Potion, Potion> STRONG_REPLENISHMENT = POTIONS.register("strong_replenishment", () -> new Potion(new MobEffectInstance(REPLENISHMENT_EFFECT.get(), 450, 1)));
-    public static final DeferredHolder<Potion, Potion> LEAKING = POTIONS.register("leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT.get(), 900)));
-    public static final DeferredHolder<Potion, Potion> LONG_LEAKING = POTIONS.register("long_leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT.get(), 1800)));
-    public static final DeferredHolder<Potion, Potion> STRONG_LEAKING = POTIONS.register("strong_leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT.get(), 432, 1)));
+    public static final DeferredHolder<Potion, Potion> INSTANT_MANA = POTIONS.register("instant_mana", () -> new Potion(new MobEffectInstance(INSTANT_MANA_EFFECT, 1)));
+    public static final DeferredHolder<Potion, Potion> STRONG_INSTANT_MANA = POTIONS.register("strong_instant_mana", () -> new Potion(new MobEffectInstance(INSTANT_MANA_EFFECT, 1, 1)));
+    public static final DeferredHolder<Potion, Potion> MANA_BOMB = POTIONS.register("mana_bomb", () -> new Potion(new MobEffectInstance(MANA_BOMB_EFFECT, 1)));
+    public static final DeferredHolder<Potion, Potion> STRONG_MANA_BOMB = POTIONS.register("strong_mana_bomb", () -> new Potion(new MobEffectInstance(MANA_BOMB_EFFECT, 1, 1)));
+    public static final DeferredHolder<Potion, Potion> REPLENISHMENT = POTIONS.register("replenishment", () -> new Potion(new MobEffectInstance(REPLENISHMENT_EFFECT, 900)));
+    public static final DeferredHolder<Potion, Potion> LONG_REPLENISHMENT = POTIONS.register("long_replenishment", () -> new Potion(new MobEffectInstance(REPLENISHMENT_EFFECT, 1800)));
+    public static final DeferredHolder<Potion, Potion> STRONG_REPLENISHMENT = POTIONS.register("strong_replenishment", () -> new Potion(new MobEffectInstance(REPLENISHMENT_EFFECT, 450, 1)));
+    public static final DeferredHolder<Potion, Potion> LEAKING = POTIONS.register("leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT, 900)));
+    public static final DeferredHolder<Potion, Potion> LONG_LEAKING = POTIONS.register("long_leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT, 1800)));
+    public static final DeferredHolder<Potion, Potion> STRONG_LEAKING = POTIONS.register("strong_leaking", () -> new Potion(new MobEffectInstance(LEAKING_MOB_EFFECT, 432, 1)));
 
     private static final DeferredRegister<MenuType<?>> CONTAINER_TYPES = DeferredRegister.create(BuiltInRegistries.MENU, MOD_ID);
-    public static final DeferredHolder<MenuType<?>, MenuType<SpellProgressionMenu>> SPELL_PROGRESSION_MENU = CONTAINER_TYPES.register("spell_progression", () -> IMenuTypeExtension.create(SpellProgressionMenu::construct, FeatureFlags.DEFAULT_FLAGS));
+    public static final DeferredHolder<MenuType<?>, MenuType<SpellProgressionMenu>> SPELL_PROGRESSION_MENU = CONTAINER_TYPES.register("spell_progression", () -> IMenuTypeExtension.create(SpellProgressionMenu::construct));
 
     private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MOD_ID);
     public static final DeferredHolder<EntityType<?>, EntityType<SpellProjectile>> SPELL_PROJECTILE = ENTITY_TYPES.register("spell_projectile", () -> EntityType.Builder.<SpellProjectile>of(SpellProjectile::new, MobCategory.MISC).clientTrackingRange(20).updateInterval(10).setShouldReceiveVelocityUpdates(true).sized(0.5F, 0.5F).build("spell_projectile"));
@@ -139,8 +138,8 @@ public class BuiltInRegisters
 
     private static void entityAttributeModification(EntityAttributeModificationEvent event)
     {
-        event.add(EntityType.PLAYER, BuiltInRegisters.MAX_MANA_ATTRIBUTE.get());
-        event.add(EntityType.PLAYER, BuiltInRegisters.MANA_REGENERATION_ATTRIBUTE.get());
+        event.add(EntityType.PLAYER, BuiltInRegisters.MAX_MANA_ATTRIBUTE);
+        event.add(EntityType.PLAYER, BuiltInRegisters.MANA_REGENERATION_ATTRIBUTE);
     }
 
     private static void registerCommands(RegisterCommandsEvent event)
@@ -148,7 +147,7 @@ public class BuiltInRegisters
         SpellCommand.register(event.getDispatcher(), event.getBuildContext());
     }
 
-    private static void livingHurt(LivingHurtEvent event)
+    private static void livingHurt(LivingIncomingDamageEvent event)
     {
         if(event.getEntity().level().isClientSide)
         {
@@ -156,7 +155,7 @@ public class BuiltInRegisters
         }
 
         // Magic Immune effect
-        if(event.getSource().is(DamageTypes.MAGIC) && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && event.getEntity().hasEffect(BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get()))
+        if(event.getSource().is(DamageTypes.MAGIC) && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && event.getEntity().hasEffect(BuiltInRegisters.MAGIC_IMMUNE_EFFECT))
         {
             event.setCanceled(true);
             return;
@@ -212,8 +211,8 @@ public class BuiltInRegisters
 
         if(!event.getLevel().isClientSide && event.getEntity() instanceof ServerPlayer player && !player.hasContainerOpen() && SpellsUtil.isAltEnchantingTable(player.level().getBlockState(pos).getBlock()))
         {
-            event.setUseBlock(Event.Result.DENY);
-            event.setUseItem(Event.Result.DENY);
+            event.setUseBlock(TriState.FALSE);
+            event.setUseItem(TriState.FALSE);
 
             ContainerLevelAccess access = ContainerLevelAccess.create(player.level(), pos);
 

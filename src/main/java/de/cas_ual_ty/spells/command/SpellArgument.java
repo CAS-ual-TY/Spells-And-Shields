@@ -28,7 +28,7 @@ public class SpellArgument implements ArgumentType<Spell>
     
     public SpellArgument(CommandBuildContext cbx)
     {
-        spells = cbx.holderLookup(Spells.REGISTRY_KEY);
+        spells = cbx.lookupOrThrow(Spells.REGISTRY_KEY);
     }
     
     public static SpellArgument spell(CommandBuildContext cbx)

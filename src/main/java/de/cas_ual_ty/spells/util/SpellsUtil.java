@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -171,7 +170,7 @@ public class SpellsUtil
 
     public static void addPotionRecipe(Item ingredient, Holder<Potion> from, Holder<Potion> to, PotionBrewing.Builder builder)
     {
-        builder.addMix(from, Ingredient.of(ingredient), to);
+        builder.addMix(from, ingredient, to);
     }
     
     public static boolean isEnchantingTable(Block block)
@@ -241,19 +240,19 @@ public class SpellsUtil
     {
         return switch(op)
                 {
-                    case ADDITION -> "addition";
-                    case MULTIPLY_BASE -> "multiply_base";
+                    case ADD_VALUE -> "addition";
+                    case ADD_MULTIPLIED_BASE -> "multiply_base";
                     case ADD_MULTIPLIED_TOTAL -> "multiply_total";
                     default -> null;
                 };
     }
-    
+
     public static AttributeModifier.Operation operationFromString(String s)
     {
         return switch(s)
                 {
-                    case "addition" -> AttributeModifier.Operation.ADDITION;
-                    case "multiply_base" -> AttributeModifier.Operation.MULTIPLY_BASE;
+                    case "addition" -> AttributeModifier.Operation.ADD_VALUE;
+                    case "multiply_base" -> AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
                     case "multiply_total" -> AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
                     default -> null;
                 };
@@ -314,7 +313,7 @@ public class SpellsUtil
     
     public static <T> Optional<T> stringToObject(SpellContext ctx, DynamicCtxVar<String> s, Registry<T> registry)
     {
-        return s.getValue(ctx).map(id -> registry.get(new ResourceLocation(id)));
+        return s.getValue(ctx).map(id -> registry.get(ResourceLocation.parse(id)));
     }
     
     public static BlockState tagToState(Block block, CompoundTag tag)

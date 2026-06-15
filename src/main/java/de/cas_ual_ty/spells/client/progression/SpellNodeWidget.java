@@ -6,7 +6,7 @@ import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
-import net.minecraft.advancements.FrameType;
+import net.minecraft.advancements.AdvancementType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 
 public class SpellNodeWidget
 {
-    public static final ResourceLocation TITLE_BOX_SPRITE = new ResourceLocation("advancements/title_box");
+    public static final ResourceLocation TITLE_BOX_SPRITE = ResourceLocation.parse("advancements/title_box");
     public static final int[] TEXT_OFFSETS = new int[] {0, 10, -10, 25, -25};
     
     public static final int BAR_WIDTH = 200;
@@ -86,7 +86,7 @@ public class SpellNodeWidget
         
         width = 29 + font.width(title) + TITLE_PADDING_LEFT + TITLE_PADDING_RIGHT;
         
-        frameIcon = spellStatus == SpellStatus.LEARNED ? AdvancementWidgetType.OBTAINED.frameSprite(FrameType.values()[spell.getFrame()]) : AdvancementWidgetType.UNOBTAINED.frameSprite(FrameType.values()[spell.getFrame()]);
+        frameIcon = spellStatus == SpellStatus.LEARNED ? AdvancementWidgetType.OBTAINED.frameSprite(AdvancementType.values()[spell.getFrame()]) : AdvancementWidgetType.UNOBTAINED.frameSprite(AdvancementType.values()[spell.getFrame()]);
         
         // 0 = gold = available
         // 1 = blue = buyable

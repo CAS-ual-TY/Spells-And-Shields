@@ -112,7 +112,7 @@ public class ApplyMobEffectAction extends AffectTypeAction<LivingEntityTarget>
                         {
                             showIcon.getValue(ctx).ifPresent(showIcon ->
                             {
-                                target.getLivingEntity().addEffect(new MobEffectInstance(mobEffect, duration, amplifier, ambient, visible, showIcon));
+                                target.getLivingEntity().addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(mobEffect), duration, amplifier, ambient, visible, showIcon));
                             });
                         });
                     });

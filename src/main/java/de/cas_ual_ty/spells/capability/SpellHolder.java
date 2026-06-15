@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.HolderLookup;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -56,7 +57,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
             {
                 ListTag tag = pendingNBT;
                 pendingNBT = null;
-                deserializeNBT(tag);
+                deserializeNBT(null, tag);
             }
         }
     }
@@ -143,7 +144,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public ListTag serializeNBT()
+    public ListTag serializeNBT(HolderLookup.Provider provider)
     {
         if(player == null)
         {
@@ -166,7 +167,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public void deserializeNBT(ListTag tag)
+    public void deserializeNBT(HolderLookup.Provider provider, ListTag tag)
     {
         if(player == null)
         {

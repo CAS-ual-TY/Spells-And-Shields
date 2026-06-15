@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.HolderLookup;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public ListTag serializeNBT()
+    public ListTag serializeNBT(HolderLookup.Provider provider)
     {
         ListTag list = new ListTag();
 
@@ -71,7 +72,7 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
     }
 
     @Override
-    public void deserializeNBT(ListTag nbt)
+    public void deserializeNBT(HolderLookup.Provider provider, ListTag nbt)
     {
         progression.clear();
 

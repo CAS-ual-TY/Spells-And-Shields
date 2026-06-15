@@ -88,7 +88,7 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
     {
         SpellsUtil.stringToObject(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
         {
-            AttributeInstance a = target.getLivingEntity().getAttribute(attribute);
+            AttributeInstance a = target.getLivingEntity().getAttribute(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute));
 
             if(a != null)
             {

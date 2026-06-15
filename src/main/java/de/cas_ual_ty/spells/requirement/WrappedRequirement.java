@@ -8,8 +8,9 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.registers.RequirementTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
@@ -84,7 +85,7 @@ public class WrappedRequirement extends Requirement
         status = RequirementStatus.decide(passes(spellProgressionHolder, access));
         MutableComponent c = makeDescription(spellProgressionHolder, access);
         
-        if(c.getContents() != ComponentContents.EMPTY)
+        if(!c.getString().isEmpty())
         {
             component = Component.literal("- ").append(c.withStyle(hidden ? ChatFormatting.DARK_GRAY : (status.passes ? ChatFormatting.GREEN : ChatFormatting.RED)));
         }
@@ -104,14 +105,14 @@ public class WrappedRequirement extends Requirement
     public void writeToBuf(FriendlyByteBuf buf)
     {
         buf.writeByte(status.ordinal());
-        buf.writeComponent(component);
+        ComponentSerialization.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, component);
     }
     
     @Override
     public void readFromBuf(FriendlyByteBuf buf)
     {
         status = RequirementStatus.values()[buf.readByte()];
-        component = (MutableComponent) buf.readComponent();
+        component = (MutableComponent) ComponentSerialization.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
     }
     
     public static WrappedRequirement wrap(Requirement requirement, SpellProgressionHolder spellProgressionHolder, ContainerLevelAccess access, boolean hidden)

@@ -16,7 +16,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,7 +63,7 @@ public class SpellsAndShields
 
     private static void registerPayloadHandlers(RegisterPayloadHandlersEvent event)
     {
-        IPayloadRegistrar registrar = event.registrar(MOD_ID);
+        PayloadRegistrar registrar = event.registrar(MOD_ID);
         // server → client
         registrar.playToClient(ManaSyncMessage.TYPE, ManaSyncMessage.STREAM_CODEC, ManaSyncMessage::handle);
         registrar.playToClient(SpellsSyncMessage.TYPE, SpellsSyncMessage.STREAM_CODEC, SpellsSyncMessage::handle);

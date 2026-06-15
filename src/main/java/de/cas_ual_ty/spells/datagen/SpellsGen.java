@@ -31,7 +31,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.core.Holder;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -39,7 +40,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.AttributeModifierTemplate;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -61,6 +61,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -85,8 +86,10 @@ public class SpellsGen
     public static final String KEY_ITEM_COST_SINGLE = "spell.generic.item_cost.single";
     public static final String KEY_ITEM_COST_TEXT = "spell.generic.item_cost.text";
     
+    protected static final DecimalFormat ATTRIBUTE_MODIFIER_FORMAT = new DecimalFormat("#.##");
+
     protected String modId;
-    protected final BootstapContext<Spell> context;
+    protected final BootstrapContext<Spell> context;
     
     public static final CtxVarType<Integer> INT = CtxVarTypes.INT.get();
     public static final CtxVarType<Double> DOUBLE = CtxVarTypes.DOUBLE.get();
@@ -104,7 +107,7 @@ public class SpellsGen
     public final DynamicCtxVar<Vec3> ZERO_VEC3 = VEC3.immediate(Vec3.ZERO);
     public final DynamicCtxVar<CompoundTag> EMPTY_TAG = TAG.immediate(new CompoundTag());
     
-    public SpellsGen(String modId, BootstapContext<Spell> context)
+    public SpellsGen(String modId, BootstrapContext<Spell> context)
     {
         this.modId = modId;
         this.context = context;
@@ -119,7 +122,7 @@ public class SpellsGen
     
     public void dummy(ResourceLocation rl, String key, String descKey)
     {
-        dummy(rl, key, descKey, DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + rl.getPath() + ".png")));
+        dummy(rl, key, descKey, DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/" + rl.getPath() + ".png")));
     }
     
     public void dummy(ResourceLocation rl, String key, String descKey, SpellIcon icon)
@@ -132,7 +135,7 @@ public class SpellsGen
     
     public void addSpell(String key, Spell spell)
     {
-        addSpell(new ResourceLocation(modId, key), spell);
+        addSpell(ResourceLocation.fromNamespaceAndPath(modId, key), spell);
     }
     
     public void addSpell(ResourceLocation key, Spell spell)
@@ -140,16 +143,16 @@ public class SpellsGen
         context.register(ResourceKey.create(Spells.REGISTRY_KEY, key), spell);
     }
     
-    public void addPermanentEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, int duration, int amplifier)
+    public void addPermanentEffectSpell(ResourceLocation rl, String key, String descKey, Holder<MobEffect> mobEffect, int duration, int amplifier)
     {
-        MutableComponent component = mobEffect.getDisplayName().copy();
+        MutableComponent component = mobEffect.value().getDisplayName().copy();
         if(amplifier > 0)
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
-        ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect);
+        ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect.value());
         String uuidCode = " uuid_from_string('permanent' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT);
-        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(PERMANENT_ICON_RL))), Component.translatable(key, component), 0F)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(PERMANENT_ICON_RL))), Component.translatable(key, component), 0F)
                 .addAction(CopyTargetsAction.make(ON_EQUIP, "player", OWNER))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP, "player", OWNER))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER))
@@ -162,7 +165,7 @@ public class SpellsGen
                 .addAction(ActivateAction.make("apply", "renew"))
                 .addAction(ApplyMobEffectAction.make("apply", "player", STRING.reference("mob_effect"), INT.reference("duration+1"), INT.reference("amplifier"), BOOLEAN.reference("ambient"), BOOLEAN.reference("visible"), BOOLEAN.reference("show_icon")))
                 .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("duration"), STRING.reference("uuid"), EMPTY_TAG, eventHookMap()))
-                .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect).toString())
+                .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect.value()).toString())
                 .addParameter(INT, "duration", duration)
                 .addParameter(INT, "amplifier", amplifier)
                 .addParameter(BOOLEAN, "ambient", false)
@@ -170,23 +173,25 @@ public class SpellsGen
                 .addParameter(BOOLEAN, "show_icon", true)
                 .addEventHook(ON_EQUIP)
                 .addEventHook(ON_UNEQUIP)
-                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())));
-        
-        if(!mobEffect.getAttributeModifiers().isEmpty())
+                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.value().getCategory().getTooltipFormatting())));
+
+        Map<Holder<Attribute>, AttributeModifier> attributeModifiers = new HashMap<>();
+        mobEffect.value().createModifiers(amplifier, attributeModifiers::put);
+
+        if(!attributeModifiers.isEmpty())
         {
             spell.addTooltip(Component.empty());
             spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
-            
-            for(Map.Entry<Attribute, AttributeModifierTemplate> e : mobEffect.getAttributeModifiers().entrySet())
+
+            for(Map.Entry<Holder<Attribute>, AttributeModifier> e : attributeModifiers.entrySet())
             {
-                AttributeModifier am = e.getValue().create(amplifier);
-                
-                Attribute attribute = e.getKey();
-                AttributeModifier.Operation op = am.getOperation();
-                double value = am.getAmount();
-                
+                AttributeModifier am = e.getValue();
+
+                AttributeModifier.Operation op = am.operation();
+                double value = am.amount();
+
                 double d;
-                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                if(op != AttributeModifier.Operation.ADD_MULTIPLIED_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 {
                     d = value;
                 }
@@ -194,60 +199,62 @@ public class SpellsGen
                 {
                     d = value * 100;
                 }
-                
+
                 if(value > 0)
                 {
-                    spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
+                    spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.id(), ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
                 }
                 else if(value < 0)
                 {
                     d *= -1D;
-                    spell.addTooltip(Component.translatable("attribute.modifier.take." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
+                    spell.addTooltip(Component.translatable("attribute.modifier.take." + op.id(), ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
                 }
             }
         }
-        
+
         addSpell(rl, spell);
     }
-    
-    public void addTemporaryEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
+
+    public void addTemporaryEffectSpell(ResourceLocation rl, String key, String descKey, Holder<MobEffect> mobEffect, float manaCost, int duration, int amplifier)
     {
-        MutableComponent component = mobEffect.getDisplayName().copy();
+        MutableComponent component = mobEffect.value().getDisplayName().copy();
         if(amplifier > 0)
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
-        ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect);
+        ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect.value());
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT);
-        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), Component.translatable(key, component), manaCost)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), Component.translatable(key, component), manaCost)
                 .addAction(ManaCheckAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ApplyMobEffectAction.make(ACTIVE, OWNER, STRING.reference("mob_effect"), INT.reference("duration+1"), INT.reference("amplifier"), BOOLEAN.reference("ambient"), BOOLEAN.reference("visible"), BOOLEAN.reference("show_icon")))
                 .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
                 .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
-                .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect).toString())
+                .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect.value()).toString())
                 .addParameter(INT, "duration", duration)
                 .addParameter(INT, "amplifier", amplifier)
                 .addParameter(BOOLEAN, "ambient", false)
                 .addParameter(BOOLEAN, "visible", false)
                 .addParameter(BOOLEAN, "show_icon", true)
                 .addEventHook(ACTIVE)
-                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())));
-        
-        if(!mobEffect.getAttributeModifiers().isEmpty())
+                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.value().getCategory().getTooltipFormatting())));
+
+        Map<Holder<Attribute>, AttributeModifier> attributeModifiers = new HashMap<>();
+        mobEffect.value().createModifiers(amplifier, attributeModifiers::put);
+
+        if(!attributeModifiers.isEmpty())
         {
             spell.addTooltip(Component.empty());
             spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
-            
-            for(Map.Entry<Attribute, AttributeModifierTemplate> e : mobEffect.getAttributeModifiers().entrySet())
+
+            for(Map.Entry<Holder<Attribute>, AttributeModifier> e : attributeModifiers.entrySet())
             {
-                AttributeModifier am = e.getValue().create(amplifier);
-                
-                Attribute attribute = e.getKey();
-                AttributeModifier.Operation op = am.getOperation();
-                double value = am.getAmount();
-                
+                AttributeModifier am = e.getValue();
+
+                AttributeModifier.Operation op = am.operation();
+                double value = am.amount();
+
                 double d;
-                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                if(op != AttributeModifier.Operation.ADD_MULTIPLIED_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 {
                     d = value;
                 }
@@ -255,32 +262,32 @@ public class SpellsGen
                 {
                     d = value * 100;
                 }
-                
+
                 if(value > 0)
                 {
-                    spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
+                    spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.id(), ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
                 }
                 else if(value < 0)
                 {
                     d *= -1D;
-                    spell.addTooltip(Component.translatable("attribute.modifier.take." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
+                    spell.addTooltip(Component.translatable("attribute.modifier.take." + op.id(), ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
                 }
             }
         }
-        
+
         addSpell(rl, spell);
     }
-    
-    public void addToggleEffectSpell(ResourceLocation rl, String key, String descKey, MobEffect mobEffect, float manaCost, int duration, int amplifier)
+
+    public void addToggleEffectSpell(ResourceLocation rl, String key, String descKey, Holder<MobEffect> mobEffect, float manaCost, int duration, int amplifier)
     {
-        MutableComponent component = mobEffect.getDisplayName().copy();
+        MutableComponent component = mobEffect.value().getDisplayName().copy();
         if(amplifier > 0)
         {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
-        ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect);
+        ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect.value());
         String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT);
-        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), Component.translatable(key, component), manaCost)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), Component.translatable(key, component), manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP, "player", OWNER))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER))
@@ -303,7 +310,7 @@ public class SpellsGen
                 .addAction(DeactivateAction.make(ACTIVE, "anti_sound"))
                 .addAction(DeactivateAction.make("anti_sound", "sound"))
                 .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
-                .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect).toString())
+                .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect.value()).toString())
                 .addParameter(INT, "duration", duration)
                 .addParameter(INT, "amplifier", amplifier)
                 .addParameter(BOOLEAN, "ambient", false)
@@ -311,23 +318,25 @@ public class SpellsGen
                 .addParameter(BOOLEAN, "show_icon", true)
                 .addEventHook(ACTIVE)
                 .addEventHook(ON_UNEQUIP)
-                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.getCategory().getTooltipFormatting())));
-        
-        if(!mobEffect.getAttributeModifiers().isEmpty())
+                .addTooltip(Component.translatable(descKey, component.copy().withStyle(mobEffect.value().getCategory().getTooltipFormatting())));
+
+        Map<Holder<Attribute>, AttributeModifier> attributeModifiers = new HashMap<>();
+        mobEffect.value().createModifiers(amplifier, attributeModifiers::put);
+
+        if(!attributeModifiers.isEmpty())
         {
             spell.addTooltip(Component.empty());
             spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
-            
-            for(Map.Entry<Attribute, AttributeModifierTemplate> e : mobEffect.getAttributeModifiers().entrySet())
+
+            for(Map.Entry<Holder<Attribute>, AttributeModifier> e : attributeModifiers.entrySet())
             {
-                AttributeModifier am = e.getValue().create(amplifier);
-                
-                Attribute attribute = e.getKey();
-                AttributeModifier.Operation op = am.getOperation();
-                double value = am.getAmount();
-                
+                AttributeModifier am = e.getValue();
+
+                AttributeModifier.Operation op = am.operation();
+                double value = am.amount();
+
                 double d;
-                if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                if(op != AttributeModifier.Operation.ADD_MULTIPLIED_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 {
                     d = value;
                 }
@@ -335,32 +344,32 @@ public class SpellsGen
                 {
                     d = value * 100;
                 }
-                
+
                 if(value > 0)
                 {
-                    spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
+                    spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.id(), ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
                 }
                 else if(value < 0)
                 {
                     d *= -1D;
-                    spell.addTooltip(Component.translatable("attribute.modifier.take." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
+                    spell.addTooltip(Component.translatable("attribute.modifier.take." + op.id(), ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
                 }
             }
         }
-        
+
         addSpell(rl, spell);
     }
-    
-    public void addPermanentAttributeSpell(ResourceLocation rl, String key, String descKey, SpellIcon spellIcon, Attribute attribute, AttributeModifier.Operation op, double value)
+
+    public void addPermanentAttributeSpell(ResourceLocation rl, String key, String descKey, SpellIcon spellIcon, Holder<Attribute> attribute, AttributeModifier.Operation op, double value)
     {
-        MutableComponent component = Component.translatable(attribute.getDescriptionId());
-        ResourceLocation attributeRL = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
+        MutableComponent component = Component.translatable(attribute.value().getDescriptionId());
+        ResourceLocation attributeRL = BuiltInRegistries.ATTRIBUTE.getKey(attribute.value());
         String opString = SpellsUtil.operationToString(op);
         String nameCode = " '" + SpellsAndShields.MOD_ID + ":" + attributeRL.getPath() + "_' + " + SPELL_SLOT;
 
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(spellIcon, DefaultSpellIcon.make(PERMANENT_ICON_RL))), Component.translatable(key, component), 0F)
-                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute, BuiltInRegistries.ATTRIBUTE), Compiler.compileString(nameCode, STRING), DOUBLE.immediate(value), STRING.immediate(opString)))
-                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP, OWNER, SpellsUtil.objectToString(attribute, BuiltInRegistries.ATTRIBUTE), Compiler.compileString(nameCode, STRING)))
+                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute.value(), BuiltInRegistries.ATTRIBUTE), Compiler.compileString(nameCode, STRING), DOUBLE.immediate(value), STRING.immediate(opString)))
+                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP, OWNER, SpellsUtil.objectToString(attribute.value(), BuiltInRegistries.ATTRIBUTE), Compiler.compileString(nameCode, STRING)))
                 .addEventHook(ON_EQUIP)
                 .addEventHook(ON_UNEQUIP)
                 .addTooltip(Component.translatable(descKey, component.copy().withStyle(ChatFormatting.BLUE)));
@@ -369,7 +378,7 @@ public class SpellsGen
         spell.addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
         
         double d;
-        if(op != AttributeModifier.Operation.MULTIPLY_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+        if(op != AttributeModifier.Operation.ADD_MULTIPLIED_BASE && op != AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
         {
             d = value;
         }
@@ -377,15 +386,15 @@ public class SpellsGen
         {
             d = value * 100;
         }
-        
+
         if(value > 0)
         {
-            spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
+            spell.addTooltip(Component.translatable("attribute.modifier.plus." + op.id(), ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.BLUE));
         }
         else if(value < 0)
         {
             d *= -1D;
-            spell.addTooltip(Component.translatable("attribute.modifier.take." + op.toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
+            spell.addTooltip(Component.translatable("attribute.modifier.take." + op.id(), ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
         }
         
         addSpell(rl, spell);
@@ -396,7 +405,7 @@ public class SpellsGen
         ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
         ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('permanent_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT);
-        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(PERMANENT_ICON_RL))), key, 0F)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(PERMANENT_ICON_RL))), key, 0F)
                 .addAction(CopyTargetsAction.make(ON_EQUIP, "player", OWNER))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP, "player", OWNER))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER))
@@ -458,7 +467,7 @@ public class SpellsGen
         ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
         ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('temporary_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT);
-        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), key, manaCost)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), key, manaCost)
                 .addAction(ManaCheckAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER))
@@ -518,7 +527,7 @@ public class SpellsGen
         ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
         ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('toggle_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT);
-        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), key, manaCost)
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), key, manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP, "player", OWNER))
                 .addAction(CopyTargetsAction.make("apply", "player", HOLDER))
@@ -749,9 +758,9 @@ public class SpellsGen
                 .addTooltip(itemCostComponent(new ItemStack(Items.SPECTRAL_ARROW)))
         );
         
-        addPermanentAttributeSpell(Spells.HEALTH_BOOST, Spells.KEY_HEALTH_BOOST, Spells.KEY_HEALTH_BOOST_DESC, DefaultSpellIcon.make(new ResourceLocation("textures/mob_effect/" + BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.HEALTH_BOOST).getPath() + ".png")), Attributes.MAX_HEALTH, AttributeModifier.Operation.ADDITION, 4D);
+        addPermanentAttributeSpell(Spells.HEALTH_BOOST, Spells.KEY_HEALTH_BOOST, Spells.KEY_HEALTH_BOOST_DESC, DefaultSpellIcon.make(ResourceLocation.parse("textures/mob_effect/" + BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.HEALTH_BOOST.value()).getPath() + ".png")), Attributes.MAX_HEALTH, AttributeModifier.Operation.ADD_VALUE, 4D);
         
-        addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltInRegisters.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltInRegisters.MAX_MANA_ATTRIBUTE.get(), AttributeModifier.Operation.ADDITION, 4D);
+        addPermanentAttributeSpell(Spells.MANA_BOOST, Spells.KEY_MANA_BOOST, Spells.KEY_MANA_BOOST_DESC, DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "textures/mob_effect/" + BuiltInRegisters.MANA_BOOST_EFFECT.getId().getPath() + ".png")), BuiltInRegisters.MAX_MANA_ATTRIBUTE, AttributeModifier.Operation.ADD_VALUE, 4D);
         
         addSpell(Spells.WATER_LEAP, new Spell(modId, "water_leap", Spells.KEY_WATER_LEAP, 5F)
                 .addParameter(DOUBLE, "speed", 2.5)
@@ -771,9 +780,9 @@ public class SpellsGen
                 .addTooltip(Component.translatable(Spells.KEY_WATER_LEAP_DESC))
         );
         
-        ResourceLocation resistanceRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.DAMAGE_RESISTANCE);
-        ResourceLocation waterBreathingRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WATER_BREATHING);
-        addSpell(Spells.PERMANENT_AQUA_RESISTANCE, new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(new ResourceLocation(resistanceRL.getNamespace(), "textures/mob_effect/" + resistanceRL.getPath() + ".png")), DefaultSpellIcon.make(new ResourceLocation(waterBreathingRL.getNamespace(), "textures/mob_effect/" + waterBreathingRL.getPath() + ".png")))), Spells.KEY_PERMANENT_AQUA_RESISTANCE, 0F)
+        ResourceLocation resistanceRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.DAMAGE_RESISTANCE.value());
+        ResourceLocation waterBreathingRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WATER_BREATHING.value());
+        addSpell(Spells.PERMANENT_AQUA_RESISTANCE, new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(resistanceRL.getNamespace(), "textures/mob_effect/" + resistanceRL.getPath() + ".png")), DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(waterBreathingRL.getNamespace(), "textures/mob_effect/" + waterBreathingRL.getPath() + ".png")))), Spells.KEY_PERMANENT_AQUA_RESISTANCE, 0F)
                 .addAction(ConditionalDeactivationAction.make(LIVING_HURT_VICTIM, Compiler.compileString(" damage_type == 'mob' ", BOOLEAN)))
                 .addAction(GetEntityEyePositionAction.make(LIVING_HURT_VICTIM, OWNER, "eye_pos"))
                 .addAction(GetFluidAction.make(LIVING_HURT_VICTIM, "eye_pos", "fluid_type", "", "", ""))
@@ -1031,7 +1040,7 @@ public class SpellsGen
         addTemporaryWalkerSpell(Spells.TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER, Spells.KEY_TEMPORARY_LAVA_WALKER_DESC, "lava_walker", Fluids.LAVA.getFluidType(), Blocks.OBSIDIAN.defaultBlockState(), 16F, false, 400);
         addToggleWalkerSpell(Spells.TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER, Spells.KEY_TOGGLE_LAVA_WALKER_DESC, "lava_walker", Fluids.LAVA.getFluidType(), Blocks.OBSIDIAN.defaultBlockState(), 5F, false);
         
-        addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(new ResourceLocation(BuiltInRegisters.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltInRegisters.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
+        addSpell(Spells.SILENCE_TARGET, new Spell(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(BuiltInRegisters.SILENCE_EFFECT.getId().getNamespace(), "textures/mob_effect/" + BuiltInRegisters.SILENCE_EFFECT.getId().getPath() + ".png")), Spells.KEY_SILENCE_TARGET, 5F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(ActivateAction.make(ACTIVE, "bypass"))
                 .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.AMETHYST_SHARD, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
@@ -1250,7 +1259,7 @@ public class SpellsGen
                 .addAction(PlaySoundAction.make("success", OWNER, SoundEvents.FIRE_EXTINGUISH, ONE_D, ONE_D))
                 .addAction(PlaySoundAction.make("success", "block_to_check", SoundEvents.FIRE_EXTINGUISH, ONE_D, ONE_D))
                 .addAction(HomeAction.make("success", "block_to_check", OWNER, ONE_D, INT.immediate(100), "", "owner_hit", "", ""))
-                .addAction(ApplyMobEffectAction.make("owner_hit", ENTITY_HIT, SpellsUtil.objectToString(BuiltInRegisters.REPLENISHMENT_EFFECT.get(), BuiltInRegistries.MOB_EFFECT), INT.reference("replenishment_duration"), ZERO, FALSE, TRUE, TRUE))
+                .addAction(ApplyMobEffectAction.make("owner_hit", ENTITY_HIT, SpellsUtil.objectToString(BuiltInRegisters.REPLENISHMENT_EFFECT.value(), BuiltInRegistries.MOB_EFFECT), INT.reference("replenishment_duration"), ZERO, FALSE, TRUE, TRUE))
                 .addAction(PlaySoundAction.make("owner_hit", ENTITY_HIT, SoundEvents.FIRE_AMBIENT, ONE_D, ONE_D))
                 .addParameter(DOUBLE, "range", 50D)
                 .addParameter(INT, "replenishment_duration", 100)
@@ -1280,7 +1289,7 @@ public class SpellsGen
                 .addTooltip(itemCostComponent(new ItemStack(Items.BONE_MEAL)))
         );
         
-        addSpell(Spells.GHAST, new Spell(AdvancedSpellIcon.make(new ResourceLocation("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32), Spells.KEY_GHAST, 4F)
+        addSpell(Spells.GHAST, new Spell(AdvancedSpellIcon.make(ResourceLocation.parse("textures/entity/ghast/ghast_shooting.png"), 16, 16, 16, 16, 64, 32), Spells.KEY_GHAST, 4F)
                 .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(BooleanActivationAction.make(ACTIVE, "success", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
                 .addAction(PlayerHasItemsAction.make(ACTIVE, OWNER, SpellsUtil.objectToString(Items.FIRE_CHARGE, BuiltInRegistries.ITEM), ONE, null, TRUE, TRUE))
@@ -1344,10 +1353,10 @@ public class SpellsGen
         );
         
         addSpell(Spells.EVOKER_FANGS, new Spell(LayeredSpellIcon.make(ImmutableList.of(
-                        AdvancedSpellIcon.make(new ResourceLocation("textures/entity/illager/evoker.png"), 8, 8, 8, 10, 64, 64, 0, -2),
-                        AdvancedSpellIcon.make(new ResourceLocation("textures/entity/illager/evoker.png"), 22, 26, 8, 4, 64, 64, 0, 5),
-                        AdvancedSpellIcon.make(new ResourceLocation("textures/entity/illager/evoker.png"), 6, 44, 8, 4, 64, 64, 0, 5),
-                        AdvancedSpellIcon.make(new ResourceLocation("textures/entity/illager/evoker.png"), 26, 2, 2, 4, 64, 64, 0, 2)
+                        AdvancedSpellIcon.make(ResourceLocation.parse("textures/entity/illager/evoker.png"), 8, 8, 8, 10, 64, 64, 0, -2),
+                        AdvancedSpellIcon.make(ResourceLocation.parse("textures/entity/illager/evoker.png"), 22, 26, 8, 4, 64, 64, 0, 5),
+                        AdvancedSpellIcon.make(ResourceLocation.parse("textures/entity/illager/evoker.png"), 6, 44, 8, 4, 64, 64, 0, 5),
+                        AdvancedSpellIcon.make(ResourceLocation.parse("textures/entity/illager/evoker.png"), 26, 2, 2, 4, 64, 64, 0, 2)
                 )), Spells.KEY_EVOKER_FANGS, 6F)
                         .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                         .addAction(LookAtTargetAction.make(ACTIVE, OWNER, DOUBLE.reference("range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, "", "", ""))
@@ -1431,13 +1440,13 @@ public class SpellsGen
                 .addTooltip(itemCostComponent(Items.GUNPOWDER))
         );
         
-        addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT.get(), 50, 0);
-        addTemporaryEffectSpell(Spells.TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT.get(), 13F, 400, 0);
-        addToggleEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT.get(), 4F, 50, 0);
+        addPermanentEffectSpell(Spells.PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT, Spells.KEY_PERMANENT_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT, 50, 0);
+        addTemporaryEffectSpell(Spells.TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT, Spells.KEY_TEMPORARY_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT, 13F, 400, 0);
+        addToggleEffectSpell(Spells.TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT, Spells.KEY_TOGGLE_REPLENISHMENT_DESC, BuiltInRegisters.REPLENISHMENT_EFFECT, 4F, 50, 0);
         
-        addPermanentEffectSpell(Spells.PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get(), 50, 0);
-        addTemporaryEffectSpell(Spells.TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get(), 13F, 400, 0);
-        addToggleEffectSpell(Spells.TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT.get(), 4F, 50, 0);
+        addPermanentEffectSpell(Spells.PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE, Spells.KEY_PERMANENT_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT, 50, 0);
+        addTemporaryEffectSpell(Spells.TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE, Spells.KEY_TEMPORARY_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT, 13F, 400, 0);
+        addToggleEffectSpell(Spells.TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE, Spells.KEY_TOGGLE_MAGIC_IMMUNE_DESC, BuiltInRegisters.MAGIC_IMMUNE_EFFECT, 4F, 50, 0);
         
         addPermanentEffectSpell(Spells.PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED, Spells.KEY_PERMANENT_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 50, 0);
         addTemporaryEffectSpell(Spells.TEMPORARY_SPEED, Spells.KEY_TEMPORARY_SPEED, Spells.KEY_TEMPORARY_SPEED_DESC, MobEffects.MOVEMENT_SPEED, 13F, 400, 0);

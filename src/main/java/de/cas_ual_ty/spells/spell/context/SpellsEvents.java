@@ -14,9 +14,8 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityEvent;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -30,35 +29,35 @@ public class SpellsEvents
     
     public static void registerEvents()
     {
-        register(BuiltinEvents.LIVING_ATTACK_ATTACKER.activation, LivingAttackEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
+        register(BuiltinEvents.LIVING_ATTACK_ATTACKER.activation, LivingIncomingDamageEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
                 .addTargetLink(e -> Target.of(e.getEntity()), "victim")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
-        
-        register(BuiltinEvents.LIVING_ATTACK_VICTIM.activation, LivingAttackEvent.class)
+
+        register(BuiltinEvents.LIVING_ATTACK_VICTIM.activation, LivingIncomingDamageEvent.class)
                 .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
-        
-        register(BuiltinEvents.LIVING_HURT_ATTACKER.activation, LivingHurtEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
+
+        register(BuiltinEvents.LIVING_HURT_ATTACKER.activation, LivingDamageEvent.Pre.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
                 .addTargetLink(e -> Target.of(e.getEntity()), "victim")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
-        
-        register(BuiltinEvents.LIVING_HURT_VICTIM.activation, LivingHurtEvent.class)
+                .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
+
+        register(BuiltinEvents.LIVING_HURT_VICTIM.activation, LivingDamageEvent.Pre.class)
                 .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
-        
+                .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
+
         register(BuiltinEvents.LIVING_DAMAGE_ATTACKER.activation, LivingDamageEvent.Pre.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
                 .addTargetLink(e -> Target.of(e.getEntity()), "victim")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
-        
+                .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
+
         register(BuiltinEvents.LIVING_DAMAGE_VICTIM.activation, LivingDamageEvent.Pre.class)
                 .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
+                .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
     }
     
     public static <E extends Event> RegisteredEvent<E> register(String eventId, Class<E> eventClass, Function<E, Optional<Entity>> playerGetter)

@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.capability;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.core.HolderLookup;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.Optional;
@@ -29,13 +30,13 @@ public class ExtraTagHolder implements INBTSerializable<CompoundTag>
     }
 
     @Override
-    public CompoundTag serializeNBT()
+    public CompoundTag serializeNBT(HolderLookup.Provider provider)
     {
         return tag;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag)
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag)
     {
         this.tag = tag;
     }

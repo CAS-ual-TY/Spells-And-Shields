@@ -6,18 +6,18 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 public class SpellTreesGen
 {
     protected String modId;
-    protected final BootstapContext<SpellTree> context;
+    protected final BootstrapContext<SpellTree> context;
     
     protected final HolderGetter<Spell> spellGetter;
     
-    public SpellTreesGen(String modId, BootstapContext<SpellTree> context)
+    public SpellTreesGen(String modId, BootstrapContext<SpellTree> context)
     {
         this.modId = modId;
         this.context = context;
@@ -27,7 +27,7 @@ public class SpellTreesGen
     
     public void addSpellTree(String key, SpellTree spellTree)
     {
-        addSpellTree(new ResourceLocation(modId, key), spellTree);
+        addSpellTree(ResourceLocation.fromNamespaceAndPath(modId, key), spellTree);
     }
     
     public void addSpellTree(ResourceLocation key, SpellTree spellTree)

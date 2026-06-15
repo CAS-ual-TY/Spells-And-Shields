@@ -5,7 +5,6 @@ import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
@@ -152,8 +151,8 @@ public class SpellNode
     {
         List<Component> tooltips = new LinkedList<>();
         tooltips.add(getSpellDirect().getTitle());
-        hiddenRequirements.stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> c.getContents() != ComponentContents.EMPTY).forEach(tooltips::add);
-        learnRequirements.stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> c.getContents() != ComponentContents.EMPTY).forEach(tooltips::add);
+        hiddenRequirements.stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> !c.getString().isEmpty()).forEach(tooltips::add);
+        learnRequirements.stream().map(requirement -> (requirement.makeDescription(spellProgressionHolder, access))).filter(c -> !c.getString().isEmpty()).forEach(tooltips::add);
         return tooltips;
     }
     

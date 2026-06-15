@@ -59,7 +59,7 @@ public class Spell
     
     public Spell(String modId, String icon, String titleKey, float manaCost)
     {
-        this(new ResourceLocation(modId, "textures/spell/" + icon + ".png"), Component.translatable(titleKey), manaCost);
+        this(ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/" + icon + ".png"), Component.translatable(titleKey), manaCost);
     }
     
     public Spell addTooltip(Component component)

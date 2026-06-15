@@ -62,7 +62,7 @@ public class SetOnFireAction extends AffectTypeAction<LivingEntityTarget>
             if(fireTicks > 0)
             {
                 // affected by fire protection enchantment
-                target.getEntity().setSecondsOnFire(fireTicks);
+                target.getEntity().igniteForSeconds((float) fireTicks);
             }
         });
     }

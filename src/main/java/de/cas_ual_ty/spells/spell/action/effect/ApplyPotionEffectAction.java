@@ -15,9 +15,6 @@ import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import de.cas_ual_ty.spells.util.ParamNames;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.alchemy.PotionUtils;
-
-import java.util.LinkedList;
 
 public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget>
 {
@@ -64,7 +61,7 @@ public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget
     {
         SpellsUtil.stringToObject(ctx, potion, BuiltInRegistries.POTION).ifPresent(potion ->
         {
-            PotionUtils.getAllEffects(potion, new LinkedList<>()).forEach(effect ->
+            potion.getEffects().forEach(effect ->
             {
                 target.getLivingEntity().addEffect(effect);
             });

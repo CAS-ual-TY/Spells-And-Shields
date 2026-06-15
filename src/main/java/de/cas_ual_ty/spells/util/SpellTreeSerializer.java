@@ -12,7 +12,9 @@ import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
@@ -28,7 +30,7 @@ public class SpellTreeSerializer
     public static void encodeTree(SpellTree spellTree, Registry<Spell> registry, FriendlyByteBuf buf)
     {
         buf.writeResourceLocation(spellTree.getId());
-        buf.writeComponent(spellTree.getTitle());
+        ComponentSerialization.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, spellTree.getTitle());
         SpellIcon.iconToBuf(buf, spellTree.getIcon());
         
         SpellNode spellNode = spellTree.getRoot();
@@ -69,7 +71,7 @@ public class SpellTreeSerializer
     public static SpellTree decodeTree(Registry<Spell> registry, FriendlyByteBuf buf)
     {
         ResourceLocation id = buf.readResourceLocation();
-        Component title = buf.readComponent();
+        Component title = ComponentSerialization.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
         SpellIcon icon = SpellIcon.iconFromBuf(buf);
         
         SpellTree.Builder builder = SpellTree.builder(title);

@@ -19,8 +19,9 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import java.util.function.Supplier;
@@ -365,12 +366,12 @@ public class LangGen extends LanguageProvider
         add(key.get().getDescriptionId() + ".description", desc);
     }
     
-    public void addPotion(Supplier<? extends Potion> key, String name)
+    public void addPotion(Holder<Potion> key, String name)
     {
-        add(PotionUtils.setPotion(new ItemStack(Items.POTION), key.get()), "Potion of " + name);
-        add(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), key.get()), "Splash Potion of " + name);
-        add(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), key.get()), "Lingering Potion of " + name);
-        add(PotionUtils.setPotion(new ItemStack(Items.TIPPED_ARROW), key.get()), "Arrow of " + name);
+        add(PotionContents.createItemStack(Items.POTION, key), "Potion of " + name);
+        add(PotionContents.createItemStack(Items.SPLASH_POTION, key), "Splash Potion of " + name);
+        add(PotionContents.createItemStack(Items.LINGERING_POTION, key), "Lingering Potion of " + name);
+        add(PotionContents.createItemStack(Items.TIPPED_ARROW, key), "Arrow of " + name);
     }
     
     public void addRequirement(Supplier<? extends RequirementType<?>> requirement, String desc)

@@ -12,7 +12,7 @@ import net.minecraft.util.Mth;
 
 public class SpellInteractButton extends Button
 {
-    private static final ResourceLocation TITLE_BOX_SPRITE = new ResourceLocation("advancements/title_box");
+    private static final ResourceLocation TITLE_BOX_SPRITE = ResourceLocation.parse("advancements/title_box");
     
     public final ResourceLocation v;
     
