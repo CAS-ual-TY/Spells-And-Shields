@@ -50,7 +50,7 @@ public class ManaRenderer implements LayeredDraw.Layer
         int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
         int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         Player player = Minecraft.getInstance().player;
-        if(above == SpellsClientConfig.MANA_ABOVE_FOOD.get() && right == !SpellsClientConfig.MANA_BY_HEALTH.get() && !Minecraft.getInstance().options.hideGui && player != null && !player.isSpectator())
+        if(above == SpellsClientConfig.MANA_ABOVE_FOOD.get() && right == !SpellsClientConfig.MANA_BY_HEALTH.get() && !Minecraft.getInstance().options.hideGui && player != null && !player.isSpectator() && !player.isCreative())
         {
             renderMana(width, height, guiGraphics);
         }
