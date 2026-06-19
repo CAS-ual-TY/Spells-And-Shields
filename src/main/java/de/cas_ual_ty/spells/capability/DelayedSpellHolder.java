@@ -246,6 +246,10 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
 
         public boolean tick()
         {
+            if(spell == null)
+            {
+                return true;
+            }
             if(!spell.getSpell().isBound())
             {
                 return false;

@@ -15,7 +15,10 @@ public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, SpellNo
     public static final StreamCodec<FriendlyByteBuf, SpellsSyncMessage> STREAM_CODEC = StreamCodec.of(
             (buf, msg) ->
             {
-                assert msg.spells().length == msg.nodeIds().length;
+                if(msg.spells().length != msg.nodeIds().length)
+                {
+                    throw new IllegalStateException("SpellsSyncMessage: spells/nodeIds length mismatch (" + msg.spells().length + " vs " + msg.nodeIds().length + ")");
+                }
 
                 buf.writeInt(msg.entityId());
                 buf.writeByte(msg.spells().length);
