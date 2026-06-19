@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells;
 
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
+import de.cas_ual_ty.spells.datagen.DataGen;
 import de.cas_ual_ty.spells.network.*;
 import de.cas_ual_ty.spells.registers.*;
 import de.cas_ual_ty.spells.spell.compiler.BinaryOperation;
@@ -42,6 +43,7 @@ public class SpellsAndShields
 
         modContainer.registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common.toml");
 
+        DataGen.register(modEventBus);
         modEventBus.addListener(SpellsAndShields::registerPayloadHandlers);
         NeoForge.EVENT_BUS.addListener(BuiltInRegisters::addPotionRecipes);
         BuiltInRegisters.registerEvents(modEventBus);

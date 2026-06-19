@@ -11,9 +11,7 @@
     {
       "translate": "spell.spells_and_shields.instant_mine.desc"
     },
-    {
-      "text": ""
-    },
+    "",
     {
       "color": "blue",
       "translate": "spell.generic.title.item_requirement.hand"

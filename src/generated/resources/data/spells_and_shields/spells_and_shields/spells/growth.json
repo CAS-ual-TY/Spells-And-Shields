@@ -11,9 +11,7 @@
     {
       "translate": "spell.spells_and_shields.growth.desc"
     },
-    {
-      "text": ""
-    },
+    "",
     {
       "color": "blue",
       "translate": "spell.generic.title.item_cost.hand"
@@ -108,7 +106,7 @@
       "boolean/offhand": false,
       "direction": "up",
       "item": {
-        "Count": 1,
+        "count": 1,
         "id": "minecraft:bone_meal"
       },
       "t/source": "owner",

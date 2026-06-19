@@ -11,9 +11,7 @@
     {
       "translate": "spell.spells_and_shields.blow_arrow.desc"
     },
-    {
-      "text": ""
-    },
+    "",
     {
       "color": "blue",
       "translate": "spell.generic.title.item_cost.hand"
@@ -120,7 +118,7 @@
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,
       "item": {
-        "Count": 1,
+        "count": 1,
         "id": "minecraft:arrow"
       },
       "t/target": "item"
@@ -132,7 +130,7 @@
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,
       "item": {
-        "Count": 1,
+        "count": 1,
         "id": "minecraft:tipped_arrow"
       },
       "t/target": "item"
@@ -185,7 +183,7 @@
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,
       "item": {
-        "Count": 1,
+        "count": 1,
         "id": "minecraft:spectral_arrow"
       },
       "t/target": "item"

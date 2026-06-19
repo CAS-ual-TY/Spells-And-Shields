@@ -1,0 +1,35 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.spells_and_shields.max_mana"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 4.0,
+          "per_level_above_first": 2.0
+        },
+        "attribute": "spells_and_shields:generic.max_mana",
+        "id": "spells_and_shields:max_mana",
+        "operation": "add_value"
+      }
+    ]
+  },
+  "exclusive_set": "#spells_and_shields:exclusive/mana_armor",
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 5
+  },
+  "max_level": 2,
+  "min_cost": {
+    "base": 20,
+    "per_level_above_first": 5
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:enchantable/armor",
+  "weight": 5
+}

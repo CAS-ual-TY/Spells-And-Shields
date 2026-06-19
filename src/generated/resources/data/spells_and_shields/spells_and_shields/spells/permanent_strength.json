@@ -31,9 +31,7 @@
         }
       ]
     },
-    {
-      "text": ""
-    },
+    "",
     {
       "color": "dark_purple",
       "translate": "potion.whenDrank"

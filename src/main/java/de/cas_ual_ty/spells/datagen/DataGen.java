@@ -4,20 +4,23 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
 import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Set;
 
-@EventBusSubscriber(modid = SpellsAndShields.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class DataGen
 {
-    @SubscribeEvent
-    public static void gatherData(GatherDataEvent event)
+    public static void register(IEventBus modEventBus)
+    {
+        modEventBus.addListener(DataGen::gatherData);
+    }
+
+    private static void gatherData(GatherDataEvent event)
     {
         event.getGenerator().addProvider(event.includeClient(), new LangGen(event.getGenerator(), "en_us"));
         event.getGenerator().addProvider(event.includeServer(), new DocsGen(event.getGenerator(), SpellsAndShields.MOD_ID, event.getExistingFileHelper()));
@@ -29,6 +32,7 @@ public class DataGen
                         event.getLookupProvider(),
                         // The objects to generate
                         new RegistrySetBuilder()
+                                .add(Registries.ENCHANTMENT, EnchantmentsGen::bootstrap)
                                 .add(Spells.REGISTRY_KEY, context -> {
                                     new SpellsGen(SpellsAndShields.MOD_ID, context);
                                 })

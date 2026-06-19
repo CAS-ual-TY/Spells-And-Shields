@@ -11,9 +11,7 @@
     {
       "translate": "spell.spells_and_shields.summon_animal.desc"
     },
-    {
-      "text": ""
-    },
+    "",
     {
       "color": "blue",
       "translate": "spell.generic.title.item_cost.hand"
@@ -22,7 +20,7 @@
       "color": "yellow",
       "translate": "spell.generic.item_cost",
       "with": [
-        "8",
+        8,
         {
           "translate": "item.minecraft.beef"
         }
@@ -32,7 +30,7 @@
       "color": "yellow",
       "translate": "spell.generic.item_cost",
       "with": [
-        "8",
+        8,
         {
           "translate": "item.minecraft.chicken"
         }
@@ -42,7 +40,7 @@
       "color": "yellow",
       "translate": "spell.generic.item_cost",
       "with": [
-        "8",
+        8,
         {
           "translate": "item.minecraft.porkchop"
         }
@@ -52,7 +50,7 @@
       "color": "yellow",
       "translate": "spell.generic.item_cost",
       "with": [
-        "8",
+        8,
         {
           "translate": "item.minecraft.mutton"
         }

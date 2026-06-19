@@ -11,9 +11,7 @@
     {
       "translate": "spell.spells_and_shields.potion_shot.desc"
     },
-    {
-      "text": ""
-    },
+    "",
     {
       "color": "blue",
       "translate": "spell.generic.title.item_cost.hand"
@@ -63,7 +61,7 @@
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,
       "item": {
-        "Count": 1,
+        "count": 1,
         "id": "minecraft:potion"
       },
       "t/target": "item"
@@ -101,7 +99,7 @@
       "d/int/minimum_count": 1,
       "d/int/minimum_durability": -1,
       "item": {
-        "Count": 1,
+        "count": 1,
         "id": "minecraft:potion"
       },
       "t/target": "item"

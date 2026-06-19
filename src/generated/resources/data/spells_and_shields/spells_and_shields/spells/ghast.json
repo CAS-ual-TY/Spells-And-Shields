@@ -17,9 +17,7 @@
     {
       "translate": "spell.spells_and_shields.ghast.desc"
     },
-    {
-      "text": ""
-    },
+    "",
     {
       "color": "blue",
       "translate": "spell.generic.title.item_cost.hand"

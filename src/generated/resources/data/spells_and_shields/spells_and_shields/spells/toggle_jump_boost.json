@@ -30,6 +30,21 @@
           "translate": "effect.minecraft.jump_boost"
         }
       ]
+    },
+    "",
+    {
+      "color": "dark_purple",
+      "translate": "potion.whenDrank"
+    },
+    {
+      "color": "blue",
+      "translate": "attribute.modifier.plus.0",
+      "with": [
+        "1",
+        {
+          "translate": "effect.minecraft.jump_boost"
+        }
+      ]
     }
   ],
   "s5/spell_events": [

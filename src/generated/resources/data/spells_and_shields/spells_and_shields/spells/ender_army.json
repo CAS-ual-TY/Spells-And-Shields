@@ -11,9 +11,7 @@
     {
       "translate": "spell.spells_and_shields.ender_army.desc"
     },
-    {
-      "text": ""
-    },
+    "",
     {
       "color": "blue",
       "translate": "spell.generic.title.item_cost.hand"

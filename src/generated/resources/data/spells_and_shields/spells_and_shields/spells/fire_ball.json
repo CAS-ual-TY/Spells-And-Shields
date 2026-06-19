@@ -11,9 +11,7 @@
     {
       "translate": "spell.spells_and_shields.fire_ball.desc"
     },
-    {
-      "text": ""
-    },
+    "",
     {
       "color": "blue",
       "translate": "spell.generic.title.item_cost.hand"
