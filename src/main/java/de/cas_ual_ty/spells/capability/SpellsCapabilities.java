@@ -21,6 +21,9 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
 import java.util.function.Supplier;
 
 public class SpellsCapabilities
@@ -174,7 +177,8 @@ public class SpellsCapabilities
     {
         if(event.getLevel() instanceof ServerLevel level)
         {
-            for(Entity e : level.getAllEntities())
+            List<Entity> entities = Lists.newArrayList(level.getAllEntities());
+            for(Entity e : entities)
             {
                 if(e.hasData(DELAYED_SPELL_HOLDER.get()))
                 {

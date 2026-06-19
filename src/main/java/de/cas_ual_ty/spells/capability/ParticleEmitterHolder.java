@@ -119,7 +119,7 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
 
     public ParticleEmitterSyncMessage makeSyncMessage()
     {
-        return new ParticleEmitterSyncMessage(holder.getId(), true, list);
+        return new ParticleEmitterSyncMessage(holder.getId(), true, ImmutableList.copyOf(list));
     }
 
     public void sendSync(ParticleEmitter emitter)
