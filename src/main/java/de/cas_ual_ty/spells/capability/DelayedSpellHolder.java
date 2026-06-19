@@ -39,6 +39,11 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
         this.holder = holder;
     }
 
+    public boolean hasActive()
+    {
+        return !spells.isEmpty();
+    }
+
     public void initEntity(Entity entity)
     {
         if(this.holder == null)

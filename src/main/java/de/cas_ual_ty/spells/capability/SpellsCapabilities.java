@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import com.google.common.collect.Lists;
 import net.minecraft.core.HolderLookup;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -22,7 +21,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public class SpellsCapabilities
@@ -176,12 +174,17 @@ public class SpellsCapabilities
     {
         if(event.getLevel() instanceof ServerLevel level)
         {
-            List<Entity> entities = Lists.newArrayList(level.getAllEntities());
-            entities.forEach(e ->
+            for(Entity e : level.getAllEntities())
             {
-                DelayedSpellHolder.getHolder(e).ifPresent(DelayedSpellHolder::tick);
-                ParticleEmitterHolder.getHolder(e).ifPresent(h -> h.tick(false));
-            });
+                if(e.hasData(DELAYED_SPELL_HOLDER.get()))
+                {
+                    DelayedSpellHolder.getHolder(e).ifPresent(DelayedSpellHolder::tick);
+                }
+                if(e.hasData(PARTICLE_EMITTER_HOLDER.get()))
+                {
+                    ParticleEmitterHolder.getHolder(e).ifPresent(h -> h.tick(false));
+                }
+            }
         }
     }
 

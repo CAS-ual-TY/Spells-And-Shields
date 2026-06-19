@@ -53,6 +53,11 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
         list.add(emitter);
     }
 
+    public boolean hasActive()
+    {
+        return !list.isEmpty();
+    }
+
     public void clear()
     {
         list.clear();
@@ -60,6 +65,11 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
 
     public void tick(boolean emit)
     {
+        if(list.isEmpty())
+        {
+            return;
+        }
+
         LinkedList<ParticleEmitter> newList = new LinkedList<>();
 
         for(ParticleEmitter e : list)
