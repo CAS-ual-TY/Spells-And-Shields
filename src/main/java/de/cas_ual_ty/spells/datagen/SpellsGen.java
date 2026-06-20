@@ -438,7 +438,7 @@ public class SpellsGen
         
         if(tick)
         {
-            spell.addAction(TickBlockAction.make("apply", "block", Compiler.compileString(" next_int(60) + 60 ", INT)));
+            spell.addAction(TickBlockAction.make("do_apply", "block", Compiler.compileString(" next_int(60) + 60 ", INT)));
         }
         
         spell.addAction(GetTargetGroupSizeAction.make("apply", "blocks", "size"))
@@ -498,7 +498,7 @@ public class SpellsGen
         
         if(tick)
         {
-            spell.addAction(TickBlockAction.make("apply", "block", Compiler.compileString(" next_int(60) + 60 ", INT)));
+            spell.addAction(TickBlockAction.make("do_apply", "block", Compiler.compileString(" next_int(60) + 60 ", INT)));
         }
         
         spell.addAction(GetTargetGroupSizeAction.make("apply", "blocks", "size"))
@@ -561,7 +561,7 @@ public class SpellsGen
         
         if(tick)
         {
-            spell.addAction(TickBlockAction.make("apply", "block", Compiler.compileString(" next_int(60) + 60 ", INT)));
+            spell.addAction(TickBlockAction.make("do_apply", "block", Compiler.compileString(" next_int(60) + 60 ", INT)));
         }
         
         spell.addAction(GetTargetGroupSizeAction.make("apply", "blocks", "size"))
