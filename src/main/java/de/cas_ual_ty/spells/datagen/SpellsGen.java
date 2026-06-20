@@ -365,11 +365,11 @@ public class SpellsGen
         MutableComponent component = Component.translatable(attribute.value().getDescriptionId());
         ResourceLocation attributeRL = BuiltInRegistries.ATTRIBUTE.getKey(attribute.value());
         String opString = SpellsUtil.operationToString(op);
-        String uuidCode = " uuid_from_string('attribute' + '%s' + %s + %s + %s) ".formatted(attributeRL.getPath(), SPELL_SLOT, "operation", "value");
+        String nameCode = " '" + SpellsAndShields.MOD_ID + ":" + attributeRL.getPath() + "_' + " + SPELL_SLOT;
 
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(spellIcon, DefaultSpellIcon.make(PERMANENT_ICON_RL))), Component.translatable(key, component), 0F)
-                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute.value(), BuiltInRegistries.ATTRIBUTE), Compiler.compileString(uuidCode, STRING), STRING.immediate(attributeRL.getPath()), DOUBLE.reference("value"), STRING.reference("operation")))
-                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP, OWNER, SpellsUtil.objectToString(attribute.value(), BuiltInRegistries.ATTRIBUTE), Compiler.compileString(uuidCode, STRING)))
+                .addAction(AddAttributeModifierAction.make(ON_EQUIP, OWNER, SpellsUtil.objectToString(attribute.value(), BuiltInRegistries.ATTRIBUTE), Compiler.compileString(nameCode, STRING), DOUBLE.reference("value"), STRING.reference("operation")))
+                .addAction(RemoveAttributeModifierAction.make(ON_UNEQUIP, OWNER, SpellsUtil.objectToString(attribute.value(), BuiltInRegistries.ATTRIBUTE), Compiler.compileString(nameCode, STRING)))
                 .addParameter(DOUBLE, "value", value)
                 .addParameter(STRING, "operation", opString)
                 .addEventHook(ON_EQUIP)

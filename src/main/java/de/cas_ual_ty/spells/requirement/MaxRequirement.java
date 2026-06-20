@@ -6,7 +6,6 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class MaxRequirement extends Requirement
     public static Codec<MaxRequirement> makeCodec(RequirementType<MaxRequirement> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.lazyInitializedCodec(() -> SpellsCodecs.REQUIREMENT.listOf()).fieldOf("requirements").forGetter(MaxRequirement::getList),
+                Codec.lazyInitialized(() -> SpellsCodecs.REQUIREMENT.listOf()).fieldOf("requirements").forGetter(MaxRequirement::getList),
                 Codec.intRange(0, Integer.MAX_VALUE).fieldOf("maximum").forGetter(MaxRequirement::getMaximum)
         ).apply(instance, (list, maximum) -> new MaxRequirement(type, list, maximum)));
     }

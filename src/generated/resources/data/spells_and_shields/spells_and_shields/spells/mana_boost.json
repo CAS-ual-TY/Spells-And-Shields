@@ -51,16 +51,26 @@
     "on_equip",
     "on_unequip"
   ],
-  "s6/spell_parameters": [],
+  "s6/spell_parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 4.0,
+      "var/name": "value"
+    },
+    {
+      "type": "spells_and_shields:string",
+      "value": "addition",
+      "var/name": "operation"
+    }
+  ],
   "s7/spell_actions": [
     {
       "type": "spells_and_shields:add_attribute_modifier",
       "activation": "on_equip",
       "d/double/amount": "<<value>>",
       "d/string/attribute": "spells_and_shields:generic.max_mana",
-      "d/string/name": "generic.max_mana",
+      "d/string/name": "<< 'spells_and_shields:generic.max_mana_' + spell_slot>>",
       "d/string/operation": "<<operation>>",
-      "d/string/uuid": "<< uuid_from_string('attribute' + 'generic.max_mana' + spell_slot + operation + value) >>",
       "ts/targets": "owner"
     },
     {
