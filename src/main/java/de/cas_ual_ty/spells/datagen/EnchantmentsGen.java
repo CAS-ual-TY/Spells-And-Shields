@@ -115,7 +115,7 @@ public class EnchantmentsGen
                 new EnchantmentAttributeEffect(
                     ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "max_mana"),
                     BuiltInRegisters.MAX_MANA_ATTRIBUTE,
-                    LevelBasedValue.perLevel(4.0f, 2.0f),
+                    LevelBasedValue.perLevel(3.0f, 2.0f),
                     AttributeModifier.Operation.ADD_VALUE
                 )
             )
