@@ -88,7 +88,7 @@ public class UseItemOnBlockAction extends AffectSingleTypeAction<PlayerTarget>
         ctx.getTargetGroup(blocks).forEachType(TargetTypes.POSITION.get(), positionTarget ->
         {
             ItemStack item = this.item.copy();
-            item.useOn(new UseOnContext(ctx.level, null, offhand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, item, new BlockHitResult(positionTarget.getPosition(), direction, positionTarget.getBlockPos(), false)));
+            item.useOn(new UseOnContext(ctx.level, playerTarget.getPlayer(), offhand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, item, new BlockHitResult(positionTarget.getPosition(), direction, positionTarget.getBlockPos(), false)));
         });
     }
 }
