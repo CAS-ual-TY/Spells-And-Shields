@@ -10,8 +10,7 @@ import de.cas_ual_ty.spells.spell.action.base.GetTargetAttributeAction;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.ItemTarget;
 import de.cas_ual_ty.spells.util.ParamNames;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.nbt.CompoundTag;
 
 public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
 {
@@ -43,7 +42,7 @@ public class GetItemTagAction extends GetTargetAttributeAction<ItemTarget>
         
         if(!compoundTag.isEmpty())
         {
-            addVariableAttribute(i -> i.getItem().getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag(), CtxVarTypes.TAG.get(), compoundTag);
+            addVariableAttribute((ctx, i) -> (CompoundTag) i.getItem().save(ctx.level.registryAccess()), CtxVarTypes.TAG.get(), compoundTag);
         }
     }
     
