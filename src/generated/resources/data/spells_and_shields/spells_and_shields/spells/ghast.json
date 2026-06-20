@@ -134,12 +134,6 @@
       "var/result": "tag"
     },
     {
-      "type": "spells_and_shields:put_tag",
-      "activation": "shoot",
-      "d/tag/source": "<< put_nbt_vec3(tag, 'power', direction * 2.0 * 0.1) >>",
-      "var/result": "tag"
-    },
-    {
       "type": "spells_and_shields:get_entity_eye_position",
       "activation": "shoot",
       "t/source": "holder",
@@ -151,11 +145,7 @@
       "d/compound_tag/tag": "<<tag>>",
       "d/string/entity_type": "minecraft:fireball",
       "d/vec3/direction": "<<direction>>",
-      "d/vec3/motion": [
-        0.0,
-        0.0,
-        0.0
-      ],
+      "d/vec3/motion": "<< direction * 0.2 >>",
       "t/position": "position",
       "td/entity": "fire_charge"
     },

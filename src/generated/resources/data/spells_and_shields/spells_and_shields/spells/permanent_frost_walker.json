@@ -179,8 +179,8 @@
     {
       "type": "spells_and_shields:cube_block_targets",
       "activation": "apply",
-      "corner1": "<< vec3(-rect_radius, 0, -rect_radius) >>",
-      "corner2": "<< vec3(rect_radius, 0, rect_radius) >>",
+      "d/vec3/corner1": "<< vec3(-rect_radius, 0, -rect_radius) >>",
+      "d/vec3/corner2": "<< vec3(rect_radius, 0, rect_radius) >>",
       "t/source": "below",
       "td/targets": "blocks"
     },
@@ -228,7 +228,7 @@
     },
     {
       "type": "spells_and_shields:tick_block",
-      "activation": "apply",
+      "activation": "do_apply",
       "d/int/duration": "<< next_int(60) + 60 >>",
       "ts/targets": "block"
     },

@@ -124,7 +124,7 @@
     {
       "type": "spells_and_shields:override_item",
       "activation": "consume",
-      "d/compound_tag/tag": "<<item_tag>>",
+      "d/compound_tag/tag": {},
       "d/int/amount": "<<amount>>",
       "d/int/damage": "<<damage>>",
       "d/string/item": "minecraft:bucket",
@@ -395,7 +395,7 @@
     {
       "type": "spells_and_shields:override_item",
       "activation": "do_refill",
-      "d/compound_tag/tag": "<<item_tag>>",
+      "d/compound_tag/tag": {},
       "d/int/amount": 1,
       "d/int/damage": "<<amount>>",
       "d/string/item": "minecraft:water_bucket",
@@ -404,7 +404,7 @@
     {
       "type": "spells_and_shields:give_item",
       "activation": "do_refill",
-      "d/compound_tag/tag": "<<item_tag>>",
+      "d/compound_tag/tag": {},
       "d/int/amount": "<< amount - 1 >>",
       "d/int/damage": "<<amount>>",
       "d/string/item": "minecraft:bucket",

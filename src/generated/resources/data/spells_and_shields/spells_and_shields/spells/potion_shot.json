@@ -124,7 +124,7 @@
     {
       "type": "spells_and_shields:override_item",
       "activation": "consume",
-      "d/compound_tag/tag": "<<item_tag>>",
+      "d/compound_tag/tag": {},
       "d/int/amount": "<<amount>>",
       "d/int/damage": "<<damage>>",
       "d/string/item": "minecraft:glass_bottle",
@@ -133,7 +133,7 @@
     {
       "type": "spells_and_shields:put_tag",
       "activation": "shoot",
-      "d/tag/source": "<< put_nbt_string(new_tag(), 'Potion', get_nbt_string(item_tag, 'Potion')) >>",
+      "d/tag/source": "<< put_nbt_string(new_tag(), 'Potion', get_nbt_string(get_nbt_tag(get_nbt_tag(item_tag, 'components'), 'minecraft:potion_contents'), 'potion')) >>",
       "var/result": "tag"
     },
     {
