@@ -17,9 +17,9 @@ public record RequestLearnSpellMessage(SpellNodeId nodeId) implements CustomPack
             (buf, msg) ->
             {
                 buf.writeResourceLocation(msg.nodeId().treeId());
-                buf.writeShort(msg.nodeId().nodeId());
+                buf.writeInt(msg.nodeId().nodeId());
             },
-            buf -> new RequestLearnSpellMessage(new SpellNodeId(buf.readResourceLocation(), buf.readShort()))
+            buf -> new RequestLearnSpellMessage(new SpellNodeId(buf.readResourceLocation(), buf.readInt()))
     );
 
     @Override

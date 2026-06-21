@@ -66,13 +66,13 @@ public record SpellNodeId(ResourceLocation treeId, int nodeId)
     public void toBuf(FriendlyByteBuf buf)
     {
         buf.writeResourceLocation(treeId());
-        buf.writeShort(nodeId());
+        buf.writeInt(nodeId());
     }
-    
+
     public static SpellNodeId fromBuf(FriendlyByteBuf buf)
     {
         ResourceLocation treeId = buf.readResourceLocation();
-        int nodeId = buf.readShort();
+        int nodeId = buf.readInt();
         return new SpellNodeId(treeId, nodeId);
     }
     

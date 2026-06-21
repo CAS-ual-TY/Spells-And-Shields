@@ -18,9 +18,9 @@ public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId) implements
             {
                 buf.writeByte(msg.slot());
                 buf.writeResourceLocation(msg.nodeId().treeId());
-                buf.writeShort(msg.nodeId().nodeId());
+                buf.writeInt(msg.nodeId().nodeId());
             },
-            buf -> new RequestEquipSpellMessage(buf.readByte(), new SpellNodeId(buf.readResourceLocation(), buf.readShort()))
+            buf -> new RequestEquipSpellMessage(buf.readByte(), new SpellNodeId(buf.readResourceLocation(), buf.readInt()))
     );
 
     @Override
