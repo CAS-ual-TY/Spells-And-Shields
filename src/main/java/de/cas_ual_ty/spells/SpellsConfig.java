@@ -46,7 +46,7 @@ public class SpellsConfig
         configBuilder.push("misc");
         ENCHANTING_TABLE = configBuilder
                 .comment("Resource location of the enchanting table. Some mods could change that. These are the blocks that already have some sort of GUI where the spell progression button is injected.")
-                .defineList("enchantingTables", ImmutableList.of("minecraft:enchanting_table", "quark:matrix_enchanter"), s -> true);
+                .defineList("enchantingTables", ImmutableList.of("minecraft:enchanting_table", "quark:matrix_enchanter", "easymagic:minecraft/enchanting_table"), s -> true);
         PROGRESSION_BLOCK = configBuilder
                 .comment("For modpack authors. Resource location of blocks that do not have a GUI but should be changed to open the spell progression GUI on right click. Any other functionality derived from right-clicking the block is cancelled.")
                 .defineList("altProgressionBlocks", ImmutableList.of(), s -> true);
