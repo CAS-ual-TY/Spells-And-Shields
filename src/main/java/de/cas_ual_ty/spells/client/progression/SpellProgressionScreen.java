@@ -334,6 +334,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             
             learnButton.visible = ProgressionHelper.isFullyLinked(w.spellNode, menu.spellProgression) && (w.spellStatus == SpellStatus.LOCKED || w.spellStatus == SpellStatus.FORGOTTEN);
             equipButton.visible = w.spellStatus == SpellStatus.LEARNED;
+            equipButton.setFocused(false);
             unavailableButton.visible = !learnButton.visible && !equipButton.visible;
         }
     }
