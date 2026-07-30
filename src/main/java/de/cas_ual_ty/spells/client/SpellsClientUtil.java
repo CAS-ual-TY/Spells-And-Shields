@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.client;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.ParticleEmitterHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
@@ -27,6 +28,8 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -37,7 +40,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -115,11 +117,15 @@ public class SpellsClientUtil
     }
     
     private static List<SpellSlotWidget> spellSlotWidgets = new ArrayList<>(SpellHolder.SPELL_SLOTS);
-    
+
     private static void initScreen(ScreenEvent.Init.Post event)
     {
         if(Minecraft.getInstance().player != null && event.getScreen() instanceof AbstractContainerScreen screen)
         {
+            if(SpellsConfig.DEBUG_ENCHANTING_TABLE.getAsBoolean() && lastRightClickedBlock != null)
+            {
+                Minecraft.getInstance().player.displayClientMessage(Component.literal("BLOCK: " + BuiltInRegistries.BLOCK.getKey(lastRightClickedBlock)), true);
+            }
             if(SpellsUtil.isTrueEnchantingTable(lastRightClickedBlock))
             {
                 lastRightClickedBlock = null;

@@ -19,6 +19,7 @@ public class SpellsConfig
     public static final ModConfigSpec.ConfigValue<List<? extends String>> PROGRESSION_BLOCK;
     
     public static final ModConfigSpec.BooleanValue DEBUG_SPELLS;
+    public static final ModConfigSpec.BooleanValue DEBUG_ENCHANTING_TABLE;
     public static final ModConfigSpec.IntValue ACTION_JUMP_LIMIT;
     
     public static final ModConfigSpec.BooleanValue GLOBAL_ITEM_COSTS;
@@ -55,6 +56,9 @@ public class SpellsConfig
         DEBUG_SPELLS = configBuilder
                 .comment("Debug spells on use. For data pack creators.")
                 .define("debugSpells", false);
+        DEBUG_ENCHANTING_TABLE = configBuilder
+                .comment("Prints the last right-clicked block when opening a menu to allow easy obtaining of the IDs of modded enchanting tables.")
+                .define("debugEnchantingTable", false);
         ACTION_JUMP_LIMIT = configBuilder
                 .comment("Hard limit of jumps by spell actions to prevent endless loops (which would result in a crash).")
                 .defineInRange("actionJumpLimit", 1000, 10, 10000);
