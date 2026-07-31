@@ -18,6 +18,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -70,6 +71,7 @@ public class SpellsEvents
                 .addTargetLink(e -> e.getNewAboutToBeSetTarget() != null ? Target.of(e.getNewAboutToBeSetTarget()) : null, "new_target");
 
         registerOwnerLeftDimensionEvent();
+        registerHolderUnloadedEvent();
     }
 
     private static void registerOwnerLeftDimensionEvent()
@@ -111,6 +113,22 @@ public class SpellsEvents
         });
     }
     
+    private static void registerHolderUnloadedEvent()
+    {
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, true, EntityLeaveLevelEvent.class, event ->
+        {
+            Entity entity = event.getEntity();
+            if(entity.getRemovalReason() != Entity.RemovalReason.UNLOADED_TO_CHUNK) return;
+            if(entity instanceof Player) return;
+            if(!entity.hasData(SpellsCapabilities.DELAYED_SPELL_HOLDER.get())) return;
+
+            Consumer<SpellContext> toContext = ctx -> {};
+            Consumer<SpellContext> fromContext = ctx -> {};
+            DelayedSpellHolder.getHolder(entity).ifPresent(holder ->
+                    holder.activateEvent(BuiltinEvents.HOLDER_UNLOADED.activation, toContext, fromContext));
+        });
+    }
+
     public static <E extends Event> RegisteredEvent<E> register(String eventId, Class<E> eventClass, Function<E, Optional<Entity>> playerGetter)
     {
         RegisteredEvent<E> registeredEvent = new RegisteredEvent<>(eventId, eventClass);

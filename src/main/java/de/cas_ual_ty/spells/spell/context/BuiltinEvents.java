@@ -12,7 +12,8 @@ public enum BuiltinEvents
     LIVING_DAMAGE_ATTACKER("living_damage_attacker"),
     LIVING_DAMAGE_VICTIM("living_damage_victim"),
     LIVING_CHANGE_TARGET("living_change_target"),
-    OWNER_LEFT_DIMENSION("owner_left_dimension");
+    OWNER_LEFT_DIMENSION("owner_left_dimension"),
+    HOLDER_UNLOADED("holder_unloaded");
     
     public final String activation;
     
