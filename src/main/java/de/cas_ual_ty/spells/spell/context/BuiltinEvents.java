@@ -10,7 +10,9 @@ public enum BuiltinEvents
     LIVING_HURT_ATTACKER("living_hurt_attacker"),
     LIVING_HURT_VICTIM("living_hurt_victim"),
     LIVING_DAMAGE_ATTACKER("living_damage_attacker"),
-    LIVING_DAMAGE_VICTIM("living_damage_victim");
+    LIVING_DAMAGE_VICTIM("living_damage_victim"),
+    LIVING_CHANGE_TARGET("living_change_target"),
+    OWNER_LEFT_DIMENSION("owner_left_dimension");
     
     public final String activation;
     

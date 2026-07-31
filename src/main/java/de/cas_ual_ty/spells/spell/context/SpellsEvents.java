@@ -1,21 +1,28 @@
 package de.cas_ual_ty.spells.spell.context;
 
+import com.google.common.collect.Lists;
 import de.cas_ual_ty.spells.capability.DelayedSpellHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -58,6 +65,50 @@ public class SpellsEvents
                 .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
+
+        register(BuiltinEvents.LIVING_CHANGE_TARGET.activation, LivingChangeTargetEvent.class)
+                .addTargetLink(e -> e.getNewAboutToBeSetTarget() != null ? Target.of(e.getNewAboutToBeSetTarget()) : null, "new_target");
+
+        registerOwnerLeftDimensionEvent();
+    }
+
+    private static void registerOwnerLeftDimensionEvent()
+    {
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, true, LivingDeathEvent.class, event ->
+        {
+            if(event.isCanceled()) return;
+            if(!(event.getEntity() instanceof Player)) return;
+            fireOwnerLeftDimension(event.getEntity().level());
+        });
+
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, true, PlayerEvent.PlayerLoggedOutEvent.class, event ->
+        {
+            if(event.getEntity().getServer() == null) return;
+            event.getEntity().getServer().getAllLevels().forEach(SpellsEvents::fireOwnerLeftDimension);
+        });
+
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, true, PlayerEvent.PlayerChangedDimensionEvent.class, event ->
+        {
+            if(event.getEntity().getServer() == null) return;
+            ServerLevel fromLevel = event.getEntity().getServer().getLevel(event.getFrom());
+            if(fromLevel != null) fireOwnerLeftDimension(fromLevel);
+        });
+    }
+
+    private static void fireOwnerLeftDimension(Level level)
+    {
+        if(level.isClientSide()) return;
+        if(!(level instanceof ServerLevel serverLevel)) return;
+        Consumer<SpellContext> toContext = ctx -> {};
+        Consumer<SpellContext> fromContext = ctx -> {};
+        Lists.newArrayList(serverLevel.getAllEntities()).forEach(entity ->
+        {
+            if(entity.hasData(SpellsCapabilities.DELAYED_SPELL_HOLDER.get()))
+            {
+                DelayedSpellHolder.getHolder(entity).ifPresent(holder ->
+                        holder.activateEvent(BuiltinEvents.OWNER_LEFT_DIMENSION.activation, toContext, fromContext));
+            }
+        });
     }
     
     public static <E extends Event> RegisteredEvent<E> register(String eventId, Class<E> eventClass, Function<E, Optional<Entity>> playerGetter)
