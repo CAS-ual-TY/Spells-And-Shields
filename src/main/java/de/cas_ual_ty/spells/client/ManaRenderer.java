@@ -262,8 +262,8 @@ public class ManaRenderer implements LayeredDraw.Layer
     private static void registerGuiLayers(RegisterGuiLayersEvent event)
     {
         event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "player_mana_above_hunger"), new ManaRenderer(true, true));
-        event.registerBelow(VanillaGuiLayers.FOOD_LEVEL, ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "player_mana_below_hunger"), new ManaRenderer(true, false));
-        event.registerAbove(VanillaGuiLayers.PLAYER_HEALTH, ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "player_mana_above_health"), new ManaRenderer(false, true));
+        event.registerAbove(VanillaGuiLayers.PLAYER_HEALTH, ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "player_mana_below_hunger"), new ManaRenderer(true, false));
+        event.registerBelow(VanillaGuiLayers.FOOD_LEVEL, ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "player_mana_above_health"), new ManaRenderer(false, true));
         event.registerBelow(VanillaGuiLayers.PLAYER_HEALTH, ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "player_mana_below_health"), new ManaRenderer(false, false));
     }
 
