@@ -1559,7 +1559,7 @@ public class SpellsGen
         Map<String, String> map = new HashMap<>();
         for(int i = 0; i < keyValuePairs.length; i += 2)
         {
-            map.put(keyValuePairs[0], keyValuePairs[1]);
+            map.put(keyValuePairs[i], keyValuePairs[i + 1]);
         }
         return map;
     }
