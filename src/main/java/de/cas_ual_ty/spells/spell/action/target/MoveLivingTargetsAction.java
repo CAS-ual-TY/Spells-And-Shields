@@ -1,0 +1,62 @@
+package de.cas_ual_ty.spells.spell.action.target;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
+import de.cas_ual_ty.spells.registers.TargetTypes;
+import de.cas_ual_ty.spells.spell.action.SpellActionType;
+import de.cas_ual_ty.spells.spell.action.base.SrcDstTargetAction;
+import de.cas_ual_ty.spells.spell.context.SpellContext;
+import de.cas_ual_ty.spells.spell.context.TargetGroup;
+import de.cas_ual_ty.spells.spell.target.Target;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class MoveLivingTargetsAction extends SrcDstTargetAction
+{
+    public static Codec<MoveLivingTargetsAction> makeCodec(SpellActionType<MoveLivingTargetsAction> type)
+    {
+        return RecordCodecBuilder.create(instance -> instance.group(
+                activationCodec(),
+                dstCodec(),
+                srcCodec()
+        ).apply(instance, (activation, dst, src) -> new MoveLivingTargetsAction(type, activation, dst, src)));
+    }
+
+    public static MoveLivingTargetsAction make(Object activation, Object dst, Object src)
+    {
+        return new MoveLivingTargetsAction(SpellActionTypes.MOVE_LIVING_TARGETS.get(), activation.toString(), dst.toString(), src.toString());
+    }
+
+    public MoveLivingTargetsAction(SpellActionType<?> type)
+    {
+        super(type);
+    }
+
+    public MoveLivingTargetsAction(SpellActionType<?> type, String activation, String dst, String src)
+    {
+        super(type, activation, dst, src);
+    }
+
+    @Override
+    public void findTargets(SpellContext ctx, TargetGroup source, TargetGroup destination)
+    {
+        List<Target> list = new LinkedList<>();
+
+        source.forEachTargetSafe(target ->
+        {
+            if(TargetTypes.LIVING_ENTITY.get().isType(target))
+            {
+                destination.addTargets(target);
+            }
+            else
+            {
+                list.add(target);
+            }
+        });
+
+        source.clear();
+        source.addTargets(list);
+    }
+}
