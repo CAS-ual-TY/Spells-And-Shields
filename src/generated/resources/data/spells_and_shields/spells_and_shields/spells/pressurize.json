@@ -50,8 +50,8 @@
     {
       "type": "spells_and_shields:move_player_targets",
       "activation": "no_pvp",
-      "td/destination": "targets",
-      "ts/source": ""
+      "td/destination": "",
+      "ts/source": "targets"
     },
     {
       "type": "spells_and_shields:sourced_knockback",
