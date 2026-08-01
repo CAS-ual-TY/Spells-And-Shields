@@ -28,7 +28,7 @@ public class ItemTagCheckAction extends AffectTypeAction<PlayerTarget>
                 singleTargetCodec(),
                 CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(ItemTagCheckAction::getMustBeInHand),
                 TagKey.codec(BuiltInRegistries.ITEM.key()).fieldOf("item_tag").forGetter(ItemTagCheckAction::getItemTag),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramBoolean("count")).forGetter(ItemTagCheckAction::getCount)
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("count")).forGetter(ItemTagCheckAction::getCount)
         ).apply(instance, (activation, target, mustBeInHand, itemTag, count) -> new ItemTagCheckAction(type, activation, target, mustBeInHand, itemTag, count)));
     }
     
