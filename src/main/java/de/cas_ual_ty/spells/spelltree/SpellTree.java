@@ -179,12 +179,12 @@ public class SpellTree
         
         public Builder add(ResourceLocation nodeId, Holder<Spell> spell)
         {
-            return add(new SpellNode(nodeId, new SpellInstance(spell)));
+            return add(new SpellNode(nodeId, SpellInstance.direct(spell)));
         }
 
         public Builder add(Holder<Spell> spell)
         {
-            return add(new SpellNode(spell.unwrapKey().map(ResourceKey::location).orElseThrow(IllegalArgumentException::new), new SpellInstance(spell)));
+            return add(new SpellNode(spell.unwrapKey().map(ResourceKey::location).orElseThrow(IllegalArgumentException::new), SpellInstance.direct(spell)));
         }
         
         public Builder add(SpellNode spellNode)

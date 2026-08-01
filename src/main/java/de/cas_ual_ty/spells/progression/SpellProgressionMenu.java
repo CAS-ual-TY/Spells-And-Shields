@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.SpellTrees;
+import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
@@ -83,7 +84,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
                     {
                         if(spellProgressionHolder.getSpellStatus(nodeId).isAvailable())
                         {
-                            spellHolder.setSpell(slot, node.getSpellInstance());
+                            spellHolder.setSpell(slot, SpellInstance.treeNode(nodeId, node.getSpellInstance()));
                             spellHolder.sendSync();
                         }
                     }

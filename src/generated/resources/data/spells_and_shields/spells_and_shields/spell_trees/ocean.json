@@ -8,7 +8,7 @@
   },
   "t3/root_node": {
     "n1/spell_id": "spells_and_shields:toggle_water_breathing",
-    "n2/node_id": 1,
+    "n2/node_id": "spells_and_shields:toggle_water_breathing",
     "n4/level_cost": 10,
     "n5/hidden_requirements": [
       {
@@ -18,7 +18,7 @@
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:toggle_regeneration",
-        "n2/node_id": 16,
+        "n2/node_id": "spells_and_shields:toggle_regeneration",
         "n4/level_cost": 20,
         "n6/learn_requirements": [
           {
@@ -29,7 +29,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:growth",
-            "n2/node_id": 256,
+            "n2/node_id": "spells_and_shields:growth",
             "n4/level_cost": 20,
             "n6/learn_requirements": [
               {
@@ -40,7 +40,7 @@
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:summon_guardian",
-                "n2/node_id": 4096,
+                "n2/node_id": "spells_and_shields:summon_guardian",
                 "n4/level_cost": 30,
                 "n6/learn_requirements": [
                   {
@@ -54,7 +54,7 @@
           },
           {
             "n1/spell_id": "spells_and_shields:permanent_aqua_resistance",
-            "n2/node_id": 257,
+            "n2/node_id": "spells_and_shields:permanent_aqua_resistance",
             "n4/level_cost": 20,
             "n6/learn_requirements": [
               {
@@ -68,7 +68,7 @@
       },
       {
         "n1/spell_id": "spells_and_shields:water_leap",
-        "n2/node_id": 17,
+        "n2/node_id": "spells_and_shields:water_leap",
         "n4/level_cost": 5,
         "n6/learn_requirements": [
           {
@@ -79,7 +79,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_dolphins_grace",
-            "n2/node_id": 272,
+            "n2/node_id": "spells_and_shields:toggle_dolphins_grace",
             "n4/level_cost": 30,
             "n6/learn_requirements": [
               {
@@ -91,7 +91,7 @@
           },
           {
             "n1/spell_id": "spells_and_shields:toggle_frost_walker",
-            "n2/node_id": 273,
+            "n2/node_id": "spells_and_shields:toggle_frost_walker",
             "n4/level_cost": 10,
             "n6/learn_requirements": [
               {
@@ -105,7 +105,7 @@
       },
       {
         "n1/spell_id": "spells_and_shields:water_whip",
-        "n2/node_id": 18,
+        "n2/node_id": "spells_and_shields:water_whip",
         "n4/level_cost": 10,
         "n6/learn_requirements": [
           {
@@ -116,7 +116,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:potion_shot",
-            "n2/node_id": 288,
+            "n2/node_id": "spells_and_shields:potion_shot",
             "n4/level_cost": 10,
             "n6/learn_requirements": [
               {
@@ -127,7 +127,7 @@
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:ice_spike",
-                "n2/node_id": 4608,
+                "n2/node_id": "spells_and_shields:ice_spike",
                 "n4/level_cost": 15,
                 "n6/learn_requirements": [
                   {
@@ -143,7 +143,7 @@
       },
       {
         "n1/spell_id": "spells_and_shields:lightning_strike",
-        "n2/node_id": 19,
+        "n2/node_id": "spells_and_shields:lightning_strike",
         "n4/level_cost": 25,
         "n6/learn_requirements": [
           {
@@ -159,7 +159,7 @@
       },
       {
         "n1/spell_id": "spells_and_shields:tidal_wave",
-        "n2/node_id": 20,
+        "n2/node_id": "spells_and_shields:tidal_wave",
         "n4/level_cost": 20,
         "n6/learn_requirements": [
           {

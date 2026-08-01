@@ -373,7 +373,7 @@ public class SpellCommand
         {
             lazyOptional.ifPresent(spellHolder ->
             {
-                spellHolder.setSpell(slot, new SpellInstance(Holder.direct(spell)));
+                spellHolder.setSpell(slot, SpellInstance.direct(Holder.direct(spell)));
                 spellHolder.sendSync();
             });
         });
@@ -508,7 +508,7 @@ public class SpellCommand
         ServerPlayer player = players.iterator().next();
         
         Spell spell = SpellArgument.getSpell(context, ARG_SPELL);
-        SpellInstance spellInstance = new SpellInstance(Holder.direct(spell));
+        SpellInstance spellInstance = SpellInstance.direct(Holder.direct(spell));
         
         spellInstance.run(player.level(), player, BuiltinEvents.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, -1));
         

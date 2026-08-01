@@ -8,7 +8,7 @@
   },
   "t3/root_node": {
     "n1/spell_id": "spells_and_shields:fire_ball",
-    "n2/node_id": 1,
+    "n2/node_id": "spells_and_shields:fire_ball",
     "n4/level_cost": 15,
     "n5/hidden_requirements": [
       {
@@ -24,7 +24,7 @@
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:toggle_lava_walker",
-        "n2/node_id": 16,
+        "n2/node_id": "spells_and_shields:toggle_lava_walker",
         "n4/level_cost": 20,
         "n6/learn_requirements": [
           {
@@ -35,7 +35,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_fire_resistance",
-            "n2/node_id": 256,
+            "n2/node_id": "spells_and_shields:toggle_fire_resistance",
             "n4/level_cost": 30,
             "n6/learn_requirements": [
               {
@@ -47,7 +47,7 @@
           },
           {
             "n1/spell_id": "spells_and_shields:drain_flame",
-            "n2/node_id": 257,
+            "n2/node_id": "spells_and_shields:drain_flame",
             "n4/level_cost": 20,
             "n6/learn_requirements": [
               {
@@ -61,7 +61,7 @@
       },
       {
         "n1/spell_id": "spells_and_shields:ghast",
-        "n2/node_id": 17,
+        "n2/node_id": "spells_and_shields:ghast",
         "n4/level_cost": 10,
         "n6/learn_requirements": [
           {
@@ -80,7 +80,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:flamethrower",
-            "n2/node_id": 272,
+            "n2/node_id": "spells_and_shields:flamethrower",
             "n4/level_cost": 20,
             "n6/learn_requirements": [
               {
@@ -91,7 +91,7 @@
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:magma_armor",
-                "n2/node_id": 4352,
+                "n2/node_id": "spells_and_shields:magma_armor",
                 "n4/level_cost": 25,
                 "n6/learn_requirements": [
                   {
@@ -103,7 +103,7 @@
               },
               {
                 "n1/spell_id": "spells_and_shields:summon_blaze",
-                "n2/node_id": 4353,
+                "n2/node_id": "spells_and_shields:summon_blaze",
                 "n4/level_cost": 25,
                 "n6/learn_requirements": [
                   {

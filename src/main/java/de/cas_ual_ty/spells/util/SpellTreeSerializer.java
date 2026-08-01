@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.util;
 
-import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
@@ -30,9 +29,11 @@ public class SpellTreeSerializer
     public static void encodeTree(SpellTree spellTree, RegistryFriendlyByteBuf buf)
     {
         Registry<Spell> spellsRegistry = Spells.getRegistry(buf.registryAccess());
-        Registry<SpellTree> spellTreesRegistry = SpellTrees.getRegistry(buf.registryAccess());
 
-        buf.writeResourceLocation(spellTree.getId(spellTreesRegistry));
+        // spellTree here is always one of ProgressionHelper's stripped copies, never the registry-held
+        // instance itself - getId(registry) does a reverse lookup by identity and would return null for
+        // a copy. getClientId() is the id ProgressionHelper.stripSpellTrees stamped onto it directly.
+        buf.writeResourceLocation(spellTree.getClientId());
         ComponentSerialization.STREAM_CODEC.encode(buf, spellTree.getTitle());
         SpellIcon.iconToBuf(buf, spellTree.getIcon());
         
@@ -125,6 +126,6 @@ public class SpellTreeSerializer
         int frame = buf.readByte();
         float manaCost = buf.readFloat();
         
-        return new SpellNode(id, new SpellInstance(spell, manaCost), levelCost, hiddenRequirements, learnRequirements, frame);
+        return new SpellNode(id, SpellInstance.direct(spell, manaCost), levelCost, hiddenRequirements, learnRequirements, frame);
     }
 }

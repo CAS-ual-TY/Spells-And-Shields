@@ -42,7 +42,8 @@ public class ProgressionHelper
             }
             
             SpellTree stripped = spellTree0.copy();
-            
+            stripped.setClientId(treeId);
+
             List<SpellNode> visibleNodes = new LinkedList<>();
             
             // add all active or previously bought spells
@@ -155,9 +156,7 @@ public class ProgressionHelper
         
         AtomicBoolean found = new AtomicBoolean(false);
         
-        Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level());
-        
-        menu.spellTrees.stream().filter(tree -> tree.getId(registry).equals(nodeId.treeId())).findFirst().ifPresent(spellTree ->
+        menu.spellTrees.stream().filter(tree -> tree.getClientId().equals(nodeId.treeId())).findFirst().ifPresent(spellTree ->
         {
             SpellNode spellNode = spellTree.findNode(nodeId.nodeId());
             

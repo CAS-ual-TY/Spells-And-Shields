@@ -1,7 +1,11 @@
 package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
+import de.cas_ual_ty.spells.spelltree.SpellTree;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -81,6 +85,10 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
             return;
         }
 
+        // null while attachment framework hasn't attached us to a player yet - skip validation in that case,
+        // rather than crash. In practice this always runs with a player already set.
+        Registry<SpellTree> registry = player != null ? SpellTrees.getRegistry(player.level()) : null;
+
         for(int i = 0; i < nbt.size(); ++i)
         {
             CompoundTag tag = nbt.getCompound(i);
@@ -90,7 +98,8 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
                 FullSpellNodeId fullSpellNodeId = FullSpellNodeId.fromNbt(tag);
                 byte ordinal = tag.getByte(KEY_SPELL_STATUS);
 
-                if(fullSpellNodeId != null && ordinal >= 0 && ordinal < SpellStatus.values().length)
+                if(fullSpellNodeId != null && ordinal >= 0 && ordinal < SpellStatus.values().length
+                        && (registry == null || fullSpellNodeId.isValid(registry)))
                 {
                     progression.put(fullSpellNodeId, SpellStatus.values()[ordinal]);
                 }

@@ -8,7 +8,7 @@
   },
   "t3/root_node": {
     "n1/spell_id": "spells_and_shields:blast_smelt",
-    "n2/node_id": 1,
+    "n2/node_id": "spells_and_shields:blast_smelt",
     "n4/level_cost": 5,
     "n5/hidden_requirements": [
       {
@@ -24,7 +24,7 @@
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:silence_target",
-        "n2/node_id": 16,
+        "n2/node_id": "spells_and_shields:silence_target",
         "n4/level_cost": 25,
         "n6/learn_requirements": [
           {
@@ -35,7 +35,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_magic_immune",
-            "n2/node_id": 256,
+            "n2/node_id": "spells_and_shields:toggle_magic_immune",
             "n4/level_cost": 25,
             "n6/learn_requirements": [
               {
@@ -47,7 +47,7 @@
           },
           {
             "n1/spell_id": "spells_and_shields:petrify",
-            "n2/node_id": 257,
+            "n2/node_id": "spells_and_shields:petrify",
             "n4/level_cost": 30,
             "n6/learn_requirements": [
               {
@@ -61,7 +61,7 @@
       },
       {
         "n1/spell_id": "spells_and_shields:instant_mine",
-        "n2/node_id": 17,
+        "n2/node_id": "spells_and_shields:instant_mine",
         "n4/level_cost": 15,
         "n6/learn_requirements": [
           {
@@ -72,7 +72,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_haste",
-            "n2/node_id": 272,
+            "n2/node_id": "spells_and_shields:toggle_haste",
             "n4/level_cost": 25,
             "n6/learn_requirements": [
               {
@@ -83,7 +83,7 @@
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:vein_mine",
-                "n2/node_id": 4352,
+                "n2/node_id": "spells_and_shields:vein_mine",
                 "n4/level_cost": 20,
                 "n6/learn_requirements": [
                   {
@@ -99,7 +99,7 @@
       },
       {
         "n1/spell_id": "spells_and_shields:spit_metal",
-        "n2/node_id": 18,
+        "n2/node_id": "spells_and_shields:spit_metal",
         "n4/level_cost": 10,
         "n6/learn_requirements": [
           {
@@ -110,7 +110,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:tremor",
-            "n2/node_id": 288,
+            "n2/node_id": "spells_and_shields:tremor",
             "n4/level_cost": 15,
             "n6/learn_requirements": [
               {
@@ -121,7 +121,7 @@
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:magnetism",
-                "n2/node_id": 4608,
+                "n2/node_id": "spells_and_shields:magnetism",
                 "n4/level_cost": 20,
                 "n6/learn_requirements": [
                   {

@@ -202,7 +202,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
                 
                 if(holder != null)
                 {
-                    spell = new SpellInstance(holder);
+                    spell = SpellInstance.direct(holder);
                 }
             }
         }

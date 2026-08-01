@@ -8,7 +8,7 @@
   },
   "t3/root_node": {
     "n1/spell_id": "spells_and_shields:toggle_jump_boost",
-    "n2/node_id": 1,
+    "n2/node_id": "spells_and_shields:toggle_jump_boost",
     "n4/level_cost": 15,
     "n5/hidden_requirements": [
       {
@@ -24,7 +24,7 @@
     "n9/child_nodes": [
       {
         "n1/spell_id": "spells_and_shields:leap",
-        "n2/node_id": 16,
+        "n2/node_id": "spells_and_shields:leap",
         "n4/level_cost": 10,
         "n6/learn_requirements": [
           {
@@ -35,7 +35,7 @@
         "n9/child_nodes": [
           {
             "n1/spell_id": "spells_and_shields:toggle_speed",
-            "n2/node_id": 256,
+            "n2/node_id": "spells_and_shields:toggle_speed",
             "n4/level_cost": 20,
             "n6/learn_requirements": [
               {
@@ -47,7 +47,7 @@
           },
           {
             "n1/spell_id": "spells_and_shields:jump",
-            "n2/node_id": 257,
+            "n2/node_id": "spells_and_shields:jump",
             "n4/level_cost": 14,
             "n6/learn_requirements": [
               {
@@ -58,7 +58,7 @@
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:pocket_rocket",
-                "n2/node_id": 4112,
+                "n2/node_id": "spells_and_shields:pocket_rocket",
                 "n4/level_cost": 25,
                 "n6/learn_requirements": [
                   {
@@ -72,7 +72,7 @@
           },
           {
             "n1/spell_id": "spells_and_shields:mana_soles",
-            "n2/node_id": 258,
+            "n2/node_id": "spells_and_shields:mana_soles",
             "n4/level_cost": 15,
             "n6/learn_requirements": [
               {
@@ -83,7 +83,7 @@
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:toggle_slow_falling",
-                "n2/node_id": 4128,
+                "n2/node_id": "spells_and_shields:toggle_slow_falling",
                 "n4/level_cost": 15,
                 "n6/learn_requirements": [
                   {
@@ -97,7 +97,7 @@
           },
           {
             "n1/spell_id": "spells_and_shields:blow_arrow",
-            "n2/node_id": 259,
+            "n2/node_id": "spells_and_shields:blow_arrow",
             "n4/level_cost": 10,
             "n6/learn_requirements": [
               {
@@ -108,7 +108,7 @@
             "n9/child_nodes": [
               {
                 "n1/spell_id": "spells_and_shields:pressurize",
-                "n2/node_id": 4144,
+                "n2/node_id": "spells_and_shields:pressurize",
                 "n4/level_cost": 20,
                 "n6/learn_requirements": [
                   {
@@ -119,7 +119,7 @@
                 "n9/child_nodes": [
                   {
                     "n1/spell_id": "spells_and_shields:wind_blast",
-                    "n2/node_id": 66304,
+                    "n2/node_id": "spells_and_shields:wind_blast",
                     "n4/level_cost": 25,
                     "n6/learn_requirements": [
                       {

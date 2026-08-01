@@ -15,17 +15,17 @@ import java.util.List;
 public class SpellNode
 {
     protected ResourceLocation nodeId;
-    
-    protected final SpellInstance spell;
+
+    protected final SpellInstance.Direct spell;
     protected int levelCost;
     protected List<Requirement> hiddenRequirements;
     protected List<Requirement> learnRequirements;
     protected int frame;
-    
+
     protected SpellNode parent;
     protected List<SpellNode> children;
-    
-    public SpellNode(ResourceLocation nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, List<SpellNode> children, int frame)
+
+    public SpellNode(ResourceLocation nodeId, SpellInstance.Direct spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, List<SpellNode> children, int frame)
     {
         this.nodeId = nodeId;
         this.spell = spell;
@@ -35,13 +35,13 @@ public class SpellNode
         this.children = children;
         this.frame = frame;
     }
-    
-    public SpellNode(ResourceLocation nodeId, SpellInstance spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, int frame)
+
+    public SpellNode(ResourceLocation nodeId, SpellInstance.Direct spell, int levelCost, List<Requirement> hiddenRequirements, List<Requirement> learnRequirements, int frame)
     {
         this(nodeId, spell, levelCost, hiddenRequirements, learnRequirements, new LinkedList<>(), frame);
     }
 
-    public SpellNode(ResourceLocation nodeId, SpellInstance spell)
+    public SpellNode(ResourceLocation nodeId, SpellInstance.Direct spell)
     {
         this(nodeId, spell, 0, new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), 0);
     }
@@ -50,8 +50,8 @@ public class SpellNode
     {
         return nodeId;
     }
-    
-    public SpellInstance getSpellInstance()
+
+    public SpellInstance.Direct getSpellInstance()
     {
         return spell;
     }

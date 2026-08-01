@@ -26,76 +26,40 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class SpellInstance
+/**
+ * A spell a player can run. Either a {@link Direct} reference straight to a {@link Spell} registry entry,
+ * or a {@link TreeNode} reference to a {@link de.cas_ual_ty.spells.spelltree.SpellNode} - which overrides
+ * the referenced spell's mana cost/parameters with whatever that node bakes in. There is no third layer:
+ * a {@link TreeNode} is a pure reference to a node's own values, it does not carry further overrides itself.
+ */
+public abstract class SpellInstance
 {
-    private Holder<Spell> spell;
-    private float manaCost;
-    private List<CtxVar<?>> parameters;
-    
-    private FullSpellNodeId nodeId;
-    
     private Optional<TooltipComponent> tooltipComponent;
-    
-    public SpellInstance(Holder<Spell> spell, float manaCost, List<CtxVar<?>> parameters)
+
+    protected SpellInstance()
     {
-        this.spell = spell;
-        this.manaCost = manaCost;
-        this.parameters = parameters;
-        nodeId = null;
         tooltipComponent = null;
     }
-    
-    public SpellInstance(Holder<Spell> spell, float manaCost)
-    {
-        this(spell, manaCost, new LinkedList<>());
-    }
-    
-    public SpellInstance(Holder<Spell> spell)
-    {
-        this(spell, -1, new LinkedList<>());
-    }
-    
-    public <T> SpellInstance addParameter(CtxVar<T> ctxVar)
-    {
-        parameters.add(ctxVar);
-        return this;
-    }
-    
-    public void setManaCost(float manaCost)
-    {
-        this.manaCost = manaCost;
-    }
-    
-    public void initId(FullSpellNodeId nodeId)
-    {
-        this.nodeId = nodeId;
-    }
-    
-    public Holder<Spell> getSpell()
-    {
-        return spell;
-    }
-    
-    public float getManaCost()
-    {
-        return manaCost;
-    }
-    
-    public List<CtxVar<?>> getParameters()
-    {
-        return parameters;
-    }
-    
-    public FullSpellNodeId getNodeId()
-    {
-        return nodeId;
-    }
-    
+
+    public abstract Holder<Spell> getSpell();
+
+    public abstract float getManaCost();
+
+    public abstract List<CtxVar<?>> getParameters();
+
+    @Nullable
+    public abstract FullSpellNodeId getNodeId();
+
+    public abstract SpellInstance copy();
+
+    public abstract void toNbt(CompoundTag nbt, Registry<Spell> spellRegistry);
+
     public float getAppliedManaCost()
     {
-        return manaCost >= 0 ? manaCost : spell.value().getManaCost();
+        float manaCost = getManaCost();
+        return manaCost >= 0 ? manaCost : getSpell().value().getManaCost();
     }
-    
+
     public Optional<TooltipComponent> getTooltipComponent()
     {
         if(tooltipComponent == null)
@@ -105,35 +69,35 @@ public class SpellInstance
         }
         return tooltipComponent;
     }
-    
+
     public boolean run(Player owner, String activation)
     {
         return run(owner.level(), owner, activation);
     }
-    
+
     public boolean run(Level level, @Nullable Player owner, String activation)
     {
         return run(level, owner, activation, false, (ctx) -> {}, (ctx) -> {});
     }
-    
+
     public boolean run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> preRun)
     {
         return run(level, owner, activation, false, preRun, (ctx) -> {});
     }
-    
+
     public boolean forceRun(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> preRun)
     {
         return run(level, owner, activation, true, preRun, (ctx) -> {});
     }
-    
+
     public boolean run(Player owner, String event, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
     {
         return run(owner.level(), owner, event, false, toContext, fromContext);
     }
-    
+
     public boolean run(Level level, @Nullable Player owner, String activation, boolean force, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)
     {
-        if((spell.value().getEventsList().contains(activation) || force) && !level.isClientSide)
+        if((getSpell().value().getEventsList().contains(activation) || force) && !level.isClientSide)
         {
             SpellContext ctx = initializeContext(level, owner, activation);
             preRun.accept(ctx);
@@ -143,49 +107,32 @@ public class SpellInstance
         }
         return false;
     }
-    
+
     public SpellContext initializeContext(Level level, @Nullable Player owner, String activation)
     {
         SpellContext ctx = new SpellContext(level, owner, this);
-        
+
         ctx.activate(activation);
         ctx.initCtxVar(new CtxVar<>(CtxVarTypes.DOUBLE.get(), BuiltinVariables.MANA_COST.name, (double) getAppliedManaCost()));
         ctx.initCtxVar(new CtxVar<>(CtxVarTypes.INT.get(), BuiltinVariables.MIN_BLOCK_HEIGHT.name, level.getMinBuildHeight()));
         ctx.initCtxVar(new CtxVar<>(CtxVarTypes.INT.get(), BuiltinVariables.MAX_BLOCK_HEIGHT.name, level.getMaxBuildHeight() - 1));
-        
+
         if(owner != null)
         {
             ctx.getOrCreateTargetGroup(BuiltinTargetGroups.OWNER.targetGroup).addTargets(Target.of(owner));
         }
-        
-        spell.value().getParameters().forEach(ctx::initCtxVar);
-        parameters.forEach(ctx::initCtxVar);
-        
+
+        getSpell().value().getParameters().forEach(ctx::initCtxVar);
+        getParameters().forEach(ctx::initCtxVar);
+
         return ctx;
     }
-    
-    public SpellInstance copy()
-    {
-        return new SpellInstance(spell, manaCost, new LinkedList<>(parameters));
-    }
-    
-    public void toNbt(CompoundTag nbt, Registry<Spell> spellRegistry)
-    {
-        if(nodeId != null)
-        {
-            nodeId.toNbt(nbt);
-        }
-        else
-        {
-            nbt.putString("spellId", spell.unwrap().map(ResourceKey::location, spellRegistry::getKey).toString());
-        }
-    }
-    
-    @javax.annotation.Nullable
+
+    @Nullable
     public static SpellInstance fromNbt(CompoundTag nbt, Registry<SpellTree> spellTreeRegistry, Registry<Spell> spellRegistry)
     {
         FullSpellNodeId nodeId = FullSpellNodeId.fromNbt(nbt);
-        
+
         if(nodeId != null)
         {
             return nodeId.getSpellInstance(spellTreeRegistry);
@@ -193,10 +140,148 @@ public class SpellInstance
         else if(nbt.contains("spellId", Tag.TAG_STRING))
         {
             return spellRegistry.getHolder(ResourceKey.create(Spells.REGISTRY_KEY, ResourceLocation.parse(nbt.getString("spellId"))))
-                    .map(SpellInstance::new)
+                    .<SpellInstance>map(SpellInstance::direct)
                     .orElse(null);
         }
-        
+
         return null;
+    }
+
+    public static Direct direct(Holder<Spell> spell, float manaCost, List<CtxVar<?>> parameters)
+    {
+        return new Direct(spell, manaCost, parameters);
+    }
+
+    public static Direct direct(Holder<Spell> spell, float manaCost)
+    {
+        return direct(spell, manaCost, new LinkedList<>());
+    }
+
+    public static Direct direct(Holder<Spell> spell)
+    {
+        return direct(spell, -1, new LinkedList<>());
+    }
+
+    public static TreeNode treeNode(FullSpellNodeId nodeId, Direct resolved)
+    {
+        return new TreeNode(nodeId, resolved);
+    }
+
+    /**
+     * References a {@link Spell} registry entry directly. Owns its own mana cost/parameter overrides.
+     * This is also what every {@link de.cas_ual_ty.spells.spelltree.SpellNode} stores internally.
+     */
+    public static final class Direct extends SpellInstance
+    {
+        private final Holder<Spell> spell;
+        private float manaCost;
+        private final List<CtxVar<?>> parameters;
+
+        private Direct(Holder<Spell> spell, float manaCost, List<CtxVar<?>> parameters)
+        {
+            this.spell = spell;
+            this.manaCost = manaCost;
+            this.parameters = parameters;
+        }
+
+        public Direct addParameter(CtxVar<?> ctxVar)
+        {
+            parameters.add(ctxVar);
+            return this;
+        }
+
+        public void setManaCost(float manaCost)
+        {
+            this.manaCost = manaCost;
+        }
+
+        @Override
+        public Holder<Spell> getSpell()
+        {
+            return spell;
+        }
+
+        @Override
+        public float getManaCost()
+        {
+            return manaCost;
+        }
+
+        @Override
+        public List<CtxVar<?>> getParameters()
+        {
+            return parameters;
+        }
+
+        @Override
+        @Nullable
+        public FullSpellNodeId getNodeId()
+        {
+            return null;
+        }
+
+        @Override
+        public Direct copy()
+        {
+            return new Direct(spell, manaCost, new LinkedList<>(parameters));
+        }
+
+        @Override
+        public void toNbt(CompoundTag nbt, Registry<Spell> spellRegistry)
+        {
+            nbt.putString("spellId", spell.unwrap().map(ResourceKey::location, spellRegistry::getKey).toString());
+        }
+    }
+
+    /**
+     * References a {@link de.cas_ual_ty.spells.spelltree.SpellNode} by its {@link FullSpellNodeId}, delegating
+     * every value to that node's own {@link Direct} instance. Pure reference - no override of its own.
+     */
+    public static final class TreeNode extends SpellInstance
+    {
+        private final FullSpellNodeId nodeId;
+        private final Direct resolved;
+
+        private TreeNode(FullSpellNodeId nodeId, Direct resolved)
+        {
+            this.nodeId = nodeId;
+            this.resolved = resolved;
+        }
+
+        @Override
+        public Holder<Spell> getSpell()
+        {
+            return resolved.getSpell();
+        }
+
+        @Override
+        public float getManaCost()
+        {
+            return resolved.getManaCost();
+        }
+
+        @Override
+        public List<CtxVar<?>> getParameters()
+        {
+            return resolved.getParameters();
+        }
+
+        @Override
+        public FullSpellNodeId getNodeId()
+        {
+            return nodeId;
+        }
+
+        @Override
+        public TreeNode copy()
+        {
+            return new TreeNode(nodeId, resolved);
+        }
+
+        @Override
+        public void toNbt(CompoundTag nbt, Registry<Spell> spellRegistry)
+        {
+            nodeId.toNbt(nbt);
+        }
     }
 }

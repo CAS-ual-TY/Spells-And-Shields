@@ -47,21 +47,22 @@ public class ClientMessageHandler
         
         if(level != null && level.getEntity(msg.entityId()) instanceof Player player)
         {
-            Registry<Spell> registry = Spells.getRegistry(player.level());
-            
+            Registry<Spell> spellRegistry = Spells.getRegistry(player.level());
+
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
                 for(int i = 0; i < spellHolder.getSlots() && i < msg.spells().length; ++i)
                 {
                     if(msg.spells()[i] != null)
                     {
-                        SpellInstance spellInst = new SpellInstance(registry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, msg.spells()[i])));
-                        
-                        if(msg.nodeIds()[i] != null)
-                        {
-                            spellInst.initId(msg.nodeIds()[i]);
-                        }
-                        
+                        // the client's SpellTree registry only ever holds empty placeholders (real tree
+                        // content is synced separately, only while the progression screen is open), so we
+                        // can't resolve a node's overridden mana cost/parameters here - same as before this
+                        // was ever tracked, this always falls back to the base spell's own values. The node
+                        // id is still attached purely so slot tooltips can show it.
+                        SpellInstance.Direct direct = SpellInstance.direct(spellRegistry.getHolderOrThrow(ResourceKey.create(Spells.REGISTRY_KEY, msg.spells()[i])));
+                        SpellInstance spellInst = msg.nodeIds()[i] != null ? SpellInstance.treeNode(msg.nodeIds()[i], direct) : direct;
+
                         spellHolder.setSpell(i, spellInst);
                     }
                     else

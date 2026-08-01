@@ -15,28 +15,22 @@ public record FullSpellNodeId(ResourceLocation treeId, ResourceLocation nodeId)
         return registry.get(treeId);
     }
     
+    @Nullable
     public SpellNode getSpellNode(Registry<SpellTree> registry)
     {
         SpellTree tree = getSpellTree(registry);
-        return tree.findNode(nodeId);
+        return tree == null ? null : tree.findNode(nodeId);
     }
     
     public SpellInstance getSpellInstance(Registry<SpellTree> registry)
     {
         SpellNode node = getSpellNode(registry);
-        return node == null ? null : node.getSpellInstance();
+        return node == null ? null : SpellInstance.treeNode(this, node.getSpellInstance());
     }
     
     public boolean isValid(Registry<SpellTree> registry)
     {
-        SpellTree tree = getSpellTree(registry);
-        
-        if(tree == null)
-        {
-            return false;
-        }
-        
-        return tree.findNode(nodeId) != null;
+        return getSpellNode(registry) != null;
     }
     
     public String getIDText()

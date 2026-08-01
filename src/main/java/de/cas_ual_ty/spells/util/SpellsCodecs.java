@@ -91,7 +91,7 @@ public class SpellsCodecs
                 //ResourceLocation.CODEC.optionalFieldOf("n2/node_id").xmap(o -> o.map(i -> new FullSpellNodeId(null, i)).orElse(null), nodeId -> Optional.ofNullable(nodeId).map(FullSpellNodeId::nodeId)).forGetter(SpellNode::getNodeId),
                 ResourceLocation.CODEC.fieldOf("n2/node_id").forGetter(SpellNode::getNodeId),
                 Codec.intRange(0, 2).optionalFieldOf("n3/node_frame").xmap(o -> o.orElse(0), f -> Optional.of(f).map(i -> i <= 0 ? null : i)).forGetter(SpellNode::getFrame)
-        ).apply(instance, (spell, manaCost, variables, levelCost, hiddenRequirements, learnRequirements, children, id, frame) -> new SpellNode(id, new SpellInstance(spell, manaCost, variables), levelCost, hiddenRequirements, learnRequirements, children, frame))));
+        ).apply(instance, (spell, manaCost, variables, levelCost, hiddenRequirements, learnRequirements, children, id, frame) -> new SpellNode(id, SpellInstance.direct(spell, manaCost, variables), levelCost, hiddenRequirements, learnRequirements, children, frame))));
         
         SPELL_TREE_CONTENTS = Codec.lazyInitialized(() -> RecordCodecBuilder.create(instance -> instance.group(
                 SPELL_NODE.fieldOf("t3/root_node").forGetter(SpellTree::getRoot),
