@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.capability;
 
+import com.google.common.collect.Lists;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
@@ -13,9 +14,14 @@ import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.core.HolderLookup;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -186,6 +192,8 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
             return;
         }
 
+        spells.clear();
+
         Registry<SpellTree> spellTreeRegistry = SpellTrees.getRegistry(holder.level());
         Registry<Spell> spellRegistry = Spells.getRegistry(holder.level());
         nbt.stream()
@@ -200,6 +208,41 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
         DelayedSpellHolder holder = entity.getData(SpellsCapabilities.DELAYED_SPELL_HOLDER.get());
         holder.initEntity(entity);
         return Optional.of(holder);
+    }
+
+    public static void registerEvents(IEventBus modEventBus)
+    {
+        NeoForge.EVENT_BUS.addListener(DelayedSpellHolder::onDatapackSync);
+    }
+
+    private static void onDatapackSync(OnDatapackSyncEvent event)
+    {
+        // OnDatapackSyncEvent isn't scoped to a level or entity, so unlike SpellHolder/SpellProgressionHolder
+        // (which only ever live on players, reachable via event.getRelevantPlayers()) we scan every entity in
+        // every loaded level ourselves - this covers delayed spells attached to non-player entities too
+        // (e.g. a Ghast's wind-up), which only ever get validated at chunk load otherwise.
+        //
+        // event.getPlayer() == null means this fired for a /reload, broadcast to everyone - the only
+        // case this is for. A plain join has nothing to do with any other already-loaded entity's
+        // delayed spells, so skip the whole-server scan entirely in that case.
+        if(event.getPlayer() != null)
+        {
+            return;
+        }
+
+        for(ServerLevel level : event.getPlayerList().getServer().getAllLevels())
+        {
+            HolderLookup.Provider provider = level.registryAccess();
+
+            Lists.newArrayList(level.getAllEntities()).forEach(entity ->
+            {
+                if(entity.hasData(SpellsCapabilities.DELAYED_SPELL_HOLDER.get()))
+                {
+                    getHolder(entity).ifPresent(holder ->
+                            holder.deserializeNBT(provider, holder.serializeNBT(provider)));
+                }
+            });
+        }
     }
 
     public static class DelayedSpell

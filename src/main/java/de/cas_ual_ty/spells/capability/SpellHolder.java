@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -19,7 +20,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.HolderLookup;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
@@ -202,5 +207,37 @@ public class SpellHolder implements INBTSerializable<ListTag>
         SpellHolder holder = player.getData(SpellsCapabilities.SPELL_HOLDER.get());
         holder.initPlayer(player);
         return Optional.of(holder);
+    }
+
+    public static void registerEvents(IEventBus modEventBus)
+    {
+        NeoForge.EVENT_BUS.addListener(SpellHolder::onDatapackSync);
+    }
+
+    private static void onDatapackSync(OnDatapackSyncEvent event)
+    {
+        // event.getPlayer() == null means this fired for a /reload, broadcast to everyone -
+        // that's the only case this is for. On an ordinary join it's the specific joining
+        // player, whose data has already gone through the normal (already-safe) load path
+        // by the time this event can fire, so there is nothing new to prune here.
+        if(event.getPlayer() == null)
+        {
+            event.getRelevantPlayers().forEach(SpellHolder::pruneStaleReferences);
+        }
+    }
+
+    private static void pruneStaleReferences(ServerPlayer player)
+    {
+        // round-trip both holders through NBT: their deserializeNBT already drops whatever no
+        // longer resolves (spell/tree/node gone) against the currently-loaded registries - this
+        // is the exact same safeguard that already applies to every ordinary load, just re-run
+        // here for a player who stayed connected through a live /reload.
+        RegistryAccess registryAccess = player.level().registryAccess();
+
+        getSpellHolder(player).ifPresent(spellHolder ->
+        {
+            spellHolder.deserializeNBT(registryAccess, spellHolder.serializeNBT(registryAccess));
+            spellHolder.sendSync();
+        });
     }
 }

@@ -9,9 +9,13 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.HolderLookup;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -122,5 +126,34 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
         SpellProgressionHolder holder = player.getData(SpellsCapabilities.SPELL_PROGRESSION_HOLDER.get());
         holder.initPlayer(player);
         return Optional.of(holder);
+    }
+
+    public static void registerEvents(IEventBus modEventBus)
+    {
+        NeoForge.EVENT_BUS.addListener(SpellProgressionHolder::onDatapackSync);
+    }
+
+    private static void onDatapackSync(OnDatapackSyncEvent event)
+    {
+        // event.getPlayer() == null means this fired for a /reload, broadcast to everyone -
+        // that's the only case this is for. On an ordinary join it's the specific joining
+        // player, whose data has already gone through the normal (already-safe) load path
+        // by the time this event can fire, so there is nothing new to prune here.
+        if(event.getPlayer() == null)
+        {
+            event.getRelevantPlayers().forEach(SpellProgressionHolder::pruneStaleReferences);
+        }
+    }
+
+    private static void pruneStaleReferences(ServerPlayer player)
+    {
+        // round-trip both holders through NBT: their deserializeNBT already drops whatever no
+        // longer resolves (spell/tree/node gone) against the currently-loaded registries - this
+        // is the exact same safeguard that already applies to every ordinary load, just re-run
+        // here for a player who stayed connected through a live /reload.
+        RegistryAccess registryAccess = player.level().registryAccess();
+
+        SpellProgressionHolder.getSpellProgressionHolder(player).ifPresent(progressionHolder ->
+                progressionHolder.deserializeNBT(registryAccess, progressionHolder.serializeNBT(registryAccess)));
     }
 }

@@ -1,5 +1,8 @@
 package de.cas_ual_ty.spells;
 
+import de.cas_ual_ty.spells.capability.DelayedSpellHolder;
+import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.capability.SpellsCapabilities;
 import de.cas_ual_ty.spells.datagen.DataGen;
 import de.cas_ual_ty.spells.network.*;
@@ -48,6 +51,9 @@ public class SpellsAndShields
         NeoForge.EVENT_BUS.addListener(BuiltInRegisters::addPotionRecipes);
         BuiltInRegisters.registerEvents(modEventBus);
         SpellsCapabilities.registerEvents(modEventBus);
+        SpellHolder.registerEvents(modEventBus);
+        SpellProgressionHolder.registerEvents(modEventBus);
+        DelayedSpellHolder.registerEvents(modEventBus);
 
         SpellsEvents.registerEvents();
 
