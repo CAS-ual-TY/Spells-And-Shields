@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.spell.icon;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.SpellIconTypes;
-import de.cas_ual_ty.spells.util.SpellsCodecs;
+import de.cas_ual_ty.spells.registers.SpellsCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import java.util.ArrayList;

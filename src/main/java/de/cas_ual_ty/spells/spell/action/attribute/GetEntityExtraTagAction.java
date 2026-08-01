@@ -6,11 +6,11 @@ import de.cas_ual_ty.spells.capability.ExtraTagHolder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
+import de.cas_ual_ty.spells.spell.action.ParamNames;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.GetTargetAttributeAction;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
-import de.cas_ual_ty.spells.util.ParamNames;
 
 public class GetEntityExtraTagAction extends GetTargetAttributeAction<EntityTarget>
 {

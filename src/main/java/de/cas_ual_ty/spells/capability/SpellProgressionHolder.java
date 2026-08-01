@@ -1,9 +1,9 @@
 package de.cas_ual_ty.spells.capability;
 
+import de.cas_ual_ty.spells.progression.FullSpellNodeId;
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.progression.SpellTree;
 import de.cas_ual_ty.spells.registers.SpellTrees;
-import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
-import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;

@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spelltree;
+package de.cas_ual_ty.spells.progression;
 
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.requirement.Requirement;

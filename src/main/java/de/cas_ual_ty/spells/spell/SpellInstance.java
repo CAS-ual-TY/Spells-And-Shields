@@ -1,5 +1,7 @@
 package de.cas_ual_ty.spells.spell;
 
+import de.cas_ual_ty.spells.progression.FullSpellNodeId;
+import de.cas_ual_ty.spells.progression.SpellTree;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
@@ -7,9 +9,6 @@ import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
-import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
-import de.cas_ual_ty.spells.spelltree.SpellTree;
-import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +27,7 @@ import java.util.function.Consumer;
 
 /**
  * A spell a player can run. Either a {@link Direct} reference straight to a {@link Spell} registry entry,
- * or a {@link TreeNode} reference to a {@link de.cas_ual_ty.spells.spelltree.SpellNode} - which overrides
+ * or a {@link TreeNode} reference to a {@link de.cas_ual_ty.spells.progression.SpellNode} - which overrides
  * the referenced spell's mana cost/parameters with whatever that node bakes in. There is no third layer:
  * a {@link TreeNode} is a pure reference to a node's own values, it does not carry further overrides itself.
  */
@@ -169,7 +168,7 @@ public abstract class SpellInstance
 
     /**
      * References a {@link Spell} registry entry directly. Owns its own mana cost/parameter overrides.
-     * This is also what every {@link de.cas_ual_ty.spells.spelltree.SpellNode} stores internally.
+     * This is also what every {@link de.cas_ual_ty.spells.progression.SpellNode} stores internally.
      */
     public static final class Direct extends SpellInstance
     {
@@ -234,7 +233,7 @@ public abstract class SpellInstance
     }
 
     /**
-     * References a {@link de.cas_ual_ty.spells.spelltree.SpellNode} by its {@link FullSpellNodeId}, delegating
+     * References a {@link de.cas_ual_ty.spells.progression.SpellNode} by its {@link FullSpellNodeId}, delegating
      * every value to that node's own {@link Direct} instance. Pure reference - no override of its own.
      */
     public static final class TreeNode extends SpellInstance

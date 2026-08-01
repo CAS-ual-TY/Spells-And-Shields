@@ -3,7 +3,7 @@ package de.cas_ual_ty.spells.capability;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import de.cas_ual_ty.spells.network.ParticleEmitterSyncMessage;
-import de.cas_ual_ty.spells.util.SpellsUtil;
+import de.cas_ual_ty.spells.SpellsUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;

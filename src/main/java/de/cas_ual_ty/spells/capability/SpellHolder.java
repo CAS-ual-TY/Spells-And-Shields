@@ -1,6 +1,8 @@
 package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
+import de.cas_ual_ty.spells.progression.FullSpellNodeId;
+import de.cas_ual_ty.spells.progression.SpellTree;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
@@ -8,8 +10,6 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
-import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
-import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;

@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.util;
+package de.cas_ual_ty.spells.spell;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;

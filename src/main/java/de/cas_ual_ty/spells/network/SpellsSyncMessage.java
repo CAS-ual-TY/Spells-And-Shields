@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
-import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
+import de.cas_ual_ty.spells.progression.FullSpellNodeId;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

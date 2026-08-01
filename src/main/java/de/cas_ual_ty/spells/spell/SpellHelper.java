@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.util;
+package de.cas_ual_ty.spells.spell;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
@@ -7,7 +7,6 @@ import de.cas_ual_ty.spells.network.FireSpellMessage;
 import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.Spells;
-import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import net.minecraft.resources.ResourceKey;

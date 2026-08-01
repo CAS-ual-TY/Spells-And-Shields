@@ -1,9 +1,7 @@
-package de.cas_ual_ty.spells.util;
+package de.cas_ual_ty.spells;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
-import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;

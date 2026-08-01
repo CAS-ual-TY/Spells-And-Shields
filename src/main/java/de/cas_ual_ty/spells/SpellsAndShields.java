@@ -12,7 +12,6 @@ import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.compiler.TernaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
 import de.cas_ual_ty.spells.spell.context.SpellsEvents;
-import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;

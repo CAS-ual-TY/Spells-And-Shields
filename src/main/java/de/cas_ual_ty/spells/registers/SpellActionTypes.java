@@ -28,7 +28,7 @@ import de.cas_ual_ty.spells.spell.compiler.BinaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.compiler.TernaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.UnaryOperation;
-import de.cas_ual_ty.spells.util.SpellsUtil;
+import de.cas_ual_ty.spells.SpellsUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;

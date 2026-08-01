@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.util;
+package de.cas_ual_ty.spells.progression;
 
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.requirement.Requirement;
@@ -6,8 +6,6 @@ import de.cas_ual_ty.spells.requirement.RequirementType;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
-import de.cas_ual_ty.spells.spelltree.SpellNode;
-import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;

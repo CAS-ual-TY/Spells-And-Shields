@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
+import de.cas_ual_ty.spells.spell.action.ParamNames;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -12,8 +13,7 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
-import de.cas_ual_ty.spells.util.ParamNames;
-import de.cas_ual_ty.spells.util.SpellsUtil;
+import de.cas_ual_ty.spells.SpellsUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 public class ApplyPotionEffectAction extends AffectTypeAction<LivingEntityTarget>

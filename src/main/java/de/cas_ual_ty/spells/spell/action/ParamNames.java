@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.util;
+package de.cas_ual_ty.spells.spell.action;
 
 import de.cas_ual_ty.spells.datagen.DocsGen;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;

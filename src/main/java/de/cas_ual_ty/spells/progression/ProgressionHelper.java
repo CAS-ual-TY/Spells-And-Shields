@@ -1,13 +1,8 @@
-package de.cas_ual_ty.spells.util;
+package de.cas_ual_ty.spells.progression;
 
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
-import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
-import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.requirement.WrappedRequirement;
-import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
-import de.cas_ual_ty.spells.spelltree.SpellNode;
-import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;

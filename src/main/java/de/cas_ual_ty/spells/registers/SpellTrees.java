@@ -1,12 +1,11 @@
 package de.cas_ual_ty.spells.registers;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.progression.FullSpellNodeId;
+import de.cas_ual_ty.spells.progression.SpellTree;
 import de.cas_ual_ty.spells.requirement.*;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
-import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
-import de.cas_ual_ty.spells.spelltree.SpellTree;
-import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -28,28 +27,28 @@ import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 public class SpellTrees
 {
     public static final ResourceKey<Registry<SpellTree>> REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MOD_ID, "spell_trees"));
-    
+
     public static Registry<SpellTree> getRegistry(LevelAccessor level)
     {
         return getRegistry(level.registryAccess());
     }
-    
+
     public static Registry<SpellTree> getRegistry(RegistryAccess access)
     {
         return access.registryOrThrow(REGISTRY_KEY);
     }
-    
+
     public static final String KEY_NETHER = "spell_tree." + SpellsAndShields.MOD_ID + ".nether";
     public static final String KEY_OCEAN = "spell_tree." + SpellsAndShields.MOD_ID + ".ocean";
     public static final String KEY_MINING = "spell_tree." + SpellsAndShields.MOD_ID + ".mining";
     public static final String KEY_MOVEMENT = "spell_tree." + SpellsAndShields.MOD_ID + ".movement";
     public static final String KEY_END = "spell_tree." + SpellsAndShields.MOD_ID + ".end";
-    
+
     public static void register(IEventBus modEventBus)
     {
         modEventBus.addListener(SpellTrees::newDataPackRegistry);
     }
-    
+
     private static void newDataPackRegistry(DataPackRegistryEvent.NewRegistry event)
     {
         event.dataPackRegistry(REGISTRY_KEY, SpellsCodecs.SPELL_TREE_CONTENTS, SpellsCodecs.SPELL_TREE_SYNC);
@@ -75,7 +74,7 @@ public class SpellTrees
                 .leaf()
                 .finish();
     }
-    
+
     public static SpellTree waterTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_OCEAN))
@@ -107,7 +106,7 @@ public class SpellTrees
                 .leaf()
                 .finish();
     }
-    
+
     public static SpellTree earthTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_MINING))
@@ -132,7 +131,7 @@ public class SpellTrees
                 .leaf()
                 .finish();
     }
-    
+
     public static SpellTree airTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_MOVEMENT))
@@ -157,7 +156,7 @@ public class SpellTrees
                 .leaf()
                 .finish();
     }
-    
+
     public static SpellTree enderTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_END))
@@ -169,57 +168,57 @@ public class SpellTrees
                 .add(spellGetter.apply(Spells.ENDER_ARMY)).levelCost(50).learnRequirements(bookshelves(30), item(Items.DRAGON_EGG, 1, false))
                 .finish();
     }
-    
+
     public static Requirement bookshelves(int bookshelves)
     {
         return new BookshelvesRequirement(RequirementTypes.BOOKSHELVES.get(), bookshelves);
     }
-    
+
     public static Requirement advancement(String advancementRL)
     {
         return new AdvancementRequirement(RequirementTypes.ADVANCEMENT.get(), ResourceLocation.withDefaultNamespace(advancementRL));
     }
-    
+
     public static Requirement item(Item item, int count, boolean consume)
     {
         return new ItemRequirement(RequirementTypes.ITEM.get(), new ItemStack(item, count), consume);
     }
-    
+
     public static Requirement min(int minimum, Requirement... list)
     {
         return new MinRequirement(RequirementTypes.MIN.get(), List.of(list), minimum);
     }
-    
+
     public static Requirement any(Requirement... list)
     {
         return min(1, list);
     }
-    
+
     public static Requirement all(Requirement... list)
     {
         return min(list.length, list);
     }
-    
+
     public static Requirement max(int maximum, Requirement... list)
     {
         return new MaxRequirement(RequirementTypes.MAX.get(), List.of(list), maximum);
     }
-    
+
     public static Requirement none(Requirement... list)
     {
         return max(0, list);
     }
-    
+
     public static Requirement not(Requirement... list)
     {
         return none(list);
     }
-    
+
     public static Requirement learned(ResourceLocation spellTree, ResourceLocation nodeId)
     {
         return new LearnedRequirement(RequirementTypes.LEARNED.get(), new FullSpellNodeId(spellTree, nodeId));
     }
-    
+
     public static Requirement config()
     {
         return new ConfigRequirement(RequirementTypes.CONFIG.get());

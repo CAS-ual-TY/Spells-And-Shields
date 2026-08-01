@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.util;
+package de.cas_ual_ty.spells.registers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
@@ -6,7 +6,8 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cas_ual_ty.spells.registers.*;
+import de.cas_ual_ty.spells.progression.SpellNode;
+import de.cas_ual_ty.spells.progression.SpellTree;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
 import de.cas_ual_ty.spells.spell.Spell;
@@ -18,8 +19,6 @@ import de.cas_ual_ty.spells.spell.icon.SpellIconType;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
-import de.cas_ual_ty.spells.spelltree.SpellNode;
-import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;

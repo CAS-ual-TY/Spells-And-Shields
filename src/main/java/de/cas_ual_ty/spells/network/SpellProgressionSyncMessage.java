@@ -2,12 +2,12 @@ package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
+import de.cas_ual_ty.spells.progression.FullSpellNodeId;
 import de.cas_ual_ty.spells.progression.SpellStatus;
+import de.cas_ual_ty.spells.progression.SpellTree;
+import de.cas_ual_ty.spells.progression.SpellTreeSerializer;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
-import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
-import de.cas_ual_ty.spells.spelltree.SpellTree;
-import de.cas_ual_ty.spells.util.SpellTreeSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;

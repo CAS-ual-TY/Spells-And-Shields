@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.cas_ual_ty.spells.util.ManaTooltipComponent;
+import de.cas_ual_ty.spells.spell.ManaTooltipComponent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;

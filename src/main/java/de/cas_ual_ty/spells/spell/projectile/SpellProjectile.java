@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.spell.projectile;
 
+import de.cas_ual_ty.spells.progression.FullSpellNodeId;
 import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
@@ -7,7 +8,6 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.target.Target;
-import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;

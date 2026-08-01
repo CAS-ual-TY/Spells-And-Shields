@@ -2,11 +2,11 @@ package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
+import de.cas_ual_ty.spells.progression.FullSpellNodeId;
+import de.cas_ual_ty.spells.progression.ProgressionHelper;
+import de.cas_ual_ty.spells.progression.SpellNode;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
-import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
-import de.cas_ual_ty.spells.spelltree.SpellNode;
-import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;

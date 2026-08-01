@@ -2,7 +2,6 @@ package de.cas_ual_ty.spells.registers;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.spell.Spell;
-import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;

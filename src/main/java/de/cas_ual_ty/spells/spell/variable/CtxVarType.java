@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
-import de.cas_ual_ty.spells.util.ParamNames;
+import de.cas_ual_ty.spells.spell.action.ParamNames;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;

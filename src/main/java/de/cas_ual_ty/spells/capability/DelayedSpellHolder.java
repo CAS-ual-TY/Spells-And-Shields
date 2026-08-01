@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.capability;
 
 import com.google.common.collect.Lists;
+import de.cas_ual_ty.spells.progression.SpellTree;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
@@ -10,7 +11,6 @@ import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.target.Target;
-import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
