@@ -4,6 +4,10 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.capability.ParticleEmitterHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.client.hud.ManaClientTooltipComponent;
+import de.cas_ual_ty.spells.client.hud.ManaRenderer;
+import de.cas_ual_ty.spells.client.hud.SlotsPosition;
+import de.cas_ual_ty.spells.client.hud.SpellIconRegistry;
 import de.cas_ual_ty.spells.client.progression.SpellInteractButton;
 import de.cas_ual_ty.spells.client.progression.SpellNodeWidget;
 import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
@@ -60,7 +64,7 @@ public class SpellsAndShieldsClient
     {
         modContainer.registerConfig(ModConfig.Type.CLIENT, SpellsClientConfig.CLIENT_SPEC, SpellsAndShields.MOD_ID + "/client" + ".toml");
 
-        SpellKeyBindings.register(modEventBus);
+        SpellsKeyBindings.register(modEventBus);
         ManaRenderer.register(modEventBus);
 
         modEventBus.addListener(SpellsAndShieldsClient::clientSetup);

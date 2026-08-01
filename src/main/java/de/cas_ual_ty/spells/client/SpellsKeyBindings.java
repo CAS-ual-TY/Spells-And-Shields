@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.client.hud.RadialMenu;
 import de.cas_ual_ty.spells.spell.SpellHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -20,7 +21,7 @@ import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
 import org.lwjgl.glfw.GLFW;
 
-public class SpellKeyBindings
+public class SpellsKeyBindings
 {
     public static final String CATEGORY = "key." + SpellsAndShields.MOD_ID + ".categories.spell_slots";
     public static final int COOLDOWN = 10; // in ticks
@@ -62,7 +63,7 @@ public class SpellKeyBindings
 
     public static MutableComponent getTooltip(int slot)
     {
-        return Component.literal(SpellKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString());
+        return Component.literal(SpellsKeyBindings.slotKeys[slot].getTranslatedKeyMessage().getString());
     }
 
     private static void clientTick(ClientTickEvent.Post event)
@@ -149,8 +150,8 @@ public class SpellKeyBindings
 
     public static void register(IEventBus modEventBus)
     {
-        modEventBus.addListener(SpellKeyBindings::registerKeyMappings);
-        NeoForge.EVENT_BUS.addListener(SpellKeyBindings::clientTick);
-        NeoForge.EVENT_BUS.addListener(SpellKeyBindings::movementInputUpdate);
+        modEventBus.addListener(SpellsKeyBindings::registerKeyMappings);
+        NeoForge.EVENT_BUS.addListener(SpellsKeyBindings::clientTick);
+        NeoForge.EVENT_BUS.addListener(SpellsKeyBindings::movementInputUpdate);
     }
 }

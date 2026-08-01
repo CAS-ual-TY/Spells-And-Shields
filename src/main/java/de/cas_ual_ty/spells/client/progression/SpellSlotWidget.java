@@ -2,8 +2,8 @@ package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.client.SpellIconRegistry;
-import de.cas_ual_ty.spells.client.SpellKeyBindings;
+import de.cas_ual_ty.spells.client.hud.SpellIconRegistry;
+import de.cas_ual_ty.spells.client.SpellsKeyBindings;
 import de.cas_ual_ty.spells.client.SpellsClientConfig;
 import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.registers.Spells;
@@ -103,7 +103,7 @@ public class SpellSlotWidget extends Button
                     guiGraphics.pose().pushPose();
                     guiGraphics.pose().translate(0, 0, 10D);
                     
-                    Component keyBindTooltip = SpellKeyBindings.getBaseTooltip().append(": ").append(SpellKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
+                    Component keyBindTooltip = SpellsKeyBindings.getBaseTooltip().append(": ").append(SpellsKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
                     List<Component> tooltip = spell.getSpell().value().makeTooltipList(keyBindTooltip);
                     Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
                     

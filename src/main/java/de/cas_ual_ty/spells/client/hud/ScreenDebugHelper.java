@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.client;
+package de.cas_ual_ty.spells.client.hud;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

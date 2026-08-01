@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.datagen;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.client.SpellKeyBindings;
+import de.cas_ual_ty.spells.client.SpellsKeyBindings;
 import de.cas_ual_ty.spells.client.progression.SpellProgressionScreen;
 import de.cas_ual_ty.spells.command.SpellCommand;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
@@ -78,12 +78,12 @@ public class LangGen extends LanguageProvider
         addPotion(BuiltInRegisters.LONG_LEAKING, "Leaking");
         addPotion(BuiltInRegisters.STRONG_LEAKING, "Leaking");
         
-        add(SpellKeyBindings.CATEGORY, "Spells & Shields");
+        add(SpellsKeyBindings.CATEGORY, "Spells & Shields");
         for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)
         {
-            add(SpellKeyBindings.key(i), "Spell Slot " + (i + 1));
+            add(SpellsKeyBindings.key(i), "Spell Slot " + (i + 1));
         }
-        add(SpellKeyBindings.keyRadialMenu(), "Radial Menu");
+        add(SpellsKeyBindings.keyRadialMenu(), "Radial Menu");
         
         addRequirement(RequirementTypes.BOOKSHELVES, "%s/%s Bookshelves");
         addRequirement(RequirementTypes.ADVANCEMENT, "Advancement: %s");

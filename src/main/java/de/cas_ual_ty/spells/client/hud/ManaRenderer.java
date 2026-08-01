@@ -1,8 +1,9 @@
-package de.cas_ual_ty.spells.client;
+package de.cas_ual_ty.spells.client.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.client.SpellsClientConfig;
 import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;

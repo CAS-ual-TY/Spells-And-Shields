@@ -1,8 +1,9 @@
-package de.cas_ual_ty.spells.client;
+package de.cas_ual_ty.spells.client.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.client.SpellsKeyBindings;
 import de.cas_ual_ty.spells.client.progression.SpellNodeWidget;
 import de.cas_ual_ty.spells.spell.SpellHelper;
 import de.cas_ual_ty.spells.spell.SpellInstance;
@@ -232,7 +233,7 @@ public class RadialMenu extends Screen
     @Override
     public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers)
     {
-        if(pKeyCode == SpellKeyBindings.radialMenu.getKey().getValue())
+        if(pKeyCode == SpellsKeyBindings.radialMenu.getKey().getValue())
         {
             onClose();
             return true;

@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
-import de.cas_ual_ty.spells.client.SpellIconRegistry;
+import de.cas_ual_ty.spells.client.hud.SpellIconRegistry;
 import de.cas_ual_ty.spells.client.SpellsClientConfig;
 import de.cas_ual_ty.spells.progression.SpellNode;
 import de.cas_ual_ty.spells.progression.SpellStatus;

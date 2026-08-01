@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.cas_ual_ty.spells.client.SpellIconRegistry;
+import de.cas_ual_ty.spells.client.hud.SpellIconRegistry;
 import de.cas_ual_ty.spells.progression.FullSpellNodeId;
 import de.cas_ual_ty.spells.progression.ProgressionHelper;
 import de.cas_ual_ty.spells.progression.SpellNode;

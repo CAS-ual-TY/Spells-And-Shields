@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.client;
+package de.cas_ual_ty.spells.client.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.cas_ual_ty.spells.SpellsAndShields;

@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.cas_ual_ty.spells.client.SpellIconRegistry;
+import de.cas_ual_ty.spells.client.hud.SpellIconRegistry;
 import de.cas_ual_ty.spells.client.SpellsClientConfig;
 import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.registers.Spells;
