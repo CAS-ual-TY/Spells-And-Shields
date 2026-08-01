@@ -9,7 +9,7 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 
-public class ScreenDebugHelper
+public class DebugOverlayHelper
 {
     public static void event(ScreenEvent.Render.Post event)
     {
