@@ -62,11 +62,6 @@ public class SpellsAndShields
         UnaryOperation.registerToCompiler();
         BinaryOperation.registerToCompiler();
         TernaryOperation.registerToCompiler();
-
-        if(FMLEnvironment.dist.isClient())
-        {
-            de.cas_ual_ty.spells.client.SpellsClientUtil.onModConstruct(modEventBus, modContainer);
-        }
     }
 
     private static void registerPayloadHandlers(RegisterPayloadHandlersEvent event)
