@@ -7,7 +7,7 @@ import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
-import de.cas_ual_ty.spells.spell.action.attribute.*;
+import de.cas_ual_ty.spells.spell.action.entity.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;

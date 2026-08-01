@@ -5,7 +5,7 @@ import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.ai.ClearMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.ai.GetMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
-import de.cas_ual_ty.spells.spell.action.attribute.*;
+import de.cas_ual_ty.spells.spell.action.entity.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
