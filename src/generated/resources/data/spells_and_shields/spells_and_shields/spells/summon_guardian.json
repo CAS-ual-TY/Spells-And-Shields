@@ -1,0 +1,105 @@
+{
+  "s1/title": {
+    "translate": "spell.spells_and_shields.summon_guardian"
+  },
+  "s2/icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/summon_guardian.png"
+  },
+  "s3/mana_cost": 10.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.summon_guardian.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active",
+    "living_change_target",
+    "owner_left_dimension"
+  ],
+  "s6/spell_parameters": [],
+  "s7/spell_actions": [
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:spawn_entity",
+      "activation": "active",
+      "d/string/entity_type": "minecraft:guardian",
+      "d/vec3/direction": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "d/vec3/motion": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "t/position": "owner",
+      "td/entity": "summoned"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "active",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "d/string/sound_event": "minecraft:block.respawn_anchor.set_spawn",
+      "ts/targets": "summoned"
+    },
+    {
+      "type": "spells_and_shields:add_delayed_spell",
+      "activation": "active",
+      "ad/on_remove": "on_remove",
+      "d/compound_tag/extra_data": {},
+      "d/int/tick_time": 1200,
+      "d/string/uuid": "",
+      "events_map": {
+        "living_change_target": "living_change_target",
+        "owner_left_dimension": "on_remove"
+      },
+      "ts/targets": "summoned"
+    },
+    {
+      "type": "spells_and_shields:burn_mana",
+      "activation": "active",
+      "d/double/mana_amount": "<<mana_cost>>",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:get_target_group_size",
+      "activation": "living_change_target",
+      "td/source": "new_target",
+      "var/result": "initial_size"
+    },
+    {
+      "type": "spells_and_shields:move_player_targets",
+      "activation": "living_change_target",
+      "td/destination": "",
+      "ts/source": "new_target"
+    },
+    {
+      "type": "spells_and_shields:get_target_group_size",
+      "activation": "living_change_target",
+      "td/source": "new_target",
+      "var/result": "remaining_size"
+    },
+    {
+      "type": "spells_and_shields:put_boolean",
+      "activation": "living_change_target",
+      "d/boolean/source": "<< event_is_canceled || (initial_size > 0 && remaining_size == 0) >>",
+      "var/result": "event_is_canceled"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "on_remove",
+      "activation": "owner_left_dimension"
+    },
+    {
+      "type": "spells_and_shields:kill_entity",
+      "activation": "on_remove",
+      "ts/targets": "holder"
+    }
+  ]
+}

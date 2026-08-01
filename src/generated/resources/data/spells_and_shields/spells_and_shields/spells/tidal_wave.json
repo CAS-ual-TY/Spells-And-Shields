@@ -1,0 +1,159 @@
+{
+  "s1/title": {
+    "translate": "spell.spells_and_shields.tidal_wave"
+  },
+  "s2/icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/tidal_wave.png"
+  },
+  "s3/mana_cost": 5.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.tidal_wave.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 6.0,
+      "var/name": "range"
+    },
+    {
+      "type": "spells_and_shields:double",
+      "value": 2.0,
+      "var/name": "knockback_strength"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 80,
+      "var/name": "slow_duration"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 1,
+      "var/name": "slow_amplifier"
+    }
+  ],
+  "s7/spell_actions": [
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "active",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "d/string/sound_event": "minecraft:item.bucket.fill",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:ranged_entity_targets",
+      "activation": "active",
+      "d/double/range": "<<range>>",
+      "td/destination": "targets",
+      "ts/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "no_pvp",
+      "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !pvp() >>"
+    },
+    {
+      "type": "spells_and_shields:move_player_targets",
+      "activation": "no_pvp",
+      "td/destination": "",
+      "ts/source": "targets"
+    },
+    {
+      "type": "spells_and_shields:home",
+      "activation": "active",
+      "ad/block_hit_activation": "",
+      "ad/entity_hit_activation": "on_entity_hit",
+      "ad/timeout_activation": "",
+      "d/double/velocity": 1.0,
+      "d/int/timeout": 100,
+      "t/source": "owner",
+      "td/projectile": "projectile",
+      "ts/targets": "targets"
+    },
+    {
+      "type": "spells_and_shields:particle_emitter",
+      "activation": "active",
+      "d/boolean/motion_spread": true,
+      "d/double/spread": 0.5,
+      "d/int/amount": 5,
+      "d/int/delay": 1,
+      "d/int/duration": 100,
+      "d/vec3/offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "particle": {
+        "type": "minecraft:falling_water"
+      },
+      "ts/targets": "projectile"
+    },
+    {
+      "type": "spells_and_shields:particle_emitter",
+      "activation": "active",
+      "d/boolean/motion_spread": true,
+      "d/double/spread": 0.5,
+      "d/int/amount": 5,
+      "d/int/delay": 1,
+      "d/int/duration": 100,
+      "d/vec3/offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "particle": {
+        "type": "minecraft:bubble"
+      },
+      "ts/targets": "projectile"
+    },
+    {
+      "type": "spells_and_shields:sourced_knockback",
+      "activation": "on_entity_hit",
+      "d/double/strength": "<<knockback_strength>>",
+      "t/source": "owner",
+      "ts/targets": "entity_hit"
+    },
+    {
+      "type": "spells_and_shields:apply_mob_effect",
+      "activation": "on_entity_hit",
+      "d/boolean/ambient": false,
+      "d/boolean/showIcon": true,
+      "d/boolean/visible": true,
+      "d/int/amplifier": "<<slow_amplifier>>",
+      "d/int/duration": "<<slow_duration>>",
+      "d/string/mob_effect": "minecraft:slowness",
+      "ts/targets": "entity_hit"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "on_entity_hit",
+      "d/double/spread": 0.5,
+      "d/int/count": 10,
+      "particle": {
+        "type": "minecraft:splash"
+      },
+      "ts/targets": "entity_hit"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "on_entity_hit",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "d/string/sound_event": "minecraft:entity.splash_potion.break",
+      "ts/targets": "entity_hit"
+    }
+  ]
+}

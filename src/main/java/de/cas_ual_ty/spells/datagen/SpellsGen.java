@@ -38,6 +38,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
@@ -585,7 +586,33 @@ public class SpellsGen
         
         addSpell(rl, spell);
     }
-    
+
+    public void addSummonSpell(ResourceLocation rl, String key, String descKey, String entityType, SoundEvent spawnSound, float manaCost)
+    {
+        addSummonSpell(rl, key, descKey, entityType, spawnSound, manaCost, 60 * 20);
+    }
+
+    public void addSummonSpell(ResourceLocation rl, String key, String descKey, String entityType, SoundEvent spawnSound, float manaCost, int duration)
+    {
+        addSpell(rl, new Spell(modId, rl.getPath(), key, manaCost)
+                .addAction(SimpleManaCheckAction.make(ACTIVE))
+                .addAction(SpawnEntityAction.make(ACTIVE, "summoned", STRING.immediate(entityType), OWNER, ZERO_VEC3, ZERO_VEC3))
+                .addAction(PlaySoundAction.make(ACTIVE, "summoned", spawnSound, ONE_D, ONE_D))
+                .addAction(AddDelayedSpellAction.make(ACTIVE, "summoned", "on_remove", INT.immediate(duration), STRING.immediate(""), EMPTY_TAG, eventHookMap(LIVING_CHANGE_TARGET.activation, LIVING_CHANGE_TARGET.activation, OWNER_LEFT_DIMENSION.activation, "on_remove")))
+                .addAction(BurnManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
+                .addAction(GetTargetGroupSizeAction.make(LIVING_CHANGE_TARGET, "new_target", "initial_size"))
+                .addAction(MovePlayerTargetsAction.make(LIVING_CHANGE_TARGET, "", "new_target"))
+                .addAction(GetTargetGroupSizeAction.make(LIVING_CHANGE_TARGET, "new_target", "remaining_size"))
+                .addAction(PutVarAction.makeBoolean(LIVING_CHANGE_TARGET, Compiler.compileString(" event_is_canceled || (initial_size > 0 && remaining_size == 0) ", BOOLEAN), EVENT_IS_CANCELED))
+                .addAction(ActivateAction.make(OWNER_LEFT_DIMENSION, "on_remove"))
+                .addAction(KillEntityAction.make("on_remove", HOLDER))
+                .addEventHook(ACTIVE)
+                .addEventHook(LIVING_CHANGE_TARGET)
+                .addEventHook(OWNER_LEFT_DIMENSION)
+                .addTooltip(Component.translatable(descKey))
+        );
+    }
+
     protected void addSpells()
     {
         dummy(Spells.DUMMY);
@@ -1507,6 +1534,147 @@ public class SpellsGen
         addPermanentEffectSpell(Spells.PERMANENT_CONDUIT_POWER, Spells.KEY_PERMANENT_CONDUIT_POWER, Spells.KEY_PERMANENT_CONDUIT_POWER_DESC, MobEffects.CONDUIT_POWER, 50, 0);
         addTemporaryEffectSpell(Spells.TEMPORARY_CONDUIT_POWER, Spells.KEY_TEMPORARY_CONDUIT_POWER, Spells.KEY_TEMPORARY_CONDUIT_POWER_DESC, MobEffects.CONDUIT_POWER, 13F, 400, 0);
         addToggleEffectSpell(Spells.TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER_DESC, MobEffects.CONDUIT_POWER, 4F, 50, 0);
+
+        addSpell(Spells.TREMOR, new Spell(modId, "tremor", Spells.KEY_TREMOR, 5F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE))
+                .addAction(RangedEntityTargetsAction.make(ACTIVE, "targets", OWNER, DOUBLE.reference("range")))
+                .addAction(BooleanActivationAction.make(ACTIVE, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
+                .addAction(MovePlayerTargetsAction.make("no_pvp", "", "targets"))
+                .addAction(SourcedKnockbackAction.make(ACTIVE, "targets", DOUBLE.reference("knockback_strength"), OWNER))
+                .addAction(SpawnParticlesAction.make(ACTIVE, OWNER, ParticleTypes.EXPLOSION, INT.immediate(3), DOUBLE.immediate(2D)))
+                .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.GENERIC_EXPLODE.value(), ONE_D, ONE_D))
+                .addParameter(DOUBLE, "range", 6D)
+                .addParameter(DOUBLE, "knockback_strength", 3D)
+                .addEventHook(ACTIVE)
+                .addTooltip(Component.translatable(Spells.KEY_TREMOR_DESC))
+        );
+
+        addSpell(Spells.MAGNETISM, new Spell(modId, "magnetism", Spells.KEY_MAGNETISM, 5F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE))
+                .addAction(RangedEntityTargetsAction.make(ACTIVE, "pool", OWNER, DOUBLE.reference("range")))
+                .addAction(GetPositionAction.make(ACTIVE, OWNER, "own_pos"))
+                .addAction(LabelAction.make(ACTIVE, "pull_loop"))
+                .addAction(ClearTargetsAction.make(ACTIVE, "current"))
+                .addAction(PickTargetAction.make(ACTIVE, "current", "pool", true, false))
+                .addAction(GetEntityTypeAction.make(ACTIVE, "current", "cur_type", "", ""))
+                .addAction(BooleanActivationAction.make(ACTIVE, "do_pull", Compiler.compileString(" cur_type == 'minecraft:item' ", BOOLEAN), TRUE, FALSE))
+                .addAction(GetPositionAction.make("do_pull", "current", "cur_pos"))
+                .addAction(SetMotionAction.make("do_pull", "current", Compiler.compileString(" normalize(own_pos - cur_pos) * pull_speed ", VEC3)))
+                .addAction(GetTargetGroupSizeAction.make(ACTIVE, "pool", "pool_size"))
+                .addAction(BranchAction.make(ACTIVE, "pull_loop", Compiler.compileString(" pool_size > 0 ", BOOLEAN)))
+                .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.ANVIL_LAND, ONE_D, ONE_D))
+                .addParameter(DOUBLE, "range", 8D)
+                .addParameter(DOUBLE, "pull_speed", 2D)
+                .addEventHook(ACTIVE)
+                .addTooltip(Component.translatable(Spells.KEY_MAGNETISM_DESC))
+        );
+
+        ResourceLocation petrifyResistRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.DAMAGE_RESISTANCE.value());
+        addSpell(Spells.PETRIFY, new Spell(SpellsAndShields.MOD_ID, "petrify", Spells.KEY_PETRIFY, 0F)
+                .addAction(CopyTargetsAction.make(ON_EQUIP, "player", OWNER))
+                .addAction(CopyTargetsAction.make(ON_UNEQUIP, "player", OWNER))
+                .addAction(CopyTargetsAction.make("apply", "player", HOLDER))
+                .addAction(PutVarAction.makeString(ON_EQUIP, Compiler.compileString(" uuid_from_string('petrify' + spell_slot) ", STRING), "uuid"))
+                .addAction(PutVarAction.makeString(ON_UNEQUIP, Compiler.compileString(" uuid_from_string('petrify' + spell_slot) ", STRING), "uuid"))
+                .addAction(PutVarAction.moveString("apply", DELAY_UUID, "uuid"))
+                .addAction(ActivateAction.make(ON_EQUIP, "apply"))
+                .addAction(ActivateAction.make(ON_UNEQUIP, "remove"))
+                .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.reference("uuid"), BOOLEAN.immediate(false)))
+                .addAction(ActivateAction.make("apply", "renew"))
+                .addAction(ApplyMobEffectAction.make("apply", "player", SpellsUtil.objectToString(MobEffects.DAMAGE_RESISTANCE.value(), BuiltInRegistries.MOB_EFFECT), INT.reference("duration+1"), ONE, FALSE, FALSE, TRUE))
+                .addAction(ApplyMobEffectAction.make("apply", "player", SpellsUtil.objectToString(MobEffects.MOVEMENT_SLOWDOWN.value(), BuiltInRegistries.MOB_EFFECT), INT.reference("duration+1"), ZERO, FALSE, FALSE, TRUE))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("duration"), STRING.reference("uuid"), EMPTY_TAG, eventHookMap()))
+                .addParameter(INT, "duration", 400)
+                .addEventHook(ON_EQUIP)
+                .addEventHook(ON_UNEQUIP)
+                .addTooltip(Component.translatable(Spells.KEY_PETRIFY_DESC))
+        );
+
+        addSpell(Spells.VEIN_MINE, new Spell(modId, "vein_mine", Spells.KEY_VEIN_MINE, 8F)
+                .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
+                .addAction(LookAtTargetAction.make(ACTIVE, OWNER, DOUBLE.reference("look_range"), 0F, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, "on_block_hit", "", ""))
+                .addAction(BurnManaAction.make("on_block_hit", OWNER, DOUBLE.reference(MANA_COST)))
+                .addAction(CubeBlockTargetsAction.make("on_block_hit", BLOCK_HIT, "pool", VEC3.immediate(new Vec3(-1, -1, -1)), VEC3.immediate(new Vec3(1, 1, 1))))
+                .addAction(LabelAction.make("on_block_hit", "mine_loop"))
+                .addAction(ClearTargetsAction.make("on_block_hit", "current_block"))
+                .addAction(PickTargetAction.make("on_block_hit", "current_block", "pool", true, false))
+                .addAction(PlayerHarvestBlockAction.make("on_block_hit", OWNER, "current_block", Direction.UP))
+                .addAction(GetTargetGroupSizeAction.make("on_block_hit", "pool", "pool_size"))
+                .addAction(BranchAction.make("on_block_hit", "mine_loop", Compiler.compileString(" pool_size > 0 ", BOOLEAN)))
+                .addParameter(DOUBLE, "look_range", 5D)
+                .addEventHook(ACTIVE)
+                .addTooltip(Component.translatable(Spells.KEY_VEIN_MINE_DESC))
+        );
+
+        ResourceLocation magmaFireResistRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.FIRE_RESISTANCE.value());
+        addSpell(Spells.MAGMA_ARMOR, new Spell(modId, "magma_armor", Spells.KEY_MAGMA_ARMOR, 0F)
+                .addAction(BooleanActivationAction.make(LIVING_HURT_VICTIM, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
+                .addAction(MovePlayerTargetsAction.make("no_pvp", "", "attacker"))
+                .addAction(SetOnFireAction.make(LIVING_HURT_VICTIM, "attacker", INT.reference("fire_seconds")))
+                .addAction(PlaySoundAction.make(LIVING_HURT_VICTIM, "attacker", SoundEvents.GENERIC_EXTINGUISH_FIRE, ONE_D, ONE_D))
+                .addAction(SpawnParticlesAction.make(LIVING_HURT_VICTIM, "attacker", ParticleTypes.FLAME, INT.immediate(10), DOUBLE.immediate(0.5D)))
+                .addParameter(INT, "fire_seconds", 5)
+                .addEventHook(LIVING_HURT_VICTIM)
+                .addTooltip(Component.translatable(Spells.KEY_MAGMA_ARMOR_DESC))
+        );
+
+        addSpell(Spells.ICE_SPIKE, new Spell(modId, "ice_spike", Spells.KEY_ICE_SPIKE, 5F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE))
+                .addAction(ShootAction.make(ACTIVE, OWNER, DOUBLE.immediate(2.5D), ZERO_D, INT.immediate(80), "", "on_entity_hit", "", "projectile"))
+                .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.ARROW_SHOOT, ONE_D, ONE_D))
+                .addAction(BooleanActivationAction.make("on_entity_hit", "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
+                .addAction(MovePlayerTargetsAction.make("no_pvp", "", ENTITY_HIT))
+                .addAction(ApplyMobEffectAction.make("on_entity_hit", ENTITY_HIT, SpellsUtil.objectToString(MobEffects.MOVEMENT_SLOWDOWN.value(), BuiltInRegistries.MOB_EFFECT), INT.reference("slow_duration"), INT.reference("slow_amplifier"), FALSE, TRUE, TRUE))
+                .addAction(SpawnParticlesAction.make("on_entity_hit", ENTITY_HIT, ParticleTypes.SNOWFLAKE, INT.immediate(20), DOUBLE.immediate(0.5D)))
+                .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT, SoundEvents.FIRE_EXTINGUISH, ONE_D, ONE_D))
+                .addParameter(INT, "slow_duration", 100)
+                .addParameter(INT, "slow_amplifier", 1)
+                .addEventHook(ACTIVE)
+                .addTooltip(Component.translatable(Spells.KEY_ICE_SPIKE_DESC))
+        );
+
+        addSpell(Spells.TIDAL_WAVE, new Spell(modId, "tidal_wave", Spells.KEY_TIDAL_WAVE, 5F)
+                .addAction(SimpleManaCheckAction.make(ACTIVE))
+                .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.BUCKET_FILL, ONE_D, ONE_D))
+                .addAction(RangedEntityTargetsAction.make(ACTIVE, "targets", OWNER, DOUBLE.reference("range")))
+                .addAction(BooleanActivationAction.make(ACTIVE, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
+                .addAction(MovePlayerTargetsAction.make("no_pvp", "", "targets"))
+                .addAction(HomeAction.make(ACTIVE, OWNER, "targets", ONE_D, INT.immediate(100), "", "on_entity_hit", "", "projectile"))
+                .addAction(ParticleEmitterAction.make(ACTIVE, "projectile", INT.immediate(100), ONE, INT.immediate(5), DOUBLE.immediate(0.5), TRUE, ZERO_VEC3, ParticleTypes.FALLING_WATER))
+                .addAction(ParticleEmitterAction.make(ACTIVE, "projectile", INT.immediate(100), ONE, INT.immediate(5), DOUBLE.immediate(0.5), TRUE, ZERO_VEC3, ParticleTypes.BUBBLE))
+                .addAction(SourcedKnockbackAction.make("on_entity_hit", ENTITY_HIT, DOUBLE.reference("knockback_strength"), OWNER))
+                .addAction(ApplyMobEffectAction.make("on_entity_hit", ENTITY_HIT, SpellsUtil.objectToString(MobEffects.MOVEMENT_SLOWDOWN.value(), BuiltInRegistries.MOB_EFFECT), INT.reference("slow_duration"), INT.reference("slow_amplifier"), FALSE, TRUE, TRUE))
+                .addAction(SpawnParticlesAction.make("on_entity_hit", ENTITY_HIT, ParticleTypes.SPLASH, INT.immediate(10), DOUBLE.immediate(0.5D)))
+                .addAction(PlaySoundAction.make("on_entity_hit", ENTITY_HIT, SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
+                .addParameter(DOUBLE, "range", 6D)
+                .addParameter(DOUBLE, "knockback_strength", 2D)
+                .addParameter(INT, "slow_duration", 80)
+                .addParameter(INT, "slow_amplifier", 1)
+                .addEventHook(ACTIVE)
+                .addTooltip(Component.translatable(Spells.KEY_TIDAL_WAVE_DESC))
+        );
+
+        addSpell(Spells.WIND_BLAST, new Spell(modId, "wind_blast", Spells.KEY_WIND_BLAST, 4F)
+                .addAction(HasManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
+                .addAction(GetEntityEyePositionAction.make(ACTIVE, OWNER, "eye_pos"))
+                .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE, OWNER, "", "look_dir", ""))
+                .addAction(OffsetBlockAction.make(ACTIVE, "eye_pos", "front_pos", Compiler.compileString(" look_dir * blast_range ", VEC3)))
+                .addAction(RangedEntityTargetsAction.make(ACTIVE, "targets", "front_pos", DOUBLE.reference("blast_radius")))
+                .addAction(BooleanActivationAction.make(ACTIVE, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
+                .addAction(MovePlayerTargetsAction.make("no_pvp", "", "targets"))
+                .addAction(SourcedKnockbackAction.make(ACTIVE, "targets", DOUBLE.reference("knockback_strength"), OWNER))
+                .addAction(BurnManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
+                .addAction(SpawnParticlesAction.make(ACTIVE, "targets", ParticleTypes.POOF, INT.immediate(5), DOUBLE.immediate(0.5D)))
+                .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.PLAYER_BREATH, ONE_D, ONE_D))
+                .addParameter(DOUBLE, "blast_range", 5D)
+                .addParameter(DOUBLE, "blast_radius", 5D)
+                .addParameter(DOUBLE, "knockback_strength", 3D)
+                .addEventHook(ACTIVE)
+                .addTooltip(Component.translatable(Spells.KEY_WIND_BLAST_DESC))
+        );
+
+        addSummonSpell(Spells.SUMMON_BLAZE, Spells.KEY_SUMMON_BLAZE, Spells.KEY_SUMMON_BLAZE_DESC, "minecraft:blaze", SoundEvents.RESPAWN_ANCHOR_SET_SPAWN, 10F);
+        addSummonSpell(Spells.SUMMON_GUARDIAN, Spells.KEY_SUMMON_GUARDIAN, Spells.KEY_SUMMON_GUARDIAN_DESC, "minecraft:guardian", SoundEvents.RESPAWN_ANCHOR_SET_SPAWN, 10F);
     }
     
     public String getName()

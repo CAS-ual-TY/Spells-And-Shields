@@ -1,0 +1,115 @@
+{
+  "s1/title": {
+    "translate": "spell.spells_and_shields.magnetism"
+  },
+  "s2/icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/magnetism.png"
+  },
+  "s3/mana_cost": 5.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.magnetism.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "active"
+  ],
+  "s6/spell_parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 8.0,
+      "var/name": "range"
+    },
+    {
+      "type": "spells_and_shields:double",
+      "value": 2.0,
+      "var/name": "pull_speed"
+    }
+  ],
+  "s7/spell_actions": [
+    {
+      "type": "spells_and_shields:simple_mana_check",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:ranged_entity_targets",
+      "activation": "active",
+      "d/double/range": "<<range>>",
+      "td/destination": "pool",
+      "ts/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:get_position",
+      "activation": "active",
+      "t/source": "owner",
+      "var/position": "own_pos"
+    },
+    {
+      "type": "spells_and_shields:label",
+      "activation": "active",
+      "label": "pull_loop"
+    },
+    {
+      "type": "spells_and_shields:clear_targets",
+      "activation": "active",
+      "td/destination": "current"
+    },
+    {
+      "type": "spells_and_shields:pick_target",
+      "activation": "active",
+      "boolean/random": false,
+      "boolean/remove": true,
+      "td/destination": "current",
+      "ts/source": "pool"
+    },
+    {
+      "type": "spells_and_shields:get_entity_type",
+      "activation": "active",
+      "t/source": "current",
+      "var/entity_type": "cur_type",
+      "var/is_living": "",
+      "var/is_player": ""
+    },
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "do_pull",
+      "activation": "active",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< cur_type == 'minecraft:item' >>"
+    },
+    {
+      "type": "spells_and_shields:get_position",
+      "activation": "do_pull",
+      "t/source": "current",
+      "var/position": "cur_pos"
+    },
+    {
+      "type": "spells_and_shields:set_motion",
+      "activation": "do_pull",
+      "d/vec3/motion": "<< normalize(own_pos - cur_pos) * pull_speed >>",
+      "ts/targets": "current"
+    },
+    {
+      "type": "spells_and_shields:get_target_group_size",
+      "activation": "active",
+      "td/source": "pool",
+      "var/result": "pool_size"
+    },
+    {
+      "type": "spells_and_shields:branch",
+      "activation": "active",
+      "d/boolean/conditional": "<< pool_size > 0 >>",
+      "label": "pull_loop"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "active",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "d/string/sound_event": "minecraft:block.anvil.land",
+      "ts/targets": "owner"
+    }
+  ]
+}

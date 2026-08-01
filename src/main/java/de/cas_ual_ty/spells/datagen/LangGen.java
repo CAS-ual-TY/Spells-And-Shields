@@ -351,6 +351,27 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_TEMPORARY_CONDUIT_POWER_DESC, TEMPORARY_EFFECT_DESC);
         add(Spells.KEY_TOGGLE_CONDUIT_POWER, TOGGLE_EFFECT_NAME);
         add(Spells.KEY_TOGGLE_CONDUIT_POWER_DESC, TOGGLE_EFFECT_DESC);
+
+        add(Spells.KEY_TREMOR, "Tremor");
+        add(Spells.KEY_TREMOR_DESC, "Cause a ground tremor, knocking back all nearby entities.");
+        add(Spells.KEY_MAGNETISM, "Magnetism");
+        add(Spells.KEY_MAGNETISM_DESC, "Pull all nearby dropped items toward you.");
+        add(Spells.KEY_PETRIFY, "Petrify");
+        add(Spells.KEY_PETRIFY_DESC, "Permanently gain Resistance but also become Slowed while equipped.");
+        add(Spells.KEY_VEIN_MINE, "Vein Mine");
+        add(Spells.KEY_VEIN_MINE_DESC, "Instantly mine a small cube of blocks around the targeted block using the tool in your hand.");
+        add(Spells.KEY_MAGMA_ARMOR, "Magma Armor");
+        add(Spells.KEY_MAGMA_ARMOR_DESC, "Set your attacker on fire whenever you take damage.");
+        add(Spells.KEY_ICE_SPIKE, "Ice Spike");
+        add(Spells.KEY_ICE_SPIKE_DESC, "Shoot a spike of ice that slows the target on hit.");
+        add(Spells.KEY_TIDAL_WAVE, "Tidal Wave");
+        add(Spells.KEY_TIDAL_WAVE_DESC, "Summon a wave that knocks back and slows nearby entities.");
+        add(Spells.KEY_WIND_BLAST, "Wind Blast");
+        add(Spells.KEY_WIND_BLAST_DESC, "Blast a gust of wind forward, knocking back entities in front of you.");
+        add(Spells.KEY_SUMMON_BLAZE, "Summon Blaze");
+        add(Spells.KEY_SUMMON_BLAZE_DESC, "Summon a blaze to fight for you. It will not attack players.");
+        add(Spells.KEY_SUMMON_GUARDIAN, "Summon Guardian");
+        add(Spells.KEY_SUMMON_GUARDIAN_DESC, "Summon a guardian to fight for you. It will not attack players.");
     }
     
     public void addAttribute(Supplier<? extends Attribute> key, String name)

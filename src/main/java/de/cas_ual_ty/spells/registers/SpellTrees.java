@@ -83,6 +83,11 @@ public class SpellTrees
                 .leaf()
                 .add(spellGetter.apply(Spells.GHAST)).levelCost(10).learnRequirements(bookshelves(20), item(Items.GHAST_TEAR, 1, true))
                 .add(spellGetter.apply(Spells.FLAMETHROWER)).levelCost(20).learnRequirements(bookshelves(24))
+                .add(spellGetter.apply(Spells.MAGMA_ARMOR)).levelCost(25).learnRequirements(bookshelves(26))
+                .leaf()
+                .add(spellGetter.apply(Spells.SUMMON_BLAZE)).levelCost(25).learnRequirements(bookshelves(24))
+                .leaf()
+                .leaf()
                 .finish();
     }
     
@@ -93,6 +98,8 @@ public class SpellTrees
                 .add(spellGetter.apply(Spells.TOGGLE_WATER_BREATHING)).levelCost(10).hiddenRequirements(config())
                 .add(spellGetter.apply(Spells.TOGGLE_REGENERATION)).levelCost(20).learnRequirements(bookshelves(20))
                 .add(spellGetter.apply(Spells.GROWTH)).levelCost(20).learnRequirements(bookshelves(20))
+                .add(spellGetter.apply(Spells.SUMMON_GUARDIAN)).levelCost(30).learnRequirements(bookshelves(28))
+                .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.PERMANENT_AQUA_RESISTANCE)).levelCost(20).learnRequirements(bookshelves(20))
                 .leaf()
@@ -105,9 +112,13 @@ public class SpellTrees
                 .leaf()
                 .add(spellGetter.apply(Spells.WATER_WHIP)).levelCost(10).learnRequirements(bookshelves(10))
                 .add(spellGetter.apply(Spells.POTION_SHOT)).levelCost(10).learnRequirements(bookshelves(10))
+                .add(spellGetter.apply(Spells.ICE_SPIKE)).levelCost(15).learnRequirements(bookshelves(16))
+                .leaf()
                 .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.LIGHTNING_STRIKE)).levelCost(25).learnRequirements(bookshelves(24), advancement("adventure/lightning_rod_with_villager_no_fire"))
+                .leaf()
+                .add(spellGetter.apply(Spells.TIDAL_WAVE)).levelCost(20).learnRequirements(bookshelves(22))
                 .leaf()
                 .finish();
     }
@@ -120,12 +131,20 @@ public class SpellTrees
                 .add(spellGetter.apply(Spells.SILENCE_TARGET)).levelCost(25).learnRequirements(bookshelves(26))
                 .add(spellGetter.apply(Spells.TOGGLE_MAGIC_IMMUNE)).levelCost(25).learnRequirements(bookshelves(26))
                 .leaf()
+                .add(spellGetter.apply(Spells.PETRIFY)).levelCost(30).learnRequirements(bookshelves(28))
+                .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.INSTANT_MINE)).levelCost(15).learnRequirements(bookshelves(18))
                 .add(spellGetter.apply(Spells.TOGGLE_HASTE)).levelCost(25).learnRequirements(bookshelves(24))
+                .add(spellGetter.apply(Spells.VEIN_MINE)).levelCost(20).learnRequirements(bookshelves(22))
+                .leaf()
                 .leaf()
                 .leaf()
                 .add(spellGetter.apply(Spells.SPIT_METAL)).levelCost(10).learnRequirements(bookshelves(12))
+                .add(spellGetter.apply(Spells.TREMOR)).levelCost(15).learnRequirements(bookshelves(16))
+                .add(spellGetter.apply(Spells.MAGNETISM)).levelCost(20).learnRequirements(bookshelves(20))
+                .leaf()
+                .leaf()
                 .finish();
     }
     
@@ -147,6 +166,8 @@ public class SpellTrees
                 .leaf()
                 .add(spellGetter.apply(Spells.BLOW_ARROW)).levelCost(10).learnRequirements(bookshelves(16))
                 .add(spellGetter.apply(Spells.PRESSURIZE)).levelCost(20).learnRequirements(bookshelves(18))
+                .add(spellGetter.apply(Spells.WIND_BLAST)).levelCost(25).learnRequirements(bookshelves(22))
+                .leaf()
                 .leaf()
                 .leaf()
                 .finish();

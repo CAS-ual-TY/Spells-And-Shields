@@ -350,7 +350,47 @@ public class Spells
     public static final ResourceLocation TOGGLE_CONDUIT_POWER = rl("toggle_conduit_power");
     public static final String KEY_TOGGLE_CONDUIT_POWER = key(TOGGLE_CONDUIT_POWER);
     public static final String KEY_TOGGLE_CONDUIT_POWER_DESC = descKey(TOGGLE_CONDUIT_POWER);
-    
+
+    public static final ResourceLocation TREMOR = rl("tremor");
+    public static final String KEY_TREMOR = key(TREMOR);
+    public static final String KEY_TREMOR_DESC = descKey(TREMOR);
+
+    public static final ResourceLocation MAGNETISM = rl("magnetism");
+    public static final String KEY_MAGNETISM = key(MAGNETISM);
+    public static final String KEY_MAGNETISM_DESC = descKey(MAGNETISM);
+
+    public static final ResourceLocation PETRIFY = rl("petrify");
+    public static final String KEY_PETRIFY = key(PETRIFY);
+    public static final String KEY_PETRIFY_DESC = descKey(PETRIFY);
+
+    public static final ResourceLocation VEIN_MINE = rl("vein_mine");
+    public static final String KEY_VEIN_MINE = key(VEIN_MINE);
+    public static final String KEY_VEIN_MINE_DESC = descKey(VEIN_MINE);
+
+    public static final ResourceLocation MAGMA_ARMOR = rl("magma_armor");
+    public static final String KEY_MAGMA_ARMOR = key(MAGMA_ARMOR);
+    public static final String KEY_MAGMA_ARMOR_DESC = descKey(MAGMA_ARMOR);
+
+    public static final ResourceLocation ICE_SPIKE = rl("ice_spike");
+    public static final String KEY_ICE_SPIKE = key(ICE_SPIKE);
+    public static final String KEY_ICE_SPIKE_DESC = descKey(ICE_SPIKE);
+
+    public static final ResourceLocation TIDAL_WAVE = rl("tidal_wave");
+    public static final String KEY_TIDAL_WAVE = key(TIDAL_WAVE);
+    public static final String KEY_TIDAL_WAVE_DESC = descKey(TIDAL_WAVE);
+
+    public static final ResourceLocation WIND_BLAST = rl("wind_blast");
+    public static final String KEY_WIND_BLAST = key(WIND_BLAST);
+    public static final String KEY_WIND_BLAST_DESC = descKey(WIND_BLAST);
+
+    public static final ResourceLocation SUMMON_BLAZE = rl("summon_blaze");
+    public static final String KEY_SUMMON_BLAZE = key(SUMMON_BLAZE);
+    public static final String KEY_SUMMON_BLAZE_DESC = descKey(SUMMON_BLAZE);
+
+    public static final ResourceLocation SUMMON_GUARDIAN = rl("summon_guardian");
+    public static final String KEY_SUMMON_GUARDIAN = key(SUMMON_GUARDIAN);
+    public static final String KEY_SUMMON_GUARDIAN_DESC = descKey(SUMMON_GUARDIAN);
+
     public static void register(IEventBus modEventBus)
     {
         modEventBus.addListener(Spells::newDataPackRegistry);

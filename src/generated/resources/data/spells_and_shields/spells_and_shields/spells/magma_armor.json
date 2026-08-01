@@ -1,0 +1,65 @@
+{
+  "s1/title": {
+    "translate": "spell.spells_and_shields.magma_armor"
+  },
+  "s2/icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/magma_armor.png"
+  },
+  "s3/mana_cost": 0.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.magma_armor.desc"
+    }
+  ],
+  "s5/spell_events": [
+    "living_hurt_victim"
+  ],
+  "s6/spell_parameters": [
+    {
+      "type": "spells_and_shields:int",
+      "value": 5,
+      "var/name": "fire_seconds"
+    }
+  ],
+  "s7/spell_actions": [
+    {
+      "type": "spells_and_shields:boolean_activation",
+      "a/to_activate": "no_pvp",
+      "activation": "living_hurt_victim",
+      "d/boolean/activate_if_true": true,
+      "d/boolean/deactivate_if_false": false,
+      "d/boolean/input": "<< !pvp() >>"
+    },
+    {
+      "type": "spells_and_shields:move_player_targets",
+      "activation": "no_pvp",
+      "td/destination": "",
+      "ts/source": "attacker"
+    },
+    {
+      "type": "spells_and_shields:set_on_fire",
+      "activation": "living_hurt_victim",
+      "d/int/fire_seconds": "<<fire_seconds>>",
+      "ts/targets": "attacker"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "living_hurt_victim",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "d/string/sound_event": "minecraft:entity.generic.extinguish_fire",
+      "ts/targets": "attacker"
+    },
+    {
+      "type": "spells_and_shields:spawn_particles",
+      "activation": "living_hurt_victim",
+      "d/double/spread": 0.5,
+      "d/int/count": 10,
+      "particle": {
+        "type": "minecraft:flame"
+      },
+      "ts/targets": "attacker"
+    }
+  ]
+}
