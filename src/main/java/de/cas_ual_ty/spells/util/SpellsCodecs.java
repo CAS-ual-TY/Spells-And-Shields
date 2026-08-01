@@ -23,7 +23,7 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -31,6 +31,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 
 import java.util.HashMap;
@@ -87,7 +88,8 @@ public class SpellsCodecs
                 REQUIREMENT.listOf().optionalFieldOf("n5/hidden_requirements").xmap(o -> o.orElse(new LinkedList<>()), r -> Optional.of(r).map(l -> l.isEmpty() ? null : l)).forGetter(SpellNode::getHiddenRequirements),
                 REQUIREMENT.listOf().optionalFieldOf("n6/learn_requirements").xmap(o -> o.orElse(new LinkedList<>()), r -> Optional.of(r).map(l -> l.isEmpty() ? null : l)).forGetter(SpellNode::getLearnRequirements),
                 Codec.lazyInitialized(() -> SPELL_NODE).listOf().fieldOf("n9/child_nodes").forGetter(SpellNode::getChildren),
-                Codec.INT.optionalFieldOf("n2/node_id").xmap(o -> o.map(i -> new SpellNodeId(null, i)).orElse(null), nodeId -> Optional.ofNullable(nodeId).map(SpellNodeId::nodeId)).forGetter(SpellNode::getNodeId),
+                //ResourceLocation.CODEC.optionalFieldOf("n2/node_id").xmap(o -> o.map(i -> new FullSpellNodeId(null, i)).orElse(null), nodeId -> Optional.ofNullable(nodeId).map(FullSpellNodeId::nodeId)).forGetter(SpellNode::getNodeId),
+                ResourceLocation.CODEC.fieldOf("n2/node_id").forGetter(SpellNode::getNodeId),
                 Codec.intRange(0, 2).optionalFieldOf("n3/node_frame").xmap(o -> o.orElse(0), f -> Optional.of(f).map(i -> i <= 0 ? null : i)).forGetter(SpellNode::getFrame)
         ).apply(instance, (spell, manaCost, variables, levelCost, hiddenRequirements, learnRequirements, children, id, frame) -> new SpellNode(id, new SpellInstance(spell, manaCost, variables), levelCost, hiddenRequirements, learnRequirements, children, frame))));
         

@@ -20,9 +20,11 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
@@ -76,7 +78,7 @@ public class SpellCommand
                         .then(Commands.literal("learn")
                                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players())
                                         .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx))
-                                                .then(Commands.argument(ARG_NODE_ID, IntegerArgumentType.integer(1))
+                                                .then(Commands.argument(ARG_NODE_ID, ResourceLocationArgument.id())
                                                         .executes(SpellCommand::spellsProgressionLearn)
                                                 )
                                                 .then(Commands.argument("all", StringArgumentType.string())
@@ -110,7 +112,7 @@ public class SpellCommand
                                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players())
                                         .then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(0, SpellHolder.SPELL_SLOTS))
                                                 .then(Commands.literal("direct").then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx)).executes(SpellCommand::spellsSlotSetDirect)))
-                                                .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx)).then(Commands.argument(ARG_NODE_ID, IntegerArgumentType.integer()).executes(SpellCommand::spellsSlotSet)))
+                                                .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx)).then(Commands.argument(ARG_NODE_ID, ResourceLocationArgument.id()).executes(SpellCommand::spellsSlotSet)))
                                         )
                                 )
                         )
@@ -120,7 +122,7 @@ public class SpellCommand
                 .then(Commands.literal("cast")
                         .then(Commands.argument(ARG_TARGETS, EntityArgument.player())
                                 .then(Commands.literal("direct").then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx)).executes(SpellCommand::spellsCastDirect)))
-                                .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx)).then(Commands.argument(ARG_NODE_ID, IntegerArgumentType.integer()).executes(SpellCommand::spellsCast)))
+                                .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx)).then(Commands.argument(ARG_NODE_ID, ResourceLocationArgument.id()).executes(SpellCommand::spellsCast)))
                         )
                 )
         );
@@ -136,7 +138,8 @@ public class SpellCommand
         }
         
         SpellTree spellTree = SpellTreeArgument.getSpellTree(context, ARG_SPELL_TREE);
-        int nodeId = IntegerArgumentType.getInteger(context, ARG_NODE_ID);
+        ResourceLocation treeId = spellTree.getId(SpellTrees.getRegistry(context.getSource().registryAccess()));
+        ResourceLocation nodeId = ResourceLocationArgument.getId(context, ARG_NODE_ID);
         
         SpellNode node = spellTree.findNode(nodeId);
         
@@ -153,12 +156,12 @@ public class SpellCommand
         {
             lazyOptional.ifPresent(spellProgressionHolder ->
             {
-                if(spellProgressionHolder.getSpellStatus(node.getNodeId()) != status)
+                if(spellProgressionHolder.getSpellStatus(node.getFullNodeId(treeId)) != status)
                 {
                     changed.set(true);
                 }
                 
-                spellProgressionHolder.setSpellStatus(node.getNodeId(), status);
+                spellProgressionHolder.setSpellStatus(node.getFullNodeId(treeId), status);
             });
         });
         
@@ -191,7 +194,8 @@ public class SpellCommand
         }
         
         SpellTree spellTree = SpellTreeArgument.getSpellTree(context, ARG_SPELL_TREE);
-        
+        ResourceLocation treeId = spellTree.getId(SpellTrees.getRegistry(context.getSource().registryAccess()));
+
         boolean single = players.size() == 1;
         AtomicInteger changed = new AtomicInteger(0);
         
@@ -201,12 +205,12 @@ public class SpellCommand
             {
                 spellTree.forEach(node ->
                 {
-                    if(single && spellProgressionHolder.getSpellStatus(node.getNodeId()) != status)
+                    if(single && spellProgressionHolder.getSpellStatus(node.getFullNodeId(treeId)) != status)
                     {
                         changed.getAndIncrement();
                     }
                     
-                    spellProgressionHolder.setSpellStatus(node.getNodeId(), status);
+                    spellProgressionHolder.setSpellStatus(node.getFullNodeId(treeId), status);
                 });
             });
         });
@@ -254,14 +258,16 @@ public class SpellCommand
             {
                 registry.forEach(spellTree ->
                 {
+                    ResourceLocation treeId = spellTree.getId(SpellTrees.getRegistry(context.getSource().registryAccess()));
+
                     spellTree.forEach(spellNode ->
                     {
-                        if(single && spellProgressionHolder.getSpellStatus(spellNode.getNodeId()) != status)
+                        if(single && spellProgressionHolder.getSpellStatus(spellNode.getFullNodeId(treeId)) != status)
                         {
                             learned.getAndIncrement();
                         }
                         
-                        spellProgressionHolder.setSpellStatus(spellNode.getNodeId(), status);
+                        spellProgressionHolder.setSpellStatus(spellNode.getFullNodeId(treeId), status);
                     });
                 });
             });
@@ -395,7 +401,7 @@ public class SpellCommand
         
         int slot = IntegerArgumentType.getInteger(context, ARG_SLOT);
         SpellTree spellTree = SpellTreeArgument.getSpellTree(context, ARG_SPELL_TREE);
-        int nodeId = IntegerArgumentType.getInteger(context, ARG_NODE_ID);
+        ResourceLocation nodeId = ResourceLocationArgument.getId(context, ARG_NODE_ID);
         
         SpellNode spellNode = spellTree.findNode(nodeId);
         
@@ -523,7 +529,7 @@ public class SpellCommand
         ServerPlayer player = players.iterator().next();
         
         SpellTree spellTree = SpellTreeArgument.getSpellTree(context, ARG_SPELL_TREE);
-        int nodeId = IntegerArgumentType.getInteger(context, ARG_NODE_ID);
+        ResourceLocation nodeId = ResourceLocationArgument.getId(context, ARG_NODE_ID);
         
         SpellNode spellNode = spellTree.findNode(nodeId);
         

@@ -7,7 +7,7 @@ import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -23,27 +23,27 @@ public class LearnedRequirement extends Requirement
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 ResourceLocation.CODEC.fieldOf("spell_tree").forGetter(r -> r.getNodeId().treeId()),
-                Codec.INT.fieldOf("node_id").forGetter(r -> r.getNodeId().nodeId())
-        ).apply(instance, (treeId, nodeId) -> new LearnedRequirement(type, new SpellNodeId(treeId, nodeId))));
+                ResourceLocation.CODEC.fieldOf("node_id").forGetter(r -> r.getNodeId().nodeId())
+        ).apply(instance, (treeId, nodeId) -> new LearnedRequirement(type, new FullSpellNodeId(treeId, nodeId))));
     }
     
     public static final String ERROR_TREE_SUFFIX = ".error.tree";
     public static final String ERROR_NODE_SUFFIX = ".error.node";
     
-    protected SpellNodeId nodeId;
+    protected FullSpellNodeId nodeId;
     
     public LearnedRequirement(RequirementType<?> type)
     {
         super(type);
     }
     
-    public LearnedRequirement(RequirementType<?> type, SpellNodeId nodeId)
+    public LearnedRequirement(RequirementType<?> type, FullSpellNodeId nodeId)
     {
         this(type);
         this.nodeId = nodeId;
     }
     
-    public SpellNodeId getNodeId()
+    public FullSpellNodeId getNodeId()
     {
         return nodeId;
     }
@@ -94,6 +94,6 @@ public class LearnedRequirement extends Requirement
     @Override
     public void readFromBuf(RegistryFriendlyByteBuf buf)
     {
-        nodeId = SpellNodeId.fromBuf(buf);
+        nodeId = FullSpellNodeId.fromBuf(buf);
     }
 }

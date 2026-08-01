@@ -2,14 +2,14 @@ package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.client.ClientMessageHandler;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, SpellNodeId[] nodeIds) implements CustomPacketPayload
+public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, FullSpellNodeId[] nodeIds) implements CustomPacketPayload
 {
     public static final Type<SpellsSyncMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "spells_sync"));
     public static final StreamCodec<FriendlyByteBuf, SpellsSyncMessage> STREAM_CODEC = StreamCodec.of(
@@ -34,13 +34,13 @@ public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, SpellNo
                         buf.writeBoolean(false);
                     }
                 }
-                for(SpellNodeId id : msg.nodeIds())
+                for(FullSpellNodeId id : msg.nodeIds())
                 {
                     if(id != null)
                     {
                         buf.writeBoolean(true);
                         buf.writeResourceLocation(id.treeId());
-                        buf.writeInt(id.nodeId());
+                        buf.writeResourceLocation(id.nodeId());
                     }
                     else
                     {
@@ -56,10 +56,10 @@ public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, SpellNo
                 {
                     spells[i] = buf.readBoolean() ? buf.readResourceLocation() : null;
                 }
-                SpellNodeId[] ids = new SpellNodeId[spells.length];
+                FullSpellNodeId[] ids = new FullSpellNodeId[spells.length];
                 for(int i = 0; i < ids.length; ++i)
                 {
-                    ids[i] = buf.readBoolean() ? new SpellNodeId(buf.readResourceLocation(), buf.readInt()) : null;
+                    ids[i] = buf.readBoolean() ? new FullSpellNodeId(buf.readResourceLocation(), buf.readResourceLocation()) : null;
                 }
                 return new SpellsSyncMessage(entityId, spells, ids);
             }

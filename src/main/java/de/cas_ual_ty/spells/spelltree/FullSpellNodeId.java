@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public record SpellNodeId(ResourceLocation treeId, int nodeId)
+public record FullSpellNodeId(ResourceLocation treeId, ResourceLocation nodeId)
 {
     public SpellTree getSpellTree(Registry<SpellTree> registry)
     {
@@ -41,17 +41,18 @@ public record SpellNodeId(ResourceLocation treeId, int nodeId)
     
     public String getIDText()
     {
-        return treeId + " " + nodeId;
+        //return treeId + " " + nodeId;
+        return nodeId.toString();
     }
     
     public void toNbt(CompoundTag nbt)
     {
         nbt.putString("treeId", treeId().toString());
-        nbt.putInt("nodeId", nodeId());
+        nbt.putString("nodeId", nodeId().toString());
     }
     
     @Nullable
-    public static SpellNodeId fromNbt(CompoundTag nbt)
+    public static FullSpellNodeId fromNbt(CompoundTag nbt)
     {
         if(!nbt.contains("treeId") || !nbt.contains("nodeId"))
         {
@@ -59,26 +60,31 @@ public record SpellNodeId(ResourceLocation treeId, int nodeId)
         }
         
         ResourceLocation treeId = ResourceLocation.parse(nbt.getString("treeId"));
-        int nodeId = nbt.getInt("nodeId");
-        return new SpellNodeId(treeId, nodeId);
+        ResourceLocation nodeId = ResourceLocation.parse(nbt.getString("nodeId"));
+        return new FullSpellNodeId(treeId, nodeId);
     }
     
     public void toBuf(FriendlyByteBuf buf)
     {
         buf.writeResourceLocation(treeId());
-        buf.writeInt(nodeId());
+        buf.writeResourceLocation(nodeId());
     }
 
-    public static SpellNodeId fromBuf(FriendlyByteBuf buf)
+    public static FullSpellNodeId fromBuf(FriendlyByteBuf buf)
     {
         ResourceLocation treeId = buf.readResourceLocation();
-        int nodeId = buf.readInt();
-        return new SpellNodeId(treeId, nodeId);
+        ResourceLocation nodeId = buf.readResourceLocation();
+        return new FullSpellNodeId(treeId, nodeId);
     }
     
     @Override
     public String toString()
     {
         return treeId + "/" + nodeId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof FullSpellNodeId other && (treeId.equals(other.treeId) && nodeId.equals(other.nodeId));
     }
 }

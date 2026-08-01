@@ -53,7 +53,7 @@ public class SpellTreeTab
         spellNode = spellTree.getRoot();
         icon = spellTree.getIcon();
         
-        spellTree.forEach(spellNode -> addNode(spellNode, mainScreen.getMenu().spellProgression.getOrDefault(spellNode.getNodeId(), SpellStatus.LOCKED)));
+        spellTree.forEach(spellNode -> addNode(spellNode, mainScreen.getMenu().spellProgression.getOrDefault(spellNode.getFullNodeId(spellTree.getClientId()), SpellStatus.LOCKED)));
         root = widgets.get(spellTree.getRoot());
         fixPositions();
         
@@ -129,7 +129,7 @@ public class SpellTreeTab
         
         if(SpellsClientConfig.SHOW_IDS.get())
         {
-            list.add(Component.literal(spellTree.getId().toString()).withStyle(ChatFormatting.DARK_GRAY));
+            list.add(Component.literal(spellTree.getClientId().toString()).withStyle(ChatFormatting.DARK_GRAY));
         }
         
         return list;

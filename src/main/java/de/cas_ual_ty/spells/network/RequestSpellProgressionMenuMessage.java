@@ -4,14 +4,11 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.registers.Spells;
-import de.cas_ual_ty.spells.spell.Spell;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -60,7 +57,7 @@ public record RequestSpellProgressionMenuMessage(BlockPos pos) implements Custom
                     access.execute((level, blockPos) ->
                     {
                         List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
-                        HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
+                        HashMap<FullSpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
 
                         player.openMenu(new MenuProvider()
                         {

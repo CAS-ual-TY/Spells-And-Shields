@@ -93,9 +93,9 @@ public class SelectedSpellWidget
                     Registry<Spell> spellRegistry = Spells.getRegistry(SpellsClientUtil.getClientLevel());
                     tooltip.add(Component.literal(spellInstance.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString()).withStyle(ChatFormatting.DARK_GRAY));
                     
-                    if(clickedWidget.spellNode.getNodeId() != null)
+                    if(clickedWidget.fullSpellNodeId != null)
                     {
-                        tooltip.add(Component.literal(clickedWidget.spellNode.getNodeId().getIDText()).withStyle(ChatFormatting.DARK_GRAY));
+                        tooltip.add(Component.literal(clickedWidget.fullSpellNodeId.getIDText()).withStyle(ChatFormatting.DARK_GRAY));
                     }
                 }
                 

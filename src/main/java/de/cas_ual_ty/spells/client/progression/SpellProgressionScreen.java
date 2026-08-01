@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.network.RequestEquipSpellMessage;
@@ -135,7 +134,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         {
             if(previous != null)
             {
-                Optional<SpellTreeTab> optionalSpellTreeTab = tabs.values().stream().filter(tree -> previous.spellTree.getId().equals(tree.spellTree.getId())).findFirst();
+                Optional<SpellTreeTab> optionalSpellTreeTab = tabs.values().stream().filter(tree -> previous.spellTree.getClientId().equals(tree.spellTree.getClientId())).findFirst();
                 
                 optionalSpellTreeTab.ifPresent(tab ->
                 {
@@ -245,7 +244,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         }
         else if(button == learnButton && selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
-            PacketDistributor.sendToServer(new RequestLearnSpellMessage(selectedSpellWidget.clickedWidget.spellNode.getNodeId()));
+            PacketDistributor.sendToServer(new RequestLearnSpellMessage(selectedSpellWidget.clickedWidget.fullSpellNodeId));
         }
     }
     
@@ -253,7 +252,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     {
         if(selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
-            PacketDistributor.sendToServer(new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.spellNode.getNodeId()));
+            PacketDistributor.sendToServer(new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.fullSpellNodeId));
             spellClicked(null);
         }
     }
@@ -332,7 +331,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
             selectedSpellWidget.setClickedWidget(w);
             selectedSpellWidget.active = true;
             
-            learnButton.visible = ProgressionHelper.isFullyLinked(w.spellNode, menu.spellProgression) && (w.spellStatus == SpellStatus.LOCKED || w.spellStatus == SpellStatus.FORGOTTEN);
+            learnButton.visible = ProgressionHelper.isFullyLinked(w.fullSpellNodeId.treeId(), w.spellNode, menu.spellProgression) && (w.spellStatus == SpellStatus.LOCKED || w.spellStatus == SpellStatus.FORGOTTEN);
             equipButton.visible = w.spellStatus == SpellStatus.LEARNED;
             equipButton.setFocused(false);
             unavailableButton.visible = !learnButton.visible && !equipButton.visible;

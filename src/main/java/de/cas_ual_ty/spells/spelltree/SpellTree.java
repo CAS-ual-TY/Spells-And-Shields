@@ -9,6 +9,7 @@ import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -18,7 +19,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class SpellTree
@@ -26,23 +26,36 @@ public class SpellTree
     private SpellNode root;
     private Component title;
     private SpellIcon icon;
-    
-    private ResourceLocation id;
-    
+
+    private ResourceLocation clientId;
+
     public SpellTree(SpellNode root, Component title, SpellIcon icon)
     {
         this.root = root;
         this.title = title;
         this.icon = icon;
-        
-        id = null;
     }
-    
-    public SpellTree() {}
+
+    public SpellTree()
+    {
+        // only to be used by the codecs
+        this(null, null, null);
+    }
     
     public ResourceLocation getId(Registry<SpellTree> registry)
     {
         return registry.getKey(this);
+    }
+
+    public ResourceLocation getClientId()
+    {
+        return clientId;
+    }
+
+    public SpellTree setClientId(ResourceLocation clientId)
+    {
+        this.clientId = clientId;
+        return this;
     }
     
     public SpellNode getRoot()
@@ -72,76 +85,9 @@ public class SpellTree
     {
         return root.getHiddenRequirements();
     }
-    
-    public ResourceLocation getId()
-    {
-        return id;
-    }
-    
-    public SpellTree setId(ResourceLocation id)
-    {
-        this.id = id;
-        return this;
-    }
-    
-    public int getDepth(Spell spell)
-    {
-        if(root == null)
-        {
-            return 0;
-        }
-        else
-        {
-            return find(1, root, spell);
-        }
-    }
-    
-    private int find(int depth, SpellNode spellNode, Spell spell)
-    {
-        if(spellNode.getSpellDirect() == spell)
-        {
-            return depth;
-        }
-        else
-        {
-            depth++;
-            
-            for(SpellNode child : spellNode.getChildren())
-            {
-                int found = find(depth, child, spell);
-                
-                if(found != 0)
-                {
-                    return found;
-                }
-            }
-            
-            return 0;
-        }
-    }
-    
-    public void assignNodeIds(ResourceLocation spellTreeId)
-    {
-        setId(spellTreeId);
-        
-        AtomicInteger i = new AtomicInteger(0);
-        
-        forEach(spellNode ->
-        {
-            if(spellNode.getNodeId() != null)
-            {
-                i.set(Math.max(spellNode.getNodeId().nodeId(), i.get()));
-            }
-        });
-        
-        forEach(spellNode ->
-        {
-            spellNode.setNodeId(spellTreeId, i.incrementAndGet());
-        });
-    }
-    
+
     @Nullable
-    public SpellNode findNode(int id)
+    public SpellNode findNode(ResourceLocation id)
     {
         Stack<SpellNode> stack = new Stack<>();
         stack.push(root);
@@ -150,7 +96,7 @@ public class SpellTree
         {
             SpellNode node = stack.pop();
             
-            if(node.getNodeId().nodeId() == id)
+            if(node.nodeId.equals(id))
             {
                 return node;
             }
@@ -181,7 +127,7 @@ public class SpellTree
     
     public SpellTree copy() // deep copy
     {
-        return new SpellTree(innerDeepCopy(root), title, icon).setId(id);
+        return new SpellTree(innerDeepCopy(root), title, icon);
     }
     
     private SpellNode innerDeepCopy(SpellNode original)
@@ -218,6 +164,7 @@ public class SpellTree
         private Builder(Component title)
         {
             this.title = title;
+
             root = null;
             icon = null;
             
@@ -230,48 +177,33 @@ public class SpellTree
             return this;
         }
         
-        public Builder add(int nodeId, Holder<Spell> spell)
+        public Builder add(ResourceLocation nodeId, Holder<Spell> spell)
         {
             return add(new SpellNode(nodeId, new SpellInstance(spell)));
         }
-        
+
         public Builder add(Holder<Spell> spell)
         {
-            return add(new SpellNode(new SpellInstance(spell)));
+            return add(new SpellNode(spell.unwrapKey().map(ResourceKey::location).orElseThrow(IllegalArgumentException::new), new SpellInstance(spell)));
         }
         
         public Builder add(SpellNode spellNode)
         {
             if(!stack.isEmpty())
             {
-                SpellNode parent = stack.peek();
-                
-                if(spellNode.getNodeId() == null)
+                for(SpellNode n : stack)
                 {
-                    if(parent.getChildren().size() > 15)
+                    if(n.nodeId.equals(spellNode.nodeId))
                     {
                         throw new IllegalStateException();
                     }
-                    
-                    int newId = parent.getNodeId().nodeId() * 0x10 + parent.getChildren().size();
-                    
-                    if(newId < 0 || newId < parent.getNodeId().nodeId())
-                    {
-                        throw new IllegalStateException();
-                    }
-                    
-                    spellNode.setNodeId(null, newId);
                 }
-                
+
+                SpellNode parent = stack.peek();
                 connect(parent, spellNode);
             }
             else
             {
-                if(spellNode.getNodeId() == null)
-                {
-                    spellNode.setNodeId(null, 0x1);
-                }
-                
                 root = spellNode;
             }
             stack.push(spellNode);

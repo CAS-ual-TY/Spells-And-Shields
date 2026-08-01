@@ -1,7 +1,7 @@
 package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -18,7 +18,7 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
     public static final String KEY_SPELL_STATUS = "spell_status";
 
     protected Player player;
-    protected final HashMap<SpellNodeId, SpellStatus> progression;
+    protected final HashMap<FullSpellNodeId, SpellStatus> progression;
 
     public SpellProgressionHolder()
     {
@@ -40,17 +40,17 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
         }
     }
 
-    public boolean isSpellAvailable(SpellNodeId spell)
+    public boolean isSpellAvailable(FullSpellNodeId spell)
     {
         return getSpellStatus(spell) == SpellStatus.LEARNED;
     }
 
-    public SpellStatus getSpellStatus(SpellNodeId spell)
+    public SpellStatus getSpellStatus(FullSpellNodeId spell)
     {
         return progression.getOrDefault(spell, SpellStatus.LOCKED);
     }
 
-    public void setSpellStatus(SpellNodeId spell, SpellStatus spellStatus)
+    public void setSpellStatus(FullSpellNodeId spell, SpellStatus spellStatus)
     {
         progression.put(spell, spellStatus);
     }
@@ -60,7 +60,7 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
     {
         ListTag list = new ListTag();
 
-        for(Map.Entry<SpellNodeId, SpellStatus> entry : progression.entrySet())
+        for(Map.Entry<FullSpellNodeId, SpellStatus> entry : progression.entrySet())
         {
             CompoundTag tag = new CompoundTag();
             entry.getKey().toNbt(tag);
@@ -87,18 +87,18 @@ public class SpellProgressionHolder implements INBTSerializable<ListTag>
 
             if(tag.contains(KEY_SPELL_STATUS) && tag.get(KEY_SPELL_STATUS).getId() == Tag.TAG_BYTE)
             {
-                SpellNodeId spellNodeId = SpellNodeId.fromNbt(tag);
+                FullSpellNodeId fullSpellNodeId = FullSpellNodeId.fromNbt(tag);
                 byte ordinal = tag.getByte(KEY_SPELL_STATUS);
 
-                if(spellNodeId != null && ordinal >= 0 && ordinal < SpellStatus.values().length)
+                if(fullSpellNodeId != null && ordinal >= 0 && ordinal < SpellStatus.values().length)
                 {
-                    progression.put(spellNodeId, SpellStatus.values()[ordinal]);
+                    progression.put(fullSpellNodeId, SpellStatus.values()[ordinal]);
                 }
             }
         }
     }
 
-    public HashMap<SpellNodeId, SpellStatus> getProgression()
+    public HashMap<FullSpellNodeId, SpellStatus> getProgression()
     {
         return progression;
     }

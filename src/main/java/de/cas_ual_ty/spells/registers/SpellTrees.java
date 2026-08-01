@@ -4,7 +4,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.requirement.*;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.icon.DefaultSpellIcon;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.SpellsCodecs;
 import net.minecraft.core.Holder;
@@ -51,25 +51,13 @@ public class SpellTrees
     public static void register(IEventBus modEventBus)
     {
         modEventBus.addListener(SpellTrees::newDataPackRegistry);
-        NeoForge.EVENT_BUS.addListener(SpellTrees::levelLoad);
     }
     
     private static void newDataPackRegistry(DataPackRegistryEvent.NewRegistry event)
     {
         event.dataPackRegistry(REGISTRY_KEY, SpellsCodecs.SPELL_TREE_CONTENTS, SpellsCodecs.SPELL_TREE_SYNC);
     }
-    
-    private static void levelLoad(LevelEvent.Load event)
-    {
-        if(event.getLevel().isClientSide())
-        {
-            return;
-        }
-        
-        Registry<SpellTree> registry = getRegistry(event.getLevel());
-        registry.forEach(spellTree -> spellTree.assignNodeIds(registry.getKey(spellTree)));
-    }
-    
+
     public static SpellTree fireTree(Function<ResourceLocation, Holder<Spell>> spellGetter)
     {
         return SpellTree.builder(Component.translatable(KEY_NETHER))
@@ -230,9 +218,9 @@ public class SpellTrees
         return none(list);
     }
     
-    public static Requirement learned(ResourceLocation spellTree, int nodeId)
+    public static Requirement learned(ResourceLocation spellTree, ResourceLocation nodeId)
     {
-        return new LearnedRequirement(RequirementTypes.LEARNED.get(), new SpellNodeId(spellTree, nodeId));
+        return new LearnedRequirement(RequirementTypes.LEARNED.get(), new FullSpellNodeId(spellTree, nodeId));
     }
     
     public static Requirement config()

@@ -7,7 +7,7 @@ import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
@@ -34,9 +34,9 @@ public class SpellProgressionMenu extends AbstractContainerMenu
     public final Player player;
     
     public List<SpellTree> spellTrees;
-    public HashMap<SpellNodeId, SpellStatus> spellProgression;
+    public HashMap<FullSpellNodeId, SpellStatus> spellProgression;
     
-    public SpellProgressionMenu(int id, Inventory inventory, ContainerLevelAccess containerLevelAccess, List<SpellTree> spellTrees, HashMap<SpellNodeId, SpellStatus> spellProgression)
+    public SpellProgressionMenu(int id, Inventory inventory, ContainerLevelAccess containerLevelAccess, List<SpellTree> spellTrees, HashMap<FullSpellNodeId, SpellStatus> spellProgression)
     {
         super(BuiltInRegisters.SPELL_PROGRESSION_MENU.get(), id);
         access = containerLevelAccess;
@@ -46,7 +46,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
         this.spellProgression = spellProgression;
     }
     
-    public void buySpellRequest(SpellNodeId nodeId)
+    public void buySpellRequest(FullSpellNodeId nodeId)
     {
         if(player instanceof ServerPlayer player)
         {
@@ -69,7 +69,7 @@ public class SpellProgressionMenu extends AbstractContainerMenu
         }
     }
     
-    public void equipSpellRequest(int slot, SpellNodeId nodeId)
+    public void equipSpellRequest(int slot, FullSpellNodeId nodeId)
     {
         if(player instanceof ServerPlayer player)
         {

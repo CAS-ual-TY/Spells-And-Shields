@@ -2,7 +2,7 @@ package de.cas_ual_ty.spells.network;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId) implements CustomPacketPayload
+public record RequestEquipSpellMessage(byte slot, FullSpellNodeId nodeId) implements CustomPacketPayload
 {
     public static final Type<RequestEquipSpellMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "request_equip_spell"));
     public static final StreamCodec<FriendlyByteBuf, RequestEquipSpellMessage> STREAM_CODEC = StreamCodec.of(
@@ -18,9 +18,9 @@ public record RequestEquipSpellMessage(byte slot, SpellNodeId nodeId) implements
             {
                 buf.writeByte(msg.slot());
                 buf.writeResourceLocation(msg.nodeId().treeId());
-                buf.writeInt(msg.nodeId().nodeId());
+                buf.writeResourceLocation(msg.nodeId().nodeId());
             },
-            buf -> new RequestEquipSpellMessage(buf.readByte(), new SpellNodeId(buf.readResourceLocation(), buf.readInt()))
+            buf -> new RequestEquipSpellMessage(buf.readByte(), new FullSpellNodeId(buf.readResourceLocation(), buf.readResourceLocation()))
     );
 
     @Override

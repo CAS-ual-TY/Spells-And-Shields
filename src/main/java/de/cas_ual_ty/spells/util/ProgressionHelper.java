@@ -6,10 +6,11 @@ import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.requirement.WrappedRequirement;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 
@@ -28,6 +29,7 @@ public class ProgressionHelper
         for(Map.Entry<ResourceKey<SpellTree>, SpellTree> entry : registry.entrySet())
         {
             SpellTree spellTree0 = entry.getValue();
+            ResourceLocation treeId = entry.getKey().location();
             
             if(spellTree0.getRoot() == null)
             {
@@ -46,7 +48,7 @@ public class ProgressionHelper
             // add all active or previously bought spells
             stripped.forEach(spellNode ->
             {
-                if(spellProgressionHolder.getSpellStatus(spellNode.getNodeId()).isVisible())
+                if(spellProgressionHolder.getSpellStatus(spellNode.getFullNodeId(treeId)).isVisible())
                 {
                     visibleNodes.add(spellNode);
                 }
@@ -97,7 +99,7 @@ public class ProgressionHelper
             {
                 if(!visibleNodes.contains(spellNode))
                 {
-                    boolean fullyLinked = ProgressionHelper.isFullyLinked(spellNode, spellProgressionHolder.getProgression());
+                    boolean fullyLinked = ProgressionHelper.isFullyLinked(treeId, spellNode, spellProgressionHolder.getProgression());
                     
                     if(fullyLinked)
                     {
@@ -132,13 +134,13 @@ public class ProgressionHelper
         return stripSpellTrees(spellProgressionHolder, access, registry);
     }
     
-    public static boolean isFullyLinked(SpellNode spellNode, Map<SpellNodeId, SpellStatus> progression)
+    public static boolean isFullyLinked(ResourceLocation treeId, SpellNode spellNode, Map<FullSpellNodeId, SpellStatus> progression)
     {
         SpellNode parent = spellNode;
         
         while((parent = parent.getParent()) != null)
         {
-            if(!progression.getOrDefault(parent.getNodeId(), SpellStatus.LOCKED).isAvailable())
+            if(!progression.getOrDefault(parent.getFullNodeId(treeId), SpellStatus.LOCKED).isAvailable())
             {
                 return false;
             }
@@ -147,7 +149,7 @@ public class ProgressionHelper
         return true;
     }
     
-    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, SpellNodeId nodeId)
+    public static boolean tryBuySpell(SpellProgressionHolder spellProgressionHolder, SpellProgressionMenu menu, FullSpellNodeId nodeId)
     {
         Player player = menu.player;
         
@@ -155,7 +157,7 @@ public class ProgressionHelper
         
         Registry<SpellTree> registry = SpellTrees.getRegistry(spellProgressionHolder.getPlayer().level());
         
-        menu.spellTrees.stream().filter(tree -> tree.getId().equals(nodeId.treeId())).findFirst().ifPresent(spellTree ->
+        menu.spellTrees.stream().filter(tree -> tree.getId(registry).equals(nodeId.treeId())).findFirst().ifPresent(spellTree ->
         {
             SpellNode spellNode = spellTree.findNode(nodeId.nodeId());
             

@@ -7,7 +7,7 @@ import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.target.Target;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
@@ -189,11 +189,11 @@ public class SpellProjectile extends AbstractHurtingProjectile
         
         if(nbt.contains("Spell", CompoundTag.TAG_COMPOUND))
         {
-            SpellNodeId spellNodeId = SpellNodeId.fromNbt(nbt.getCompound("Spell"));
+            FullSpellNodeId fullSpellNodeId = FullSpellNodeId.fromNbt(nbt.getCompound("Spell"));
             
-            if(spellNodeId != null)
+            if(fullSpellNodeId != null)
             {
-                spell = spellNodeId.getSpellInstance(SpellTrees.getRegistry(level()));
+                spell = fullSpellNodeId.getSpellInstance(SpellTrees.getRegistry(level()));
             }
             else if(nbt.contains("spellId", Tag.TAG_STRING))
             {

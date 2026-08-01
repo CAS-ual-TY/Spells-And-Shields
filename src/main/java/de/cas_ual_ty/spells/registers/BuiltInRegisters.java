@@ -12,10 +12,9 @@ import de.cas_ual_ty.spells.effect.SimpleEffect;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.progression.SpellProgressionMenu;
 import de.cas_ual_ty.spells.progression.SpellStatus;
-import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.projectile.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.projectile.SpellProjectile;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import de.cas_ual_ty.spells.util.SpellsUtil;
@@ -221,7 +220,7 @@ public class BuiltInRegisters
                 access.execute((level, blockPos) ->
                 {
                     List<SpellTree> availableSpellTrees = ProgressionHelper.getStrippedSpellTrees(spellProgressionHolder, access);
-                    HashMap<SpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
+                    HashMap<FullSpellNodeId, SpellStatus> progression = spellProgressionHolder.getProgression();
 
                     player.openMenu(new MenuProvider()
                     {

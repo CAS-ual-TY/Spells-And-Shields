@@ -4,7 +4,7 @@ import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -93,7 +93,7 @@ public class SpellsCapabilities
 
                 if(SpellsConfig.FORGET_SPELLS_ON_DEATH.get())
                 {
-                    for(SpellNodeId key : current.getProgression().keySet())
+                    for(FullSpellNodeId key : current.getProgression().keySet())
                     {
                         if(current.getSpellStatus(key) == SpellStatus.LEARNED)
                         {

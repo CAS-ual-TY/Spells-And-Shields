@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.cas_ual_ty.spells.client.SpellIconRegistry;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellNode;
 import de.cas_ual_ty.spells.util.ProgressionHelper;
 import net.minecraft.advancements.AdvancementType;
@@ -50,6 +51,8 @@ public class SpellNodeWidget
     public final SpellTreeTab tab;
     public final SpellNode spellNode;
     public final SpellStatus spellStatus;
+
+    public final FullSpellNodeId fullSpellNodeId;
     
     public final int width;
     
@@ -74,6 +77,8 @@ public class SpellNodeWidget
         tab = skillTreeTab;
         spellNode = spell;
         this.spellStatus = spellStatus;
+
+        fullSpellNodeId = spellNode.getFullNodeId(tab.spellTree.getClientId());
         
         font = Minecraft.getInstance().font;
         
@@ -91,9 +96,9 @@ public class SpellNodeWidget
         // 0 = gold = available
         // 1 = blue = buyable
         // 2 = black = not available & not buyable
-        titleIcon = (spellStatus == SpellStatus.LEARNED ? AdvancementWidgetType.OBTAINED.boxSprite() : ProgressionHelper.isFullyLinked(spell, tab.getScreen().getMenu().spellProgression) ? AdvancementWidgetType.UNOBTAINED.boxSprite() : TITLE_BOX_SPRITE);
+        titleIcon = (spellStatus == SpellStatus.LEARNED ? AdvancementWidgetType.OBTAINED.boxSprite() : ProgressionHelper.isFullyLinked(tab.spellTree.getClientId(), spell, tab.getScreen().getMenu().spellProgression) ? AdvancementWidgetType.UNOBTAINED.boxSprite() : TITLE_BOX_SPRITE);
     }
-    
+
     private static float getMaxWidth(StringSplitter stringSplitter, List<FormattedText> list)
     {
         return (float) list.stream().mapToDouble(stringSplitter::stringWidth).max().orElse(0D);

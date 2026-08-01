@@ -7,7 +7,7 @@ import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
-import de.cas_ual_ty.spells.spelltree.SpellNodeId;
+import de.cas_ual_ty.spells.spelltree.FullSpellNodeId;
 import de.cas_ual_ty.spells.spelltree.SpellTree;
 import de.cas_ual_ty.spells.util.ManaTooltipComponent;
 import net.minecraft.core.Holder;
@@ -32,7 +32,7 @@ public class SpellInstance
     private float manaCost;
     private List<CtxVar<?>> parameters;
     
-    private SpellNodeId nodeId;
+    private FullSpellNodeId nodeId;
     
     private Optional<TooltipComponent> tooltipComponent;
     
@@ -66,7 +66,7 @@ public class SpellInstance
         this.manaCost = manaCost;
     }
     
-    public void initId(SpellNodeId nodeId)
+    public void initId(FullSpellNodeId nodeId)
     {
         this.nodeId = nodeId;
     }
@@ -86,7 +86,7 @@ public class SpellInstance
         return parameters;
     }
     
-    public SpellNodeId getNodeId()
+    public FullSpellNodeId getNodeId()
     {
         return nodeId;
     }
@@ -184,7 +184,7 @@ public class SpellInstance
     @javax.annotation.Nullable
     public static SpellInstance fromNbt(CompoundTag nbt, Registry<SpellTree> spellTreeRegistry, Registry<Spell> spellRegistry)
     {
-        SpellNodeId nodeId = SpellNodeId.fromNbt(nbt);
+        FullSpellNodeId nodeId = FullSpellNodeId.fromNbt(nbt);
         
         if(nodeId != null)
         {
