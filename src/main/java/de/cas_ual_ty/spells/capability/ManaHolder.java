@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.capability;
 
 import de.cas_ual_ty.spells.network.ManaSyncMessage;
 import de.cas_ual_ty.spells.registers.BuiltInRegisters;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -10,7 +11,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.HolderLookup;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
 

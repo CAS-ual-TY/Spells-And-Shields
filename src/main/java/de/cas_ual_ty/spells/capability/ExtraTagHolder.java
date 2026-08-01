@@ -1,8 +1,8 @@
 package de.cas_ual_ty.spells.capability;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.core.HolderLookup;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.Optional;
