@@ -32,13 +32,13 @@ public class ExtraTagHolder implements INBTSerializable<CompoundTag>
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider)
     {
-        return tag;
+        return tag.copy();
     }
 
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag)
     {
-        this.tag = tag;
+        this.tag = tag.copy();
     }
 
     public static Optional<ExtraTagHolder> getHolder(Entity entity)
