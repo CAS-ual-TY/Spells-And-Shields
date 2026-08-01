@@ -124,11 +124,6 @@ public class ManaRenderer implements LayeredDraw.Layer
 
                 int top = height - (right ? gui.rightHeight : gui.leftHeight);
 
-                if(!right && above && player.getArmorValue() <= 0)
-                {
-                    top += 10;
-                }
-
                 int regen = -1;
 
                 if(player.hasEffect(BuiltInRegisters.REPLENISHMENT_EFFECT))
