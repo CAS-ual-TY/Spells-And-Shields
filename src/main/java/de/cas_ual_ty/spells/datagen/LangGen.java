@@ -102,6 +102,9 @@ public class LangGen extends LanguageProvider
         addRequirement(RequirementTypes.LEARNED, "Learn Spell '%s' in Spell Tree '%s'");
         addRequirement(RequirementTypes.LEARNED, LearnedRequirement.ERROR_TREE_SUFFIX, "Unknown Spell Tree '%s' (Data Pack Error)");
         addRequirement(RequirementTypes.LEARNED, LearnedRequirement.ERROR_NODE_SUFFIX, "Unknown Node ID '%s' in Spell Tree '%s' (Data Pack Error)");
+        addRequirement(RequirementTypes.TEAM, "Member of Team '%s'");
+        addRequirement(RequirementTypes.TEAM_SIZE, "Team has at least %2$s Members (%1$s/%2$s)");
+        addRequirement(RequirementTypes.TEAM_COLOR, "Team Color is '%s'");
         
         add(SpellProgressionMenu.TITLE.getString(), "Spell Progression");
         

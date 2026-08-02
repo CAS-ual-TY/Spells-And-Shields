@@ -24,6 +24,9 @@ public class RequirementTypes
     public static final DeferredHolder<RequirementType<?>, RequirementType<MinRequirement>> MIN = DEFERRED_REGISTER.register("min", () -> new RequirementType<>(MinRequirement::new, MinRequirement::makeCodec));
     public static final DeferredHolder<RequirementType<?>, RequirementType<MaxRequirement>> MAX = DEFERRED_REGISTER.register("max", () -> new RequirementType<>(MaxRequirement::new, MaxRequirement::makeCodec));
     public static final DeferredHolder<RequirementType<?>, RequirementType<LearnedRequirement>> LEARNED = DEFERRED_REGISTER.register("learned", () -> new RequirementType<>(LearnedRequirement::new, LearnedRequirement::makeCodec));
+    public static final DeferredHolder<RequirementType<?>, RequirementType<TeamRequirement>> TEAM = DEFERRED_REGISTER.register("team", () -> new RequirementType<>(TeamRequirement::new, TeamRequirement::makeCodec));
+    public static final DeferredHolder<RequirementType<?>, RequirementType<TeamSizeRequirement>> TEAM_SIZE = DEFERRED_REGISTER.register("team_size", () -> new RequirementType<>(TeamSizeRequirement::new, TeamSizeRequirement::makeCodec));
+    public static final DeferredHolder<RequirementType<?>, RequirementType<TeamColorRequirement>> TEAM_COLOR = DEFERRED_REGISTER.register("team_color", () -> new RequirementType<>(TeamColorRequirement::new, TeamColorRequirement::makeCodec));
     
     public static void register(IEventBus modEventBus)
     {

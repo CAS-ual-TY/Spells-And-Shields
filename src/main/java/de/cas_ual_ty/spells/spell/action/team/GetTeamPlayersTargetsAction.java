@@ -72,7 +72,7 @@ public class GetTeamPlayersTargetsAction extends DstTargetAction
                     {
                         ServerPlayer player = level.getServer().getPlayerList().getPlayerByName(playerName);
 
-                        if(player != null)
+                        if(player != null && player.level() == level)
                         {
                             destination.addTargets(new PlayerTarget(TargetTypes.PLAYER.get(), player));
                         }
