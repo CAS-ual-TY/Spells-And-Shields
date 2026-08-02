@@ -595,7 +595,7 @@ public class SpellsGen
     public void addSummonSpell(ResourceLocation rl, String key, String descKey, String entityType, SoundEvent spawnSound, float manaCost, int duration)
     {
         addSpell(rl, new Spell(modId, rl.getPath(), key, manaCost)
-                .addAction(SimpleTryBurnManaAction.make(ACTIVE))
+                .addAction(TryBurnManaCostAction.make(ACTIVE))
                 .addAction(SpawnEntityAction.make(ACTIVE, "summoned", STRING.immediate(entityType), OWNER, ZERO_VEC3, ZERO_VEC3))
                 .addAction(PlaySoundAction.make(ACTIVE, "summoned", spawnSound, ONE_D, ONE_D))
                 .addAction(AddDelayedSpellAction.make(ACTIVE, "summoned", "on_remove", INT.immediate(duration), STRING.immediate(""), EMPTY_TAG, eventHookMap(LIVING_CHANGE_TARGET.activation, LIVING_CHANGE_TARGET.activation, OWNER_LEFT_DIMENSION.activation, "on_remove")))
@@ -619,7 +619,7 @@ public class SpellsGen
         
         addSpell(Spells.LEAP, new Spell(modId, "leap", Spells.KEY_LEAP, 5F)
                 .addParameter(DOUBLE, "speed", 2.5)
-                .addAction(SimpleTryBurnManaAction.make(ACTIVE))
+                .addAction(TryBurnManaCostAction.make(ACTIVE))
                 .addAction(ResetFallDistanceAction.make(ACTIVE, OWNER))
                 .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE, OWNER, "", "look", ""))
                 .addAction(PutVarAction.makeVec3(ACTIVE, Compiler.compileString(" (normalize(look + vec3(0, -get_y(look), 0))) * speed ", VEC3), "direction"))
@@ -919,7 +919,7 @@ public class SpellsGen
         
         addSpell(Spells.JUMP, new Spell(modId, "jump", Spells.KEY_JUMP, 5F)
                 .addParameter(DOUBLE, "speed", 1.5)
-                .addAction(SimpleTryBurnManaAction.make(ACTIVE))
+                .addAction(TryBurnManaCostAction.make(ACTIVE))
                 .addAction(ResetFallDistanceAction.make(ACTIVE, OWNER))
                 .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE, OWNER, "", "", "motion"))
                 .addAction(SetMotionAction.make(ACTIVE, OWNER, Compiler.compileString(" vec3(0, get_y(motion) + speed, 0) ", VEC3)))
@@ -963,7 +963,7 @@ public class SpellsGen
         );
         
         addSpell(Spells.PRESSURIZE, new Spell(modId, "pressurize", Spells.KEY_PRESSURIZE, 4F)
-                .addAction(SimpleTryBurnManaAction.make(ACTIVE))
+                .addAction(TryBurnManaCostAction.make(ACTIVE))
                 .addAction(RangedEntityTargetsAction.make(ACTIVE, "targets", OWNER, DOUBLE.reference("range")))
                 .addAction(BooleanActivationAction.make(ACTIVE, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
                 .addAction(FilterPlayerTargetsAction.make("no_pvp", "", "targets", TRUE))
@@ -1536,7 +1536,7 @@ public class SpellsGen
         addToggleEffectSpell(Spells.TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER, Spells.KEY_TOGGLE_CONDUIT_POWER_DESC, MobEffects.CONDUIT_POWER, 4F, 50, 0);
 
         addSpell(Spells.TREMOR, new Spell(modId, "tremor", Spells.KEY_TREMOR, 5F)
-                .addAction(SimpleTryBurnManaAction.make(ACTIVE))
+                .addAction(TryBurnManaCostAction.make(ACTIVE))
                 .addAction(RangedEntityTargetsAction.make(ACTIVE, "targets", OWNER, DOUBLE.reference("range")))
                 .addAction(BooleanActivationAction.make(ACTIVE, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
                 .addAction(FilterPlayerTargetsAction.make("no_pvp", "", "targets", TRUE))
@@ -1550,7 +1550,7 @@ public class SpellsGen
         );
 
         addSpell(Spells.MAGNETISM, new Spell(modId, "magnetism", Spells.KEY_MAGNETISM, 5F)
-                .addAction(SimpleTryBurnManaAction.make(ACTIVE))
+                .addAction(TryBurnManaCostAction.make(ACTIVE))
                 .addAction(RangedEntityTargetsAction.make(ACTIVE, "pool", OWNER, DOUBLE.reference("range")))
                 .addAction(GetPositionAction.make(ACTIVE, OWNER, "own_pos"))
                 .addAction(LabelAction.make(ACTIVE, "pull_loop"))
@@ -1619,7 +1619,7 @@ public class SpellsGen
         );
 
         addSpell(Spells.ICE_SPIKE, new Spell(modId, "ice_spike", Spells.KEY_ICE_SPIKE, 5F)
-                .addAction(SimpleTryBurnManaAction.make(ACTIVE))
+                .addAction(TryBurnManaCostAction.make(ACTIVE))
                 .addAction(ShootAction.make(ACTIVE, OWNER, DOUBLE.immediate(2.5D), ZERO_D, INT.immediate(80), "", "on_entity_hit", "", "projectile"))
                 .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.ARROW_SHOOT, ONE_D, ONE_D))
                 .addAction(BooleanActivationAction.make("on_entity_hit", "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
@@ -1634,7 +1634,7 @@ public class SpellsGen
         );
 
         addSpell(Spells.TIDAL_WAVE, new Spell(modId, "tidal_wave", Spells.KEY_TIDAL_WAVE, 5F)
-                .addAction(SimpleTryBurnManaAction.make(ACTIVE))
+                .addAction(TryBurnManaCostAction.make(ACTIVE))
                 .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.BUCKET_FILL, ONE_D, ONE_D))
                 .addAction(RangedEntityTargetsAction.make(ACTIVE, "targets", OWNER, DOUBLE.reference("range")))
                 .addAction(BooleanActivationAction.make(ACTIVE, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
