@@ -20,6 +20,7 @@ import de.cas_ual_ty.spells.spell.action.mana.*;
 import de.cas_ual_ty.spells.spell.action.server.ExecuteCommandAction;
 import de.cas_ual_ty.spells.spell.action.server.ExecutePlayerCommandAction;
 import de.cas_ual_ty.spells.spell.action.target.*;
+import de.cas_ual_ty.spells.spell.action.team.*;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedTernaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedUnaryVarAction;
@@ -174,7 +175,13 @@ public class SpellActionTypes
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<RangedEntityTargetsAction>> RANGED_ENTITY_TARGETS = DEFERRED_REGISTER.register("ranged_entity_targets", () -> new SpellActionType<>(RangedEntityTargetsAction::new, RangedEntityTargetsAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ShootAction>> SHOOT = DEFERRED_REGISTER.register("shoot", () -> new SpellActionType<>(ShootAction::new, ShootAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ShootAltAction>> SHOOT_ALT = DEFERRED_REGISTER.register("shoot_alt", () -> new SpellActionType<>(ShootAltAction::new, ShootAltAction::makeCodec));
-    
+
+    // team
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<FilterAlliedTargetsAction>> FILTER_ALLIED_TARGETS = DEFERRED_REGISTER.register("filter_allied_targets", () -> new SpellActionType<>(FilterAlliedTargetsAction::new, FilterAlliedTargetsAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<FilterEnemyTargetsAction>> FILTER_ENEMY_TARGETS = DEFERRED_REGISTER.register("filter_enemy_targets", () -> new SpellActionType<>(FilterEnemyTargetsAction::new, FilterEnemyTargetsAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetTeamAction>> GET_TEAM = DEFERRED_REGISTER.register("get_team", () -> new SpellActionType<>(GetTeamAction::new, GetTeamAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetTeamPlayersTargetsAction>> GET_TEAM_PLAYERS_TARGETS = DEFERRED_REGISTER.register("get_team_players_targets", () -> new SpellActionType<>(GetTeamPlayersTargetsAction::new, GetTeamPlayersTargetsAction::makeCodec));
+
     // variable
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<PutVarAction<Integer>>> PUT_INT = DEFERRED_REGISTER.register("put_int", () -> PutVarAction.makeType(CtxVarTypes.INT));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<PutVarAction<Double>>> PUT_DOUBLE = DEFERRED_REGISTER.register("put_double", () -> PutVarAction.makeType(CtxVarTypes.DOUBLE));
