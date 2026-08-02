@@ -20,23 +20,12 @@ public class SpellHelper
     {
         if(player.level().isClientSide)
         {
-            SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
-            {
-                if(spellHolder.getCooldown(slot) <= 0)
-                {
-                    PacketDistributor.sendToServer(new FireSpellMessage(slot));
-                }
-            });
+            PacketDistributor.sendToServer(new FireSpellMessage(slot));
         }
         else if(player instanceof ServerPlayer serverPlayer && !isSilenced(player))
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
-                if(spellHolder.getCooldown(slot) > 0)
-                {
-                    return;
-                }
-
                 SpellInstance spell = spellHolder.getSpell(slot);
 
                 if(spell != null)
