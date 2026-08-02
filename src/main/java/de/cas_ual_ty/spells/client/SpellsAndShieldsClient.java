@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.client;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsConfig;
+import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.capability.ParticleEmitterHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.client.hud.ManaClientTooltipComponent;
@@ -19,7 +20,6 @@ import de.cas_ual_ty.spells.registers.SpellIconTypes;
 import de.cas_ual_ty.spells.spell.ManaTooltipComponent;
 import de.cas_ual_ty.spells.spell.projectile.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.projectile.SpellProjectile;
-import de.cas_ual_ty.spells.SpellsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;

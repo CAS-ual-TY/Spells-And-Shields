@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.registers;
 
+import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.capability.ManaHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.command.SpellArgument;
@@ -13,7 +14,6 @@ import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.progression.*;
 import de.cas_ual_ty.spells.spell.projectile.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.projectile.SpellProjectile;
-import de.cas_ual_ty.spells.SpellsUtil;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;

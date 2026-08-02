@@ -1,13 +1,13 @@
 package de.cas_ual_ty.spells.progression;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.capability.SpellHolder;
 import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.network.SpellProgressionSyncMessage;
 import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.spell.SpellInstance;
-import de.cas_ual_ty.spells.SpellsUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

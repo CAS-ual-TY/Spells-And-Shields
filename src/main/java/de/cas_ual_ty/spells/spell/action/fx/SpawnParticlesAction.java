@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.spell.action.fx;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.TargetTypes;
@@ -13,7 +14,6 @@ import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
-import de.cas_ual_ty.spells.SpellsUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
