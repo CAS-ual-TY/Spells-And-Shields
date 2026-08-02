@@ -179,6 +179,11 @@ public class ParticleEmitterHolder implements INBTSerializable<ListTag>
 
         public boolean tick()
         {
+            if(delay <= 0)
+            {
+                time--;
+                return false;
+            }
             return (time-- % delay) == 0;
         }
 
