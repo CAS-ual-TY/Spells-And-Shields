@@ -23,7 +23,7 @@ public class BurnManaAction extends AffectTypeAction<LivingEntityTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 multiTargetsCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("mana_amount")).forGetter(BurnManaAction::getAmount)
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("amount")).forGetter(BurnManaAction::getAmount)
         ).apply(instance, (activation, multiTargets, amount) -> new BurnManaAction(type, activation, multiTargets, amount)));
     }
     

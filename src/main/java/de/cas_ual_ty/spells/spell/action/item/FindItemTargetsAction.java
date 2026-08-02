@@ -18,34 +18,34 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class FindItemAction extends AffectTypeAction<PlayerTarget>
+public class FindItemTargetsAction extends AffectTypeAction<PlayerTarget>
 {
-    public static Codec<FindItemAction> makeCodec(SpellActionType<FindItemAction> type)
+    public static Codec<FindItemTargetsAction> makeCodec(SpellActionType<FindItemTargetsAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 multiTargetsCodec(),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(FindItemAction::getMustBeInHand),
-                ItemStack.CODEC.fieldOf("item").forGetter(FindItemAction::getItem),
-                Codec.STRING.fieldOf(ParamNames.destinationTarget("found_items")).forGetter(FindItemAction::getFoundItems)
-        ).apply(instance, (activation, target, mustBeInHand, item, foundItems) -> new FindItemAction(type, activation, target, mustBeInHand, item, foundItems)));
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(FindItemTargetsAction::getMustBeInHand),
+                ItemStack.CODEC.fieldOf("item").forGetter(FindItemTargetsAction::getItem),
+                Codec.STRING.fieldOf(ParamNames.destinationTarget("found_items")).forGetter(FindItemTargetsAction::getFoundItems)
+        ).apply(instance, (activation, target, mustBeInHand, item, foundItems) -> new FindItemTargetsAction(type, activation, target, mustBeInHand, item, foundItems)));
     }
     
-    public static FindItemAction make(Object activation, Object multiTargets, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item, String foundItems)
+    public static FindItemTargetsAction make(Object activation, Object multiTargets, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item, String foundItems)
     {
-        return new FindItemAction(SpellActionTypes.FIND_ITEM.get(), activation.toString(), multiTargets.toString(), mustBeInHand, item, foundItems);
+        return new FindItemTargetsAction(SpellActionTypes.FIND_ITEM_TARGETS.get(), activation.toString(), multiTargets.toString(), mustBeInHand, item, foundItems);
     }
     
     protected DynamicCtxVar<Boolean> mustBeInHand;
     protected ItemStack item;
     protected String foundItems;
     
-    public FindItemAction(SpellActionType<?> type)
+    public FindItemTargetsAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public FindItemAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item, String foundItems)
+    public FindItemTargetsAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item, String foundItems)
     {
         super(type, activation, multiTargets);
         this.mustBeInHand = mustBeInHand;

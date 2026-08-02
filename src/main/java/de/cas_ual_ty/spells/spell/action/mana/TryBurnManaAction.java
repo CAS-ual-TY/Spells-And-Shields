@@ -15,30 +15,30 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 
-public class ManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
+public class TryBurnManaAction extends AffectSingleTypeAction<PlayerTarget>
 {
-    public static Codec<ManaCheckAction> makeCodec(SpellActionType<ManaCheckAction> type)
+    public static Codec<TryBurnManaAction> makeCodec(SpellActionType<TryBurnManaAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("amount")).forGetter(ManaCheckAction::getAmount)
-        ).apply(instance, (activation, singleTarget, amount) -> new ManaCheckAction(type, activation, singleTarget, amount)));
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("amount")).forGetter(TryBurnManaAction::getAmount)
+        ).apply(instance, (activation, singleTarget, amount) -> new TryBurnManaAction(type, activation, singleTarget, amount)));
     }
     
-    public static ManaCheckAction make(Object activation, Object singleTarget, DynamicCtxVar<Double> amount)
+    public static TryBurnManaAction make(Object activation, Object singleTarget, DynamicCtxVar<Double> amount)
     {
-        return new ManaCheckAction(SpellActionTypes.MANA_CHECK.get(), activation.toString(), singleTarget.toString(), amount);
+        return new TryBurnManaAction(SpellActionTypes.TRY_BURN_MANA.get(), activation.toString(), singleTarget.toString(), amount);
     }
     
     protected DynamicCtxVar<Double> amount;
     
-    public ManaCheckAction(SpellActionType<?> type)
+    public TryBurnManaAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public ManaCheckAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Double> amount)
+    public TryBurnManaAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Double> amount)
     {
         super(type, activation, singleTarget);
         this.amount = amount;

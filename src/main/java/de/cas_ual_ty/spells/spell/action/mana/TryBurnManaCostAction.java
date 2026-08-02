@@ -16,28 +16,28 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PlayerTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 
-public class SimpleManaCheckAction extends AffectSingleTypeAction<PlayerTarget>
+public class TryBurnManaCostAction extends AffectSingleTypeAction<PlayerTarget>
 {
-    public static Codec<SimpleManaCheckAction> makeCodec(SpellActionType<SimpleManaCheckAction> type)
+    public static Codec<TryBurnManaCostAction> makeCodec(SpellActionType<TryBurnManaCostAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec()
-        ).apply(instance, (activation) -> new SimpleManaCheckAction(type, activation)));
+        ).apply(instance, (activation) -> new TryBurnManaCostAction(type, activation)));
     }
     
-    public static SimpleManaCheckAction make(Object activation)
+    public static TryBurnManaCostAction make(Object activation)
     {
-        return new SimpleManaCheckAction(SpellActionTypes.SIMPLE_MANA_CHECK.get(), activation.toString());
+        return new TryBurnManaCostAction(SpellActionTypes.TRY_BURN_MANA_COST.get(), activation.toString());
     }
     
     protected DynamicCtxVar<Double> amount;
     
-    public SimpleManaCheckAction(SpellActionType<?> type)
+    public TryBurnManaCostAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public SimpleManaCheckAction(SpellActionType<?> type, String activation)
+    public TryBurnManaCostAction(SpellActionType<?> type, String activation)
     {
         super(type, activation, BuiltinTargetGroups.OWNER.targetGroup);
         amount = CtxVarTypes.DOUBLE.get().reference(BuiltinVariables.MANA_COST.name);

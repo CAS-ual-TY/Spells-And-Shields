@@ -24,23 +24,23 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarget>
+public class TryConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarget>
 {
-    public static Codec<ConsumePlayerItemsAction> makeCodec(SpellActionType<ConsumePlayerItemsAction> type)
+    public static Codec<TryConsumePlayerItemsAction> makeCodec(SpellActionType<TryConsumePlayerItemsAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 sourceCodec(),
-                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(ConsumePlayerItemsAction::getItem),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(ConsumePlayerItemsAction::getAmount),
-                CtxVarTypes.TAG.get().optionalRefCodec(ParamNames.paramCompoundTag("tag")).forGetter(ConsumePlayerItemsAction::getTag),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(ConsumePlayerItemsAction::getMustBeInHand)
-        ).apply(instance, (activation, source, item, amount, tag, mustBeInHand) -> new ConsumePlayerItemsAction(type, activation, source, item, amount, tag, mustBeInHand)));
+                CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("item")).forGetter(TryConsumePlayerItemsAction::getItem),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(TryConsumePlayerItemsAction::getAmount),
+                CtxVarTypes.TAG.get().optionalRefCodec(ParamNames.paramCompoundTag("tag")).forGetter(TryConsumePlayerItemsAction::getTag),
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(TryConsumePlayerItemsAction::getMustBeInHand)
+        ).apply(instance, (activation, source, item, amount, tag, mustBeInHand) -> new TryConsumePlayerItemsAction(type, activation, source, item, amount, tag, mustBeInHand)));
     }
     
-    public static ConsumePlayerItemsAction make(Object activation, Object source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, @Nullable DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public static TryConsumePlayerItemsAction make(Object activation, Object source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, @Nullable DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
     {
-        return new ConsumePlayerItemsAction(SpellActionTypes.CONSUME_PLAYER_ITEMS.get(), activation.toString(), source.toString(), item, amount, tag, mustBeInHand);
+        return new TryConsumePlayerItemsAction(SpellActionTypes.TRY_CONSUME_PLAYER_ITEMS.get(), activation.toString(), source.toString(), item, amount, tag, mustBeInHand);
     }
     
     protected DynamicCtxVar<String> item;
@@ -48,12 +48,12 @@ public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarge
     protected DynamicCtxVar<CompoundTag> tag;
     protected DynamicCtxVar<Boolean> mustBeInHand;
     
-    public ConsumePlayerItemsAction(SpellActionType<?> type)
+    public TryConsumePlayerItemsAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public ConsumePlayerItemsAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
+    public TryConsumePlayerItemsAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<String> item, DynamicCtxVar<Integer> amount, DynamicCtxVar<CompoundTag> tag, DynamicCtxVar<Boolean> mustBeInHand)
     {
         super(type, activation, source);
         this.item = item;
@@ -111,9 +111,30 @@ public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarge
                     }
                     
                     CompoundTag tag = this.tag.getValue(ctx).orElse(null);
-                    
+
+                    int available = 0;
+
+                    for(ItemStack i : items)
+                    {
+                        if(i.getItem() == item && (tag == null || (i.get(DataComponents.CUSTOM_DATA) != null && tag.equals(i.get(DataComponents.CUSTOM_DATA).copyTag()))))
+                        {
+                            available += i.getCount();
+
+                            if(available >= amount)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if(available < amount)
+                    {
+                        ctx.deactivate(activation);
+                        return;
+                    }
+
                     int count = amount;
-                    
+
                     for(ItemStack i : items)
                     {
                         if(i.getItem() == item && (tag == null || (i.get(DataComponents.CUSTOM_DATA) != null && tag.equals(i.get(DataComponents.CUSTOM_DATA).copyTag()))))
@@ -122,7 +143,7 @@ public class ConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTarge
                             i.shrink(c);
                             count -= c;
                         }
-                        
+
                         if(count <= 0)
                         {
                             break;

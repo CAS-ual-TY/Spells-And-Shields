@@ -19,34 +19,34 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemTagCheckAction extends AffectTypeAction<PlayerTarget>
+public class TryConsumeItemByTagAction extends AffectTypeAction<PlayerTarget>
 {
-    public static Codec<ItemTagCheckAction> makeCodec(SpellActionType<ItemTagCheckAction> type)
+    public static Codec<TryConsumeItemByTagAction> makeCodec(SpellActionType<TryConsumeItemByTagAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(ItemTagCheckAction::getMustBeInHand),
-                TagKey.codec(BuiltInRegistries.ITEM.key()).fieldOf("item_tag").forGetter(ItemTagCheckAction::getItemTag),
-                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("count")).forGetter(ItemTagCheckAction::getCount)
-        ).apply(instance, (activation, target, mustBeInHand, itemTag, count) -> new ItemTagCheckAction(type, activation, target, mustBeInHand, itemTag, count)));
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(TryConsumeItemByTagAction::getMustBeInHand),
+                TagKey.codec(BuiltInRegistries.ITEM.key()).fieldOf("item_tag").forGetter(TryConsumeItemByTagAction::getItemTag),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("count")).forGetter(TryConsumeItemByTagAction::getCount)
+        ).apply(instance, (activation, target, mustBeInHand, itemTag, count) -> new TryConsumeItemByTagAction(type, activation, target, mustBeInHand, itemTag, count)));
     }
     
-    public static ItemTagCheckAction make(Object activation, Object targets, DynamicCtxVar<Boolean> mustBeInHand, TagKey<Item> itemTag, DynamicCtxVar<Integer> count)
+    public static TryConsumeItemByTagAction make(Object activation, Object targets, DynamicCtxVar<Boolean> mustBeInHand, TagKey<Item> itemTag, DynamicCtxVar<Integer> count)
     {
-        return new ItemTagCheckAction(SpellActionTypes.ITEM_TAG_CHECK.get(), activation.toString(), targets.toString(), mustBeInHand, itemTag, count);
+        return new TryConsumeItemByTagAction(SpellActionTypes.TRY_CONSUME_ITEM_BY_TAG.get(), activation.toString(), targets.toString(), mustBeInHand, itemTag, count);
     }
     
     protected DynamicCtxVar<Boolean> mustBeInHand;
     protected TagKey<Item> itemTag;
     protected DynamicCtxVar<Integer> count;
     
-    public ItemTagCheckAction(SpellActionType<?> type)
+    public TryConsumeItemByTagAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public ItemTagCheckAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Boolean> mustBeInHand, TagKey<Item> itemTag, DynamicCtxVar<Integer> count)
+    public TryConsumeItemByTagAction(SpellActionType<?> type, String activation, String targets, DynamicCtxVar<Boolean> mustBeInHand, TagKey<Item> itemTag, DynamicCtxVar<Integer> count)
     {
         super(type, activation, targets);
         this.mustBeInHand = mustBeInHand;

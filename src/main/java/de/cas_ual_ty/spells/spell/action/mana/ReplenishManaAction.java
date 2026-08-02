@@ -22,7 +22,7 @@ public class ReplenishManaAction extends AffectTypeAction<LivingEntityTarget>
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 multiTargetsCodec(),
-                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("mana_amount")).forGetter(ReplenishManaAction::getAmount)
+                CtxVarTypes.DOUBLE.get().refCodec().fieldOf(ParamNames.paramDouble("amount")).forGetter(ReplenishManaAction::getAmount)
         ).apply(instance, (activation, multiTargets, amount) -> new ReplenishManaAction(type, activation, multiTargets, amount)));
     }
     

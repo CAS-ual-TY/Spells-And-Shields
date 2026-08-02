@@ -16,32 +16,32 @@ import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemCheckAction extends AffectSingleTypeAction<PlayerTarget>
+public class TryConsumeSpecificItemAction extends AffectSingleTypeAction<PlayerTarget>
 {
-    public static Codec<ItemCheckAction> makeCodec(SpellActionType<ItemCheckAction> type)
+    public static Codec<TryConsumeSpecificItemAction> makeCodec(SpellActionType<TryConsumeSpecificItemAction> type)
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
                 singleTargetCodec(),
-                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(ItemCheckAction::getMustBeInHand),
-                ItemStack.CODEC.fieldOf("item").forGetter(ItemCheckAction::getItem)
-        ).apply(instance, (activation, singleTarget, mustBeInHand, item) -> new ItemCheckAction(type, activation, singleTarget, mustBeInHand, item)));
+                CtxVarTypes.BOOLEAN.get().refCodec().fieldOf(ParamNames.paramBoolean("must_be_in_hand")).forGetter(TryConsumeSpecificItemAction::getMustBeInHand),
+                ItemStack.CODEC.fieldOf("item").forGetter(TryConsumeSpecificItemAction::getItem)
+        ).apply(instance, (activation, singleTarget, mustBeInHand, item) -> new TryConsumeSpecificItemAction(type, activation, singleTarget, mustBeInHand, item)));
     }
     
-    public static ItemCheckAction make(Object activation, Object singleTarget, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
+    public static TryConsumeSpecificItemAction make(Object activation, Object singleTarget, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
     {
-        return new ItemCheckAction(SpellActionTypes.ITEM_CHECK.get(), activation.toString(), singleTarget.toString(), mustBeInHand, item);
+        return new TryConsumeSpecificItemAction(SpellActionTypes.TRY_CONSUME_SPECIFIC_ITEM.get(), activation.toString(), singleTarget.toString(), mustBeInHand, item);
     }
     
     protected DynamicCtxVar<Boolean> mustBeInHand;
     protected ItemStack item;
     
-    public ItemCheckAction(SpellActionType<?> type)
+    public TryConsumeSpecificItemAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public ItemCheckAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
+    public TryConsumeSpecificItemAction(SpellActionType<?> type, String activation, String singleTarget, DynamicCtxVar<Boolean> mustBeInHand, ItemStack item)
     {
         super(type, activation, singleTarget);
         this.mustBeInHand = mustBeInHand;
