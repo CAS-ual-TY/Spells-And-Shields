@@ -197,6 +197,10 @@ public class SpellsCapabilities
         {
             ManaHolder.getManaHolder(event.getEntity()).ifPresent(ManaHolder::tick);
         }
+
+        // cooldowns tick down independently on client and server - only explicit changes (not
+        // the regular per-tick decrement) get synced, see SpellHolder.setCooldown
+        SpellHolder.getSpellHolder(event.getEntity()).ifPresent(SpellHolder::tickCooldowns);
     }
 
     public static void registerEvents(IEventBus modEventBus)

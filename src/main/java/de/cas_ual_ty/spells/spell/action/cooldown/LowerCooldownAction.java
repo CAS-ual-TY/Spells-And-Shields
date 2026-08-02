@@ -1,0 +1,54 @@
+package de.cas_ual_ty.spells.spell.action.cooldown;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.SpellActionTypes;
+import de.cas_ual_ty.spells.spell.action.ParamNames;
+import de.cas_ual_ty.spells.spell.action.SpellActionType;
+import de.cas_ual_ty.spells.spell.context.SpellContext;
+import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+
+public class LowerCooldownAction extends CooldownAction
+{
+    public static Codec<LowerCooldownAction> makeCodec(SpellActionType<LowerCooldownAction> type)
+    {
+        return RecordCodecBuilder.create(instance -> instance.group(
+                activationCodec(),
+                singleTargetCodec(),
+                slotCodec(),
+                CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("amount")).forGetter(LowerCooldownAction::getAmount)
+        ).apply(instance, (activation, target, slot, amount) -> new LowerCooldownAction(type, activation, target, slot, amount)));
+    }
+
+    public static LowerCooldownAction make(Object activation, Object target, DynamicCtxVar<Integer> slot, DynamicCtxVar<Integer> amount)
+    {
+        return new LowerCooldownAction(SpellActionTypes.LOWER_COOLDOWN.get(), activation.toString(), target.toString(), slot, amount);
+    }
+
+    protected DynamicCtxVar<Integer> amount;
+
+    public LowerCooldownAction(SpellActionType<?> type)
+    {
+        super(type);
+    }
+
+    public LowerCooldownAction(SpellActionType<?> type, String activation, String target, DynamicCtxVar<Integer> slot, DynamicCtxVar<Integer> amount)
+    {
+        super(type, activation, target, slot);
+        this.amount = amount;
+    }
+
+    public DynamicCtxVar<Integer> getAmount()
+    {
+        return amount;
+    }
+
+    @Override
+    protected void affectCooldown(SpellContext ctx, SpellHolder spellHolder, int slot)
+    {
+        // setCooldown clamps to >= 0, so a lower amount than the current cooldown can never go negative
+        amount.getValue(ctx).ifPresent(amount -> spellHolder.setCooldown(slot, spellHolder.getCooldown(slot) - amount));
+    }
+}

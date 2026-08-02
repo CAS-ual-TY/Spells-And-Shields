@@ -199,7 +199,20 @@ public class RadialMenu extends Screen
             if(spell != null)
             {
                 Vec2 pos = iconPositionPoints[i];
+                int cooldown = holder.getCooldown(i);
+
+                if(cooldown > 0)
+                {
+                    RenderSystem.setShaderColor(0.5F, 0.5F, 0.5F, 1F);
+                }
+
                 SpellIconRegistry.render(spell.getSpell().value().getIcon(), guiGraphics, iconWidth, iconHeight, Math.round(pos.x), Math.round(pos.y), pPartialTick);
+
+                if(cooldown > 0)
+                {
+                    RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+                    guiGraphics.drawCenteredString(font, String.valueOf((cooldown + 20 - 1) / 20), Math.round(pos.x) + iconWidth / 2, Math.round(pos.y) + (iconHeight - font.lineHeight) / 2, -1);
+                }
             }
         }
     }

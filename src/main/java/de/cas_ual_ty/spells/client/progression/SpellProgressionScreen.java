@@ -24,6 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
@@ -214,7 +215,7 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
         {
             int x = getGuiLeft() - SpellNodeWidget.FRAME_WIDTH;
             int y = getGuiTop() + i * (SpellNodeWidget.FRAME_HEIGHT + 1);
-            spellSlotButtons[i] = new SpellSlotWidget(x, y, i, this::slotChosen);
+            spellSlotButtons[i] = new SpellSlotWidget(x, y, i, this.font, this::slotChosen);
         }
         
         disableSlotButtons();
@@ -248,8 +249,19 @@ public class SpellProgressionScreen extends AbstractContainerScreen<SpellProgres
     {
         if(selectedTab != null && selectedSpellWidget.clickedWidget != null)
         {
-            PacketDistributor.sendToServer(new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.fullSpellNodeId));
-            spellClicked(null);
+            Player player = Minecraft.getInstance().player;
+
+            if(player != null)
+            {
+                SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
+                {
+                    if(spellHolder.getCooldown(slot) == 0)
+                    {
+                        PacketDistributor.sendToServer(new RequestEquipSpellMessage((byte) slot, selectedSpellWidget.clickedWidget.fullSpellNodeId));
+                        spellClicked(null);
+                    }
+                });
+            }
         }
     }
     

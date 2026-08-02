@@ -9,15 +9,15 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, FullSpellNodeId[] nodeIds) implements CustomPacketPayload
+public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, FullSpellNodeId[] nodeIds, int[] cooldowns) implements CustomPacketPayload
 {
     public static final Type<SpellsSyncMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "spells_sync"));
     public static final StreamCodec<FriendlyByteBuf, SpellsSyncMessage> STREAM_CODEC = StreamCodec.of(
             (buf, msg) ->
             {
-                if(msg.spells().length != msg.nodeIds().length)
+                if(msg.spells().length != msg.nodeIds().length || msg.spells().length != msg.cooldowns().length)
                 {
-                    throw new IllegalStateException("SpellsSyncMessage: spells/nodeIds length mismatch (" + msg.spells().length + " vs " + msg.nodeIds().length + ")");
+                    throw new IllegalStateException("SpellsSyncMessage: spells/nodeIds/cooldowns length mismatch (" + msg.spells().length + " vs " + msg.nodeIds().length + " vs " + msg.cooldowns().length + ")");
                 }
 
                 buf.writeInt(msg.entityId());
@@ -47,6 +47,10 @@ public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, FullSpe
                         buf.writeBoolean(false);
                     }
                 }
+                for(int cooldown : msg.cooldowns())
+                {
+                    buf.writeVarInt(cooldown);
+                }
             },
             buf ->
             {
@@ -61,7 +65,12 @@ public record SpellsSyncMessage(int entityId, ResourceLocation[] spells, FullSpe
                 {
                     ids[i] = buf.readBoolean() ? new FullSpellNodeId(buf.readResourceLocation(), buf.readResourceLocation()) : null;
                 }
-                return new SpellsSyncMessage(entityId, spells, ids);
+                int[] cooldowns = new int[spells.length];
+                for(int i = 0; i < cooldowns.length; ++i)
+                {
+                    cooldowns[i] = buf.readVarInt();
+                }
+                return new SpellsSyncMessage(entityId, spells, ids, cooldowns);
             }
     );
 

@@ -69,6 +69,11 @@ public class ClientMessageHandler
                     {
                         spellHolder.setSpell(i, null);
                     }
+
+                    if(i < msg.cooldowns().length)
+                    {
+                        spellHolder.setCooldown(i, msg.cooldowns()[i]);
+                    }
                 }
             });
         }

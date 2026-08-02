@@ -34,14 +34,17 @@ public class SpellHolder implements INBTSerializable<ListTag>
 {
     public static final int SPELL_SLOTS = 5;
     public static final String EMPTY_SLOT = "";
+    public static final String KEY_COOLDOWN = "cooldown";
 
     protected final SpellInstance[] slots;
+    protected final int[] cooldowns;
     protected Player player;
     private ListTag pendingNBT;
 
     public SpellHolder()
     {
         slots = new SpellInstance[SPELL_SLOTS];
+        cooldowns = new int[SPELL_SLOTS];
         player = null;
         pendingNBT = null;
     }
@@ -80,6 +83,11 @@ public class SpellHolder implements INBTSerializable<ListTag>
     {
         if(!player.level().isClientSide)
         {
+            if(cooldowns[slot] > 0)
+            {
+                return;
+            }
+
             if(slots[slot] != null)
             {
                 slots[slot].run(player.level(), player, BuiltinEvents.ON_UNEQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
@@ -90,6 +98,28 @@ public class SpellHolder implements INBTSerializable<ListTag>
             }
         }
         slots[slot] = spell;
+    }
+
+    public int getCooldown(int slot)
+    {
+        return cooldowns[slot];
+    }
+
+    public void setCooldown(int slot, int ticks)
+    {
+        cooldowns[slot] = Math.max(0, ticks);
+        sendSync();
+    }
+
+    public void tickCooldowns()
+    {
+        for(int i = 0; i < SPELL_SLOTS; ++i)
+        {
+            if(cooldowns[i] > 0)
+            {
+                --cooldowns[i];
+            }
+        }
     }
 
     public Player getPlayer()
@@ -143,7 +173,8 @@ public class SpellHolder implements INBTSerializable<ListTag>
         return new SpellsSyncMessage(
                 player.getId(),
                 Arrays.stream(slots).map(s -> s != null ? s.getSpell().unwrap().map(ResourceKey::location, registry::getKey) : null).toArray(ResourceLocation[]::new),
-                Arrays.stream(slots).map(s -> s != null ? s.getNodeId() : null).toArray(FullSpellNodeId[]::new)
+                Arrays.stream(slots).map(s -> s != null ? s.getNodeId() : null).toArray(FullSpellNodeId[]::new),
+                cooldowns.clone()
         );
     }
 
@@ -165,6 +196,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
             {
                 slots[i].toNbt(tag, spellRegistry);
             }
+            tag.putInt(KEY_COOLDOWN, cooldowns[i]);
             list.add(i, tag);
         }
         return list;
@@ -189,7 +221,9 @@ public class SpellHolder implements INBTSerializable<ListTag>
 
         for(int i = 0; i < SPELL_SLOTS && i < tag.size(); ++i)
         {
-            slots[i] = SpellInstance.fromNbt(tag.getCompound(i), spellTreeRegistry, spellRegistry);
+            CompoundTag slotTag = tag.getCompound(i);
+            slots[i] = SpellInstance.fromNbt(slotTag, spellTreeRegistry, spellRegistry);
+            cooldowns[i] = slotTag.getInt(KEY_COOLDOWN);
         }
     }
 

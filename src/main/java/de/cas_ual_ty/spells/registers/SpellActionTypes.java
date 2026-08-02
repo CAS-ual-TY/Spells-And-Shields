@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.spell.action.ai.ClearMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.ai.GetMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.control.*;
+import de.cas_ual_ty.spells.spell.action.cooldown.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
@@ -85,7 +86,15 @@ public class SpellActionTypes
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<JumpAction>> JUMP = DEFERRED_REGISTER.register("jump", () -> new SpellActionType<>(JumpAction::new, JumpAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<LabelAction>> LABEL = DEFERRED_REGISTER.register("label", () -> new SpellActionType<>(LabelAction::new, LabelAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<TerminateAction>> TERMINATE = DEFERRED_REGISTER.register("terminate", () -> new SpellActionType<>(TerminateAction::new, TerminateAction::makeCodec));
-    
+
+    // cooldown
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<AddCooldownAction>> ADD_COOLDOWN = DEFERRED_REGISTER.register("add_cooldown", () -> new SpellActionType<>(AddCooldownAction::new, AddCooldownAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<ClearCooldownAction>> CLEAR_COOLDOWN = DEFERRED_REGISTER.register("clear_cooldown", () -> new SpellActionType<>(ClearCooldownAction::new, ClearCooldownAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetCooldownAction>> GET_COOLDOWN = DEFERRED_REGISTER.register("get_cooldown", () -> new SpellActionType<>(GetCooldownAction::new, GetCooldownAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<LowerCooldownAction>> LOWER_COOLDOWN = DEFERRED_REGISTER.register("lower_cooldown", () -> new SpellActionType<>(LowerCooldownAction::new, LowerCooldownAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<SetCooldownAction>> SET_COOLDOWN = DEFERRED_REGISTER.register("set_cooldown", () -> new SpellActionType<>(SetCooldownAction::new, SetCooldownAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<TryCooldownAction>> TRY_COOLDOWN = DEFERRED_REGISTER.register("try_cooldown", () -> new SpellActionType<>(TryCooldownAction::new, TryCooldownAction::makeCodec));
+
     // delayed
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<AddDelayedSpellAction>> ADD_DELAYED_SPELL = DEFERRED_REGISTER.register("add_delayed_spell", () -> new SpellActionType<>(AddDelayedSpellAction::new, AddDelayedSpellAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<CheckHasDelayedSpellAction>> CHECK_HAS_DELAYED_SPELL = DEFERRED_REGISTER.register("check_has_delayed_spell", () -> new SpellActionType<>(CheckHasDelayedSpellAction::new, CheckHasDelayedSpellAction::makeCodec));

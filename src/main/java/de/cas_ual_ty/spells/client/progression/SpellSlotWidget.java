@@ -13,6 +13,7 @@ import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -31,16 +32,18 @@ import java.util.function.IntConsumer;
 public class SpellSlotWidget extends Button
 {
     public final int slot;
+    public final Font font;
     
-    public SpellSlotWidget(int x, int y, int slot, IntConsumer onPress)
+    public SpellSlotWidget(int x, int y, int slot, Font font, IntConsumer onPress)
     {
         super(x, y, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, Component.empty(), (b) -> onPress.accept(slot), DEFAULT_NARRATION);
         this.slot = slot;
+        this.font = font;
     }
     
-    protected void renderFrame(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick)
+    protected void renderFrame(GuiGraphics guiGraphics, int mouseX, int mouseY, SpellHolder spellHolder, SpellInstance spell, int cooldown)
     {
-        if(!active || isMouseOver(mouseX, mouseY))
+        if(!active || isMouseOver(mouseX, mouseY) || cooldown > 0)
         {
             // white frame
             guiGraphics.blitSprite(AdvancementWidgetType.UNOBTAINED.frameSprite(AdvancementType.GOAL), getX(), getY(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
@@ -51,34 +54,56 @@ public class SpellSlotWidget extends Button
             guiGraphics.blitSprite(AdvancementWidgetType.OBTAINED.frameSprite(AdvancementType.GOAL), getX(), getY(), SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT);
         }
     }
-    
+
+    protected void renderCooldownOverlay(GuiGraphics guiGraphics, SpellHolder spellHolder, SpellInstance spell, int cooldown)
+    {
+        guiGraphics.drawCenteredString(font, String.valueOf((cooldown + 20 - 1) / 20), getX() + SpellNodeWidget.FRAME_WIDTH/2, getY() + (SpellNodeWidget.FRAME_HEIGHT - font.lineHeight) / 2, -1);
+    }
+
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTick)
     {
+        Player player = Minecraft.getInstance().player;
+
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
-        
-        renderFrame(guiGraphics, mouseX, mouseY, deltaTick);
-        
-        Player player = Minecraft.getInstance().player;
-        
+
         if(player != null)
         {
             SpellHolder.getSpellHolder(player).ifPresent(spellHolder ->
             {
+                int cooldown = spellHolder.getCooldown(slot);
                 SpellInstance spell = spellHolder.getSpell(slot);
-                
-                if(spell != null && spell.getSpell() != null)
+
+                if(spell == null || spell.getSpell() == null)
                 {
-                    SpellIcon icon = spell.getSpell().value().getIcon();
-                    SpellIconRegistry.render(icon, guiGraphics, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, getX(), getY(), deltaTick);
+                    RenderSystem.enableBlend();
+                    renderFrame(guiGraphics, mouseX, mouseY, spellHolder, spell, cooldown);
+                    RenderSystem.disableBlend();
+                    return;
+                }
+
+                if(cooldown > 0)
+                {
+                    RenderSystem.setShaderColor(0.5F, 0.5F, 0.5F, 1F);
+                }
+
+                RenderSystem.enableBlend();
+                renderFrame(guiGraphics, mouseX, mouseY, spellHolder, spell, cooldown);
+                RenderSystem.disableBlend();
+                SpellIcon icon = spell.getSpell().value().getIcon();
+                SpellIconRegistry.render(icon, guiGraphics, SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, getX(), getY(), deltaTick);
+
+                if(cooldown > 0)
+                {
+                    RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+                    RenderSystem.enableBlend();
+                    renderCooldownOverlay(guiGraphics, spellHolder, spell, cooldown);
+                    RenderSystem.disableBlend();
                 }
             });
         }
-        
-        RenderSystem.disableBlend();
     }
     
     @Override

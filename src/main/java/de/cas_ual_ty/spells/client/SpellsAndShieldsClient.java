@@ -21,6 +21,7 @@ import de.cas_ual_ty.spells.spell.ManaTooltipComponent;
 import de.cas_ual_ty.spells.spell.projectile.HomingSpellProjectile;
 import de.cas_ual_ty.spells.spell.projectile.SpellProjectile;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.advancements.AdvancementWidgetType;
@@ -237,6 +238,8 @@ public class SpellsAndShieldsClient
                     margin = SpellsClientConfig.SPELL_SLOTS_POSITION_CREATIVE_SPACING.get();
                 }
 
+                Font font = Minecraft.getInstance().font;
+
                 for(int i = 0; i < SpellHolder.SPELL_SLOTS; ++i)
                 {
                     int x1 = offX + i * slotsPosition.incrementX(SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, margin);
@@ -244,7 +247,7 @@ public class SpellsAndShieldsClient
                             + offY + i * slotsPosition.incrementY(SpellNodeWidget.FRAME_WIDTH, SpellNodeWidget.FRAME_HEIGHT, margin);
 
                     int slot = i;
-                    SpellSlotWidget s = new SpellSlotWidget(0, y1, i, (j) -> {})
+                    SpellSlotWidget s = new SpellSlotWidget(0, y1, i, font, (j) -> {})
                     {
                         @Override
                         public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick)
