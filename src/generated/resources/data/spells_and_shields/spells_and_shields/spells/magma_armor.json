@@ -32,8 +32,9 @@
       "d/boolean/input": "<< !pvp() >>"
     },
     {
-      "type": "spells_and_shields:move_player_targets",
+      "type": "spells_and_shields:filter_player_targets",
       "activation": "no_pvp",
+      "d/boolean/move": true,
       "td/destination": "",
       "ts/source": "attacker"
     },

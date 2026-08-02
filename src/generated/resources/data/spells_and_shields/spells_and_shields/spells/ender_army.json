@@ -91,8 +91,9 @@
       "d/boolean/input": "<< !pvp() >>"
     },
     {
-      "type": "spells_and_shields:move_player_targets",
+      "type": "spells_and_shields:filter_player_targets",
       "activation": "no_pvp",
+      "d/boolean/move": true,
       "td/destination": "",
       "ts/source": "entity_hit"
     },
@@ -118,7 +119,7 @@
     {
       "type": "spells_and_shields:burn_mana",
       "activation": "on_entity_hit",
-      "d/double/mana_amount": "<<mana_cost>>",
+      "d/double/amount": "<<mana_cost>>",
       "ts/targets": "owner"
     },
     {
@@ -130,7 +131,7 @@
       "d/boolean/input": "<< item_costs() >>"
     },
     {
-      "type": "spells_and_shields:consume_player_items",
+      "type": "spells_and_shields:try_consume_player_items",
       "activation": "consume",
       "d/boolean/must_be_in_hand": true,
       "d/int/amount": 1,

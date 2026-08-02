@@ -39,7 +39,7 @@
   ],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:simple_mana_check",
+      "type": "spells_and_shields:try_burn_mana_cost",
       "activation": "active"
     },
     {
@@ -66,8 +66,9 @@
       "d/boolean/input": "<< !pvp() >>"
     },
     {
-      "type": "spells_and_shields:move_player_targets",
+      "type": "spells_and_shields:filter_player_targets",
       "activation": "no_pvp",
+      "d/boolean/move": true,
       "td/destination": "",
       "ts/source": "targets"
     },

@@ -29,7 +29,9 @@
       "type": "spells_and_shields:get_mana",
       "activation": "reduce",
       "t/target": "owner",
-      "var/result": "mana"
+      "var/extra_mana": "",
+      "var/mana": "mana",
+      "var/max_mana": ""
     },
     {
       "type": "spells_and_shields:put_double",
@@ -46,7 +48,7 @@
     {
       "type": "spells_and_shields:burn_mana",
       "activation": "reduce",
-      "d/double/mana_amount": "<<reduce_amount>>",
+      "d/double/amount": "<<reduce_amount>>",
       "ts/targets": "owner"
     },
     {

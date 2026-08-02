@@ -20,7 +20,7 @@
   "s6/spell_parameters": [],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:simple_mana_check",
+      "type": "spells_and_shields:try_burn_mana_cost",
       "activation": "active"
     },
     {
@@ -64,7 +64,7 @@
     {
       "type": "spells_and_shields:burn_mana",
       "activation": "active",
-      "d/double/mana_amount": "<<mana_cost>>",
+      "d/double/amount": "<<mana_cost>>",
       "ts/targets": "owner"
     },
     {
@@ -74,8 +74,9 @@
       "var/result": "initial_size"
     },
     {
-      "type": "spells_and_shields:move_player_targets",
+      "type": "spells_and_shields:filter_player_targets",
       "activation": "living_change_target",
+      "d/boolean/move": true,
       "td/destination": "",
       "ts/source": "new_target"
     },

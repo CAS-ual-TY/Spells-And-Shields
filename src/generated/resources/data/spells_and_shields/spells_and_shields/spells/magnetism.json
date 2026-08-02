@@ -29,7 +29,7 @@
   ],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:simple_mana_check",
+      "type": "spells_and_shields:try_burn_mana_cost",
       "activation": "active"
     },
     {

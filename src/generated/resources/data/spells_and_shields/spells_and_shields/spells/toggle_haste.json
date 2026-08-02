@@ -162,7 +162,7 @@
       "ts/targets": "player"
     },
     {
-      "type": "spells_and_shields:mana_check",
+      "type": "spells_and_shields:try_burn_mana",
       "activation": "apply",
       "d/double/amount": "<< (mana_cost * duration) / 100 >>",
       "t/target": "player"

@@ -124,7 +124,7 @@
     {
       "type": "spells_and_shields:burn_mana",
       "activation": "active",
-      "d/double/mana_amount": "<<mana_cost>>",
+      "d/double/amount": "<<mana_cost>>",
       "ts/targets": "owner"
     },
     {
@@ -188,8 +188,9 @@
       "d/boolean/input": "<< !pvp() >>"
     },
     {
-      "type": "spells_and_shields:move_player_targets",
+      "type": "spells_and_shields:filter_player_targets",
       "activation": "no_pvp",
+      "d/boolean/move": true,
       "td/destination": "",
       "ts/source": "entity_hit"
     },

@@ -49,7 +49,7 @@
     {
       "type": "spells_and_shields:burn_mana",
       "activation": "active",
-      "d/double/mana_amount": "<<mana_cost>>",
+      "d/double/amount": "<<mana_cost>>",
       "ts/targets": "owner"
     },
     {
@@ -75,7 +75,7 @@
     {
       "type": "spells_and_shields:replenish_mana",
       "activation": "on_entity_hit",
-      "d/double/mana_amount": "<<mana_cost>>",
+      "d/double/amount": "<<mana_cost>>",
       "ts/targets": "entity_hit"
     },
     {
