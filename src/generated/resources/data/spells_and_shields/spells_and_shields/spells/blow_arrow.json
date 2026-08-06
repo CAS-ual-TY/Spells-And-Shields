@@ -44,9 +44,9 @@
       ]
     }
   ],
-  "s5/spell_events": [
-    "active"
-  ],
+  "s5/spell_events": {
+    "active": "active"
+  },
   "s6/spell_parameters": [],
   "s7/spell_actions": [
     {

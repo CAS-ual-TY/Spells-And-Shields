@@ -21,10 +21,10 @@
       "translate": "spell.spells_and_shields.toggle_lava_walker.desc"
     }
   ],
-  "s5/spell_events": [
-    "active",
-    "on_unequip"
-  ],
+  "s5/spell_events": {
+    "active": "active",
+    "on_unequip": "on_unequip"
+  },
   "s6/spell_parameters": [
     {
       "type": "spells_and_shields:int",

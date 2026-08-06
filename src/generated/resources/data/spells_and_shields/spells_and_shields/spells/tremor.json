@@ -12,9 +12,9 @@
       "translate": "spell.spells_and_shields.tremor.desc"
     }
   ],
-  "s5/spell_events": [
-    "active"
-  ],
+  "s5/spell_events": {
+    "active": "active"
+  },
   "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",

@@ -47,10 +47,10 @@
       ]
     }
   ],
-  "s5/spell_events": [
-    "on_equip",
-    "on_unequip"
-  ],
+  "s5/spell_events": {
+    "on_equip": "on_equip",
+    "on_unequip": "on_unequip"
+  },
   "s6/spell_parameters": [
     {
       "type": "spells_and_shields:double",

@@ -598,7 +598,7 @@ public class SpellsGen
                 .addAction(TryBurnManaCostAction.make(ACTIVE))
                 .addAction(SpawnEntityAction.make(ACTIVE, "summoned", STRING.immediate(entityType), OWNER, ZERO_VEC3, ZERO_VEC3))
                 .addAction(PlaySoundAction.make(ACTIVE, "summoned", spawnSound, ONE_D, ONE_D))
-                .addAction(AddDelayedSpellAction.make(ACTIVE, "summoned", "on_remove", INT.immediate(duration), STRING.immediate(""), EMPTY_TAG, eventHookMap(LIVING_CHANGE_TARGET.activation, LIVING_CHANGE_TARGET.activation, OWNER_LEFT_DIMENSION.activation, "on_remove")))
+                .addAction(AddDelayedSpellAction.make(ACTIVE, "summoned", "on_remove", INT.immediate(duration), STRING.immediate(""), EMPTY_TAG, eventHookMap(LIVING_CHANGE_TARGET.event, LIVING_CHANGE_TARGET.event, OWNER_LEFT_DIMENSION.event, "on_remove")))
                 .addAction(BurnManaAction.make(ACTIVE, OWNER, DOUBLE.reference(MANA_COST)))
                 .addAction(GetTargetGroupSizeAction.make(LIVING_CHANGE_TARGET, "new_target", "initial_size"))
                 .addAction(FilterPlayerTargetsAction.make(LIVING_CHANGE_TARGET, "", "new_target", TRUE))

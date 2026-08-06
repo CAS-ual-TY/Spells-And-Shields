@@ -12,9 +12,9 @@
       "translate": "spell.spells_and_shields.mana_soles.desc"
     }
   ],
-  "s5/spell_events": [
-    "living_hurt_victim"
-  ],
+  "s5/spell_events": {
+    "living_hurt_victim": "living_hurt_victim"
+  },
   "s6/spell_parameters": [],
   "s7/spell_actions": [
     {

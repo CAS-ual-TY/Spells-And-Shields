@@ -12,11 +12,11 @@
       "translate": "spell.spells_and_shields.summon_blaze.desc"
     }
   ],
-  "s5/spell_events": [
-    "active",
-    "living_change_target",
-    "owner_left_dimension"
-  ],
+  "s5/spell_events": {
+    "active": "active",
+    "living_change_target": "living_change_target",
+    "owner_left_dimension": "owner_left_dimension"
+  },
   "s6/spell_parameters": [],
   "s7/spell_actions": [
     {

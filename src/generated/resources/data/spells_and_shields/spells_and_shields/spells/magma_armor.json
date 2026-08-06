@@ -12,9 +12,9 @@
       "translate": "spell.spells_and_shields.magma_armor.desc"
     }
   ],
-  "s5/spell_events": [
-    "living_hurt_victim"
-  ],
+  "s5/spell_events": {
+    "living_hurt_victim": "living_hurt_victim"
+  },
   "s6/spell_parameters": [
     {
       "type": "spells_and_shields:int",
