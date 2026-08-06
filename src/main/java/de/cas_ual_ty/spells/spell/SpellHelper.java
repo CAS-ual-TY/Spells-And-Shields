@@ -32,7 +32,7 @@ public class SpellHelper
                 {
                     try
                     {
-                        spell.run(spellHolder.getPlayer().level(), spellHolder.getPlayer(), BuiltinEvents.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                        spell.run(spellHolder.getPlayer().level(), spellHolder.getPlayer(), BuiltinEvents.ACTIVE.event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
                     }
                     catch(Exception e)
                     {

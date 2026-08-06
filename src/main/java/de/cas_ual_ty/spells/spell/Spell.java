@@ -13,8 +13,10 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Spell
 {
@@ -24,9 +26,9 @@ public class Spell
     protected List<Component> tooltip;
     protected float manaCost;
     private List<CtxVar<?>> parameters;
-    private List<String> events;
-    
-    public Spell(List<SpellAction> spellActions, SpellIcon icon, Component title, List<Component> tooltip, float manaCost, List<CtxVar<?>> parameters, List<String> events)
+    private Map<String, String> events;
+
+    public Spell(List<SpellAction> spellActions, SpellIcon icon, Component title, List<Component> tooltip, float manaCost, List<CtxVar<?>> parameters, Map<String, String> events)
     {
         this.spellActions = spellActions;
         this.icon = icon;
@@ -36,10 +38,10 @@ public class Spell
         this.parameters = parameters;
         this.events = events;
     }
-    
+
     public Spell(SpellIcon icon, Component title, List<Component> tooltip, float manaCost)
     {
-        this(new ArrayList<>(), icon, title, tooltip, manaCost, new LinkedList<>(), new LinkedList<>());
+        this(new ArrayList<>(), icon, title, tooltip, manaCost, new LinkedList<>(), new LinkedHashMap<>());
     }
     
     public Spell(SpellIcon icon, Component title, float manaCost)
@@ -87,7 +89,12 @@ public class Spell
     
     public Spell addEventHook(Object eventId)
     {
-        events.add(eventId.toString());
+        return addEventHook(eventId, eventId);
+    }
+
+    public Spell addEventHook(Object eventId, Object activation)
+    {
+        events.put(eventId.toString(), activation.toString());
         return this;
     }
     
@@ -121,9 +128,15 @@ public class Spell
         return parameters;
     }
     
-    public List<String> getEventsList()
+    public Map<String, String> getEvents()
     {
         return events;
+    }
+
+    @Nullable
+    public String getEventActivation(String eventId)
+    {
+        return events.get(eventId);
     }
     
     public List<Component> makeTooltipList(@Nullable Component keyBindTooltip)

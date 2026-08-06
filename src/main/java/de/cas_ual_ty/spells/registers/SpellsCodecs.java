@@ -102,7 +102,7 @@ public class SpellsCodecs
                 ComponentSerialization.CODEC.listOf().fieldOf("s4/tooltip").forGetter(Spell::getTooltip),
                 Codec.FLOAT.fieldOf("s3/mana_cost").xmap(f -> Math.max(0, f), f -> Math.max(0, f)).forGetter(Spell::getManaCost),
                 CTX_VAR.listOf().fieldOf("s6/spell_parameters").forGetter(Spell::getParameters),
-                Codec.STRING.listOf().fieldOf("s5/spell_events").forGetter(Spell::getEventsList)
+                Codec.lazyInitialized(() -> STRING_MAP).fieldOf("s5/spell_events").forGetter(Spell::getEvents)
         ).apply(instance, Spell::new)));
         
         SPELL_SYNC = Codec.lazyInitialized(() -> RecordCodecBuilder.create(instance -> instance.group(

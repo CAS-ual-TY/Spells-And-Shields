@@ -37,37 +37,37 @@ public class SpellsEvents
     
     public static void registerEvents()
     {
-        register(BuiltinEvents.LIVING_ATTACK_ATTACKER.activation, LivingIncomingDamageEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
+        register(BuiltinEvents.LIVING_ATTACK_ATTACKER.event, LivingIncomingDamageEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
                 .addTargetLink(e -> Target.of(e.getEntity()), "victim")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
 
-        register(BuiltinEvents.LIVING_ATTACK_VICTIM.activation, LivingIncomingDamageEvent.class)
+        register(BuiltinEvents.LIVING_ATTACK_VICTIM.event, LivingIncomingDamageEvent.class)
                 .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
 
-        register(BuiltinEvents.LIVING_HURT_ATTACKER.activation, LivingDamageEvent.Pre.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
+        register(BuiltinEvents.LIVING_HURT_ATTACKER.event, LivingDamageEvent.Pre.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
                 .addTargetLink(e -> Target.of(e.getEntity()), "victim")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
 
-        register(BuiltinEvents.LIVING_HURT_VICTIM.activation, LivingDamageEvent.Pre.class)
+        register(BuiltinEvents.LIVING_HURT_VICTIM.event, LivingDamageEvent.Pre.class)
                 .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
 
-        register(BuiltinEvents.LIVING_DAMAGE_ATTACKER.activation, LivingDamageEvent.Pre.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
+        register(BuiltinEvents.LIVING_DAMAGE_ATTACKER.event, LivingDamageEvent.Pre.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
                 .addTargetLink(e -> Target.of(e.getEntity()), "victim")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
 
-        register(BuiltinEvents.LIVING_DAMAGE_VICTIM.activation, LivingDamageEvent.Pre.class)
+        register(BuiltinEvents.LIVING_DAMAGE_VICTIM.event, LivingDamageEvent.Pre.class)
                 .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
                 .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
                 .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
 
-        register(BuiltinEvents.LIVING_CHANGE_TARGET.activation, LivingChangeTargetEvent.class)
+        register(BuiltinEvents.LIVING_CHANGE_TARGET.event, LivingChangeTargetEvent.class)
                 .addTargetLink(e -> e.getNewAboutToBeSetTarget() != null ? Target.of(e.getNewAboutToBeSetTarget()) : null, "new_target");
 
         registerOwnerLeftDimensionEvent();
@@ -108,7 +108,7 @@ public class SpellsEvents
             if(entity.hasData(SpellsCapabilities.DELAYED_SPELL_HOLDER.get()))
             {
                 DelayedSpellHolder.getHolder(entity).ifPresent(holder ->
-                        holder.activateEvent(BuiltinEvents.OWNER_LEFT_DIMENSION.activation, toContext, fromContext));
+                        holder.activateEvent(BuiltinEvents.OWNER_LEFT_DIMENSION.event, toContext, fromContext));
             }
         });
     }
@@ -125,7 +125,7 @@ public class SpellsEvents
             Consumer<SpellContext> toContext = ctx -> {};
             Consumer<SpellContext> fromContext = ctx -> {};
             DelayedSpellHolder.getHolder(entity).ifPresent(holder ->
-                    holder.activateEvent(BuiltinEvents.HOLDER_UNLOADED.activation, toContext, fromContext));
+                    holder.activateEvent(BuiltinEvents.HOLDER_UNLOADED.event, toContext, fromContext));
         });
     }
 

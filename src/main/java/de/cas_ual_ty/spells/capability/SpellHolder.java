@@ -90,11 +90,11 @@ public class SpellHolder implements INBTSerializable<ListTag>
 
             if(slots[slot] != null)
             {
-                slots[slot].run(player.level(), player, BuiltinEvents.ON_UNEQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                slots[slot].run(player.level(), player, BuiltinEvents.ON_UNEQUIP.event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
             }
             if(spell != null)
             {
-                spell.run(player.level(), player, BuiltinEvents.ON_EQUIP.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                spell.run(player.level(), player, BuiltinEvents.ON_EQUIP.event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
             }
         }
         slots[slot] = spell;
@@ -127,7 +127,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
         return player;
     }
 
-    public void activateAll(String activation)
+    public void activateAll(String event)
     {
         for(int i = 0; i < getSlots(); i++)
         {
@@ -135,7 +135,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
             if(s != null)
             {
                 final int slot = i;
-                s.run(player.level(), player, activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                s.run(player.level(), player, event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
             }
         }
     }

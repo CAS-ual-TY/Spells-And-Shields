@@ -118,7 +118,7 @@ public class SpellsCapabilities
                     SpellHolder.getSpellHolder(event.getOriginal()).ifPresent(original ->
                             current.deserializeNBT(provider, original.serializeNBT(provider)));
                     current.sendSync();
-                    current.activateAll(BuiltinEvents.ON_EQUIP.activation);
+                    current.activateAll(BuiltinEvents.ON_EQUIP.event);
                 });
             }
         }

@@ -510,7 +510,7 @@ public class SpellCommand
         Spell spell = SpellArgument.getSpell(context, ARG_SPELL);
         SpellInstance spellInstance = SpellInstance.direct(Holder.direct(spell));
         
-        spellInstance.run(player.level(), player, BuiltinEvents.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, -1));
+        spellInstance.run(player.level(), player, BuiltinEvents.ACTIVE.event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, -1));
         
         context.getSource().sendSuccess(() -> Component.translatable(SPELLS_CAST_DIRECT, players.iterator().next().getDisplayName(), spell.getTitle()), true);
         
@@ -539,7 +539,7 @@ public class SpellCommand
             return 0;
         }
         
-        spellNode.getSpellInstance().run(player.level(), player, BuiltinEvents.ACTIVE.activation, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, -1));
+        spellNode.getSpellInstance().run(player.level(), player, BuiltinEvents.ACTIVE.event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, -1));
         
         Spell spell = spellNode.getSpellDirect();
         context.getSource().sendSuccess(() -> Component.translatable(SPELLS_CAST, players.iterator().next().getDisplayName(), spell.getTitle(), spellTree.getTitle()), true);

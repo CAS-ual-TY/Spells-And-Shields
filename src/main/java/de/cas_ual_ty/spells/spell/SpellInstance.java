@@ -69,21 +69,30 @@ public abstract class SpellInstance
         return tooltipComponent;
     }
 
-    public boolean run(Player owner, String activation)
+    public boolean run(Player owner, String event)
     {
-        return run(owner.level(), owner, activation);
+        return run(owner.level(), owner, event);
     }
 
-    public boolean run(Level level, @Nullable Player owner, String activation)
+    public boolean run(Level level, @Nullable Player owner, String event)
     {
-        return run(level, owner, activation, false, (ctx) -> {}, (ctx) -> {});
+        return run(level, owner, event, false, (ctx) -> {}, (ctx) -> {});
     }
 
-    public boolean run(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> preRun)
+    public boolean run(Level level, @Nullable Player owner, String event, Consumer<SpellContext> preRun)
     {
-        return run(level, owner, activation, false, preRun, (ctx) -> {});
+        return run(level, owner, event, false, preRun, (ctx) -> {});
     }
 
+    /**
+     * Runs the spell starting directly at {@code activation}, skipping the spell's own event map entirely.
+     * For callers that already resolved their own activation locally and just need the spell entered at that
+     * exact point - currently {@link de.cas_ual_ty.spells.spell.projectile.SpellProjectile}'s hit/timeout
+     * callbacks (resolved per-projectile-instance from {@code ShootAction}/{@code HomeAction} params) and
+     * {@link de.cas_ual_ty.spells.capability.DelayedSpellHolder} (resolved per-delayed-spell via its own
+     * {@code eventsMap}). Everything else - direct casts, admin commands, all {@code SpellsEvents} dispatch -
+     * goes through the regular {@code run} overloads below and always passes through the spell's event map.
+     */
     public boolean forceRun(Level level, @Nullable Player owner, String activation, Consumer<SpellContext> preRun)
     {
         return run(level, owner, activation, true, preRun, (ctx) -> {});
@@ -94,9 +103,15 @@ public abstract class SpellInstance
         return run(owner.level(), owner, event, false, toContext, fromContext);
     }
 
-    public boolean run(Level level, @Nullable Player owner, String activation, boolean force, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)
+    public boolean run(Level level, @Nullable Player owner, String event, boolean preResolved, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)
     {
-        if((getSpell().value().getEventsList().contains(activation) || force) && !level.isClientSide)
+        // when not preResolved, "event" is the raw event id coming from the dispatcher (eg. SpellsEvents) -
+        // the spell's own event map decides which activation that turns into, so different event ids can be
+        // configured to fire the same activation. A preResolved run (see forceRun above) already passes a
+        // real activation directly via this same parameter and skips this lookup entirely.
+        String activation = preResolved ? event : getSpell().value().getEventActivation(event);
+
+        if(activation != null && !level.isClientSide)
         {
             SpellContext ctx = initializeContext(level, owner, activation);
             preRun.accept(ctx);

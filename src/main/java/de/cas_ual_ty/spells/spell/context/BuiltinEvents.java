@@ -14,17 +14,17 @@ public enum BuiltinEvents
     LIVING_CHANGE_TARGET("living_change_target"),
     OWNER_LEFT_DIMENSION("owner_left_dimension"),
     HOLDER_UNLOADED("holder_unloaded");
-    
-    public final String activation;
-    
-    BuiltinEvents(String activation)
+
+    public final String event;
+
+    BuiltinEvents(String event)
     {
-        this.activation = activation;
+        this.event = event;
     }
-    
+
     @Override
     public String toString()
     {
-        return activation;
+        return event;
     }
 }
