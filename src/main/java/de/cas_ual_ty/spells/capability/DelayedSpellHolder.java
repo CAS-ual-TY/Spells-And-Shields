@@ -109,16 +109,17 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
 
         LinkedList<DelayedSpell> theSpells = spells;
         spells = new LinkedList<>();
+        boolean removed = false;
 
         for(DelayedSpell spell : theSpells)
         {
-            if(uuid.equals(spell.uuid))
+            if(!removed && uuid.equals(spell.uuid))
             {
                 if(forceActivate)
                 {
                     activate(spell);
                 }
-                return true;
+                removed = true;
             }
             else
             {
@@ -126,7 +127,7 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
             }
         }
 
-        return false;
+        return removed;
     }
 
     public void activateEvent(String event, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)

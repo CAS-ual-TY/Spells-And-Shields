@@ -76,11 +76,19 @@ public class SpellHolder implements INBTSerializable<ListTag>
 
     public SpellInstance getSpell(int slot)
     {
+        if(slot < 0 || slot >= SPELL_SLOTS)
+        {
+            return null;
+        }
         return slots[slot];
     }
 
     public void setSpell(int slot, @Nullable SpellInstance spell)
     {
+        if(slot < 0 || slot >= SPELL_SLOTS)
+        {
+            return;
+        }
         if(!player.level().isClientSide)
         {
             if(cooldowns[slot] > 0)
