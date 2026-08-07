@@ -11,11 +11,7 @@ import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import net.minecraft.core.Holder;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Calls a {@link SpellFunction}: runs its actions as a contained sub-run of the current {@link SpellContext},
