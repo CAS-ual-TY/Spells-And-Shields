@@ -1,9 +1,16 @@
 {
-  "actions": [
+  "f1/parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 5.0,
+      "var/name": "mana_cost"
+    }
+  ],
+  "f2/actions": [
     {
       "type": "spells_and_shields:try_burn_mana",
-      "activation": "pay",
-      "d/double/amount": "<<mana_amount>>",
+      "activation": "active",
+      "d/double/amount": "<<mana_cost>>",
       "t/target": "owner"
     }
   ]

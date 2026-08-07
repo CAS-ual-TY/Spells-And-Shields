@@ -1,32 +1,44 @@
 {
-  "actions": [
+  "f1/parameters": [
+    {
+      "type": "spells_and_shields:double",
+      "value": 5.0,
+      "var/name": "mana_cost"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 100,
+      "var/name": "duration"
+    }
+  ],
+  "f2/actions": [
     {
       "type": "spells_and_shields:has_mana",
-      "activation": "pay",
-      "d/double/amount": "<<mana_amount>>",
+      "activation": "active",
+      "d/double/amount": "<<mana_cost>>",
       "t/target": "owner"
     },
     {
       "type": "spells_and_shields:get_cooldown",
-      "activation": "pay",
+      "activation": "active",
       "d/int/slot": "<<slot>>",
       "t/source": "owner",
       "var/cooldown": "cooldown_remaining"
     },
     {
       "type": "spells_and_shields:conditional_deactivation",
-      "activation": "pay",
+      "activation": "active",
       "d/boolean/condition": "<< cooldown_remaining <= 0 >>"
     },
     {
       "type": "spells_and_shields:burn_mana",
-      "activation": "pay",
-      "d/double/amount": "<<mana_amount>>",
+      "activation": "active",
+      "d/double/amount": "<<mana_cost>>",
       "ts/targets": "owner"
     },
     {
       "type": "spells_and_shields:set_cooldown",
-      "activation": "pay",
+      "activation": "active",
       "d/int/duration": "<<duration>>",
       "d/int/slot": "<<slot>>",
       "t/target": "owner"
