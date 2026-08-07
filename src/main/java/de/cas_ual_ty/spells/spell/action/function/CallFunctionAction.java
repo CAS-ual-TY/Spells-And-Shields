@@ -90,7 +90,7 @@ public class CallFunctionAction extends SpellAction
         // if the nest limit was already exhausted, runNestedActions runs nothing - renaming back
         // immediately below still correctly undoes the rename-in either way, so nothing is left
         // stranded under an internal name
-        ctx.runNestedActions(function.value().getActions());
+        ctx.runNestedActions(function.value());
 
         activations.forEach((host, internal) -> ctx.renameActivation(internal, host));
         variables.forEach((host, internal) -> ctx.renameCtxVar(internal, host));

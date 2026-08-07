@@ -117,7 +117,8 @@ public class SpellsCodecs
         ).apply(instance, Spell::new)));
 
         SPELL_FUNCTION_CONTENTS = Codec.lazyInitialized(() -> RecordCodecBuilder.create(instance -> instance.group(
-                Codec.lazyInitialized(() -> SPELL_ACTION).listOf().fieldOf("actions").forGetter(SpellFunction::getActions)
+                CTX_VAR.listOf().fieldOf("f1/parameters").forGetter(SpellFunction::getParameters),
+                Codec.lazyInitialized(() -> SPELL_ACTION).listOf().fieldOf("f2/actions").forGetter(SpellFunction::getActions)
         ).apply(instance, SpellFunction::new)));
 
         STRING_MAP = new PrimitiveCodec<>()

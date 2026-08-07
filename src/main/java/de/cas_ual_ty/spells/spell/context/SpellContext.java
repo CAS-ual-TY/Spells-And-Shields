@@ -7,6 +7,7 @@ import de.cas_ual_ty.spells.registers.SpellActionTypes;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.SpellFunction;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
@@ -309,7 +310,7 @@ public class SpellContext
     }
 
     /**
-     * Runs {@code actions} as a nested, contained sub-run for a {@code call_function} call: same shared context
+     * Runs {@code function} as a nested, contained sub-run for a {@code call_function} call: same shared context
      * (activations/variables/target groups carry across exactly as translated by the caller beforehand), but its
      * own {@code index}/labels so jumps inside the function can never land in - or be landed on from - the
      * caller's own action list, which is a different list with unrelated indices. {@link #terminate()} is NOT
@@ -317,10 +318,14 @@ public class SpellContext
      * caller's own loop (which checks it right after every action, same as this one does) stops too - termination
      * is meant to cascade all the way out, not stay contained to whichever call is currently innermost.
      * <p>
+     * {@link SpellFunction#getParameters()} are initialized first, after whatever the caller's own input maps
+     * already renamed in - since {@link #initCtxVar(CtxVar)} unconditionally overwrites, this means the
+     * function's own declared starting values always win for its own internal names.
+     * <p>
      * Gated by {@link SpellsConfig#FUNCTION_NEST_LIMIT} to prevent unbounded/infinite recursion (eg. a function
      * that calls itself). Returns {@code false} without running anything if the limit is already exhausted.
      */
-    public boolean runNestedActions(List<SpellAction> actions)
+    public boolean runNestedActions(SpellFunction function)
     {
         if(nestLimit-- <= 0)
         {
@@ -335,7 +340,8 @@ public class SpellContext
         Map<String, Label> savedLabels = labels;
         labels = new HashMap<>();
 
-        runActions(actions);
+        function.getParameters().forEach(this::initCtxVar);
+        runActions(function.getActions());
 
         labels = savedLabels;
         index = savedIndex;
