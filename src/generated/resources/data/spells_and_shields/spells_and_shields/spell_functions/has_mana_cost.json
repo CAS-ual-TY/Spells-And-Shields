@@ -17,7 +17,7 @@
   },
   "f5/actions": [
     {
-      "type": "spells_and_shields:try_burn_mana",
+      "type": "spells_and_shields:has_mana",
       "activation": "_active",
       "d/double/amount": "<<_mana_cost>>",
       "t/target": "_owner"

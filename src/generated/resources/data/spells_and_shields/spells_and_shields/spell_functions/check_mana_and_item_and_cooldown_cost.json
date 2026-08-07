@@ -3,7 +3,27 @@
     {
       "type": "spells_and_shields:double",
       "value": 5.0,
-      "var/name": "mana_cost"
+      "var/name": "_mana_cost"
+    },
+    {
+      "type": "spells_and_shields:string",
+      "value": "minecraft:lapis_lazuli",
+      "var/name": "item"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 1,
+      "var/name": "item_amount"
+    },
+    {
+      "type": "spells_and_shields:boolean",
+      "value": true,
+      "var/name": "must_be_in_hand"
+    },
+    {
+      "type": "spells_and_shields:tag",
+      "value": {},
+      "var/name": "item_tag"
     },
     {
       "type": "spells_and_shields:int",
@@ -11,56 +31,65 @@
       "var/name": "duration"
     }
   ],
-  "f2/actions": [
+  "f2/map_activations": {
+    "active": "_active"
+  },
+  "f3/map_variables": {
+    "mana_cost": "_mana_cost"
+  },
+  "f4/map_targets": {
+    "owner": "_owner"
+  },
+  "f5/actions": [
     {
       "type": "spells_and_shields:has_mana",
-      "activation": "active",
-      "d/double/amount": "<<mana_cost>>",
-      "t/target": "owner"
+      "activation": "_active",
+      "d/double/amount": "<<_mana_cost>>",
+      "t/target": "_owner"
     },
     {
       "type": "spells_and_shields:get_cooldown",
-      "activation": "active",
-      "d/int/slot": "<<slot>>",
-      "t/source": "owner",
-      "var/cooldown": "cooldown_remaining"
+      "activation": "_active",
+      "d/int/slot": "<<spell_slot>>",
+      "t/source": "_owner",
+      "var/cooldown": "_cooldown_remaining"
     },
     {
       "type": "spells_and_shields:conditional_deactivation",
-      "activation": "active",
-      "d/boolean/condition": "<< cooldown_remaining <= 0 >>"
+      "activation": "_active",
+      "d/boolean/condition": "<< _cooldown_remaining <= 0 >>"
     },
     {
       "type": "spells_and_shields:player_has_items",
-      "activation": "active",
+      "activation": "_active",
       "d/boolean/creative_bypass": true,
       "d/boolean/must_be_in_hand": "<<must_be_in_hand>>",
       "d/compound_tag/tag": "<<item_tag>>",
       "d/int/amount": "<< item_costs() ? item_amount : 0 >>",
       "d/string/item": "<<item>>",
-      "t/source": "owner"
+      "t/source": "_owner"
     },
     {
       "type": "spells_and_shields:burn_mana",
-      "activation": "active",
-      "d/double/amount": "<<mana_cost>>",
-      "ts/targets": "owner"
+      "activation": "_active",
+      "d/double/amount": "<<_mana_cost>>",
+      "ts/targets": "_owner"
     },
     {
       "type": "spells_and_shields:set_cooldown",
-      "activation": "active",
+      "activation": "_active",
       "d/int/duration": "<<duration>>",
-      "d/int/slot": "<<slot>>",
-      "t/target": "owner"
+      "d/int/slot": "<<spell_slot>>",
+      "t/target": "_owner"
     },
     {
       "type": "spells_and_shields:try_consume_player_items",
-      "activation": "active",
+      "activation": "_active",
       "d/boolean/must_be_in_hand": "<<must_be_in_hand>>",
       "d/compound_tag/tag": "<<item_tag>>",
       "d/int/amount": "<< item_costs() ? item_amount : 0 >>",
       "d/string/item": "<<item>>",
-      "t/source": "owner"
+      "t/source": "_owner"
     }
   ]
 }

@@ -1,11 +1,6 @@
 {
   "f1/parameters": [
     {
-      "type": "spells_and_shields:double",
-      "value": 5.0,
-      "var/name": "_mana_cost"
-    },
-    {
       "type": "spells_and_shields:string",
       "value": "minecraft:lapis_lazuli",
       "var/name": "item"
@@ -29,41 +24,17 @@
   "f2/map_activations": {
     "active": "_active"
   },
-  "f3/map_variables": {
-    "mana_cost": "_mana_cost"
-  },
   "f4/map_targets": {
     "owner": "_owner"
   },
   "f5/actions": [
-    {
-      "type": "spells_and_shields:has_mana",
-      "activation": "_active",
-      "d/double/amount": "<<_mana_cost>>",
-      "t/target": "_owner"
-    },
     {
       "type": "spells_and_shields:player_has_items",
       "activation": "_active",
       "d/boolean/creative_bypass": true,
       "d/boolean/must_be_in_hand": "<<must_be_in_hand>>",
       "d/compound_tag/tag": "<<item_tag>>",
-      "d/int/amount": "<< item_costs() ? item_amount : 0 >>",
-      "d/string/item": "<<item>>",
-      "t/source": "_owner"
-    },
-    {
-      "type": "spells_and_shields:burn_mana",
-      "activation": "_active",
-      "d/double/amount": "<<_mana_cost>>",
-      "ts/targets": "_owner"
-    },
-    {
-      "type": "spells_and_shields:try_consume_player_items",
-      "activation": "_active",
-      "d/boolean/must_be_in_hand": "<<must_be_in_hand>>",
-      "d/compound_tag/tag": "<<item_tag>>",
-      "d/int/amount": "<< item_costs() ? item_amount : 0 >>",
+      "d/int/amount": "<<item_amount>>",
       "d/string/item": "<<item>>",
       "t/source": "_owner"
     }

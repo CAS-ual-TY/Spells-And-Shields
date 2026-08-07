@@ -14,18 +14,6 @@
   },
   "f5/actions": [
     {
-      "type": "spells_and_shields:get_cooldown",
-      "activation": "_active",
-      "d/int/slot": "<<spell_slot>>",
-      "t/source": "_owner",
-      "var/cooldown": "_cooldown_remaining"
-    },
-    {
-      "type": "spells_and_shields:conditional_deactivation",
-      "activation": "_active",
-      "d/boolean/condition": "<< _cooldown_remaining <= 0 >>"
-    },
-    {
       "type": "spells_and_shields:set_cooldown",
       "activation": "_active",
       "d/int/duration": "<<duration>>",
