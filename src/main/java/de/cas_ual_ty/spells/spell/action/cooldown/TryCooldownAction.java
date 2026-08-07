@@ -65,7 +65,17 @@ public class TryCooldownAction extends AffectSingleTypeAction<PlayerTarget>
             {
                 if(slot >= 0)
                 {
-                    SpellHolder.getSpellHolder(target.getPlayer()).ifPresent(spellHolder -> spellHolder.setCooldown(slot, duration));
+                    SpellHolder.getSpellHolder(target.getPlayer()).ifPresent(spellHolder ->
+                    {
+                        if(spellHolder.getCooldown(slot) > 0)
+                        {
+                            ctx.deactivate(activation);
+                        }
+                        else
+                        {
+                            spellHolder.setCooldown(slot, duration);
+                        }
+                    });
                 }
             });
         });
