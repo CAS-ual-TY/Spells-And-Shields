@@ -117,39 +117,39 @@ public class SpellFunctionsGen
         addSpellFunctions();
     }
 
-    public void addFunction(String key, List<CtxVar<?>> parameters, Map<String, String> defaultVariables, List<SpellAction> actions)
+    public void addFunction(ResourceLocation key, List<CtxVar<?>> parameters, Map<String, String> defaultVariables, List<SpellAction> actions)
     {
-        context.register(ResourceKey.create(SpellFunctions.REGISTRY_KEY, ResourceLocation.fromNamespaceAndPath(modId, key)), new SpellFunction(parameters, actions, DEFAULT_ACTIVATIONS, defaultVariables, DEFAULT_TARGETS));
+        context.register(ResourceKey.create(SpellFunctions.REGISTRY_KEY, key), new SpellFunction(parameters, actions, DEFAULT_ACTIVATIONS, defaultVariables, DEFAULT_TARGETS));
     }
 
-    public void addFunction(String key, List<CtxVar<?>> parameters, List<SpellAction> actions)
+    public void addFunction(ResourceLocation key, List<CtxVar<?>> parameters, List<SpellAction> actions)
     {
         addFunction(key, parameters, Map.of(), actions);
     }
 
-    public void addFunction(String key, List<SpellAction> actions)
+    public void addFunction(ResourceLocation key, List<SpellAction> actions)
     {
         addFunction(key, new LinkedList<>(), actions);
     }
 
     public void addSpellFunctions()
     {
-        addFunction("check_mana_cost", manaAmountDefault(), DEFAULT_VARIABLES_MANA, checkManaCost());
-        addFunction("check_item_cost", itemCostDefault(), checkItemCost());
-        addFunction("check_cooldown_cost", cooldownDurationDefault(), checkCooldownCost());
-        addFunction("check_mana_and_item_cost", combine(manaAmountDefault(), itemCostDefault()), DEFAULT_VARIABLES_MANA, checkManaAndItemCost());
-        addFunction("check_mana_and_cooldown_cost", combine(manaAmountDefault(), cooldownDurationDefault()), DEFAULT_VARIABLES_MANA, checkManaAndCooldownCost());
-        addFunction("check_item_and_cooldown_cost", combine(itemCostDefault(), cooldownDurationDefault()), checkItemAndCooldownCost());
-        addFunction("check_mana_and_item_and_cooldown_cost", combine(manaAmountDefault(), itemCostDefault(), cooldownDurationDefault()), DEFAULT_VARIABLES_MANA, checkManaAndItemAndCooldownCost());
+        addFunction(SpellFunctions.CHECK_MANA_COST, manaAmountDefault(), DEFAULT_VARIABLES_MANA, checkManaCost());
+        addFunction(SpellFunctions.CHECK_ITEM_COST, itemCostDefault(), checkItemCost());
+        addFunction(SpellFunctions.CHECK_COOLDOWN_COST, cooldownDurationDefault(), checkCooldownCost());
+        addFunction(SpellFunctions.CHECK_MANA_AND_ITEM_COST, combine(manaAmountDefault(), itemCostDefault()), DEFAULT_VARIABLES_MANA, checkManaAndItemCost());
+        addFunction(SpellFunctions.CHECK_MANA_AND_COOLDOWN_COST, combine(manaAmountDefault(), cooldownDurationDefault()), DEFAULT_VARIABLES_MANA, checkManaAndCooldownCost());
+        addFunction(SpellFunctions.CHECK_ITEM_AND_COOLDOWN_COST, combine(itemCostDefault(), cooldownDurationDefault()), checkItemAndCooldownCost());
+        addFunction(SpellFunctions.CHECK_MANA_AND_ITEM_AND_COOLDOWN_COST, combine(manaAmountDefault(), itemCostDefault(), cooldownDurationDefault()), DEFAULT_VARIABLES_MANA, checkManaAndItemAndCooldownCost());
 
         // single-step check-only / consume-only functions, for spells that check a cost up front but only
         // actually spend it later on a different activation
-        addFunction("has_mana_cost", manaAmountDefault(), DEFAULT_VARIABLES_MANA, hasManaCost());
-        addFunction("burn_mana_cost", manaAmountDefault(), DEFAULT_VARIABLES_MANA, burnManaCost());
-        addFunction("has_item_cost", itemCostDefault(), hasItemCost());
-        addFunction("consume_item_cost", itemCostDefault(), consumeItemCost());
-        addFunction("has_cooldown_cost", hasCooldownCost());
-        addFunction("set_cooldown_cost", cooldownDurationDefault(), setCooldownCost());
+        addFunction(SpellFunctions.HAS_MANA_COST, manaAmountDefault(), DEFAULT_VARIABLES_MANA, hasManaCost());
+        addFunction(SpellFunctions.BURN_MANA_COST, manaAmountDefault(), DEFAULT_VARIABLES_MANA, burnManaCost());
+        addFunction(SpellFunctions.HAS_ITEM_COST, itemCostDefault(), hasItemCost());
+        addFunction(SpellFunctions.CONSUME_ITEM_COST, itemCostDefault(), consumeItemCost());
+        addFunction(SpellFunctions.HAS_COOLDOWN_COST, hasCooldownCost());
+        addFunction(SpellFunctions.SET_COOLDOWN_COST, cooldownDurationDefault(), setCooldownCost());
     }
 
     // ----- mana only -----

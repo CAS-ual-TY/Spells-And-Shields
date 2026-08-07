@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.registers;
 
+import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.spell.SpellFunction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -25,6 +26,21 @@ public class SpellFunctions
         return access.registryOrThrow(REGISTRY_KEY);
     }
 
+    public static final ResourceLocation CHECK_MANA_COST = rl("check_mana_cost");
+    public static final ResourceLocation CHECK_ITEM_COST = rl("check_item_cost");
+    public static final ResourceLocation CHECK_COOLDOWN_COST = rl("check_cooldown_cost");
+    public static final ResourceLocation CHECK_MANA_AND_ITEM_COST = rl("check_mana_and_item_cost");
+    public static final ResourceLocation CHECK_MANA_AND_COOLDOWN_COST = rl("check_mana_and_cooldown_cost");
+    public static final ResourceLocation CHECK_ITEM_AND_COOLDOWN_COST = rl("check_item_and_cooldown_cost");
+    public static final ResourceLocation CHECK_MANA_AND_ITEM_AND_COOLDOWN_COST = rl("check_mana_and_item_and_cooldown_cost");
+
+    public static final ResourceLocation HAS_MANA_COST = rl("has_mana_cost");
+    public static final ResourceLocation BURN_MANA_COST = rl("burn_mana_cost");
+    public static final ResourceLocation HAS_ITEM_COST = rl("has_item_cost");
+    public static final ResourceLocation CONSUME_ITEM_COST = rl("consume_item_cost");
+    public static final ResourceLocation HAS_COOLDOWN_COST = rl("has_cooldown_cost");
+    public static final ResourceLocation SET_COOLDOWN_COST = rl("set_cooldown_cost");
+
     public static void register(IEventBus modEventBus)
     {
         modEventBus.addListener(SpellFunctions::newDataPackRegistry);
@@ -34,5 +50,10 @@ public class SpellFunctions
     {
         // unsynced - functions are pure server-side execution helpers, never referenced client-side
         event.dataPackRegistry(REGISTRY_KEY, SpellsCodecs.SPELL_FUNCTION_CONTENTS);
+    }
+
+    private static ResourceLocation rl(String path)
+    {
+        return ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, path);
     }
 }
