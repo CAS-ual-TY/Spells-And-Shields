@@ -21,6 +21,7 @@ public class SpellsConfig
     public static final ModConfigSpec.BooleanValue DEBUG_SPELLS;
     public static final ModConfigSpec.BooleanValue DEBUG_ENCHANTING_TABLE;
     public static final ModConfigSpec.IntValue ACTION_JUMP_LIMIT;
+    public static final ModConfigSpec.IntValue FUNCTION_NEST_LIMIT;
     
     public static final ModConfigSpec.BooleanValue GLOBAL_ITEM_COSTS;
     public static final ModConfigSpec.BooleanValue GLOBAL_TERRAIN_DAMAGE;
@@ -62,6 +63,9 @@ public class SpellsConfig
         ACTION_JUMP_LIMIT = configBuilder
                 .comment("Hard limit of jumps by spell actions to prevent endless loops (which would result in a crash).")
                 .defineInRange("actionJumpLimit", 1000, 10, 10000);
+        FUNCTION_NEST_LIMIT = configBuilder
+                .comment("Hard limit of nested function calls by spell actions to prevent endless recursion (which would result in a crash).")
+                .defineInRange("functionNestLimit", 100, 1, 1000);
         configBuilder.pop();
         
         configBuilder.push("globals");

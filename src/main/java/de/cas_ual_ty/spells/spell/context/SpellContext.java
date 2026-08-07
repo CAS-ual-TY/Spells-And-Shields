@@ -34,7 +34,8 @@ public class SpellContext
     protected int index;
     protected Map<String, Label> labels;
     protected int jumpLimit;
-    
+    protected int nestLimit;
+
     public SpellContext(Level level, @Nullable Player owner, SpellInstance spell)
     {
         this.level = level;
@@ -47,6 +48,7 @@ public class SpellContext
         index = 0;
         labels = new HashMap<>();
         jumpLimit = SpellsConfig.ACTION_JUMP_LIMIT.get();
+        nestLimit = SpellsConfig.FUNCTION_NEST_LIMIT.get();
     }
     
     public Level getLevel()
@@ -94,7 +96,26 @@ public class SpellContext
     {
         return activation.isEmpty() || activationsList.stream().anyMatch(s -> s.equals(activation));
     }
-    
+
+    /**
+     * Moves activation status from {@code from} to {@code to} (only if {@code from} was actually active) - used to
+     * translate names across a {@code call_function} boundary. A no-op if either name is empty, if they are equal,
+     * or if {@code from} was not active to begin with.
+     */
+    public void renameActivation(String from, String to)
+    {
+        if(from.isEmpty() || to.isEmpty() || from.equals(to))
+        {
+            return;
+        }
+
+        if(isActivated(from))
+        {
+            deactivate(from);
+            activate(to);
+        }
+    }
+
     public boolean hasTargetGroup(String id)
     {
         return id.isEmpty() || targetGroups.containsKey(id);
@@ -127,7 +148,27 @@ public class SpellContext
             consumer.accept(tg);
         }
     }
-    
+
+    /**
+     * Moves the target group stored under {@code from} to {@code to} (only if one is present under {@code from}) -
+     * used to translate names across a {@code call_function} boundary. A no-op if either name is empty, if they
+     * are equal, or if there was no target group under {@code from} to begin with.
+     */
+    public void renameTargetGroup(String from, String to)
+    {
+        if(from.isEmpty() || to.isEmpty() || from.equals(to))
+        {
+            return;
+        }
+
+        TargetGroup tg = targetGroups.remove(from);
+
+        if(tg != null)
+        {
+            targetGroups.put(to, tg);
+        }
+    }
+
     @Nullable
     public CtxVar<?> getCtxVar(String name)
     {
@@ -171,7 +212,27 @@ public class SpellContext
             return true;
         }
     }
-    
+
+    /**
+     * Moves the variable stored under {@code from} to {@code to} (only if one is present under {@code from}) -
+     * used to translate names across a {@code call_function} boundary. A no-op if either name is empty, if they
+     * are equal, or if there was no variable under {@code from} to begin with.
+     */
+    public void renameCtxVar(String from, String to)
+    {
+        if(from.isEmpty() || to.isEmpty() || from.equals(to))
+        {
+            return;
+        }
+
+        CtxVar<?> var = ctxVars.remove(from);
+
+        if(var != null)
+        {
+            ctxVars.put(to, var);
+        }
+    }
+
     public void addLabel(String label, SpellAction spellAction)
     {
         addLabel(index, label, spellAction);
@@ -228,11 +289,64 @@ public class SpellContext
     {
         Spell spell = this.spell.getSpell().value();
         ResourceLocation spellRl = null;
-        
+
         if(SpellsConfig.DEBUG_SPELLS.get())
         {
             spellRl = Spells.getRegistry(level).getKey(spell);
             SpellsAndShields.LOGGER.info("Running spell " + spellRl);
+        }
+
+        runActions(spell.getSpellActions());
+
+        if(SpellsConfig.DEBUG_SPELLS.get())
+        {
+            SpellsAndShields.LOGGER.info("Finished running spell " + spellRl);
+            SpellsAndShields.LOGGER.info("-".repeat(50));
+            SpellsAndShields.LOGGER.info("-".repeat(50));
+        }
+
+        terminate(); // make sure this context is not run again
+    }
+
+    /**
+     * Runs {@code actions} as a nested, contained sub-run for a {@code call_function} call: same shared context
+     * (activations/variables/target groups carry across exactly as translated by the caller beforehand), but its
+     * own {@code index}/labels so jumps inside the function can never land in - or be landed on from - the
+     * caller's own action list, which is a different list with unrelated indices. {@link #terminate()} is NOT
+     * re-guarded here: if the function calls it, {@link #isTerminated()} stays true once this returns, and the
+     * caller's own loop (which checks it right after every action, same as this one does) stops too - termination
+     * is meant to cascade all the way out, not stay contained to whichever call is currently innermost.
+     * <p>
+     * Gated by {@link SpellsConfig#FUNCTION_NEST_LIMIT} to prevent unbounded/infinite recursion (eg. a function
+     * that calls itself). Returns {@code false} without running anything if the limit is already exhausted.
+     */
+    public boolean runNestedActions(List<SpellAction> actions)
+    {
+        if(nestLimit-- <= 0)
+        {
+            if(SpellsConfig.DEBUG_SPELLS.get())
+            {
+                SpellsAndShields.LOGGER.info("Hard function nest limit reached! Skipping function call...");
+            }
+            return false;
+        }
+
+        int savedIndex = index;
+        Map<String, Label> savedLabels = labels;
+        labels = new HashMap<>();
+
+        runActions(actions);
+
+        labels = savedLabels;
+        index = savedIndex;
+
+        return true;
+    }
+
+    private void runActions(List<SpellAction> actions)
+    {
+        if(SpellsConfig.DEBUG_SPELLS.get())
+        {
             SpellsAndShields.LOGGER.info("-".repeat(50));
             SpellsAndShields.LOGGER.info("Initial state:");
             debugActivations();
@@ -241,25 +355,23 @@ public class SpellContext
             debugLabels();
             SpellsAndShields.LOGGER.info("-".repeat(50));
         }
-        
-        List<SpellAction> actions = spell.getSpellActions();
-        
+
         for(index = 0; index < actions.size() && index >= 0; index++)
         {
             SpellAction spellAction = actions.get(index);
-            
+
             if(spellAction.doActivate(this))
             {
                 ResourceLocation actionRl = null;
-                
+
                 if(SpellsConfig.DEBUG_SPELLS.get())
                 {
                     actionRl = SpellActionTypes.REGISTRY.getKey(spellAction.getType());
                     SpellsAndShields.LOGGER.info("Starting action " + actionRl);
                 }
-                
+
                 spellAction.doAction(this);
-                
+
                 if(SpellsConfig.DEBUG_SPELLS.get())
                 {
                     SpellsAndShields.LOGGER.info("Finish action " + actionRl);
@@ -270,22 +382,13 @@ public class SpellContext
                     debugLabels();
                     SpellsAndShields.LOGGER.info("-".repeat(50));
                 }
-                
+
                 if(isTerminated())
                 {
                     break;
                 }
             }
         }
-        
-        if(SpellsConfig.DEBUG_SPELLS.get())
-        {
-            SpellsAndShields.LOGGER.info("Finished running spell " + spellRl);
-            SpellsAndShields.LOGGER.info("-".repeat(50));
-            SpellsAndShields.LOGGER.info("-".repeat(50));
-        }
-        
-        terminate(); // make sure this context is not run again
     }
     
     public void debugCtxVars()

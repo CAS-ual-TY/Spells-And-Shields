@@ -16,6 +16,7 @@ import de.cas_ual_ty.spells.spell.action.entity.*;
 import de.cas_ual_ty.spells.spell.action.fx.ParticleEmitterAction;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
+import de.cas_ual_ty.spells.spell.action.function.CallFunctionAction;
 import de.cas_ual_ty.spells.spell.action.item.*;
 import de.cas_ual_ty.spells.spell.action.level.*;
 import de.cas_ual_ty.spells.spell.action.mana.*;
@@ -124,7 +125,10 @@ public class SpellActionTypes
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ParticleEmitterAction>> PARTICLE_EMITTER = DEFERRED_REGISTER.register("particle_emitter", () -> new SpellActionType<>(ParticleEmitterAction::new, ParticleEmitterAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<PlaySoundAction>> PLAY_SOUND = DEFERRED_REGISTER.register("play_sound", () -> new SpellActionType<>(PlaySoundAction::new, PlaySoundAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<SpawnParticlesAction>> SPAWN_PARTICLES = DEFERRED_REGISTER.register("spawn_particles", () -> new SpellActionType<>(SpawnParticlesAction::new, SpawnParticlesAction::makeCodec));
-    
+
+    // function
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<CallFunctionAction>> CALL_FUNCTION = DEFERRED_REGISTER.register("call_function", () -> new SpellActionType<>(CallFunctionAction::new, CallFunctionAction::makeCodec));
+
     // item
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ConsumeItemAction>> CONSUME_ITEM = DEFERRED_REGISTER.register("consume_item", () -> new SpellActionType<>(ConsumeItemAction::new, ConsumeItemAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<DamageItemAction>> DAMAGE_ITEM = DEFERRED_REGISTER.register("damage_item", () -> new SpellActionType<>(DamageItemAction::new, DamageItemAction::makeCodec));

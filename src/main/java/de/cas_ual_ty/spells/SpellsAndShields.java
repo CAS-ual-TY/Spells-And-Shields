@@ -40,6 +40,7 @@ public class SpellsAndShields
         SpellIconTypes.register(modEventBus);
         Spells.register(modEventBus);
         SpellTrees.register(modEventBus);
+        SpellFunctions.register(modEventBus);
         TargetTypes.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, SpellsConfig.GENERAL_SPEC, MOD_ID + "/common.toml");

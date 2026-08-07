@@ -11,6 +11,7 @@ import de.cas_ual_ty.spells.progression.SpellTree;
 import de.cas_ual_ty.spells.requirement.Requirement;
 import de.cas_ual_ty.spells.requirement.RequirementType;
 import de.cas_ual_ty.spells.spell.Spell;
+import de.cas_ual_ty.spells.spell.SpellFunction;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
@@ -37,6 +38,7 @@ public class SpellsCodecs
 {
     public static Codec<Holder<Spell>> SPELL;
     public static Codec<Holder<SpellTree>> SPELL_TREE;
+    public static Codec<Holder<SpellFunction>> SPELL_FUNCTION;
     
     public static Codec<RequirementType<?>> REQUIREMENT_TYPE;
     public static Codec<SpellActionType<?>> SPELL_ACTION_TYPE;
@@ -55,14 +57,16 @@ public class SpellsCodecs
     
     public static Codec<Spell> SPELL_CONTENTS;
     public static Codec<Spell> SPELL_SYNC;
-    
+    public static Codec<SpellFunction> SPELL_FUNCTION_CONTENTS;
+
     public static Codec<Map<String, String>> STRING_MAP;
-    
+
     public static void makeCodecs(IEventBus modEventBus)
     {
         SPELL = Codec.lazyInitialized(() -> RegistryFileCodec.create(Spells.REGISTRY_KEY, Codec.lazyInitialized(() -> SPELL_CONTENTS), false));
         SPELL_TREE = Codec.lazyInitialized(() -> RegistryFixedCodec.create(SpellTrees.REGISTRY_KEY));
-        
+        SPELL_FUNCTION = Codec.lazyInitialized(() -> RegistryFileCodec.create(SpellFunctions.REGISTRY_KEY, Codec.lazyInitialized(() -> SPELL_FUNCTION_CONTENTS), false));
+
         REQUIREMENT_TYPE = Codec.lazyInitialized(() -> RequirementTypes.REGISTRY.byNameCodec());
         CTX_VAR_TYPE = Codec.lazyInitialized(() -> CtxVarTypes.REGISTRY.byNameCodec());
         SPELL_ACTION_TYPE = Codec.lazyInitialized(() -> SpellActionTypes.REGISTRY.byNameCodec());
@@ -111,7 +115,11 @@ public class SpellsCodecs
                 ComponentSerialization.CODEC.listOf().fieldOf("s4/tooltip").forGetter(s -> s.getTooltip().isEmpty() ? ImmutableList.of(Component.empty()) : s.getTooltip()),
                 Codec.FLOAT.fieldOf("s3/mana_cost").xmap(f -> Math.max(0, f), f -> Math.max(0, f)).forGetter(Spell::getManaCost)
         ).apply(instance, Spell::new)));
-        
+
+        SPELL_FUNCTION_CONTENTS = Codec.lazyInitialized(() -> RecordCodecBuilder.create(instance -> instance.group(
+                Codec.lazyInitialized(() -> SPELL_ACTION).listOf().fieldOf("actions").forGetter(SpellFunction::getActions)
+        ).apply(instance, SpellFunction::new)));
+
         STRING_MAP = new PrimitiveCodec<>()
         {
             @Override
