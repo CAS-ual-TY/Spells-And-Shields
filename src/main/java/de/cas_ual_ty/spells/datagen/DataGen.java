@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.datagen;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.registers.SpellFunctions;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
 import net.minecraft.core.RegistrySetBuilder;
@@ -38,6 +39,9 @@ public class DataGen
                                 })
                                 .add(SpellTrees.REGISTRY_KEY, context -> {
                                     new SpellTreesGen(SpellsAndShields.MOD_ID, context);
+                                })
+                                .add(SpellFunctions.REGISTRY_KEY, context -> {
+                                    new SpellFunctionsGen(SpellsAndShields.MOD_ID, context);
                                 }),
                         // Generate dynamic registry objects for this mod
                         Set.of(SpellsAndShields.MOD_ID)

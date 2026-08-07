@@ -1,0 +1,42 @@
+{
+  "actions": [
+    {
+      "type": "spells_and_shields:get_cooldown",
+      "activation": "pay",
+      "d/int/slot": "<<slot>>",
+      "t/source": "owner",
+      "var/cooldown": "cooldown_remaining"
+    },
+    {
+      "type": "spells_and_shields:conditional_deactivation",
+      "activation": "pay",
+      "d/boolean/condition": "<< cooldown_remaining <= 0 >>"
+    },
+    {
+      "type": "spells_and_shields:player_has_items",
+      "activation": "pay",
+      "d/boolean/creative_bypass": true,
+      "d/boolean/must_be_in_hand": "<<must_be_in_hand>>",
+      "d/compound_tag/tag": "<<item_tag>>",
+      "d/int/amount": "<< item_costs() ? item_amount : 0 >>",
+      "d/string/item": "<<item>>",
+      "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:set_cooldown",
+      "activation": "pay",
+      "d/int/duration": "<<duration>>",
+      "d/int/slot": "<<slot>>",
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:try_consume_player_items",
+      "activation": "pay",
+      "d/boolean/must_be_in_hand": "<<must_be_in_hand>>",
+      "d/compound_tag/tag": "<<item_tag>>",
+      "d/int/amount": "<< item_costs() ? item_amount : 0 >>",
+      "d/string/item": "<<item>>",
+      "t/source": "owner"
+    }
+  ]
+}

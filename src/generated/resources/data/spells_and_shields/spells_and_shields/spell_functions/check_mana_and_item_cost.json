@@ -1,0 +1,35 @@
+{
+  "actions": [
+    {
+      "type": "spells_and_shields:has_mana",
+      "activation": "pay",
+      "d/double/amount": "<<mana_amount>>",
+      "t/target": "owner"
+    },
+    {
+      "type": "spells_and_shields:player_has_items",
+      "activation": "pay",
+      "d/boolean/creative_bypass": true,
+      "d/boolean/must_be_in_hand": "<<must_be_in_hand>>",
+      "d/compound_tag/tag": "<<item_tag>>",
+      "d/int/amount": "<< item_costs() ? item_amount : 0 >>",
+      "d/string/item": "<<item>>",
+      "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:burn_mana",
+      "activation": "pay",
+      "d/double/amount": "<<mana_amount>>",
+      "ts/targets": "owner"
+    },
+    {
+      "type": "spells_and_shields:try_consume_player_items",
+      "activation": "pay",
+      "d/boolean/must_be_in_hand": "<<must_be_in_hand>>",
+      "d/compound_tag/tag": "<<item_tag>>",
+      "d/int/amount": "<< item_costs() ? item_amount : 0 >>",
+      "d/string/item": "<<item>>",
+      "t/source": "owner"
+    }
+  ]
+}

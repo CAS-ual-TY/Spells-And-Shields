@@ -1,0 +1,10 @@
+{
+  "actions": [
+    {
+      "type": "spells_and_shields:try_burn_mana",
+      "activation": "pay",
+      "d/double/amount": "<<mana_amount>>",
+      "t/target": "owner"
+    }
+  ]
+}

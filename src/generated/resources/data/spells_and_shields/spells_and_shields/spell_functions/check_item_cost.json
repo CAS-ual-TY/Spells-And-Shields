@@ -1,0 +1,13 @@
+{
+  "actions": [
+    {
+      "type": "spells_and_shields:try_consume_player_items",
+      "activation": "pay",
+      "d/boolean/must_be_in_hand": "<<must_be_in_hand>>",
+      "d/compound_tag/tag": "<<item_tag>>",
+      "d/int/amount": "<< item_costs() ? item_amount : 0 >>",
+      "d/string/item": "<<item>>",
+      "t/source": "owner"
+    }
+  ]
+}
