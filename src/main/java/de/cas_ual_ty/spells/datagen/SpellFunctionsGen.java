@@ -26,6 +26,7 @@ import java.util.List;
 
 import static de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups.OWNER;
 import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.MANA_COST;
+import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.SPELL_SLOT;
 
 /**
  * Reusable "pay a cost" functions covering every non-empty combination of the mod's 3 cost types (mana, items,
@@ -43,15 +44,17 @@ import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.MANA_COST;
  * outright - this mod's control flow only supports jumping backward to an already-visited label, so a
  * conditional skip-ahead is not available and isn't needed here anyway.
  * <p>
- * Mana and cooldown costs both declare real parameters ({@code mana_cost}, {@link #DURATION}) with fixed literal
- * defaults ({@link #DEFAULT_MANA_COST}, {@link #DEFAULT_COOLDOWN_DURATION}). A {@link de.cas_ual_ty.spells.spell.variable.CtxVar}
- * parameter default can only be a fixed literal, not a reference to another variable, and is applied
- * unconditionally after the caller's rename-in - so mapping a custom value into either name has no effect, the
- * declared default always wins. The mana parameter deliberately reuses the ambient {@code mana_cost} builtin's
- * own name rather than a separate one; since the default always wins regardless, this doesn't let a caller pass
- * the spell's real mana cost through either, but it does mean calling one of these functions leaves
- * {@code mana_cost} at {@link #DEFAULT_MANA_COST} for the rest of the host spell's run, not just inside the
- * function - see {@link #manaAmountDefault()}.
+ * Mana and cooldown-duration costs both declare real parameters ({@code mana_cost}, {@link #DURATION}) with
+ * fixed literal defaults ({@link #DEFAULT_MANA_COST}, {@link #DEFAULT_COOLDOWN_DURATION}). A
+ * {@link de.cas_ual_ty.spells.spell.variable.CtxVar} parameter default can only be a fixed literal, not a
+ * reference to another variable, and is applied unconditionally after the caller's rename-in - so mapping a
+ * custom value into either name has no effect, the declared default always wins. The mana parameter
+ * deliberately reuses the ambient {@code mana_cost} builtin's own name rather than a separate one; since the
+ * default always wins regardless, this doesn't let a caller pass the spell's real mana cost through either, but
+ * it does mean calling one of these functions leaves {@code mana_cost} at {@link #DEFAULT_MANA_COST} for the
+ * rest of the host spell's run, not just inside the function - see {@link #manaAmountDefault()}. The cooldown
+ * slot, by contrast, reuses the ambient {@code spell_slot} builtin directly with no declared parameter/default
+ * at all - it's always populated for a running spell, same as {@code mana_cost} would be without its default.
  */
 public class SpellFunctionsGen
 {
@@ -70,7 +73,6 @@ public class SpellFunctionsGen
     public static final String ITEM_AMOUNT = "item_amount";
     public static final String ITEM_TAG = "item_tag";
     public static final String MUST_BE_IN_HAND = "must_be_in_hand";
-    public static final String SLOT = "slot";
     public static final String DURATION = "duration";
 
     // default cost parameters - declared on the SpellFunction itself, applied after any caller rename-in
@@ -132,7 +134,7 @@ public class SpellFunctionsGen
     {
         List<SpellAction> actions = new LinkedList<>();
         addCooldownCheck(actions);
-        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SLOT), INT.reference(DURATION)));
+        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
         return actions;
     }
 
@@ -156,7 +158,7 @@ public class SpellFunctionsGen
         actions.add(HasManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
         addCooldownCheck(actions);
         actions.add(BurnManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
-        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SLOT), INT.reference(DURATION)));
+        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
         return actions;
     }
 
@@ -167,7 +169,7 @@ public class SpellFunctionsGen
         List<SpellAction> actions = new LinkedList<>();
         addCooldownCheck(actions);
         actions.add(PlayerHasItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
-        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SLOT), INT.reference(DURATION)));
+        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
         actions.add(TryConsumePlayerItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
         return actions;
     }
@@ -181,7 +183,7 @@ public class SpellFunctionsGen
         addCooldownCheck(actions);
         actions.add(PlayerHasItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
         actions.add(BurnManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
-        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SLOT), INT.reference(DURATION)));
+        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
         actions.add(TryConsumePlayerItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
         return actions;
     }
@@ -189,13 +191,13 @@ public class SpellFunctionsGen
     // ----- shared building blocks -----
 
     /**
-     * Appends a check for whether the {@code slot} cooldown has run out, deactivating {@link #PAY} if not.
-     * Does not consume anything - pair with a {@code SetCooldownAction} once every other cost has also
-     * been confirmed.
+     * Appends a check for whether the ambient {@code spell_slot}'s cooldown has run out, deactivating
+     * {@link #PAY} if not. Does not consume anything - pair with a {@code SetCooldownAction} once every other
+     * cost has also been confirmed.
      */
     protected void addCooldownCheck(List<SpellAction> actions)
     {
-        actions.add(GetCooldownAction.make(PAY, OWNER, INT.reference(SLOT), "cooldown_remaining"));
+        actions.add(GetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), "cooldown_remaining"));
         actions.add(ConditionalDeactivationAction.make(PAY, Compiler.compileString(" cooldown_remaining <= 0 ", BOOLEAN)));
     }
 
