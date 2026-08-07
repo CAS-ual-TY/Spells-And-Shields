@@ -116,7 +116,7 @@ public class TryConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTa
 
                     for(ItemStack i : items)
                     {
-                        if(i.getItem() == item && (tag == null || (i.get(DataComponents.CUSTOM_DATA) != null && tag.equals(i.get(DataComponents.CUSTOM_DATA).copyTag()))))
+                        if(i.getItem() == item && (tag == null || tag.isEmpty() || (i.get(DataComponents.CUSTOM_DATA) != null && tag.equals(i.get(DataComponents.CUSTOM_DATA).copyTag()))))
                         {
                             available += i.getCount();
 
@@ -137,7 +137,7 @@ public class TryConsumePlayerItemsAction extends AffectSingleTypeAction<PlayerTa
 
                     for(ItemStack i : items)
                     {
-                        if(i.getItem() == item && (tag == null || (i.get(DataComponents.CUSTOM_DATA) != null && tag.equals(i.get(DataComponents.CUSTOM_DATA).copyTag()))))
+                        if(i.getItem() == item && (tag == null || tag.isEmpty() || (i.get(DataComponents.CUSTOM_DATA) != null && tag.equals(i.get(DataComponents.CUSTOM_DATA).copyTag()))))
                         {
                             int c = Math.min(count, i.getCount());
                             i.shrink(c);
