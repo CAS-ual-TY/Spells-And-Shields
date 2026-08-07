@@ -118,8 +118,11 @@ public class SpellsCodecs
 
         SPELL_FUNCTION_CONTENTS = Codec.lazyInitialized(() -> RecordCodecBuilder.create(instance -> instance.group(
                 CTX_VAR.listOf().fieldOf("f1/parameters").forGetter(SpellFunction::getParameters),
-                Codec.lazyInitialized(() -> SPELL_ACTION).listOf().fieldOf("f2/actions").forGetter(SpellFunction::getActions)
-        ).apply(instance, SpellFunction::new)));
+                Codec.lazyInitialized(() -> STRING_MAP).optionalFieldOf("f2/map_activations").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(SpellFunction::getDefaultActivations),
+                Codec.lazyInitialized(() -> STRING_MAP).optionalFieldOf("f3/map_variables").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(SpellFunction::getDefaultVariables),
+                Codec.lazyInitialized(() -> STRING_MAP).optionalFieldOf("f4/map_targets").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(SpellFunction::getDefaultTargets),
+                Codec.lazyInitialized(() -> SPELL_ACTION).listOf().fieldOf("f5/actions").forGetter(SpellFunction::getActions)
+        ).apply(instance, (parameters, defaultActivations, defaultVariables, defaultTargets, actions) -> new SpellFunction(parameters, actions, defaultActivations, defaultVariables, defaultTargets))));
 
         STRING_MAP = new PrimitiveCodec<>()
         {

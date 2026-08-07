@@ -23,19 +23,25 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import static de.cas_ual_ty.spells.spell.context.BuiltinEvents.ACTIVE;
 import static de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups.OWNER;
 import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.MANA_COST;
 import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.SPELL_SLOT;
 
 /**
  * Reusable "pay a cost" functions covering every non-empty combination of the mod's 3 cost types (mana, items,
- * cooldown). Each function is entered/exited on its own internal "active" activation - the caller maps whichever
- * activation is currently active to "active" (and back) via {@code call_function}'s activations map. If every
- * relevant cost can be paid, "active" stays active for the whole run and the costs are actually deducted; if any
- * one of them can't be paid, "active" gets deactivated partway through and nothing further in the function runs -
- * including any not-yet-reached consume step - so a failed combined check never partially consumes one cost
- * while failing on another.
+ * cooldown). Each function is entered/exited on its own internal {@link #ACTIVE_INTERNAL} activation, working against its
+ * own internal {@link #OWNER_INTERNAL} target group - both purely internal names (underscore-prefixed) with no
+ * meaning to any host, translated via {@link SpellFunction#getDefaultActivations()}/{@link SpellFunction#getDefaultTargets()}
+ * ({@link #DEFAULT_ACTIVATIONS}/{@link #DEFAULT_TARGETS}, attached to every function by {@link #addFunction}) -
+ * a caller who supplies no {@code activations}/{@code targets} map of their own gets these defaults instead,
+ * which map the conventional host names ({@code active}, {@code owner}) onto the function's internal ones. If
+ * every relevant cost can be paid, {@link #ACTIVE_INTERNAL} stays active for the whole run and the costs are actually
+ * deducted; if any one of them can't be paid, {@link #ACTIVE_INTERNAL} gets deactivated partway through and nothing further
+ * in the function runs - including any not-yet-reached consume step - so a failed combined check never partially
+ * consumes one cost while failing on another.
  * <p>
  * Item costs specifically also respect the {@code item_costs} config toggle (see {@code SpellsConfig#GLOBAL_ITEM_COSTS}):
  * when it's off, the effective item amount required/consumed is substituted down to {@code 0} (both
@@ -47,11 +53,13 @@ import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.SPELL_SLOT;
  * Every declared parameter's default is applied via {@code initCtxVarIfAbsent} (see
  * {@link de.cas_ual_ty.spells.spell.context.SpellContext#runNestedActions}) - only where nothing is already
  * present under that name - so a caller's explicit {@code call_function} {@code parameters} override, or an
- * already-populated ambient value, always takes precedence over the default. Mana costs declare a parameter
- * under the ambient {@code mana_cost} builtin's own name: for a normal spell call, {@code mana_cost} is already
- * sitting there before the function ever runs, so {@link #DEFAULT_MANA_COST} never actually fires and the
- * function just uses the spell's real cost automatically, no override needed. The cooldown slot similarly
- * reuses the ambient {@code spell_slot} builtin directly, with no declared parameter/default at all. Item costs
+ * already-populated (ambient or rename-in'd) value, always takes precedence over the default. Mana costs work
+ * against {@link #MANA_COST_INTERNAL}, a purely internal name like {@link #ACTIVE_INTERNAL}/{@link #OWNER_INTERNAL} - a
+ * caller who leaves {@code variables} empty gets {@link #DEFAULT_VARIABLES_MANA} instead, translating the
+ * ambient {@code mana_cost} builtin onto it, so a normal spell call never needs to map or override anything and
+ * {@link #DEFAULT_MANA_COST} never actually fires. The cooldown slot, by contrast, is hardcoded straight into
+ * the relevant actions as the ambient {@code spell_slot} builtin, with no internal name, no default mapping, and
+ * no parameter at all - there's no reason to expose it as one, nothing ever needs to override it. Item costs
  * ({@link #ITEM}/{@link #ITEM_AMOUNT}/{@link #MUST_BE_IN_HAND}) and {@link #DURATION} (cooldown length) have no
  * ambient builtin to fall back to, so their defaults ({@link #DEFAULT_ITEM}, {@link #DEFAULT_ITEM_AMOUNT},
  * {@link #DEFAULT_MUST_BE_IN_HAND}, {@link #DEFAULT_COOLDOWN_DURATION}) always apply unless a caller overrides
@@ -66,7 +74,16 @@ import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.SPELL_SLOT;
  */
 public class SpellFunctionsGen
 {
-    public static final String PAY = "active";
+    public static final String ACTIVE_INTERNAL = "_active";
+    public static final String OWNER_INTERNAL = "_owner";
+    public static final String MANA_COST_INTERNAL = "_mana_cost";
+
+    // attached to every function via addFunction() - a caller who leaves its own activations/targets map empty
+    // falls back to these, translating the conventional host names onto this class's internal ones
+    public static final Map<String, String> DEFAULT_ACTIVATIONS = Map.of(ACTIVE.toString(), ACTIVE_INTERNAL);
+    public static final Map<String, String> DEFAULT_TARGETS = Map.of(OWNER.toString(), OWNER_INTERNAL);
+    // only attached to functions that actually use mana - see addFunction(key, parameters, defaultVariables, actions)
+    public static final Map<String, String> DEFAULT_VARIABLES_MANA = Map.of(MANA_COST.name, MANA_COST_INTERNAL);
 
     public static final CtxVarType<Integer> INT = CtxVarTypes.INT.get();
     public static final CtxVarType<Double> DOUBLE = CtxVarTypes.DOUBLE.get();
@@ -100,9 +117,14 @@ public class SpellFunctionsGen
         addSpellFunctions();
     }
 
+    public void addFunction(String key, List<CtxVar<?>> parameters, Map<String, String> defaultVariables, List<SpellAction> actions)
+    {
+        context.register(ResourceKey.create(SpellFunctions.REGISTRY_KEY, ResourceLocation.fromNamespaceAndPath(modId, key)), new SpellFunction(parameters, actions, DEFAULT_ACTIVATIONS, defaultVariables, DEFAULT_TARGETS));
+    }
+
     public void addFunction(String key, List<CtxVar<?>> parameters, List<SpellAction> actions)
     {
-        context.register(ResourceKey.create(SpellFunctions.REGISTRY_KEY, ResourceLocation.fromNamespaceAndPath(modId, key)), new SpellFunction(parameters, actions));
+        addFunction(key, parameters, Map.of(), actions);
     }
 
     public void addFunction(String key, List<SpellAction> actions)
@@ -112,18 +134,18 @@ public class SpellFunctionsGen
 
     public void addSpellFunctions()
     {
-        addFunction("check_mana_cost", manaAmountDefault(), checkManaCost());
+        addFunction("check_mana_cost", manaAmountDefault(), DEFAULT_VARIABLES_MANA, checkManaCost());
         addFunction("check_item_cost", itemCostDefault(), checkItemCost());
         addFunction("check_cooldown_cost", cooldownDurationDefault(), checkCooldownCost());
-        addFunction("check_mana_and_item_cost", combine(manaAmountDefault(), itemCostDefault()), checkManaAndItemCost());
-        addFunction("check_mana_and_cooldown_cost", combine(manaAmountDefault(), cooldownDurationDefault()), checkManaAndCooldownCost());
+        addFunction("check_mana_and_item_cost", combine(manaAmountDefault(), itemCostDefault()), DEFAULT_VARIABLES_MANA, checkManaAndItemCost());
+        addFunction("check_mana_and_cooldown_cost", combine(manaAmountDefault(), cooldownDurationDefault()), DEFAULT_VARIABLES_MANA, checkManaAndCooldownCost());
         addFunction("check_item_and_cooldown_cost", combine(itemCostDefault(), cooldownDurationDefault()), checkItemAndCooldownCost());
-        addFunction("check_mana_and_item_and_cooldown_cost", combine(manaAmountDefault(), itemCostDefault(), cooldownDurationDefault()), checkManaAndItemAndCooldownCost());
+        addFunction("check_mana_and_item_and_cooldown_cost", combine(manaAmountDefault(), itemCostDefault(), cooldownDurationDefault()), DEFAULT_VARIABLES_MANA, checkManaAndItemAndCooldownCost());
 
         // single-step check-only / consume-only functions, for spells that check a cost up front but only
         // actually spend it later on a different activation
-        addFunction("has_mana_cost", manaAmountDefault(), hasManaCost());
-        addFunction("burn_mana_cost", manaAmountDefault(), burnManaCost());
+        addFunction("has_mana_cost", manaAmountDefault(), DEFAULT_VARIABLES_MANA, hasManaCost());
+        addFunction("burn_mana_cost", manaAmountDefault(), DEFAULT_VARIABLES_MANA, burnManaCost());
         addFunction("has_item_cost", itemCostDefault(), hasItemCost());
         addFunction("consume_item_cost", itemCostDefault(), consumeItemCost());
         addFunction("has_cooldown_cost", hasCooldownCost());
@@ -135,7 +157,7 @@ public class SpellFunctionsGen
     protected List<SpellAction> checkManaCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(TryBurnManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
+        actions.add(TryBurnManaAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, DOUBLE.reference(MANA_COST_INTERNAL)));
         return actions;
     }
 
@@ -144,7 +166,7 @@ public class SpellFunctionsGen
     protected List<SpellAction> checkItemCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(TryConsumePlayerItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
+        actions.add(TryConsumePlayerItemsAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
         return actions;
     }
 
@@ -154,7 +176,7 @@ public class SpellFunctionsGen
     {
         List<SpellAction> actions = new LinkedList<>();
         addCooldownCheck(actions);
-        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
+        actions.add(SetCooldownAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
         return actions;
     }
 
@@ -163,10 +185,10 @@ public class SpellFunctionsGen
     protected List<SpellAction> checkManaAndItemCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(HasManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
-        actions.add(PlayerHasItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
-        actions.add(BurnManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
-        actions.add(TryConsumePlayerItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
+        actions.add(HasManaAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, DOUBLE.reference(MANA_COST_INTERNAL)));
+        actions.add(PlayerHasItemsAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
+        actions.add(BurnManaAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, DOUBLE.reference(MANA_COST_INTERNAL)));
+        actions.add(TryConsumePlayerItemsAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
         return actions;
     }
 
@@ -175,10 +197,10 @@ public class SpellFunctionsGen
     protected List<SpellAction> checkManaAndCooldownCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(HasManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
+        actions.add(HasManaAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, DOUBLE.reference(MANA_COST_INTERNAL)));
         addCooldownCheck(actions);
-        actions.add(BurnManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
-        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
+        actions.add(BurnManaAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, DOUBLE.reference(MANA_COST_INTERNAL)));
+        actions.add(SetCooldownAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
         return actions;
     }
 
@@ -188,9 +210,9 @@ public class SpellFunctionsGen
     {
         List<SpellAction> actions = new LinkedList<>();
         addCooldownCheck(actions);
-        actions.add(PlayerHasItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
-        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
-        actions.add(TryConsumePlayerItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
+        actions.add(PlayerHasItemsAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
+        actions.add(SetCooldownAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
+        actions.add(TryConsumePlayerItemsAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
         return actions;
     }
 
@@ -199,12 +221,12 @@ public class SpellFunctionsGen
     protected List<SpellAction> checkManaAndItemAndCooldownCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(HasManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
+        actions.add(HasManaAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, DOUBLE.reference(MANA_COST_INTERNAL)));
         addCooldownCheck(actions);
-        actions.add(PlayerHasItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
-        actions.add(BurnManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
-        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
-        actions.add(TryConsumePlayerItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
+        actions.add(PlayerHasItemsAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
+        actions.add(BurnManaAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, DOUBLE.reference(MANA_COST_INTERNAL)));
+        actions.add(SetCooldownAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
+        actions.add(TryConsumePlayerItemsAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
         return actions;
     }
 
@@ -213,14 +235,14 @@ public class SpellFunctionsGen
     protected List<SpellAction> hasManaCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(HasManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
+        actions.add(HasManaAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, DOUBLE.reference(MANA_COST_INTERNAL)));
         return actions;
     }
 
     protected List<SpellAction> burnManaCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(BurnManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
+        actions.add(BurnManaAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, DOUBLE.reference(MANA_COST_INTERNAL)));
         return actions;
     }
 
@@ -235,14 +257,14 @@ public class SpellFunctionsGen
     protected List<SpellAction> hasItemCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(PlayerHasItemsAction.make(PAY, OWNER, STRING.reference(ITEM), INT.reference(ITEM_AMOUNT), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
+        actions.add(PlayerHasItemsAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, STRING.reference(ITEM), INT.reference(ITEM_AMOUNT), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
         return actions;
     }
 
     protected List<SpellAction> consumeItemCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(TryConsumePlayerItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
+        actions.add(TryConsumePlayerItemsAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
         return actions;
     }
 
@@ -258,7 +280,7 @@ public class SpellFunctionsGen
     protected List<SpellAction> setCooldownCost()
     {
         List<SpellAction> actions = new LinkedList<>();
-        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
+        actions.add(SetCooldownAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
         return actions;
     }
 
@@ -266,13 +288,13 @@ public class SpellFunctionsGen
 
     /**
      * Appends a check for whether the ambient {@code spell_slot}'s cooldown has run out, deactivating
-     * {@link #PAY} if not. Does not consume anything - pair with a {@code SetCooldownAction} once every other
+     * {@link #ACTIVE_INTERNAL} if not. Does not consume anything - pair with a {@code SetCooldownAction} once every other
      * cost has also been confirmed.
      */
     protected void addCooldownCheck(List<SpellAction> actions)
     {
-        actions.add(GetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), "cooldown_remaining"));
-        actions.add(ConditionalDeactivationAction.make(PAY, Compiler.compileString(" cooldown_remaining <= 0 ", BOOLEAN)));
+        actions.add(GetCooldownAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, INT.reference(SPELL_SLOT.name), "_cooldown_remaining"));
+        actions.add(ConditionalDeactivationAction.make(ACTIVE_INTERNAL, Compiler.compileString(" _cooldown_remaining <= 0 ", BOOLEAN)));
     }
 
     /**
@@ -289,17 +311,19 @@ public class SpellFunctionsGen
     }
 
     /**
-     * Fallback {@code mana_cost} of {@link #DEFAULT_MANA_COST}, declared as a {@link SpellFunction} parameter
-     * reusing the same name as the ambient {@code mana_cost} builtin (deliberately - the whole point is that a
-     * normal spell call never needs to touch this at all). Since it's only applied if {@code mana_cost} isn't
-     * already present, and a running spell's context already has the real value sitting there before the
-     * function ever runs, this default is dead weight for the common case and only matters as a safety net for
-     * some hypothetical call site with no ambient {@code mana_cost} at all.
+     * Fallback {@link #MANA_COST_INTERNAL} of {@link #DEFAULT_MANA_COST}, declared as a {@link SpellFunction}
+     * parameter - same if-absent semantics as {@link #cooldownDurationDefault()}. Paired with
+     * {@link #DEFAULT_VARIABLES_MANA} (attached by {@code addFunction} to every function that uses this), which
+     * translates the ambient {@code mana_cost} builtin onto {@link #MANA_COST_INTERNAL} whenever the caller
+     * leaves its own {@code variables} map empty - so a normal spell call never needs to touch this at all, the
+     * real cost is already sitting there by the time this default would apply, and this default is dead weight
+     * for the common case, only mattering as a safety net for some hypothetical call site with no ambient
+     * {@code mana_cost} and no mapping at all.
      */
     protected List<CtxVar<?>> manaAmountDefault()
     {
         List<CtxVar<?>> parameters = new LinkedList<>();
-        parameters.add(new CtxVar<>(DOUBLE, MANA_COST.name, DEFAULT_MANA_COST));
+        parameters.add(new CtxVar<>(DOUBLE, MANA_COST_INTERNAL, DEFAULT_MANA_COST));
         return parameters;
     }
 

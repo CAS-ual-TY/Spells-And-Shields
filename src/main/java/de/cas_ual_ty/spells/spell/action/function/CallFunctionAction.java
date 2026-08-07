@@ -31,6 +31,12 @@ import java.util.Optional;
  * function's own default stays otherwise" pattern {@code SpellNode}'s optional parameter list already uses over
  * a {@code Spell}'s base parameters. Unlisted parameter names keep the function's own declared default (or the
  * value already present under that name, per {@link SpellContext#runNestedActions}).
+ * <p>
+ * Each of {@link #activations}/{@link #variables}/{@link #targets} falls back independently to the function's
+ * own {@link SpellFunction#getDefaultActivations()}/{@link SpellFunction#getDefaultVariables()}/
+ * {@link SpellFunction#getDefaultTargets()} whenever the caller left that particular map empty - a function can
+ * declare a sensible default translation (eg. {@code owner -> _owner}) for names it conventionally expects to
+ * correspond with the host, without every caller needing to spell it out.
  */
 public class CallFunctionAction extends SpellAction
 {
@@ -105,6 +111,11 @@ public class CallFunctionAction extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
+        SpellFunction fn = function.value();
+        Map<String, String> activations = this.activations.isEmpty() ? fn.getDefaultActivations() : this.activations;
+        Map<String, String> variables = this.variables.isEmpty() ? fn.getDefaultVariables() : this.variables;
+        Map<String, String> targets = this.targets.isEmpty() ? fn.getDefaultTargets() : this.targets;
+
         activations.forEach((host, internal) -> ctx.renameActivation(host, internal));
         variables.forEach((host, internal) -> ctx.renameCtxVar(host, internal));
         targets.forEach((host, internal) -> ctx.renameTargetGroup(host, internal));
@@ -112,7 +123,7 @@ public class CallFunctionAction extends SpellAction
         // if the nest limit was already exhausted, runNestedActions runs nothing - renaming back
         // immediately below still correctly undoes the rename-in either way, so nothing is left
         // stranded under an internal name
-        ctx.runNestedActions(function.value(), parameters);
+        ctx.runNestedActions(fn, parameters);
 
         activations.forEach((host, internal) -> ctx.renameActivation(internal, host));
         variables.forEach((host, internal) -> ctx.renameCtxVar(internal, host));
