@@ -17,9 +17,9 @@ public class CtxVarType<T>
     private Function<T, T> copyFunc;
     private Codec<T> immCodec;
     private Codec<CtxVar<T>> codec;
-    
+
     private Map<CtxVarType<?>, Function<T, ?>> converters;
-    
+
     public CtxVarType(Function<T, T> copyFunc, Codec<T> immCodec)
     {
         this.copyFunc = copyFunc;
@@ -46,7 +46,7 @@ public class CtxVarType<T>
     {
         return codec;
     }
-    
+
     public Codec<T> getImmCodec()
     {
         return immCodec;

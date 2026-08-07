@@ -181,6 +181,18 @@ public class SpellContext
         ctxVars.put(variable.getName(), variable.copy());
         return true;
     }
+
+    /**
+     * Like {@link #initCtxVar(CtxVar)}, but only if nothing is already stored under {@link CtxVar#getName()} -
+     * used for {@link SpellFunction} parameter defaults, so a default whose name happens to coincide with an
+     * already-populated ambient/host variable (eg. {@code mana_cost}) doesn't clobber it; the ambient value is
+     * used as-is, and the default only kicks in when nothing was there to begin with.
+     */
+    public <T> boolean initCtxVarIfAbsent(CtxVar<T> variable)
+    {
+        ctxVars.putIfAbsent(variable.getName(), variable.copy());
+        return true;
+    }
     
     public <T> Optional<T> getCtxVar(CtxVarType<T> type, String name)
     {
@@ -319,13 +331,17 @@ public class SpellContext
      * is meant to cascade all the way out, not stay contained to whichever call is currently innermost.
      * <p>
      * {@link SpellFunction#getParameters()} are initialized first, after whatever the caller's own input maps
-     * already renamed in - since {@link #initCtxVar(CtxVar)} unconditionally overwrites, this means the
-     * function's own declared starting values always win for its own internal names.
+     * already renamed in - via {@link #initCtxVarIfAbsent(CtxVar)}, so a default only takes effect where nothing
+     * already exists under that name (eg. a fresh internal-only working variable); a name that already carries
+     * an ambient/renamed-in value (eg. {@code mana_cost}) is left untouched. {@code callerParameters} are then
+     * applied on top, in the function's own internal namespace (post-mapping, same as
+     * {@link SpellFunction#getParameters()}) - unconditionally, via {@link #initCtxVar(CtxVar)}, so an explicit
+     * per-call override always wins regardless of what's already there.
      * <p>
      * Gated by {@link SpellsConfig#FUNCTION_NEST_LIMIT} to prevent unbounded/infinite recursion (eg. a function
      * that calls itself). Returns {@code false} without running anything if the limit is already exhausted.
      */
-    public boolean runNestedActions(SpellFunction function)
+    public boolean runNestedActions(SpellFunction function, List<CtxVar<?>> callerParameters)
     {
         if(nestLimit-- <= 0)
         {
@@ -340,7 +356,8 @@ public class SpellContext
         Map<String, Label> savedLabels = labels;
         labels = new HashMap<>();
 
-        function.getParameters().forEach(this::initCtxVar);
+        function.getParameters().forEach(this::initCtxVarIfAbsent);
+        callerParameters.forEach(this::initCtxVar);
         runActions(function.getActions());
 
         labels = savedLabels;

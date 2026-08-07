@@ -8,9 +8,12 @@ import de.cas_ual_ty.spells.spell.SpellFunction;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
+import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import net.minecraft.core.Holder;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,6 +25,12 @@ import java.util.Optional;
  * reverse, moving whatever is left under each {@code internal} name back to its {@code host} name. Names not
  * listed in a map are left alone on both sides - the function's own internal-only names never touch the host's
  * namespace, and the host's other state is never visible inside the function.
+ * <p>
+ * {@link #parameters} let the caller override specific declared {@link SpellFunction#getParameters()} defaults
+ * by name (in the function's own internal namespace, post-mapping) - the same "caller's value wins if present,
+ * function's own default stays otherwise" pattern {@code SpellNode}'s optional parameter list already uses over
+ * a {@code Spell}'s base parameters. Unlisted parameter names keep the function's own declared default (or the
+ * value already present under that name, per {@link SpellContext#runNestedActions}).
  */
 public class CallFunctionAction extends SpellAction
 {
@@ -32,32 +41,40 @@ public class CallFunctionAction extends SpellAction
                 SpellsCodecs.SPELL_FUNCTION.fieldOf("function").forGetter(CallFunctionAction::getFunction),
                 Codec.lazyInitialized(() -> SpellsCodecs.STRING_MAP).optionalFieldOf("activations").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(CallFunctionAction::getActivations),
                 Codec.lazyInitialized(() -> SpellsCodecs.STRING_MAP).optionalFieldOf("variables").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(CallFunctionAction::getVariables),
-                Codec.lazyInitialized(() -> SpellsCodecs.STRING_MAP).optionalFieldOf("targets").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(CallFunctionAction::getTargets)
-        ).apply(instance, (activation, function, activations, variables, targets) -> new CallFunctionAction(type, activation, function, activations, variables, targets)));
+                Codec.lazyInitialized(() -> SpellsCodecs.STRING_MAP).optionalFieldOf("targets").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(CallFunctionAction::getTargets),
+                Codec.lazyInitialized(() -> SpellsCodecs.CTX_VAR).listOf().optionalFieldOf("parameters").xmap(o -> o.orElse(new LinkedList<>()), p -> p.isEmpty() ? Optional.empty() : Optional.of(p)).forGetter(CallFunctionAction::getParameters)
+        ).apply(instance, (activation, function, activations, variables, targets, parameters) -> new CallFunctionAction(type, activation, function, activations, variables, targets, parameters)));
+    }
+
+    public static CallFunctionAction make(Object activation, Holder<SpellFunction> function, Map<String, String> activations, Map<String, String> variables, Map<String, String> targets, List<CtxVar<?>> parameters)
+    {
+        return new CallFunctionAction(SpellActionTypes.CALL_FUNCTION.get(), activation.toString(), function, activations, variables, targets, parameters);
     }
 
     public static CallFunctionAction make(Object activation, Holder<SpellFunction> function, Map<String, String> activations, Map<String, String> variables, Map<String, String> targets)
     {
-        return new CallFunctionAction(SpellActionTypes.CALL_FUNCTION.get(), activation.toString(), function, activations, variables, targets);
+        return make(activation, function, activations, variables, targets, new LinkedList<>());
     }
 
     protected Holder<SpellFunction> function;
     protected Map<String, String> activations;
     protected Map<String, String> variables;
     protected Map<String, String> targets;
+    protected List<CtxVar<?>> parameters;
 
     public CallFunctionAction(SpellActionType<?> type)
     {
         super(type);
     }
 
-    public CallFunctionAction(SpellActionType<?> type, String activation, Holder<SpellFunction> function, Map<String, String> activations, Map<String, String> variables, Map<String, String> targets)
+    public CallFunctionAction(SpellActionType<?> type, String activation, Holder<SpellFunction> function, Map<String, String> activations, Map<String, String> variables, Map<String, String> targets, List<CtxVar<?>> parameters)
     {
         super(type, activation);
         this.function = function;
         this.activations = activations;
         this.variables = variables;
         this.targets = targets;
+        this.parameters = parameters;
     }
 
     public Holder<SpellFunction> getFunction()
@@ -80,6 +97,11 @@ public class CallFunctionAction extends SpellAction
         return targets;
     }
 
+    public List<CtxVar<?>> getParameters()
+    {
+        return parameters;
+    }
+
     @Override
     protected void wasActivated(SpellContext ctx)
     {
@@ -90,7 +112,7 @@ public class CallFunctionAction extends SpellAction
         // if the nest limit was already exhausted, runNestedActions runs nothing - renaming back
         // immediately below still correctly undoes the rename-in either way, so nothing is left
         // stranded under an internal name
-        ctx.runNestedActions(function.value());
+        ctx.runNestedActions(function.value(), parameters);
 
         activations.forEach((host, internal) -> ctx.renameActivation(internal, host));
         variables.forEach((host, internal) -> ctx.renameCtxVar(internal, host));

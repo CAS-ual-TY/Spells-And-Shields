@@ -44,17 +44,25 @@ import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.SPELL_SLOT;
  * outright - this mod's control flow only supports jumping backward to an already-visited label, so a
  * conditional skip-ahead is not available and isn't needed here anyway.
  * <p>
- * Mana and cooldown-duration costs both declare real parameters ({@code mana_cost}, {@link #DURATION}) with
- * fixed literal defaults ({@link #DEFAULT_MANA_COST}, {@link #DEFAULT_COOLDOWN_DURATION}). A
- * {@link de.cas_ual_ty.spells.spell.variable.CtxVar} parameter default can only be a fixed literal, not a
- * reference to another variable, and is applied unconditionally after the caller's rename-in - so mapping a
- * custom value into either name has no effect, the declared default always wins. The mana parameter
- * deliberately reuses the ambient {@code mana_cost} builtin's own name rather than a separate one; since the
- * default always wins regardless, this doesn't let a caller pass the spell's real mana cost through either, but
- * it does mean calling one of these functions leaves {@code mana_cost} at {@link #DEFAULT_MANA_COST} for the
- * rest of the host spell's run, not just inside the function - see {@link #manaAmountDefault()}. The cooldown
- * slot, by contrast, reuses the ambient {@code spell_slot} builtin directly with no declared parameter/default
- * at all - it's always populated for a running spell, same as {@code mana_cost} would be without its default.
+ * Every declared parameter's default is applied via {@code initCtxVarIfAbsent} (see
+ * {@link de.cas_ual_ty.spells.spell.context.SpellContext#runNestedActions}) - only where nothing is already
+ * present under that name - so a caller's explicit {@code call_function} {@code parameters} override, or an
+ * already-populated ambient value, always takes precedence over the default. Mana costs declare a parameter
+ * under the ambient {@code mana_cost} builtin's own name: for a normal spell call, {@code mana_cost} is already
+ * sitting there before the function ever runs, so {@link #DEFAULT_MANA_COST} never actually fires and the
+ * function just uses the spell's real cost automatically, no override needed. The cooldown slot similarly
+ * reuses the ambient {@code spell_slot} builtin directly, with no declared parameter/default at all. Item costs
+ * ({@link #ITEM}/{@link #ITEM_AMOUNT}/{@link #MUST_BE_IN_HAND}) and {@link #DURATION} (cooldown length) have no
+ * ambient builtin to fall back to, so their defaults ({@link #DEFAULT_ITEM}, {@link #DEFAULT_ITEM_AMOUNT},
+ * {@link #DEFAULT_MUST_BE_IN_HAND}, {@link #DEFAULT_COOLDOWN_DURATION}) always apply unless a caller overrides
+ * them - {@link #ITEM} in particular is expected to always be overridden by real spells.
+ * <p>
+ * Besides the atomic check-and-pay combinations above, {@link #addSpellFunctions()} also registers single-step
+ * check-only ({@code has_*_cost}) and consume-only ({@code burn_mana_cost}/{@code consume_item_cost}/
+ * {@code set_cooldown_cost}) functions for spells that check a cost up front (on their own "active"-mapped
+ * activation) but only actually spend it later, on a different activation (eg. a projectile that only burns
+ * mana/consumes its reagent once it actually hits something) - the combined functions above pay everything
+ * atomically in one call and don't fit that split-timing pattern.
  */
 public class SpellFunctionsGen
 {
@@ -78,6 +86,9 @@ public class SpellFunctionsGen
     // default cost parameters - declared on the SpellFunction itself, applied after any caller rename-in
     public static final double DEFAULT_MANA_COST = 5.0;
     public static final int DEFAULT_COOLDOWN_DURATION = 100; // 5 seconds
+    public static final String DEFAULT_ITEM = "minecraft:lapis_lazuli";
+    public static final int DEFAULT_ITEM_AMOUNT = 1;
+    public static final boolean DEFAULT_MUST_BE_IN_HAND = true;
 
     protected String modId;
     protected final BootstrapContext<SpellFunction> context;
@@ -102,12 +113,21 @@ public class SpellFunctionsGen
     public void addSpellFunctions()
     {
         addFunction("check_mana_cost", manaAmountDefault(), checkManaCost());
-        addFunction("check_item_cost", checkItemCost());
+        addFunction("check_item_cost", itemCostDefault(), checkItemCost());
         addFunction("check_cooldown_cost", cooldownDurationDefault(), checkCooldownCost());
-        addFunction("check_mana_and_item_cost", manaAmountDefault(), checkManaAndItemCost());
+        addFunction("check_mana_and_item_cost", combine(manaAmountDefault(), itemCostDefault()), checkManaAndItemCost());
         addFunction("check_mana_and_cooldown_cost", combine(manaAmountDefault(), cooldownDurationDefault()), checkManaAndCooldownCost());
-        addFunction("check_item_and_cooldown_cost", cooldownDurationDefault(), checkItemAndCooldownCost());
-        addFunction("check_mana_and_item_and_cooldown_cost", combine(manaAmountDefault(), cooldownDurationDefault()), checkManaAndItemAndCooldownCost());
+        addFunction("check_item_and_cooldown_cost", combine(itemCostDefault(), cooldownDurationDefault()), checkItemAndCooldownCost());
+        addFunction("check_mana_and_item_and_cooldown_cost", combine(manaAmountDefault(), itemCostDefault(), cooldownDurationDefault()), checkManaAndItemAndCooldownCost());
+
+        // single-step check-only / consume-only functions, for spells that check a cost up front but only
+        // actually spend it later on a different activation
+        addFunction("has_mana_cost", manaAmountDefault(), hasManaCost());
+        addFunction("burn_mana_cost", manaAmountDefault(), burnManaCost());
+        addFunction("has_item_cost", itemCostDefault(), hasItemCost());
+        addFunction("consume_item_cost", itemCostDefault(), consumeItemCost());
+        addFunction("has_cooldown_cost", hasCooldownCost());
+        addFunction("set_cooldown_cost", cooldownDurationDefault(), setCooldownCost());
     }
 
     // ----- mana only -----
@@ -188,6 +208,60 @@ public class SpellFunctionsGen
         return actions;
     }
 
+    // ----- single-step: mana only -----
+
+    protected List<SpellAction> hasManaCost()
+    {
+        List<SpellAction> actions = new LinkedList<>();
+        actions.add(HasManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
+        return actions;
+    }
+
+    protected List<SpellAction> burnManaCost()
+    {
+        List<SpellAction> actions = new LinkedList<>();
+        actions.add(BurnManaAction.make(PAY, OWNER, DOUBLE.reference(MANA_COST.name)));
+        return actions;
+    }
+
+    // ----- single-step: items only -----
+
+    /**
+     * Unlike {@link #effectiveItemAmount()}-based checks elsewhere in this class, this always requires the full
+     * {@link #ITEM_AMOUNT} regardless of the {@code item_costs} toggle - matching the established convention in
+     * existing spells, where the item must physically be in hand either way and only the later consume step
+     * respects the toggle. See {@link #consumeItemCost()}.
+     */
+    protected List<SpellAction> hasItemCost()
+    {
+        List<SpellAction> actions = new LinkedList<>();
+        actions.add(PlayerHasItemsAction.make(PAY, OWNER, STRING.reference(ITEM), INT.reference(ITEM_AMOUNT), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND), TRUE));
+        return actions;
+    }
+
+    protected List<SpellAction> consumeItemCost()
+    {
+        List<SpellAction> actions = new LinkedList<>();
+        actions.add(TryConsumePlayerItemsAction.make(PAY, OWNER, STRING.reference(ITEM), effectiveItemAmount(), TAG.reference(ITEM_TAG), BOOLEAN.reference(MUST_BE_IN_HAND)));
+        return actions;
+    }
+
+    // ----- single-step: cooldown only -----
+
+    protected List<SpellAction> hasCooldownCost()
+    {
+        List<SpellAction> actions = new LinkedList<>();
+        addCooldownCheck(actions);
+        return actions;
+    }
+
+    protected List<SpellAction> setCooldownCost()
+    {
+        List<SpellAction> actions = new LinkedList<>();
+        actions.add(SetCooldownAction.make(PAY, OWNER, INT.reference(SPELL_SLOT.name), INT.reference(DURATION)));
+        return actions;
+    }
+
     // ----- shared building blocks -----
 
     /**
@@ -202,10 +276,10 @@ public class SpellFunctionsGen
     }
 
     /**
-     * Default {@link #DURATION} of {@link #DEFAULT_COOLDOWN_DURATION} ticks, declared as a {@link SpellFunction}
-     * parameter. Since parameter defaults unconditionally overwrite whatever the caller's rename-in already
-     * placed under the same internal name, mapping a custom value into {@link #DURATION} has no effect on these
-     * functions - the default always wins.
+     * Fallback {@link #DURATION} of {@link #DEFAULT_COOLDOWN_DURATION} ticks, declared as a {@link SpellFunction}
+     * parameter - applied only if nothing is already present under that name (see
+     * {@link de.cas_ual_ty.spells.spell.context.SpellContext#runNestedActions}), so a caller mapping a custom
+     * value into {@link #DURATION} via {@code variables} takes precedence over this default automatically.
      */
     protected List<CtxVar<?>> cooldownDurationDefault()
     {
@@ -215,20 +289,37 @@ public class SpellFunctionsGen
     }
 
     /**
-     * Default {@code mana_cost} of {@link #DEFAULT_MANA_COST}, declared as a {@link SpellFunction} parameter
-     * reusing the same name as the ambient {@code mana_cost} builtin (deliberately - so a caller wanting the
-     * function to use the spell's real mana cost never needs a variables mapping just to pass it through, it's
-     * already sitting under that name). Because parameter defaults are applied unconditionally, this default
-     * overwrites {@code mana_cost} on every call regardless of what was already there - the real ambient value
-     * included - so the function always spends exactly {@link #DEFAULT_MANA_COST} unless a caller edits this
-     * default directly; no variables-map trick can preserve or override it, same as {@link #cooldownDurationDefault()}.
-     * Because the name is shared and the context isn't isolated, {@code mana_cost} is left at
-     * {@link #DEFAULT_MANA_COST} for the rest of the host spell's run after the call too, not just inside it.
+     * Fallback {@code mana_cost} of {@link #DEFAULT_MANA_COST}, declared as a {@link SpellFunction} parameter
+     * reusing the same name as the ambient {@code mana_cost} builtin (deliberately - the whole point is that a
+     * normal spell call never needs to touch this at all). Since it's only applied if {@code mana_cost} isn't
+     * already present, and a running spell's context already has the real value sitting there before the
+     * function ever runs, this default is dead weight for the common case and only matters as a safety net for
+     * some hypothetical call site with no ambient {@code mana_cost} at all.
      */
     protected List<CtxVar<?>> manaAmountDefault()
     {
         List<CtxVar<?>> parameters = new LinkedList<>();
         parameters.add(new CtxVar<>(DOUBLE, MANA_COST.name, DEFAULT_MANA_COST));
+        return parameters;
+    }
+
+    /**
+     * Fallback {@link #ITEM}/{@link #ITEM_AMOUNT}/{@link #MUST_BE_IN_HAND}/{@link #ITEM_TAG} of
+     * {@link #DEFAULT_ITEM} (1, in hand, no tag), declared as {@link SpellFunction} parameters - same if-absent
+     * semantics as {@link #cooldownDurationDefault()}. Unlike {@code mana_cost}/{@code spell_slot}, none of these
+     * have an ambient builtin to fall back to (every spell's required item is entirely spell-specific), so this
+     * default is just a sensible placeholder - real spells are expected to always override {@link #ITEM} at
+     * minimum via {@code call_function}'s own {@code parameters} list. {@link #ITEM_TAG} defaults to an empty tag
+     * rather than being left undeclared, so it actually shows up as a parameter - both {@code PlayerHasItemsAction}
+     * and {@code TryConsumePlayerItemsAction} treat an empty tag the same as no tag filter at all.
+     */
+    protected List<CtxVar<?>> itemCostDefault()
+    {
+        List<CtxVar<?>> parameters = new LinkedList<>();
+        parameters.add(new CtxVar<>(STRING, ITEM, DEFAULT_ITEM));
+        parameters.add(new CtxVar<>(INT, ITEM_AMOUNT, DEFAULT_ITEM_AMOUNT));
+        parameters.add(new CtxVar<>(BOOLEAN, MUST_BE_IN_HAND, DEFAULT_MUST_BE_IN_HAND));
+        parameters.add(new CtxVar<>(TAG, ITEM_TAG, new CompoundTag()));
         return parameters;
     }
 
