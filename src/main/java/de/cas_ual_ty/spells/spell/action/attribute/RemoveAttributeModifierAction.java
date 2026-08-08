@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.action.effect;
+package de.cas_ual_ty.spells.spell.action.attribute;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -77,7 +77,10 @@ public class RemoveAttributeModifierAction extends AffectTypeAction<LivingEntity
             {
                 id.getValue(ctx).ifPresent(id ->
                 {
-                    a.removeModifier(ResourceLocation.parse(id));
+                    if(a.hasModifier(ResourceLocation.parse(id)))
+                    {
+                        a.removeModifier(ResourceLocation.parse(id));
+                    }
                 });
             }
         });

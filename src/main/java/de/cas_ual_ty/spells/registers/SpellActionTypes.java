@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.ai.ClearMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.ai.GetMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
+import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.cooldown.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
@@ -63,10 +64,16 @@ public class SpellActionTypes
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ClearMobTargetAction>> CLEAR_MOB_TARGET = DEFERRED_REGISTER.register("clear_mob_target", () -> new SpellActionType<>(ClearMobTargetAction::new, ClearMobTargetAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetMobTargetAction>> GET_MOB_TARGET = DEFERRED_REGISTER.register("get_mob_target", () -> new SpellActionType<>(GetMobTargetAction::new, GetMobTargetAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<SetMobTargetAction>> SET_MOB_TARGET = DEFERRED_REGISTER.register("set_mob_target", () -> new SpellActionType<>(SetMobTargetAction::new, SetMobTargetAction::makeCodec));
-    
+
     // attribute
-    public static final DeferredHolder<SpellActionType<?>, SpellActionType<CheckTagAction>> CHECK_TAG = DEFERRED_REGISTER.register("check_tag", () -> new SpellActionType<>(CheckTagAction::new, CheckTagAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<AddAttributeModifierAction>> ADD_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("add_attribute_modifier", () -> new SpellActionType<>(AddAttributeModifierAction::new, AddAttributeModifierAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetAttributeModifierAction>> GET_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("get_attribute_modifier", () -> new SpellActionType<>(GetAttributeModifierAction::new, GetAttributeModifierAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetAttributeValueAction>> GET_ATTRIBUTE_VALUE = DEFERRED_REGISTER.register("get_attribute_value", () -> new SpellActionType<>(GetAttributeValueAction::new, GetAttributeValueAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<HasAttributeModifierAction>> HAS_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("has_attribute_modifier", () -> new SpellActionType<>(HasAttributeModifierAction::new, HasAttributeModifierAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<RemoveAttributeModifierAction>> REMOVE_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("remove_attribute_modifier", () -> new SpellActionType<>(RemoveAttributeModifierAction::new, RemoveAttributeModifierAction::makeCodec));
+
+    // entity
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<CheckTagAction>> CHECK_TAG = DEFERRED_REGISTER.register("check_tag", () -> new SpellActionType<>(CheckTagAction::new, CheckTagAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetEntityExtraTagAction>> GET_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("get_entity_extra_tag", () -> new SpellActionType<>(GetEntityExtraTagAction::new, GetEntityExtraTagAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetEntityEyePositionAction>> GET_ENTITY_EYE_POSITION = DEFERRED_REGISTER.register("get_entity_eye_position", () -> new SpellActionType<>(GetEntityEyePositionAction::new, GetEntityEyePositionAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetEntityPositionDirectionMotionAction>> GET_ENTITY_POSITION_DIRECTION_MOTION = DEFERRED_REGISTER.register("get_entity_position_direction", () -> new SpellActionType<>(GetEntityPositionDirectionMotionAction::new, GetEntityPositionDirectionMotionAction::makeCodec));
@@ -100,9 +107,8 @@ public class SpellActionTypes
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<AddDelayedSpellAction>> ADD_DELAYED_SPELL = DEFERRED_REGISTER.register("add_delayed_spell", () -> new SpellActionType<>(AddDelayedSpellAction::new, AddDelayedSpellAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<CheckHasDelayedSpellAction>> CHECK_HAS_DELAYED_SPELL = DEFERRED_REGISTER.register("check_has_delayed_spell", () -> new SpellActionType<>(CheckHasDelayedSpellAction::new, CheckHasDelayedSpellAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<RemoveDelayedSpellAction>> REMOVE_DELAYED_SPELL = DEFERRED_REGISTER.register("remove_delayed_spell", () -> new SpellActionType<>(RemoveDelayedSpellAction::new, RemoveDelayedSpellAction::makeCodec));
-    
+
     // effects
-    public static final DeferredHolder<SpellActionType<?>, SpellActionType<AddAttributeModifierAction>> ADD_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("add_attribute_modifier", () -> new SpellActionType<>(AddAttributeModifierAction::new, AddAttributeModifierAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ApplyEntityExtraTagAction>> APPLY_ENTITY_EXTRA_TAG = DEFERRED_REGISTER.register("apply_entity_extra_tag", () -> new SpellActionType<>(ApplyEntityExtraTagAction::new, ApplyEntityExtraTagAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ApplyEntityTagAction>> APPLY_ENTITY_TAG = DEFERRED_REGISTER.register("apply_entity_tag", () -> new SpellActionType<>(ApplyEntityTagAction::new, ApplyEntityTagAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ApplyMobEffectAction>> APPLY_MOB_EFFECT = DEFERRED_REGISTER.register("apply_mob_effect", () -> new SpellActionType<>(ApplyMobEffectAction::new, ApplyMobEffectAction::makeCodec));
@@ -111,7 +117,6 @@ public class SpellActionTypes
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<HealAction>> HEAL = DEFERRED_REGISTER.register("heal", () -> new SpellActionType<>(HealAction::new, HealAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<KillEntityAction>> KILL_ENTITY = DEFERRED_REGISTER.register("kill_entity", () -> new SpellActionType<>(KillEntityAction::new, KillEntityAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<KnockbackAction>> KNOCKBACK = DEFERRED_REGISTER.register("knockback", () -> new SpellActionType<>(KnockbackAction::new, KnockbackAction::makeCodec));
-    public static final DeferredHolder<SpellActionType<?>, SpellActionType<RemoveAttributeModifierAction>> REMOVE_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("remove_attribute_modifier", () -> new SpellActionType<>(RemoveAttributeModifierAction::new, RemoveAttributeModifierAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<RemoveMobEffectAction>> REMOVE_MOB_EFFECT = DEFERRED_REGISTER.register("remove_mob_effect", () -> new SpellActionType<>(RemoveMobEffectAction::new, RemoveMobEffectAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ResetFallDistanceAction>> RESET_FALL_DISTANCE = DEFERRED_REGISTER.register("reset_fall_distance", () -> new SpellActionType<>(ResetFallDistanceAction::new, ResetFallDistanceAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<SetMotionAction>> SET_MOTION = DEFERRED_REGISTER.register("set_motion", () -> new SyncedSpellActionType<>(SetMotionAction::new, SetMotionAction::makeCodec, SetMotionAction.ClientAction::new));

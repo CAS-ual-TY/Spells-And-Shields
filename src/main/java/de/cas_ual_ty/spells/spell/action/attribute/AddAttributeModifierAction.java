@@ -1,4 +1,4 @@
-package de.cas_ual_ty.spells.spell.action.effect;
+package de.cas_ual_ty.spells.spell.action.attribute;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -98,7 +98,10 @@ public class AddAttributeModifierAction extends AffectTypeAction<LivingEntityTar
                     {
                         operation.getValue(ctx).map(SpellsUtil::operationFromString).ifPresent(op ->
                         {
-                            a.addPermanentModifier(new AttributeModifier(ResourceLocation.parse(name), amount, op));
+                            if(!a.hasModifier(ResourceLocation.parse(name)))
+                            {
+                                a.addPermanentModifier(new AttributeModifier(ResourceLocation.parse(name), amount, op));
+                            }
                         });
                     });
                 });

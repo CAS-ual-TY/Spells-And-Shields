@@ -10,6 +10,8 @@ import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellFunction;
 import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
+import de.cas_ual_ty.spells.spell.action.attribute.AddAttributeModifierAction;
+import de.cas_ual_ty.spells.spell.action.attribute.RemoveAttributeModifierAction;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.delayed.AddDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.delayed.CheckHasDelayedSpellAction;
@@ -437,10 +439,10 @@ public class SpellsGen
             d *= -1D;
             spell.addTooltip(Component.translatable("attribute.modifier.take." + op.id(), ATTRIBUTE_MODIFIER_FORMAT.format(d), component.copy()).withStyle(ChatFormatting.RED));
         }
-        
+
         addSpell(rl, spell);
     }
-    
+
     public void addPermanentWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, boolean tick)
     {
         ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
