@@ -50,10 +50,9 @@
   "s6/spell_parameters": [],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:has_mana",
+      "type": "spells_and_shields:call_function",
       "activation": "active",
-      "d/double/amount": "<<mana_cost>>",
-      "t/target": "owner"
+      "function": "spells_and_shields:has_mana_cost"
     },
     {
       "type": "spells_and_shields:put_tag",
@@ -153,10 +152,9 @@
       "activation": "potion"
     },
     {
-      "type": "spells_and_shields:burn_mana",
+      "type": "spells_and_shields:call_function",
       "activation": "shoot",
-      "d/double/amount": "<<mana_cost>>",
-      "ts/targets": "owner"
+      "function": "spells_and_shields:burn_mana_cost"
     },
     {
       "type": "spells_and_shields:spawn_entity",
@@ -189,10 +187,9 @@
       "t/target": "item"
     },
     {
-      "type": "spells_and_shields:has_mana",
+      "type": "spells_and_shields:call_function",
       "activation": "spectral",
-      "d/double/amount": "<<mana_cost>>",
-      "t/target": "owner"
+      "function": "spells_and_shields:has_mana_cost"
     },
     {
       "type": "spells_and_shields:spawn_entity",

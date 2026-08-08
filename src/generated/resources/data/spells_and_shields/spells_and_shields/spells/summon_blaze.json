@@ -20,8 +20,9 @@
   "s6/spell_parameters": [],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:try_burn_mana_cost",
-      "activation": "active"
+      "type": "spells_and_shields:call_function",
+      "activation": "active",
+      "function": "spells_and_shields:check_mana_cost"
     },
     {
       "type": "spells_and_shields:spawn_entity",
@@ -62,10 +63,9 @@
       "ts/targets": "summoned"
     },
     {
-      "type": "spells_and_shields:burn_mana",
+      "type": "spells_and_shields:call_function",
       "activation": "active",
-      "d/double/amount": "<<mana_cost>>",
-      "ts/targets": "owner"
+      "function": "spells_and_shields:burn_mana_cost"
     },
     {
       "type": "spells_and_shields:get_target_group_size",

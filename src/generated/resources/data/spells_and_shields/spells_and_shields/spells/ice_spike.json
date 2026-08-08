@@ -29,8 +29,9 @@
   ],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:try_burn_mana_cost",
-      "activation": "active"
+      "type": "spells_and_shields:call_function",
+      "activation": "active",
+      "function": "spells_and_shields:check_mana_cost"
     },
     {
       "type": "spells_and_shields:shoot",

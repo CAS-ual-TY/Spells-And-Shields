@@ -38,10 +38,9 @@
   ],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:has_mana",
+      "type": "spells_and_shields:call_function",
       "activation": "active",
-      "d/double/amount": "<<mana_cost>>",
-      "t/target": "owner"
+      "function": "spells_and_shields:has_mana_cost"
     },
     {
       "type": "spells_and_shields:look_at_target",
@@ -79,10 +78,9 @@
       "d/boolean/input": "<<is_air>>"
     },
     {
-      "type": "spells_and_shields:burn_mana",
+      "type": "spells_and_shields:call_function",
       "activation": "burn_mana",
-      "d/double/amount": "<<mana_cost>>",
-      "ts/targets": "owner"
+      "function": "spells_and_shields:burn_mana_cost"
     }
   ]
 }
