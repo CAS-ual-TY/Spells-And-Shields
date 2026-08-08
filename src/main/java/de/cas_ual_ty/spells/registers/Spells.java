@@ -389,6 +389,10 @@ public class Spells
     public static final String KEY_SUMMON_GUARDIAN = key(SUMMON_GUARDIAN);
     public static final String KEY_SUMMON_GUARDIAN_DESC = descKey(SUMMON_GUARDIAN);
 
+    public static final ResourceLocation TOGGLE_FLIGHT = rl("toggle_flight");
+    public static final String KEY_TOGGLE_FLIGHT = key(TOGGLE_FLIGHT);
+    public static final String KEY_TOGGLE_FLIGHT_DESC = descKey(TOGGLE_FLIGHT);
+
     public static void register(IEventBus modEventBus)
     {
         modEventBus.addListener(Spells::newDataPackRegistry);

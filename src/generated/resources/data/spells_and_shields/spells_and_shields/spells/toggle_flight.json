@@ -1,0 +1,280 @@
+{
+  "s1/title": {
+    "translate": "spell.spells_and_shields.toggle_flight"
+  },
+  "s2/icon": {
+    "type": "spells_and_shields:layered",
+    "icons_list": [
+      {
+        "type": "spells_and_shields:advanced",
+        "height": 16,
+        "texture": "spells_and_shields:textures/spell/flight.png",
+        "textureHeight": 16,
+        "textureWidth": 16,
+        "u": 0,
+        "v": 0,
+        "width": 16
+      },
+      {
+        "type": "spells_and_shields:default",
+        "texture": "spells_and_shields:textures/spell/toggle.png"
+      },
+      {
+        "type": "spells_and_shields:default",
+        "texture": "spells_and_shields:textures/spell/toggle.png"
+      }
+    ]
+  },
+  "s3/mana_cost": 8.0,
+  "s4/tooltip": [
+    {
+      "translate": "spell.spells_and_shields.toggle_flight.desc"
+    },
+    "",
+    {
+      "color": "dark_purple",
+      "translate": "potion.whenDrank"
+    },
+    {
+      "color": "blue",
+      "translate": "attribute.modifier.plus.0",
+      "with": [
+        "1",
+        {
+          "translate": "neoforge.creative_flight"
+        }
+      ]
+    }
+  ],
+  "s5/spell_events": {
+    "active": "active",
+    "living_hurt_victim": "living_hurt_victim",
+    "on_unequip": "on_unequip"
+  },
+  "s6/spell_parameters": [
+    {
+      "type": "spells_and_shields:string",
+      "value": "neoforge:creative_flight",
+      "var/name": "attribute"
+    },
+    {
+      "type": "spells_and_shields:double",
+      "value": 1.0,
+      "var/name": "value"
+    },
+    {
+      "type": "spells_and_shields:string",
+      "value": "addition",
+      "var/name": "operation"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 100,
+      "var/name": "duration"
+    },
+    {
+      "type": "spells_and_shields:int",
+      "value": 300,
+      "var/name": "cooldown"
+    }
+  ],
+  "s7/spell_actions": [
+    {
+      "type": "spells_and_shields:has_cooldown",
+      "activation": "active",
+      "d/int/slot": "<<spell_slot>>",
+      "t/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "active",
+      "td/destination": "player",
+      "ts/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "on_unequip",
+      "td/destination": "player",
+      "ts/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "living_hurt_victim",
+      "td/destination": "player",
+      "ts/source": "owner"
+    },
+    {
+      "type": "spells_and_shields:copy_targets",
+      "activation": "renew",
+      "td/destination": "player",
+      "ts/source": "holder"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "remove",
+      "activation": "renew"
+    },
+    {
+      "type": "spells_and_shields:try_burn_mana",
+      "activation": "renew",
+      "d/double/amount": "<< (mana_cost * duration) / 100 >>",
+      "t/target": "player"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "remove",
+      "activation": "renew"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "remove",
+      "d/string/source": "<< get_nbt_string(delay_tag, 'attribute_mod') >>",
+      "var/result": "attribute_mod"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "remove",
+      "d/string/source": "<< get_nbt_string(delay_tag, 'attribute') >>",
+      "var/result": "attribute"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "active",
+      "d/string/source": "<< uuid_from_string('toggle' + 'creative_flight' + spell_slot) >>",
+      "var/result": "uuid"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "on_unequip",
+      "d/string/source": "<< uuid_from_string('toggle' + 'creative_flight' + spell_slot) >>",
+      "var/result": "uuid"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "living_hurt_victim",
+      "d/string/source": "<< uuid_from_string('toggle' + 'creative_flight' + spell_slot) >>",
+      "var/result": "uuid"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "active",
+      "d/string/source": "<< 'spells_and_shields:creative_flight_' + spell_slot>>",
+      "var/result": "attribute_mod"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "on_unequip",
+      "d/string/source": "<< 'spells_and_shields:creative_flight_' + spell_slot>>",
+      "var/result": "attribute_mod"
+    },
+    {
+      "type": "spells_and_shields:put_string",
+      "activation": "living_hurt_victim",
+      "d/string/source": "<< 'spells_and_shields:creative_flight_' + spell_slot>>",
+      "var/result": "attribute_mod"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "apply",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "remove",
+      "activation": "active"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "remove",
+      "activation": "on_unequip"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "remove",
+      "activation": "living_hurt_victim"
+    },
+    {
+      "type": "spells_and_shields:set_cooldown",
+      "activation": "living_hurt_victim",
+      "d/int/duration": "<<cooldown>>",
+      "d/int/slot": "<<spell_slot>>",
+      "t/target": "player"
+    },
+    {
+      "type": "spells_and_shields:remove_attribute_modifier",
+      "activation": "remove",
+      "d/string/attribute": "<<attribute>>",
+      "d/string/id": "<<attribute_mod>>",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:check_has_delayed_spell",
+      "activation": "remove",
+      "d/string/uuid": "<<uuid>>",
+      "t/target": "player"
+    },
+    {
+      "type": "spells_and_shields:deactivate",
+      "a/to_deactivate": "apply",
+      "activation": "remove"
+    },
+    {
+      "type": "spells_and_shields:remove_delayed_spell",
+      "activation": "remove",
+      "d/boolean/force_activate": false,
+      "d/string/uuid": "<<uuid>>",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "remove",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "d/string/sound_event": "minecraft:entity.splash_potion.break",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:try_burn_mana",
+      "activation": "apply",
+      "d/double/amount": "<< (mana_cost * duration) / 100 >>",
+      "t/target": "player"
+    },
+    {
+      "type": "spells_and_shields:activate",
+      "a/to_activate": "renew",
+      "activation": "apply"
+    },
+    {
+      "type": "spells_and_shields:add_attribute_modifier",
+      "activation": "apply",
+      "d/double/amount": "<<value>>",
+      "d/string/attribute": "<<attribute>>",
+      "d/string/name": "<<attribute_mod>>",
+      "d/string/operation": "<<operation>>",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:put_tag",
+      "activation": "apply",
+      "d/tag/source": "<< put_nbt_string(put_nbt_string(new_tag(), 'attribute', attribute), 'attribute_mod', attribute_mod) >>",
+      "var/result": "delay_tag"
+    },
+    {
+      "type": "spells_and_shields:add_delayed_spell",
+      "activation": "renew",
+      "ad/on_remove": "renew",
+      "d/compound_tag/extra_data": "<<delay_tag>>",
+      "d/int/tick_time": "<<duration>>",
+      "d/string/uuid": "<<uuid>>",
+      "ts/targets": "player"
+    },
+    {
+      "type": "spells_and_shields:play_sound",
+      "activation": "apply",
+      "d/double/pitch": 1.0,
+      "d/double/volume": 1.0,
+      "d/string/sound_event": "minecraft:entity.generic.drink",
+      "ts/targets": "player"
+    }
+  ]
+}

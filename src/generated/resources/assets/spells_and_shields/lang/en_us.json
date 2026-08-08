@@ -255,6 +255,8 @@
   "spell.spells_and_shields.toggle_dolphins_grace.desc": "Toggles the %s effect and burns mana (per 5 seconds) while it is active.",
   "spell.spells_and_shields.toggle_fire_resistance": "Toggle %s",
   "spell.spells_and_shields.toggle_fire_resistance.desc": "Toggles the %s effect and burns mana (per 5 seconds) while it is active.",
+  "spell.spells_and_shields.toggle_flight": "Toggle Flight",
+  "spell.spells_and_shields.toggle_flight.desc": "Toggles the ability to fly and burns mana (per 5 seconds) while it is active. Taking damages makes you temporarily lose this ability!",
   "spell.spells_and_shields.toggle_frost_walker": "Toggle Frost Walker",
   "spell.spells_and_shields.toggle_frost_walker.desc": "Toggles the following effect and burns mana (per 5 seconds) while it is active: Walk on water by turning the blocks you walk on into ice.",
   "spell.spells_and_shields.toggle_glowing": "Toggle %s",

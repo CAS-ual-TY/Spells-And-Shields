@@ -177,6 +177,8 @@ public class LangGen extends LanguageProvider
         add(Spells.KEY_HEALTH_BOOST_DESC, "Increases your maximum health.");
         add(Spells.KEY_MANA_BOOST, "Mana Boost");
         add(Spells.KEY_MANA_BOOST_DESC, "Increases your maximum mana.");
+        add(Spells.KEY_TOGGLE_FLIGHT, "Toggle Flight");
+        add(Spells.KEY_TOGGLE_FLIGHT_DESC, "Toggles the ability to fly and burns mana (per 5 seconds) while it is active. Taking damages makes you temporarily lose this ability!");
         add(Spells.KEY_WATER_LEAP, "Water Leap");
         add(Spells.KEY_WATER_LEAP_DESC, "Leap forward like a dolphin (must be underwater).");
         add(Spells.KEY_PERMANENT_AQUA_RESISTANCE, PERMANENT_EFFECT_NAME.formatted("Aqua Resistance"));
