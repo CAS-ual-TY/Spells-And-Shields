@@ -88,6 +88,8 @@ public class SpellTrees
                 .add(spellGetter.apply(Spells.SUMMON_BLAZE)).levelCost(25).learnRequirements(bookshelves(24))
                 .leaf()
                 .leaf()
+                .leaf()
+                .add(spellGetter.apply(Spells.EVOKER_FANGS)).levelCost(20).learnRequirements(bookshelves(24))
                 .finish();
     }
     
