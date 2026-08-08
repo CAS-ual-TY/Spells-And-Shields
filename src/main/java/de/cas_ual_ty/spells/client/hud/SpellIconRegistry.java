@@ -38,9 +38,9 @@ public class SpellIconRegistry
     
     public static final SpellIconRenderer<AdvancedSpellIcon> ADVANCED_RENDERER = (icon, guiGraphics, width, height, x, y, partialTicks) -> {
         RenderSystem.enableBlend();
-        int offX = (width - icon.getWidth()) / 2 + icon.getOffsetX();
-        int offY = (height - icon.getHeight()) / 2 + icon.getOffsetY();
-        guiGraphics.blit(icon.getTexture(), x + offX, y + offY, icon.getWidth(), icon.getHeight(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
+        int offX = (width - icon.getSizeX()) / 2 + icon.getOffsetX();
+        int offY = (height - icon.getSizeY()) / 2 + icon.getOffsetY();
+        guiGraphics.blit(icon.getTexture(), x + offX, y + offY, icon.getSizeX(), icon.getSizeY(), icon.getU(), icon.getV(), icon.getWidth(), icon.getHeight(), icon.getTextureWidth(), icon.getTextureHeight());
         RenderSystem.disableBlend();
     };
     
