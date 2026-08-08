@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.level.Level;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -101,6 +103,86 @@ public abstract class SpellInstance
     public boolean run(Player owner, String event, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
     {
         return run(owner.level(), owner, event, false, toContext, fromContext);
+    }
+
+    /**
+     * Sentinel {@link de.cas_ual_ty.spells.spell.context.BuiltinVariables#SPELL_SLOT} value for a run that
+     * isn't tied to any real equipped slot (currently: {@link #runCommand}).
+     */
+    public static final int NO_SLOT = -1;
+
+    /**
+     * The three standard ways a spell run gets started, and exactly what each one populates before the
+     * spell's own actions run - new call sites should always go through one of these three instead of
+     * hand-rolling a {@code toContext}/{@code preRun} lambda, so a future new entry point can't silently
+     * forget one of these (this is exactly how {@code spell_slot} went missing from the general hook-event
+     * dispatch in {@link de.cas_ual_ty.spells.spell.context.SpellsEvents} for a while).
+     * <ul>
+     * <li>{@link #runEquipped}: the spell is running because a player has it equipped in a spell slot -
+     * either they actively cast it, or a hook event (eg. taking damage) fired for them. Sets the
+     * {@code owner} target (via the regular {@code owner} parameter) and the real
+     * {@link de.cas_ual_ty.spells.spell.context.BuiltinVariables#SPELL_SLOT}.</li>
+     * <li>{@link #runCommand}: the spell is force-cast on a player via {@code /spells cast}, independent of
+     * whether they actually have it equipped anywhere. Sets the {@code owner} target the same way, but
+     * {@code spell_slot} is left at the {@link #NO_SLOT} sentinel since there's no real slot backing this run.</li>
+     * <li>{@link #runDelayed}: the spell is running as a delayed spell instance, detached from any player's
+     * equipped slots (the equipping player may be offline, dead, or the holder may not even be a player).
+     * Sets only the {@code holder} target plus the {@code delay_time}/{@code delay_uuid}/{@code delay_tag}
+     * variables - no {@code owner} target, no {@code spell_slot} at all.</li>
+     * </ul>
+     */
+    public boolean runEquipped(Level level, Player owner, String event, int slot, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
+    {
+        return run(level, owner, event, false, toContext.andThen(ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot)), fromContext);
+    }
+
+    public boolean runEquipped(Level level, Player owner, String event, int slot, Consumer<SpellContext> toContext)
+    {
+        return runEquipped(level, owner, event, slot, toContext, (ctx) -> {});
+    }
+
+    public boolean runEquipped(Player owner, String event, int slot, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
+    {
+        return runEquipped(owner.level(), owner, event, slot, toContext, fromContext);
+    }
+
+    public boolean runEquipped(Level level, Player owner, String event, int slot)
+    {
+        return runEquipped(level, owner, event, slot, (ctx) -> {}, (ctx) -> {});
+    }
+
+    public boolean runEquipped(Player owner, String event, int slot)
+    {
+        return runEquipped(owner.level(), owner, event, slot, (ctx) -> {}, (ctx) -> {});
+    }
+
+    public boolean runCommand(Level level, Player owner, String event)
+    {
+        return runEquipped(level, owner, event, NO_SLOT, (ctx) -> {}, (ctx) -> {});
+    }
+
+    /**
+     * The {@code holder}-based counterpart to {@link #runEquipped}/{@link #runCommand} - see the class doc
+     * above. {@code activation} is a pre-resolved activation (matching {@link #forceRun}), not a raw event id,
+     * since a delayed spell instance resolves its own activation locally via its own events map before calling
+     * this (see {@link de.cas_ual_ty.spells.capability.DelayedSpellHolder}).
+     */
+    public boolean runDelayed(Level level, Entity holder, String activation, int delayTime, CompoundTag delayTag, @Nullable UUID delayUuid, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
+    {
+        Consumer<SpellContext> toContextWithDelay = ctx ->
+        {
+            ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HOLDER.targetGroup).addTargets(Target.of(holder));
+            ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.DELAY_TIME.name, delayTime);
+            ctx.setCtxVar(CtxVarTypes.TAG.get(), BuiltinVariables.DELAY_TAG.name, delayTag);
+
+            if(delayUuid != null)
+            {
+                ctx.setCtxVar(CtxVarTypes.STRING.get(), BuiltinVariables.DELAY_UUID.name, delayUuid.toString());
+            }
+
+            toContext.accept(ctx);
+        };
+        return run(level, null, activation, true, toContextWithDelay, fromContext);
     }
 
     public boolean run(Level level, @Nullable Player owner, String event, boolean preResolved, Consumer<SpellContext> preRun, Consumer<SpellContext> postRun)

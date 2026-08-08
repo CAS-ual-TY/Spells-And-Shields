@@ -10,12 +10,10 @@ import de.cas_ual_ty.spells.capability.SpellProgressionHolder;
 import de.cas_ual_ty.spells.progression.SpellNode;
 import de.cas_ual_ty.spells.progression.SpellStatus;
 import de.cas_ual_ty.spells.progression.SpellTree;
-import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
-import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -510,7 +508,7 @@ public class SpellCommand
         Spell spell = SpellArgument.getSpell(context, ARG_SPELL);
         SpellInstance spellInstance = SpellInstance.direct(Holder.direct(spell));
         
-        spellInstance.run(player.level(), player, BuiltinEvents.ACTIVE.event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, -1));
+        spellInstance.runCommand(player.level(), player, BuiltinEvents.ACTIVE.event);
         
         context.getSource().sendSuccess(() -> Component.translatable(SPELLS_CAST_DIRECT, players.iterator().next().getDisplayName(), spell.getTitle()), true);
         
@@ -539,7 +537,7 @@ public class SpellCommand
             return 0;
         }
         
-        spellNode.getSpellInstance().run(player.level(), player, BuiltinEvents.ACTIVE.event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, -1));
+        spellNode.getSpellInstance().runCommand(player.level(), player, BuiltinEvents.ACTIVE.event);
         
         Spell spell = spellNode.getSpellDirect();
         context.getSource().sendSuccess(() -> Component.translatable(SPELLS_CAST, players.iterator().next().getDisplayName(), spell.getTitle(), spellTree.getTitle()), true);

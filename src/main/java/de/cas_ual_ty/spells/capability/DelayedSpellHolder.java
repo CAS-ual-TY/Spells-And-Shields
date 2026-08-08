@@ -2,15 +2,11 @@ package de.cas_ual_ty.spells.capability;
 
 import com.google.common.collect.Lists;
 import de.cas_ual_ty.spells.progression.SpellTree;
-import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
-import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
-import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
-import de.cas_ual_ty.spells.spell.target.Target;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -73,20 +69,7 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
         SpellInstance s = spell.spell;
         if(s != null && !activation.isEmpty())
         {
-            Consumer<SpellContext> toContextExt = ctx ->
-            {
-                ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HOLDER.targetGroup).addTargets(Target.of(holder));
-                ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.DELAY_TIME.name, spell.getTime());
-                ctx.setCtxVar(CtxVarTypes.TAG.get(), BuiltinVariables.DELAY_TAG.name, spell.tag);
-
-                if(spell.uuid != null)
-                {
-                    ctx.setCtxVar(CtxVarTypes.STRING.get(), BuiltinVariables.DELAY_UUID.name, spell.uuid.toString());
-                }
-
-                toContext.accept(ctx);
-            };
-            s.run(holder.level(), null, activation, true, toContextExt, fromContext);
+            s.runDelayed(holder.level(), holder, activation, spell.getTime(), spell.tag, spell.uuid, toContext, fromContext);
         }
     }
 

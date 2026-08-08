@@ -3,13 +3,11 @@ package de.cas_ual_ty.spells.capability;
 import de.cas_ual_ty.spells.network.SpellsSyncMessage;
 import de.cas_ual_ty.spells.progression.FullSpellNodeId;
 import de.cas_ual_ty.spells.progression.SpellTree;
-import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.context.BuiltinEvents;
-import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -98,11 +96,11 @@ public class SpellHolder implements INBTSerializable<ListTag>
 
             if(slots[slot] != null)
             {
-                slots[slot].run(player.level(), player, BuiltinEvents.ON_UNEQUIP.event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                slots[slot].runEquipped(player, BuiltinEvents.ON_UNEQUIP.event, slot);
             }
             if(spell != null)
             {
-                spell.run(player.level(), player, BuiltinEvents.ON_EQUIP.event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                spell.runEquipped(player, BuiltinEvents.ON_EQUIP.event, slot);
             }
         }
         slots[slot] = spell;
@@ -142,8 +140,7 @@ public class SpellHolder implements INBTSerializable<ListTag>
             SpellInstance s = getSpell(i);
             if(s != null)
             {
-                final int slot = i;
-                s.run(player.level(), player, event, ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
+                s.runEquipped(player, event, i);
             }
         }
     }

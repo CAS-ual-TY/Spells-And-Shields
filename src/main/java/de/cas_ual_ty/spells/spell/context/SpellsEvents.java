@@ -170,9 +170,7 @@ public class SpellsEvents
                             SpellInstance spell = spellHolder.getSpell(i);
                             if(spell != null)
                             {
-                                final int slot = i;
-                                Consumer<SpellContext> toContextWithSlot = toContext.andThen(ctx -> ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.SPELL_SLOT.name, slot));
-                                spell.run(player, eventId, toContextWithSlot, fromContext);
+                                spell.runEquipped(player, eventId, i, toContext, fromContext);
                             }
                         }
                     });
