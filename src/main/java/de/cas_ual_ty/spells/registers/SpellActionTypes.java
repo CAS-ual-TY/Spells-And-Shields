@@ -31,7 +31,9 @@ import de.cas_ual_ty.spells.spell.action.team.GetTeamPlayersTargetsAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedBinaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedTernaryVarAction;
 import de.cas_ual_ty.spells.spell.action.variable.MappedUnaryVarAction;
+import de.cas_ual_ty.spells.spell.action.variable.PackTagAction;
 import de.cas_ual_ty.spells.spell.action.variable.PutVarAction;
+import de.cas_ual_ty.spells.spell.action.variable.UnpackTagAction;
 import de.cas_ual_ty.spells.spell.compiler.BinaryOperation;
 import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.compiler.TernaryOperation;
@@ -211,6 +213,8 @@ public class SpellActionTypes
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<PutVarAction<Boolean>>> PUT_BOOLEAN = DEFERRED_REGISTER.register("put_boolean", () -> PutVarAction.makeType(CtxVarTypes.BOOLEAN));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<PutVarAction<CompoundTag>>> PUT_TAG = DEFERRED_REGISTER.register("put_tag", () -> PutVarAction.makeType(CtxVarTypes.TAG));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<PutVarAction<String>>> PUT_STRING = DEFERRED_REGISTER.register("put_string", () -> PutVarAction.makeType(CtxVarTypes.STRING));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<PackTagAction>> PACK_TAG = DEFERRED_REGISTER.register("pack_tag", () -> new SpellActionType<>(PackTagAction::new, PackTagAction::makeCodec));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<UnpackTagAction>> UNPACK_TAG = DEFERRED_REGISTER.register("unpack_tag", () -> new SpellActionType<>(UnpackTagAction::new, UnpackTagAction::makeCodec));
     
     // variable / mapped unary functions
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<MappedUnaryVarAction>> NEGATE = DEFERRED_REGISTER.register("negate", () -> MappedUnaryVarAction.makeType(UnaryOperation.NEGATE));
