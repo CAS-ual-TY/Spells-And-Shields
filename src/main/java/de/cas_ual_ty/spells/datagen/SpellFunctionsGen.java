@@ -4,8 +4,7 @@ import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.SpellFunctions;
 import de.cas_ual_ty.spells.spell.SpellFunction;
 import de.cas_ual_ty.spells.spell.action.SpellAction;
-import de.cas_ual_ty.spells.spell.action.control.ConditionalDeactivationAction;
-import de.cas_ual_ty.spells.spell.action.cooldown.GetCooldownAction;
+import de.cas_ual_ty.spells.spell.action.cooldown.HasCooldownAction;
 import de.cas_ual_ty.spells.spell.action.cooldown.SetCooldownAction;
 import de.cas_ual_ty.spells.spell.action.item.PlayerHasItemsAction;
 import de.cas_ual_ty.spells.spell.action.item.TryConsumePlayerItemsAction;
@@ -299,8 +298,7 @@ public class SpellFunctionsGen
      */
     protected void addCooldownCheck(List<SpellAction> actions)
     {
-        actions.add(GetCooldownAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, INT.reference(SPELL_SLOT.name), "_cooldown_remaining"));
-        actions.add(ConditionalDeactivationAction.make(ACTIVE_INTERNAL, Compiler.compileString(" _cooldown_remaining <= 0 ", BOOLEAN)));
+        actions.add(HasCooldownAction.make(ACTIVE_INTERNAL, OWNER_INTERNAL, INT.reference(SPELL_SLOT.name)));
     }
 
     /**

@@ -6,18 +6,8 @@
     "type": "spells_and_shields:layered",
     "icons_list": [
       {
-        "type": "spells_and_shields:advanced",
-        "height": 16,
-        "texture": "spells_and_shields:textures/spell/flight.png",
-        "textureHeight": 16,
-        "textureWidth": 16,
-        "u": 0,
-        "v": 0,
-        "width": 16
-      },
-      {
         "type": "spells_and_shields:default",
-        "texture": "spells_and_shields:textures/spell/toggle.png"
+        "texture": "spells_and_shields:textures/spell/toggle_flight.png"
       },
       {
         "type": "spells_and_shields:default",
