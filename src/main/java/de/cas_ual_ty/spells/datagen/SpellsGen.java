@@ -443,6 +443,61 @@ public class SpellsGen
         addSpell(rl, spell);
     }
 
+    public void addToggleAttributeSpell(ResourceLocation rl, String key, String descKey, SpellIcon spellIcon, Holder<Attribute> attribute, float manaCost, double value, AttributeModifier.Operation operation, int duration)
+    {
+        MutableComponent component = Component.translatable(attribute.value().getDescriptionId());
+        ResourceLocation attributeRL = BuiltInRegistries.ATTRIBUTE.getKey(attribute.value());
+        String modifierIDCode = " '" + SpellsAndShields.MOD_ID + ":" + attributeRL.getPath() + "_' + " + SPELL_SLOT;
+        String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(attributeRL.getPath(), SPELL_SLOT);
+
+        Spell spell = new Spell(LayeredSpellIcon.make(List.of(spellIcon, DefaultSpellIcon.make(TOGGLE_ICON_RL), DefaultSpellIcon.make(TOGGLE_ICON_RL))), key, manaCost)
+                .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
+                .addAction(CopyTargetsAction.make(ON_UNEQUIP, "player", OWNER))
+                .addAction(CopyTargetsAction.make("renew", "player", HOLDER))
+
+                .addAction(ActivateAction.make("renew", "remove"))
+                .addAction(TryBurnManaAction.make("renew", "player", Compiler.compileString(" (" + MANA_COST + " * duration) / 100 ", DOUBLE)))
+                .addAction(DeactivateAction.make("renew", "remove"))
+                .addAction(PutVarAction.makeString("remove", Compiler.compileString(" get_nbt_string(" + DELAY_TAG + ", 'attribute_mod') ", STRING), "attribute_mod"))
+                .addAction(PutVarAction.makeString("remove", Compiler.compileString(" get_nbt_string(" + DELAY_TAG + ", 'attribute') ", STRING), "attribute"))
+
+                .addAction(PutVarAction.makeString(ACTIVE, Compiler.compileString(uuidCode, STRING), "uuid"))
+                .addAction(PutVarAction.makeString(ON_UNEQUIP, Compiler.compileString(uuidCode, STRING), "uuid"))
+                .addAction(PutVarAction.makeString(ACTIVE, Compiler.compileString(modifierIDCode, STRING), "attribute_mod"))
+                .addAction(PutVarAction.makeString(ON_UNEQUIP, Compiler.compileString(modifierIDCode, STRING), "attribute_mod"))
+
+                .addAction(ActivateAction.make(ACTIVE, "apply"))
+                .addAction(ActivateAction.make(ACTIVE, "remove"))
+                .addAction(ActivateAction.make(ON_UNEQUIP, "remove"))
+
+                .addAction(RemoveAttributeModifierAction.make("remove", "player", STRING.reference("attribute"), STRING.reference("attribute_mod")))
+                .addAction(CheckHasDelayedSpellAction.make("remove", "player", STRING.reference("uuid")))
+                .addAction(DeactivateAction.make("remove", "apply"))
+                .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.reference("uuid"), BOOLEAN.immediate(false)))
+                .addAction(PlaySoundAction.make("remove", "player", SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
+
+                .addAction(TryBurnManaAction.make("apply", "player", Compiler.compileString(" (" + MANA_COST + " * duration) / 100 ", DOUBLE)))
+                .addAction(ActivateAction.make("apply", "renew"))
+                .addAction(AddAttributeModifierAction.make("apply", "player", STRING.reference("attribute"), STRING.reference("attribute_mod"), DOUBLE.reference("value"), STRING.reference("operation")))
+                .addAction(PutVarAction.makeCompoundTag("apply", Compiler.compileString(" put_nbt_string(put_nbt_string(new_tag(), 'attribute', attribute), 'attribute_mod', attribute_mod) ", TAG), DELAY_TAG))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "renew", INT.reference("duration"), STRING.reference("uuid"), TAG.reference(DELAY_TAG), eventHookMap()))
+
+                .addAction(PlaySoundAction.make("apply", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
+
+                .addParameter(STRING, "attribute", attributeRL.toString())
+                .addParameter(DOUBLE, "value", value)
+                .addParameter(STRING, "operation", SpellsUtil.operationToString(operation))
+                .addParameter(INT, "duration", duration * 20)
+                .addEventHook(ACTIVE)
+                .addEventHook(ON_UNEQUIP)
+                .addTooltip(Component.translatable(descKey))
+                .addTooltip(Component.empty())
+                .addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE))
+                .addTooltip(Component.translatable("attribute.modifier.plus." + AttributeModifier.Operation.ADD_VALUE.id(), ATTRIBUTE_MODIFIER_FORMAT.format(1D), component.copy()).withStyle(ChatFormatting.BLUE));
+
+        addSpell(rl, spell);
+    }
+
     public void addPermanentWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, boolean tick)
     {
         ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
@@ -1550,7 +1605,8 @@ public class SpellsGen
         addPermanentEffectSpell(Spells.PERMANENT_NIGHT_VISION, Spells.KEY_PERMANENT_NIGHT_VISION, Spells.KEY_PERMANENT_NIGHT_VISION_DESC, MobEffects.NIGHT_VISION, 50, 0);
         addTemporaryEffectSpell(Spells.TEMPORARY_NIGHT_VISION, Spells.KEY_TEMPORARY_NIGHT_VISION, Spells.KEY_TEMPORARY_NIGHT_VISION_DESC, MobEffects.NIGHT_VISION, 13F, 400, 0);
         addToggleEffectSpell(Spells.TOGGLE_NIGHT_VISION, Spells.KEY_TOGGLE_NIGHT_VISION, Spells.KEY_TOGGLE_NIGHT_VISION_DESC, MobEffects.NIGHT_VISION, 4F, 50, 0);
-        
+
+
         addPermanentEffectSpell(Spells.PERMANENT_STRENGTH, Spells.KEY_PERMANENT_STRENGTH, Spells.KEY_PERMANENT_STRENGTH_DESC, MobEffects.DAMAGE_BOOST, 50, 0);
         addTemporaryEffectSpell(Spells.TEMPORARY_STRENGTH, Spells.KEY_TEMPORARY_STRENGTH, Spells.KEY_TEMPORARY_STRENGTH_DESC, MobEffects.DAMAGE_BOOST, 13F, 400, 0);
         addToggleEffectSpell(Spells.TOGGLE_STRENGTH, Spells.KEY_TOGGLE_STRENGTH, Spells.KEY_TOGGLE_STRENGTH_DESC, MobEffects.DAMAGE_BOOST, 4F, 50, 0);
