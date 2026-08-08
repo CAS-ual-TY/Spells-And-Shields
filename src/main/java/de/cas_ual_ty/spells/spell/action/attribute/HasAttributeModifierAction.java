@@ -9,8 +9,6 @@ import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.ParamNames;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.GetTargetAttributeAction;
-import de.cas_ual_ty.spells.spell.context.SpellContext;
-import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.LivingEntityTarget;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
@@ -96,25 +94,5 @@ public class HasAttributeModifierAction extends GetTargetAttributeAction<LivingE
     public ITargetType<LivingEntityTarget> getAffectedType()
     {
         return TargetTypes.LIVING_ENTITY.get();
-    }
-
-    @Override
-    public void affectSingleTarget(SpellContext ctx, TargetGroup group, LivingEntityTarget livingEntityTarget)
-    {
-        SpellsUtil.stringToHolder(ctx, attribute, BuiltInRegistries.ATTRIBUTE).ifPresent(attribute ->
-        {
-            AttributeInstance a = livingEntityTarget.getLivingEntity().getAttribute(attribute);
-
-            if(a != null)
-            {
-                id.getValue(ctx).ifPresent(id ->
-                {
-                    if(a.hasModifier(ResourceLocation.parse(id)))
-                    {
-                        a.removeModifier(ResourceLocation.parse(id));
-                    }
-                });
-            }
-        });
     }
 }
