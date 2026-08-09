@@ -45,8 +45,7 @@ public class DataGen
                                     new SpellFunctionsGen(SpellsAndShields.MOD_ID, context);
                                 })
                                 .add(PlayerAnimations.REGISTRY_KEY, context -> {
-                                    // no entries generated here - player animations are hand-authored JSON
-                                    // (see src/main/resources/.../player_animations), loaded via --existing
+                                    new PlayerAnimationsGen(SpellsAndShields.MOD_ID, context);
                                 }),
                         // Generate dynamic registry objects for this mod
                         Set.of(SpellsAndShields.MOD_ID)
