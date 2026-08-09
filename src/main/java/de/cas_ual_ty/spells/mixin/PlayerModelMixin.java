@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,6 +30,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * itself - a mixin class must never extend its own {@code @Mixin} target, that's a self-referential merge Mixin
  * doesn't support correctly. The sleeve/pants/jacket fields ({@code PlayerModel}-only, not on
  * {@code HumanoidModel}) are reached via {@code @Shadow} instead - see {@link #spellsAndShields$applyAnimation}.
+ * <p>
+ * {@code setupAnim} isn't only called for the real third-person render: {@code PlayerRenderer.renderHand}
+ * (backing the first-person bare-arm mesh, via {@code renderRightHand}/{@code renderLeftHand}) calls the exact
+ * same method with all five animation parameters hardcoded to {@code 0.0F}, purely to reset the model to a
+ * neutral pose before positioning that arm entirely via {@code PoseStack} instead. A real third-person render
+ * essentially never has {@code ageInTicks} (let alone all five params) land on exactly {@code 0.0F}, so that's
+ * used below as a cheap, reliable signal to skip applying the third-person animation on that call - otherwise
+ * it contaminates the same arm mesh {@link de.cas_ual_ty.spells.client.animation.PlayerAnimationRenderHooks}
+ * separately (and correctly) animates for first person, compounding into visible garbage.
  */
 @Mixin(PlayerModel.class)
 public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T>
@@ -66,6 +76,12 @@ public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidM
             return;
         }
 
+        if(limbSwing == 0F && limbSwingAmount == 0F && ageInTicks == 0F && netHeadYaw == 0F && headPitch == 0F)
+        {
+            // the first-person bare-arm reset call - see the class doc above
+            return;
+        }
+
         int entityId = entity.getId();
         float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
 
@@ -93,6 +109,11 @@ public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidM
      * So the sample has to be composed on top of whatever's already there (added for translate/rotate,
      * multiplied for scale) rather than assigned outright, or it would snap the part's pivot to the parent's
      * origin instead of animating from its actual rest position.
+     * <p>
+     * {@code ModelPart} only has separate {@code xRot}/{@code yRot}/{@code zRot} fields, not a quaternion, so
+     * {@link AnimationSample#rotate()} has to be decomposed into Euler angles here - {@code sample.rotate().x()}
+     * etc. would be the quaternion's own raw imaginary components, not Euler angles, hence
+     * {@code getEulerAnglesXYZ} instead.
      */
     private static void apply(ModelPart part, @Nullable AnimationSample sample)
     {
@@ -101,12 +122,14 @@ public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidM
             return;
         }
 
+        Vector3f euler = sample.rotate().getEulerAnglesXYZ(new Vector3f());
+
         part.x += (float) sample.translate().x();
         part.y += (float) sample.translate().y();
         part.z += (float) sample.translate().z();
-        part.xRot += (float) sample.rotate().x();
-        part.yRot += (float) sample.rotate().y();
-        part.zRot += (float) sample.rotate().z();
+        part.xRot += euler.x();
+        part.yRot += euler.y();
+        part.zRot += euler.z();
         part.xScale *= (float) sample.scale().x();
         part.yScale *= (float) sample.scale().y();
         part.zScale *= (float) sample.scale().z();

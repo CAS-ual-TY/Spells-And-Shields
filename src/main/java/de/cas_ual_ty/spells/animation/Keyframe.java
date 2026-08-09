@@ -9,8 +9,12 @@ import net.minecraft.world.phys.Vec3;
  * added on top of the part's existing position/rotation (its rest pose, or whatever vanilla/other logic
  * already set that frame) rather than absolute values - the identity {@code (0,0,0)} default means "no
  * change", not "snap to the model's origin". {@code scale} is likewise multiplied on top, defaulting to
- * {@code (1,1,1)}. {@code ease} shapes the interpolation curve arriving at this keyframe from the previous one
- * on the same part's track - it has no effect on the very first keyframe of a track.
+ * {@code (1,1,1)}. {@code ease} contributes to <em>both</em> of this keyframe's adjacent segments: {@code OUT}/
+ * {@code BOTH} eases this keyframe's own departure (the start of the segment leaving it, toward the next
+ * keyframe), and {@code IN}/{@code BOTH} eases its own arrival (the end of the segment coming from the
+ * previous keyframe) - see {@link AnimationSection#sample}. Consequently a track's first keyframe only ever
+ * has an outgoing segment to shape (its own {@code IN} component is moot), and the last keyframe only ever has
+ * an incoming one (its own {@code OUT} component is moot).
  */
 public record Keyframe(int time, Vec3 translate, Vec3 rotate, Vec3 scale, EaseType ease)
 {

@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.event.RenderHandEvent;
-import org.joml.Quaternionf;
 
 /**
  * First-person counterpart to {@link de.cas_ual_ty.spells.mixin.PlayerModelMixin}. {@link RenderHandEvent} only
@@ -32,7 +31,9 @@ public class PlayerAnimationRenderHooks
         }
 
         event.getPoseStack().translate(sample.translate().x(), sample.translate().y(), sample.translate().z());
-        event.getPoseStack().mulPose(new Quaternionf().rotateXYZ((float) sample.rotate().x(), (float) sample.rotate().y(), (float) sample.rotate().z()));
+        // applied straight as a quaternion, deliberately never round-tripped through Euler angles - see
+        // AnimationSample's own doc for why that avoids a visible wobble/roll artifact
+        event.getPoseStack().mulPose(sample.rotate());
         event.getPoseStack().scale((float) sample.scale().x(), (float) sample.scale().y(), (float) sample.scale().z());
     }
 }
