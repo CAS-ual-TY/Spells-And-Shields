@@ -3,7 +3,6 @@ package de.cas_ual_ty.spells.datagen;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.registers.PlayerAnimations;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -13,14 +12,13 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Generates {@code assets/spells_and_shields/player_animations/stab.json} - Player Animator's own GeckoLib-style
+ * Generates {@code assets/spells_and_shields/player_animations/*.json} - Player Animator's own GeckoLib-style
  * keyframe format, not a Minecraft {@link com.mojang.serialization.Codec} - PlayerAnimator's codec is
  * decode-only, and round-tripping through its Java objects would lossily convert degrees to radians and back,
  * so this builds the raw {@link JsonObject} tree directly instead, matching exactly what's hand-authored today.
  * <p>
- * Both {@link PlayerAnimations#STAB} and {@link PlayerAnimations#STAB_1P} live in this one file - see
- * that class' doc: PlayerAnimator keys animations by their own declared {@code name}, not filename, so multiple
- * independent animations can freely share one file with no interaction between them.
+ * Each spell's third-person/first-person animation pair is written together via {@link #writePair} - see its
+ * own doc. Add new pairs directly in {@link #run}.
  * <p>
  * A segment's easing is anchored to its <em>departing</em> keyframe, not the one it arrives at (verified against
  * PlayerAnimator's own {@code getValueFromKeyframes}, which defaults {@code isEasingBefore} to {@code false}) -
@@ -48,16 +46,27 @@ public class PlayerAnimationsGen implements DataProvider
     @Override
     public CompletableFuture<?> run(CachedOutput output)
     {
+        return CompletableFuture.allOf(
+                writePair(output, PlayerAnimations.STAB, PlayerAnimations.STAB_1P, stab(), stab1p())
+        );
+    }
+
+    /**
+     * Writes one third-person/first-person animation pair into a single file, named after the third-person id
+     * (see {@link PlayerAnimations}' own doc - PlayerAnimator keys by declared {@code name}, not filename, so
+     * the filename itself is only for our own organization).
+     */
+    protected CompletableFuture<?> writePair(CachedOutput output, ResourceLocation thirdPersonId, ResourceLocation firstPersonId, JsonObject thirdPerson, JsonObject firstPerson)
+    {
         JsonObject animations = new JsonObject();
-        animations.add(PlayerAnimations.STAB.getPath(), stab());
-        animations.add(PlayerAnimations.STAB_1P.getPath(), stab1p());
+        animations.add(thirdPersonId.getPath(), thirdPerson);
+        animations.add(firstPersonId.getPath(), firstPerson);
 
         JsonObject file = new JsonObject();
         file.addProperty("format_version", "1.8.0");
         file.add("animations", animations);
 
-        ResourceLocation fileId = ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "stab");
-        return DataProvider.saveStable(output, file, pathProvider.json(fileId));
+        return DataProvider.saveStable(output, file, pathProvider.json(thirdPersonId));
     }
 
     protected JsonObject stab()
