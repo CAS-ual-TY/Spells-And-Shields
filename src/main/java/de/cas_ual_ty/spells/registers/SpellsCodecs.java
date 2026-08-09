@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cas_ual_ty.spells.animation.PlayerAnimation;
 import de.cas_ual_ty.spells.progression.SpellNode;
 import de.cas_ual_ty.spells.progression.SpellTree;
 import de.cas_ual_ty.spells.requirement.Requirement;
@@ -39,6 +40,7 @@ public class SpellsCodecs
     public static Codec<Holder<Spell>> SPELL;
     public static Codec<Holder<SpellTree>> SPELL_TREE;
     public static Codec<Holder<SpellFunction>> SPELL_FUNCTION;
+    public static Codec<Holder<PlayerAnimation>> PLAYER_ANIMATION;
     
     public static Codec<RequirementType<?>> REQUIREMENT_TYPE;
     public static Codec<SpellActionType<?>> SPELL_ACTION_TYPE;
@@ -66,6 +68,7 @@ public class SpellsCodecs
         SPELL = Codec.lazyInitialized(() -> RegistryFileCodec.create(Spells.REGISTRY_KEY, Codec.lazyInitialized(() -> SPELL_CONTENTS), false));
         SPELL_TREE = Codec.lazyInitialized(() -> RegistryFixedCodec.create(SpellTrees.REGISTRY_KEY));
         SPELL_FUNCTION = Codec.lazyInitialized(() -> RegistryFileCodec.create(SpellFunctions.REGISTRY_KEY, Codec.lazyInitialized(() -> SPELL_FUNCTION_CONTENTS), false));
+        PLAYER_ANIMATION = Codec.lazyInitialized(() -> RegistryFileCodec.create(PlayerAnimations.REGISTRY_KEY, Codec.lazyInitialized(() -> PlayerAnimation.CODEC), false));
 
         REQUIREMENT_TYPE = Codec.lazyInitialized(() -> RequirementTypes.REGISTRY.byNameCodec());
         CTX_VAR_TYPE = Codec.lazyInitialized(() -> CtxVarTypes.REGISTRY.byNameCodec());

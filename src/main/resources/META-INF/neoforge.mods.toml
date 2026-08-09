@@ -3,6 +3,9 @@ loaderVersion="${loader_version_range}"
 license="${mod_license}"
 issueTrackerURL="https://github.com/CAS-ual-TY/Spells-And-Shields/issues"
 
+[[mixins]]
+    config="spells_and_shields.mixins.json"
+
 [[mods]]
     modId="${mod_id}"
     version="${mod_version}"

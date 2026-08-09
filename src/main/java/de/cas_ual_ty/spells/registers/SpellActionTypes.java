@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.spell.action.SyncedSpellActionType;
 import de.cas_ual_ty.spells.spell.action.ai.ClearMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.ai.GetMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
+import de.cas_ual_ty.spells.spell.action.animation.PlayAnimationAction;
 import de.cas_ual_ty.spells.spell.action.attribute.*;
 import de.cas_ual_ty.spells.spell.action.control.*;
 import de.cas_ual_ty.spells.spell.action.cooldown.*;
@@ -66,6 +67,9 @@ public class SpellActionTypes
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ClearMobTargetAction>> CLEAR_MOB_TARGET = DEFERRED_REGISTER.register("clear_mob_target", () -> new SpellActionType<>(ClearMobTargetAction::new, ClearMobTargetAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<GetMobTargetAction>> GET_MOB_TARGET = DEFERRED_REGISTER.register("get_mob_target", () -> new SpellActionType<>(GetMobTargetAction::new, GetMobTargetAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<SetMobTargetAction>> SET_MOB_TARGET = DEFERRED_REGISTER.register("set_mob_target", () -> new SpellActionType<>(SetMobTargetAction::new, SetMobTargetAction::makeCodec));
+
+    // animation
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<PlayAnimationAction>> PLAY_ANIMATION = DEFERRED_REGISTER.register("play_animation", () -> new SyncedSpellActionType<>(PlayAnimationAction::new, PlayAnimationAction::makeCodec, PlayAnimationAction.ClientAction::new));
 
     // attribute
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<AddAttributeModifierAction>> ADD_ATTRIBUTE_MODIFIER = DEFERRED_REGISTER.register("add_attribute_modifier", () -> new SpellActionType<>(AddAttributeModifierAction::new, AddAttributeModifierAction::makeCodec));

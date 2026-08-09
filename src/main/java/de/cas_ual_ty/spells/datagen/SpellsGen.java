@@ -3,13 +3,16 @@ package de.cas_ual_ty.spells.datagen;
 import com.google.common.collect.ImmutableList;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import de.cas_ual_ty.spells.SpellsUtil;
+import de.cas_ual_ty.spells.animation.PlayerAnimation;
 import de.cas_ual_ty.spells.registers.BuiltInRegisters;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
+import de.cas_ual_ty.spells.registers.PlayerAnimations;
 import de.cas_ual_ty.spells.registers.SpellFunctions;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellFunction;
 import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
+import de.cas_ual_ty.spells.spell.action.animation.PlayAnimationAction;
 import de.cas_ual_ty.spells.spell.action.attribute.AddAttributeModifierAction;
 import de.cas_ual_ty.spells.spell.action.attribute.RemoveAttributeModifierAction;
 import de.cas_ual_ty.spells.spell.action.control.*;
@@ -107,6 +110,7 @@ public class SpellsGen
     protected String modId;
     protected final BootstrapContext<Spell> context;
     protected final HolderGetter<SpellFunction> spellFunctionGetter;
+    protected final HolderGetter<PlayerAnimation> playerAnimationGetter;
     
     public static final CtxVarType<Integer> INT = CtxVarTypes.INT.get();
     public static final CtxVarType<Double> DOUBLE = CtxVarTypes.DOUBLE.get();
@@ -129,6 +133,7 @@ public class SpellsGen
         this.modId = modId;
         this.context = context;
         this.spellFunctionGetter = context.lookup(SpellFunctions.REGISTRY_KEY);
+        this.playerAnimationGetter = context.lookup(PlayerAnimations.REGISTRY_KEY);
 
         addSpells();
     }
@@ -139,6 +144,14 @@ public class SpellsGen
     public Holder<SpellFunction> getFunction(ResourceLocation key)
     {
         return spellFunctionGetter.getOrThrow(ResourceKey.create(SpellFunctions.REGISTRY_KEY, key));
+    }
+
+    /**
+     * Looks up a {@link PlayerAnimation} by id (eg. a hand-authored one under {@code data/.../player_animations}).
+     */
+    public Holder<PlayerAnimation> getPlayerAnimation(ResourceLocation key)
+    {
+        return playerAnimationGetter.getOrThrow(ResourceKey.create(PlayerAnimations.REGISTRY_KEY, key));
     }
 
     /**
@@ -782,6 +795,7 @@ public class SpellsGen
                 .addAction(BooleanActivationAction.make("consume", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), FALSE, TRUE))
                 .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.BLAZE_POWDER)))
                 .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(3D), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
+                .addAction(PlayAnimationAction.make("shoot", OWNER, getPlayerAnimation(ResourceLocation.fromNamespaceAndPath(modId, "test_stab"))))
                 .addAction(PlaySoundAction.make("shoot", OWNER, SoundEvents.BLAZE_SHOOT, ONE_D, ONE_D))
                 .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(2), INT.immediate(3), DOUBLE.immediate(0.2D), TRUE, ZERO_VEC3, ParticleTypes.LARGE_SMOKE))
                 .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), ONE, ZERO_D, TRUE, ZERO_VEC3, ParticleTypes.LAVA))

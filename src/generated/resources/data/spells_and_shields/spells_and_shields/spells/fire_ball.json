@@ -135,6 +135,12 @@
       "td/projectile": "projectile"
     },
     {
+      "type": "spells_and_shields:play_animation",
+      "activation": "shoot",
+      "animation": "spells_and_shields:test_stab",
+      "ts/targets": "owner"
+    },
+    {
       "type": "spells_and_shields:play_sound",
       "activation": "shoot",
       "d/double/pitch": 1.0,

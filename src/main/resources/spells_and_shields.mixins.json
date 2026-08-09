@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "de.cas_ual_ty.spells.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "spells_and_shields.refmap.json",
+  "client": [
+    "PlayerModelMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

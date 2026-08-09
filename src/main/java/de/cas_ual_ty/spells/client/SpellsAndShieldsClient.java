@@ -5,6 +5,7 @@ import de.cas_ual_ty.spells.SpellsConfig;
 import de.cas_ual_ty.spells.SpellsUtil;
 import de.cas_ual_ty.spells.capability.ParticleEmitterHolder;
 import de.cas_ual_ty.spells.capability.SpellHolder;
+import de.cas_ual_ty.spells.client.animation.PlayerAnimationRenderHooks;
 import de.cas_ual_ty.spells.client.hud.ManaClientTooltipComponent;
 import de.cas_ual_ty.spells.client.hud.ManaRenderer;
 import de.cas_ual_ty.spells.client.hud.SlotsPosition;
@@ -77,6 +78,7 @@ public class SpellsAndShieldsClient
         NeoForge.EVENT_BUS.addListener(SpellsAndShieldsClient::initScreen);
         NeoForge.EVENT_BUS.addListener(SpellsAndShieldsClient::renderScreen);
         NeoForge.EVENT_BUS.addListener(SpellsAndShieldsClient::levelTick);
+        NeoForge.EVENT_BUS.addListener(PlayerAnimationRenderHooks::renderHand);
         //MinecraftForge.EVENT_BUS.addListener(ScreenDebugHelper::event);
     }
 

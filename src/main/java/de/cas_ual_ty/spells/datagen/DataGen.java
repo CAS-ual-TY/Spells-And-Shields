@@ -1,6 +1,7 @@
 package de.cas_ual_ty.spells.datagen;
 
 import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.registers.PlayerAnimations;
 import de.cas_ual_ty.spells.registers.SpellFunctions;
 import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
@@ -42,6 +43,10 @@ public class DataGen
                                 })
                                 .add(SpellFunctions.REGISTRY_KEY, context -> {
                                     new SpellFunctionsGen(SpellsAndShields.MOD_ID, context);
+                                })
+                                .add(PlayerAnimations.REGISTRY_KEY, context -> {
+                                    // no entries generated here - player animations are hand-authored JSON
+                                    // (see src/main/resources/.../player_animations), loaded via --existing
                                 }),
                         // Generate dynamic registry objects for this mod
                         Set.of(SpellsAndShields.MOD_ID)
