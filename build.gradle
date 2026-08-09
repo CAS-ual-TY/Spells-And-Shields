@@ -27,6 +27,13 @@ sourceSets.main.resources {
 
 repositories {
     // Add here additional repositories if required by some of the dependencies below.
+    maven {
+        name = "KosmX's maven"
+        url = 'https://maven.kosmx.dev/'
+        content {
+            includeGroup("dev.kosmx.player-anim")
+        }
+    }
 }
 
 base {
@@ -110,6 +117,15 @@ dependencies {
     // compileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"
     // We add the full version to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
     // localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
+
+    // Optional compat: Player Animator. compileOnly gives us its API at compile time without making it a hard
+    // dependency of the published mod; localRuntime pulls the full jar in for our own dev environment/testing
+    // only (mirrors the JEI example above) - a real user needs to install the mod jar themselves for the compat
+    // to actually activate, gated at runtime via ModCompat.PLAYER_ANIMATOR (ModList.isLoaded(...)). Its own
+    // bundled AnimationJson loader understands GeckoLib-format animation JSON directly - no separate GeckoLib
+    // mod/dependency is needed for that, it's a file format PlayerAnimator natively parses, not a mod dependency.
+    compileOnly "dev.kosmx.player-anim:player-animation-lib-forge:${player_anim_version}"
+    localRuntime "dev.kosmx.player-anim:player-animation-lib-forge:${player_anim_version}"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar

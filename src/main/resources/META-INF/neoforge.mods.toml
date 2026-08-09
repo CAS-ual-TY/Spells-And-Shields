@@ -28,3 +28,12 @@ issueTrackerURL="https://github.com/CAS-ual-TY/Spells-And-Shields/issues"
     ordering="NONE"
     side="BOTH"
 
+# Optional - see de.cas_ual_ty.spells.compat.ModCompat. Not required to run the mod; player animations only
+# actually play if Player Animator is installed.
+[[dependencies.${mod_id}]]
+    modId="playeranimator"
+    type="optional"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="CLIENT"
+

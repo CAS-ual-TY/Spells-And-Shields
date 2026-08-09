@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellFunction;
 import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
+import de.cas_ual_ty.spells.spell.action.animation.PlayAnimationAction;
 import de.cas_ual_ty.spells.spell.action.attribute.AddAttributeModifierAction;
 import de.cas_ual_ty.spells.spell.action.attribute.RemoveAttributeModifierAction;
 import de.cas_ual_ty.spells.spell.action.control.*;
@@ -782,6 +783,7 @@ public class SpellsGen
                 .addAction(BooleanActivationAction.make("consume", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), FALSE, TRUE))
                 .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.BLAZE_POWDER)))
                 .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(3D), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
+                .addAction(PlayAnimationAction.make("shoot", OWNER, STRING.immediate(modId + ":test_stab")))
                 .addAction(PlaySoundAction.make("shoot", OWNER, SoundEvents.BLAZE_SHOOT, ONE_D, ONE_D))
                 .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(2), INT.immediate(3), DOUBLE.immediate(0.2D), TRUE, ZERO_VEC3, ParticleTypes.LARGE_SMOKE))
                 .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), ONE, ZERO_D, TRUE, ZERO_VEC3, ParticleTypes.LAVA))
