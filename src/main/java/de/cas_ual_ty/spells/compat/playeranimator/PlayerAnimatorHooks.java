@@ -9,7 +9,6 @@ import dev.kosmx.playerAnim.api.layered.AnimationStack;
 import dev.kosmx.playerAnim.api.layered.IActualAnimation;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
-import dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
@@ -18,6 +17,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,18 +28,10 @@ import org.slf4j.LoggerFactory;
  * Animations themselves aren't ours to define - PlayerAnimator loads them client-side from
  * {@code assets/<namespace>/player_animations/*.json} (GeckoLib-exported keyframe JSON, auto-detected by
  * {@code LegacyGeckoJsonCodec}), keyed by the animation's own declared {@code name}, not its filename or path -
- * see {@link PlayerAnimationRegistry}. All this hook does is resolve that registry entry and play it on the
- * given player's own persistent {@link ModifierLayer}, discarding whatever it was already playing (a hard cut,
- * no fade) - matching {@code de.cas_ual_ty.spells.spell.action.animation.PlayAnimationAction}'s contract.
- * <p>
- * {@code THIRD_PERSON_MODEL}, not {@code VANILLA} - {@code VANILLA} would reuse vanilla's own camera-locked
- * bare-arm render path, which sounds ideal, but vanilla's {@code PlayerRenderer.renderHand()} forcibly resets
- * {@code rightArm.xRot} to {@code 0} right after {@code setupAnim} runs (so it's not left over from a swing
- * computed for a different context) - that's the exact axis this animation's swing lives on, so under
- * {@code VANILLA} almost the entire motion got discarded right before rendering, no way around it since it's
- * vanilla's own code. {@code THIRD_PERSON_MODEL} instead renders the real third-person model from a
- * camera parked near the head - not truly camera-locked like vanilla's own hand, but the full rotation actually
- * survives - see {@link AimModifier} for the first-person-only adjustments this needs on top.
+ * see {@link PlayerAnimationRegistry}. All this hook does is resolve the two registry entries
+ * {@link de.cas_ual_ty.spells.spell.action.animation.PlayAnimationAction} sent over and play them on the given
+ * player's own persistent {@link ModifierLayer}, discarding whatever it was already playing (a hard cut, no
+ * fade).
  */
 public class PlayerAnimatorHooks
 {
@@ -50,12 +43,7 @@ public class PlayerAnimatorHooks
     private static final ResourceLocation LAYER_ID = ResourceLocation.fromNamespaceAndPath(SpellsAndShields.MOD_ID, "play_animation");
     private static final int PRIORITY = 1000;
 
-    // right-hand only, matching this action's "main hand only" contract - THIRD_PERSON_MODEL reuses the exact
-    // same right_arm/right_item bone data as third person, rendered from a first-person-adjacent viewpoint,
-    // rather than needing a wholly separate first-person animation format/track
-    private static final FirstPersonConfiguration FIRST_PERSON_CONFIG = new FirstPersonConfiguration(true, false, true, false);
-
-    public static void play(Level clientLevel, int entityId, ResourceLocation animationId)
+    public static void play(Level clientLevel, int entityId, ResourceLocation thirdPersonAnimationId, ResourceLocation firstPersonAnimationId)
     {
         Entity entity = clientLevel.getEntity(entityId);
 
@@ -64,19 +52,50 @@ public class PlayerAnimatorHooks
             return;
         }
 
+        IActualAnimation<?> thirdPerson = resolve(thirdPersonAnimationId);
+        IActualAnimation<?> firstPerson = resolve(firstPersonAnimationId);
+
+        if(thirdPerson == null && firstPerson == null)
+        {
+            return;
+        }
+
+        if(firstPerson != null)
+        {
+            // THIRD_PERSON_MODEL, not VANILLA - VANILLA reuses vanilla's own camera-locked bare-arm render, which
+            // sounds ideal, but vanilla's PlayerRenderer.renderHand() forcibly resets rightArm.xRot to 0 right
+            // after setupAnim runs, discarding almost any real swing (that's the axis this animation's swing
+            // lives on) before it ever renders - no way around it, it's vanilla's own code. THIRD_PERSON_MODEL
+            // instead renders the real third-person model from a camera parked near the head - not truly
+            // camera-locked like vanilla's own hand, but the full rotation actually survives.
+            firstPerson.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
+            // right-hand only, matching this action's "main hand only" contract. Also required for the arm to
+            // render AT ALL under THIRD_PERSON_MODEL: PlayerRendererMixin#hideBonesInFirstPerson hides every
+            // model part in first person, then selectively re-shows rightArm/leftArm based on this - its default
+            // (showRightArm=false) hides the arm outright, which is why it was invisible without this.
+            firstPerson.setFirstPersonConfiguration(new FirstPersonConfiguration(true, false, true, false));
+        }
+
+        getOrCreateLayer(player).setAnimation(new ViewRouter(thirdPerson, firstPerson, player));
+    }
+
+    @Nullable
+    private static IActualAnimation<?> resolve(@Nullable ResourceLocation animationId)
+    {
+        if(animationId == null)
+        {
+            return null;
+        }
+
         IPlayable playable = PlayerAnimationRegistry.getAnimation(animationId);
 
         if(playable == null)
         {
             LOGGER.warn("No Player Animator animation found for {} (not installed as an asset, or Player Animator itself couldn't parse it)", animationId);
-            return;
+            return null;
         }
 
-        IActualAnimation<?> actual = playable.playAnimation();
-        actual.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
-        actual.setFirstPersonConfiguration(FIRST_PERSON_CONFIG);
-
-        getOrCreateLayer(player).setAnimation(actual);
+        return playable.playAnimation();
     }
 
     @SuppressWarnings("unchecked")
@@ -92,7 +111,6 @@ public class PlayerAnimatorHooks
 
         ModifierLayer<IAnimation> layer = new ModifierLayer<>();
         data.set(LAYER_ID, layer);
-        layer.addModifierBefore(new AimModifier(player));
 
         AnimationStack stack = PlayerAnimationAccess.getPlayerAnimLayer(player);
         stack.addAnimLayer(PRIORITY, layer);
@@ -101,62 +119,116 @@ public class PlayerAnimatorHooks
     }
 
     /**
-     * First-person-only aim follow, applied on top of whatever keyframed animation is currently playing on
-     * this player's layer - without it the arm always thrusts in the exact fixed direction baked into the
-     * keyframes, regardless of where the player is actually looking. Added once per player (see
-     * {@link #getOrCreateLayer}), not per animation - it keeps working correctly across every future
-     * {@link #play} call on the same layer since it just wraps whatever's currently beneath it.
+     * Plays two independently-authored animations at once and routes every query to whichever one actually
+     * matches the current render - {@link FirstPersonMode#isFirstPersonPass()} true means the up-close first
+     * person pass, so {@code firstPerson} answers; otherwise (real third person, or any other pass) {@code
+     * thirdPerson} does. Either side can be {@code null} if that animation id didn't resolve - the missing side
+     * then just contributes nothing for whichever view it would have owned, rather than the whole thing failing.
      * <p>
-     * Completely inert outside {@link FirstPersonMode#isFirstPersonPass()} - {@code THIRD_PERSON_MODEL} renders
-     * using this exact same {@link ModifierLayer} for both the real third-person camera AND the up-close
-     * first-person pass, so without this guard the look-direction bend was also happening in real third person.
-     * Third person must render the animation exactly as authored, untouched.
+     * {@code tick()}/{@code setupAnim()} run on both regardless of view, since those track wall-clock animation
+     * progress (once per game tick / once per render), not view-specific data - only {@code get3DTransform} (the
+     * actual per-bone pose query, asked many times per frame with the view already implied by
+     * {@code isFirstPersonPass()}) is routed.
      * <p>
-     * {@code body}'s own keyframed rotation (whatever the JSON itself animates, eg. {@code test_stab.json}'s
-     * torso twist) is suppressed entirely in first person, not just left un-adjusted - {@code body}'s rotation
-     * is applied to the whole matrix stack before the arm renders (see PlayerAnimator's own
-     * {@code PlayerRendererMixin#applyBodyTransforms}), so any body motion at all drags the arm along with it.
+     * {@code getFirstPersonMode}/{@code getFirstPersonConfiguration} always answer from {@code firstPerson}
+     * specifically (regardless of current pass) - those two are how {@code AnimationStack} decides whether this
+     * layer even wants to participate in first-person rendering at all, they're not per-frame pose queries.
      * <p>
-     * {@code rightArm} itself only gets pitch/yaw bend, not touched for other parts. Yaw compensates for
-     * {@code yBodyRot} (the body's facing) lagging behind the camera's actual look yaw, which vanilla only lets
-     * catch up gradually - harmless in third person, but in first person the camera IS the exact look direction,
-     * so that lag visibly dragged the arm with the body instead of the view. Pitch/yaw both use the interpolated
-     * {@code getViewXRot}/{@code getViewYRot}/{@code getPreciseBodyRotation} accessors (this method's own
-     * {@code tickDelta} param) rather than the raw per-tick fields - those only update once per game tick, so
-     * reading them directly caused a visible flicker between ticks at render framerates above 20 fps.
+     * {@code rightArm}'s rotation additionally gets a live pitch/yaw bend on top, first-person only, so the arm
+     * follows where the player is actually looking instead of always thrusting in the exact fixed direction
+     * baked into {@code firstPerson}'s keyframes. Yaw compensates for {@code yBodyRot} (the body's facing)
+     * lagging behind the camera's actual look yaw, which vanilla only lets catch up gradually - in first person
+     * the camera IS the exact look direction, so uncompensated the arm visibly dragged with the body instead of
+     * the view. Both use the interpolated {@code getViewXRot}/{@code getViewYRot}/{@code getPreciseBodyRotation}
+     * accessors (this method's own {@code tickDelta} param) rather than the raw per-tick fields, which only
+     * update once per game tick and so flicker at render framerates above 20 fps.
      */
-    private static class AimModifier extends AbstractModifier
+    private static class ViewRouter implements IAnimation
     {
+        @Nullable
+        private final IActualAnimation<?> thirdPerson;
+        @Nullable
+        private final IActualAnimation<?> firstPerson;
         private final AbstractClientPlayer player;
 
-        private AimModifier(AbstractClientPlayer player)
+        private ViewRouter(@Nullable IActualAnimation<?> thirdPerson, @Nullable IActualAnimation<?> firstPerson, AbstractClientPlayer player)
         {
+            this.thirdPerson = thirdPerson;
+            this.firstPerson = firstPerson;
             this.player = player;
         }
 
-        @Override
-        public Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0)
+        @Nullable
+        private IActualAnimation<?> active()
         {
-            if(!FirstPersonMode.isFirstPersonPass() || type != TransformType.ROTATION)
-            {
-                return super.get3DTransform(modelName, type, tickDelta, value0);
-            }
+            return FirstPersonMode.isFirstPersonPass() ? firstPerson : thirdPerson;
+        }
 
-            if("body".equals(modelName))
+        @Override
+        public boolean isActive()
+        {
+            return (thirdPerson != null && thirdPerson.isActive()) || (firstPerson != null && firstPerson.isActive());
+        }
+
+        @Override
+        public void tick()
+        {
+            if(thirdPerson != null) { thirdPerson.tick(); }
+            if(firstPerson != null) { firstPerson.tick(); }
+        }
+
+        @Override
+        public void setupAnim(float tickDelta)
+        {
+            if(thirdPerson != null) { thirdPerson.setupAnim(tickDelta); }
+            if(firstPerson != null) { firstPerson.setupAnim(tickDelta); }
+        }
+
+        @Override
+        public @NotNull Vec3f get3DTransform(String modelName, TransformType type, float tickDelta, Vec3f value0)
+        {
+            IActualAnimation<?> active = active();
+
+            if(active == null)
             {
                 return value0;
             }
 
-            if(!"rightArm".equals(modelName))
+            Vec3f transformed = active.get3DTransform(modelName, type, tickDelta, value0);
+
+            if(active == firstPerson && type == TransformType.ROTATION && "rightArm".equals(modelName))
             {
-                return super.get3DTransform(modelName, type, tickDelta, value0);
+                float pitch = (float) Math.toRadians(player.getViewXRot(tickDelta) / 2F);
+                float yaw = (float) Math.toRadians(Mth.wrapDegrees(player.getViewYRot(tickDelta) - player.getPreciseBodyRotation(tickDelta)));
+                transformed = transformed.add(new Vec3f(pitch, yaw, 0));
             }
 
-            Vec3f transformed = super.get3DTransform(modelName, type, tickDelta, value0);
-            float pitch = (float) Math.toRadians(player.getViewXRot(tickDelta) / 2F);
-            float yaw = (float) Math.toRadians(Mth.wrapDegrees(player.getViewYRot(tickDelta) - player.getPreciseBodyRotation(tickDelta)));
+            // head renders as a child of body's own transform, so any rotation this animation gives body would
+            // otherwise carry the head along with it too. value0 already satisfies "vanilla's body pose +
+            // value0 = correct look direction" as a baseline invariant (that's what value0 IS - vanilla's own
+            // already-computed, already-correct head rotation) - so cancelling out only OUR OWN extra
+            // contribution to body (subtracting it back out of head) is the minimal fix that preserves that
+            // invariant. Rebuilding the whole yaw from getViewYRot/getPreciseBodyRotation from scratch (a
+            // previous attempt) double-counted compensation vanilla already applies on its own, overshooting.
+            if(active == thirdPerson && type == TransformType.ROTATION && "head".equals(modelName))
+            {
+                Vec3f bodyTwist = thirdPerson.get3DTransform("body", TransformType.ROTATION, tickDelta, Vec3f.ZERO);
+                transformed = transformed.add(bodyTwist);
+            }
 
-            return transformed.add(new Vec3f(pitch, yaw, 0));
+            return transformed;
+        }
+
+        @Override
+        public @NotNull FirstPersonMode getFirstPersonMode(float tickDelta)
+        {
+            return firstPerson != null ? firstPerson.getFirstPersonMode(tickDelta) : FirstPersonMode.NONE;
+        }
+
+        @Override
+        public @NotNull FirstPersonConfiguration getFirstPersonConfiguration(float tickDelta)
+        {
+            return firstPerson != null ? firstPerson.getFirstPersonConfiguration(tickDelta) : IAnimation.super.getFirstPersonConfiguration(tickDelta);
         }
     }
 }
