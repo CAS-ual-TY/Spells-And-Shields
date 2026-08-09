@@ -134,14 +134,18 @@ public class PlayerAnimatorHooks
      * specifically (regardless of current pass) - those two are how {@code AnimationStack} decides whether this
      * layer even wants to participate in first-person rendering at all, they're not per-frame pose queries.
      * <p>
-     * {@code rightArm}'s rotation additionally gets a live pitch/yaw bend on top, first-person only, so the arm
-     * follows where the player is actually looking instead of always thrusting in the exact fixed direction
-     * baked into {@code firstPerson}'s keyframes. Yaw compensates for {@code yBodyRot} (the body's facing)
-     * lagging behind the camera's actual look yaw, which vanilla only lets catch up gradually - in first person
-     * the camera IS the exact look direction, so uncompensated the arm visibly dragged with the body instead of
-     * the view. Both use the interpolated {@code getViewXRot}/{@code getViewYRot}/{@code getPreciseBodyRotation}
-     * accessors (this method's own {@code tickDelta} param) rather than the raw per-tick fields, which only
-     * update once per game tick and so flicker at render framerates above 20 fps.
+     * {@code body}'s rotation additionally gets a live pitch/yaw bend on top, first-person only, so it (and
+     * everything rendered as its child, including {@code rightArm}) follows where the player is actually
+     * looking instead of staying at {@code body}'s own facing. Only {@code body} gets this correction, not
+     * {@code rightArm} too - the arm renders nested inside body's own {@code PoseStack} rotation (see
+     * {@code PlayerRendererMixin#applyBodyTransforms}), so it inherits the correction for free; adding it a
+     * second time to the arm's own local rotation would double-count the same term. Yaw compensates for
+     * {@code yBodyRot} (the body's facing) lagging behind the camera's actual look yaw, which vanilla only
+     * lets catch up gradually - in first person the camera IS the exact look direction, so uncompensated
+     * everything visibly dragged with the body instead of the view. Both use the interpolated
+     * {@code getViewXRot}/{@code getViewYRot}/{@code getPreciseBodyRotation} accessors (this method's own
+     * {@code tickDelta} param) rather than the raw per-tick fields, which only update once per game tick and so
+     * flicker at render framerates above 20 fps.
      */
     private static class ViewRouter implements IAnimation
     {
@@ -196,10 +200,22 @@ public class PlayerAnimatorHooks
 
             Vec3f transformed = active.get3DTransform(modelName, type, tickDelta, value0);
 
-            if(active == firstPerson && type == TransformType.ROTATION && "rightArm".equals(modelName))
+            // body only, NOT rightArm too - rightArm renders as a child of body's own PoseStack rotation
+            // (see PlayerRendererMixin#applyBodyTransforms, applied before the arm renders), so correcting
+            // both double-counts the same view-yaw term: once baked into the shared stack via body, once more
+            // in the arm's own local rotation. Correcting body alone is enough - the arm inherits it through
+            // the hierarchy for free, with its own keyframed swing still layering on top correctly.
+            if(active == firstPerson && type == TransformType.ROTATION && "body".equals(modelName))
             {
+                // yaw is negated compared to the arm's old per-bone version: body's rotation is applied via
+                // PlayerRendererMixin#applyBodyTransforms as Axis.YP.rotation(vec3f.y) on top of vanilla's own
+                // baseline Axis.YP.rotationDegrees(180 - yBodyRot) - substituting "viewYaw" for "yBodyRot" in
+                // that same vanilla formula and solving for the needed delta gives (bodyFacing - viewYaw), the
+                // opposite sign from a direct "viewYaw - bodyFacing" - that direct form worked for the arm
+                // because ModelPart.setRotation composes as a plain local rotation with no such 180-flipped
+                // baseline to account for.
                 float pitch = (float) Math.toRadians(player.getViewXRot(tickDelta) / 2F);
-                float yaw = (float) Math.toRadians(Mth.wrapDegrees(player.getViewYRot(tickDelta) - player.getPreciseBodyRotation(tickDelta)));
+                float yaw = (float) Math.toRadians(Mth.wrapDegrees(player.getPreciseBodyRotation(tickDelta) - player.getViewYRot(tickDelta)));
                 transformed = transformed.add(new Vec3f(pitch, yaw, 0));
             }
 
