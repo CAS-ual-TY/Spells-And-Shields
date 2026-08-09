@@ -24,6 +24,7 @@ public class DataGen
     private static void gatherData(GatherDataEvent event)
     {
         event.getGenerator().addProvider(event.includeClient(), new LangGen(event.getGenerator(), "en_us"));
+        event.getGenerator().addProvider(event.includeClient(), new PlayerAnimationsGen(event.getGenerator().getPackOutput()));
         event.getGenerator().addProvider(event.includeServer(), new DocsGen(event.getGenerator(), SpellsAndShields.MOD_ID, event.getExistingFileHelper()));
         
         event.getGenerator().addProvider(
