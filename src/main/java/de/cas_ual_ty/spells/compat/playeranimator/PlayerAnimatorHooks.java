@@ -30,6 +30,15 @@ import org.slf4j.LoggerFactory;
  * see {@link PlayerAnimationRegistry}. All this hook does is resolve that registry entry and play it on the
  * given player's own persistent {@link ModifierLayer}, discarding whatever it was already playing (a hard cut,
  * no fade) - matching {@code de.cas_ual_ty.spells.spell.action.animation.PlayAnimationAction}'s contract.
+ * <p>
+ * {@code THIRD_PERSON_MODEL}, not {@code VANILLA} - {@code VANILLA} would reuse vanilla's own camera-locked
+ * bare-arm render path, which sounds ideal, but vanilla's {@code PlayerRenderer.renderHand()} forcibly resets
+ * {@code rightArm.xRot} to {@code 0} right after {@code setupAnim} runs (so it's not left over from a swing
+ * computed for a different context) - that's the exact axis this animation's swing lives on, so under
+ * {@code VANILLA} almost the entire motion got discarded right before rendering, no way around it since it's
+ * vanilla's own code. {@code THIRD_PERSON_MODEL} instead renders the real third-person model from a
+ * camera parked near the head - not truly camera-locked like vanilla's own hand, but the full rotation actually
+ * survives - see {@link AimModifier} for the first-person-only adjustments this needs on top.
  */
 public class PlayerAnimatorHooks
 {
@@ -106,9 +115,7 @@ public class PlayerAnimatorHooks
      * {@code body}'s own keyframed rotation (whatever the JSON itself animates, eg. {@code test_stab.json}'s
      * torso twist) is suppressed entirely in first person, not just left un-adjusted - {@code body}'s rotation
      * is applied to the whole matrix stack before the arm renders (see PlayerAnimator's own
-     * {@code PlayerRendererMixin#applyBodyTransforms}), so any body motion at all drags the arm along with it;
-     * that's why the arm still looked glued to the body even after we stopped adding our own adjustment to it.
-     * There's no body visible from this viewpoint to justify that drag.
+     * {@code PlayerRendererMixin#applyBodyTransforms}), so any body motion at all drags the arm along with it.
      * <p>
      * {@code rightArm} itself only gets pitch/yaw bend, not touched for other parts. Yaw compensates for
      * {@code yBodyRot} (the body's facing) lagging behind the camera's actual look yaw, which vanilla only lets
