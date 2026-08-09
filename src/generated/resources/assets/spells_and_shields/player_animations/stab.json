@@ -1,0 +1,127 @@
+{
+  "animations": {
+    "stab": {
+      "animation_length": 0.5,
+      "bones": {
+        "body": {
+          "rotation": {
+            "0.0": {
+              "easing": "easeOutQuad",
+              "vector": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "0.15": [
+              0.0,
+              -20.0,
+              0.0
+            ],
+            "0.35": {
+              "easing": "easeInQuad",
+              "vector": [
+                0.0,
+                -20.0,
+                0.0
+              ]
+            },
+            "0.5": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "right_arm": {
+          "rotation": {
+            "0.0": {
+              "easing": "easeOutQuad",
+              "vector": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "0.15": [
+              -100.0,
+              10.0,
+              5.0
+            ],
+            "0.35": {
+              "easing": "easeInQuad",
+              "vector": [
+                -100.0,
+                10.0,
+                5.0
+              ]
+            },
+            "0.5": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        }
+      },
+      "loop": false
+    },
+    "stab_1p": {
+      "animation_length": 0.6,
+      "bones": {
+        "right_arm": {
+          "position": {
+            "0.15": [
+              0.0,
+              0.0,
+              -7.0
+            ],
+            "0.35": {
+              "easing": "easeInQuad",
+              "vector": [
+                0.0,
+                0.0,
+                -7.0
+              ]
+            },
+            "0.5": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "rotation": {
+            "0.0": {
+              "easing": "easeOutQuad",
+              "vector": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "0.15": [
+              -100.0,
+              10.0,
+              5.0
+            ],
+            "0.35": {
+              "easing": "easeInQuad",
+              "vector": [
+                -100.0,
+                10.0,
+                5.0
+              ]
+            },
+            "0.5": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        }
+      },
+      "loop": false
+    }
+  },
+  "format_version": "1.8.0"
+}

@@ -137,8 +137,8 @@
     {
       "type": "spells_and_shields:play_animation",
       "activation": "shoot",
-      "d/string/first_person_animation": "spells_and_shields:test_stab_1p",
-      "d/string/third_person_animation": "spells_and_shields:test_stab",
+      "d/string/first_person_animation": "spells_and_shields:stab_1p",
+      "d/string/third_person_animation": "spells_and_shields:stab",
       "ts/targets": "owner"
     },
     {
