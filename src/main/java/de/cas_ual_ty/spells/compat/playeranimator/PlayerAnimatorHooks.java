@@ -305,16 +305,22 @@ public class PlayerAnimatorHooks
             return transformed;
         }
 
+        // both gated on firstPerson.isActive(), not just firstPerson != null - getFirstPersonMode() on the
+        // underlying animation is a static flag (set once via setFirstPersonMode in play(), never tied to
+        // whether it's still actually playing), so without this check the "fake third person" 1p render trick
+        // would keep firing even after firstPerson's own animation finished, for as long as the layer stays
+        // alive - which it does as long as thirdPerson (a completely independent length) is still running.
+
         @Override
         public @NotNull FirstPersonMode getFirstPersonMode(float tickDelta)
         {
-            return firstPerson != null ? firstPerson.getFirstPersonMode(tickDelta) : FirstPersonMode.NONE;
+            return firstPerson != null && firstPerson.isActive() ? firstPerson.getFirstPersonMode(tickDelta) : FirstPersonMode.NONE;
         }
 
         @Override
         public @NotNull FirstPersonConfiguration getFirstPersonConfiguration(float tickDelta)
         {
-            return firstPerson != null ? firstPerson.getFirstPersonConfiguration(tickDelta) : IAnimation.super.getFirstPersonConfiguration(tickDelta);
+            return firstPerson != null && firstPerson.isActive() ? firstPerson.getFirstPersonConfiguration(tickDelta) : IAnimation.super.getFirstPersonConfiguration(tickDelta);
         }
     }
 }
