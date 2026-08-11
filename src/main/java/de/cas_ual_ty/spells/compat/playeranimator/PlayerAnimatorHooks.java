@@ -1,5 +1,6 @@
 package de.cas_ual_ty.spells.compat.playeranimator;
 
+import com.mojang.math.Axis;
 import de.cas_ual_ty.spells.SpellsAndShields;
 import dev.kosmx.playerAnim.api.IPlayable;
 import dev.kosmx.playerAnim.api.TransformType;
@@ -17,6 +18,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -28,11 +33,13 @@ import org.slf4j.LoggerFactory;
  * Animations themselves aren't ours to define - PlayerAnimator loads them client-side from
  * {@code assets/<namespace>/player_animations/*.json} (GeckoLib-exported keyframe JSON, auto-detected by
  * {@code LegacyGeckoJsonCodec}), keyed by the animation's own declared {@code name}, not its filename or path -
- * see {@link PlayerAnimationRegistry}. All this hook does is resolve the two registry entries
- * {@link de.cas_ual_ty.spells.spell.action.animation.PlayAnimationAction} sent over and play them on the given
+ * see {@link PlayerAnimationRegistry}. {@link #play} resolves the two registry entries
+ * {@link de.cas_ual_ty.spells.spell.action.animation.PlayAnimationAction} sent over and plays them on the given
  * player's own persistent {@link ModifierLayer}, discarding whatever it was already playing (a hard cut, no
- * fade).
+ * fade). {@link #onRenderPlayerPre}/{@link #onRenderPlayerPost} additionally make the whole player model follow
+ * the camera's look direction, first-person only - see their own doc.
  */
+@EventBusSubscriber(modid = SpellsAndShields.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class PlayerAnimatorHooks
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerAnimatorHooks.class);
@@ -76,7 +83,7 @@ public class PlayerAnimatorHooks
             firstPerson.setFirstPersonConfiguration(new FirstPersonConfiguration(true, false, true, false));
         }
 
-        getOrCreateLayer(player).setAnimation(new ViewRouter(thirdPerson, firstPerson, player));
+        getOrCreateLayer(player).setAnimation(new ViewRouter(thirdPerson, firstPerson));
     }
 
     @Nullable
@@ -119,6 +126,99 @@ public class PlayerAnimatorHooks
     }
 
     /**
+     * Specifically whether the FIRST-PERSON side is still active - not the combined
+     * {@code ModifierLayer.isActive()} (true as long as EITHER view's animation is still running). Only ever
+     * called from the render hooks below, which only ever matter during the first-person pass - gating on the
+     * combined OR would keep the whole-model rotation wrap applying even after the first-person animation
+     * itself finished, just because the third-person one (a different length) happened to still be running.
+     */
+    private static boolean hasActiveFirstPersonAnimation(AbstractClientPlayer player)
+    {
+        IAnimation existing = PlayerAnimationAccess.getPlayerAssociatedData(player).get(LAYER_ID);
+        return existing instanceof ModifierLayer<?> layer
+                && layer.getAnimation() instanceof ViewRouter router
+                && router.firstPerson != null
+                && router.firstPerson.isActive();
+    }
+
+    /**
+     * Makes the whole player model follow the camera's look direction in first person, rigidly, as one piece -
+     * not per-bone (per-bone correction of {@code body}/{@code rightArm} through PlayerAnimator's own animation
+     * system was tried repeatedly and always hit one of two problems: pitching {@code body} floats the hand
+     * through a wide arc, since {@code body} pivots at the model's root/feet, far from the hand; pitching only
+     * {@code rightArm} leaves {@code body} - and the camera's implied resting frame - out of sync with where the
+     * camera actually points, so the correctly-bent arm still looks misplaced. Wrapping the whole render in one
+     * rigid rotation sidesteps both).
+     * <p>
+     * Hooked at {@link RenderPlayerEvent.Pre}/{@link RenderPlayerEvent.Post} specifically because those fire
+     * (confirmed in {@code PlayerRenderer.render}) strictly outside vanilla's own
+     * {@code pushPose}/{@code setupRotations}/{@code popPose} sequence - Pre before all of it, Post after - so
+     * our own push/pop pair cleanly wraps vanilla's own, with nothing left over to leak into whatever renders
+     * next on the same shared PoseStack.
+     * <p>
+     * Gated on {@link FirstPersonMode#isFirstPersonPass()} (only meaningful during the up-close first-person
+     * pass) and {@link #hasActiveFirstPersonAnimation} (only while this player's first-person animation is
+     * actually still playing) - both checks must agree between Pre and Post or the push/pop pair goes
+     * unbalanced; they're safe to re-evaluate independently since neither can change mid-render (the pass flag
+     * only flips between separate render calls, and nothing else mutates the layer while this synchronous call
+     * is on the stack).
+     * <p>
+     * The entity's own local origin (where a naive rotation would pivot around) sits at its feet, not somewhere
+     * natural like the eyes - rotating straight there swings the head/chest through a wide arc instead of
+     * tilting in place. Translating up to eye height before rotating (and back down after) fixes that - the
+     * eye/camera is also just the conceptually correct pivot for a first-person view in the first place, the one
+     * fixed point everything else swings around.
+     * <p>
+     * The rotation itself needs three terms, not two - this was the actual bug behind several earlier failed
+     * attempts (wrong direction depending on facing, pitch bleeding into yaw at some angles). Vanilla's own
+     * {@code setupRotations}, called AFTER this hook returns, still applies its own
+     * {@code Axis.YP.rotationDegrees(180 - yBodyRot)} - and because {@code PoseStack} operations compose by
+     * appending onto the right of whatever's already there, that later call ends up applied to the raw model
+     * geometry FIRST (innermost), with everything from this hook wrapped OUTSIDE it. So a plain two-term
+     * "yaw then pitch" here still leaves pitch rotating geometry that vanilla has already yawed by the real body
+     * facing - the pitch axis silently depends on facing direction, exactly the reported symptom. The fix is to
+     * explicitly cancel vanilla's upcoming rotation first (innermost among our own calls), apply a now-clean
+     * pitch, then establish the true desired facing (outermost) - three rotations, not two.
+     */
+    @SubscribeEvent
+    public static void onRenderPlayerPre(RenderPlayerEvent.Pre event)
+    {
+        if(!(event.getEntity() instanceof AbstractClientPlayer player) || !FirstPersonMode.isFirstPersonPass() || !hasActiveFirstPersonAnimation(player))
+        {
+            return;
+        }
+
+        float partialTick = event.getPartialTick();
+        float eyeHeight = player.getEyeHeight();
+
+        // cancels vanilla's own upcoming Axis.YP.rotationDegrees(180 - yBodyRot), applied to raw geometry first
+        float undoVanillaYaw = (float) Math.toRadians(player.getPreciseBodyRotation(partialTick) - 180F);
+        float pitch = (float) Math.toRadians(-player.getViewXRot(partialTick));
+        // re-establishes the same "180 - X" facing convention vanilla uses, but with view yaw instead of body yaw
+        float finalYaw = (float) Math.toRadians(180F - player.getViewYRot(partialTick));
+
+        event.getPoseStack().pushPose();
+        event.getPoseStack().translate(0, eyeHeight, 0);
+        // call order matters: PoseStack appends new mulPose calls onto the right, so the LAST call here acts on
+        // the (vanilla-rotated) geometry FIRST - undoVanillaYaw has to be last for that reason
+        event.getPoseStack().mulPose(Axis.YP.rotation(finalYaw));
+        event.getPoseStack().mulPose(Axis.XP.rotation(pitch));
+        event.getPoseStack().mulPose(Axis.YP.rotation(undoVanillaYaw));
+        event.getPoseStack().translate(0, -eyeHeight, 0);
+    }
+
+    @SubscribeEvent
+    public static void onRenderPlayerPost(RenderPlayerEvent.Post event)
+    {
+        if(!(event.getEntity() instanceof AbstractClientPlayer player) || !FirstPersonMode.isFirstPersonPass() || !hasActiveFirstPersonAnimation(player))
+        {
+            return;
+        }
+
+        event.getPoseStack().popPose();
+    }
+
+    /**
      * Plays two independently-authored animations at once and routes every query to whichever one actually
      * matches the current render - {@link FirstPersonMode#isFirstPersonPass()} true means the up-close first
      * person pass, so {@code firstPerson} answers; otherwise (real third person, or any other pass) {@code
@@ -133,19 +233,6 @@ public class PlayerAnimatorHooks
      * {@code getFirstPersonMode}/{@code getFirstPersonConfiguration} always answer from {@code firstPerson}
      * specifically (regardless of current pass) - those two are how {@code AnimationStack} decides whether this
      * layer even wants to participate in first-person rendering at all, they're not per-frame pose queries.
-     * <p>
-     * {@code body}'s rotation additionally gets a live pitch/yaw bend on top, first-person only, so it (and
-     * everything rendered as its child, including {@code rightArm}) follows where the player is actually
-     * looking instead of staying at {@code body}'s own facing. Only {@code body} gets this correction, not
-     * {@code rightArm} too - the arm renders nested inside body's own {@code PoseStack} rotation (see
-     * {@code PlayerRendererMixin#applyBodyTransforms}), so it inherits the correction for free; adding it a
-     * second time to the arm's own local rotation would double-count the same term. Yaw compensates for
-     * {@code yBodyRot} (the body's facing) lagging behind the camera's actual look yaw, which vanilla only
-     * lets catch up gradually - in first person the camera IS the exact look direction, so uncompensated
-     * everything visibly dragged with the body instead of the view. Both use the interpolated
-     * {@code getViewXRot}/{@code getViewYRot}/{@code getPreciseBodyRotation} accessors (this method's own
-     * {@code tickDelta} param) rather than the raw per-tick fields, which only update once per game tick and so
-     * flicker at render framerates above 20 fps.
      */
     private static class ViewRouter implements IAnimation
     {
@@ -153,19 +240,22 @@ public class PlayerAnimatorHooks
         private final IActualAnimation<?> thirdPerson;
         @Nullable
         private final IActualAnimation<?> firstPerson;
-        private final AbstractClientPlayer player;
 
-        private ViewRouter(@Nullable IActualAnimation<?> thirdPerson, @Nullable IActualAnimation<?> firstPerson, AbstractClientPlayer player)
+        private ViewRouter(@Nullable IActualAnimation<?> thirdPerson, @Nullable IActualAnimation<?> firstPerson)
         {
             this.thirdPerson = thirdPerson;
             this.firstPerson = firstPerson;
-            this.player = player;
         }
 
         @Nullable
         private IActualAnimation<?> active()
         {
-            return FirstPersonMode.isFirstPersonPass() ? firstPerson : thirdPerson;
+            // checks the CANDIDATE side's own isActive(), not just which view we're in - the two animations can
+            // have different lengths (see PlayAnimationAction/stab.json), so one finishing shouldn't leave its
+            // own view stuck querying a frozen-at-rest animation object just because the OTHER view's animation
+            // (a completely independent length) happens to still be running.
+            IActualAnimation<?> candidate = FirstPersonMode.isFirstPersonPass() ? firstPerson : thirdPerson;
+            return candidate != null && candidate.isActive() ? candidate : null;
         }
 
         @Override
@@ -200,32 +290,12 @@ public class PlayerAnimatorHooks
 
             Vec3f transformed = active.get3DTransform(modelName, type, tickDelta, value0);
 
-            // body only, NOT rightArm too - rightArm renders as a child of body's own PoseStack rotation
-            // (see PlayerRendererMixin#applyBodyTransforms, applied before the arm renders), so correcting
-            // both double-counts the same view-yaw term: once baked into the shared stack via body, once more
-            // in the arm's own local rotation. Correcting body alone is enough - the arm inherits it through
-            // the hierarchy for free, with its own keyframed swing still layering on top correctly.
-            if(active == firstPerson && type == TransformType.ROTATION && "body".equals(modelName))
-            {
-                // yaw is negated compared to the arm's old per-bone version: body's rotation is applied via
-                // PlayerRendererMixin#applyBodyTransforms as Axis.YP.rotation(vec3f.y) on top of vanilla's own
-                // baseline Axis.YP.rotationDegrees(180 - yBodyRot) - substituting "viewYaw" for "yBodyRot" in
-                // that same vanilla formula and solving for the needed delta gives (bodyFacing - viewYaw), the
-                // opposite sign from a direct "viewYaw - bodyFacing" - that direct form worked for the arm
-                // because ModelPart.setRotation composes as a plain local rotation with no such 180-flipped
-                // baseline to account for.
-                float pitch = (float) Math.toRadians(player.getViewXRot(tickDelta) / 2F);
-                float yaw = (float) Math.toRadians(Mth.wrapDegrees(player.getPreciseBodyRotation(tickDelta) - player.getViewYRot(tickDelta)));
-                transformed = transformed.add(new Vec3f(pitch, yaw, 0));
-            }
-
             // head renders as a child of body's own transform, so any rotation this animation gives body would
             // otherwise carry the head along with it too. value0 already satisfies "vanilla's body pose +
             // value0 = correct look direction" as a baseline invariant (that's what value0 IS - vanilla's own
             // already-computed, already-correct head rotation) - so cancelling out only OUR OWN extra
             // contribution to body (subtracting it back out of head) is the minimal fix that preserves that
-            // invariant. Rebuilding the whole yaw from getViewYRot/getPreciseBodyRotation from scratch (a
-            // previous attempt) double-counted compensation vanilla already applies on its own, overshooting.
+            // invariant.
             if(active == thirdPerson && type == TransformType.ROTATION && "head".equals(modelName))
             {
                 Vec3f bodyTwist = thirdPerson.get3DTransform("body", TransformType.ROTATION, tickDelta, Vec3f.ZERO);
