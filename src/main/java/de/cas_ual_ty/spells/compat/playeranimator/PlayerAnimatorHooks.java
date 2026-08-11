@@ -9,6 +9,7 @@ import dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode;
 import dev.kosmx.playerAnim.api.layered.AnimationStack;
 import dev.kosmx.playerAnim.api.layered.IActualAnimation;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
+import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
@@ -76,11 +77,32 @@ public class PlayerAnimatorHooks
             // instead renders the real third-person model from a camera parked near the head - not truly
             // camera-locked like vanilla's own hand, but the full rotation actually survives.
             firstPerson.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
-            // right-hand only, matching this action's "main hand only" contract. Also required for the arm to
-            // render AT ALL under THIRD_PERSON_MODEL: PlayerRendererMixin#hideBonesInFirstPerson hides every
-            // model part in first person, then selectively re-shows rightArm/leftArm based on this - its default
-            // (showRightArm=false) hides the arm outright, which is why it was invisible without this.
-            firstPerson.setFirstPersonConfiguration(new FirstPersonConfiguration(true, false, true, false));
+            // arm/item visibility, both hands, is inferred straight from the animation's OWN data - a hand only
+            // shows if its first-person JSON actually declares that hand's bone track (right_arm/right_item or
+            // left_arm/left_item); leave one out and it stays hidden entirely, same treatment on both sides. No
+            // separate flag anywhere - the animation file itself is the single source of truth for what it
+            // touches. Without this PlayerRendererMixin#hideBonesInFirstPerson would hide every model part in
+            // first person and only re-show whatever this configuration says to.
+            // NOTE: KeyframeAnimation.AnimationBuilder's constructor pre-populates ALL NINE standard bone
+            // entries into bodyParts up front, regardless of what the JSON declares - the JSON only decides
+            // whether keyframes get added to a part, not whether the map key exists. So bodyParts.containsKey(...)
+            // is always true and useless here; StateCollection.isEnabled() is the real signal - it only becomes
+            // true once a keyframe was actually added to that part.
+            boolean showRightArm = false;
+            boolean showRightItem = false;
+            boolean showLeftArm = false;
+            boolean showLeftItem = false;
+
+            if(firstPerson instanceof KeyframeAnimationPlayer keyframePlayer)
+            {
+                var bodyParts = keyframePlayer.getData().getBodyParts();
+                showRightArm = bodyParts.get("rightArm").isEnabled();
+                showRightItem = bodyParts.get("rightItem").isEnabled();
+                showLeftArm = bodyParts.get("leftArm").isEnabled();
+                showLeftItem = bodyParts.get("leftItem").isEnabled();
+            }
+
+            firstPerson.setFirstPersonConfiguration(new FirstPersonConfiguration(showRightArm, showLeftArm, showRightItem, showLeftItem));
         }
 
         getOrCreateLayer(player).setAnimation(new ViewRouter(thirdPerson, firstPerson));

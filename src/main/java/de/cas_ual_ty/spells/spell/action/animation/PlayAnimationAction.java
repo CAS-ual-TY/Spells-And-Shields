@@ -30,6 +30,9 @@ import net.minecraft.world.level.Level;
  * {@code firstPerson} for the up-close first-person render. They're independently authored files, not one
  * shared bone track - {@link PlayerAnimatorHooks} plays both simultaneously and routes between them per-frame
  * based on which view is actually rendering, since a single animation has no way to vary its own data by view.
+ * Whether the off hand/its item shows in first person is likewise decided entirely by the {@code firstPerson}
+ * animation's own data (does it declare a {@code left_arm}/{@code left_item} bone track or not) - see
+ * {@link PlayerAnimatorHooks#play}, not a parameter of this action.
  * <p>
  * This action exists whether or not Player Animator is installed - the animation just silently doesn't play if
  * it isn't (see {@link ModCompat#PLAYER_ANIMATOR}), so spells using it degrade gracefully rather than crashing

@@ -14,7 +14,9 @@ import static de.cas_ual_ty.spells.SpellsAndShields.MOD_ID;
 public class PlayerAnimations
 {
     public static final ResourceLocation STAB = rl("stab");
+    public static final ResourceLocation STAB_OFF = rl("stab_off");
     public static final ResourceLocation STAB_1P = rl("stab_1p");
+    public static final ResourceLocation STAB_1P_OFF = rl("stab_1p_off");
 
     private static ResourceLocation rl(String path)
     {

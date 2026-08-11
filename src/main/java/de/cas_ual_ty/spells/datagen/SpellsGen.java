@@ -782,7 +782,17 @@ public class SpellsGen
                 .addAction(BooleanActivationAction.make("consume", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), FALSE, TRUE))
                 .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.BLAZE_POWDER)))
                 .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(3D), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
-                .addAction(PlayAnimationAction.make("shoot", OWNER, STRING.immediate(PlayerAnimations.STAB.toString()), STRING.immediate(PlayerAnimations.STAB_1P.toString())))
+
+                .addAction(ActivateAction.make("shoot", "animation"))
+                .addAction(PutVarAction.makeString("animation", Compiler.compileString(" uuid_from_string('_animation_stab') " , STRING), "animation_uuid"))
+                .addAction(ActivateAction.make("animation", "animation_offhand"))
+                .addAction(CheckHasDelayedSpellAction.make("animation_offhand", OWNER, STRING.reference("animation_uuid")))
+                .addAction(DeactivateAction.make("animation_offhand", "animation"))
+                .addAction(AddDelayedSpellAction.make("animation", OWNER, "", INT.immediate(20), STRING.reference("animation_uuid"), EMPTY_TAG, Map.of()))
+                .addAction(RemoveDelayedSpellAction.make("animation_offhand", OWNER, STRING.reference("animation_uuid"), BOOLEAN.immediate(false)))
+                .addAction(PlayAnimationAction.make("animation", OWNER, STRING.immediate(PlayerAnimations.STAB.toString()), STRING.immediate(PlayerAnimations.STAB_1P.toString())))
+                .addAction(PlayAnimationAction.make("animation_offhand", OWNER, STRING.immediate(PlayerAnimations.STAB_OFF.toString()), STRING.immediate(PlayerAnimations.STAB_1P_OFF.toString())))
+
                 .addAction(PlaySoundAction.make("shoot", OWNER, SoundEvents.BLAZE_SHOOT, ONE_D, ONE_D))
                 .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(2), INT.immediate(3), DOUBLE.immediate(0.2D), TRUE, ZERO_VEC3, ParticleTypes.LARGE_SMOKE))
                 .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), ONE, ZERO_D, TRUE, ZERO_VEC3, ParticleTypes.LAVA))

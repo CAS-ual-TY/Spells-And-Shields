@@ -31,10 +31,60 @@ public class PlayerAnimationsGen implements DataProvider
     protected static final String POSITION = "position";
 
     protected static final String RIGHT_ARM = "right_arm";
+    protected static final String LEFT_ARM = "left_arm";
+    protected static final String RIGHT_ITEM = "right_item";
+    protected static final String LEFT_ITEM = "left_item";
+    protected static final String RIGHT_LEG = "right_leg";
+    protected static final String LEFT_LEG = "left_leg";
     protected static final String BODY = "body";
 
-    protected static final String EASE_OUT_QUAD = "easeOutQuad";
+    protected static final String LINEAR = "linear";
+    protected static final String CONSTANT = "constant";
+
+    protected static final String EASE_IN_SINE = "easeInSine";
+    protected static final String EASE_OUT_SINE = "easeOutSine";
+    protected static final String EASE_IN_OUT_SINE = "easeInOutSine";
+
+    protected static final String EASE_IN_CUBIC = "easeInCubic";
+    protected static final String EASE_OUT_CUBIC = "easeOutCubic";
+    protected static final String EASE_IN_OUT_CUBIC = "easeInOutCubic";
+
     protected static final String EASE_IN_QUAD = "easeInQuad";
+    protected static final String EASE_OUT_QUAD = "easeOutQuad";
+    protected static final String EASE_IN_OUT_QUAD = "easeInOutQuad";
+
+    protected static final String EASE_IN_QUART = "easeInQuart";
+    protected static final String EASE_OUT_QUART = "easeOutQuart";
+    protected static final String EASE_IN_OUT_QUART = "easeInOutQuart";
+
+    protected static final String EASE_IN_QUINT = "easeInQuint";
+    protected static final String EASE_OUT_QUINT = "easeOutQuint";
+    protected static final String EASE_IN_OUT_QUINT = "easeInOutQuint";
+
+    protected static final String EASE_IN_EXPO = "easeInExpo";
+    protected static final String EASE_OUT_EXPO = "easeOutExpo";
+    protected static final String EASE_IN_OUT_EXPO = "easeInOutExpo";
+
+    protected static final String EASE_IN_CIRC = "easeInCirc";
+    protected static final String EASE_OUT_CIRC = "easeOutCirc";
+    protected static final String EASE_IN_OUT_CIRC = "easeInOutCirc";
+
+    // these three (plus STEP below) also accept an optional numeric "easingArgs" on the keyframe - only via the
+    // object form ({"vector":[...], "easing":..., "easingArgs":[...]}), not the plain array shorthand
+    protected static final String EASE_IN_BACK = "easeInBack";
+    protected static final String EASE_OUT_BACK = "easeOutBack";
+    protected static final String EASE_IN_OUT_BACK = "easeInOutBack";
+
+    protected static final String EASE_IN_ELASTIC = "easeInElastic";
+    protected static final String EASE_OUT_ELASTIC = "easeOutElastic";
+    protected static final String EASE_IN_OUT_ELASTIC = "easeInOutElastic";
+
+    protected static final String EASE_IN_BOUNCE = "easeInBounce";
+    protected static final String EASE_OUT_BOUNCE = "easeOutBounce";
+    protected static final String EASE_IN_OUT_BOUNCE = "easeInOutBounce";
+
+    protected static final String CATMULL_ROM = "catmullRom";
+    protected static final String STEP = "step";
 
     protected final PackOutput.PathProvider pathProvider;
 
@@ -47,7 +97,7 @@ public class PlayerAnimationsGen implements DataProvider
     public CompletableFuture<?> run(CachedOutput output)
     {
         return CompletableFuture.allOf(
-                writePair(output, PlayerAnimations.STAB, PlayerAnimations.STAB_1P, stab(), stab1p())
+                writePairWithOff(output, PlayerAnimations.STAB, PlayerAnimations.STAB_OFF, PlayerAnimations.STAB_1P, PlayerAnimations.STAB_1P_OFF, stab(), reverse(stab()), stab1p(), reverse(stab1p()))
         );
     }
 
@@ -69,6 +119,21 @@ public class PlayerAnimationsGen implements DataProvider
         return DataProvider.saveStable(output, file, pathProvider.json(thirdPersonId));
     }
 
+    protected CompletableFuture<?> writePairWithOff(CachedOutput output, ResourceLocation thirdPersonId, ResourceLocation thirdPersonOffId, ResourceLocation firstPersonId, ResourceLocation firstPersonOffId, JsonObject thirdPerson, JsonObject thirdPersonOff, JsonObject firstPerson, JsonObject firstPersonOff)
+    {
+        JsonObject animations = new JsonObject();
+        animations.add(thirdPersonId.getPath(), thirdPerson);
+        animations.add(thirdPersonOffId.getPath(), thirdPersonOff);
+        animations.add(firstPersonId.getPath(), firstPerson);
+        animations.add(firstPersonOffId.getPath(), firstPersonOff);
+
+        JsonObject file = new JsonObject();
+        file.addProperty("format_version", "1.8.0");
+        file.add("animations", animations);
+
+        return DataProvider.saveStable(output, file, pathProvider.json(thirdPersonId));
+    }
+
     protected JsonObject stab()
     {
         JsonObject animation = animation(0.5, false);
@@ -76,8 +141,8 @@ public class PlayerAnimationsGen implements DataProvider
         JsonObject bones = new JsonObject();
         bones.add(RIGHT_ARM, bone(ROTATION, track(
                 "0.0", eased(0, 0, 0, EASE_OUT_QUAD),
-                "0.15", vec(-100, 10, 5),
-                "0.35", eased(-100, 10, 5, EASE_IN_QUAD),
+                "0.15", vec(-90, 10, 5),
+                "0.35", eased(-90, 10, 5, EASE_IN_QUAD),
                 "0.5", vec(0, 0, 0)
         )));
         bones.add(BODY, bone(ROTATION, track(
@@ -93,19 +158,21 @@ public class PlayerAnimationsGen implements DataProvider
 
     protected JsonObject stab1p()
     {
-        JsonObject animation = animation(0.6, false);
+        JsonObject animation = animation(1.6, false);
 
         JsonObject rightArm = new JsonObject();
         rightArm.add(ROTATION, track(
                 "0.0", eased(0, 0, 0, EASE_OUT_QUAD),
-                "0.15", vec(-100, 10, 5),
-                "0.35", eased(-100, 10, 5, EASE_IN_QUAD),
-                "0.5", vec(0, 0, 0)
+                "0.10", vec(-90, 10, 5),
+                "0.35", eased(-90, 10, 5, LINEAR),
+                "0.6", vec(0, 0, 0)
         ));
         rightArm.add(POSITION, track(
-                "0.15", vec(0, 0, -7),
-                "0.35", eased(0, 0, -7, EASE_IN_QUAD),
-                "0.5", vec(0, 0, 0)
+                "0.0", vec(0, 0, 2),
+                "0.10", vec(0, 0, 2),
+                "0.20", vec(0, 0, -7),
+                "0.35", eased(0, 0, -6, LINEAR),
+                "0.6", vec(0, 0, 0)
         ));
 
         JsonObject bones = new JsonObject();
@@ -113,6 +180,114 @@ public class PlayerAnimationsGen implements DataProvider
         animation.add("bones", bones);
 
         return animation;
+    }
+
+    /**
+     * Mirrors an animation across the left-right plane - right_arm/right_item/right_leg swap with their left_*
+     * counterparts (any other bone, eg. {@code body}, keeps its own name). Y always negates on both tracks.
+     * {@code position}'s X (left-right offset) also negates, Z (forward/back reach - the same direction for
+     * both arms) doesn't. {@code rotation} is the opposite: X (pitch - both arms raise/lower the same way)
+     * doesn't negate, Z (roll) does. Deep-copies everything else (easing, animation_length, loop, ...) unchanged,
+     * so {@code reverse(stab1p())} stands in for a hand-authored {@code stab1p_off()} without duplicating the
+     * whole track by hand.
+     */
+    protected static JsonObject reverse(JsonObject animation)
+    {
+        JsonObject result = new JsonObject();
+        result.addProperty("animation_length", animation.get("animation_length").getAsDouble());
+        result.addProperty("loop", animation.get("loop").getAsBoolean());
+
+        JsonObject bones = new JsonObject();
+
+        for(var boneEntry : animation.getAsJsonObject("bones").entrySet())
+        {
+            bones.add(mirrorBoneName(boneEntry.getKey()), mirrorBone(boneEntry.getValue().getAsJsonObject()));
+        }
+
+        result.add("bones", bones);
+
+        return result;
+    }
+
+    protected static String mirrorBoneName(String name)
+    {
+        return switch(name)
+        {
+            case RIGHT_ARM -> LEFT_ARM;
+            case LEFT_ARM -> RIGHT_ARM;
+            case RIGHT_ITEM -> LEFT_ITEM;
+            case LEFT_ITEM -> RIGHT_ITEM;
+            case RIGHT_LEG -> LEFT_LEG;
+            case LEFT_LEG -> RIGHT_LEG;
+            default -> name;
+        };
+    }
+
+    protected static JsonObject mirrorBone(JsonObject bone)
+    {
+        JsonObject result = new JsonObject();
+
+        for(var trackEntry : bone.entrySet())
+        {
+            String type = trackEntry.getKey();
+
+            if(POSITION.equals(type))
+            {
+                // left-right offset (X) flips, forward/back reach (Z) doesn't
+                result.add(type, mirrorTrack(trackEntry.getValue().getAsJsonObject(), true, false));
+            }
+            else if(ROTATION.equals(type))
+            {
+                // pitch (X) doesn't flip, roll (Z) does
+                result.add(type, mirrorTrack(trackEntry.getValue().getAsJsonObject(), false, true));
+            }
+            else
+            {
+                result.add(type, trackEntry.getValue());
+            }
+        }
+
+        return result;
+    }
+
+    protected static JsonObject mirrorTrack(JsonObject track, boolean negateX, boolean negateZ)
+    {
+        JsonObject result = new JsonObject();
+
+        for(var keyframeEntry : track.entrySet())
+        {
+            result.add(keyframeEntry.getKey(), mirrorKeyframe(keyframeEntry.getValue(), negateX, negateZ));
+        }
+
+        return result;
+    }
+
+    protected static JsonElement mirrorKeyframe(JsonElement keyframe, boolean negateX, boolean negateZ)
+    {
+        if(keyframe.isJsonArray())
+        {
+            return mirrorVec(keyframe.getAsJsonArray(), negateX, negateZ);
+        }
+
+        JsonObject source = keyframe.getAsJsonObject();
+        JsonObject result = new JsonObject();
+
+        for(var fieldEntry : source.entrySet())
+        {
+            result.add(fieldEntry.getKey(), "vector".equals(fieldEntry.getKey()) ? mirrorVec(fieldEntry.getValue().getAsJsonArray(), negateX, negateZ) : fieldEntry.getValue());
+        }
+
+        return result;
+    }
+
+    // Y (index 1) always negates on both tracks. X (index 0) and Z (index 2) are complementary between the two
+    // track types - see mirrorBone for which is which.
+    protected static JsonArray mirrorVec(JsonArray original, boolean negateX, boolean negateZ)
+    {
+        double x = original.get(0).getAsDouble();
+        double y = original.get(1).getAsDouble();
+        double z = original.get(2).getAsDouble();
+        return vec(negateX ? -x : x, -y, negateZ ? -z : z);
     }
 
     protected static JsonObject animation(double lengthSeconds, boolean loop)
