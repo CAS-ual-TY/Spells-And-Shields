@@ -9,10 +9,8 @@ import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 
@@ -83,15 +81,14 @@ public class CheckTagAction extends SpellAction
     protected <V> boolean isTag(String registryRL, String tagRL, String entryRL)
     {
         Registry<V> registry = (Registry<V>) BuiltInRegistries.REGISTRY.get(ResourceLocation.parse(registryRL));
-        
+
         if(registry == null)
         {
             return false;
         }
-        
-        ResourceKey<? extends Registry<V>> registryKey = registry.key();
-        TagKey<V> tagKey = TagKey.create(registryKey, ResourceLocation.parse(tagRL));
-        
-        return registry.getTag(tagKey).map(tag -> tag.contains(Holder.direct(registry.get(ResourceLocation.parse(entryRL))))).orElse(false);
+
+        TagKey<V> tagKey = TagKey.create(registry.key(), ResourceLocation.parse(tagRL));
+
+        return registry.getHolder(ResourceLocation.parse(entryRL)).map(holder -> holder.is(tagKey)).orElse(false);
     }
 }
