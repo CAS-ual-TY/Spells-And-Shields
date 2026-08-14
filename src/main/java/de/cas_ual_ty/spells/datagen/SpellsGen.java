@@ -23,6 +23,8 @@ import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.entity.*;
 import de.cas_ual_ty.spells.spell.action.function.CallFunctionAction;
+import de.cas_ual_ty.spells.client.particle.CustomParticleAttachMode;
+import de.cas_ual_ty.spells.spell.action.fx.CustomParticleEmitterPositionAction;
 import de.cas_ual_ty.spells.spell.action.fx.ParticleEmitterAction;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
@@ -781,7 +783,7 @@ public class SpellsGen
                 .addAction(CallFunctionAction.make("shoot", getFunction(SpellFunctions.BURN_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(BooleanActivationAction.make("consume", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), FALSE, TRUE))
                 .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.BLAZE_POWDER)))
-                .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(3D), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
+                .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(0.05D), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
 
                 .addAction(ActivateAction.make("shoot", "animation"))
                 .addAction(PutVarAction.makeString("animation", Compiler.compileString(" uuid_from_string('_animation_stab') " , STRING), "animation_uuid"))
@@ -794,10 +796,58 @@ public class SpellsGen
                 .addAction(PlayAnimationAction.make("animation_offhand", OWNER, STRING.immediate(PlayerAnimations.STAB_OFF.toString()), STRING.immediate(PlayerAnimations.STAB_1P_OFF.toString())))
 
                 .addAction(PlaySoundAction.make("shoot", OWNER, SoundEvents.BLAZE_SHOOT, ONE_D, ONE_D))
-                .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(2), INT.immediate(3), DOUBLE.immediate(0.2D), TRUE, ZERO_VEC3, ParticleTypes.LARGE_SMOKE))
-                .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), ONE, ZERO_D, TRUE, ZERO_VEC3, ParticleTypes.LAVA))
-                .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), INT.immediate(2), DOUBLE.immediate(0.1D), TRUE, ZERO_VEC3, ParticleTypes.SMOKE))
-                .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), INT.immediate(2), DOUBLE.immediate(0.1D), TRUE, ZERO_VEC3, ParticleTypes.FLAME))
+                //.addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(2), INT.immediate(3), DOUBLE.immediate(0.2D), TRUE, ZERO_VEC3, ParticleTypes.LARGE_SMOKE))
+                //.addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), ONE, ZERO_D, TRUE, ZERO_VEC3, ParticleTypes.LAVA))
+                //.addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), INT.immediate(2), DOUBLE.immediate(0.1D), TRUE, ZERO_VEC3, ParticleTypes.SMOKE))
+                //.addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), INT.immediate(2), DOUBLE.immediate(0.1D), TRUE, ZERO_VEC3, ParticleTypes.FLAME))
+
+                .addAction(PutVarAction.makeInt("shoot", 18, "particle_amount"))
+                .addAction(PutVarAction.makeDouble("shoot", 2, "particle_radius"))
+                .addAction(CustomParticleEmitterPositionAction.make(
+                        "shoot", "projectile",
+                        INT.reference("particle_amount"),
+                        INT.immediate(20 * 15),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.RELATIVE, CustomParticleAttachMode.RELATIVE,
+                        List.of("particle_amount", "particle_radius"),
+                        "vec3(" +
+                                "sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015," +
+                                "sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius," +
+                                "cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius" +
+                                ")",
+                        "vec3(1.0, 0.0, 0.05)",
+                        "1.0 - age / to_double(max_age)"
+                ))
+                .addAction(CustomParticleEmitterPositionAction.make(
+                        "shoot", "projectile",
+                        INT.reference("particle_amount"),
+                        INT.immediate(20 * 15),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.RELATIVE, CustomParticleAttachMode.RELATIVE,
+                        List.of("particle_amount", "particle_radius"),
+                        "vec3(" +
+                                "sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius," +
+                                "sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015," +
+                                "cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius" +
+                                ")",
+                        "vec3(1.0, 0.5, 0.05)",
+                        "1.0 - age / to_double(max_age)"
+                ))
+                .addAction(CustomParticleEmitterPositionAction.make(
+                        "shoot", "projectile",
+                        INT.reference("particle_amount"),
+                        INT.immediate(20 * 15),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.RELATIVE, CustomParticleAttachMode.RELATIVE,
+                        List.of("particle_amount", "particle_radius"),
+                        "vec3(" +
+                                "sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius," +
+                                "cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius," +
+                                "sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015" +
+                                ")",
+                        "vec3(1.0, 1.0, 0.05)",
+                        "1.0 - age / to_double(max_age)"
+                ))
                 .addAction(BooleanActivationAction.make("on_entity_hit", "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
                 .addAction(FilterPlayerTargetsAction.make("no_pvp", "", ENTITY_HIT, TRUE))
                 .addAction(SourcedDamageAction.make("on_entity_hit", ENTITY_HIT, DOUBLE.immediate(2D), PROJECTILE))

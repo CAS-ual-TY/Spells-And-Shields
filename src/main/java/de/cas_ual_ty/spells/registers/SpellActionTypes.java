@@ -16,6 +16,9 @@ import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.entity.*;
 import de.cas_ual_ty.spells.spell.action.function.CallFunctionAction;
+import de.cas_ual_ty.spells.spell.action.fx.CustomParticleEmitterClientAction;
+import de.cas_ual_ty.spells.spell.action.fx.CustomParticleEmitterMotionAction;
+import de.cas_ual_ty.spells.spell.action.fx.CustomParticleEmitterPositionAction;
 import de.cas_ual_ty.spells.spell.action.fx.ParticleEmitterAction;
 import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
 import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
@@ -134,6 +137,8 @@ public class SpellActionTypes
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<TeleportToAction>> TELEPORT_TO = DEFERRED_REGISTER.register("teleport_to", () -> new SpellActionType<>(TeleportToAction::new, TeleportToAction::makeCodec));
     
     // fx
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<CustomParticleEmitterMotionAction>> CUSTOM_PARTICLE_EMITTER_MOTION = DEFERRED_REGISTER.register("custom_particle_emitter_motion", () -> new SyncedSpellActionType<>(CustomParticleEmitterMotionAction::new, CustomParticleEmitterMotionAction::makeCodec, CustomParticleEmitterClientAction::new));
+    public static final DeferredHolder<SpellActionType<?>, SpellActionType<CustomParticleEmitterPositionAction>> CUSTOM_PARTICLE_EMITTER_POSITION = DEFERRED_REGISTER.register("custom_particle_emitter_position", () -> new SyncedSpellActionType<>(CustomParticleEmitterPositionAction::new, CustomParticleEmitterPositionAction::makeCodec, CustomParticleEmitterClientAction::new));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<ParticleEmitterAction>> PARTICLE_EMITTER = DEFERRED_REGISTER.register("particle_emitter", () -> new SpellActionType<>(ParticleEmitterAction::new, ParticleEmitterAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<PlaySoundAction>> PLAY_SOUND = DEFERRED_REGISTER.register("play_sound", () -> new SpellActionType<>(PlaySoundAction::new, PlaySoundAction::makeCodec));
     public static final DeferredHolder<SpellActionType<?>, SpellActionType<SpawnParticlesAction>> SPAWN_PARTICLES = DEFERRED_REGISTER.register("spawn_particles", () -> new SpellActionType<>(SpawnParticlesAction::new, SpawnParticlesAction::makeCodec));
@@ -324,6 +329,7 @@ public class SpellActionTypes
         
         UnaryOperation.UUID_FROM_STRING.register(CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x) -> SpellsUtil.generateUUIDFromName(x).toString());
         UnaryOperation.NEXT_INT.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x) -> Compiler.RANDOM.nextInt(x));
+        UnaryOperation.TO_DOUBLE.register(CtxVarTypes.INT.get(), CtxVarTypes.DOUBLE.get(), Integer::doubleValue);
         
         BinaryOperation.ADD.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> x + y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x + y)

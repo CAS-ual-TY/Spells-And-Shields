@@ -129,7 +129,7 @@
       "ad/entity_hit_activation": "on_entity_hit",
       "ad/timeout_activation": "on_timeout",
       "d/double/inaccuracy": 0.0,
-      "d/double/velocity": 3.0,
+      "d/double/velocity": 0.05,
       "d/int/timeout": 200,
       "t/source": "owner",
       "td/projectile": "projectile"
@@ -200,75 +200,66 @@
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:particle_emitter",
+      "type": "spells_and_shields:put_int",
       "activation": "shoot",
-      "d/boolean/motion_spread": true,
-      "d/double/spread": 0.2,
-      "d/int/amount": 3,
-      "d/int/delay": 2,
-      "d/int/duration": 200,
-      "d/vec3/offset": [
-        0.0,
-        0.0,
-        0.0
+      "d/int/source": 18,
+      "var/result": "particle_amount"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "shoot",
+      "d/double/source": 2.0,
+      "var/result": "particle_radius"
+    },
+    {
+      "type": "spells_and_shields:custom_particle_emitter_position",
+      "activation": "shoot",
+      "alpha": "1.0 - age / to_double(max_age)",
+      "captured_variables": [
+        "particle_amount",
+        "particle_radius"
       ],
-      "particle": {
-        "type": "minecraft:large_smoke"
-      },
+      "color": "vec3(1.0, 0.0, 0.05)",
+      "d/int/count": "<<particle_amount>>",
+      "d/int/duration": 300,
+      "d/int/period": 0,
+      "position": "vec3(sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015,sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius)",
+      "position_attach_mode": "relative",
+      "rotation_attach_mode": "relative",
       "ts/targets": "projectile"
     },
     {
-      "type": "spells_and_shields:particle_emitter",
+      "type": "spells_and_shields:custom_particle_emitter_position",
       "activation": "shoot",
-      "d/boolean/motion_spread": true,
-      "d/double/spread": 0.0,
-      "d/int/amount": 1,
-      "d/int/delay": 4,
-      "d/int/duration": 200,
-      "d/vec3/offset": [
-        0.0,
-        0.0,
-        0.0
+      "alpha": "1.0 - age / to_double(max_age)",
+      "captured_variables": [
+        "particle_amount",
+        "particle_radius"
       ],
-      "particle": {
-        "type": "minecraft:lava"
-      },
+      "color": "vec3(1.0, 0.5, 0.05)",
+      "d/int/count": "<<particle_amount>>",
+      "d/int/duration": 300,
+      "d/int/period": 0,
+      "position": "vec3(sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015,cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius)",
+      "position_attach_mode": "relative",
+      "rotation_attach_mode": "relative",
       "ts/targets": "projectile"
     },
     {
-      "type": "spells_and_shields:particle_emitter",
+      "type": "spells_and_shields:custom_particle_emitter_position",
       "activation": "shoot",
-      "d/boolean/motion_spread": true,
-      "d/double/spread": 0.1,
-      "d/int/amount": 2,
-      "d/int/delay": 4,
-      "d/int/duration": 200,
-      "d/vec3/offset": [
-        0.0,
-        0.0,
-        0.0
+      "alpha": "1.0 - age / to_double(max_age)",
+      "captured_variables": [
+        "particle_amount",
+        "particle_radius"
       ],
-      "particle": {
-        "type": "minecraft:smoke"
-      },
-      "ts/targets": "projectile"
-    },
-    {
-      "type": "spells_and_shields:particle_emitter",
-      "activation": "shoot",
-      "d/boolean/motion_spread": true,
-      "d/double/spread": 0.1,
-      "d/int/amount": 2,
-      "d/int/delay": 4,
-      "d/int/duration": 200,
-      "d/vec3/offset": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "particle": {
-        "type": "minecraft:flame"
-      },
+      "color": "vec3(1.0, 1.0, 0.05)",
+      "d/int/count": "<<particle_amount>>",
+      "d/int/duration": 300,
+      "d/int/period": 0,
+      "position": "vec3(sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015)",
+      "position_attach_mode": "relative",
+      "rotation_attach_mode": "relative",
       "ts/targets": "projectile"
     },
     {
