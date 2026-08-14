@@ -167,9 +167,8 @@ public class BuiltInRegisters
             ItemStack weapon = attacker.getMainHandItem();
 
             int bladeLevel = event.getEntity().level().registryAccess()
-                    .lookup(Registries.ENCHANTMENT)
-                    .flatMap(reg -> reg.get(MANA_BLADE_KEY))
-                    .map(h -> EnchantmentHelper.getItemEnchantmentLevel(h, weapon))
+                    .holder(MANA_BLADE_KEY)
+                    .map(holder -> EnchantmentHelper.getTagEnchantmentLevel(holder, weapon))
                     .orElse(0);
 
             if(bladeLevel > 0)
