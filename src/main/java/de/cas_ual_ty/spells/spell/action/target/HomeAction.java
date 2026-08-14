@@ -34,13 +34,13 @@ public class HomeAction extends AffectSingleTypeAction<PositionTarget>
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("entity_hit_activation")).forGetter(HomeAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("timeout_activation")).forGetter(HomeAction::getTimeoutActivation),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(HomeAction::getProjectileDestination),
-                ParticleTypes.CODEC.optionalFieldOf("particle").xmap(o -> o.orElse(null), Optional::ofNullable).forGetter(HomeAction::getParticle)
+                ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(HomeAction::getParticle)
         ).apply(instance, (activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle) -> new HomeAction(type, activation, source, target, velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle)));
     }
 
     public static HomeAction make(Object activation, Object source, Object target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle)
     {
-        return new HomeAction(SpellActionTypes.HOME.get(), activation.toString(), source.toString(), target.toString(), velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle);
+        return new HomeAction(SpellActionTypes.HOME.get(), activation.toString(), source.toString(), target.toString(), velocity, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, Optional.ofNullable(particle));
     }
 
     public static HomeAction make(Object activation, Object source, Object target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)
@@ -58,14 +58,14 @@ public class HomeAction extends AffectSingleTypeAction<PositionTarget>
     protected String timeoutActivation;
     protected String projectileDestination;
 
-    protected ParticleOptions particle;
+    protected Optional<ParticleOptions> particle;
 
     public HomeAction(SpellActionType<?> type)
     {
         super(type);
     }
 
-    public HomeAction(SpellActionType<?> type, String activation, String source, String target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle)
+    public HomeAction(SpellActionType<?> type, String activation, String source, String target, DynamicCtxVar<Double> velocity, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, Optional<ParticleOptions> particle)
     {
         super(type, activation, source);
         this.target = target;
@@ -113,7 +113,7 @@ public class HomeAction extends AffectSingleTypeAction<PositionTarget>
         return projectileDestination;
     }
 
-    public ParticleOptions getParticle()
+    public Optional<ParticleOptions> getParticle()
     {
         return particle;
     }
@@ -127,7 +127,7 @@ public class HomeAction extends AffectSingleTypeAction<PositionTarget>
             {
                 ctx.getTargetGroup(target).forEachTypeSafe(TargetTypes.ENTITY.get(), target ->
                 {
-                    HomingSpellProjectile e = HomingSpellProjectile.home(ctx.level, source1.getPosition(), null, target.getEntity(), ctx.spell, velocity.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle);
+                    HomingSpellProjectile e = HomingSpellProjectile.home(ctx.level, source1.getPosition(), null, target.getEntity(), ctx.spell, velocity.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle.orElse(null));
                     if(e != null)
                     {
                         ctx.getOrCreateTargetGroup(projectileDestination).addTargets(Target.of(e));

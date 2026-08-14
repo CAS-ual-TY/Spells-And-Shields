@@ -35,13 +35,13 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("entity_hit_activation")).forGetter(ShootAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("timeout_activation")).forGetter(ShootAction::getTimeoutActivation),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(ShootAction::getProjectileDestination),
-                ParticleTypes.CODEC.optionalFieldOf("particle").xmap(o -> o.orElse(null), Optional::ofNullable).forGetter(ShootAction::getParticle)
+                ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(ShootAction::getParticle)
         ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle) -> new ShootAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle)));
     }
 
     public static ShootAction make(Object activation, Object source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle)
     {
-        return new ShootAction(SpellActionTypes.SHOOT.get(), activation.toString(), source.toString(), velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle);
+        return new ShootAction(SpellActionTypes.SHOOT.get(), activation.toString(), source.toString(), velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, Optional.ofNullable(particle));
     }
 
     public static ShootAction make(Object activation, Object source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)
@@ -59,14 +59,14 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
     protected String timeoutActivation;
     protected String projectileDestination;
 
-    protected ParticleOptions particle;
+    protected Optional<ParticleOptions> particle;
 
     public ShootAction(SpellActionType<?> type)
     {
         super(type);
     }
 
-    public ShootAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle)
+    public ShootAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, Optional<ParticleOptions> particle)
     {
         super(type, activation, source);
         this.velocity = velocity;
@@ -114,7 +114,7 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
         return projectileDestination;
     }
 
-    public ParticleOptions getParticle()
+    public Optional<ParticleOptions> getParticle()
     {
         return particle;
     }
@@ -128,7 +128,7 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
             {
                 timeout.getValue(ctx).ifPresent(timeout ->
                 {
-                    Entity e = SpellProjectile.shoot(entityTarget.getEntity(), ctx.spell, velocity.floatValue(), inaccuracy.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle);
+                    Entity e = SpellProjectile.shoot(entityTarget.getEntity(), ctx.spell, velocity.floatValue(), inaccuracy.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle.orElse(null));
                     if(e != null)
                     {
                         ctx.getOrCreateTargetGroup(projectileDestination).addTargets(Target.of(e));
