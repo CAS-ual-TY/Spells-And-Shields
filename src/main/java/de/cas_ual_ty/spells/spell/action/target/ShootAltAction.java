@@ -16,6 +16,8 @@ import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.PositionTarget;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
@@ -36,33 +38,41 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("entity_hit_activation")).forGetter(ShootAltAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("timeout_activation")).forGetter(ShootAltAction::getTimeoutActivation),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(ShootAltAction::getProjectileDestination),
-                Codec.STRING.optionalFieldOf(ParamNames.singleTarget("shooter")).xmap(o -> o.orElse(""), s -> s.isEmpty() ? Optional.empty() : Optional.ofNullable(s)).forGetter(ShootAltAction::getShooter)
-        ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, shooter) -> new ShootAltAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, shooter)));
+                ParticleTypes.CODEC.optionalFieldOf("particle").xmap(o -> o.orElse(null), Optional::ofNullable).forGetter(ShootAltAction::getParticle),
+                Codec.STRING.optionalFieldOf(ParamNames.singleTarget("shooter")).xmap(o -> o.orElse(""), s -> s.isEmpty() ? Optional.empty() : Optional.of(s)).forGetter(ShootAltAction::getShooter)
+        ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle, shooter) -> new ShootAltAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle, shooter)));
     }
-    
+
+    public static ShootAltAction make(Object activation, Object source, DynamicCtxVar<Vec3> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle, @Nullable Object shooter)
+    {
+        return new ShootAltAction(SpellActionTypes.SHOOT_ALT.get(), activation.toString(), source.toString(), velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle, shooter == null ? "" : shooter.toString());
+    }
+
     public static ShootAltAction make(Object activation, Object source, DynamicCtxVar<Vec3> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, @Nullable Object shooter)
     {
-        return new ShootAltAction(SpellActionTypes.SHOOT_ALT.get(), activation.toString(), source.toString(), velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, shooter == null ? "" : shooter.toString());
+        return make(activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, null, shooter);
     }
-    
+
     protected DynamicCtxVar<Vec3> velocity;
     protected DynamicCtxVar<Double> inaccuracy;
-    
+
     protected DynamicCtxVar<Integer> timeout;
-    
+
     protected String blockHitActivation;
     protected String entityHitActivation;
     protected String timeoutActivation;
     protected String projectileDestination;
-    
+
+    protected ParticleOptions particle;
+
     protected String shooter;
-    
+
     public ShootAltAction(SpellActionType<?> type)
     {
         super(type);
     }
-    
-    public ShootAltAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Vec3> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, String shooter)
+
+    public ShootAltAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Vec3> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle, String shooter)
     {
         super(type, activation, source);
         this.velocity = velocity;
@@ -72,49 +82,55 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
         this.entityHitActivation = entityHitActivation;
         this.timeoutActivation = timeoutActivation;
         this.projectileDestination = projectileDestination;
+        this.particle = particle;
         this.shooter = shooter;
     }
-    
+
     public DynamicCtxVar<Vec3> getVelocity()
     {
         return velocity;
     }
-    
+
     public DynamicCtxVar<Double> getInaccuracy()
     {
         return inaccuracy;
     }
-    
+
     public DynamicCtxVar<Integer> getTimeout()
     {
         return timeout;
     }
-    
+
     public String getBlockHitActivation()
     {
         return blockHitActivation;
     }
-    
+
     public String getEntityHitActivation()
     {
         return entityHitActivation;
     }
-    
+
     public String getTimeoutActivation()
     {
         return timeoutActivation;
     }
-    
+
     public String getProjectileDestination()
     {
         return projectileDestination;
     }
-    
+
+    public ParticleOptions getParticle()
+    {
+        return particle;
+    }
+
     public String getShooter()
     {
         return shooter;
     }
-    
+
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PositionTarget positionTarget)
     {
@@ -125,7 +141,7 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
                 timeout.getValue(ctx).ifPresent(timeout ->
                 {
                     Entity shooter = ctx.getTargetGroup(this.shooter).getSingleTarget().flatMap(t -> TargetTypes.ENTITY.get().ifType(t).map(EntityTarget::getEntity)).orElse(null);
-                    Entity e = SpellProjectile.shoot(ctx.level, positionTarget.getPosition(), velocity, shooter, ctx.spell, inaccuracy.floatValue(), (float) velocity.length(), timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+                    Entity e = SpellProjectile.shoot(ctx.level, positionTarget.getPosition(), velocity, shooter, ctx.spell, inaccuracy.floatValue(), (float) velocity.length(), timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle);
                     if(e != null)
                     {
                         ctx.getOrCreateTargetGroup(projectileDestination).addTargets(Target.of(e));
@@ -134,7 +150,7 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
             });
         });
     }
-    
+
     @Override
     public ITargetType<PositionTarget> getAffectedType()
     {

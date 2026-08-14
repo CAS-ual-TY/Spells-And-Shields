@@ -31,50 +31,48 @@ import org.jetbrains.annotations.Nullable;
 public class SpellProjectile extends AbstractHurtingProjectile
 {
     protected SpellInstance spell;
-    
+
     protected int timeout;
-    
+
     protected String blockHitActivation;
     protected String entityHitActivation;
     protected String timeoutActivation;
-    
+
+    protected ParticleOptions particle;
+
     public SpellProjectile(EntityType<? extends SpellProjectile> entityType, Level level)
     {
-        super(entityType, level);
-        spell = null;
-        timeout = -1;
-        blockHitActivation = null;
-        entityHitActivation = null;
-        timeoutActivation = null;
+        this(entityType, level, null, -1, null, null, null, null);
     }
-    
-    public SpellProjectile(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel, SpellInstance spell, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+
+    public SpellProjectile(EntityType<? extends AbstractHurtingProjectile> entityType, Level pLevel, SpellInstance spell, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, ParticleOptions particle)
     {
-        super(pEntityType, pLevel);
+        super(entityType, pLevel);
         this.spell = spell;
         this.timeout = timeout;
         this.blockHitActivation = blockHitActivation;
         this.entityHitActivation = entityHitActivation;
         this.timeoutActivation = timeoutActivation;
+        this.accelerationPower = 0;
     }
-    
+
     @Override
     protected float getInertia()
     {
         return 1F;
     }
-    
+
     @Override
     protected ParticleOptions getTrailParticle()
     {
-        return ParticleTypes.POOF;
+        return this.particle;
     }
-    
+
     @Override
     public void tick()
     {
         super.tick();
-        
+
         if(spell != null && !level().isClientSide())
         {
             if(tickCount >= timeout)
@@ -87,7 +85,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
             }
         }
     }
-    
+
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult)
     {
@@ -97,15 +95,15 @@ public class SpellProjectile extends AbstractHurtingProjectile
             {
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.ENTITY_HIT.targetGroup).addTargets(Target.of(entityHitResult.getEntity()));
-                
+
                 Vec3 clip = entityHitResult.getEntity().getBoundingBox().clip(position().subtract(getDeltaMovement()), position().add(getDeltaMovement())).orElse(entityHitResult.getEntity().getEyePosition());
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level(), clip));
             });
-            
+
             discard();
         }
     }
-    
+
     @Override
     protected void onHitBlock(BlockHitResult blockHitResult)
     {
@@ -117,28 +115,28 @@ public class SpellProjectile extends AbstractHurtingProjectile
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.BLOCK_HIT.targetGroup).addTargets(Target.of(level(), blockHitResult.getBlockPos()));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level(), blockHitResult.getLocation()));
             });
-            
+
             discard();
         }
     }
-    
+
     @Override
     public boolean shouldBurn()
     {
         return false;
     }
-    
+
     @Nullable
     public SpellInstance getSpell()
     {
         return spell;
     }
-    
+
     public void setSpell(SpellInstance spell)
     {
         this.spell = spell;
     }
-    
+
     @Nullable
     public Player getPlayerOwner()
     {
@@ -151,12 +149,12 @@ public class SpellProjectile extends AbstractHurtingProjectile
             return null;
         }
     }
-    
+
     @Override
     public void addAdditionalSaveData(CompoundTag nbt)
     {
         super.addAdditionalSaveData(nbt);
-        
+
         if(spell != null)
         {
             if(spell.getNodeId() != null)
@@ -175,22 +173,22 @@ public class SpellProjectile extends AbstractHurtingProjectile
         {
             discard();
         }
-        
+
         nbt.putInt("Timeout", timeout);
         nbt.putString("BlockHitActivation", blockHitActivation);
         nbt.putString("EntityHitActivation", entityHitActivation);
         nbt.putString("TimeoutActivation", timeoutActivation);
     }
-    
+
     @Override
     public void readAdditionalSaveData(CompoundTag nbt)
     {
         super.readAdditionalSaveData(nbt);
-        
+
         if(nbt.contains("Spell", CompoundTag.TAG_COMPOUND))
         {
             FullSpellNodeId fullSpellNodeId = FullSpellNodeId.fromNbt(nbt.getCompound("Spell"));
-            
+
             if(fullSpellNodeId != null)
             {
                 spell = fullSpellNodeId.getSpellInstance(SpellTrees.getRegistry(level()));
@@ -199,46 +197,46 @@ public class SpellProjectile extends AbstractHurtingProjectile
             {
                 Registry<Spell> spellRegistry = Spells.getRegistry(level());
                 Holder<Spell> holder = spellRegistry.getHolder(ResourceKey.create(Spells.REGISTRY_KEY, ResourceLocation.parse(nbt.getString("spellId")))).orElse(null);
-                
+
                 if(holder != null)
                 {
                     spell = SpellInstance.direct(holder);
                 }
             }
         }
-        
+
         if(spell == null)
         {
             discard();
             return;
         }
-        
+
         timeout = nbt.getInt("Timeout");
         blockHitActivation = nbt.getString("BlockHitActivation");
         entityHitActivation = nbt.getString("EntityHitActivation");
         timeoutActivation = nbt.getString("TimeoutActivation");
     }
-    
-    public static SpellProjectile shoot(Level level0, Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+
+    public static SpellProjectile shoot(Level level0, Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, ParticleOptions particle)
     {
         if(level0 instanceof ServerLevel level)
         {
-            SpellProjectile projectile = new SpellProjectile(BuiltInRegisters.SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+            SpellProjectile projectile = new SpellProjectile(BuiltInRegisters.SPELL_PROJECTILE.get(), level, spell, timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle);
             projectile.setOwner(source);
-            
+
             projectile.moveTo(position.x, position.y, position.z, 0F, 0F);
             projectile.shoot(direction.x, direction.y, direction.z, velocity, inaccuracy);
-            
+
             level.addFreshEntity(projectile);
-            
+
             return projectile;
         }
-        
+
         return null;
     }
-    
-    public static SpellProjectile shoot(Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation)
+
+    public static SpellProjectile shoot(Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, ParticleOptions particle)
     {
-        return shoot(source.level(), source.getEyePosition(), source.getLookAngle().normalize(), source, spell, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+        return shoot(source.level(), source.getEyePosition(), source.getLookAngle().normalize(), source, spell, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle);
     }
 }

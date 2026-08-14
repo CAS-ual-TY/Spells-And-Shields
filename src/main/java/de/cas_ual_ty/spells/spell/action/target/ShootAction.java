@@ -15,7 +15,11 @@ import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.target.Target;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
+
+import java.util.Optional;
 
 public class ShootAction extends AffectSingleTypeAction<EntityTarget>
 {
@@ -30,31 +34,39 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("block_hit_activation")).forGetter(ShootAction::getBlockHitActivation),
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("entity_hit_activation")).forGetter(ShootAction::getEntityHitActivation),
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("timeout_activation")).forGetter(ShootAction::getTimeoutActivation),
-                Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(ShootAction::getProjectileDestination)
-        ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination) -> new ShootAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination)));
+                Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(ShootAction::getProjectileDestination),
+                ParticleTypes.CODEC.optionalFieldOf("particle").xmap(o -> o.orElse(null), Optional::ofNullable).forGetter(ShootAction::getParticle)
+        ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle) -> new ShootAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle)));
     }
-    
+
+    public static ShootAction make(Object activation, Object source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle)
+    {
+        return new ShootAction(SpellActionTypes.SHOOT.get(), activation.toString(), source.toString(), velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle);
+    }
+
     public static ShootAction make(Object activation, Object source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)
     {
-        return new ShootAction(SpellActionTypes.SHOOT.get(), activation.toString(), source.toString(), velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination);
+        return make(activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, null);
     }
-    
+
     protected DynamicCtxVar<Double> velocity;
     protected DynamicCtxVar<Double> inaccuracy;
-    
+
     protected DynamicCtxVar<Integer> timeout;
-    
+
     protected String blockHitActivation;
     protected String entityHitActivation;
     protected String timeoutActivation;
     protected String projectileDestination;
-    
+
+    protected ParticleOptions particle;
+
     public ShootAction(SpellActionType<?> type)
     {
         super(type);
     }
-    
-    public ShootAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination)
+
+    public ShootAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Double> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle)
     {
         super(type, activation, source);
         this.velocity = velocity;
@@ -64,43 +76,49 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
         this.entityHitActivation = entityHitActivation;
         this.timeoutActivation = timeoutActivation;
         this.projectileDestination = projectileDestination;
+        this.particle = particle;
     }
-    
+
     public DynamicCtxVar<Double> getVelocity()
     {
         return velocity;
     }
-    
+
     public DynamicCtxVar<Double> getInaccuracy()
     {
         return inaccuracy;
     }
-    
+
     public DynamicCtxVar<Integer> getTimeout()
     {
         return timeout;
     }
-    
+
     public String getBlockHitActivation()
     {
         return blockHitActivation;
     }
-    
+
     public String getEntityHitActivation()
     {
         return entityHitActivation;
     }
-    
+
     public String getTimeoutActivation()
     {
         return timeoutActivation;
     }
-    
+
     public String getProjectileDestination()
     {
         return projectileDestination;
     }
-    
+
+    public ParticleOptions getParticle()
+    {
+        return particle;
+    }
+
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, EntityTarget entityTarget)
     {
@@ -110,7 +128,7 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
             {
                 timeout.getValue(ctx).ifPresent(timeout ->
                 {
-                    Entity e = SpellProjectile.shoot(entityTarget.getEntity(), ctx.spell, velocity.floatValue(), inaccuracy.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation);
+                    Entity e = SpellProjectile.shoot(entityTarget.getEntity(), ctx.spell, velocity.floatValue(), inaccuracy.floatValue(), timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle);
                     if(e != null)
                     {
                         ctx.getOrCreateTargetGroup(projectileDestination).addTargets(Target.of(e));
@@ -119,7 +137,7 @@ public class ShootAction extends AffectSingleTypeAction<EntityTarget>
             });
         });
     }
-    
+
     @Override
     public ITargetType<EntityTarget> getAffectedType()
     {
