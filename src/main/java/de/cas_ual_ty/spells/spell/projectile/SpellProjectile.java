@@ -193,15 +193,15 @@ public class SpellProjectile extends AbstractHurtingProjectile
             {
                 spell = fullSpellNodeId.getSpellInstance(SpellTrees.getRegistry(level()));
             }
-            else if(nbt.contains("spellId", Tag.TAG_STRING))
-            {
-                Registry<Spell> spellRegistry = Spells.getRegistry(level());
-                Holder<Spell> holder = spellRegistry.getHolder(ResourceKey.create(Spells.REGISTRY_KEY, ResourceLocation.parse(nbt.getString("spellId")))).orElse(null);
+        }
+        else if(nbt.contains("spellId", Tag.TAG_STRING))
+        {
+            Registry<Spell> spellRegistry = Spells.getRegistry(level());
+            Holder<Spell> holder = spellRegistry.getHolder(ResourceKey.create(Spells.REGISTRY_KEY, ResourceLocation.parse(nbt.getString("spellId")))).orElse(null);
 
-                if(holder != null)
-                {
-                    spell = SpellInstance.direct(holder);
-                }
+            if(holder != null)
+            {
+                spell = SpellInstance.direct(holder);
             }
         }
 

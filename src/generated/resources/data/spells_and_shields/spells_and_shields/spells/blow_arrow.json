@@ -189,7 +189,7 @@
     {
       "type": "spells_and_shields:call_function",
       "activation": "spectral",
-      "function": "spells_and_shields:has_mana_cost"
+      "function": "spells_and_shields:burn_mana_cost"
     },
     {
       "type": "spells_and_shields:spawn_entity",
