@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * fade). {@link #onRenderPlayerPre}/{@link #onRenderPlayerPost} additionally make the whole player model follow
  * the camera's look direction, first-person only - see their own doc.
  */
-@EventBusSubscriber(modid = SpellsAndShields.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = SpellsAndShields.MOD_ID, value = Dist.CLIENT)
 public class PlayerAnimatorHooks
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerAnimatorHooks.class);
