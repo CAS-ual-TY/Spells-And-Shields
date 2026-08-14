@@ -143,7 +143,7 @@
     },
     {
       "type": "spells_and_shields:call_function",
-      "activation": "active",
+      "activation": "shoot",
       "function": "spells_and_shields:burn_mana_cost"
     },
     {
