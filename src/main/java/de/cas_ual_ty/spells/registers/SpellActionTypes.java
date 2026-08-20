@@ -330,6 +330,23 @@ public class SpellActionTypes
         UnaryOperation.UUID_FROM_STRING.register(CtxVarTypes.STRING.get(), CtxVarTypes.STRING.get(), (x) -> SpellsUtil.generateUUIDFromName(x).toString());
         UnaryOperation.NEXT_INT.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x) -> Compiler.RANDOM.nextInt(x));
         UnaryOperation.TO_DOUBLE.register(CtxVarTypes.INT.get(), CtxVarTypes.DOUBLE.get(), Integer::doubleValue);
+        UnaryOperation.HEX_TO_VEC3.register(CtxVarTypes.STRING.get(), CtxVarTypes.VEC3.get(), (hex) ->
+        {
+            String cleaned = hex.startsWith("#") ? hex.substring(1) : hex;
+
+            try
+            {
+                int value = Integer.parseInt(cleaned, 16);
+                double r = ((value >> 16) & 0xFF) / 255.0;
+                double g = ((value >> 8) & 0xFF) / 255.0;
+                double b = (value & 0xFF) / 255.0;
+                return new Vec3(r, g, b);
+            }
+            catch(NumberFormatException e)
+            {
+                return null;
+            }
+        });
         
         BinaryOperation.ADD.register(CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), CtxVarTypes.INT.get(), (x, y) -> x + y)
                 .register(CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), CtxVarTypes.DOUBLE.get(), (x, y) -> x + y)

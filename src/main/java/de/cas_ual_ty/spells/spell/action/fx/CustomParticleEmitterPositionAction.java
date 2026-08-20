@@ -19,7 +19,8 @@ import java.util.List;
  * tick client-side (against that particle's own {@code index}/{@code age}), replacing the particle's position
  * outright rather than integrating a velocity. See {@link CustomParticleEmitterMotionAction} for the other mode
  * (initial position once at spawn + per-tick motion integrated) and {@link CustomParticleEmitterActionBase} for
- * the fields shared between both, including {@code period} (repeat spawns).
+ * the fields shared between both, including {@code period} (repeat spawns) and {@code initialize} (per-particle
+ * one-time ctx vars).
  */
 public class CustomParticleEmitterPositionAction extends CustomParticleEmitterActionBase
 {
@@ -36,14 +37,20 @@ public class CustomParticleEmitterPositionAction extends CustomParticleEmitterAc
                 capturedVariablesCodec(),
                 Codec.STRING.fieldOf("position").forGetter(CustomParticleEmitterPositionAction::getPosition),
                 colorCodec(),
-                alphaCodec()
-        ).apply(instance, (activation, multiTargets, count, duration, period, positionAttachMode, rotationAttachMode, capturedVariables, position, color, alpha) ->
-                new CustomParticleEmitterPositionAction(type, activation, multiTargets, count, duration, period, positionAttachMode, rotationAttachMode, capturedVariables, position, color, alpha)));
+                alphaCodec(),
+                initializeCodec()
+        ).apply(instance, (activation, multiTargets, count, duration, period, positionAttachMode, rotationAttachMode, capturedVariables, position, color, alpha, initialize) ->
+                new CustomParticleEmitterPositionAction(type, activation, multiTargets, count, duration, period, positionAttachMode, rotationAttachMode, capturedVariables, position, color, alpha, initialize)));
+    }
+
+    public static CustomParticleEmitterPositionAction make(Object activation, Object multiTargets, DynamicCtxVar<Integer> count, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> period, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<String> capturedVariables, String position, String color, String alpha, List<CustomParticleInitEntry> initialize)
+    {
+        return new CustomParticleEmitterPositionAction(SpellActionTypes.CUSTOM_PARTICLE_EMITTER_POSITION.get(), activation.toString(), multiTargets.toString(), count, duration, period, positionAttachMode, rotationAttachMode, capturedVariables, position, color, alpha, initialize);
     }
 
     public static CustomParticleEmitterPositionAction make(Object activation, Object multiTargets, DynamicCtxVar<Integer> count, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> period, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<String> capturedVariables, String position, String color, String alpha)
     {
-        return new CustomParticleEmitterPositionAction(SpellActionTypes.CUSTOM_PARTICLE_EMITTER_POSITION.get(), activation.toString(), multiTargets.toString(), count, duration, period, positionAttachMode, rotationAttachMode, capturedVariables, position, color, alpha);
+        return make(activation, multiTargets, count, duration, period, positionAttachMode, rotationAttachMode, capturedVariables, position, color, alpha, List.of());
     }
 
     protected String position;
@@ -53,9 +60,9 @@ public class CustomParticleEmitterPositionAction extends CustomParticleEmitterAc
         super(type);
     }
 
-    public CustomParticleEmitterPositionAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> count, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> period, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<String> capturedVariables, String position, String color, String alpha)
+    public CustomParticleEmitterPositionAction(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> count, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> period, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<String> capturedVariables, String position, String color, String alpha, List<CustomParticleInitEntry> initialize)
     {
-        super(type, activation, multiTargets, count, duration, period, positionAttachMode, rotationAttachMode, capturedVariables, color, alpha);
+        super(type, activation, multiTargets, count, duration, period, positionAttachMode, rotationAttachMode, capturedVariables, color, alpha, initialize);
         this.position = position;
     }
 
@@ -72,7 +79,7 @@ public class CustomParticleEmitterPositionAction extends CustomParticleEmitterAc
         count.getValue(ctx).ifPresent(countValue -> duration.getValue(ctx).ifPresent(durationValue -> period.getValue(ctx).ifPresent(periodValue ->
         {
             List<CtxVar<?>> captured = captureVariables(ctx);
-            sendClientAction(entity, new CustomParticleEmitterClientAction(entity.getId(), positionAttachMode, rotationAttachMode, countValue, durationValue, periodValue, "", "", position, color, alpha, captured));
+            sendClientAction(entity, new CustomParticleEmitterClientAction(entity.getId(), positionAttachMode, rotationAttachMode, countValue, durationValue, periodValue, "", "", position, color, alpha, captured, initialize));
         })));
     }
 }

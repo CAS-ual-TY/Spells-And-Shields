@@ -3,6 +3,7 @@ package de.cas_ual_ty.spells.spell.action.fx;
 import de.cas_ual_ty.spells.client.particle.CustomParticleAttachMode;
 import de.cas_ual_ty.spells.client.particle.CustomParticleContext;
 import de.cas_ual_ty.spells.client.particle.CustomParticleEmitterInstance;
+import de.cas_ual_ty.spells.client.particle.CustomParticleInitVar;
 import de.cas_ual_ty.spells.client.particle.CustomParticleInstance;
 import de.cas_ual_ty.spells.client.particle.CustomParticleRenderer;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
@@ -27,6 +28,14 @@ import java.util.List;
  * legitimately empty, so that's a safe "absent" sentinel, same as everywhere else in this mod's ad-hoc buffer
  * encodings). See {@code CustomParticleEmitterInstance}/{@code CustomParticleManager} for how the two modes tick
  * differently once spawned, and how {@link #period} drives repeat spawns.
+ * <p>
+ * {@link #execute} calls {@code emitter.context.setFrameVars(...)} BEFORE the initial {@code spawnBatch()} -
+ * every LATER batch gets it from {@code CustomParticleManager} (which calls it once per tick, before ticking
+ * particles), but the very first batch is spawned right here, so without this call {@code source_motion}/
+ * {@code source_yaw}/{@code source_pitch} would be completely unset (not just stale) for any formula the
+ * FIRST batch evaluates - `initial_position`/`initialize` entries referencing them would silently fail (logged
+ * as "Operant 1 does not exist" with {@code SpellsConfig.DEBUG_SPELLS} on) and the whole expression tree
+ * involving them would permanently evaluate to empty for those particles.
  */
 public class CustomParticleEmitterClientAction implements IClientAction
 {
@@ -42,8 +51,9 @@ public class CustomParticleEmitterClientAction implements IClientAction
     protected String color;
     protected String alpha;
     protected List<CtxVar<?>> capturedVariables;
+    protected List<CustomParticleInitEntry> initialize;
 
-    public CustomParticleEmitterClientAction(int entityId, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, int count, int duration, int period, String initialPosition, String motion, String position, String color, String alpha, List<CtxVar<?>> capturedVariables)
+    public CustomParticleEmitterClientAction(int entityId, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, int count, int duration, int period, String initialPosition, String motion, String position, String color, String alpha, List<CtxVar<?>> capturedVariables, List<CustomParticleInitEntry> initialize)
     {
         this.entityId = entityId;
         this.positionAttachMode = positionAttachMode;
@@ -57,11 +67,12 @@ public class CustomParticleEmitterClientAction implements IClientAction
         this.color = color;
         this.alpha = alpha;
         this.capturedVariables = capturedVariables;
+        this.initialize = initialize;
     }
 
     public CustomParticleEmitterClientAction()
     {
-        this(0, CustomParticleAttachMode.ABSOLUTE, CustomParticleAttachMode.ABSOLUTE, 0, 0, 0, "", "", "", "", "", new LinkedList<>());
+        this(0, CustomParticleAttachMode.ABSOLUTE, CustomParticleAttachMode.ABSOLUTE, 0, 0, 0, "", "", "", "", "", new LinkedList<>(), new LinkedList<>());
     }
 
     @Override
@@ -83,6 +94,15 @@ public class CustomParticleEmitterClientAction implements IClientAction
         for(CtxVar<?> var : capturedVariables)
         {
             writeCtxVar(buf, var);
+        }
+
+        buf.writeVarInt(initialize.size());
+
+        for(CustomParticleInitEntry entry : initialize)
+        {
+            buf.writeById(CtxVarTypes.REGISTRY::getId, entry.type());
+            buf.writeUtf(entry.name());
+            buf.writeUtf(entry.value());
         }
     }
 
@@ -107,6 +127,17 @@ public class CustomParticleEmitterClientAction implements IClientAction
         for(int i = 0; i < capturedCount; i++)
         {
             capturedVariables.add(readCtxVar(buf));
+        }
+
+        int initializeCount = buf.readVarInt();
+        initialize = new LinkedList<>();
+
+        for(int i = 0; i < initializeCount; i++)
+        {
+            CtxVarType<?> type = buf.readById(CtxVarTypes.REGISTRY::byId);
+            String name = buf.readUtf();
+            String formula = buf.readUtf();
+            initialize.add(new CustomParticleInitEntry(type, name, formula));
         }
     }
 
@@ -142,10 +173,16 @@ public class CustomParticleEmitterClientAction implements IClientAction
 
         Vec3 spawnPosition = attachedTo != null ? attachedTo.position() : Vec3.ZERO;
         float spawnYaw = attachedTo != null ? attachedTo.getViewYRot(1.0F) : 0.0F;
+        float spawnPitch = attachedTo != null ? attachedTo.getViewXRot(1.0F) : 0.0F;
 
         List<CustomParticleInstance> particles = new LinkedList<>();
-        CustomParticleEmitterInstance emitter = new CustomParticleEmitterInstance(clientLevel, attachedTo, positionAttachMode, rotationAttachMode, particles, count, duration, period, spawnPosition, spawnYaw);
+        CustomParticleEmitterInstance emitter = new CustomParticleEmitterInstance(clientLevel, attachedTo, positionAttachMode, rotationAttachMode, particles, count, duration, period, spawnPosition, spawnYaw, spawnPitch);
 
+        emitter.context.setFrameVars(
+                attachedTo != null ? attachedTo.getDeltaMovement() : Vec3.ZERO,
+                spawnYaw,
+                spawnPitch
+        );
         emitter.context.capture(CtxVarTypes.INT.get(), CustomParticleContext.MAX_AGE_NAME, period > 0 ? period : duration);
 
         for(CtxVar<?> var : capturedVariables)
@@ -159,6 +196,15 @@ public class CustomParticleEmitterClientAction implements IClientAction
         emitter.alphaExpr = Compiler.compileString(alpha, CtxVarTypes.DOUBLE.get());
         emitter.initialPositionExpr = initialPosition.isEmpty() ? null : Compiler.compileString(initialPosition, CtxVarTypes.VEC3.get());
 
+        List<CustomParticleInitVar<?>> compiledInitVars = new LinkedList<>();
+
+        for(CustomParticleInitEntry entry : initialize)
+        {
+            compiledInitVars.add(compileInitVar(entry));
+        }
+
+        emitter.initVars = compiledInitVars;
+
         emitter.spawnBatch();
 
         CustomParticleRenderer.ACTIVE.add(emitter);
@@ -167,5 +213,15 @@ public class CustomParticleEmitterClientAction implements IClientAction
     private static <T> void captureInto(CustomParticleContext ctx, CtxVar<T> var)
     {
         ctx.capture(var.getType(), var.getName(), var.getValue());
+    }
+
+    private static <T> CustomParticleInitVar<T> compileInitVar(CtxVarType<T> type, String name, String formula)
+    {
+        return new CustomParticleInitVar<>(type, name, Compiler.compileString(formula, type));
+    }
+
+    private static CustomParticleInitVar<?> compileInitVar(CustomParticleInitEntry entry)
+    {
+        return compileInitVar(entry.type(), entry.name(), entry.value());
     }
 }

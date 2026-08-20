@@ -12,19 +12,23 @@ import java.util.Iterator;
 /**
  * Advances every active {@link CustomParticleEmitterInstance} once per client tick - ages the emitter, evaluates
  * that emitter's DSL expressions (see {@link CustomParticleContext}) fresh against each particle's own
- * {@code index}/{@code age} and writes the results into the particle (snapshotting the previous position first,
- * for render-time interpolation - see {@link CustomParticleRenderer}), and drops emitters that expired or whose
- * attachment died/unloaded while still {@linkplain CustomParticleEmitterInstance#needsAttachedEntity() needed}.
+ * {@code index}/{@code age}/{@code initVars} (see {@link CustomParticleContext#evaluate(de.cas_ual_ty.spells.spell.variable.DynamicCtxVar, CustomParticleInstance)})
+ * and writes the results into the particle (snapshotting the previous position first, for render-time
+ * interpolation - see {@link CustomParticleRenderer}), and drops emitters that expired or whose attachment
+ * died/unloaded while still {@linkplain CustomParticleEmitterInstance#needsAttachedEntity() needed}.
  * <p>
  * Exactly one of {@link CustomParticleEmitterInstance#motionExpr}/{@link CustomParticleEmitterInstance#positionExpr}
  * is set per emitter (see {@code CustomParticleEmitterClientAction}) - motion mode re-evaluates a velocity every
  * tick and integrates it into position, position mode recomputes the position directly with no integration.
  * <p>
- * When {@link CustomParticleEmitterInstance#period} is {@code > 0}, individual particles are dropped once their
- * own age reaches it (before that, one-shot particles only ever go away with the whole emitter), and a fresh
- * {@link CustomParticleEmitterInstance#spawnBatch()} fires every {@code period} ticks - old and new batches
- * overlap/replace each other into a continuous trail rather than piling up for the emitter's whole
- * {@link CustomParticleEmitterInstance#duration}.
+ * When {@link CustomParticleEmitterInstance#period} is {@code > 0}, a fresh {@link CustomParticleEmitterInstance#spawnBatch()}
+ * fires every {@code period} ticks - individual particles are NOT force-removed once they age past it, they
+ * simply keep ticking (and rendering, however the formulas leave them) until the whole emitter expires via
+ * {@link CustomParticleEmitterInstance#duration}. A pulse that should visually disappear needs its OWN
+ * {@code alpha} formula to fade it out (eg. {@code 1.0 - age / to_double(max_age)}, where {@code max_age} is
+ * captured as {@code period} for repeating emitters) - that already makes it invisible at the same moment a
+ * hard removal would have, with no visible difference, while still allowing an emitter that wants its particles
+ * to persist (eg. a trail that should stay planted, not fade) to just use a constant alpha instead.
  */
 @EventBusSubscriber(modid = SpellsAndShields.MOD_ID, value = Dist.CLIENT)
 public class CustomParticleManager
@@ -45,39 +49,33 @@ public class CustomParticleManager
             }
 
             emitter.age++;
-            emitter.context.setFrameVars(emitter.attachedTo != null ? emitter.attachedTo.getDeltaMovement() : Vec3.ZERO);
+            emitter.context.setFrameVars(
+                    emitter.attachedTo != null ? emitter.attachedTo.getDeltaMovement() : Vec3.ZERO,
+                    emitter.attachedTo != null ? emitter.attachedTo.getViewYRot(1.0F) : 0.0F,
+                    emitter.attachedTo != null ? emitter.attachedTo.getViewXRot(1.0F) : 0.0F
+            );
 
-            Iterator<CustomParticleInstance> particleIterator = emitter.particles.iterator();
-
-            while(particleIterator.hasNext())
+            for(CustomParticleInstance particle : emitter.particles)
             {
-                CustomParticleInstance particle = particleIterator.next();
-
-                if(emitter.period > 0 && particle.age >= emitter.period)
-                {
-                    particleIterator.remove();
-                    continue;
-                }
-
                 particle.prevPosition = particle.position;
 
                 if(emitter.motionExpr != null)
                 {
-                    particle.motion = emitter.context.evaluate(emitter.motionExpr, particle.index, particle.age).orElse(Vec3.ZERO);
+                    particle.motion = emitter.context.evaluate(emitter.motionExpr, particle).orElse(Vec3.ZERO);
                     particle.position = particle.position.add(particle.motion);
                 }
                 else if(emitter.positionExpr != null)
                 {
-                    particle.position = emitter.context.evaluate(emitter.positionExpr, particle.index, particle.age).orElse(particle.position);
+                    particle.position = emitter.context.evaluate(emitter.positionExpr, particle).orElse(particle.position);
                 }
 
-                emitter.context.evaluate(emitter.colorExpr, particle.index, particle.age).ifPresent(color ->
+                emitter.context.evaluate(emitter.colorExpr, particle).ifPresent(color ->
                 {
                     particle.red = color.x();
                     particle.green = color.y();
                     particle.blue = color.z();
                 });
-                emitter.context.evaluate(emitter.alphaExpr, particle.index, particle.age).ifPresent(alpha -> particle.alpha = alpha);
+                emitter.context.evaluate(emitter.alphaExpr, particle).ifPresent(alpha -> particle.alpha = alpha);
 
                 particle.age++;
             }

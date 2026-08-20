@@ -34,6 +34,12 @@ import java.util.List;
  * {@link #captureVariables(SpellContext)}) - named existing {@link SpellContext} variables that get baked to
  * plain values and sent alongside the formulas, per the mod's rule that particles never get live access to
  * server-only spell state. Names not currently set on the caster's context are silently skipped.
+ * <p>
+ * {@link #initialize} entries are, like {@link #color}/{@link #alpha}, raw DSL formula strings compiled
+ * client-side - but evaluated only ONCE per particle, at spawn, and the result kept on that specific particle
+ * (see {@code CustomParticleInitEntry}/{@code CustomParticleInitVar}) for every later per-tick formula to
+ * reference by name - permanent per-particle state, distinct from the always-changing {@code index}/{@code age}
+ * and from the emitter-wide {@link #capturedVariables}.
  */
 public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<EntityTarget>
 {
@@ -80,6 +86,15 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
         return Codec.STRING.fieldOf("alpha").forGetter(CustomParticleEmitterActionBase::getAlpha);
     }
 
+    /**
+     * Each entry is a named ctx var evaluated once per particle at spawn and then kept on that particle - see
+     * {@link CustomParticleInitEntry}. Optional, defaults to an empty list.
+     */
+    public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, List<CustomParticleInitEntry>> initializeCodec()
+    {
+        return CustomParticleInitEntry.CODEC.listOf().optionalFieldOf("initialize", new LinkedList<>()).forGetter(CustomParticleEmitterActionBase::getInitialize);
+    }
+
     protected DynamicCtxVar<Integer> count;
     protected DynamicCtxVar<Integer> duration;
     protected DynamicCtxVar<Integer> period;
@@ -88,13 +103,14 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
     protected List<String> capturedVariables;
     protected String color;
     protected String alpha;
+    protected List<CustomParticleInitEntry> initialize;
 
     public CustomParticleEmitterActionBase(SpellActionType<?> type)
     {
         super(type);
     }
 
-    public CustomParticleEmitterActionBase(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> count, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> period, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<String> capturedVariables, String color, String alpha)
+    public CustomParticleEmitterActionBase(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> count, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> period, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<String> capturedVariables, String color, String alpha, List<CustomParticleInitEntry> initialize)
     {
         super(type, activation, multiTargets);
         this.count = count;
@@ -105,6 +121,7 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
         this.capturedVariables = capturedVariables;
         this.color = color;
         this.alpha = alpha;
+        this.initialize = initialize;
     }
 
     @Override
@@ -151,6 +168,11 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
     public String getAlpha()
     {
         return alpha;
+    }
+
+    public List<CustomParticleInitEntry> getInitialize()
+    {
+        return initialize;
     }
 
     protected List<CtxVar<?>> captureVariables(SpellContext ctx)

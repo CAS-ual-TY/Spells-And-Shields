@@ -2,6 +2,7 @@ package de.cas_ual_ty.spells.client.particle;
 
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
+import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
 import net.minecraft.world.level.Level;
@@ -32,16 +33,31 @@ import java.util.Optional;
  * {@code to_double(...)} cast on one side, since INT/INT division truncates via its own overload rather than
  * promoting to DOUBLE.
  * {@link #setFrameVars} is called once per emitter per client tick (not per particle) for values that DO keep
- * changing but are the same for every particle in the emitter that tick - currently just
- * {@link #SRC_MOTION_NAME}, the attached entity's current {@code getDeltaMovement()}. {@link #INDEX_NAME}/
- * {@link #AGE_NAME} are per-particle, overwritten right before every {@link #evaluate}.
+ * changing but are the same for every particle in the emitter that tick - {@link #SOURCE_MOTION_NAME} (the
+ * attached entity's current {@code getDeltaMovement()}), {@link #SOURCE_YAW_NAME}/{@link #SOURCE_PITCH_NAME}
+ * (its current {@code getViewYRot}/{@code getViewXRot}, degrees) - all zero if unattached.
+ * {@link #INDEX_NAME}/{@link #TOTAL_INDEX_NAME}/{@link #AGE_NAME} are per-particle, overwritten right before
+ * every {@link #evaluate}. {@code index} resets to 0 for every batch ({@code 0..count-1}, see
+ * {@code CustomParticleEmitterInstance#spawnBatch()}); {@code total_index} is the ever-growing counter across
+ * every batch a repeating emitter has spawned, for formulas that need a value that never repeats.
+ * {@code source_position} is deliberately NOT exposed - particle offsets are already relative to the anchor
+ * (see {@code CustomParticleRenderer#resolveWorldPosition}), so formulas never need the source's absolute
+ * world position.
+ * <p>
+ * A fourth tier - per-PARTICLE, not per-emitter or per-tick - comes from {@code CustomParticleInitEntry}: named
+ * ctx vars evaluated once per particle at spawn and then kept on that specific particle
+ * ({@link CustomParticleInstance#initVars}), pushed in by {@link #evaluate(DynamicCtxVar, CustomParticleInstance)}
+ * for every later per-tick evaluation of that particle's own formulas.
  */
 public class CustomParticleContext
 {
     public static final String INDEX_NAME = "index";
+    public static final String TOTAL_INDEX_NAME = "total_index";
     public static final String AGE_NAME = "age";
     public static final String MAX_AGE_NAME = "max_age";
-    public static final String SRC_MOTION_NAME = "src_motion";
+    public static final String SOURCE_MOTION_NAME = "source_motion";
+    public static final String SOURCE_YAW_NAME = "source_yaw";
+    public static final String SOURCE_PITCH_NAME = "source_pitch";
 
     private final SpellContext ctx;
 
@@ -55,15 +71,45 @@ public class CustomParticleContext
         ctx.setCtxVar(type, name, value);
     }
 
-    public void setFrameVars(Vec3 srcMotion)
+    public void setFrameVars(Vec3 sourceMotion, float sourceYaw, float sourcePitch)
     {
-        ctx.setCtxVar(CtxVarTypes.VEC3.get(), SRC_MOTION_NAME, srcMotion);
+        ctx.setCtxVar(CtxVarTypes.VEC3.get(), SOURCE_MOTION_NAME, sourceMotion);
+        ctx.setCtxVar(CtxVarTypes.DOUBLE.get(), SOURCE_YAW_NAME, (double) sourceYaw);
+        ctx.setCtxVar(CtxVarTypes.DOUBLE.get(), SOURCE_PITCH_NAME, (double) sourcePitch);
     }
 
-    public <T> Optional<T> evaluate(DynamicCtxVar<T> expression, int index, int age)
+    public <T> Optional<T> evaluate(DynamicCtxVar<T> expression, int index, int totalIndex, int age)
     {
         ctx.setCtxVar(CtxVarTypes.INT.get(), INDEX_NAME, index);
+        ctx.setCtxVar(CtxVarTypes.INT.get(), TOTAL_INDEX_NAME, totalIndex);
         ctx.setCtxVar(CtxVarTypes.INT.get(), AGE_NAME, age);
         return expression.getValue(ctx);
+    }
+
+    /**
+     * Same as {@link #evaluate(DynamicCtxVar, int, int, int)}, but also pushes {@code particle}'s own
+     * {@link CustomParticleInstance#initVars} in first, so per-tick formulas (position/motion/color/alpha) can
+     * reference whatever that particle's {@code initialize} entries computed for it at spawn. Spawn-time
+     * evaluation itself (initial_position, the initialize entries) happens BEFORE the particle object exists,
+     * so that still goes through the plain {@code (index, totalIndex, age)} overload - see
+     * {@link CustomParticleEmitterInstance#spawnBatch()}.
+     */
+    public <T> Optional<T> evaluate(DynamicCtxVar<T> expression, CustomParticleInstance particle)
+    {
+        ctx.setCtxVar(CtxVarTypes.INT.get(), INDEX_NAME, particle.index);
+        ctx.setCtxVar(CtxVarTypes.INT.get(), TOTAL_INDEX_NAME, particle.totalIndex);
+        ctx.setCtxVar(CtxVarTypes.INT.get(), AGE_NAME, particle.age);
+
+        for(CtxVar<?> var : particle.initVars.values())
+        {
+            setVar(var);
+        }
+
+        return expression.getValue(ctx);
+    }
+
+    private <T> void setVar(CtxVar<T> var)
+    {
+        ctx.setCtxVar(var.getType(), var.getName(), var.getValue());
     }
 }

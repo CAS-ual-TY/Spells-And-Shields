@@ -102,12 +102,16 @@ public class CustomParticleRenderer
      * Resolves a particle's interpolated local offset (its own {@code position}, spawn-local - not world space)
      * against its emitter's attachment. Position and rotation attachment resolve independently:
      * <ul>
-     * <li>position ABSOLUTE: anchor is {@code emitter.spawnPosition}, never moves after spawn.</li>
+     * <li>position ABSOLUTE: anchor is THIS PARTICLE's own {@code spawnPosition} (captured per-batch, see
+     * {@link CustomParticleEmitterInstance#spawnBatch()}), never moves after that batch spawned.</li>
      * <li>position RELATIVE: anchor is {@link Entity#getPosition(float)} of {@code emitter.attachedTo}.</li>
      * <li>rotation ABSOLUTE: local offset stays unrotated.</li>
-     * <li>rotation RELATIVE: local offset rotates by the entity's current yaw - by how far it's turned since
-     * {@code emitter.spawnYaw} if position is ABSOLUTE ("stays put but reorients"), or by the entity's full
-     * current yaw if position is also RELATIVE (rigid child-style attachment).</li>
+     * <li>rotation RELATIVE: local offset rotates by the entity's current yaw AND pitch - by how far each has
+     * turned since THIS PARTICLE's own {@code spawnYaw}/{@code spawnPitch} if position is ABSOLUTE ("stays put
+     * but reorients"), or by the entity's full current yaw/pitch if position is also RELATIVE (rigid
+     * child-style attachment). Composed the same way vanilla does for local-offset-to-world transforms (eg.
+     * {@code Player#getRopeHoldPosition}): pitch first via {@code xRot}, then yaw via {@code yRot}, both
+     * negated-degrees-to-radians.</li>
      * </ul>
      */
     private static Vec3 resolveWorldPosition(CustomParticleEmitterInstance emitter, CustomParticleInstance particle, float partialTick)
@@ -118,28 +122,36 @@ public class CustomParticleRenderer
                 Mth.lerp(partialTick, particle.prevPosition.z(), particle.position.z())
         );
 
-        Vec3 anchor = emitter.spawnPosition;
-        float rotationAngle = 0.0F;
+        Vec3 anchor = particle.spawnPosition;
+        float yawAngle = 0.0F;
+        float pitchAngle = 0.0F;
 
         if(emitter.needsAttachedEntity())
         {
             Entity attachedTo = emitter.attachedTo;
             float entityYaw = attachedTo.getViewYRot(partialTick);
+            float entityPitch = attachedTo.getViewXRot(partialTick);
 
             if(emitter.positionAttachMode == CustomParticleAttachMode.RELATIVE)
             {
                 anchor = attachedTo.getPosition(partialTick);
-                rotationAngle = emitter.rotationAttachMode == CustomParticleAttachMode.RELATIVE ? entityYaw : 0.0F;
+
+                if(emitter.rotationAttachMode == CustomParticleAttachMode.RELATIVE)
+                {
+                    yawAngle = entityYaw;
+                    pitchAngle = entityPitch;
+                }
             }
             else if(emitter.rotationAttachMode == CustomParticleAttachMode.RELATIVE)
             {
-                rotationAngle = entityYaw - emitter.spawnYaw;
+                yawAngle = entityYaw - particle.spawnYaw;
+                pitchAngle = entityPitch - particle.spawnPitch;
             }
         }
 
-        if(rotationAngle != 0.0F)
+        if(pitchAngle != 0.0F || yawAngle != 0.0F)
         {
-            localOffset = localOffset.yRot((float) -Math.toRadians(rotationAngle));
+            localOffset = localOffset.xRot((float) -Math.toRadians(pitchAngle)).yRot((float) -Math.toRadians(yawAngle));
         }
 
         return anchor.add(localOffset);
