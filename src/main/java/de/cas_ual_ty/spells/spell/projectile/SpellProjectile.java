@@ -14,10 +14,12 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -74,7 +76,9 @@ public class SpellProjectile extends AbstractHurtingProjectile
     public void tick()
     {
         super.tick();
-        
+
+        lockRotationToVelocity();
+
         if(spell != null && !level().isClientSide())
         {
             if(tickCount >= timeout)
@@ -87,7 +91,37 @@ public class SpellProjectile extends AbstractHurtingProjectile
             }
         }
     }
-    
+
+    /**
+     * AbstractHurtingProjectile#tick() unconditionally calls ProjectileUtil.rotateTowardsMovement(this, 0.2F),
+     * which drags xRot/yRot 20%/tick towards ITS OWN atan2 convention - one that matches neither
+     * Projectile#shoot()'s convention nor the "true" look-direction convention used everywhere else
+     * (Entity#calculateViewVector/getViewYRot/getViewXRot, Entity#lookAt) - visibly rotating away from the
+     * correct heading over several ticks. Since this projectile's velocity direction never actually changes
+     * (getInertia() == 1F, no acceleration), just re-lock rotation to the true instantaneous heading, using the
+     * SAME formula as Entity#lookAt (confirmed by inverting calculateViewVector too): yaw/pitch here are the
+     * NEGATION of what Projectile#shoot() itself sets - shoot()'s own atan2(dx,dz)/atan2(dy,horiz) do not match
+     * the look-direction convention either, they just happen to render correctly for arrows because
+     * ArrowRenderer applies its own compensating offset.
+     * <p>
+     * Called both every tick AND synchronously right after {@link #shoot(double, double, double, float, float)}
+     * in the static factories below - the latter closes the window where anything reading this entity's rotation
+     * (eg. a particle emitter's one-time {@code initial_position} evaluation) before its first tick() would
+     * otherwise still see vanilla shoot()'s un-corrected convention.
+     */
+    protected void lockRotationToVelocity()
+    {
+        Vec3 motion = getDeltaMovement();
+        if(motion.lengthSqr() > 0.0D)
+        {
+            double horizontalDistance = motion.horizontalDistance();
+            setYRot((float) (Mth.atan2(-motion.x, motion.z) * 180.0F / (float) Math.PI));
+            setXRot((float) (Mth.atan2(-motion.y, horizontalDistance) * 180.0F / (float) Math.PI));
+            yRotO = getYRot();
+            xRotO = getXRot();
+        }
+    }
+
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult)
     {
@@ -126,6 +160,19 @@ public class SpellProjectile extends AbstractHurtingProjectile
     public boolean shouldBurn()
     {
         return false;
+    }
+
+    @Override
+    public void recreateFromPacket(ClientboundAddEntityPacket packet)
+    {
+        super.recreateFromPacket(packet);
+
+        // Entity#recreateFromPacket sets xRot/yRot from the packet but leaves xRotO/yRotO at their
+        // constructor-default 0 for one tick, so partial-tick-interpolated rotation reads (eg. the particle
+        // emitter's RELATIVE rotation attach) blend from 0 towards the real heading for that first tick instead
+        // of already being correct.
+        this.xRotO = this.getXRot();
+        this.yRotO = this.getYRot();
     }
     
     @Nullable
@@ -228,7 +275,8 @@ public class SpellProjectile extends AbstractHurtingProjectile
             
             projectile.moveTo(position.x, position.y, position.z, 0F, 0F);
             projectile.shoot(direction.x, direction.y, direction.z, velocity, inaccuracy);
-            
+            projectile.lockRotationToVelocity();
+
             level.addFreshEntity(projectile);
             
             return projectile;
