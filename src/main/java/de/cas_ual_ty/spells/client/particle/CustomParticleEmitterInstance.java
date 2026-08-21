@@ -143,7 +143,21 @@ public class CustomParticleEmitterInstance
             }
 
             Vec3 startPosition = initialPositionExpr == null ? Vec3.ZERO : context.evaluate(initialPositionExpr, index, totalIndex, 0).orElse(Vec3.ZERO);
-            particles.add(new CustomParticleInstance(index, totalIndex, startPosition, batchPosition, batchYaw, batchPitch, particleInitVars));
+            CustomParticleInstance particle = new CustomParticleInstance(index, totalIndex, startPosition, batchPosition, batchYaw, batchPitch, particleInitVars);
+
+            // Evaluate color/alpha once right away too - otherwise a fresh particle renders at
+            // CustomParticleInstance's white/opaque constructor defaults for the one tick between spawning here
+            // and CustomParticleManager's next per-tick evaluation, which is most visible on whichever particle
+            // happens to be the last one ever spawned (eg. the emitter's source dying right after).
+            context.evaluate(colorExpr, particle).ifPresent(color ->
+            {
+                particle.red = color.x();
+                particle.green = color.y();
+                particle.blue = color.z();
+            });
+            context.evaluate(alphaExpr, particle).ifPresent(alpha -> particle.alpha = alpha);
+
+            particles.add(particle);
         }
     }
 
