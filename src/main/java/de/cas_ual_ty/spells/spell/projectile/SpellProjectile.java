@@ -55,6 +55,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
         this.blockHitActivation = blockHitActivation;
         this.entityHitActivation = entityHitActivation;
         this.timeoutActivation = timeoutActivation;
+        this.particle = particle;
         this.accelerationPower = 0;
     }
 
