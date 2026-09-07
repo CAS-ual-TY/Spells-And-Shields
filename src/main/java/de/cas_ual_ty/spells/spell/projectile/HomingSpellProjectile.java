@@ -109,6 +109,8 @@ public class HomingSpellProjectile extends SpellProjectile
             projectile.moveTo(position.x, position.y, position.z, 0F, 0F);
             projectile.shoot(direction.x, direction.y, direction.z, velocity, 0F);
 
+            projectile.lockRotationToVelocity();
+
             level.addFreshEntity(projectile);
 
             return projectile;

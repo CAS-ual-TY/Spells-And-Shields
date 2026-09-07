@@ -23,9 +23,8 @@ import de.cas_ual_ty.spells.spell.action.delayed.RemoveDelayedSpellAction;
 import de.cas_ual_ty.spells.spell.action.effect.*;
 import de.cas_ual_ty.spells.spell.action.entity.*;
 import de.cas_ual_ty.spells.spell.action.function.CallFunctionAction;
-import de.cas_ual_ty.spells.spell.action.fx.ParticleEmitterAction;
-import de.cas_ual_ty.spells.spell.action.fx.PlaySoundAction;
-import de.cas_ual_ty.spells.spell.action.fx.SpawnParticlesAction;
+import de.cas_ual_ty.spells.client.particle.CustomParticleAttachMode;
+import de.cas_ual_ty.spells.spell.action.fx.*;
 import de.cas_ual_ty.spells.spell.action.item.*;
 import de.cas_ual_ty.spells.spell.action.level.*;
 import de.cas_ual_ty.spells.spell.action.mana.BurnManaAction;
@@ -781,7 +780,7 @@ public class SpellsGen
                 .addAction(CallFunctionAction.make("shoot", getFunction(SpellFunctions.BURN_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(BooleanActivationAction.make("consume", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), FALSE, TRUE))
                 .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.BLAZE_POWDER)))
-                .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(3D), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
+                .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(0.05D), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
 
                 .addAction(ActivateAction.make("shoot", "animation"))
                 .addAction(PutVarAction.makeString("animation", Compiler.compileString(" uuid_from_string('_animation_stab') " , STRING), "animation_uuid"))
@@ -794,10 +793,58 @@ public class SpellsGen
                 .addAction(PlayAnimationAction.make("animation_offhand", OWNER, STRING.immediate(PlayerAnimations.STAB_OFF.toString()), STRING.immediate(PlayerAnimations.STAB_1P_OFF.toString())))
 
                 .addAction(PlaySoundAction.make("shoot", OWNER, SoundEvents.BLAZE_SHOOT, ONE_D, ONE_D))
-                .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(2), INT.immediate(3), DOUBLE.immediate(0.2D), TRUE, ZERO_VEC3, ParticleTypes.LARGE_SMOKE))
-                .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), ONE, ZERO_D, TRUE, ZERO_VEC3, ParticleTypes.LAVA))
-                .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), INT.immediate(2), DOUBLE.immediate(0.1D), TRUE, ZERO_VEC3, ParticleTypes.SMOKE))
-                .addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), INT.immediate(2), DOUBLE.immediate(0.1D), TRUE, ZERO_VEC3, ParticleTypes.FLAME))
+                //.addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(2), INT.immediate(3), DOUBLE.immediate(0.2D), TRUE, ZERO_VEC3, ParticleTypes.LARGE_SMOKE))
+                //.addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), ONE, ZERO_D, TRUE, ZERO_VEC3, ParticleTypes.LAVA))
+                //.addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), INT.immediate(2), DOUBLE.immediate(0.1D), TRUE, ZERO_VEC3, ParticleTypes.SMOKE))
+                //.addAction(ParticleEmitterAction.make("shoot", "projectile", INT.immediate(200), INT.immediate(4), INT.immediate(2), DOUBLE.immediate(0.1D), TRUE, ZERO_VEC3, ParticleTypes.FLAME))
+
+                .addAction(PutVarAction.makeInt("shoot", 18, "particle_amount"))
+                .addAction(PutVarAction.makeDouble("shoot", 2, "particle_radius"))
+                .addAction(CustomParticleEmitterPositionAction.make(
+                        "shoot", "projectile",
+                        INT.reference("particle_amount"),
+                        INT.immediate(20 * 15),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.RELATIVE, CustomParticleAttachMode.RELATIVE,
+                        List.of("particle_amount", "particle_radius"),
+                        "vec3(" +
+                                "sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015," +
+                                "sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius," +
+                                "cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius" +
+                                ")",
+                        "vec3(1.0, 0.0, 0.05)",
+                        "1.0 - age / to_double(max_age)"
+                ))
+                .addAction(CustomParticleEmitterPositionAction.make(
+                        "shoot", "projectile",
+                        INT.reference("particle_amount"),
+                        INT.immediate(20 * 15),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.RELATIVE, CustomParticleAttachMode.RELATIVE,
+                        List.of("particle_amount", "particle_radius"),
+                        "vec3(" +
+                                "sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius," +
+                                "sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015," +
+                                "cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius" +
+                                ")",
+                        "vec3(1.0, 0.5, 0.05)",
+                        "1.0 - age / to_double(max_age)"
+                ))
+                .addAction(CustomParticleEmitterPositionAction.make(
+                        "shoot", "projectile",
+                        INT.reference("particle_amount"),
+                        INT.immediate(20 * 15),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.RELATIVE, CustomParticleAttachMode.RELATIVE,
+                        List.of("particle_amount", "particle_radius"),
+                        "vec3(" +
+                                "sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius," +
+                                "cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius," +
+                                "sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015" +
+                                ")",
+                        "vec3(1.0, 1.0, 0.05)",
+                        "1.0 - age / to_double(max_age)"
+                ))
                 .addAction(BooleanActivationAction.make("on_entity_hit", "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
                 .addAction(FilterPlayerTargetsAction.make("no_pvp", "", ENTITY_HIT, TRUE))
                 .addAction(SourcedDamageAction.make("on_entity_hit", ENTITY_HIT, DOUBLE.immediate(2D), PROJECTILE))
@@ -1845,6 +1892,174 @@ public class SpellsGen
 
         addSummonSpell(Spells.SUMMON_BLAZE, Spells.KEY_SUMMON_BLAZE, Spells.KEY_SUMMON_BLAZE_DESC, "minecraft:blaze", SoundEvents.RESPAWN_ANCHOR_SET_SPAWN, 10F);
         addSummonSpell(Spells.SUMMON_GUARDIAN, Spells.KEY_SUMMON_GUARDIAN, Spells.KEY_SUMMON_GUARDIAN_DESC, "minecraft:guardian", SoundEvents.RESPAWN_ANCHOR_SET_SPAWN, 10F);
+
+        // test spells - CustomParticleEmitter demos, throwaway
+        ResourceLocation testIconRl = ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/fire_ball.png");
+
+        addSpell("rainbow_test_ar", new Spell(DefaultSpellIcon.make(testIconRl), Component.literal("Rainbow Test AR"), 0F)
+                .addAction(PutVarAction.makeInt(ACTIVE, 6, "rows"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, 2D, "speed"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, 0.2D, "v_distance"))
+                .addAction(PutVarAction.makeInt(ACTIVE, Compiler.compileString("floor(speed / v_distance)", INT), "columns"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, Compiler.compileString("speed / columns", DOUBLE), "h_distance"))
+                .addAction(ShootAction.make(ACTIVE, OWNER, DOUBLE.reference("speed"), ZERO_D, INT.immediate(200), "", "", "", "projectile"))
+                .addAction(CustomParticleEmitterMotionAction.make(
+                        ACTIVE, "projectile",
+                        Compiler.compileString("rows * columns", INT),
+                        INT.immediate(200),
+                        INT.immediate(1),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.ABSOLUTE, CustomParticleAttachMode.RELATIVE,
+                        List.of("rows", "columns", "v_distance", "h_distance"),
+                        "vec3(0, v_distance * (r - 2.5), (c * length(source_motion)) / columns)",
+                        "vec3(0.0, 0.0, 0.0)",
+                        "colour",
+                        "1.0",
+                        "",
+                        List.of(
+                                new CustomParticleInitEntry(INT, "r", "index % rows"),
+                                new CustomParticleInitEntry(INT, "c", "index / rows"),
+                                // world-up (0,1,0) rotated the same way CustomParticleRenderer#resolveWorldPosition
+                                // rotates local offsets (xRot(-pitch) then yRot(-yaw)) - the projectile's own local
+                                // "up", tipping with pitch instead of always pointing along world Y.
+                                new CustomParticleInitEntry(VEC3, "colour",
+                                        "r == 0 ? hex_to_vec3('E50000') :" +
+                                                "r == 1 ? hex_to_vec3('FF8D00') :" +
+                                                "r == 2 ? hex_to_vec3('FFEE00') :" +
+                                                "r == 3 ? hex_to_vec3('028121') :" +
+                                                "r == 4 ? hex_to_vec3('004CFF') :" +
+                                                "r == 5 ? hex_to_vec3('770088') :" +
+                                                "hex_to_vec3('FFFFFF')")
+                        )
+                ))
+                .addEventHook(ACTIVE)
+        );
+
+        addSpell("rainbow_test_aa", new Spell(DefaultSpellIcon.make(testIconRl), Component.literal("Rainbow Test AA"), 0F)
+                .addAction(PutVarAction.makeInt(ACTIVE, 6, "rows"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, 2D, "speed"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, 0.2D, "v_distance"))
+                .addAction(PutVarAction.makeInt(ACTIVE, Compiler.compileString("floor(speed / v_distance)", INT), "columns"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, Compiler.compileString("speed / columns", DOUBLE), "h_distance"))
+                .addAction(ShootAction.make(ACTIVE, OWNER, DOUBLE.reference("speed"), ZERO_D, INT.immediate(200), "", "", "", "projectile"))
+                .addAction(CustomParticleEmitterMotionAction.make(
+                        ACTIVE, "projectile",
+                        Compiler.compileString("rows * columns", INT),
+                        INT.immediate(200),
+                        INT.immediate(1),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.ABSOLUTE, CustomParticleAttachMode.ABSOLUTE,
+                        List.of("rows", "columns", "v_distance", "h_distance"),
+                        "(c * source_motion) / columns + " +
+                                "vec3(" +
+                                "-sin(to_radians(source_pitch)) * sin(to_radians(source_yaw)), " +
+                                "cos(to_radians(source_pitch)), " +
+                                "sin(to_radians(source_pitch)) * cos(to_radians(source_yaw))" +
+                                ") * v_distance * (r - 2.5)",
+                        "vec3(0.0, 0.0, 0.0)",
+                        "colour",
+                        "1.0",
+                        "",
+                        List.of(
+                                new CustomParticleInitEntry(INT, "r", "index % rows"),
+                                new CustomParticleInitEntry(INT, "c", "index / rows"),
+                                // world-up (0,1,0) rotated the same way CustomParticleRenderer#resolveWorldPosition
+                                // rotates local offsets (xRot(-pitch) then yRot(-yaw)) - the projectile's own local
+                                // "up", tipping with pitch instead of always pointing along world Y.
+                                new CustomParticleInitEntry(VEC3, "colour",
+                                        "r == 0 ? hex_to_vec3('E50000') :" +
+                                        "r == 1 ? hex_to_vec3('FF8D00') :" +
+                                        "r == 2 ? hex_to_vec3('FFEE00') :" +
+                                        "r == 3 ? hex_to_vec3('028121') :" +
+                                        "r == 4 ? hex_to_vec3('004CFF') :" +
+                                        "r == 5 ? hex_to_vec3('770088') :" +
+                                                "hex_to_vec3('FFFFFF')")
+                        )
+                ))
+                .addEventHook(ACTIVE)
+        );
+
+        addSpell("rainbow_test_rr", new Spell(DefaultSpellIcon.make(testIconRl), Component.literal("Rainbow Test RR"), 0F)
+                .addAction(PutVarAction.makeInt(ACTIVE, 6, "rows"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, 2D, "speed"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, 0.2D, "v_distance"))
+                .addAction(PutVarAction.makeInt(ACTIVE, Compiler.compileString("floor(speed / v_distance)", INT), "columns"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, Compiler.compileString("speed / columns", DOUBLE), "h_distance"))
+                .addAction(ShootAction.make(ACTIVE, OWNER, DOUBLE.reference("speed"), ZERO_D, INT.immediate(200), "", "", "", "projectile"))
+                .addAction(CustomParticleEmitterMotionAction.make(
+                        ACTIVE, "projectile",
+                        Compiler.compileString("rows * columns", INT),
+                        INT.immediate(200),
+                        INT.immediate(0),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.RELATIVE, CustomParticleAttachMode.RELATIVE,
+                        List.of("rows", "columns", "v_distance", "h_distance"),
+                        "vec3(0, v_distance * (r - 2.5), (c * length(source_motion)) / columns)",
+                        "vec3(0.0, 0.0, 0.0)",
+                        "colour",
+                        "1.0",
+                        "",
+                        List.of(
+                                new CustomParticleInitEntry(INT, "r", "index % rows"),
+                                new CustomParticleInitEntry(INT, "c", "index / rows"),
+                                // world-up (0,1,0) rotated the same way CustomParticleRenderer#resolveWorldPosition
+                                // rotates local offsets (xRot(-pitch) then yRot(-yaw)) - the projectile's own local
+                                // "up", tipping with pitch instead of always pointing along world Y.
+                                new CustomParticleInitEntry(VEC3, "colour",
+                                        "r == 0 ? hex_to_vec3('E50000') :" +
+                                                "r == 1 ? hex_to_vec3('FF8D00') :" +
+                                                "r == 2 ? hex_to_vec3('FFEE00') :" +
+                                                "r == 3 ? hex_to_vec3('028121') :" +
+                                                "r == 4 ? hex_to_vec3('004CFF') :" +
+                                                "r == 5 ? hex_to_vec3('770088') :" +
+                                                "hex_to_vec3('FFFFFF')")
+                        )
+                ))
+                .addEventHook(ACTIVE)
+        );
+
+        addSpell("rainbow_test_ra", new Spell(DefaultSpellIcon.make(testIconRl), Component.literal("Rainbow Test RA"), 0F)
+                .addAction(PutVarAction.makeInt(ACTIVE, 6, "rows"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, 2D, "speed"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, 0.2D, "v_distance"))
+                .addAction(PutVarAction.makeInt(ACTIVE, Compiler.compileString("floor(speed / v_distance)", INT), "columns"))
+                .addAction(PutVarAction.makeDouble(ACTIVE, Compiler.compileString("speed / columns", DOUBLE), "h_distance"))
+                .addAction(ShootAction.make(ACTIVE, OWNER, DOUBLE.reference("speed"), ZERO_D, INT.immediate(200), "", "", "", "projectile"))
+                .addAction(CustomParticleEmitterPositionAction.make(
+                        ACTIVE, "projectile",
+                        Compiler.compileString("rows * columns", INT),
+                        INT.immediate(200),
+                        INT.immediate(0),
+                        INT.immediate(0),
+                        CustomParticleAttachMode.RELATIVE, CustomParticleAttachMode.ABSOLUTE,
+                        List.of("rows", "columns", "v_distance", "h_distance"),
+                        "(c * source_motion) / columns + " +
+                                "vec3(" +
+                                "-sin(to_radians(source_pitch)) * sin(to_radians(source_yaw)), " +
+                                "cos(to_radians(source_pitch)), " +
+                                "sin(to_radians(source_pitch)) * cos(to_radians(source_yaw))" +
+                                ") * v_distance * (r - 2.5)",
+                        "colour",
+                        "1.0",
+                        "",
+                        List.of(
+                                new CustomParticleInitEntry(INT, "r", "index % rows"),
+                                new CustomParticleInitEntry(INT, "c", "index / rows"),
+                                // world-up (0,1,0) rotated the same way CustomParticleRenderer#resolveWorldPosition
+                                // rotates local offsets (xRot(-pitch) then yRot(-yaw)) - the projectile's own local
+                                // "up", tipping with pitch instead of always pointing along world Y.
+                                new CustomParticleInitEntry(VEC3, "colour",
+                                        "r == 0 ? hex_to_vec3('E50000') :" +
+                                                "r == 1 ? hex_to_vec3('FF8D00') :" +
+                                                "r == 2 ? hex_to_vec3('FFEE00') :" +
+                                                "r == 3 ? hex_to_vec3('028121') :" +
+                                                "r == 4 ? hex_to_vec3('004CFF') :" +
+                                                "r == 5 ? hex_to_vec3('770088') :" +
+                                                "hex_to_vec3('FFFFFF')")
+                        )
+                ))
+                .addEventHook(ACTIVE)
+        );
     }
     
     public String getName()

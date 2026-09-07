@@ -489,25 +489,29 @@ public class Compiler
     private static Part compileProduct()
     {
         Part currentOp = compileFactor();
-        
+
         char sign;
-        
-        while((sign = getChar()) == '*' || sign == '/')
+
+        while((sign = getChar()) == '*' || sign == '/' || sign == '%')
         {
             nextCharSkipSpaces();
-            
+
             Part op2 = compileFactor();
-            
+
             if(sign == '*')
             {
                 currentOp = makeBinaryFunc(BinaryOperation.MUL, currentOp, op2);
             }
-            else
+            else if(sign == '/')
             {
                 currentOp = makeBinaryFunc(BinaryOperation.DIV, currentOp, op2);
             }
+            else
+            {
+                currentOp = makeBinaryFunc(BinaryOperation.REM, currentOp, op2);
+            }
         }
-        
+
         return currentOp;
     }
     
@@ -683,13 +687,13 @@ public class Compiler
     private static Part compileConditional()
     {
         Part conditional = compileDisjunction();
-        
+
         if(getChar() == '?')
         {
             nextCharSkipSpaces();
-            
-            Part op1 = compileDisjunction();
-            
+
+            Part op1 = compileConditional();
+
             if(getChar() == ':')
             {
                 nextCharSkipSpaces();
@@ -698,12 +702,12 @@ public class Compiler
             {
                 throw makeException("Expected ':'");
             }
-            
-            Part op2 = compileDisjunction();
-            
+
+            Part op2 = compileConditional();
+
             return makeTernaryFunc(TernaryOperation.CONDITIONAL, conditional, op1, op2);
         }
-        
+
         return conditional;
     }
     

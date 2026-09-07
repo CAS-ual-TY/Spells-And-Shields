@@ -35,7 +35,9 @@ public class UnaryOperation
     public static final UnaryOperation TO_DEGREES = new UnaryOperation("to_degrees");
     public static final UnaryOperation UUID_FROM_STRING = new UnaryOperation("uuid_from_string");
     public static final UnaryOperation NEXT_INT = new UnaryOperation("next_int");
-    
+    public static final UnaryOperation TO_DOUBLE = new UnaryOperation("to_double");
+    public static final UnaryOperation HEX_TO_VEC3 = new UnaryOperation("hex_to_vec3");
+
     public static void registerToCompiler()
     {
         Compiler.registerUnaryFunction("round", ROUND);
@@ -55,6 +57,8 @@ public class UnaryOperation
         Compiler.registerUnaryFunction("to_degrees", TO_DEGREES);
         Compiler.registerUnaryFunction("uuid_from_string", UUID_FROM_STRING);
         Compiler.registerUnaryFunction("next_int", NEXT_INT);
+        Compiler.registerUnaryFunction("to_double", TO_DOUBLE);
+        Compiler.registerUnaryFunction("hex_to_vec3", HEX_TO_VEC3);
     }
     
     public final String name;
