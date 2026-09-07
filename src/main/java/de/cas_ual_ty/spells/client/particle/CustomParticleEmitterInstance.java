@@ -35,7 +35,7 @@ import java.util.Map;
  * turned since ITS batch's own spawn yaw/pitch - "stays put but reorients."
  * <p>
  * {@link #period} is ticks between repeat spawns of a fresh {@link #count}-particle batch - {@code <= 0} means
- * one-shot. Every particle, from every batch, lives until the whole emitter expires via {@link #duration} -
+ * one-shot. Every particle, from every batch, lives until the whole emitter expires via {@link #totalLifetime} -
  * {@link #period} does NOT force-remove individual particles early (see {@code CustomParticleManager}); a pulse
  * that should visually fade out needs its own {@code alpha} formula for that.
  */
@@ -48,8 +48,17 @@ public class CustomParticleEmitterInstance
     public final CustomParticleAttachMode rotationAttachMode;
     public final List<CustomParticleInstance> particles;
     public final int count;
-    public final int duration;
+    public final int totalLifetime;
     public final int period;
+    /**
+     * Ticks to wait before the first batch spawns - {@code <= 0} means spawn immediately (the original behavior,
+     * still handled by {@code CustomParticleEmitterClientAction#execute} calling {@link #spawnBatch()} directly).
+     * When {@code > 0}, {@code execute} skips that immediate call and {@code CustomParticleManager} spawns the
+     * first batch once {@code age} reaches this, then (if {@link #period} {@code > 0}) every {@link #period}
+     * ticks after that - {@code delay, delay + period, delay + 2*period, ...} rather than
+     * {@code 0, period, 2*period, ...}.
+     */
+    public final int delay;
     public final Vec3 spawnPosition;
     public final float spawnYaw;
     public final float spawnPitch;
@@ -76,6 +85,14 @@ public class CustomParticleEmitterInstance
     public ReferencedCtxVar<Double> alphaExpr;
     @Nullable
     public ReferencedCtxVar<Vec3> initialPositionExpr;
+    /**
+     * Raw DSL formula (INT), evaluated once per particle at spawn just like {@link #initialPositionExpr} - the
+     * result becomes that particle's own {@link CustomParticleInstance#maxAge}. Null means no per-particle limit
+     * (every particle lives until this emitter itself expires via {@link #totalLifetime}, same as before this
+     * field existed) - see {@code CustomParticleManager} for where {@code maxAge} actually gets enforced.
+     */
+    @Nullable
+    public ReferencedCtxVar<Integer> particleLifetimeExpr;
 
     /**
      * Compiled {@code CustomParticleInitEntry} list, in declaration order (later entries may reference earlier
@@ -93,7 +110,7 @@ public class CustomParticleEmitterInstance
      */
     public int nextIndex;
 
-    public CustomParticleEmitterInstance(Level level, @Nullable Entity attachedTo, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<CustomParticleInstance> particles, int count, int duration, int period, Vec3 spawnPosition, float spawnYaw, float spawnPitch)
+    public CustomParticleEmitterInstance(Level level, @Nullable Entity attachedTo, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<CustomParticleInstance> particles, int count, int totalLifetime, int period, int delay, Vec3 spawnPosition, float spawnYaw, float spawnPitch)
     {
         this.level = level;
         this.attachedTo = attachedTo;
@@ -101,8 +118,9 @@ public class CustomParticleEmitterInstance
         this.rotationAttachMode = rotationAttachMode;
         this.particles = particles;
         this.count = count;
-        this.duration = duration;
+        this.totalLifetime = totalLifetime;
         this.period = period;
+        this.delay = delay;
         this.spawnPosition = spawnPosition;
         this.spawnYaw = spawnYaw;
         this.spawnPitch = spawnPitch;
@@ -143,7 +161,8 @@ public class CustomParticleEmitterInstance
             }
 
             Vec3 startPosition = initialPositionExpr == null ? Vec3.ZERO : context.evaluate(initialPositionExpr, index, totalIndex, 0).orElse(Vec3.ZERO);
-            CustomParticleInstance particle = new CustomParticleInstance(index, totalIndex, startPosition, batchPosition, batchYaw, batchPitch, particleInitVars);
+            int maxAge = particleLifetimeExpr == null ? -1 : context.evaluate(particleLifetimeExpr, index, totalIndex, 0).orElse(-1);
+            CustomParticleInstance particle = new CustomParticleInstance(index, totalIndex, startPosition, batchPosition, batchYaw, batchPitch, maxAge, particleInitVars);
 
             // Evaluate color/alpha once right away too - otherwise a fresh particle renders at
             // CustomParticleInstance's white/opaque constructor defaults for the one tick between spawning here
@@ -163,7 +182,7 @@ public class CustomParticleEmitterInstance
 
     public boolean isExpired()
     {
-        return age >= duration;
+        return age >= totalLifetime;
     }
 
     /**

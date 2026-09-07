@@ -106,12 +106,16 @@ public class CustomParticleRenderer
      * {@link CustomParticleEmitterInstance#spawnBatch()}), never moves after that batch spawned.</li>
      * <li>position RELATIVE: anchor is {@link Entity#getPosition(float)} of {@code emitter.attachedTo}.</li>
      * <li>rotation ABSOLUTE: local offset stays unrotated.</li>
-     * <li>rotation RELATIVE: local offset rotates by the entity's current yaw AND pitch - by how far each has
-     * turned since THIS PARTICLE's own {@code spawnYaw}/{@code spawnPitch} if position is ABSOLUTE ("stays put
-     * but reorients"), or by the entity's full current yaw/pitch if position is also RELATIVE (rigid
-     * child-style attachment). Composed the same way vanilla does for local-offset-to-world transforms (eg.
-     * {@code Player#getRopeHoldPosition}): pitch first via {@code xRot}, then yaw via {@code yRot}, both
-     * negated-degrees-to-radians.</li>
+     * <li>rotation RELATIVE: local offset rotates by the entity's full CURRENT yaw and pitch, every frame -
+     * whether position is ABSOLUTE (particle stays put at its own frozen spawn position, but continuously
+     * re-orients to match wherever the entity is currently facing - eg. a raw local offset like
+     * {@code vec3(0, 0, 1)} always points "forward" as of right now, not as of spawn) or also RELATIVE (rigid
+     * child-style attachment, entity's position AND orientation both live). Composed the same way vanilla does
+     * for local-offset-to-world transforms (eg. {@code Player#getRopeHoldPosition}): pitch first via
+     * {@code xRot}, then yaw via {@code yRot}, both negated-degrees-to-radians. {@code particle.spawnYaw}/
+     * {@code spawnPitch} are NOT used here - a formula that wants a frozen-at-spawn orientation instead should
+     * bake {@code source_yaw}/{@code source_pitch} into its own offset formula and use rotation ABSOLUTE, like
+     * {@code CustomParticleEmitterMotionAction}'s {@code initial_position} does when evaluated once at spawn.</li>
      * </ul>
      */
     private static Vec3 resolveWorldPosition(CustomParticleEmitterInstance emitter, CustomParticleInstance particle, float partialTick)
@@ -135,17 +139,12 @@ public class CustomParticleRenderer
             if(emitter.positionAttachMode == CustomParticleAttachMode.RELATIVE)
             {
                 anchor = attachedTo.getPosition(partialTick);
-
-                if(emitter.rotationAttachMode == CustomParticleAttachMode.RELATIVE)
-                {
-                    yawAngle = entityYaw;
-                    pitchAngle = entityPitch;
-                }
             }
-            else if(emitter.rotationAttachMode == CustomParticleAttachMode.RELATIVE)
+
+            if(emitter.rotationAttachMode == CustomParticleAttachMode.RELATIVE)
             {
-                yawAngle = entityYaw - particle.spawnYaw;
-                pitchAngle = entityPitch - particle.spawnPitch;
+                yawAngle = entityYaw;
+                pitchAngle = entityPitch;
             }
         }
 

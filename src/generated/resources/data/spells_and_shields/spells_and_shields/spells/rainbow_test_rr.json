@@ -1,0 +1,95 @@
+{
+  "s1/title": "Rainbow Test RR",
+  "s2/icon": {
+    "type": "spells_and_shields:default",
+    "texture": "spells_and_shields:textures/spell/fire_ball.png"
+  },
+  "s3/mana_cost": 0.0,
+  "s4/tooltip": [],
+  "s5/spell_events": {
+    "active": "active"
+  },
+  "s6/spell_parameters": [],
+  "s7/spell_actions": [
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "active",
+      "d/int/source": 6,
+      "var/result": "rows"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "active",
+      "d/double/source": 2.0,
+      "var/result": "speed"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "active",
+      "d/double/source": 0.2,
+      "var/result": "v_distance"
+    },
+    {
+      "type": "spells_and_shields:put_int",
+      "activation": "active",
+      "d/int/source": "<<floor(speed / v_distance)>>",
+      "var/result": "columns"
+    },
+    {
+      "type": "spells_and_shields:put_double",
+      "activation": "active",
+      "d/double/source": "<<speed / columns>>",
+      "var/result": "h_distance"
+    },
+    {
+      "type": "spells_and_shields:shoot",
+      "activation": "active",
+      "ad/block_hit_activation": "",
+      "ad/entity_hit_activation": "",
+      "ad/timeout_activation": "",
+      "d/double/inaccuracy": 0.0,
+      "d/double/velocity": "<<speed>>",
+      "d/int/timeout": 200,
+      "t/source": "owner",
+      "td/projectile": "projectile"
+    },
+    {
+      "type": "spells_and_shields:custom_particle_emitter_motion",
+      "activation": "active",
+      "captured_variables": [
+        "rows",
+        "columns",
+        "v_distance",
+        "h_distance"
+      ],
+      "d/int/count": "<<rows * columns>>",
+      "d/int/delay": 0,
+      "d/int/period": 0,
+      "d/int/total_lifetime": 200,
+      "initialize": [
+        {
+          "type": "spells_and_shields:int",
+          "name": "r",
+          "value": "index % rows"
+        },
+        {
+          "type": "spells_and_shields:int",
+          "name": "c",
+          "value": "index / rows"
+        },
+        {
+          "type": "spells_and_shields:vec3",
+          "name": "colour",
+          "value": "r == 0 ? hex_to_vec3('E50000') :r == 1 ? hex_to_vec3('FF8D00') :r == 2 ? hex_to_vec3('FFEE00') :r == 3 ? hex_to_vec3('028121') :r == 4 ? hex_to_vec3('004CFF') :r == 5 ? hex_to_vec3('770088') :hex_to_vec3('FFFFFF')"
+        }
+      ],
+      "p1/initial_position": "vec3(0, v_distance * (r - 2.5), (c * length(source_motion)) / columns)",
+      "p2/motion": "vec3(0.0, 0.0, 0.0)",
+      "p3/color": "colour",
+      "p4/alpha": "1.0",
+      "position_attach_mode": "relative",
+      "rotation_attach_mode": "relative",
+      "ts/targets": "projectile"
+    }
+  ]
+}

@@ -48,9 +48,9 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
         return CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("count")).forGetter(CustomParticleEmitterActionBase::getCount);
     }
 
-    public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, DynamicCtxVar<Integer>> durationCodec()
+    public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, DynamicCtxVar<Integer>> totalLifetimeCodec()
     {
-        return CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("duration")).forGetter(CustomParticleEmitterActionBase::getDuration);
+        return CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("total_lifetime")).forGetter(CustomParticleEmitterActionBase::getTotalLifetime);
     }
 
     /**
@@ -59,6 +59,17 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
     public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, DynamicCtxVar<Integer>> periodCodec()
     {
         return CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("period")).forGetter(CustomParticleEmitterActionBase::getPeriod);
+    }
+
+    /**
+     * Ticks to wait before the first batch spawns - subsequent repeat batches (if {@code period > 0}) are offset
+     * by this too, so they land on {@code delay, delay + period, delay + 2*period, ...} rather than
+     * {@code 0, period, 2*period, ...}. {@code <= 0} means no delay (spawn immediately at cast time), matching
+     * every emitter's behavior before this field existed - see {@code CustomParticleEmitterInstance#delay}.
+     */
+    public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, DynamicCtxVar<Integer>> delayCodec()
+    {
+        return CtxVarTypes.INT.get().refCodec().optionalFieldOf(ParamNames.paramInt("delay"), CtxVarTypes.INT.get().immediate(0)).forGetter(CustomParticleEmitterActionBase::getDelay);
     }
 
     public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, CustomParticleAttachMode> positionAttachModeCodec()
@@ -76,14 +87,22 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
         return Codec.STRING.listOf().optionalFieldOf("captured_variables", new LinkedList<>()).forGetter(CustomParticleEmitterActionBase::getCapturedVariables);
     }
 
-    public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, String> colorCodec()
+    /**
+     * {@code key} is the JSON field name to use - callers pick their own {@code p1}/{@code p2}/... slot since
+     * {@link CustomParticleEmitterMotionAction} and {@link CustomParticleEmitterPositionAction} have different
+     * numbers of per-particle expression fields ahead of this one.
+     */
+    public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, String> colorCodec(String key)
     {
-        return Codec.STRING.fieldOf("color").forGetter(CustomParticleEmitterActionBase::getColor);
+        return Codec.STRING.fieldOf(key).forGetter(CustomParticleEmitterActionBase::getColor);
     }
 
-    public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, String> alphaCodec()
+    /**
+     * @see #colorCodec(String)
+     */
+    public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, String> alphaCodec(String key)
     {
-        return Codec.STRING.fieldOf("alpha").forGetter(CustomParticleEmitterActionBase::getAlpha);
+        return Codec.STRING.fieldOf(key).forGetter(CustomParticleEmitterActionBase::getAlpha);
     }
 
     /**
@@ -95,14 +114,32 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
         return CustomParticleInitEntry.CODEC.listOf().optionalFieldOf("initialize", new LinkedList<>()).forGetter(CustomParticleEmitterActionBase::getInitialize);
     }
 
+    /**
+     * Raw DSL formula string (INT), compiled/evaluated client-side exactly once per particle at spawn (same
+     * timing as {@code initialize} entries) - the result becomes that particle's own {@code maxAge}; once its own
+     * {@code age} reaches it, that single particle is removed, independent of the emitter's own
+     * {@link #totalLifetime} (which just controls when the emitter stops spawning new batches/expires entirely -
+     * see {@code CustomParticleEmitterInstance}/{@code CustomParticleManager}). Optional, empty means no
+     * per-particle limit (every particle lives until the emitter itself expires, same as before this field
+     * existed).
+     *
+     * @see #colorCodec(String)
+     */
+    public static <T extends CustomParticleEmitterActionBase> RecordCodecBuilder<T, String> particleLifetimeCodec(String key)
+    {
+        return Codec.STRING.optionalFieldOf(key, "").forGetter(CustomParticleEmitterActionBase::getParticleLifetime);
+    }
+
     protected DynamicCtxVar<Integer> count;
-    protected DynamicCtxVar<Integer> duration;
+    protected DynamicCtxVar<Integer> totalLifetime;
     protected DynamicCtxVar<Integer> period;
+    protected DynamicCtxVar<Integer> delay;
     protected CustomParticleAttachMode positionAttachMode;
     protected CustomParticleAttachMode rotationAttachMode;
     protected List<String> capturedVariables;
     protected String color;
     protected String alpha;
+    protected String particleLifetime;
     protected List<CustomParticleInitEntry> initialize;
 
     public CustomParticleEmitterActionBase(SpellActionType<?> type)
@@ -110,17 +147,19 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
         super(type);
     }
 
-    public CustomParticleEmitterActionBase(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> count, DynamicCtxVar<Integer> duration, DynamicCtxVar<Integer> period, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<String> capturedVariables, String color, String alpha, List<CustomParticleInitEntry> initialize)
+    public CustomParticleEmitterActionBase(SpellActionType<?> type, String activation, String multiTargets, DynamicCtxVar<Integer> count, DynamicCtxVar<Integer> totalLifetime, DynamicCtxVar<Integer> period, DynamicCtxVar<Integer> delay, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, List<String> capturedVariables, String color, String alpha, String particleLifetime, List<CustomParticleInitEntry> initialize)
     {
         super(type, activation, multiTargets);
         this.count = count;
-        this.duration = duration;
+        this.totalLifetime = totalLifetime;
         this.period = period;
+        this.delay = delay;
         this.positionAttachMode = positionAttachMode;
         this.rotationAttachMode = rotationAttachMode;
         this.capturedVariables = capturedVariables;
         this.color = color;
         this.alpha = alpha;
+        this.particleLifetime = particleLifetime;
         this.initialize = initialize;
     }
 
@@ -135,14 +174,19 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
         return count;
     }
 
-    public DynamicCtxVar<Integer> getDuration()
+    public DynamicCtxVar<Integer> getTotalLifetime()
     {
-        return duration;
+        return totalLifetime;
     }
 
     public DynamicCtxVar<Integer> getPeriod()
     {
         return period;
+    }
+
+    public DynamicCtxVar<Integer> getDelay()
+    {
+        return delay;
     }
 
     public CustomParticleAttachMode getPositionAttachMode()
@@ -168,6 +212,11 @@ public abstract class CustomParticleEmitterActionBase extends AffectTypeAction<E
     public String getAlpha()
     {
         return alpha;
+    }
+
+    public String getParticleLifetime()
+    {
+        return particleLifetime;
     }
 
     public List<CustomParticleInitEntry> getInitialize()

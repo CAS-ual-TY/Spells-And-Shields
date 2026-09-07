@@ -28,7 +28,7 @@ import java.util.Optional;
  * after it's spawned client-side, with values already resolved server-side at cast time (see
  * {@code CustomParticleEmitterInstance}) - per the mod's rule that particles never get live access to
  * server-only spell state, everything captured this way is frozen from that point on ({@link #MAX_AGE_NAME} -
- * the emitter's {@code duration} - is captured this way too, since it never changes once spawned). {@code age}/
+ * the emitter's {@code total_lifetime} - is captured this way too, since it never changes once spawned). {@code age}/
  * {@code max_age} are both INT (tick counts) - a fade formula like {@code age / max_age} needs an explicit
  * {@code to_double(...)} cast on one side, since INT/INT division truncates via its own overload rather than
  * promoting to DOUBLE.
@@ -55,6 +55,11 @@ public class CustomParticleContext
     public static final String TOTAL_INDEX_NAME = "total_index";
     public static final String AGE_NAME = "age";
     public static final String MAX_AGE_NAME = "max_age";
+    /**
+     * This specific particle's own {@link CustomParticleInstance#maxAge} ({@code -1} if it has no individual
+     * limit) - distinct from {@link #MAX_AGE_NAME}, which is the whole EMITTER's total_lifetime/period, not per-particle.
+     */
+    public static final String PARTICLE_MAX_AGE_NAME = "particle_max_age";
     public static final String SOURCE_MOTION_NAME = "source_motion";
     public static final String SOURCE_YAW_NAME = "source_yaw";
     public static final String SOURCE_PITCH_NAME = "source_pitch";
@@ -99,6 +104,7 @@ public class CustomParticleContext
         ctx.setCtxVar(CtxVarTypes.INT.get(), INDEX_NAME, particle.index);
         ctx.setCtxVar(CtxVarTypes.INT.get(), TOTAL_INDEX_NAME, particle.totalIndex);
         ctx.setCtxVar(CtxVarTypes.INT.get(), AGE_NAME, particle.age);
+        ctx.setCtxVar(CtxVarTypes.INT.get(), PARTICLE_MAX_AGE_NAME, particle.maxAge);
 
         for(CtxVar<?> var : particle.initVars.values())
         {

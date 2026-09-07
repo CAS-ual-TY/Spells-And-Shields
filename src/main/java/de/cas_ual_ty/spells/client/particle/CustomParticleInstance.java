@@ -52,9 +52,16 @@ public class CustomParticleInstance
     public final float spawnYaw;
     public final float spawnPitch;
 
+    /**
+     * This particle's own individual lifetime, from {@code CustomParticleEmitterInstance#particleLifetimeExpr}
+     * evaluated once at spawn - {@code -1} means unlimited (this particle lives until the whole emitter expires
+     * via its own {@code total_lifetime}, same as before this field existed). Enforced in {@code CustomParticleManager}.
+     */
+    public final int maxAge;
+
     public final Map<String, CtxVar<?>> initVars;
 
-    public CustomParticleInstance(int index, int totalIndex, Vec3 position, Vec3 spawnPosition, float spawnYaw, float spawnPitch, Map<String, CtxVar<?>> initVars)
+    public CustomParticleInstance(int index, int totalIndex, Vec3 position, Vec3 spawnPosition, float spawnYaw, float spawnPitch, int maxAge, Map<String, CtxVar<?>> initVars)
     {
         this.index = index;
         this.totalIndex = totalIndex;
@@ -69,6 +76,7 @@ public class CustomParticleInstance
         this.spawnPosition = spawnPosition;
         this.spawnYaw = spawnYaw;
         this.spawnPitch = spawnPitch;
+        this.maxAge = maxAge;
         this.initVars = initVars;
     }
 }

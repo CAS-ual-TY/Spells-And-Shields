@@ -43,36 +43,40 @@ public class CustomParticleEmitterClientAction implements IClientAction
     protected CustomParticleAttachMode positionAttachMode;
     protected CustomParticleAttachMode rotationAttachMode;
     protected int count;
-    protected int duration;
+    protected int totalLifetime;
     protected int period;
+    protected int delay;
     protected String initialPosition;
     protected String motion;
     protected String position;
     protected String color;
     protected String alpha;
+    protected String particleLifetime;
     protected List<CtxVar<?>> capturedVariables;
     protected List<CustomParticleInitEntry> initialize;
 
-    public CustomParticleEmitterClientAction(int entityId, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, int count, int duration, int period, String initialPosition, String motion, String position, String color, String alpha, List<CtxVar<?>> capturedVariables, List<CustomParticleInitEntry> initialize)
+    public CustomParticleEmitterClientAction(int entityId, CustomParticleAttachMode positionAttachMode, CustomParticleAttachMode rotationAttachMode, int count, int totalLifetime, int period, int delay, String initialPosition, String motion, String position, String color, String alpha, String particleLifetime, List<CtxVar<?>> capturedVariables, List<CustomParticleInitEntry> initialize)
     {
         this.entityId = entityId;
         this.positionAttachMode = positionAttachMode;
         this.rotationAttachMode = rotationAttachMode;
         this.count = count;
-        this.duration = duration;
+        this.totalLifetime = totalLifetime;
         this.period = period;
+        this.delay = delay;
         this.initialPosition = initialPosition;
         this.motion = motion;
         this.position = position;
         this.color = color;
         this.alpha = alpha;
+        this.particleLifetime = particleLifetime;
         this.capturedVariables = capturedVariables;
         this.initialize = initialize;
     }
 
     public CustomParticleEmitterClientAction()
     {
-        this(0, CustomParticleAttachMode.ABSOLUTE, CustomParticleAttachMode.ABSOLUTE, 0, 0, 0, "", "", "", "", "", new LinkedList<>(), new LinkedList<>());
+        this(0, CustomParticleAttachMode.ABSOLUTE, CustomParticleAttachMode.ABSOLUTE, 0, 0, 0, 0, "", "", "", "", "", "", new LinkedList<>(), new LinkedList<>());
     }
 
     @Override
@@ -82,13 +86,15 @@ public class CustomParticleEmitterClientAction implements IClientAction
         buf.writeEnum(positionAttachMode);
         buf.writeEnum(rotationAttachMode);
         buf.writeVarInt(count);
-        buf.writeVarInt(duration);
+        buf.writeVarInt(totalLifetime);
         buf.writeVarInt(period);
+        buf.writeVarInt(delay);
         buf.writeUtf(initialPosition);
         buf.writeUtf(motion);
         buf.writeUtf(position);
         buf.writeUtf(color);
         buf.writeUtf(alpha);
+        buf.writeUtf(particleLifetime);
         buf.writeVarInt(capturedVariables.size());
 
         for(CtxVar<?> var : capturedVariables)
@@ -113,13 +119,15 @@ public class CustomParticleEmitterClientAction implements IClientAction
         positionAttachMode = buf.readEnum(CustomParticleAttachMode.class);
         rotationAttachMode = buf.readEnum(CustomParticleAttachMode.class);
         count = buf.readVarInt();
-        duration = buf.readVarInt();
+        totalLifetime = buf.readVarInt();
         period = buf.readVarInt();
+        delay = buf.readVarInt();
         initialPosition = buf.readUtf();
         motion = buf.readUtf();
         position = buf.readUtf();
         color = buf.readUtf();
         alpha = buf.readUtf();
+        particleLifetime = buf.readUtf();
 
         int capturedCount = buf.readVarInt();
         capturedVariables = new LinkedList<>();
@@ -176,14 +184,14 @@ public class CustomParticleEmitterClientAction implements IClientAction
         float spawnPitch = attachedTo != null ? attachedTo.getViewXRot(1.0F) : 0.0F;
 
         List<CustomParticleInstance> particles = new LinkedList<>();
-        CustomParticleEmitterInstance emitter = new CustomParticleEmitterInstance(clientLevel, attachedTo, positionAttachMode, rotationAttachMode, particles, count, duration, period, spawnPosition, spawnYaw, spawnPitch);
+        CustomParticleEmitterInstance emitter = new CustomParticleEmitterInstance(clientLevel, attachedTo, positionAttachMode, rotationAttachMode, particles, count, totalLifetime, period, delay, spawnPosition, spawnYaw, spawnPitch);
 
         emitter.context.setFrameVars(
                 attachedTo != null ? attachedTo.getDeltaMovement() : Vec3.ZERO,
                 spawnYaw,
                 spawnPitch
         );
-        emitter.context.capture(CtxVarTypes.INT.get(), CustomParticleContext.MAX_AGE_NAME, period > 0 ? period : duration);
+        emitter.context.capture(CtxVarTypes.INT.get(), CustomParticleContext.MAX_AGE_NAME, period > 0 ? period : totalLifetime);
 
         for(CtxVar<?> var : capturedVariables)
         {
@@ -195,6 +203,7 @@ public class CustomParticleEmitterClientAction implements IClientAction
         emitter.colorExpr = Compiler.compileString(color, CtxVarTypes.VEC3.get());
         emitter.alphaExpr = Compiler.compileString(alpha, CtxVarTypes.DOUBLE.get());
         emitter.initialPositionExpr = initialPosition.isEmpty() ? null : Compiler.compileString(initialPosition, CtxVarTypes.VEC3.get());
+        emitter.particleLifetimeExpr = particleLifetime.isEmpty() ? null : Compiler.compileString(particleLifetime, CtxVarTypes.INT.get());
 
         List<CustomParticleInitVar<?>> compiledInitVars = new LinkedList<>();
 
@@ -205,7 +214,13 @@ public class CustomParticleEmitterClientAction implements IClientAction
 
         emitter.initVars = compiledInitVars;
 
-        emitter.spawnBatch();
+        // Delay > 0 means even the first batch waits - CustomParticleManager's tick loop spawns it once
+        // emitter.age reaches emitter.delay, same as every repeat batch after it. Delay <= 0 keeps the original
+        // behavior of spawning the first batch immediately, right here, at cast time.
+        if(delay <= 0)
+        {
+            emitter.spawnBatch();
+        }
 
         CustomParticleRenderer.ACTIVE.add(emitter);
     }
