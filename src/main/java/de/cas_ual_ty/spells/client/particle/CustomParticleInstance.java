@@ -11,12 +11,13 @@ import java.util.Map;
  * {@code Particle}'s own xo/yo/zo) - it's the position as of the END of the previous tick, updated once per
  * tick right before {@link #position} changes again.
  * <p>
- * {@link #spawnPosition}/{@link #spawnYaw}/{@link #spawnPitch} are THIS particle's own anchor for whichever
- * attachment axis is {@link CustomParticleAttachMode#ABSOLUTE} - captured fresh by
- * {@link CustomParticleEmitterInstance#spawnBatch()} at the moment THIS particle (or its batch) was spawned, not
- * shared emitter-wide. This is what makes a repeating ({@code period > 0}) ABSOLUTE-attached emitter read as a
- * proper trail following the source around - each new batch anchors to wherever the source currently is, rather
- * than every batch reusing the very first batch's spawn point.
+ * {@link #spawnPosition} is THIS particle's own anchor for whichever attachment axis is
+ * {@link CustomParticleAttachMode#ABSOLUTE} - captured fresh by {@link CustomParticleEmitterInstance#spawnBatch()}
+ * at the moment THIS particle (or its batch) was spawned, not shared emitter-wide. This is what makes a repeating
+ * ({@code period > 0}) ABSOLUTE-attached emitter read as a proper trail following the source around - each new
+ * batch anchors to wherever the source currently is, rather than every batch reusing the very first batch's
+ * spawn point. (Rotation has no equivalent spawn-time anchor - RELATIVE rotation always uses the entity's full
+ * CURRENT yaw/pitch, see {@code CustomParticleRenderer#resolveWorldPosition}.)
  * <p>
  * {@link #initVars} holds this particle's OWN copy of whatever the emitter's {@code CustomParticleInitEntry}
  * list computed for it at spawn (see {@code CustomParticleInitVar#evaluateAndStore}) - permanent, per-particle
@@ -49,8 +50,6 @@ public class CustomParticleInstance
     public int age;
 
     public final Vec3 spawnPosition;
-    public final float spawnYaw;
-    public final float spawnPitch;
 
     /**
      * This particle's own individual lifetime, from {@code CustomParticleEmitterInstance#particleLifetimeExpr}
@@ -61,7 +60,7 @@ public class CustomParticleInstance
 
     public final Map<String, CtxVar<?>> initVars;
 
-    public CustomParticleInstance(int index, int totalIndex, Vec3 position, Vec3 spawnPosition, float spawnYaw, float spawnPitch, int maxAge, Map<String, CtxVar<?>> initVars)
+    public CustomParticleInstance(int index, int totalIndex, Vec3 position, Vec3 spawnPosition, int maxAge, Map<String, CtxVar<?>> initVars)
     {
         this.index = index;
         this.totalIndex = totalIndex;
@@ -74,8 +73,6 @@ public class CustomParticleInstance
         this.alpha = 1.0;
         this.age = 0;
         this.spawnPosition = spawnPosition;
-        this.spawnYaw = spawnYaw;
-        this.spawnPitch = spawnPitch;
         this.maxAge = maxAge;
         this.initVars = initVars;
     }

@@ -112,10 +112,11 @@ public class CustomParticleRenderer
      * {@code vec3(0, 0, 1)} always points "forward" as of right now, not as of spawn) or also RELATIVE (rigid
      * child-style attachment, entity's position AND orientation both live). Composed the same way vanilla does
      * for local-offset-to-world transforms (eg. {@code Player#getRopeHoldPosition}): pitch first via
-     * {@code xRot}, then yaw via {@code yRot}, both negated-degrees-to-radians. {@code particle.spawnYaw}/
-     * {@code spawnPitch} are NOT used here - a formula that wants a frozen-at-spawn orientation instead should
-     * bake {@code source_yaw}/{@code source_pitch} into its own offset formula and use rotation ABSOLUTE, like
-     * {@code CustomParticleEmitterMotionAction}'s {@code initial_position} does when evaluated once at spawn.</li>
+     * {@code xRot}, then yaw via {@code yRot}, both negated-degrees-to-radians. There is no per-particle
+     * spawn-time yaw/pitch capture (unlike {@code spawnPosition}) - a formula that wants a frozen-at-spawn
+     * orientation instead should bake {@code source_yaw}/{@code source_pitch} into its own offset formula and
+     * use rotation ABSOLUTE, like {@code CustomParticleEmitterMotionAction}'s {@code initial_position} does when
+     * evaluated once at spawn.</li>
      * </ul>
      */
     private static Vec3 resolveWorldPosition(CustomParticleEmitterInstance emitter, CustomParticleInstance particle, float partialTick)

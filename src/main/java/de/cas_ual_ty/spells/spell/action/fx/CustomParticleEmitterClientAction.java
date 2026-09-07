@@ -184,7 +184,7 @@ public class CustomParticleEmitterClientAction implements IClientAction
         float spawnPitch = attachedTo != null ? attachedTo.getViewXRot(1.0F) : 0.0F;
 
         List<CustomParticleInstance> particles = new LinkedList<>();
-        CustomParticleEmitterInstance emitter = new CustomParticleEmitterInstance(clientLevel, attachedTo, positionAttachMode, rotationAttachMode, particles, count, totalLifetime, period, delay, spawnPosition, spawnYaw, spawnPitch);
+        CustomParticleEmitterInstance emitter = new CustomParticleEmitterInstance(clientLevel, attachedTo, positionAttachMode, rotationAttachMode, particles, count, totalLifetime, period, delay, spawnPosition);
 
         emitter.context.setFrameVars(
                 attachedTo != null ? attachedTo.getDeltaMovement() : Vec3.ZERO,
