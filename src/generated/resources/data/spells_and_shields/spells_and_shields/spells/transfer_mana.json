@@ -29,11 +29,6 @@
   ],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:call_function",
-      "activation": "active",
-      "function": "spells_and_shields:has_mana_cost"
-    },
-    {
       "type": "spells_and_shields:look_at_target",
       "a/block_hit_activation": "looked_at_block",
       "a/entity_hit_activation": "looked_at_entity",
@@ -48,7 +43,7 @@
     {
       "type": "spells_and_shields:call_function",
       "activation": "active",
-      "function": "spells_and_shields:burn_mana_cost"
+      "function": "spells_and_shields:check_mana_cost"
     },
     {
       "type": "spells_and_shields:home",

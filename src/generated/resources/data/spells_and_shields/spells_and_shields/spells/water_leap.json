@@ -24,11 +24,6 @@
   ],
   "s7/spell_actions": [
     {
-      "type": "spells_and_shields:call_function",
-      "activation": "active",
-      "function": "spells_and_shields:has_mana_cost"
-    },
-    {
       "type": "spells_and_shields:get_entity_eye_position",
       "activation": "active",
       "t/source": "owner",
@@ -61,7 +56,7 @@
     {
       "type": "spells_and_shields:call_function",
       "activation": "active",
-      "function": "spells_and_shields:burn_mana_cost"
+      "function": "spells_and_shields:check_mana_cost"
     },
     {
       "type": "spells_and_shields:reset_fall_distance",

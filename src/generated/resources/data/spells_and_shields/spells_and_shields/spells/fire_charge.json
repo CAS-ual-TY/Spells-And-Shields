@@ -37,82 +37,12 @@
     {
       "type": "spells_and_shields:call_function",
       "activation": "active",
-      "function": "spells_and_shields:has_mana_cost"
-    },
-    {
-      "type": "spells_and_shields:boolean_activation",
-      "a/to_activate": "consume",
-      "activation": "active",
-      "d/boolean/activate_if_true": true,
-      "d/boolean/deactivate_if_false": false,
-      "d/boolean/input": "<< !item_costs() >>"
-    },
-    {
-      "type": "spells_and_shields:call_function",
-      "activation": "active",
-      "function": "spells_and_shields:has_item_cost",
-      "parameters": [
-        {
-          "type": "spells_and_shields:string",
-          "value": "minecraft:fire_charge",
-          "var/name": "item"
-        },
-        {
-          "type": "spells_and_shields:int",
-          "value": 1,
-          "var/name": "item_amount"
-        },
-        {
-          "type": "spells_and_shields:boolean",
-          "value": true,
-          "var/name": "must_be_in_hand"
-        }
-      ]
-    },
-    {
-      "type": "spells_and_shields:activate",
-      "a/to_activate": "consume",
-      "activation": "active"
+      "function": "spells_and_shields:check_mana_and_item_cost"
     },
     {
       "type": "spells_and_shields:activate",
       "a/to_activate": "shoot",
-      "activation": "consume"
-    },
-    {
-      "type": "spells_and_shields:call_function",
-      "activation": "consume",
-      "function": "spells_and_shields:burn_mana_cost"
-    },
-    {
-      "type": "spells_and_shields:boolean_activation",
-      "a/to_activate": "consume",
-      "activation": "consume",
-      "d/boolean/activate_if_true": false,
-      "d/boolean/deactivate_if_false": true,
-      "d/boolean/input": "<< item_costs() >>"
-    },
-    {
-      "type": "spells_and_shields:call_function",
-      "activation": "consume",
-      "function": "spells_and_shields:consume_item_cost",
-      "parameters": [
-        {
-          "type": "spells_and_shields:string",
-          "value": "minecraft:fire_charge",
-          "var/name": "item"
-        },
-        {
-          "type": "spells_and_shields:int",
-          "value": 1,
-          "var/name": "item_amount"
-        },
-        {
-          "type": "spells_and_shields:boolean",
-          "value": true,
-          "var/name": "must_be_in_hand"
-        }
-      ]
+      "activation": "active"
     },
     {
       "type": "spells_and_shields:get_entity_uuid",

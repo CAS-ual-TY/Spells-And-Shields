@@ -39,88 +39,23 @@
       "type": "spells_and_shields:int",
       "value": 2,
       "var/name": "fire_seconds"
+    },
+    {
+      "type": "spells_and_shields:string",
+      "value": "minecraft:blaze_powder",
+      "var/name": "item"
     }
   ],
   "s7/spell_actions": [
     {
       "type": "spells_and_shields:call_function",
       "activation": "active",
-      "function": "spells_and_shields:has_mana_cost"
-    },
-    {
-      "type": "spells_and_shields:boolean_activation",
-      "a/to_activate": "consume",
-      "activation": "active",
-      "d/boolean/activate_if_true": true,
-      "d/boolean/deactivate_if_false": false,
-      "d/boolean/input": "<< !item_costs() >>"
-    },
-    {
-      "type": "spells_and_shields:call_function",
-      "activation": "active",
-      "function": "spells_and_shields:has_item_cost",
-      "parameters": [
-        {
-          "type": "spells_and_shields:string",
-          "value": "minecraft:blaze_powder",
-          "var/name": "item"
-        },
-        {
-          "type": "spells_and_shields:int",
-          "value": 1,
-          "var/name": "item_amount"
-        },
-        {
-          "type": "spells_and_shields:boolean",
-          "value": true,
-          "var/name": "must_be_in_hand"
-        }
-      ]
-    },
-    {
-      "type": "spells_and_shields:activate",
-      "a/to_activate": "consume",
-      "activation": "active"
+      "function": "spells_and_shields:check_mana_and_item_cost"
     },
     {
       "type": "spells_and_shields:activate",
       "a/to_activate": "shoot",
-      "activation": "consume"
-    },
-    {
-      "type": "spells_and_shields:call_function",
-      "activation": "shoot",
-      "function": "spells_and_shields:burn_mana_cost"
-    },
-    {
-      "type": "spells_and_shields:boolean_activation",
-      "a/to_activate": "consume",
-      "activation": "consume",
-      "d/boolean/activate_if_true": false,
-      "d/boolean/deactivate_if_false": true,
-      "d/boolean/input": "<< item_costs() >>"
-    },
-    {
-      "type": "spells_and_shields:call_function",
-      "activation": "consume",
-      "function": "spells_and_shields:consume_item_cost",
-      "parameters": [
-        {
-          "type": "spells_and_shields:string",
-          "value": "minecraft:blaze_powder",
-          "var/name": "item"
-        },
-        {
-          "type": "spells_and_shields:int",
-          "value": 1,
-          "var/name": "item_amount"
-        },
-        {
-          "type": "spells_and_shields:boolean",
-          "value": true,
-          "var/name": "must_be_in_hand"
-        }
-      ]
+      "activation": "active"
     },
     {
       "type": "spells_and_shields:shoot",
@@ -129,7 +64,7 @@
       "ad/entity_hit_activation": "on_entity_hit",
       "ad/timeout_activation": "on_timeout",
       "d/double/inaccuracy": 0.0,
-      "d/double/velocity": 0.05,
+      "d/double/velocity": "<<speed>>",
       "d/int/timeout": 200,
       "t/source": "owner",
       "td/projectile": "projectile"
@@ -214,16 +149,17 @@
     {
       "type": "spells_and_shields:custom_particle_emitter_position",
       "activation": "shoot",
-      "alpha": "1.0 - age / to_double(max_age)",
       "captured_variables": [
         "particle_amount",
         "particle_radius"
       ],
-      "color": "vec3(1.0, 0.0, 0.05)",
       "d/int/count": "<<particle_amount>>",
-      "d/int/duration": 300,
+      "d/int/delay": 0,
       "d/int/period": 0,
-      "position": "vec3(sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015,sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius)",
+      "d/int/total_lifetime": 300,
+      "p1/position": "vec3(sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015,sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius)",
+      "p2/color": "vec3(1.0, 0.0, 0.05)",
+      "p3/alpha": "1.0 - age / to_double(max_age)",
       "position_attach_mode": "relative",
       "rotation_attach_mode": "relative",
       "ts/targets": "projectile"
@@ -231,16 +167,17 @@
     {
       "type": "spells_and_shields:custom_particle_emitter_position",
       "activation": "shoot",
-      "alpha": "1.0 - age / to_double(max_age)",
       "captured_variables": [
         "particle_amount",
         "particle_radius"
       ],
-      "color": "vec3(1.0, 0.5, 0.05)",
       "d/int/count": "<<particle_amount>>",
-      "d/int/duration": 300,
+      "d/int/delay": 0,
       "d/int/period": 0,
-      "position": "vec3(sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015,cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius)",
+      "d/int/total_lifetime": 300,
+      "p1/position": "vec3(sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015,cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius)",
+      "p2/color": "vec3(1.0, 0.5, 0.05)",
+      "p3/alpha": "1.0 - age / to_double(max_age)",
       "position_attach_mode": "relative",
       "rotation_attach_mode": "relative",
       "ts/targets": "projectile"
@@ -248,16 +185,17 @@
     {
       "type": "spells_and_shields:custom_particle_emitter_position",
       "activation": "shoot",
-      "alpha": "1.0 - age / to_double(max_age)",
       "captured_variables": [
         "particle_amount",
         "particle_radius"
       ],
-      "color": "vec3(1.0, 1.0, 0.05)",
       "d/int/count": "<<particle_amount>>",
-      "d/int/duration": 300,
+      "d/int/delay": 0,
       "d/int/period": 0,
-      "position": "vec3(sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015)",
+      "d/int/total_lifetime": 300,
+      "p1/position": "vec3(sin(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,cos(to_radians(age * particle_amount + index * (360/particle_amount))) * particle_radius,sin(to_radians(age * 10 + index * (360/particle_amount))) * 0.00015)",
+      "p2/color": "vec3(1.0, 1.0, 0.05)",
+      "p3/alpha": "1.0 - age / to_double(max_age)",
       "position_attach_mode": "relative",
       "rotation_attach_mode": "relative",
       "ts/targets": "projectile"

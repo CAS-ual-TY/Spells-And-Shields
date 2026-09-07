@@ -10,6 +10,7 @@ import de.cas_ual_ty.spells.registers.SpellFunctions;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellFunction;
+import de.cas_ual_ty.spells.spell.action.SpellAction;
 import de.cas_ual_ty.spells.spell.action.ai.SetMobTargetAction;
 import de.cas_ual_ty.spells.spell.action.animation.PlayAnimationAction;
 import de.cas_ual_ty.spells.spell.action.attribute.AddAttributeModifierAction;
@@ -82,6 +83,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static de.cas_ual_ty.spells.datagen.SpellFunctionsGen.*;
+
 import static de.cas_ual_ty.spells.spell.context.BuiltinEvents.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups.*;
 import static de.cas_ual_ty.spells.spell.context.BuiltinVariables.*;
@@ -138,6 +141,21 @@ public class SpellsGen
     public Holder<SpellFunction> getFunction(ResourceLocation key)
     {
         return spellFunctionGetter.getOrThrow(ResourceKey.create(SpellFunctions.REGISTRY_KEY, key));
+    }
+
+    public SpellAction checkManaCosts()
+    {
+        return CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.CHECK_MANA_COST), Map.of(), Map.of(), Map.of());
+    }
+
+    public SpellAction checkManaItemCosts()
+    {
+        return CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.CHECK_MANA_AND_ITEM_COST), Map.of(), Map.of(), Map.of());
+    }
+
+    public SpellAction checkManaItemCooldownCosts()
+    {
+        return CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.CHECK_MANA_AND_ITEM_AND_COOLDOWN_COST), Map.of(), Map.of(), Map.of());
     }
 
     /**
@@ -741,6 +759,7 @@ public class SpellsGen
         amountsTag.putInt(BuiltInRegistries.ITEM.getKey(Items.CHICKEN).toString(), 8);
         amountsTag.putInt(BuiltInRegistries.ITEM.getKey(Items.PORKCHOP).toString(), 8);
         amountsTag.putInt(BuiltInRegistries.ITEM.getKey(Items.MUTTON).toString(), 8);
+        // TODO SUMMON_ANIMAL
         addSpell(Spells.SUMMON_ANIMAL, new Spell(modId, "summon_animal", Spells.KEY_SUMMON_ANIMAL, 4F)
                 .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(MainhandItemTargetAction.make(ACTIVE, OWNER, "item"))
@@ -768,20 +787,15 @@ public class SpellsGen
                 .addTooltip(itemCostComponent(new ItemStack(Items.PORKCHOP, 8)))
                 .addTooltip(itemCostComponent(new ItemStack(Items.MUTTON, 8)))
         );
-        
+
+
         addSpell(Spells.FIRE_BALL, new Spell(modId, "fire_ball", Spells.KEY_FIRE_BALL, 5F)
                 .addParameter(DOUBLE, "speed", 2.5)
                 .addParameter(INT, "fire_seconds", 2)
-                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_MANA_COST), Map.of(), Map.of(), Map.of()))
-                .addAction(BooleanActivationAction.make(ACTIVE, "consume", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.BLAZE_POWDER)))
-                .addAction(ActivateAction.make(ACTIVE, "consume"))
-                .addAction(ActivateAction.make("consume", "shoot"))
-                .addAction(CallFunctionAction.make("shoot", getFunction(SpellFunctions.BURN_MANA_COST), Map.of(), Map.of(), Map.of()))
-                .addAction(BooleanActivationAction.make("consume", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), FALSE, TRUE))
-                .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.BLAZE_POWDER)))
-                .addAction(ShootAction.make("shoot", OWNER, DOUBLE.immediate(0.05D), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
-
+                .addParameter(STRING, ITEM, BuiltInRegistries.ITEM.getKey(Items.BLAZE_POWDER).toString())
+                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.CHECK_MANA_AND_ITEM_COST), Map.of(), Map.of(), Map.of()))
+                .addAction(ActivateAction.make(ACTIVE, "shoot"))
+                .addAction(ShootAction.make("shoot", OWNER, DOUBLE.reference("speed"), ZERO_D, INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", "projectile"))
                 .addAction(ActivateAction.make("shoot", "animation"))
                 .addAction(PutVarAction.makeString("animation", Compiler.compileString(" uuid_from_string('_animation_stab') " , STRING), "animation_uuid"))
                 .addAction(ActivateAction.make("animation", "animation_offhand"))
@@ -865,6 +879,7 @@ public class SpellsGen
         );
         
         CompoundTag blastRecipes = blastFurnaceRecipes();
+        // TODO BLAST_SMELT
         addSpell(Spells.BLAST_SMELT, new Spell(modId, "blast_smelt", Spells.KEY_BLAST_SMELT, 4F)
                 .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(MainhandItemTargetAction.make(ACTIVE, OWNER, "item"))
@@ -886,13 +901,13 @@ public class SpellsGen
                 .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
                 .addTooltip(textItemCostComponent(Component.translatable(Spells.KEY_BLAST_SMELT_DESC_COST), 1))
         );
-        
+
+        // TODO: Test: TRANSFER_MANA
         addSpell(Spells.TRANSFER_MANA, new Spell(modId, "transfer_mana", Spells.KEY_TRANSFER_MANA, 4F)
                 .addParameter(DOUBLE, "speed", 2.5)
                 .addParameter(DOUBLE, "range", 25D)
-                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(LookAtTargetAction.make(ACTIVE, OWNER, DOUBLE.reference("range"), 0.5F, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, "looked_at_block", "looked_at_entity", "looked_at_nothing"))
-                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.BURN_MANA_COST), Map.of(), Map.of(), Map.of()))
+                .addAction(checkManaCosts())
                 .addAction(HomeAction.make("looked_at_entity", OWNER, ENTITY_HIT, DOUBLE.immediate(3D), INT.immediate(200), "on_block_hit", "on_entity_hit", "on_timeout", ""))
                 .addAction(PlaySoundAction.make("looked_at_entity", OWNER, SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, ONE_D, ONE_D))
                 .addAction(ReplenishManaAction.make("on_entity_hit", ENTITY_HIT, DOUBLE.reference(MANA_COST)))
@@ -909,6 +924,7 @@ public class SpellsGen
         CompoundTag tag = new CompoundTag();
         tag.putBoolean("crit", true);
         tag.putInt("pickup", 1);
+        // TODO BLOW_ARROW
         addSpell(Spells.BLOW_ARROW, new Spell(modId, "blow_arrow", Spells.KEY_BLOW_ARROW, 5F)
                 .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(PutVarAction.makeCompoundTag(ACTIVE, tag, "tag"))
@@ -951,12 +967,11 @@ public class SpellsGen
         
         addSpell(Spells.WATER_LEAP, new Spell(modId, "water_leap", Spells.KEY_WATER_LEAP, 5F)
                 .addParameter(DOUBLE, "speed", 2.5)
-                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(GetEntityEyePositionAction.make(ACTIVE, OWNER, "eye_pos"))
                 .addAction(GetBlockAction.make(ACTIVE, OWNER, "feet_block", "", ""))
                 .addAction(GetBlockAction.make(ACTIVE, "eye_pos", "eye_block", "", ""))
                 .addAction(BooleanActivationAction.make(ACTIVE, ACTIVE, Compiler.compileString(" feet_block == '" + BuiltInRegistries.BLOCK.getKey(Blocks.WATER).toString() + "' && eye_block == '" + BuiltInRegistries.BLOCK.getKey(Blocks.WATER).toString() + "' ", BOOLEAN), FALSE, TRUE))
-                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.BURN_MANA_COST), Map.of(), Map.of(), Map.of()))
+                .addAction(checkManaCosts())
                 .addAction(ResetFallDistanceAction.make(ACTIVE, OWNER))
                 .addAction(GetEntityPositionDirectionMotionAction.make(ACTIVE, OWNER, "", "look", ""))
                 .addAction(PutVarAction.makeVec3(ACTIVE, Compiler.compileString(" (normalize(look + vec3(0, -get_y(look), 0))) * speed ", VEC3), "direction"))
@@ -979,7 +994,8 @@ public class SpellsGen
                 .addEventHook(LIVING_HURT_VICTIM)
                 .addTooltip(Component.translatable(Spells.KEY_PERMANENT_AQUA_RESISTANCE_DESC))
         );
-        
+
+        // TODO: WATER_WHIP
         addSpell(Spells.WATER_WHIP, new Spell(modId, "water_whip", Spells.KEY_WATER_WHIP, 5F)
                 .addParameter(DOUBLE, "damage", 10.0)
                 .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_MANA_COST), Map.of(), Map.of(), Map.of()))
@@ -1039,7 +1055,8 @@ public class SpellsGen
                 .addTooltip(itemCostTitle(KEY_HAND_ITEM_COST_TITLE))
                 .addTooltip(itemCostComponent(new ItemStack(Items.WATER_BUCKET)))
         );
-        
+
+        //TODO POTION_SHOT
         addSpell(Spells.POTION_SHOT, new Spell(modId, "potion_shot", Spells.KEY_POTION_SHOT, 5F)
                 .addParameter(DOUBLE, "damage", 10.0)
                 .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_MANA_COST), Map.of(), Map.of(), Map.of()))
@@ -1097,16 +1114,11 @@ public class SpellsGen
                 .addEventHook(LIVING_HURT_VICTIM)
                 .addTooltip(Component.translatable(Spells.KEY_MANA_SOLES_DESC))
         );
-        
+
+        //TODO: TEST: FIRE_CHARGE
         addSpell(Spells.FIRE_CHARGE, new Spell(ItemSpellIcon.make(new ItemStack(Items.FIRE_CHARGE)), Spells.KEY_FIRE_CHARGE, 5F)
-                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_MANA_COST), Map.of(), Map.of(), Map.of()))
-                .addAction(BooleanActivationAction.make(ACTIVE, "consume", Compiler.compileString(" !item_costs() ", BOOLEAN), TRUE, FALSE))
-                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.HAS_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.FIRE_CHARGE)))
-                .addAction(ActivateAction.make(ACTIVE, "consume"))
-                .addAction(ActivateAction.make("consume", "shoot"))
-                .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.BURN_MANA_COST), Map.of(), Map.of(), Map.of()))
-                .addAction(BooleanActivationAction.make("consume", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), FALSE, TRUE))
-                .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.FIRE_CHARGE)))
+                .addAction(checkManaItemCosts())
+                .addAction(ActivateAction.make(ACTIVE, "shoot"))
                 .addAction(GetEntityUUIDAction.make("shoot", OWNER, "uuid"))
                 .addAction(GetEntityPositionDirectionMotionAction.make("shoot", OWNER, "", "direction", ""))
                 .addAction(PutVarAction.makeCompoundTag("shoot", Compiler.compileString(" put_nbt_uuid(new_tag(), 'Owner', uuid) ", TAG), "tag"))
@@ -1121,7 +1133,7 @@ public class SpellsGen
         );
         
         addSpell(Spells.PRESSURIZE, new Spell(modId, "pressurize", Spells.KEY_PRESSURIZE, 4F)
-                .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.CHECK_MANA_COST), Map.of(), Map.of(), Map.of()))
+                .addAction(checkManaCosts())
                 .addAction(RangedEntityTargetsAction.make(ACTIVE, "targets", OWNER, DOUBLE.reference("range")))
                 .addAction(BooleanActivationAction.make(ACTIVE, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
                 .addAction(FilterPlayerTargetsAction.make("no_pvp", "", "targets", TRUE))
