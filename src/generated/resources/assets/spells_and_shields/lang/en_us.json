@@ -319,7 +319,7 @@
   "spells.progression.forget_all.success.multiple": "All %s spells have been forgotten by %s players",
   "spells.progression.forget_all.success.single": "All %s learned spells in %s spell trees have been forgotten by %s",
   "spells.progression.forget_tree.failed.single": "Not a single spell in spell tree '%s' was learned by %s",
-  "spells.progression.forget_tree.success.multiple": "Spell tree 's%' have been forgotten by %s players",
+  "spells.progression.forget_tree.success.multiple": "Spell tree '%s' have been forgotten by %s players",
   "spells.progression.forget_tree.success.single": "Spell tree '%s' was forgotten by %s",
   "spells.progression.learn.failed.single": "Spell '%s' was already learned by %s",
   "spells.progression.learn.success.multiple": "Spell '%s' has been learned by %s players",

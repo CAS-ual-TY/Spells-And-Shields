@@ -122,7 +122,7 @@ public class LangGen extends LanguageProvider
         add(SpellCommand.SPELLS_PROGRESSION_FORGET_MULTIPLE, "Spell '%s' has been forgotten by %s players");
         add(SpellCommand.SPELLS_PROGRESSION_FORGET_TREE_SINGLE, "Spell tree '%s' was forgotten by %s");
         add(SpellCommand.SPELLS_PROGRESSION_FORGET_TREE_SINGLE_FAILED, "Not a single spell in spell tree '%s' was learned by %s");
-        add(SpellCommand.SPELLS_PROGRESSION_FORGET_TREE_MULTIPLE, "Spell tree 's%' have been forgotten by %s players");
+        add(SpellCommand.SPELLS_PROGRESSION_FORGET_TREE_MULTIPLE, "Spell tree '%s' have been forgotten by %s players");
         add(SpellCommand.SPELLS_PROGRESSION_FORGET_ALL_SINGLE, "All %s learned spells in %s spell trees have been forgotten by %s");
         add(SpellCommand.SPELLS_PROGRESSION_FORGET_ALL_SINGLE_FAILED, "%s has never learned a single spell");
         add(SpellCommand.SPELLS_PROGRESSION_FORGET_ALL_MULTIPLE, "All %s spells have been forgotten by %s players");

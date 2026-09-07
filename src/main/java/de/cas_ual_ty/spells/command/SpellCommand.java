@@ -91,7 +91,7 @@ public class SpellCommand
                         .then(Commands.literal("forget")
                                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players())
                                         .then(Commands.argument(ARG_SPELL_TREE, SpellTreeArgument.spellTree(cbx))
-                                                .then(Commands.argument(ARG_SPELL, SpellArgument.spell(cbx))
+                                                .then(Commands.argument(ARG_NODE_ID, ResourceLocationArgument.id())
                                                         .executes(SpellCommand::spellsProgressionForget)
                                                 )
                                                 .then(Commands.argument("all", StringArgumentType.string())

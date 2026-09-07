@@ -32,7 +32,7 @@ public class SpellIconRegistry
     
     public static final SpellIconRenderer<ItemSpellIcon> ITEM_RENDERER = (icon, guiGraphics, width, height, x, y, partialTicks) -> {
         RenderSystem.enableBlend();
-        guiGraphics.renderItem(icon.getItem(), x + (width - 16) / 2, y + (width - 16) / 2);
+        guiGraphics.renderItem(icon.getItem(), x + (width - 16) / 2, y + (height - 16) / 2);
         RenderSystem.disableBlend();
     };
     
