@@ -7,9 +7,8 @@ import de.cas_ual_ty.spells.spell.variable.ReferencedCtxVar;
 import java.util.Map;
 
 /**
- * Client-side compiled form of one {@code CustomParticleInitEntry} - a named ctx var evaluated once per particle
- * at spawn ({@code index} of that particle, {@code age} 0) and then kept on that particle
- * ({@link CustomParticleInstance#initVars}) for every later per-tick formula evaluation to reference by name.
+ * Client-side compiled form of one {@code CustomParticleInitEntry} - evaluated once at spawn, kept on the
+ * particle ({@link CustomParticleInstance#initVars}) for later per-tick formulas to reference by name.
  */
 public class CustomParticleInitVar<T>
 {
@@ -24,14 +23,7 @@ public class CustomParticleInitVar<T>
         this.expr = expr;
     }
 
-    /**
-     * Evaluates {@link #expr} against {@code context}'s current state - including whatever earlier entries in
-     * the same {@code initialize} list have already pushed into it via THIS method, so later entries can
-     * reference earlier ones - with the given spawn-time {@code index}/{@code totalIndex}/{@code age}. On
-     * success, pushes the result into {@code context} under {@link #name} (so {@code initial_position} and
-     * subsequent entries can reference it too) AND stores it into {@code target}, the new particle's own
-     * permanent map.
-     */
+    /** Pushes the result into {@code context} (so later entries can reference it) and into {@code target}. */
     public void evaluateAndStore(CustomParticleContext context, int index, int totalIndex, int age, Map<String, CtxVar<?>> target)
     {
         context.evaluate(expr, index, totalIndex, age).ifPresent(value ->

@@ -16,12 +16,8 @@ import net.minecraft.world.entity.Entity;
 import java.util.List;
 
 /**
- * Spawns a {@code CustomParticleEmitter} in "position" mode - {@link #position} is re-evaluated directly every
- * tick client-side (against that particle's own {@code index}/{@code age}), replacing the particle's position
- * outright rather than integrating a velocity. See {@link CustomParticleEmitterMotionAction} for the other mode
- * (initial position once at spawn + per-tick motion integrated) and {@link CustomParticleEmitterActionBase} for
- * the fields shared between both, including {@code period} (repeat spawns) and {@code initialize} (per-particle
- * one-time ctx vars).
+ * "Position" mode - {@link #position} re-evaluated every tick, replacing the particle's position outright
+ * rather than integrating a velocity. See {@link CustomParticleEmitterMotionAction} for the other mode.
  */
 public class CustomParticleEmitterPositionAction extends CustomParticleEmitterActionBase
 {

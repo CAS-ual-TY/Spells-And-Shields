@@ -92,21 +92,10 @@ public class SpellProjectile extends AbstractHurtingProjectile
     }
 
     /**
-     * AbstractHurtingProjectile#tick() unconditionally calls ProjectileUtil.rotateTowardsMovement(this, 0.2F),
-     * which drags xRot/yRot 20%/tick towards ITS OWN atan2 convention - one that matches neither
-     * Projectile#shoot()'s convention nor the "true" look-direction convention used everywhere else
-     * (Entity#calculateViewVector/getViewYRot/getViewXRot, Entity#lookAt) - visibly rotating away from the
-     * correct heading over several ticks. Since this projectile's velocity direction never actually changes
-     * (getInertia() == 1F, no acceleration), just re-lock rotation to the true instantaneous heading, using the
-     * SAME formula as Entity#lookAt (confirmed by inverting calculateViewVector too): yaw/pitch here are the
-     * NEGATION of what Projectile#shoot() itself sets - shoot()'s own atan2(dx,dz)/atan2(dy,horiz) do not match
-     * the look-direction convention either, they just happen to render correctly for arrows because
-     * ArrowRenderer applies its own compensating offset.
-     * <p>
-     * Called both every tick AND synchronously right after {@link #shoot(double, double, double, float, float)}
-     * in the static factories below - the latter closes the window where anything reading this entity's rotation
-     * (eg. a particle emitter's one-time {@code initial_position} evaluation) before its first tick() would
-     * otherwise still see vanilla shoot()'s un-corrected convention.
+     * AbstractHurtingProjectile#tick() drags xRot/yRot towards its own atan2 convention every tick, which doesn't
+     * match Entity#getViewYRot/getViewXRot's look-direction convention - re-lock to the real heading instead.
+     * Called every tick, and synchronously right after {@link #shoot} so rotation is already correct before the
+     * first tick (eg. for a particle emitter's one-time {@code initial_position} evaluation).
      */
     protected void lockRotationToVelocity()
     {
@@ -166,10 +155,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
     {
         super.recreateFromPacket(packet);
 
-        // Entity#recreateFromPacket sets xRot/yRot from the packet but leaves xRotO/yRotO at their
-        // constructor-default 0 for one tick, so partial-tick-interpolated rotation reads (eg. the particle
-        // emitter's RELATIVE rotation attach) blend from 0 towards the real heading for that first tick instead
-        // of already being correct.
+        // recreateFromPacket sets xRot/yRot but leaves xRotO/yRotO at 0 for one tick, so interpolated reads blend from 0
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
     }

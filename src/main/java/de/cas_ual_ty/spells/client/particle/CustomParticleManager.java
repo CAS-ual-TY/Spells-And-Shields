@@ -10,28 +10,8 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import java.util.Iterator;
 
 /**
- * Advances every active {@link CustomParticleEmitterInstance} once per client tick - ages the emitter, evaluates
- * that emitter's DSL expressions (see {@link CustomParticleContext}) fresh against each particle's own
- * {@code index}/{@code age}/{@code initVars} (see {@link CustomParticleContext#evaluate(de.cas_ual_ty.spells.spell.variable.DynamicCtxVar, CustomParticleInstance)})
- * and writes the results into the particle (snapshotting the previous position first, for render-time
- * interpolation - see {@link CustomParticleRenderer}), and drops emitters that expired or whose attachment
- * died/unloaded while still {@linkplain CustomParticleEmitterInstance#needsAttachedEntity() needed}.
- * <p>
- * Exactly one of {@link CustomParticleEmitterInstance#motionExpr}/{@link CustomParticleEmitterInstance#positionExpr}
- * is set per emitter (see {@code CustomParticleEmitterClientAction}) - motion mode re-evaluates a velocity every
- * tick and integrates it into position, position mode recomputes the position directly with no integration.
- * <p>
- * When {@link CustomParticleEmitterInstance#period} is {@code > 0}, a fresh {@link CustomParticleEmitterInstance#spawnBatch()}
- * fires every {@code period} ticks, offset by {@link CustomParticleEmitterInstance#delay} if set - individual
- * particles are NOT force-removed once they age past {@code period}, they simply keep ticking (and rendering,
- * however the formulas leave them) until either the whole emitter expires via
- * {@link CustomParticleEmitterInstance#totalLifetime}, or - if {@code particle_lifetime} was set on the action that
- * spawned them - their OWN individual {@link CustomParticleInstance#maxAge} is reached, in which case only that
- * one particle is removed. A pulse that should visually disappear without either of those needs its own
- * {@code alpha} formula to fade it out (eg. {@code 1.0 - age / to_double(max_age)}, where {@code max_age} is
- * captured as {@code period} for repeating emitters) - that already makes it invisible at the same moment a
- * hard removal would have, with no visible difference, while still allowing an emitter that wants its particles
- * to persist (eg. a trail that should stay planted, not fade) to just use a constant alpha instead.
+ * Advances every active {@link CustomParticleEmitterInstance} once per client tick - evaluates DSL expressions,
+ * ages/removes particles and emitters, spawns repeat batches.
  */
 @EventBusSubscriber(modid = SpellsAndShields.MOD_ID, value = Dist.CLIENT)
 public class CustomParticleManager

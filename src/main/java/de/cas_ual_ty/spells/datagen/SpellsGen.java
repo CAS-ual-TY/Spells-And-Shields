@@ -1931,9 +1931,6 @@ public class SpellsGen
                         List.of(
                                 new CustomParticleInitEntry(INT, "r", "index % rows"),
                                 new CustomParticleInitEntry(INT, "c", "index / rows"),
-                                // world-up (0,1,0) rotated the same way CustomParticleRenderer#resolveWorldPosition
-                                // rotates local offsets (xRot(-pitch) then yRot(-yaw)) - the projectile's own local
-                                // "up", tipping with pitch instead of always pointing along world Y.
                                 new CustomParticleInitEntry(VEC3, "colour",
                                         "r == 0 ? hex_to_vec3('E50000') :" +
                                                 "r == 1 ? hex_to_vec3('FF8D00') :" +
@@ -1975,9 +1972,6 @@ public class SpellsGen
                         List.of(
                                 new CustomParticleInitEntry(INT, "r", "index % rows"),
                                 new CustomParticleInitEntry(INT, "c", "index / rows"),
-                                // world-up (0,1,0) rotated the same way CustomParticleRenderer#resolveWorldPosition
-                                // rotates local offsets (xRot(-pitch) then yRot(-yaw)) - the projectile's own local
-                                // "up", tipping with pitch instead of always pointing along world Y.
                                 new CustomParticleInitEntry(VEC3, "colour",
                                         "r == 0 ? hex_to_vec3('E50000') :" +
                                         "r == 1 ? hex_to_vec3('FF8D00') :" +
@@ -2014,9 +2008,6 @@ public class SpellsGen
                         List.of(
                                 new CustomParticleInitEntry(INT, "r", "index % rows"),
                                 new CustomParticleInitEntry(INT, "c", "index / rows"),
-                                // world-up (0,1,0) rotated the same way CustomParticleRenderer#resolveWorldPosition
-                                // rotates local offsets (xRot(-pitch) then yRot(-yaw)) - the projectile's own local
-                                // "up", tipping with pitch instead of always pointing along world Y.
                                 new CustomParticleInitEntry(VEC3, "colour",
                                         "r == 0 ? hex_to_vec3('E50000') :" +
                                                 "r == 1 ? hex_to_vec3('FF8D00') :" +
@@ -2057,9 +2048,6 @@ public class SpellsGen
                         List.of(
                                 new CustomParticleInitEntry(INT, "r", "index % rows"),
                                 new CustomParticleInitEntry(INT, "c", "index / rows"),
-                                // world-up (0,1,0) rotated the same way CustomParticleRenderer#resolveWorldPosition
-                                // rotates local offsets (xRot(-pitch) then yRot(-yaw)) - the projectile's own local
-                                // "up", tipping with pitch instead of always pointing along world Y.
                                 new CustomParticleInitEntry(VEC3, "colour",
                                         "r == 0 ? hex_to_vec3('E50000') :" +
                                                 "r == 1 ? hex_to_vec3('FF8D00') :" +

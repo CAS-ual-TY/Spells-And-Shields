@@ -22,20 +22,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Shared network payload and client-side spawn logic for both {@link CustomParticleEmitterMotionAction} and
- * {@link CustomParticleEmitterPositionAction} - exactly one of {@link #initialPosition}/{@link #motion} (motion
- * mode) or {@link #position} (position mode) is non-empty; the other(s) are sent as {@code ""} (raw DSL is never
- * legitimately empty, so that's a safe "absent" sentinel, same as everywhere else in this mod's ad-hoc buffer
- * encodings). See {@code CustomParticleEmitterInstance}/{@code CustomParticleManager} for how the two modes tick
- * differently once spawned, and how {@link #period} drives repeat spawns.
+ * Shared network payload and client-side spawn logic for {@link CustomParticleEmitterMotionAction}/
+ * {@link CustomParticleEmitterPositionAction} - exactly one of {@link #initialPosition}/{@link #motion} or
+ * {@link #position} is non-empty, the rest sent as {@code ""} ("absent" sentinel).
  * <p>
- * {@link #execute} calls {@code emitter.context.setFrameVars(...)} BEFORE the initial {@code spawnBatch()} -
- * every LATER batch gets it from {@code CustomParticleManager} (which calls it once per tick, before ticking
- * particles), but the very first batch is spawned right here, so without this call {@code source_motion}/
- * {@code source_yaw}/{@code source_pitch} would be completely unset (not just stale) for any formula the
- * FIRST batch evaluates - `initial_position`/`initialize` entries referencing them would silently fail (logged
- * as "Operant 1 does not exist" with {@code SpellsConfig.DEBUG_SPELLS} on) and the whole expression tree
- * involving them would permanently evaluate to empty for those particles.
+ * {@link #execute} must call {@code setFrameVars} before the initial {@code spawnBatch()} - without it,
+ * {@code source_motion}/{@code source_yaw}/{@code source_pitch} are unset for the first batch's formulas.
  */
 public class CustomParticleEmitterClientAction implements IClientAction
 {
@@ -214,9 +206,6 @@ public class CustomParticleEmitterClientAction implements IClientAction
 
         emitter.initVars = compiledInitVars;
 
-        // Delay > 0 means even the first batch waits - CustomParticleManager's tick loop spawns it once
-        // emitter.age reaches emitter.delay, same as every repeat batch after it. Delay <= 0 keeps the original
-        // behavior of spawning the first batch immediately, right here, at cast time.
         if(delay <= 0)
         {
             emitter.spawnBatch();

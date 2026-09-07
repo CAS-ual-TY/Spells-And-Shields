@@ -6,15 +6,8 @@ import de.cas_ual_ty.spells.registers.SpellsCodecs;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
 /**
- * One entry of a {@code CustomParticleEmitterActionBase#initialize} list - a named ctx var, evaluated once per
- * particle at spawn (against that particle's own {@code index}, {@code age} 0) from a raw DSL formula string,
- * then kept on the particle so every later per-tick evaluation of {@code position}/{@code motion}/{@code color}/
- * {@code alpha} can reference it by name (see {@code CustomParticleInstance#initVars}).
- * <p>
- * Like {@code position}/{@code motion}/{@code color}/{@code alpha}, {@link #value} is a raw DSL formula string,
- * NOT a {@link de.cas_ual_ty.spells.spell.variable.DynamicCtxVar} resolved server-side - the server has no
- * concept of individual particles or their {@code index} to evaluate against, so this compiles and evaluates
- * client-side (see {@code CustomParticleInitVar}), same as those fields.
+ * One entry of a {@code CustomParticleEmitterActionBase#initialize} list - a named ctx var evaluated once per
+ * particle at spawn from a raw DSL formula string, then kept on the particle for later per-tick formulas.
  */
 public record CustomParticleInitEntry(CtxVarType<?> type, String name, String value)
 {

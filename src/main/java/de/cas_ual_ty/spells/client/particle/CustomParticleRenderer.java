@@ -21,15 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Draws every active {@link CustomParticleEmitterInstance}'s particles as simple camera-facing colored quads, at
- * {@link RenderLevelStageEvent.Stage#AFTER_PARTICLES} (translucent-safe, after vanilla particles/entities). No
- * texture yet - flat-colored squares, same {@link RenderType}/vertex-building technique vanilla's own
- * {@code SingleQuadParticle} uses (raw camera-relative coordinates fed straight to the buffer, not
- * {@code PoseStack} transforms - vanilla particles bypass the pose stack entirely for position, so this does
- * too, for the same proven-correct billboard math).
- * <p>
- * {@link #ACTIVE} is a placeholder list living here for now - ticking/spawning/expiring emitters into it is a
- * separate concern (the manager), not yet built.
+ * Draws every active {@link CustomParticleEmitterInstance}'s particles as camera-facing colored quads, at
+ * {@link RenderLevelStageEvent.Stage#AFTER_PARTICLES}.
  */
 @EventBusSubscriber(modid = SpellsAndShields.MOD_ID, value = Dist.CLIENT)
 public class CustomParticleRenderer
@@ -99,25 +92,9 @@ public class CustomParticleRenderer
     }
 
     /**
-     * Resolves a particle's interpolated local offset (its own {@code position}, spawn-local - not world space)
-     * against its emitter's attachment. Position and rotation attachment resolve independently:
-     * <ul>
-     * <li>position ABSOLUTE: anchor is THIS PARTICLE's own {@code spawnPosition} (captured per-batch, see
-     * {@link CustomParticleEmitterInstance#spawnBatch()}), never moves after that batch spawned.</li>
-     * <li>position RELATIVE: anchor is {@link Entity#getPosition(float)} of {@code emitter.attachedTo}.</li>
-     * <li>rotation ABSOLUTE: local offset stays unrotated.</li>
-     * <li>rotation RELATIVE: local offset rotates by the entity's full CURRENT yaw and pitch, every frame -
-     * whether position is ABSOLUTE (particle stays put at its own frozen spawn position, but continuously
-     * re-orients to match wherever the entity is currently facing - eg. a raw local offset like
-     * {@code vec3(0, 0, 1)} always points "forward" as of right now, not as of spawn) or also RELATIVE (rigid
-     * child-style attachment, entity's position AND orientation both live). Composed the same way vanilla does
-     * for local-offset-to-world transforms (eg. {@code Player#getRopeHoldPosition}): pitch first via
-     * {@code xRot}, then yaw via {@code yRot}, both negated-degrees-to-radians. There is no per-particle
-     * spawn-time yaw/pitch capture (unlike {@code spawnPosition}) - a formula that wants a frozen-at-spawn
-     * orientation instead should bake {@code source_yaw}/{@code source_pitch} into its own offset formula and
-     * use rotation ABSOLUTE, like {@code CustomParticleEmitterMotionAction}'s {@code initial_position} does when
-     * evaluated once at spawn.</li>
-     * </ul>
+     * Position ABSOLUTE anchors to the particle's own spawnPosition; RELATIVE anchors to the entity's live
+     * position. Rotation RELATIVE always uses the entity's full current yaw/pitch (never frozen at spawn),
+     * composed pitch-then-yaw like vanilla's {@code Player#getRopeHoldPosition}.
      */
     private static Vec3 resolveWorldPosition(CustomParticleEmitterInstance emitter, CustomParticleInstance particle, float partialTick)
     {
