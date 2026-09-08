@@ -12,7 +12,6 @@ import de.cas_ual_ty.spells.spell.variable.ReferencedCtxVar;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class Compiler
@@ -360,9 +359,9 @@ public class Compiler
 
                 if(cachedEntry == null || cachedType1 != type1 || cachedType2 != type2)
                 {
-                    AtomicBoolean reversed = new AtomicBoolean(false);
-                    cachedEntry = op.getEntry(type1, type2, reversed);
-                    cachedReversed = reversed.get();
+                    BinaryOperation.Resolution resolution = op.getEntry(type1, type2);
+                    cachedEntry = resolution.entry();
+                    cachedReversed = resolution.reversed();
                     cachedType1 = type1;
                     cachedType2 = type2;
                 }

@@ -8,7 +8,7 @@ import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public class TernaryOperation
@@ -102,26 +102,22 @@ public class TernaryOperation
         
         public <X> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, CtxVar<?> operant3, BiConsumer<CtxVarType<X>, X> result)
         {
-            AtomicBoolean success = new AtomicBoolean(false);
-            
-            operant1.tryGetAs(this.operant1).ifPresent(op1 ->
+            Optional<T> op1 = operant1.tryGetAs(this.operant1);
+            Optional<U> op2 = operant2.tryGetAs(this.operant2);
+            Optional<V> op3 = operant3.tryGetAs(this.operant3);
+
+            if(op1.isPresent() && op2.isPresent() && op3.isPresent())
             {
-                operant2.tryGetAs(this.operant2).ifPresent(op2 ->
+                X value = (X) function.apply(op1.get(), op2.get(), op3.get());
+
+                if(value != null)
                 {
-                    operant3.tryGetAs(this.operant3).ifPresent(op3 ->
-                    {
-                        X value = (X) function.apply(op1, op2, op3);
-                        
-                        if(value != null)
-                        {
-                            result.accept((CtxVarType<X>) result(), value);
-                            success.set(true);
-                        }
-                    });
-                });
-            });
-            
-            return success.get();
+                    result.accept((CtxVarType<X>) result(), value);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
     

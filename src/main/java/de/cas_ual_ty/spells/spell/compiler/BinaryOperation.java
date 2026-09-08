@@ -8,7 +8,7 @@ import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
@@ -76,58 +76,66 @@ public class BinaryOperation
         return this;
     }
     
-    public Entry<?, ?, ?> getEntry(CtxVarType<?> operant1, CtxVarType<?> operant2, AtomicBoolean reversed)
+    /**
+     * {@code reversed} is true when {@code entry} only matched with the operands swapped (eg. {@code 2 + vec}
+     * matching a {@code (vec, double)} registration) - callers must apply {@code entry} to the operands in that
+     * swapped order.
+     */
+    public record Resolution(Entry<?, ?, ?> entry, boolean reversed)
     {
-        Entry<?, ?, ?> entry = entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2)).findFirst().orElse(null);
-        
+    }
+
+    public Resolution getEntry(CtxVarType<?> operant1, CtxVarType<?> operant2)
+    {
+        Entry<?, ?, ?> entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant1, operant2)).findFirst().orElse(null);
+        boolean reversed = false;
+
         if(entry == null)
         {
             entry = map.stream().filter(e -> e.areTypesDirectlyApplicable(operant2, operant1)).findFirst().orElse(null);
-            
+
             if(entry != null)
             {
-                reversed.set(true);
+                reversed = true;
             }
             else
             {
                 entry = map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant1, operant2)).findFirst().orElse(null);
-                
+
                 if(entry == null)
                 {
                     entry = map.stream().filter(e -> e.areTypesIndirectlyApplicable(operant2, operant1)).findFirst().orElse(null);
-                    
+
                     if(entry != null)
                     {
-                        reversed.set(true);
+                        reversed = true;
                     }
                 }
             }
         }
-        
+
         if(entry == null && SpellsConfig.DEBUG_SPELLS.get())
         {
             SpellsAndShields.LOGGER.info("Can not execute binary operation \"" + name + "\" with types " + CtxVarTypes.REGISTRY.getKey(operant1) + ", " + CtxVarTypes.REGISTRY.getKey(operant2));
         }
-        
-        return entry;
+
+        return new Resolution(entry, reversed);
     }
-    
+
     public <V> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, BiConsumer<CtxVarType<V>, V> result)
     {
-        AtomicBoolean reversed = new AtomicBoolean(false);
-        
-        Entry<?, ?, ?> entry = getEntry(operant1.getType(), operant2.getType(), reversed);
-        
-        if(entry != null)
+        Resolution resolution = getEntry(operant1.getType(), operant2.getType());
+
+        if(resolution.entry() != null)
         {
-            return reversed.get() ? entry.applyAndSet(operant2, operant1, result) : entry.applyAndSet(operant1, operant2, result);
+            return resolution.reversed() ? resolution.entry().applyAndSet(operant2, operant1, result) : resolution.entry().applyAndSet(operant1, operant2, result);
         }
         else
         {
             return false;
         }
     }
-    
+
     public static record Entry<T, U, V>(CtxVarType<T> operant1, CtxVarType<U> operant2, CtxVarType<V> result,
                                         BiFunction<T, U, V> function)
     {
@@ -135,31 +143,29 @@ public class BinaryOperation
         {
             return operant1.canConvertTo(this.operant1) && operant2.canConvertTo(this.operant2);
         }
-        
+
         public boolean areTypesDirectlyApplicable(CtxVarType<?> operant1, CtxVarType<?> operant2)
         {
             return operant1 == this.operant1 && operant2 == this.operant2;
         }
-        
+
         public <X> boolean applyAndSet(CtxVar<?> operant1, CtxVar<?> operant2, BiConsumer<CtxVarType<X>, X> result)
         {
-            AtomicBoolean success = new AtomicBoolean(false);
-            
-            operant1.tryGetAs(this.operant1).ifPresent(op1 ->
+            Optional<T> op1 = operant1.tryGetAs(this.operant1);
+            Optional<U> op2 = operant2.tryGetAs(this.operant2);
+
+            if(op1.isPresent() && op2.isPresent())
             {
-                operant2.tryGetAs(this.operant2).ifPresent(op2 ->
+                X value = (X) function.apply(op1.get(), op2.get());
+
+                if(value != null)
                 {
-                    X value = (X) function.apply(op1, op2);
-                    
-                    if(value != null)
-                    {
-                        result.accept((CtxVarType<X>) result(), value);
-                        success.set(true);
-                    }
-                });
-            });
-            
-            return success.get();
+                    result.accept((CtxVarType<X>) result(), value);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

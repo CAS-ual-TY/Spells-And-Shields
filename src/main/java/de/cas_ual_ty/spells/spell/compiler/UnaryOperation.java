@@ -8,7 +8,7 @@ import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -122,20 +122,20 @@ public class UnaryOperation
         
         public <X> boolean applyAndSet(CtxVar<?> operant, BiConsumer<CtxVarType<X>, X> result)
         {
-            AtomicBoolean success = new AtomicBoolean(false);
-            
-            operant.tryGetAs(this.operant).ifPresent(op ->
+            Optional<T> op = operant.tryGetAs(this.operant);
+
+            if(op.isPresent())
             {
-                X value = (X) function.apply(op);
-                
+                X value = (X) function.apply(op.get());
+
                 if(value != null)
                 {
                     result.accept((CtxVarType<X>) result(), value);
-                    success.set(true);
+                    return true;
                 }
-            });
-            
-            return success.get();
+            }
+
+            return false;
         }
     }
 }
