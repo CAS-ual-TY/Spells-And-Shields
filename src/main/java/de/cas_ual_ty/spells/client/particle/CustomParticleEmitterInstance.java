@@ -87,13 +87,14 @@ public class CustomParticleEmitterInstance
             CustomParticleInstance particle = new CustomParticleInstance(index, totalIndex, startPosition, batchPosition, maxAge, particleInitVars);
 
             // evaluate once now too, else it renders white/opaque for one tick before CustomParticleManager's first tick
-            context.evaluate(colorExpr, particle).ifPresent(color ->
+            context.beginParticle(particle);
+            context.evaluate(colorExpr).ifPresent(color ->
             {
                 particle.red = color.x();
                 particle.green = color.y();
                 particle.blue = color.z();
             });
-            context.evaluate(alphaExpr, particle).ifPresent(alpha -> particle.alpha = alpha);
+            context.evaluate(alphaExpr).ifPresent(alpha -> particle.alpha = alpha);
 
             particles.add(particle);
         }

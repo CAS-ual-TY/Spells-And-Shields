@@ -44,24 +44,25 @@ public class CustomParticleManager
             {
                 CustomParticleInstance particle = particleIterator.next();
                 particle.prevPosition = particle.position;
+                emitter.context.beginParticle(particle);
 
                 if(emitter.motionExpr != null)
                 {
-                    particle.motion = emitter.context.evaluate(emitter.motionExpr, particle).orElse(Vec3.ZERO);
+                    particle.motion = emitter.context.evaluate(emitter.motionExpr).orElse(Vec3.ZERO);
                     particle.position = particle.position.add(particle.motion);
                 }
                 else if(emitter.positionExpr != null)
                 {
-                    particle.position = emitter.context.evaluate(emitter.positionExpr, particle).orElse(particle.position);
+                    particle.position = emitter.context.evaluate(emitter.positionExpr).orElse(particle.position);
                 }
 
-                emitter.context.evaluate(emitter.colorExpr, particle).ifPresent(color ->
+                emitter.context.evaluate(emitter.colorExpr).ifPresent(color ->
                 {
                     particle.red = color.x();
                     particle.green = color.y();
                     particle.blue = color.z();
                 });
-                emitter.context.evaluate(emitter.alphaExpr, particle).ifPresent(alpha -> particle.alpha = alpha);
+                emitter.context.evaluate(emitter.alphaExpr).ifPresent(alpha -> particle.alpha = alpha);
 
                 particle.age++;
 

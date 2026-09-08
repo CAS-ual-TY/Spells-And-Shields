@@ -53,7 +53,11 @@ public class CustomParticleContext
         return expression.getValue(ctx);
     }
 
-    public <T> Optional<T> evaluate(DynamicCtxVar<T> expression, CustomParticleInstance particle)
+    /**
+     * Pushes {@code particle}'s state (index/age/initVars) once - call before one or more {@link #evaluate(DynamicCtxVar)}
+     * calls against the same particle in the same tick, instead of re-pushing per formula.
+     */
+    public void beginParticle(CustomParticleInstance particle)
     {
         ctx.setCtxVar(CtxVarTypes.INT.get(), INDEX_NAME, particle.index);
         ctx.setCtxVar(CtxVarTypes.INT.get(), TOTAL_INDEX_NAME, particle.totalIndex);
@@ -64,7 +68,10 @@ public class CustomParticleContext
         {
             setVar(var);
         }
+    }
 
+    public <T> Optional<T> evaluate(DynamicCtxVar<T> expression)
+    {
         return expression.getValue(ctx);
     }
 
