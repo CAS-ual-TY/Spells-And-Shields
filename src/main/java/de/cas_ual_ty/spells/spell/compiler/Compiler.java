@@ -12,7 +12,7 @@ import de.cas_ual_ty.spells.spell.variable.ReferencedCtxVar;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class Compiler
@@ -249,52 +249,142 @@ public class Compiler
     
     private static Part makeUnaryFunc(UnaryOperation op, Part operant1)
     {
-        return (ctx) ->
+        return new UnaryPart(op, operant1);
+    }
+
+    private static Part makeBinaryFunc(BinaryOperation op, Part operant1, Part operant2)
+    {
+        return new BinaryPart(op, operant1, operant2);
+    }
+
+    private static Part makeTernaryFunc(TernaryOperation op, Part operant1, Part operant2, Part operant3)
+    {
+        return new TernaryPart(op, operant1, operant2, operant3);
+    }
+
+    /**
+     * Caches the resolved {@link UnaryOperation.Entry} (keyed by operand type) so repeat evaluations of the same
+     * compiled node - eg. every particle, every tick - skip {@link UnaryOperation#getEntry} entirely instead of
+     * re-scanning its whole overload list every single call.
+     */
+    private static final class UnaryPart implements Part
+    {
+        private final UnaryOperation op;
+        private final Part operant1;
+
+        private CtxVarType<?> cachedType;
+        private UnaryOperation.Entry<?, ?> cachedEntry;
+
+        private UnaryPart(UnaryOperation op, Part operant1)
+        {
+            this.op = op;
+            this.operant1 = operant1;
+        }
+
+        @Override
+        public Optional<CtxVar<?>> getValue(SpellContext ctx)
         {
             Optional<CtxVar<?>> optional1 = operant1.getValue(ctx);
-            
-            AtomicReference<CtxVar<?>> newVar = new AtomicReference<>(null);
-            
-            optional1.ifPresent(op1 ->
+            CtxVar<?> newVar = null;
+
+            if(optional1.isPresent())
             {
-                op.applyAndSet(op1, (type, value) -> newVar.set(new CtxVar<>(type, value)));
-            });
-            
-            if((optional1.isEmpty() || newVar.get() == null) && SpellsConfig.DEBUG_SPELLS.get())
+                CtxVar<?> op1 = optional1.get();
+                CtxVarType<?> type1 = op1.getType();
+
+                if(cachedEntry == null || cachedType != type1)
+                {
+                    cachedType = type1;
+                    cachedEntry = op.getEntry(type1);
+                }
+
+                if(cachedEntry != null)
+                {
+                    CtxVar<?>[] result = new CtxVar<?>[1];
+                    cachedEntry.applyAndSet(op1, (type, value) -> result[0] = new CtxVar<>(type, value));
+                    newVar = result[0];
+                }
+            }
+
+            if((optional1.isEmpty() || newVar == null) && SpellsConfig.DEBUG_SPELLS.get())
             {
                 SpellsAndShields.LOGGER.info("Error executing compiled unary operation \"" + op.name + "\":");
                 if(optional1.isEmpty())
                 {
                     SpellsAndShields.LOGGER.info("Operant 1 does not exist.");
                 }
-                if(newVar.get() == null)
+                if(newVar == null)
                 {
                     SpellsAndShields.LOGGER.info("Result does not exist.");
                 }
             }
-            
-            return Optional.ofNullable(newVar.get());
-        };
+
+            return Optional.ofNullable(newVar);
+        }
     }
-    
-    private static Part makeBinaryFunc(BinaryOperation op, Part operant1, Part operant2)
+
+    /**
+     * @see UnaryPart
+     */
+    private static final class BinaryPart implements Part
     {
-        return (ctx) ->
+        private final BinaryOperation op;
+        private final Part operant1;
+        private final Part operant2;
+
+        private CtxVarType<?> cachedType1;
+        private CtxVarType<?> cachedType2;
+        private BinaryOperation.Entry<?, ?, ?> cachedEntry;
+        private boolean cachedReversed;
+
+        private BinaryPart(BinaryOperation op, Part operant1, Part operant2)
+        {
+            this.op = op;
+            this.operant1 = operant1;
+            this.operant2 = operant2;
+        }
+
+        @Override
+        public Optional<CtxVar<?>> getValue(SpellContext ctx)
         {
             Optional<CtxVar<?>> optional1 = operant1.getValue(ctx);
             Optional<CtxVar<?>> optional2 = operant2.getValue(ctx);
-            
-            AtomicReference<CtxVar<?>> newVar = new AtomicReference<>(null);
-            
-            optional1.ifPresent(op1 ->
+            CtxVar<?> newVar = null;
+
+            if(optional1.isPresent() && optional2.isPresent())
             {
-                optional2.ifPresent(op2 ->
+                CtxVar<?> op1 = optional1.get();
+                CtxVar<?> op2 = optional2.get();
+                CtxVarType<?> type1 = op1.getType();
+                CtxVarType<?> type2 = op2.getType();
+
+                if(cachedEntry == null || cachedType1 != type1 || cachedType2 != type2)
                 {
-                    op.applyAndSet(op1, op2, (type, value) -> newVar.set(new CtxVar<>(type, value)));
-                });
-            });
-            
-            if((optional1.isEmpty() || optional2.isEmpty() || newVar.get() == null) && SpellsConfig.DEBUG_SPELLS.get())
+                    AtomicBoolean reversed = new AtomicBoolean(false);
+                    cachedEntry = op.getEntry(type1, type2, reversed);
+                    cachedReversed = reversed.get();
+                    cachedType1 = type1;
+                    cachedType2 = type2;
+                }
+
+                if(cachedEntry != null)
+                {
+                    CtxVar<?>[] result = new CtxVar<?>[1];
+
+                    if(cachedReversed)
+                    {
+                        cachedEntry.applyAndSet(op2, op1, (type, value) -> result[0] = new CtxVar<>(type, value));
+                    }
+                    else
+                    {
+                        cachedEntry.applyAndSet(op1, op2, (type, value) -> result[0] = new CtxVar<>(type, value));
+                    }
+
+                    newVar = result[0];
+                }
+            }
+
+            if((optional1.isEmpty() || optional2.isEmpty() || newVar == null) && SpellsConfig.DEBUG_SPELLS.get())
             {
                 SpellsAndShields.LOGGER.info("Error executing compiled binary operation \"" + op.name + "\":");
                 if(optional1.isEmpty())
@@ -305,38 +395,73 @@ public class Compiler
                 {
                     SpellsAndShields.LOGGER.info("Operant 2 does not exist.");
                 }
-                if(newVar.get() == null)
+                if(newVar == null)
                 {
                     SpellsAndShields.LOGGER.info("Result does not exist.");
                 }
             }
-            
-            return Optional.ofNullable(newVar.get());
-        };
+
+            return Optional.ofNullable(newVar);
+        }
     }
-    
-    private static Part makeTernaryFunc(TernaryOperation op, Part operant1, Part operant2, Part operant3)
+
+    /**
+     * @see UnaryPart
+     */
+    private static final class TernaryPart implements Part
     {
-        return (ctx) ->
+        private final TernaryOperation op;
+        private final Part operant1;
+        private final Part operant2;
+        private final Part operant3;
+
+        private CtxVarType<?> cachedType1;
+        private CtxVarType<?> cachedType2;
+        private CtxVarType<?> cachedType3;
+        private TernaryOperation.Entry<?, ?, ?, ?> cachedEntry;
+
+        private TernaryPart(TernaryOperation op, Part operant1, Part operant2, Part operant3)
+        {
+            this.op = op;
+            this.operant1 = operant1;
+            this.operant2 = operant2;
+            this.operant3 = operant3;
+        }
+
+        @Override
+        public Optional<CtxVar<?>> getValue(SpellContext ctx)
         {
             Optional<CtxVar<?>> optional1 = operant1.getValue(ctx);
             Optional<CtxVar<?>> optional2 = operant2.getValue(ctx);
             Optional<CtxVar<?>> optional3 = operant3.getValue(ctx);
-            
-            AtomicReference<CtxVar<?>> newVar = new AtomicReference<>(null);
-            
-            optional1.ifPresent(op1 ->
+            CtxVar<?> newVar = null;
+
+            if(optional1.isPresent() && optional2.isPresent() && optional3.isPresent())
             {
-                optional2.ifPresent(op2 ->
+                CtxVar<?> op1 = optional1.get();
+                CtxVar<?> op2 = optional2.get();
+                CtxVar<?> op3 = optional3.get();
+                CtxVarType<?> type1 = op1.getType();
+                CtxVarType<?> type2 = op2.getType();
+                CtxVarType<?> type3 = op3.getType();
+
+                if(cachedEntry == null || cachedType1 != type1 || cachedType2 != type2 || cachedType3 != type3)
                 {
-                    optional3.ifPresent(op3 ->
-                    {
-                        op.applyAndSet(op1, op2, op3, (type, value) -> newVar.set(new CtxVar<>(type, value)));
-                    });
-                });
-            });
-            
-            if((optional1.isEmpty() || optional2.isEmpty() || optional3.isEmpty() || newVar.get() == null) && SpellsConfig.DEBUG_SPELLS.get())
+                    cachedEntry = op.getEntry(type1, type2, type3);
+                    cachedType1 = type1;
+                    cachedType2 = type2;
+                    cachedType3 = type3;
+                }
+
+                if(cachedEntry != null)
+                {
+                    CtxVar<?>[] result = new CtxVar<?>[1];
+                    cachedEntry.applyAndSet(op1, op2, op3, (type, value) -> result[0] = new CtxVar<>(type, value));
+                    newVar = result[0];
+                }
+            }
+
+            if((optional1.isEmpty() || optional2.isEmpty() || optional3.isEmpty() || newVar == null) && SpellsConfig.DEBUG_SPELLS.get())
             {
                 SpellsAndShields.LOGGER.info("Error executing compiled ternary operation \"" + op.name + "\":");
                 if(optional1.isEmpty())
@@ -351,14 +476,14 @@ public class Compiler
                 {
                     SpellsAndShields.LOGGER.info("Operant 3 does not exist.");
                 }
-                if(newVar.get() == null)
+                if(newVar == null)
                 {
                     SpellsAndShields.LOGGER.info("Result does not exist.");
                 }
             }
-            
-            return Optional.ofNullable(newVar.get());
-        };
+
+            return Optional.ofNullable(newVar);
+        }
     }
     
     private static Part compileFactor()
