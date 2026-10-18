@@ -65,9 +65,9 @@ public class SpellContext
         }
     }
     
-    public void activate(List<String> activation)
+    public void activate(List<String> activations)
     {
-        activationsList.forEach(this::activate);
+        activations.forEach(this::activate);
     }
     
     public void activate(String... activations)
@@ -83,9 +83,9 @@ public class SpellContext
         }
     }
     
-    public void deactivate(List<String> activation)
+    public void deactivate(List<String> activations)
     {
-        activationsList.forEach(this::deactivate);
+        activations.forEach(this::deactivate);
     }
     
     public void deactivate(String... activations)
