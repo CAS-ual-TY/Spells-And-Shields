@@ -86,17 +86,7 @@ public class Compiler
     {
         Parser parser = new Parser(input);
         
-        Part part;
-        
-        try
-        {
-            part = parser.compile();
-        }
-        catch(InlineCompilationException e)
-        {
-            SpellsAndShields.LOGGER.error(e.getMessage());
-            return new ReferencedCtxVar<>(type, input, (ctx) -> Optional.empty());
-        }
+        Part part = parser.compile();
         
         if(parser.position < input.length())
         {
