@@ -57,9 +57,6 @@ public class Compiler
         TERNARY_FUNCTIONS.put(name, op);
     }
     
-    private static int position;
-    private static String s;
-    
     public static <T> DataResult<DynamicCtxVar<T>> compileData(String input, CtxVarType<T> type)
     {
         try
@@ -87,14 +84,13 @@ public class Compiler
     
     private static <T> ReferencedCtxVar<T> compile(String input, CtxVarType<T> type) throws InlineCompilationException
     {
-        position = 0;
-        s = input;
+        Parser parser = new Parser(input);
         
         Part part;
         
         try
         {
-            part = compile();
+            part = parser.compile();
         }
         catch(InlineCompilationException e)
         {
@@ -102,148 +98,12 @@ public class Compiler
             return new ReferencedCtxVar<>(type, input, (ctx) -> Optional.empty());
         }
         
-        if(position < s.length())
+        if(parser.position < input.length())
         {
-            throw makeException("Expected end of string.");
+            throw parser.makeException("Expected end of string.");
         }
         
         return new ReferencedCtxVar<T>(type, input, (ctx) -> part.getValue(ctx).map(v -> v.tryConvertTo(type)));
-    }
-    
-    private static InlineCompilationException makeException(String msg)
-    {
-        return new InlineCompilationException("Can not compile \"" + s + "\" at index " + position + ": " + msg);
-    }
-    
-    private static void nextChar()
-    {
-        position++;
-    }
-    
-    private static char getChar()
-    {
-        if(position >= s.length())
-        {
-            return 0;
-        }
-        
-        return s.charAt(position);
-    }
-    
-    private static void skipSpaces()
-    {
-        while(getChar() == ' ')
-        {
-            nextChar();
-        }
-    }
-    
-    private static void nextCharSkipSpaces()
-    {
-        nextChar();
-        skipSpaces();
-    }
-    
-    private static String readName()
-    {
-        int start = position;
-        
-        if(Character.isAlphabetic(getChar()) || getChar() == '_')
-        {
-            nextChar();
-        }
-        
-        while(Character.isAlphabetic(getChar()) || Character.isDigit(getChar()) || getChar() == '_')
-        {
-            nextChar();
-        }
-        
-        if(position == start)
-        {
-            throw makeException("Expected identifier.");
-        }
-        
-        final int end = position;
-        
-        skipSpaces();
-        
-        return s.substring(start, end);
-    }
-    
-    private static Part readImmediate()
-    {
-        boolean floatingPoint = false;
-        
-        final int start = position;
-        
-        while(Character.isDigit(getChar()))
-        {
-            nextChar();
-        }
-        
-        if(getChar() == '.')
-        {
-            nextChar();
-            
-            floatingPoint = true;
-            
-            while(Character.isDigit(getChar()))
-            {
-                nextChar();
-            }
-        }
-        
-        if(position == start)
-        {
-            throw makeException("Expected identifier.");
-        }
-        
-        final int end = position;
-        
-        skipSpaces();
-        
-        if(floatingPoint)
-        {
-            double value = Double.parseDouble(s.substring(start, end));
-            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.DOUBLE.get(), value));
-        }
-        else
-        {
-            int value = Integer.parseInt(s.substring(start, end));
-            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.INT.get(), value));
-        }
-    }
-    
-    private static Part readString()
-    {
-        if(getChar() != '\'')
-        {
-            throw makeException("Expected string to start with '''.");
-        }
-        
-        nextChar();
-        
-        StringBuilder s = new StringBuilder();
-        
-        char c;
-        while((c = getChar()) != '\'' && position < Compiler.s.length())
-        {
-            s.append(c);
-            nextChar();
-        }
-        
-        if(c == '\'')
-        {
-            nextChar();
-        }
-        else
-        {
-            throw makeException("Expected string to end with '''.");
-        }
-        
-        skipSpaces();
-        
-        return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.STRING.get(), s.toString()));
     }
     
     private static Part makeUnaryFunc(UnaryOperation op, Part operant1)
@@ -485,367 +345,519 @@ public class Compiler
         }
     }
     
-    private static Part compileFactor()
+    /**
+     * Cursor state for one {@link Compiler#compile(String, CtxVarType)} call - one instance per compile, so concurrent
+     * compiles (eg. server registry load vs. client particle formulas in singleplayer) can't trample each other.
+     */
+    private static final class Parser
     {
-        boolean negate = false;
-        boolean not = false;
+        private final String s;
+        private int position;
         
-        Part ref;
-        
-        if(getChar() == '-')
+        private Parser(String s)
         {
-            nextCharSkipSpaces();
-            negate = true;
-        }
-        else if(getChar() == '!')
-        {
-            nextCharSkipSpaces();
-            not = true;
+            this.s = s;
+            this.position = 0;
         }
         
-        if(getChar() == '(')
+        private InlineCompilationException makeException(String msg)
         {
-            nextCharSkipSpaces();
-            
-            ref = compileExpression();
-            
-            if(getChar() == ')')
+            return new InlineCompilationException("Can not compile \"" + s + "\" at index " + position + ": " + msg);
+        }
+        
+        private void nextChar()
+        {
+            position++;
+        }
+        
+        private char getChar()
+        {
+            if(position >= s.length())
             {
-                nextCharSkipSpaces();
+                return 0;
+            }
+            
+            return s.charAt(position);
+        }
+        
+        private void skipSpaces()
+        {
+            while(getChar() == ' ')
+            {
+                nextChar();
+            }
+        }
+        
+        private void nextCharSkipSpaces()
+        {
+            nextChar();
+            skipSpaces();
+        }
+        
+        private String readName()
+        {
+            int start = position;
+            
+            if(Character.isAlphabetic(getChar()) || getChar() == '_')
+            {
+                nextChar();
+            }
+            
+            while(Character.isAlphabetic(getChar()) || Character.isDigit(getChar()) || getChar() == '_')
+            {
+                nextChar();
+            }
+            
+            if(position == start)
+            {
+                throw makeException("Expected identifier.");
+            }
+            
+            final int end = position;
+            
+            skipSpaces();
+            
+            return s.substring(start, end);
+        }
+        
+        private Part readImmediate()
+        {
+            boolean floatingPoint = false;
+            
+            final int start = position;
+            
+            while(Character.isDigit(getChar()))
+            {
+                nextChar();
+            }
+            
+            if(getChar() == '.')
+            {
+                nextChar();
+                
+                floatingPoint = true;
+                
+                while(Character.isDigit(getChar()))
+                {
+                    nextChar();
+                }
+            }
+            
+            if(position == start)
+            {
+                throw makeException("Expected identifier.");
+            }
+            
+            final int end = position;
+            
+            skipSpaces();
+            
+            if(floatingPoint)
+            {
+                double value = Double.parseDouble(s.substring(start, end));
+                return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.DOUBLE.get(), value));
             }
             else
             {
-                throw makeException("Expected ')'");
+                int value = Integer.parseInt(s.substring(start, end));
+                return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.INT.get(), value));
             }
         }
-        else if(Character.isDigit(getChar()))
+        
+        private Part readString()
         {
-            ref = readImmediate();
+            if(getChar() != '\'')
+            {
+                throw makeException("Expected string to start with '''.");
+            }
+            
+            nextChar();
+            
+            StringBuilder s = new StringBuilder();
+            
+            char c;
+            while((c = getChar()) != '\'' && position < this.s.length())
+            {
+                s.append(c);
+                nextChar();
+            }
+            
+            if(c == '\'')
+            {
+                nextChar();
+            }
+            else
+            {
+                throw makeException("Expected string to end with '''.");
+            }
+            
+            skipSpaces();
+            
+            return (ctx) -> Optional.of(new CtxVar<>(CtxVarTypes.STRING.get(), s.toString()));
         }
-        else if(getChar() == '\'')
+        
+        private Part compileFactor()
         {
-            ref = readString();
-        }
-        else
-        {
-            String name = readName();
+            boolean negate = false;
+            boolean not = false;
+            
+            Part ref;
+            
+            if(getChar() == '-')
+            {
+                nextCharSkipSpaces();
+                negate = true;
+            }
+            else if(getChar() == '!')
+            {
+                nextCharSkipSpaces();
+                not = true;
+            }
             
             if(getChar() == '(')
             {
                 nextCharSkipSpaces();
                 
-                List<Part> arguments = new ArrayList<>();
-                
-                if(getChar() != ')')
-                {
-                    arguments.add(compileExpression());
-                    
-                    while(getChar() == ',')
-                    {
-                        nextCharSkipSpaces();
-                        arguments.add(compileExpression());
-                    }
-                }
+                ref = compileExpression();
                 
                 if(getChar() == ')')
                 {
                     nextCharSkipSpaces();
-                    ref = null;
-                    
-                    if(arguments.isEmpty())
-                    {
-                        Supplier<CtxVar<?>> supplier = SUPPLIERS.get(name);
-                        ref = (ctx) -> Optional.ofNullable(supplier).map(Supplier::get);
-                    }
-                    else if(arguments.size() == 1)
-                    {
-                        UnaryOperation op = UNARY_FUNCTIONS.get(name);
-                        if(op != null)
-                        {
-                            ref = makeUnaryFunc(op, arguments.get(0));
-                        }
-                    }
-                    else if(arguments.size() == 2)
-                    {
-                        BinaryOperation op = BINARY_FUNCTIONS.get(name);
-                        if(op != null)
-                        {
-                            ref = makeBinaryFunc(op, arguments.get(0), arguments.get(1));
-                        }
-                    }
-                    else if(arguments.size() == 3)
-                    {
-                        TernaryOperation op = TERNARY_FUNCTIONS.get(name);
-                        if(op != null)
-                        {
-                            ref = makeTernaryFunc(op, arguments.get(0), arguments.get(1), arguments.get(2));
-                        }
-                    }
-                    
-                    if(ref == null)
-                    {
-                        throw makeException("Unknown function \"" + name + "\" with number of arguments: " + arguments.size());
-                    }
                 }
                 else
                 {
                     throw makeException("Expected ')'");
                 }
             }
-            else
+            else if(Character.isDigit(getChar()))
             {
-                ref = (ctx) -> Optional.ofNullable(ctx.getCtxVar(name));
+                ref = readImmediate();
             }
-        }
-        
-        if(negate)
-        {
-            ref = makeUnaryFunc(UnaryOperation.NEGATE, ref);
-        }
-        else if(not)
-        {
-            ref = makeUnaryFunc(UnaryOperation.NOT, ref);
-        }
-        
-        return ref;
-    }
-    
-    private static Part compileProduct()
-    {
-        Part currentOp = compileFactor();
-
-        char sign;
-
-        while((sign = getChar()) == '*' || sign == '/' || sign == '%')
-        {
-            nextCharSkipSpaces();
-
-            Part op2 = compileFactor();
-
-            if(sign == '*')
+            else if(getChar() == '\'')
             {
-                currentOp = makeBinaryFunc(BinaryOperation.MUL, currentOp, op2);
-            }
-            else if(sign == '/')
-            {
-                currentOp = makeBinaryFunc(BinaryOperation.DIV, currentOp, op2);
+                ref = readString();
             }
             else
             {
-                currentOp = makeBinaryFunc(BinaryOperation.REM, currentOp, op2);
-            }
-        }
-
-        return currentOp;
-    }
-    
-    private static Part compileSum()
-    {
-        Part currentOp = compileProduct();
-        
-        char sign;
-        
-        while((sign = getChar()) == '+' || sign == '-')
-        {
-            nextCharSkipSpaces();
-            
-            Part op2 = compileProduct();
-            
-            if(sign == '+')
-            {
-                currentOp = makeBinaryFunc(BinaryOperation.ADD, currentOp, op2);
-            }
-            else
-            {
-                currentOp = makeBinaryFunc(BinaryOperation.SUB, currentOp, op2);
-            }
-        }
-        
-        return currentOp;
-    }
-    
-    private static Part compileRelation()
-    {
-        Part currentOp = compileSum();
-        
-        char sign;
-        
-        while((sign = getChar()) == '>' || sign == '<')
-        {
-            nextChar();
-            
-            BinaryOperation op;
-            
-            if(sign == '>')
-            {
-                if(getChar() == '=')
+                String name = readName();
+                
+                if(getChar() == '(')
                 {
                     nextCharSkipSpaces();
-                    op = BinaryOperation.GEQ;
+                    
+                    List<Part> arguments = new ArrayList<>();
+                    
+                    if(getChar() != ')')
+                    {
+                        arguments.add(compileExpression());
+                        
+                        while(getChar() == ',')
+                        {
+                            nextCharSkipSpaces();
+                            arguments.add(compileExpression());
+                        }
+                    }
+                    
+                    if(getChar() == ')')
+                    {
+                        nextCharSkipSpaces();
+                        ref = null;
+                        
+                        if(arguments.isEmpty())
+                        {
+                            Supplier<CtxVar<?>> supplier = SUPPLIERS.get(name);
+                            ref = (ctx) -> Optional.ofNullable(supplier).map(Supplier::get);
+                        }
+                        else if(arguments.size() == 1)
+                        {
+                            UnaryOperation op = UNARY_FUNCTIONS.get(name);
+                            if(op != null)
+                            {
+                                ref = makeUnaryFunc(op, arguments.get(0));
+                            }
+                        }
+                        else if(arguments.size() == 2)
+                        {
+                            BinaryOperation op = BINARY_FUNCTIONS.get(name);
+                            if(op != null)
+                            {
+                                ref = makeBinaryFunc(op, arguments.get(0), arguments.get(1));
+                            }
+                        }
+                        else if(arguments.size() == 3)
+                        {
+                            TernaryOperation op = TERNARY_FUNCTIONS.get(name);
+                            if(op != null)
+                            {
+                                ref = makeTernaryFunc(op, arguments.get(0), arguments.get(1), arguments.get(2));
+                            }
+                        }
+                        
+                        if(ref == null)
+                        {
+                            throw makeException("Unknown function \"" + name + "\" with number of arguments: " + arguments.size());
+                        }
+                    }
+                    else
+                    {
+                        throw makeException("Expected ')'");
+                    }
                 }
                 else
                 {
-                    skipSpaces();
-                    op = BinaryOperation.GT;
+                    ref = (ctx) -> Optional.ofNullable(ctx.getCtxVar(name));
                 }
             }
-            else
+            
+            if(negate)
             {
-                if(getChar() == '=')
-                {
-                    nextCharSkipSpaces();
-                    op = BinaryOperation.LEQ;
-                }
-                else
-                {
-                    skipSpaces();
-                    op = BinaryOperation.LT;
-                }
+                ref = makeUnaryFunc(UnaryOperation.NEGATE, ref);
+            }
+            else if(not)
+            {
+                ref = makeUnaryFunc(UnaryOperation.NOT, ref);
             }
             
-            Part op2 = compileSum();
-            
-            currentOp = makeBinaryFunc(op, currentOp, op2);
+            return ref;
         }
         
-        return currentOp;
-    }
-    
-    private static Part compileComparison()
-    {
-        Part currentOp = compileRelation();
-        
-        char sign;
-        
-        while((sign = getChar()) == '=' || sign == '!')
+        private Part compileProduct()
         {
-            nextChar();
-            
-            BinaryOperation op;
-            
-            if(sign == '=')
-            {
-                if(getChar() == '=')
-                {
-                    nextCharSkipSpaces();
-                    op = BinaryOperation.EQ;
-                }
-                else
-                {
-                    throw makeException("Expected '='");
-                }
-            }
-            else
-            {
-                if(getChar() == '=')
-                {
-                    nextCharSkipSpaces();
-                    op = BinaryOperation.NEQ;
-                }
-                else
-                {
-                    throw makeException("Expected '='");
-                }
-            }
-            
-            Part op2 = compileRelation();
-            
-            currentOp = makeBinaryFunc(op, currentOp, op2);
-        }
-        
-        return currentOp;
-    }
-    
-    private static Part compileConjunction()
-    {
-        Part currentOp = compileComparison();
-        
-        char sign;
-        
-        while(getChar() == '&')
-        {
-            nextChar();
-            
-            if(getChar() == '&')
+            Part currentOp = compileFactor();
+
+            char sign;
+
+            while((sign = getChar()) == '*' || sign == '/' || sign == '%')
             {
                 nextCharSkipSpaces();
+
+                Part op2 = compileFactor();
+
+                if(sign == '*')
+                {
+                    currentOp = makeBinaryFunc(BinaryOperation.MUL, currentOp, op2);
+                }
+                else if(sign == '/')
+                {
+                    currentOp = makeBinaryFunc(BinaryOperation.DIV, currentOp, op2);
+                }
+                else
+                {
+                    currentOp = makeBinaryFunc(BinaryOperation.REM, currentOp, op2);
+                }
             }
-            else
-            {
-                throw makeException("Expected '&'");
-            }
-            
-            Part op2 = compileComparison();
-            
-            currentOp = makeBinaryFunc(BinaryOperation.AND, currentOp, op2);
+
+            return currentOp;
         }
         
-        return currentOp;
-    }
-    
-    private static Part compileDisjunction()
-    {
-        Part currentOp = compileConjunction();
-        
-        while(getChar() == '|')
+        private Part compileSum()
         {
-            nextChar();
+            Part currentOp = compileProduct();
             
-            if(getChar() == '|')
+            char sign;
+            
+            while((sign = getChar()) == '+' || sign == '-')
             {
                 nextCharSkipSpaces();
-            }
-            else
-            {
-                throw makeException("Expected '|'");
+                
+                Part op2 = compileProduct();
+                
+                if(sign == '+')
+                {
+                    currentOp = makeBinaryFunc(BinaryOperation.ADD, currentOp, op2);
+                }
+                else
+                {
+                    currentOp = makeBinaryFunc(BinaryOperation.SUB, currentOp, op2);
+                }
             }
             
-            Part op2 = compileConjunction();
-            
-            currentOp = makeBinaryFunc(BinaryOperation.OR, currentOp, op2);
+            return currentOp;
         }
         
-        return currentOp;
-    }
-    
-    private static Part compileConditional()
-    {
-        Part conditional = compileDisjunction();
-
-        if(getChar() == '?')
+        private Part compileRelation()
         {
-            nextCharSkipSpaces();
+            Part currentOp = compileSum();
+            
+            char sign;
+            
+            while((sign = getChar()) == '>' || sign == '<')
+            {
+                nextChar();
+                
+                BinaryOperation op;
+                
+                if(sign == '>')
+                {
+                    if(getChar() == '=')
+                    {
+                        nextCharSkipSpaces();
+                        op = BinaryOperation.GEQ;
+                    }
+                    else
+                    {
+                        skipSpaces();
+                        op = BinaryOperation.GT;
+                    }
+                }
+                else
+                {
+                    if(getChar() == '=')
+                    {
+                        nextCharSkipSpaces();
+                        op = BinaryOperation.LEQ;
+                    }
+                    else
+                    {
+                        skipSpaces();
+                        op = BinaryOperation.LT;
+                    }
+                }
+                
+                Part op2 = compileSum();
+                
+                currentOp = makeBinaryFunc(op, currentOp, op2);
+            }
+            
+            return currentOp;
+        }
+        
+        private Part compileComparison()
+        {
+            Part currentOp = compileRelation();
+            
+            char sign;
+            
+            while((sign = getChar()) == '=' || sign == '!')
+            {
+                nextChar();
+                
+                BinaryOperation op;
+                
+                if(sign == '=')
+                {
+                    if(getChar() == '=')
+                    {
+                        nextCharSkipSpaces();
+                        op = BinaryOperation.EQ;
+                    }
+                    else
+                    {
+                        throw makeException("Expected '='");
+                    }
+                }
+                else
+                {
+                    if(getChar() == '=')
+                    {
+                        nextCharSkipSpaces();
+                        op = BinaryOperation.NEQ;
+                    }
+                    else
+                    {
+                        throw makeException("Expected '='");
+                    }
+                }
+                
+                Part op2 = compileRelation();
+                
+                currentOp = makeBinaryFunc(op, currentOp, op2);
+            }
+            
+            return currentOp;
+        }
+        
+        private Part compileConjunction()
+        {
+            Part currentOp = compileComparison();
+            
+            char sign;
+            
+            while(getChar() == '&')
+            {
+                nextChar();
+                
+                if(getChar() == '&')
+                {
+                    nextCharSkipSpaces();
+                }
+                else
+                {
+                    throw makeException("Expected '&'");
+                }
+                
+                Part op2 = compileComparison();
+                
+                currentOp = makeBinaryFunc(BinaryOperation.AND, currentOp, op2);
+            }
+            
+            return currentOp;
+        }
+        
+        private Part compileDisjunction()
+        {
+            Part currentOp = compileConjunction();
+            
+            while(getChar() == '|')
+            {
+                nextChar();
+                
+                if(getChar() == '|')
+                {
+                    nextCharSkipSpaces();
+                }
+                else
+                {
+                    throw makeException("Expected '|'");
+                }
+                
+                Part op2 = compileConjunction();
+                
+                currentOp = makeBinaryFunc(BinaryOperation.OR, currentOp, op2);
+            }
+            
+            return currentOp;
+        }
+        
+        private Part compileConditional()
+        {
+            Part conditional = compileDisjunction();
 
-            Part op1 = compileConditional();
-
-            if(getChar() == ':')
+            if(getChar() == '?')
             {
                 nextCharSkipSpaces();
-            }
-            else
-            {
-                throw makeException("Expected ':'");
+
+                Part op1 = compileConditional();
+
+                if(getChar() == ':')
+                {
+                    nextCharSkipSpaces();
+                }
+                else
+                {
+                    throw makeException("Expected ':'");
+                }
+
+                Part op2 = compileConditional();
+
+                return makeTernaryFunc(TernaryOperation.CONDITIONAL, conditional, op1, op2);
             }
 
-            Part op2 = compileConditional();
-
-            return makeTernaryFunc(TernaryOperation.CONDITIONAL, conditional, op1, op2);
+            return conditional;
         }
-
-        return conditional;
-    }
-    
-    private static Part compileExpression()
-    {
-        return compileConditional();
-    }
-    
-    private static Part compile()
-    {
-        skipSpaces();
-        Part part = compileExpression();
-        skipSpaces();
-        return part;
+        
+        private Part compileExpression()
+        {
+            return compileConditional();
+        }
+        
+        private Part compile()
+        {
+            skipSpaces();
+            Part part = compileExpression();
+            skipSpaces();
+            return part;
+        }
     }
     
     private interface Part
