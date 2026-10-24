@@ -1184,7 +1184,7 @@ public class SpellsGen
                 .addAction(ApplyEntityExtraTagAction.make("shoot", "projectile", Compiler.compileString(" put_nbt_double(new_tag(), 'damage', damage) ", TAG)))
                 .addAction(BooleanActivationAction.make("shoot", "consume", Compiler.compileString(" item_costs() ", BOOLEAN), TRUE, FALSE))
                 .addAction(ConsumeItemAction.make("consume", "item", ONE))
-                .addAction(PlaySoundAction.make(ACTIVE, OWNER, SoundEvents.LLAMA_SPIT, ONE_D, ONE_D))
+                .addAction(PlaySoundAction.make("shoot", OWNER, SoundEvents.LLAMA_SPIT, ONE_D, ONE_D))
                 .addAction(GetEntityExtraTagAction.make("on_entity_hit", PROJECTILE, "damage_tag"))
                 .addAction(BooleanActivationAction.make("on_entity_hit", "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
                 .addAction(FilterPlayerTargetsAction.make("no_pvp", "", ENTITY_HIT, TRUE))
