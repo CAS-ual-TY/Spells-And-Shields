@@ -18,6 +18,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -133,10 +135,35 @@ public class SpawnEntityAction extends SpellAction
                         
                         entity.setPos(position.getPosition());
                         
-                        // TODO doesnt quite work
-                        entity.setYRot((float) (Mth.atan2(direction.x, direction.z) * (double) (180F / (float) Math.PI)));
-                        entity.setXRot((float) (Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI)));
-                        
+                        float yRot;
+                        float xRot;
+
+                        if(entity instanceof Projectile)
+                        {
+                            // projectiles use their own mirrored convention, see Projectile#shoot
+                            yRot = (float) (Mth.atan2(direction.x, direction.z) * (double) (180F / (float) Math.PI));
+                            xRot = (float) (Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI));
+                        }
+                        else
+                        {
+                            // inverse of Entity#calculateViewVector
+                            yRot = (float) (Mth.atan2(-direction.x, direction.z) * (double) (180F / (float) Math.PI));
+                            xRot = (float) (-Mth.atan2(direction.y, direction.horizontalDistance()) * (double) (180F / (float) Math.PI));
+                        }
+
+                        entity.setYRot(yRot);
+                        entity.setXRot(xRot);
+                        entity.yRotO = yRot;
+                        entity.xRotO = xRot;
+
+                        if(entity instanceof LivingEntity livingEntity)
+                        {
+                            livingEntity.setYHeadRot(yRot);
+                            livingEntity.setYBodyRot(yRot);
+                            livingEntity.yHeadRotO = yRot;
+                            livingEntity.yBodyRotO = yRot;
+                        }
+
                         entity.setDeltaMovement(motion);
                         
                         ctx.getLevel().addFreshEntity(entity);
