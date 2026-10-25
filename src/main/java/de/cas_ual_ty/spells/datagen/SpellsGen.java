@@ -988,13 +988,13 @@ public class SpellsGen
         ResourceLocation resistanceRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.DAMAGE_RESISTANCE.value());
         ResourceLocation waterBreathingRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.WATER_BREATHING.value());
         addSpell(Spells.PERMANENT_AQUA_RESISTANCE, new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(resistanceRL.getNamespace(), "textures/mob_effect/" + resistanceRL.getPath() + ".png")), DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(waterBreathingRL.getNamespace(), "textures/mob_effect/" + waterBreathingRL.getPath() + ".png")))), Spells.KEY_PERMANENT_AQUA_RESISTANCE, 0F)
-                .addAction(ConditionalDeactivationAction.make(LIVING_HURT_VICTIM, Compiler.compileString(" damage_type == 'mob' ", BOOLEAN)))
-                .addAction(GetEntityEyePositionAction.make(LIVING_HURT_VICTIM, OWNER, "eye_pos"))
-                .addAction(GetFluidAction.make(LIVING_HURT_VICTIM, "eye_pos", "fluid_type", "", "", ""))
-                .addAction(ConditionalDeactivationAction.make(LIVING_HURT_VICTIM, Compiler.compileString(" fluid_type == '" + NeoForgeRegistries.FLUID_TYPES.getKey(Fluids.WATER.getFluidType()) + "' ", BOOLEAN)))
-                .addAction(PutVarAction.makeDouble(LIVING_HURT_VICTIM, Compiler.compileString(" damage_amount * factor ", DOUBLE), "damage_amount"))
+                .addAction(ConditionalDeactivationAction.make(LIVING_INCOMING_DAMAGE_VICTIM, Compiler.compileString(" damage_type == '" + DamageTypes.MOB_ATTACK.location() + "' ", BOOLEAN)))
+                .addAction(GetEntityEyePositionAction.make(LIVING_INCOMING_DAMAGE_VICTIM, OWNER, "eye_pos"))
+                .addAction(GetFluidAction.make(LIVING_INCOMING_DAMAGE_VICTIM, "eye_pos", "fluid_type", "", "", ""))
+                .addAction(ConditionalDeactivationAction.make(LIVING_INCOMING_DAMAGE_VICTIM, Compiler.compileString(" fluid_type == '" + NeoForgeRegistries.FLUID_TYPES.getKey(Fluids.WATER.getFluidType()) + "' ", BOOLEAN)))
+                .addAction(PutVarAction.makeDouble(LIVING_INCOMING_DAMAGE_VICTIM, Compiler.compileString(" damage_amount * factor ", DOUBLE), "damage_amount"))
                 .addParameter(DOUBLE, "factor", 0.75D)
-                .addEventHook(LIVING_HURT_VICTIM)
+                .addEventHook(LIVING_INCOMING_DAMAGE_VICTIM)
                 .addTooltip(Component.translatable(Spells.KEY_PERMANENT_AQUA_RESISTANCE_DESC))
         );
 
@@ -1108,13 +1108,13 @@ public class SpellsGen
         );
         
         addSpell(Spells.MANA_SOLES, new Spell(modId, "mana_soles", Spells.KEY_MANA_SOLES, 0F)
-                .addAction(BooleanActivationAction.make(LIVING_HURT_VICTIM, "reduce", Compiler.compileString(" damage_type == '" + DamageTypes.FALL.location().getPath() + "' ", BOOLEAN), TRUE, TRUE))
+                .addAction(BooleanActivationAction.make(LIVING_INCOMING_DAMAGE_VICTIM, "reduce", Compiler.compileString(" damage_type == '" + DamageTypes.FALL.location() + "' ", BOOLEAN), TRUE, TRUE))
                 .addAction(GetManaAction.make("reduce", OWNER, "mana", "", ""))
                 .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" min(mana, damage_amount) ", DOUBLE), "reduce_amount"))
                 .addAction(PutVarAction.makeBoolean("reduce", Compiler.compileString(" " + EVENT_IS_CANCELED.toString() + " || (reduce_amount >= damage_amount) ", BOOLEAN), EVENT_IS_CANCELED))
                 .addAction(BurnManaAction.make("reduce", OWNER, DOUBLE.reference("reduce_amount")))
                 .addAction(PutVarAction.makeDouble("reduce", Compiler.compileString(" damage_amount - reduce_amount ", DOUBLE), "damage_amount"))
-                .addEventHook(LIVING_HURT_VICTIM)
+                .addEventHook(LIVING_INCOMING_DAMAGE_VICTIM)
                 .addTooltip(Component.translatable(Spells.KEY_MANA_SOLES_DESC))
         );
 
@@ -1696,7 +1696,7 @@ public class SpellsGen
 
                 .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP, "player", OWNER))
-                .addAction(CopyTargetsAction.make(LIVING_HURT_VICTIM, "player", OWNER))
+                .addAction(CopyTargetsAction.make(LIVING_DAMAGE_POST_VICTIM, "player", OWNER))
                 .addAction(CopyTargetsAction.make("renew", "player", HOLDER))
 
                 .addAction(ActivateAction.make("renew", "remove"))
@@ -1707,17 +1707,17 @@ public class SpellsGen
 
                 .addAction(PutVarAction.makeString(ACTIVE, Compiler.compileString(flightUuidCode, STRING), "uuid"))
                 .addAction(PutVarAction.makeString(ON_UNEQUIP, Compiler.compileString(flightUuidCode, STRING), "uuid"))
-                .addAction(PutVarAction.makeString(LIVING_HURT_VICTIM, Compiler.compileString(flightUuidCode, STRING), "uuid"))
+                .addAction(PutVarAction.makeString(LIVING_DAMAGE_POST_VICTIM, Compiler.compileString(flightUuidCode, STRING), "uuid"))
                 .addAction(PutVarAction.makeString(ACTIVE, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
                 .addAction(PutVarAction.makeString(ON_UNEQUIP, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
-                .addAction(PutVarAction.makeString(LIVING_HURT_VICTIM, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
+                .addAction(PutVarAction.makeString(LIVING_DAMAGE_POST_VICTIM, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
 
                 .addAction(ActivateAction.make(ACTIVE, "apply"))
                 .addAction(ActivateAction.make(ACTIVE, "remove"))
                 .addAction(ActivateAction.make(ON_UNEQUIP, "remove"))
-                .addAction(ActivateAction.make(LIVING_HURT_VICTIM, "remove"))
+                .addAction(ActivateAction.make(LIVING_DAMAGE_POST_VICTIM, "remove"))
 
-                .addAction(SetCooldownAction.make(LIVING_HURT_VICTIM, "player", INT.reference(SPELL_SLOT), INT.reference("cooldown")))
+                .addAction(SetCooldownAction.make(LIVING_DAMAGE_POST_VICTIM, "player", INT.reference(SPELL_SLOT), INT.reference("cooldown")))
 
                 .addAction(RemoveAttributeModifierAction.make("remove", "player", STRING.reference("attribute"), STRING.reference("attribute_mod")))
                 .addAction(CheckHasDelayedSpellAction.make("remove", "player", STRING.reference("uuid")))
@@ -1740,7 +1740,7 @@ public class SpellsGen
                 .addParameter(INT, "cooldown", 15 * 20)
                 .addEventHook(ACTIVE)
                 .addEventHook(ON_UNEQUIP)
-                .addEventHook(LIVING_HURT_VICTIM)
+                .addEventHook(LIVING_DAMAGE_POST_VICTIM)
                 .addTooltip(Component.translatable(Spells.KEY_TOGGLE_FLIGHT_DESC))
                 .addTooltip(Component.empty())
                 .addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE))
@@ -1843,13 +1843,13 @@ public class SpellsGen
 
         ResourceLocation magmaFireResistRL = BuiltInRegistries.MOB_EFFECT.getKey(MobEffects.FIRE_RESISTANCE.value());
         addSpell(Spells.MAGMA_ARMOR, new Spell(modId, "magma_armor", Spells.KEY_MAGMA_ARMOR, 0F)
-                .addAction(BooleanActivationAction.make(LIVING_HURT_VICTIM, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
+                .addAction(BooleanActivationAction.make(LIVING_DAMAGE_POST_VICTIM, "no_pvp", Compiler.compileString(" !pvp() ", BOOLEAN), TRUE, FALSE))
                 .addAction(FilterPlayerTargetsAction.make("no_pvp", "", "attacker", TRUE))
-                .addAction(SetOnFireAction.make(LIVING_HURT_VICTIM, "attacker", INT.reference("fire_seconds")))
-                .addAction(PlaySoundAction.make(LIVING_HURT_VICTIM, "attacker", SoundEvents.GENERIC_EXTINGUISH_FIRE, ONE_D, ONE_D))
-                .addAction(SpawnParticlesAction.make(LIVING_HURT_VICTIM, "attacker", ParticleTypes.FLAME, INT.immediate(10), DOUBLE.immediate(0.5D)))
+                .addAction(SetOnFireAction.make(LIVING_DAMAGE_POST_VICTIM, "attacker", INT.reference("fire_seconds")))
+                .addAction(PlaySoundAction.make(LIVING_DAMAGE_POST_VICTIM, "attacker", SoundEvents.GENERIC_EXTINGUISH_FIRE, ONE_D, ONE_D))
+                .addAction(SpawnParticlesAction.make(LIVING_DAMAGE_POST_VICTIM, "attacker", ParticleTypes.FLAME, INT.immediate(10), DOUBLE.immediate(0.5D)))
                 .addParameter(INT, "fire_seconds", 5)
-                .addEventHook(LIVING_HURT_VICTIM)
+                .addEventHook(LIVING_DAMAGE_POST_VICTIM)
                 .addTooltip(Component.translatable(Spells.KEY_MAGMA_ARMOR_DESC))
         );
 
@@ -2205,7 +2205,7 @@ public class SpellsGen
 
                 .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
                 .addAction(CopyTargetsAction.make(ON_UNEQUIP, "player", OWNER))
-                .addAction(CopyTargetsAction.make(LIVING_HURT_VICTIM, "player", OWNER))
+                .addAction(CopyTargetsAction.make(LIVING_DAMAGE_POST_VICTIM, "player", OWNER))
                 .addAction(CopyTargetsAction.make("renew", "player", HOLDER))
 
                 .addAction(ActivateAction.make("renew", "remove"))
@@ -2216,17 +2216,17 @@ public class SpellsGen
 
                 .addAction(PutVarAction.makeString(ACTIVE, Compiler.compileString(flightUuidCode, STRING), "uuid"))
                 .addAction(PutVarAction.makeString(ON_UNEQUIP, Compiler.compileString(flightUuidCode, STRING), "uuid"))
-                .addAction(PutVarAction.makeString(LIVING_HURT_VICTIM, Compiler.compileString(flightUuidCode, STRING), "uuid"))
+                .addAction(PutVarAction.makeString(LIVING_DAMAGE_POST_VICTIM, Compiler.compileString(flightUuidCode, STRING), "uuid"))
                 .addAction(PutVarAction.makeString(ACTIVE, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
                 .addAction(PutVarAction.makeString(ON_UNEQUIP, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
-                .addAction(PutVarAction.makeString(LIVING_HURT_VICTIM, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
+                .addAction(PutVarAction.makeString(LIVING_DAMAGE_POST_VICTIM, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
 
                 .addAction(ActivateAction.make(ACTIVE, "apply"))
                 .addAction(ActivateAction.make(ACTIVE, "remove"))
                 .addAction(ActivateAction.make(ON_UNEQUIP, "remove"))
-                .addAction(ActivateAction.make(LIVING_HURT_VICTIM, "remove"))
+                .addAction(ActivateAction.make(LIVING_DAMAGE_POST_VICTIM, "remove"))
 
-                .addAction(SetCooldownAction.make(LIVING_HURT_VICTIM, "player", INT.reference(SPELL_SLOT), INT.reference("cooldown")))
+                .addAction(SetCooldownAction.make(LIVING_DAMAGE_POST_VICTIM, "player", INT.reference(SPELL_SLOT), INT.reference("cooldown")))
 
                 .addAction(RemoveAttributeModifierAction.make("remove", "player", STRING.reference("attribute"), STRING.reference("attribute_mod")))
                 .addAction(CheckHasDelayedSpellAction.make("remove", "player", STRING.reference("uuid")))
@@ -2249,7 +2249,7 @@ public class SpellsGen
                 .addParameter(INT, "cooldown", cooldown * 20)
                 .addEventHook(ACTIVE)
                 .addEventHook(ON_UNEQUIP)
-                .addEventHook(LIVING_HURT_VICTIM)
+                .addEventHook(LIVING_DAMAGE_POST_VICTIM)
                 .addTooltip(Component.translatable(descKey))
                 .addTooltip(Component.empty())
                 .addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE))

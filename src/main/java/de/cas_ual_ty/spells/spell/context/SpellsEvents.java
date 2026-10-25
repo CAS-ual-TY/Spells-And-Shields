@@ -17,11 +17,13 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
@@ -37,36 +39,39 @@ public class SpellsEvents
     
     public static void registerEvents()
     {
-        register(BuiltinEvents.LIVING_ATTACK_ATTACKER.event, LivingIncomingDamageEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
-                .addTargetLink(e -> Target.of(e.getEntity()), "victim")
-                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
+        // LivingIncomingDamageEvent: start of hurt(), before shield, i-frames and all reductions; cancelable
+        registerDamageEvent(BuiltinEvents.LIVING_INCOMING_DAMAGE_ATTACKER.event, BuiltinEvents.LIVING_INCOMING_DAMAGE_VICTIM.event, LivingIncomingDamageEvent.class, LivingIncomingDamageEvent::getSource, registeredEvent -> registeredEvent
+                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount")
+                .addVariableLink(e -> (double) e.getOriginalAmount(), CtxVarTypes.DOUBLE, "original_damage_amount")
+                .addVariableLink(e -> e.getContainer().getPostAttackInvulnerabilityTicks(), (e, c) -> e.setInvulnerabilityTicks(c), CtxVarTypes.INT, "invulnerability_ticks"));
 
-        register(BuiltinEvents.LIVING_ATTACK_VICTIM.event, LivingIncomingDamageEvent.class)
-                .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
-                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getAmount(), CtxVarTypes.DOUBLE, "damage_amount");
+        // LivingDamageEvent.Pre: past shield and i-frames, after armor, enchantment and mob effect reductions, before absorption; not cancelable
+        registerDamageEvent(BuiltinEvents.LIVING_DAMAGE_PRE_ATTACKER.event, BuiltinEvents.LIVING_DAMAGE_PRE_VICTIM.event, LivingDamageEvent.Pre.class, LivingDamageEvent.Pre::getSource, registeredEvent ->
+        {
+            registeredEvent
+                    .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount")
+                    .addVariableLink(e -> (double) e.getOriginalDamage(), CtxVarTypes.DOUBLE, "original_damage_amount")
+                    .addVariableLink(e -> (double) e.getContainer().getBlockedDamage(), CtxVarTypes.DOUBLE, "blocked_damage");
+            for(DamageContainer.Reduction reduction : DamageContainer.Reduction.values())
+            {
+                registeredEvent.addVariableLink(e -> (double) e.getContainer().getReduction(reduction), CtxVarTypes.DOUBLE, reduction.name().toLowerCase() + "_reduction");
+            }
+        });
 
-        // 1.21 merged LivingAttackEvent + LivingHurtEvent into LivingIncomingDamageEvent; hurt = same event as attack, but pre-armor amount is writable
-        register(BuiltinEvents.LIVING_HURT_ATTACKER.event, LivingIncomingDamageEvent.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
-                .addTargetLink(e -> Target.of(e.getEntity()), "victim")
-                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
-
-        register(BuiltinEvents.LIVING_HURT_VICTIM.event, LivingIncomingDamageEvent.class)
-                .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
-                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getAmount(), (e, c) -> e.setAmount(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
-
-        register(BuiltinEvents.LIVING_DAMAGE_ATTACKER.event, LivingDamageEvent.Pre.class, event -> Optional.ofNullable(event.getSource()).map(DamageSource::getEntity))
-                .addTargetLink(e -> Target.of(e.getEntity()), "victim")
-                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
-
-        register(BuiltinEvents.LIVING_DAMAGE_VICTIM.event, LivingDamageEvent.Pre.class)
-                .addTargetLink(e -> e.getSource().getEntity() != null ? Target.of(e.getSource().getEntity()) : null, "attacker")
-                .addVariableLink(e -> e.getSource().getMsgId(), CtxVarTypes.STRING, "damage_type")
-                .addVariableLink(e -> (double) e.getNewDamage(), (e, c) -> e.setNewDamage(c.floatValue()), CtxVarTypes.DOUBLE, "damage_amount");
+        // LivingDamageEvent.Post: after health has been reduced, final values; read-only
+        registerDamageEvent(BuiltinEvents.LIVING_DAMAGE_POST_ATTACKER.event, BuiltinEvents.LIVING_DAMAGE_POST_VICTIM.event, LivingDamageEvent.Post.class, LivingDamageEvent.Post::getSource, registeredEvent ->
+        {
+            registeredEvent
+                    .addVariableLink(e -> (double) e.getNewDamage(), CtxVarTypes.DOUBLE, "damage_amount")
+                    .addVariableLink(e -> (double) e.getOriginalDamage(), CtxVarTypes.DOUBLE, "original_damage_amount")
+                    .addVariableLink(e -> (double) e.getBlockedDamage(), CtxVarTypes.DOUBLE, "blocked_damage")
+                    .addVariableLink(e -> (double) e.getShieldDamage(), CtxVarTypes.DOUBLE, "shield_damage")
+                    .addVariableLink(LivingDamageEvent.Post::getPostAttackInvulnerabilityTicks, CtxVarTypes.INT, "invulnerability_ticks");
+            for(DamageContainer.Reduction reduction : DamageContainer.Reduction.values())
+            {
+                registeredEvent.addVariableLink(e -> (double) e.getReduction(reduction), CtxVarTypes.DOUBLE, reduction.name().toLowerCase() + "_reduction");
+            }
+        });
 
         register(BuiltinEvents.LIVING_CHANGE_TARGET.event, LivingChangeTargetEvent.class)
                 .addTargetLink(e -> e.getNewAboutToBeSetTarget() != null ? Target.of(e.getNewAboutToBeSetTarget()) : null, "new_target");
@@ -128,6 +133,24 @@ public class SpellsEvents
             DelayedSpellHolder.getHolder(entity).ifPresent(holder ->
                     holder.activateEvent(BuiltinEvents.HOLDER_UNLOADED.event, toContext, fromContext));
         });
+    }
+
+    // registers the _attacker (owner = attacker) and _victim (owner = victim) variant of a damage event with shared links
+    private static <E extends LivingEvent> void registerDamageEvent(String attackerEventId, String victimEventId, Class<E> eventClass, Function<E, DamageSource> sourceGetter, Consumer<RegisteredEvent<E>> extraLinks)
+    {
+        RegisteredEvent<E> attackerEvent = register(attackerEventId, eventClass, e -> Optional.ofNullable(sourceGetter.apply(e).getEntity()))
+                .addTargetLink(e -> Target.of(e.getEntity()), "victim");
+
+        RegisteredEvent<E> victimEvent = register(victimEventId, eventClass)
+                .addTargetLink(e -> sourceGetter.apply(e).getEntity() != null ? Target.of(sourceGetter.apply(e).getEntity()) : null, "attacker");
+
+        for(RegisteredEvent<E> registeredEvent : List.of(attackerEvent, victimEvent))
+        {
+            registeredEvent
+                    .addTargetLink(e -> sourceGetter.apply(e).getDirectEntity() != null ? Target.of(sourceGetter.apply(e).getDirectEntity()) : null, "direct_attacker")
+                    .addVariableLink(e -> sourceGetter.apply(e).typeHolder().unwrapKey().map(key -> key.location().toString()).orElse(null), CtxVarTypes.STRING, "damage_type");
+            extraLinks.accept(registeredEvent);
+        }
     }
 
     public static <E extends Event> RegisteredEvent<E> register(String eventId, Class<E> eventClass, Function<E, Optional<Entity>> playerGetter)
