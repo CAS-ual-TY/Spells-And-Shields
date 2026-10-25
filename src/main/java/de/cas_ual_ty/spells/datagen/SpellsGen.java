@@ -286,7 +286,6 @@ public class SpellsGen
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
         ResourceLocation mobEffectRL = BuiltInRegistries.MOB_EFFECT.getKey(mobEffect.value());
-        String uuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(mobEffectRL.getPath(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(mobEffectRL.getNamespace(), "textures/mob_effect/" + mobEffectRL.getPath() + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), Component.translatable(key, component), manaCost)
                 .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.CHECK_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(ApplyMobEffectAction.make(ACTIVE, OWNER, STRING.reference("mob_effect"), INT.reference("duration+1"), INT.reference("amplifier"), BOOLEAN.reference("ambient"), BOOLEAN.reference("visible"), BOOLEAN.reference("show_icon")))
@@ -2189,70 +2188,5 @@ public class SpellsGen
         blastRecipes.putString("minecraft:raw_copper", "minecraft:copper_ingot");
         blastRecipes.putString("minecraft:deepslate_coal_ore", "minecraft:coal");
         return blastRecipes;
-    }
-
-    public void addToggleFlightSpell(ResourceLocation rl, String key, String descKey, Holder<Attribute> attribute, float manaCost, double value, AttributeModifier.Operation operation, int duration, int cooldown)
-    {
-        MutableComponent flightComponent = Component.translatable(attribute.value().getDescriptionId());
-        ResourceLocation flightAttributeRL = BuiltInRegistries.ATTRIBUTE.getKey(attribute.value());
-        String flightModifierIDCode = " '" + SpellsAndShields.MOD_ID + ":" + flightAttributeRL.getPath() + "_' + " + SPELL_SLOT;
-        String flightUuidCode = " uuid_from_string('toggle' + '%s' + %s) ".formatted(flightAttributeRL.getPath(), SPELL_SLOT);
-
-        Spell spell = new Spell(LayeredSpellIcon.make(List.of(AdvancedSpellIcon.make(ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/flight.png"), 0, 0, 16, 16, 16, 16, 0, 0, 16, 16), DefaultSpellIcon.make(TOGGLE_ICON_RL), DefaultSpellIcon.make(TOGGLE_ICON_RL))), key, manaCost)
-                .addAction(HasCooldownAction.make(ACTIVE, OWNER, INT.reference(SPELL_SLOT)))
-
-                .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
-                .addAction(CopyTargetsAction.make(ON_UNEQUIP, "player", OWNER))
-                .addAction(CopyTargetsAction.make(LIVING_DAMAGE_POST_VICTIM, "player", OWNER))
-                .addAction(CopyTargetsAction.make("renew", "player", HOLDER))
-
-                .addAction(ActivateAction.make("renew", "remove"))
-                .addAction(TryBurnManaAction.make("renew", "player", Compiler.compileString(" (" + MANA_COST + " * duration) / 100 ", DOUBLE)))
-                .addAction(DeactivateAction.make("renew", "remove"))
-                .addAction(PutVarAction.makeString("remove", Compiler.compileString(" get_nbt_string(" + DELAY_TAG + ", 'attribute_mod') ", STRING), "attribute_mod"))
-                .addAction(PutVarAction.makeString("remove", Compiler.compileString(" get_nbt_string(" + DELAY_TAG + ", 'attribute') ", STRING), "attribute"))
-
-                .addAction(PutVarAction.makeString(ACTIVE, Compiler.compileString(flightUuidCode, STRING), "uuid"))
-                .addAction(PutVarAction.makeString(ON_UNEQUIP, Compiler.compileString(flightUuidCode, STRING), "uuid"))
-                .addAction(PutVarAction.makeString(LIVING_DAMAGE_POST_VICTIM, Compiler.compileString(flightUuidCode, STRING), "uuid"))
-                .addAction(PutVarAction.makeString(ACTIVE, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
-                .addAction(PutVarAction.makeString(ON_UNEQUIP, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
-                .addAction(PutVarAction.makeString(LIVING_DAMAGE_POST_VICTIM, Compiler.compileString(flightModifierIDCode, STRING), "attribute_mod"))
-
-                .addAction(ActivateAction.make(ACTIVE, "apply"))
-                .addAction(ActivateAction.make(ACTIVE, "remove"))
-                .addAction(ActivateAction.make(ON_UNEQUIP, "remove"))
-                .addAction(ActivateAction.make(LIVING_DAMAGE_POST_VICTIM, "remove"))
-
-                .addAction(SetCooldownAction.make(LIVING_DAMAGE_POST_VICTIM, "player", INT.reference(SPELL_SLOT), INT.reference("cooldown")))
-
-                .addAction(RemoveAttributeModifierAction.make("remove", "player", STRING.reference("attribute"), STRING.reference("attribute_mod")))
-                .addAction(CheckHasDelayedSpellAction.make("remove", "player", STRING.reference("uuid")))
-                .addAction(DeactivateAction.make("remove", "apply"))
-                .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.reference("uuid"), BOOLEAN.immediate(false)))
-                .addAction(PlaySoundAction.make("remove", "player", SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
-
-                .addAction(TryBurnManaAction.make("apply", "player", Compiler.compileString(" (" + MANA_COST + " * duration) / 100 ", DOUBLE)))
-                .addAction(ActivateAction.make("apply", "renew"))
-                .addAction(AddAttributeModifierAction.make("apply", "player", STRING.reference("attribute"), STRING.reference("attribute_mod"), DOUBLE.reference("value"), STRING.reference("operation")))
-                .addAction(PutVarAction.makeCompoundTag("apply", Compiler.compileString(" put_nbt_string(put_nbt_string(new_tag(), 'attribute', attribute), 'attribute_mod', attribute_mod) ", TAG), DELAY_TAG))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "renew", INT.reference("duration"), STRING.reference("uuid"), TAG.reference(DELAY_TAG), eventHookMap()))
-
-                .addAction(PlaySoundAction.make("apply", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
-
-                .addParameter(STRING, "attribute", flightAttributeRL.toString())
-                .addParameter(DOUBLE, "value", value)
-                .addParameter(STRING, "operation", SpellsUtil.operationToString(operation))
-                .addParameter(INT, "duration", duration * 20)
-                .addParameter(INT, "cooldown", cooldown * 20)
-                .addEventHook(ACTIVE)
-                .addEventHook(ON_UNEQUIP)
-                .addEventHook(LIVING_DAMAGE_POST_VICTIM)
-                .addTooltip(Component.translatable(descKey))
-                .addTooltip(Component.empty())
-                .addTooltip(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE))
-                .addTooltip(Component.translatable("attribute.modifier.plus." + AttributeModifier.Operation.ADD_VALUE.id(), ATTRIBUTE_MODIFIER_FORMAT.format(1D), flightComponent.copy()).withStyle(ChatFormatting.BLUE));
-
-        addSpell(rl, spell);
     }
 }
