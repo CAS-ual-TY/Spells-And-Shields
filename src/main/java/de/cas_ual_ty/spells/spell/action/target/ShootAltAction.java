@@ -8,6 +8,7 @@ import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.ParamNames;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectSingleTypeAction;
+import de.cas_ual_ty.spells.spell.action.variable.PackTagAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.projectile.SpellProjectile;
@@ -22,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 
 public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
@@ -39,13 +41,19 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("timeout_activation")).forGetter(ShootAltAction::getTimeoutActivation),
                 Codec.STRING.fieldOf(ParamNames.destinationTarget("projectile")).forGetter(ShootAltAction::getProjectileDestination),
                 ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(ShootAltAction::getParticle),
-                Codec.STRING.optionalFieldOf(ParamNames.singleTarget("shooter")).xmap(o -> o.orElse(""), s -> s.isEmpty() ? Optional.empty() : Optional.of(s)).forGetter(ShootAltAction::getShooter)
-        ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle, shooter) -> new ShootAltAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle, shooter)));
+                Codec.STRING.optionalFieldOf(ParamNames.singleTarget("shooter")).xmap(o -> o.orElse(""), s -> s.isEmpty() ? Optional.empty() : Optional.of(s)).forGetter(ShootAltAction::getShooter),
+                Codec.STRING.listOf().optionalFieldOf("captured_variables", List.of()).forGetter(ShootAltAction::getCapturedVariables)
+        ).apply(instance, (activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle, shooter, capturedVariables) -> new ShootAltAction(type, activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle, shooter, capturedVariables)));
+    }
+
+    public static ShootAltAction make(Object activation, Object source, DynamicCtxVar<Vec3> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle, @Nullable Object shooter, List<String> capturedVariables)
+    {
+        return new ShootAltAction(SpellActionTypes.SHOOT_ALT.get(), activation.toString(), source.toString(), velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, Optional.ofNullable(particle), shooter == null ? "" : shooter.toString(), capturedVariables);
     }
 
     public static ShootAltAction make(Object activation, Object source, DynamicCtxVar<Vec3> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, ParticleOptions particle, @Nullable Object shooter)
     {
-        return new ShootAltAction(SpellActionTypes.SHOOT_ALT.get(), activation.toString(), source.toString(), velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, Optional.ofNullable(particle), shooter == null ? "" : shooter.toString());
+        return make(activation, source, velocity, inaccuracy, timeout, blockHitActivation, entityHitActivation, timeoutActivation, projectileDestination, particle, shooter, List.of());
     }
 
     public static ShootAltAction make(Object activation, Object source, DynamicCtxVar<Vec3> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, @Nullable Object shooter)
@@ -67,12 +75,14 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
 
     protected String shooter;
 
+    protected List<String> capturedVariables;
+
     public ShootAltAction(SpellActionType<?> type)
     {
         super(type);
     }
 
-    public ShootAltAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Vec3> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, Optional<ParticleOptions> particle, String shooter)
+    public ShootAltAction(SpellActionType<?> type, String activation, String source, DynamicCtxVar<Vec3> velocity, DynamicCtxVar<Double> inaccuracy, DynamicCtxVar<Integer> timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, String projectileDestination, Optional<ParticleOptions> particle, String shooter, List<String> capturedVariables)
     {
         super(type, activation, source);
         this.velocity = velocity;
@@ -84,6 +94,7 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
         this.projectileDestination = projectileDestination;
         this.particle = particle;
         this.shooter = shooter;
+        this.capturedVariables = capturedVariables;
     }
 
     public DynamicCtxVar<Vec3> getVelocity()
@@ -131,6 +142,11 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
         return shooter;
     }
 
+    public List<String> getCapturedVariables()
+    {
+        return capturedVariables;
+    }
+
     @Override
     public void affectSingleTarget(SpellContext ctx, TargetGroup group, PositionTarget positionTarget)
     {
@@ -141,9 +157,10 @@ public class ShootAltAction extends AffectSingleTypeAction<PositionTarget>
                 timeout.getValue(ctx).ifPresent(timeout ->
                 {
                     Entity shooter = ctx.getTargetGroup(this.shooter).getSingleTarget().flatMap(t -> TargetTypes.ENTITY.get().ifType(t).map(EntityTarget::getEntity)).orElse(null);
-                    Entity e = SpellProjectile.shoot(ctx.level, positionTarget.getPosition(), velocity, shooter, ctx.spell, inaccuracy.floatValue(), (float) velocity.length(), timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle.orElse(null));
+                    SpellProjectile e = SpellProjectile.shoot(ctx.level, positionTarget.getPosition(), velocity, shooter, ctx.spell, inaccuracy.floatValue(), (float) velocity.length(), timeout, blockHitActivation, entityHitActivation, timeoutActivation, particle.orElse(null));
                     if(e != null)
                     {
+                        e.setCapturedVariables(PackTagAction.packCapturedVariables(ctx, capturedVariables));
                         ctx.getOrCreateTargetGroup(projectileDestination).addTargets(Target.of(e));
                     }
                 });

@@ -6,6 +6,7 @@ import de.cas_ual_ty.spells.registers.SpellTrees;
 import de.cas_ual_ty.spells.registers.Spells;
 import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
+import de.cas_ual_ty.spells.spell.action.variable.UnpackTagAction;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.target.Target;
 import net.minecraft.core.Holder;
@@ -41,6 +42,9 @@ public class SpellProjectile extends AbstractHurtingProjectile
     protected String timeoutActivation;
 
     protected ParticleOptions particle;
+
+    // variables packed at shoot time (see PackTagAction#packCapturedVariables), restored in every hit/timeout activation
+    protected CompoundTag capturedVariables = new CompoundTag();
 
     public SpellProjectile(EntityType<? extends SpellProjectile> entityType, Level level)
     {
@@ -84,6 +88,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
             {
                 spell.forceRun(level(), getPlayerOwner(), timeoutActivation, (ctx) ->
                 {
+                    UnpackTagAction.unpackCapturedVariables(ctx, capturedVariables);
                     ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 });
                 discard();
@@ -117,6 +122,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
         {
             spell.forceRun(level(), getPlayerOwner(), entityHitActivation, (ctx) ->
             {
+                UnpackTagAction.unpackCapturedVariables(ctx, capturedVariables);
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.ENTITY_HIT.targetGroup).addTargets(Target.of(entityHitResult.getEntity()));
 
@@ -135,6 +141,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
         {
             spell.forceRun(level(), getPlayerOwner(), blockHitActivation, (ctx) ->
             {
+                UnpackTagAction.unpackCapturedVariables(ctx, capturedVariables);
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.PROJECTILE.targetGroup).addTargets(Target.of(this));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.BLOCK_HIT.targetGroup).addTargets(Target.of(level(), blockHitResult.getBlockPos()));
                 ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HIT_POSITION.targetGroup).addTargets(Target.of(level(), blockHitResult.getLocation()));
@@ -169,6 +176,16 @@ public class SpellProjectile extends AbstractHurtingProjectile
     public void setSpell(SpellInstance spell)
     {
         this.spell = spell;
+    }
+
+    public CompoundTag getCapturedVariables()
+    {
+        return capturedVariables;
+    }
+
+    public void setCapturedVariables(CompoundTag capturedVariables)
+    {
+        this.capturedVariables = capturedVariables;
     }
 
     @Nullable
@@ -212,6 +229,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
         nbt.putString("BlockHitActivation", blockHitActivation);
         nbt.putString("EntityHitActivation", entityHitActivation);
         nbt.putString("TimeoutActivation", timeoutActivation);
+        nbt.put("CapturedVariables", capturedVariables);
     }
 
     @Override
@@ -249,6 +267,7 @@ public class SpellProjectile extends AbstractHurtingProjectile
         blockHitActivation = nbt.getString("BlockHitActivation");
         entityHitActivation = nbt.getString("EntityHitActivation");
         timeoutActivation = nbt.getString("TimeoutActivation");
+        capturedVariables = nbt.getCompound("CapturedVariables");
     }
 
     public static SpellProjectile shoot(Level level0, Vec3 position, Vec3 direction, @Nullable Entity source, SpellInstance spell, float velocity, float inaccuracy, int timeout, String blockHitActivation, String entityHitActivation, String timeoutActivation, ParticleOptions particle)

@@ -30,17 +30,17 @@ public class PackTagAction extends SpellAction
     {
         return RecordCodecBuilder.create(instance -> instance.group(
                 activationCodec(),
-                Codec.STRING.listOf().fieldOf("names").forGetter(PackTagAction::getNames),
+                Codec.STRING.listOf().fieldOf("captured_variables").forGetter(PackTagAction::getCapturedVariables),
                 Codec.STRING.fieldOf(ParamNames.varResult()).forGetter(PackTagAction::getResult)
-        ).apply(instance, (activation, names, result) -> new PackTagAction(type, activation, names, result)));
+        ).apply(instance, (activation, capturedVariables, result) -> new PackTagAction(type, activation, capturedVariables, result)));
     }
 
-    public static PackTagAction make(Object activation, List<String> names, Object result)
+    public static PackTagAction make(Object activation, List<String> capturedVariables, Object result)
     {
-        return new PackTagAction(SpellActionTypes.PACK_TAG.get(), activation.toString(), names, result.toString());
+        return new PackTagAction(SpellActionTypes.PACK_TAG.get(), activation.toString(), capturedVariables, result.toString());
     }
 
-    protected List<String> names;
+    protected List<String> capturedVariables;
     protected String result;
 
     public PackTagAction(SpellActionType<?> type)
@@ -48,16 +48,16 @@ public class PackTagAction extends SpellAction
         super(type);
     }
 
-    public PackTagAction(SpellActionType<?> type, String activation, List<String> names, String result)
+    public PackTagAction(SpellActionType<?> type, String activation, List<String> capturedVariables, String result)
     {
         super(type, activation);
-        this.names = names;
+        this.capturedVariables = capturedVariables;
         this.result = result;
     }
 
-    public List<String> getNames()
+    public List<String> getCapturedVariables()
     {
-        return names;
+        return capturedVariables;
     }
 
     public String getResult()
@@ -68,9 +68,18 @@ public class PackTagAction extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
+        ctx.setCtxVar(CtxVarTypes.TAG.get(), result, packCapturedVariables(ctx, capturedVariables));
+    }
+
+    /**
+     * Packs the named ctx vars into a fresh {@link CompoundTag}; reverse via {@link UnpackTagAction#unpackCapturedVariables}.
+     * Also used by actions that carry variables over to an asynchronous activation (eg. projectile hits).
+     */
+    public static CompoundTag packCapturedVariables(SpellContext ctx, List<String> capturedVariables)
+    {
         CompoundTag packed = new CompoundTag();
 
-        for(String name : names)
+        for(String name : capturedVariables)
         {
             CtxVar<?> ctxVar = ctx.getCtxVar(name);
 
@@ -80,7 +89,7 @@ public class PackTagAction extends SpellAction
             }
         }
 
-        ctx.setCtxVar(CtxVarTypes.TAG.get(), result, packed);
+        return packed;
     }
 
     private static <T> void pack(CompoundTag tag, String key, CtxVar<T> ctxVar)

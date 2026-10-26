@@ -61,13 +61,18 @@ public class UnpackTagAction extends SpellAction
     @Override
     protected void wasActivated(SpellContext ctx)
     {
-        source.getValue(ctx).ifPresent(tag ->
+        source.getValue(ctx).ifPresent(tag -> unpackCapturedVariables(ctx, tag));
+    }
+
+    /**
+     * Unpacks every entry of a tag written by {@link PackTagAction#packCapturedVariables} into its own ctx var.
+     */
+    public static void unpackCapturedVariables(SpellContext ctx, CompoundTag tag)
+    {
+        for(String key : tag.getAllKeys())
         {
-            for(String key : tag.getAllKeys())
-            {
-                unpack(ctx, tag, key);
-            }
-        });
+            unpack(ctx, tag, key);
+        }
     }
 
     private static void unpack(SpellContext ctx, CompoundTag tag, String key)
