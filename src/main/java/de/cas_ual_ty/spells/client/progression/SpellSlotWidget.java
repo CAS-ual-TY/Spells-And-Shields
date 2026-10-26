@@ -2,12 +2,9 @@ package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.cas_ual_ty.spells.capability.SpellHolder;
-import de.cas_ual_ty.spells.client.SpellsClientConfig;
 import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.client.SpellsKeyBindings;
 import de.cas_ual_ty.spells.client.hud.SpellIconRegistry;
-import de.cas_ual_ty.spells.registers.Spells;
-import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
 import de.cas_ual_ty.spells.spell.icon.SpellIcon;
 import net.minecraft.ChatFormatting;
@@ -19,14 +16,9 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.advancements.AdvancementWidgetType;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.function.IntConsumer;
 
 public class SpellSlotWidget extends Button
@@ -129,20 +121,7 @@ public class SpellSlotWidget extends Button
                     guiGraphics.pose().translate(0, 0, 10D);
                     
                     Component keyBindTooltip = SpellsKeyBindings.getBaseTooltip().append(": ").append(SpellsKeyBindings.getTooltip(slot).withStyle(ChatFormatting.YELLOW));
-                    List<Component> tooltip = spell.getSpell().value().makeTooltipList(keyBindTooltip);
-                    Optional<TooltipComponent> tooltipComponent = spell.getTooltipComponent();
-                    
-                    if(SpellsClientConfig.SHOW_IDS.get())
-                    {
-                        Registry<Spell> spellRegistry = Spells.getRegistry(SpellsClientUtil.getClientLevel());
-                        tooltip.add(Component.literal(spell.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString()).withStyle(ChatFormatting.DARK_GRAY));
-                        if(spell.getNodeId() != null)
-                        {
-                            tooltip.add(Component.literal(spell.getNodeId().getIDText()).withStyle(ChatFormatting.DARK_GRAY));
-                        }
-                    }
-                    
-                    guiGraphics.renderTooltip(Minecraft.getInstance().font, tooltip, tooltipComponent, mouseX, mouseY);
+                    SpellsClientUtil.renderSpellTooltip(guiGraphics, Minecraft.getInstance().font, spell, keyBindTooltip, spell.getNodeId(), mouseX, mouseY);
                     
                     guiGraphics.pose().popPose();
                 }

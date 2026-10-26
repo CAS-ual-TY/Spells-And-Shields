@@ -1,25 +1,14 @@
 package de.cas_ual_ty.spells.client.progression;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.cas_ual_ty.spells.client.SpellsClientConfig;
 import de.cas_ual_ty.spells.client.SpellsClientUtil;
 import de.cas_ual_ty.spells.client.hud.SpellIconRegistry;
-import de.cas_ual_ty.spells.registers.Spells;
-import de.cas_ual_ty.spells.spell.Spell;
 import de.cas_ual_ty.spells.spell.SpellInstance;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-
-import java.util.List;
-import java.util.Optional;
 
 import static de.cas_ual_ty.spells.client.progression.SpellNodeWidget.*;
 
@@ -85,21 +74,7 @@ public class SelectedSpellWidget
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(0, 0, 400D);
                 
-                List<Component> tooltip = spellInstance.getSpell().value().makeTooltipList(null);
-                Optional<TooltipComponent> tooltipComponent = clickedWidget.spellNode.getSpellInstance().getTooltipComponent();
-                
-                if(SpellsClientConfig.SHOW_IDS.get())
-                {
-                    Registry<Spell> spellRegistry = Spells.getRegistry(SpellsClientUtil.getClientLevel());
-                    tooltip.add(Component.literal(spellInstance.getSpell().unwrap().map(ResourceKey::location, spellRegistry::getKey).toString()).withStyle(ChatFormatting.DARK_GRAY));
-                    
-                    if(clickedWidget.fullSpellNodeId != null)
-                    {
-                        tooltip.add(Component.literal(clickedWidget.fullSpellNodeId.getIDText()).withStyle(ChatFormatting.DARK_GRAY));
-                    }
-                }
-                
-                guiGraphics.renderTooltip(font, tooltip, tooltipComponent, mouseX, mouseY);
+                SpellsClientUtil.renderSpellTooltip(guiGraphics, font, spellInstance, null, clickedWidget.fullSpellNodeId, mouseX, mouseY);
                 
                 guiGraphics.pose().popPose();
             }
