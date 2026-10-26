@@ -13,17 +13,17 @@
     }
   ],
   "s5/spell_events": {
-    "living_hurt_victim": "living_hurt_victim"
+    "living_incoming_damage_victim": "living_incoming_damage_victim"
   },
   "s6/spell_parameters": [],
   "s7/spell_actions": [
     {
       "type": "spells_and_shields:boolean_activation",
       "a/to_activate": "reduce",
-      "activation": "living_hurt_victim",
+      "activation": "living_incoming_damage_victim",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": true,
-      "d/boolean/input": "<< damage_type == 'fall' >>"
+      "d/boolean/input": "<< damage_type == 'minecraft:fall' >>"
     },
     {
       "type": "spells_and_shields:get_mana",

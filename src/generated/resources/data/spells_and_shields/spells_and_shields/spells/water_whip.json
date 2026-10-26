@@ -109,7 +109,7 @@
       "t/source": "item",
       "var/amount": "amount",
       "var/compound_tag": "item_tag",
-      "var/damage": "damage",
+      "var/damage": "item_damage",
       "var/item": "item"
     },
     {
@@ -125,7 +125,7 @@
       "activation": "consume",
       "d/compound_tag/tag": {},
       "d/int/amount": "<<amount>>",
-      "d/int/damage": "<<damage>>",
+      "d/int/damage": "<<item_damage>>",
       "d/string/item": "minecraft:bucket",
       "t/target": "item"
     },
@@ -208,7 +208,7 @@
     {
       "type": "spells_and_shields:sourced_damage",
       "activation": "on_entity_hit",
-      "d/double/damage": 10.0,
+      "d/double/damage": "<<damage>>",
       "t/source": "projectile",
       "ts/targets": "entity_hit"
     },
@@ -388,7 +388,7 @@
       "t/source": "item",
       "var/amount": "amount",
       "var/compound_tag": "item_tag",
-      "var/damage": "damage",
+      "var/damage": "item_damage",
       "var/item": "item"
     },
     {

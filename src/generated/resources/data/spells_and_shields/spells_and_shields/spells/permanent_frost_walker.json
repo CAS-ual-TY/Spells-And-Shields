@@ -34,7 +34,7 @@
     {
       "type": "spells_and_shields:string",
       "value": "minecraft:water",
-      "var/name": "block_from"
+      "var/name": "fluid_from"
     },
     {
       "type": "spells_and_shields:string",
@@ -217,7 +217,7 @@
       "activation": "apply",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": true,
-      "d/boolean/input": "<< is_source && fluid_id == 'minecraft:water' >>"
+      "d/boolean/input": "<< is_source && fluid_id == fluid_from >>"
     },
     {
       "type": "spells_and_shields:set_block",

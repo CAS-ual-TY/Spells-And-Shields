@@ -34,11 +34,6 @@
       "type": "spells_and_shields:int",
       "value": 3,
       "var/name": "range"
-    },
-    {
-      "type": "spells_and_shields:int",
-      "value": 20,
-      "var/name": "duration"
     }
   ],
   "s7/spell_actions": [

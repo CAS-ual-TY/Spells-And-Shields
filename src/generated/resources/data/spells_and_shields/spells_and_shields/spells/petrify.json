@@ -89,7 +89,7 @@
       "d/boolean/showIcon": true,
       "d/boolean/visible": false,
       "d/int/amplifier": 1,
-      "d/int/duration": "<<duration+1>>",
+      "d/int/duration": "<< duration + 1 >>",
       "d/string/mob_effect": "minecraft:resistance",
       "ts/targets": "player"
     },
@@ -100,7 +100,7 @@
       "d/boolean/showIcon": true,
       "d/boolean/visible": false,
       "d/int/amplifier": 0,
-      "d/int/duration": "<<duration+1>>",
+      "d/int/duration": "<< duration + 1 >>",
       "d/string/mob_effect": "minecraft:slowness",
       "ts/targets": "player"
     },

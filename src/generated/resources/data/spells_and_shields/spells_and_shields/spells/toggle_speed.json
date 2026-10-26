@@ -179,7 +179,7 @@
       "d/boolean/showIcon": "<<show_icon>>",
       "d/boolean/visible": "<<visible>>",
       "d/int/amplifier": "<<amplifier>>",
-      "d/int/duration": "<<duration+1>>",
+      "d/int/duration": "<< duration + 1 >>",
       "d/string/mob_effect": "<<mob_effect>>",
       "ts/targets": "player"
     },

@@ -29,13 +29,7 @@
   "s5/spell_events": {
     "active": "active"
   },
-  "s6/spell_parameters": [
-    {
-      "type": "spells_and_shields:double",
-      "value": 10.0,
-      "var/name": "damage"
-    }
-  ],
+  "s6/spell_parameters": [],
   "s7/spell_actions": [
     {
       "type": "spells_and_shields:call_function",

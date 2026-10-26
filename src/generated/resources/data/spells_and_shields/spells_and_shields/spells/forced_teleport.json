@@ -183,9 +183,15 @@
       "var/result": "x"
     },
     {
+      "type": "spells_and_shields:get_position",
+      "activation": "active",
+      "t/source": "player",
+      "var/position": "start_pos"
+    },
+    {
       "type": "spells_and_shields:put_double",
       "activation": "active",
-      "d/double/source": "<< min(max_block_height, max(min_block_height, random_double() * 2 * teleport_range - teleport_range)) >>",
+      "d/double/source": "<< min(max_block_height, max(min_block_height, get_y(start_pos) + random_double() * 2 * teleport_range - teleport_range)) - get_y(start_pos) >>",
       "var/result": "y"
     },
     {

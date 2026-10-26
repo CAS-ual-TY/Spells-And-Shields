@@ -13,7 +13,7 @@
     }
   ],
   "s5/spell_events": {
-    "living_hurt_victim": "living_hurt_victim"
+    "living_damage_post_victim": "living_damage_post_victim"
   },
   "s6/spell_parameters": [
     {
@@ -26,7 +26,7 @@
     {
       "type": "spells_and_shields:boolean_activation",
       "a/to_activate": "no_pvp",
-      "activation": "living_hurt_victim",
+      "activation": "living_damage_post_victim",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": false,
       "d/boolean/input": "<< !pvp() >>"
@@ -40,13 +40,13 @@
     },
     {
       "type": "spells_and_shields:set_on_fire",
-      "activation": "living_hurt_victim",
+      "activation": "living_damage_post_victim",
       "d/int/fire_seconds": "<<fire_seconds>>",
       "ts/targets": "attacker"
     },
     {
       "type": "spells_and_shields:play_sound",
-      "activation": "living_hurt_victim",
+      "activation": "living_damage_post_victim",
       "d/double/pitch": 1.0,
       "d/double/volume": 1.0,
       "d/string/sound_event": "minecraft:entity.generic.extinguish_fire",
@@ -54,7 +54,7 @@
     },
     {
       "type": "spells_and_shields:spawn_particles",
-      "activation": "living_hurt_victim",
+      "activation": "living_damage_post_victim",
       "d/double/spread": 0.5,
       "d/int/count": 10,
       "particle": {

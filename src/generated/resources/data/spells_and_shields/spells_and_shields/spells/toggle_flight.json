@@ -38,7 +38,7 @@
   ],
   "s5/spell_events": {
     "active": "active",
-    "living_hurt_victim": "living_hurt_victim",
+    "living_damage_post_victim": "living_damage_post_victim",
     "on_unequip": "on_unequip"
   },
   "s6/spell_parameters": [
@@ -89,7 +89,7 @@
     },
     {
       "type": "spells_and_shields:copy_targets",
-      "activation": "living_hurt_victim",
+      "activation": "living_damage_post_victim",
       "td/destination": "player",
       "ts/source": "owner"
     },
@@ -141,7 +141,7 @@
     },
     {
       "type": "spells_and_shields:put_string",
-      "activation": "living_hurt_victim",
+      "activation": "living_damage_post_victim",
       "d/string/source": "<< uuid_from_string('toggle' + 'creative_flight' + spell_slot) >>",
       "var/result": "uuid"
     },
@@ -159,7 +159,7 @@
     },
     {
       "type": "spells_and_shields:put_string",
-      "activation": "living_hurt_victim",
+      "activation": "living_damage_post_victim",
       "d/string/source": "<< 'spells_and_shields:creative_flight_' + spell_slot>>",
       "var/result": "attribute_mod"
     },
@@ -181,11 +181,11 @@
     {
       "type": "spells_and_shields:activate",
       "a/to_activate": "remove",
-      "activation": "living_hurt_victim"
+      "activation": "living_damage_post_victim"
     },
     {
       "type": "spells_and_shields:set_cooldown",
-      "activation": "living_hurt_victim",
+      "activation": "living_damage_post_victim",
       "d/int/duration": "<<cooldown>>",
       "d/int/slot": "<<spell_slot>>",
       "t/target": "player"
