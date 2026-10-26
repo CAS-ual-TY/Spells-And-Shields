@@ -51,6 +51,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -240,7 +241,8 @@ public class BuiltInRegisters
     {
         modEventBus.addListener(BuiltInRegisters::entityAttributeModification);
         NeoForge.EVENT_BUS.addListener(BuiltInRegisters::registerCommands);
-        NeoForge.EVENT_BUS.addListener(BuiltInRegisters::livingHurt);
+        // HIGH: Magic Immune must cancel before spell events (LOW) see the damage
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, BuiltInRegisters::livingHurt);
         NeoForge.EVENT_BUS.addListener(BuiltInRegisters::rightClickBlock);
     }
 }

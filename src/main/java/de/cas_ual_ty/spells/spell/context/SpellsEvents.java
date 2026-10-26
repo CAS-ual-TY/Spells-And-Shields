@@ -157,7 +157,8 @@ public class SpellsEvents
     {
         RegisteredEvent<E> registeredEvent = new RegisteredEvent<>(eventId, eventClass);
         NAME_TO_ENTRY.put(eventId, registeredEvent);
-        NeoForge.EVENT_BUS.addListener(EventPriority.NORMAL, true, eventClass, event ->
+        // LOW: run after other mods have modified or canceled the event, so spells see (and adjust) near-final values
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOW, true, eventClass, event ->
         {
             playerGetter.apply(event).ifPresent(entity ->
             {
