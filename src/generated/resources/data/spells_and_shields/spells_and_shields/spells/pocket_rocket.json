@@ -130,7 +130,6 @@
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "success",
       "ad/on_remove": "fire",
-      "d/compound_tag/extra_data": {},
       "d/int/tick_time": "<< repetitions * time_delay_ticks >>",
       "d/string/uuid": "",
       "ts/targets": "owner"

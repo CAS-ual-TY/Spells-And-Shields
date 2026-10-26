@@ -117,18 +117,6 @@
     },
     {
       "type": "spells_and_shields:put_string",
-      "activation": "remove",
-      "d/string/source": "<< get_nbt_string(delay_tag, 'attribute_mod') >>",
-      "var/result": "attribute_mod"
-    },
-    {
-      "type": "spells_and_shields:put_string",
-      "activation": "remove",
-      "d/string/source": "<< get_nbt_string(delay_tag, 'attribute') >>",
-      "var/result": "attribute"
-    },
-    {
-      "type": "spells_and_shields:put_string",
       "activation": "active",
       "d/string/source": "<< uuid_from_string('toggle' + 'creative_flight' + spell_slot) >>",
       "var/result": "uuid"
@@ -244,16 +232,13 @@
       "ts/targets": "player"
     },
     {
-      "type": "spells_and_shields:put_tag",
-      "activation": "apply",
-      "d/tag/source": "<< put_nbt_string(put_nbt_string(new_tag(), 'attribute', attribute), 'attribute_mod', attribute_mod) >>",
-      "var/result": "delay_tag"
-    },
-    {
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "renew",
       "ad/on_remove": "renew",
-      "d/compound_tag/extra_data": "<<delay_tag>>",
+      "captured_variables": [
+        "attribute",
+        "attribute_mod"
+      ],
       "d/int/tick_time": "<<duration>>",
       "d/string/uuid": "<<uuid>>",
       "ts/targets": "player"

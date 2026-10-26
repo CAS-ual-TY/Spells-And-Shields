@@ -53,7 +53,6 @@
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "active",
       "ad/on_remove": "on_remove",
-      "d/compound_tag/extra_data": {},
       "d/int/tick_time": 1200,
       "d/string/uuid": "",
       "events_map": {

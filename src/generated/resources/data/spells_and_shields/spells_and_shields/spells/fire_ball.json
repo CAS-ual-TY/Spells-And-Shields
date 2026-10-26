@@ -100,7 +100,6 @@
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "animation",
       "ad/on_remove": "",
-      "d/compound_tag/extra_data": {},
       "d/int/tick_time": 20,
       "d/string/uuid": "<<animation_uuid>>",
       "ts/targets": "owner"

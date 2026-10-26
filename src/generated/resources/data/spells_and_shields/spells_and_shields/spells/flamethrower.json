@@ -150,12 +150,6 @@
       "ts/source": "holder"
     },
     {
-      "type": "spells_and_shields:put_int",
-      "activation": "on_timeout",
-      "d/int/source": "<< get_nbt_int(delay_tag, 'repetitions') >>",
-      "var/result": "repetitions"
-    },
-    {
       "type": "spells_and_shields:activate",
       "a/to_activate": "shoot",
       "activation": "on_timeout"
@@ -249,10 +243,18 @@
       "ts/targets": "player"
     },
     {
+      "type": "spells_and_shields:put_int",
+      "activation": "repeat",
+      "d/int/source": "<< repetitions - 1 >>",
+      "var/result": "repetitions"
+    },
+    {
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "repeat",
       "ad/on_remove": "on_timeout",
-      "d/compound_tag/extra_data": "<< put_nbt_int(new_tag(), 'repetitions', repetitions - 1) >>",
+      "captured_variables": [
+        "repetitions"
+      ],
       "d/int/tick_time": "<<repetition_delay>>",
       "d/string/uuid": "",
       "ts/targets": "player"

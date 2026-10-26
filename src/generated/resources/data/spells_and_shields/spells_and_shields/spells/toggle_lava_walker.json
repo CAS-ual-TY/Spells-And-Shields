@@ -273,7 +273,6 @@
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "renew",
       "ad/on_remove": "apply",
-      "d/compound_tag/extra_data": {},
       "d/int/tick_time": "<<refresh_rate>>",
       "d/string/uuid": "<<uuid>>",
       "ts/targets": "player"

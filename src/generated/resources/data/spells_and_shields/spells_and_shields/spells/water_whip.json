@@ -136,12 +136,6 @@
       "var/uuid": "owner_uuid_return"
     },
     {
-      "type": "spells_and_shields:put_tag",
-      "activation": "shoot",
-      "d/tag/source": "<< put_nbt_uuid(new_tag(), 'owner_uuid_return', owner_uuid_return) >>",
-      "var/result": "tag"
-    },
-    {
       "type": "spells_and_shields:call_function",
       "activation": "shoot",
       "function": "spells_and_shields:burn_mana_cost"
@@ -152,6 +146,9 @@
       "ad/block_hit_activation": "on_block_hit",
       "ad/entity_hit_activation": "on_entity_hit",
       "ad/timeout_activation": "on_timeout",
+      "captured_variables": [
+        "owner_uuid_return"
+      ],
       "d/double/inaccuracy": 0.0,
       "d/double/velocity": 1.0,
       "d/int/timeout": 100,
@@ -174,12 +171,6 @@
       "particle": {
         "type": "minecraft:falling_water"
       },
-      "ts/targets": "projectile"
-    },
-    {
-      "type": "spells_and_shields:apply_entity_extra_tag",
-      "activation": "shoot",
-      "d/compound_tag/tag": "<<tag>>",
       "ts/targets": "projectile"
     },
     {
@@ -246,15 +237,9 @@
       "activation": "on_timeout"
     },
     {
-      "type": "spells_and_shields:get_entity_extra_tag",
-      "activation": "return",
-      "t/source": "projectile",
-      "var/compound_tag": "tag"
-    },
-    {
       "type": "spells_and_shields:entity_uuid_target",
       "activation": "return",
-      "d/string/uuid": "<< get_nbt_uuid(tag, 'owner_uuid_return') >>",
+      "d/string/uuid": "<<owner_uuid_return>>",
       "td/destination": "return_target"
     },
     {
@@ -263,6 +248,9 @@
       "ad/block_hit_activation": "dummy_block_hit",
       "ad/entity_hit_activation": "on_entity_hit_return",
       "ad/timeout_activation": "dummy_timeout",
+      "captured_variables": [
+        "owner_uuid_return"
+      ],
       "d/double/velocity": 1.0,
       "d/int/timeout": 100,
       "t/source": "position",
@@ -288,12 +276,6 @@
       "ts/targets": "projectile"
     },
     {
-      "type": "spells_and_shields:apply_entity_extra_tag",
-      "activation": "return",
-      "d/compound_tag/tag": "<<tag>>",
-      "ts/targets": "projectile"
-    },
-    {
       "type": "spells_and_shields:get_entity_type",
       "activation": "on_entity_hit_return",
       "t/source": "entity_hit",
@@ -308,18 +290,12 @@
       "var/uuid": "hit_uuid"
     },
     {
-      "type": "spells_and_shields:get_entity_extra_tag",
-      "activation": "on_entity_hit_return",
-      "t/source": "projectile",
-      "var/compound_tag": "tag"
-    },
-    {
       "type": "spells_and_shields:boolean_activation",
       "a/to_activate": "refill",
       "activation": "on_entity_hit_return",
       "d/boolean/activate_if_true": true,
       "d/boolean/deactivate_if_false": false,
-      "d/boolean/input": "<< is_player && (hit_uuid == get_nbt_uuid(tag, 'owner_uuid_return')) >>"
+      "d/boolean/input": "<< is_player && (hit_uuid == owner_uuid_return) >>"
     },
     {
       "type": "spells_and_shields:mainhand_item_target",

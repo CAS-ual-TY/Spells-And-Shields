@@ -95,12 +95,6 @@
       "var/result": "time"
     },
     {
-      "type": "spells_and_shields:put_int",
-      "activation": "apply",
-      "d/int/source": "<< get_nbt_int(delay_tag, 'time') >>",
-      "var/result": "time"
-    },
-    {
       "type": "spells_and_shields:activate",
       "a/to_activate": "apply",
       "activation": "active"
@@ -266,10 +260,18 @@
       "ts/targets": "player"
     },
     {
+      "type": "spells_and_shields:put_int",
+      "activation": "renew",
+      "d/int/source": "<< time + refresh_rate >>",
+      "var/result": "time"
+    },
+    {
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "renew",
       "ad/on_remove": "apply",
-      "d/compound_tag/extra_data": "<< put_nbt_int(new_tag(), 'time', time + refresh_rate) >>",
+      "captured_variables": [
+        "time"
+      ],
       "d/int/tick_time": "<<refresh_rate>>",
       "d/string/uuid": "<<uuid>>",
       "ts/targets": "player"

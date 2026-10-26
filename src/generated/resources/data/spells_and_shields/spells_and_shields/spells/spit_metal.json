@@ -126,28 +126,25 @@
       "function": "spells_and_shields:burn_mana_cost"
     },
     {
-      "type": "spells_and_shields:shoot",
-      "activation": "shoot",
-      "ad/block_hit_activation": "",
-      "ad/entity_hit_activation": "on_entity_hit",
-      "ad/timeout_activation": "",
-      "d/double/inaccuracy": 0.0,
-      "d/double/velocity": 2.0,
-      "d/int/timeout": 100,
-      "t/source": "owner",
-      "td/projectile": "projectile"
-    },
-    {
       "type": "spells_and_shields:put_double",
       "activation": "shoot",
       "d/double/source": "<< base_damage + get_nbt_double(item_damage_map, item_id) >>",
       "var/result": "damage"
     },
     {
-      "type": "spells_and_shields:apply_entity_extra_tag",
+      "type": "spells_and_shields:shoot",
       "activation": "shoot",
-      "d/compound_tag/tag": "<< put_nbt_double(new_tag(), 'damage', damage) >>",
-      "ts/targets": "projectile"
+      "ad/block_hit_activation": "",
+      "ad/entity_hit_activation": "on_entity_hit",
+      "ad/timeout_activation": "",
+      "captured_variables": [
+        "damage"
+      ],
+      "d/double/inaccuracy": 0.0,
+      "d/double/velocity": 2.0,
+      "d/int/timeout": 100,
+      "t/source": "owner",
+      "td/projectile": "projectile"
     },
     {
       "type": "spells_and_shields:boolean_activation",
@@ -172,12 +169,6 @@
       "ts/targets": "owner"
     },
     {
-      "type": "spells_and_shields:get_entity_extra_tag",
-      "activation": "on_entity_hit",
-      "t/source": "projectile",
-      "var/compound_tag": "damage_tag"
-    },
-    {
       "type": "spells_and_shields:boolean_activation",
       "a/to_activate": "no_pvp",
       "activation": "on_entity_hit",
@@ -195,7 +186,7 @@
     {
       "type": "spells_and_shields:sourced_damage",
       "activation": "on_entity_hit",
-      "d/double/damage": "<< get_nbt_double(damage_tag, 'damage') >>",
+      "d/double/damage": "<<damage>>",
       "t/source": "projectile",
       "ts/targets": "entity_hit"
     }

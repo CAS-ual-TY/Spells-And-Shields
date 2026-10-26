@@ -116,7 +116,6 @@
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "success",
       "ad/on_remove": "sound",
-      "d/compound_tag/extra_data": {},
       "d/int/tick_time": 10,
       "d/string/uuid": "",
       "ts/targets": "owner"
@@ -125,7 +124,6 @@
       "type": "spells_and_shields:add_delayed_spell",
       "activation": "success",
       "ad/on_remove": "shoot",
-      "d/compound_tag/extra_data": {},
       "d/int/tick_time": 20,
       "d/string/uuid": "",
       "ts/targets": "owner"
