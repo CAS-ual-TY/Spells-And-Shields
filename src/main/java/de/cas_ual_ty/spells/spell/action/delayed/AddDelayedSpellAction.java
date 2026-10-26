@@ -11,14 +11,15 @@ import de.cas_ual_ty.spells.registers.TargetTypes;
 import de.cas_ual_ty.spells.spell.action.ParamNames;
 import de.cas_ual_ty.spells.spell.action.SpellActionType;
 import de.cas_ual_ty.spells.spell.action.base.AffectTypeAction;
+import de.cas_ual_ty.spells.spell.action.variable.PackTagAction;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 import de.cas_ual_ty.spells.spell.context.TargetGroup;
 import de.cas_ual_ty.spells.spell.target.EntityTarget;
 import de.cas_ual_ty.spells.spell.target.ITargetType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
-import net.minecraft.nbt.CompoundTag;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,35 +34,40 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
                 Codec.STRING.fieldOf(ParamNames.asynchronousActivation("on_remove")).forGetter(AddDelayedSpellAction::getRemoveActivation),
                 CtxVarTypes.INT.get().refCodec().fieldOf(ParamNames.paramInt("tick_time")).forGetter(AddDelayedSpellAction::getTickTime),
                 CtxVarTypes.STRING.get().refCodec().fieldOf(ParamNames.paramString("uuid")).forGetter(AddDelayedSpellAction::getUuid),
-                CtxVarTypes.TAG.get().refCodec().fieldOf(ParamNames.paramCompoundTag("extra_data")).forGetter(AddDelayedSpellAction::getTag),
-                Codec.lazyInitialized(() -> SpellsCodecs.STRING_MAP).optionalFieldOf("events_map").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(AddDelayedSpellAction::getEventsMap)
-        ).apply(instance, (activation, multiTargets, removeActivation, tickTime, uuid, tag, eventsMap) -> new AddDelayedSpellAction(type, activation, multiTargets, removeActivation, tickTime, uuid, tag, eventsMap)));
+                Codec.lazyInitialized(() -> SpellsCodecs.STRING_MAP).optionalFieldOf("events_map").xmap(o -> o.orElse(new HashMap<>()), m -> m.isEmpty() ? Optional.empty() : Optional.of(m)).forGetter(AddDelayedSpellAction::getEventsMap),
+                Codec.STRING.listOf().optionalFieldOf("captured_variables", List.of()).forGetter(AddDelayedSpellAction::getCapturedVariables)
+        ).apply(instance, (activation, multiTargets, removeActivation, tickTime, uuid, eventsMap, capturedVariables) -> new AddDelayedSpellAction(type, activation, multiTargets, removeActivation, tickTime, uuid, eventsMap, capturedVariables)));
     }
-    
-    public static AddDelayedSpellAction make(Object activation, Object multiTargets, Object removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag, Map<String, String> eventsMap)
+
+    public static AddDelayedSpellAction make(Object activation, Object multiTargets, Object removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, Map<String, String> eventsMap, List<String> capturedVariables)
     {
-        return new AddDelayedSpellAction(SpellActionTypes.ADD_DELAYED_SPELL.get(), activation.toString(), multiTargets.toString(), removeActivation.toString(), tickTime, uuid, tag, eventsMap);
+        return new AddDelayedSpellAction(SpellActionTypes.ADD_DELAYED_SPELL.get(), activation.toString(), multiTargets.toString(), removeActivation.toString(), tickTime, uuid, eventsMap, capturedVariables);
     }
-    
+
+    public static AddDelayedSpellAction make(Object activation, Object multiTargets, Object removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, Map<String, String> eventsMap)
+    {
+        return make(activation, multiTargets, removeActivation, tickTime, uuid, eventsMap, List.of());
+    }
+
     protected String removeActivation;
     protected DynamicCtxVar<Integer> tickTime;
     protected DynamicCtxVar<String> uuid;
-    protected DynamicCtxVar<CompoundTag> tag;
     protected Map<String, String> eventsMap;
+    protected List<String> capturedVariables;
     
     public AddDelayedSpellAction(SpellActionType<?> type)
     {
         super(type);
     }
     
-    public AddDelayedSpellAction(SpellActionType<?> type, String activation, String multiTargets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, DynamicCtxVar<CompoundTag> tag, Map<String, String> eventsMap)
+    public AddDelayedSpellAction(SpellActionType<?> type, String activation, String multiTargets, String removeActivation, DynamicCtxVar<Integer> tickTime, DynamicCtxVar<String> uuid, Map<String, String> eventsMap, List<String> capturedVariables)
     {
         super(type, activation, multiTargets);
         this.removeActivation = removeActivation;
         this.tickTime = tickTime;
         this.uuid = uuid;
-        this.tag = tag;
         this.eventsMap = eventsMap;
+        this.capturedVariables = capturedVariables;
     }
     
     public String getRemoveActivation()
@@ -79,14 +85,14 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
         return uuid;
     }
     
-    public DynamicCtxVar<CompoundTag> getTag()
-    {
-        return tag;
-    }
-    
     public Map<String, String> getEventsMap()
     {
         return eventsMap;
+    }
+    
+    public List<String> getCapturedVariables()
+    {
+        return capturedVariables;
     }
     
     @Override
@@ -102,15 +108,12 @@ public class AddDelayedSpellAction extends AffectTypeAction<EntityTarget>
         {
             tickTime.getValue(ctx).ifPresent(tickTime ->
             {
-                tag.getValue(ctx).ifPresent(tag ->
+                if(tickTime > 0)
                 {
-                    if(tickTime > 0)
-                    {
-                        UUID uuid = this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).orElse(null);
-                        
-                        holder.addDelayedSpell(ctx.spell, uuid, removeActivation, tickTime, tag, eventsMap);
-                    }
-                });
+                    UUID uuid = this.uuid.getValue(ctx).map(SpellsUtil::uuidFromString).orElse(null);
+
+                    holder.addDelayedSpell(ctx.spell, uuid, removeActivation, tickTime, eventsMap, PackTagAction.packCapturedVariables(ctx, capturedVariables));
+                }
             });
         });
     }

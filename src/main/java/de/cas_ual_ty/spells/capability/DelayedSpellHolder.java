@@ -69,13 +69,13 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
         SpellInstance s = spell.spell;
         if(s != null && !activation.isEmpty())
         {
-            s.runDelayed(holder.level(), holder, activation, spell.getTime(), spell.tag, spell.uuid, toContext, fromContext);
+            s.runDelayed(holder.level(), holder, activation, spell.getTime(), spell.capturedVariables, spell.uuid, toContext, fromContext);
         }
     }
 
-    public void addDelayedSpell(SpellInstance spell, UUID uuid, String activation, int tickTime, CompoundTag tag, Map<String, String> map)
+    public void addDelayedSpell(SpellInstance spell, UUID uuid, String activation, int tickTime, Map<String, String> map, CompoundTag capturedVariables)
     {
-        spells.add(new DelayedSpell(spell, uuid, activation, tickTime, tag, map));
+        spells.add(new DelayedSpell(spell, uuid, activation, tickTime, map, capturedVariables));
     }
 
     public boolean hasDelayedSpell(UUID uuid)
@@ -234,19 +234,19 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
         public final UUID uuid;
         public final String activation;
         public final int tickTime;
-        public final CompoundTag tag;
         public final Map<String, String> eventsMap;
+        public final CompoundTag capturedVariables;
 
         private int time;
 
-        public DelayedSpell(SpellInstance spell, UUID uuid, String activation, int tickTime, CompoundTag tag, Map<String, String> eventsMap)
+        public DelayedSpell(SpellInstance spell, UUID uuid, String activation, int tickTime, Map<String, String> eventsMap, CompoundTag capturedVariables)
         {
             this.spell = spell;
             this.uuid = uuid;
             this.activation = activation;
             this.tickTime = tickTime;
-            this.tag = tag;
             this.eventsMap = eventsMap;
+            this.capturedVariables = capturedVariables;
             time = 0;
         }
 
@@ -265,13 +265,13 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
 
             activation = tag.getString("activation");
             tickTime = tag.getInt("maxTime");
-            this.tag = tag.getCompound("tag");
             eventsMap = new HashMap<>();
             CompoundTag map = tag.getCompound("map");
             for(String key : map.getAllKeys())
             {
                 eventsMap.put(key, map.getString(key));
             }
+            capturedVariables = tag.getCompound("captured_variables");
             time = tag.getInt("time");
         }
 
@@ -305,11 +305,11 @@ public class DelayedSpellHolder implements INBTSerializable<ListTag>
 
             tag.putString("activation", activation);
             tag.putInt("maxTime", tickTime);
-            tag.put("tag", this.tag);
 
             CompoundTag map = new CompoundTag();
             eventsMap.forEach(map::putString);
             tag.put("map", map);
+            tag.put("captured_variables", capturedVariables);
 
             tag.putInt("time", time);
             return tag;

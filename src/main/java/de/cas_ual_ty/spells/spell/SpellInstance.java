@@ -4,6 +4,7 @@ import de.cas_ual_ty.spells.progression.FullSpellNodeId;
 import de.cas_ual_ty.spells.progression.SpellTree;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.registers.Spells;
+import de.cas_ual_ty.spells.spell.action.variable.UnpackTagAction;
 import de.cas_ual_ty.spells.spell.context.BuiltinTargetGroups;
 import de.cas_ual_ty.spells.spell.context.BuiltinVariables;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
@@ -127,7 +128,7 @@ public abstract class SpellInstance
      * {@code spell_slot} is left at the {@link #NO_SLOT} sentinel since there's no real slot backing this run.</li>
      * <li>{@link #runDelayed}: the spell is running as a delayed spell instance, detached from any player's
      * equipped slots (the equipping player may be offline, dead, or the holder may not even be a player).
-     * Sets only the {@code holder} target plus the {@code delay_time}/{@code delay_uuid}/{@code delay_tag}
+     * Sets only the {@code holder} target plus the {@code delay_time}/{@code delay_uuid} and any captured
      * variables - no {@code owner} target, no {@code spell_slot} at all.</li>
      * </ul>
      */
@@ -167,13 +168,14 @@ public abstract class SpellInstance
      * since a delayed spell instance resolves its own activation locally via its own events map before calling
      * this (see {@link de.cas_ual_ty.spells.capability.DelayedSpellHolder}).
      */
-    public boolean runDelayed(Level level, Entity holder, String activation, int delayTime, CompoundTag delayTag, @Nullable UUID delayUuid, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
+    public boolean runDelayed(Level level, Entity holder, String activation, int delayTime, CompoundTag capturedVariables, @Nullable UUID delayUuid, Consumer<SpellContext> toContext, Consumer<SpellContext> fromContext)
     {
         Consumer<SpellContext> toContextWithDelay = ctx ->
         {
+            // restored first, so builtin delay variables and event variables (toContext) take precedence
+            UnpackTagAction.unpackCapturedVariables(ctx, capturedVariables);
             ctx.getOrCreateTargetGroup(BuiltinTargetGroups.HOLDER.targetGroup).addTargets(Target.of(holder));
             ctx.setCtxVar(CtxVarTypes.INT.get(), BuiltinVariables.DELAY_TIME.name, delayTime);
-            ctx.setCtxVar(CtxVarTypes.TAG.get(), BuiltinVariables.DELAY_TAG.name, delayTag);
 
             if(delayUuid != null)
             {

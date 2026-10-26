@@ -226,7 +226,7 @@ public class SpellsGen
                 .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.reference("uuid"), BOOLEAN.immediate(false)))
                 .addAction(ActivateAction.make("apply", "renew"))
                 .addAction(ApplyMobEffectAction.make("apply", "player", STRING.reference("mob_effect"), INT.compile(" duration + 1 "), INT.reference("amplifier"), BOOLEAN.reference("ambient"), BOOLEAN.reference("visible"), BOOLEAN.reference("show_icon")))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("duration"), STRING.reference("uuid"), EMPTY_TAG, eventHookMap()))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("duration"), STRING.reference("uuid"), eventHookMap()))
                 .addParameter(STRING, "mob_effect", BuiltInRegistries.MOB_EFFECT.getKey(mobEffect.value()).toString())
                 .addParameter(INT, "duration", duration)
                 .addParameter(INT, "amplifier", amplifier)
@@ -365,7 +365,7 @@ public class SpellsGen
                 .addAction(TryBurnManaAction.make("apply", "player", DOUBLE.compile(" (" + MANA_COST + " * duration) / 100 ")))
                 .addAction(ActivateAction.make("apply", "renew"))
                 .addAction(ApplyMobEffectAction.make("apply", "player", STRING.reference("mob_effect"), INT.compile(" duration + 1 "), INT.reference("amplifier"), BOOLEAN.reference("ambient"), BOOLEAN.reference("visible"), BOOLEAN.reference("show_icon")))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("duration"), STRING.reference("uuid"), EMPTY_TAG, eventHookMap()))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("duration"), STRING.reference("uuid"), eventHookMap()))
                 .addAction(ActivateAction.make("apply", "sound"))
                 .addAction(ActivateAction.make("apply", "anti_sound"))
                 .addAction(DeactivateAction.make(ACTIVE, "anti_sound"))
@@ -478,8 +478,6 @@ public class SpellsGen
                 .addAction(ActivateAction.make("renew", "remove"))
                 .addAction(TryBurnManaAction.make("renew", "player", DOUBLE.compile(" (" + MANA_COST + " * duration) / 100 ")))
                 .addAction(DeactivateAction.make("renew", "remove"))
-                .addAction(PutVarAction.makeString("remove", STRING.compile(" get_nbt_string(" + DELAY_TAG + ", 'attribute_mod') "), "attribute_mod"))
-                .addAction(PutVarAction.makeString("remove", STRING.compile(" get_nbt_string(" + DELAY_TAG + ", 'attribute') "), "attribute"))
 
                 .addAction(PutVarAction.makeString(ACTIVE, STRING.compile(uuidCode), "uuid"))
                 .addAction(PutVarAction.makeString(ON_UNEQUIP, STRING.compile(uuidCode), "uuid"))
@@ -499,8 +497,7 @@ public class SpellsGen
                 .addAction(TryBurnManaAction.make("apply", "player", DOUBLE.compile(" (" + MANA_COST + " * duration) / 100 ")))
                 .addAction(ActivateAction.make("apply", "renew"))
                 .addAction(AddAttributeModifierAction.make("apply", "player", STRING.reference("attribute"), STRING.reference("attribute_mod"), DOUBLE.reference("value"), STRING.reference("operation")))
-                .addAction(PutVarAction.makeCompoundTag("apply", TAG.compile(" put_nbt_string(put_nbt_string(new_tag(), 'attribute', attribute), 'attribute_mod', attribute_mod) "), DELAY_TAG))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "renew", INT.reference("duration"), STRING.reference("uuid"), TAG.reference(DELAY_TAG), eventHookMap()))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "renew", INT.reference("duration"), STRING.reference("uuid"), eventHookMap(), List.of("attribute", "attribute_mod")))
 
                 .addAction(PlaySoundAction.make("apply", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
 
@@ -531,13 +528,12 @@ public class SpellsGen
                 .addAction(ActivateAction.make(ON_EQUIP, "apply"))
                 .addAction(ActivateAction.make(ON_UNEQUIP, "remove"))
                 .addAction(PutVarAction.makeInt(ON_EQUIP, ZERO, "time"))
-                .addAction(PutVarAction.makeInt("apply", INT.compile(" get_nbt_int(" + DELAY_TAG + ", 'time') "), "time"))
                 .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.reference("uuid"), BOOLEAN.immediate(false)))
                 .addAction(DeactivateAction.make("remove", "apply"))
                 .addAction(PlaySoundAction.make("remove", "player", SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
                 .addAction(ActivateAction.make("apply", "renew"));
 
-        addWalkerSpellCore(spell, from, to, tick, ON_EQUIP, TAG.compile(" put_nbt_int(new_tag(), 'time', time + refresh_rate) "));
+        addWalkerSpellCore(spell, from, to, tick, ON_EQUIP, true);
 
         spell.addEventHook(ON_EQUIP)
                 .addEventHook(ON_UNEQUIP)
@@ -556,7 +552,6 @@ public class SpellsGen
                 .addAction(PutVarAction.makeString(ACTIVE, STRING.compile(uuidCode), "uuid"))
                 .addAction(PutVarAction.moveString("apply", DELAY_UUID, "uuid"))
                 .addAction(PutVarAction.makeInt(ACTIVE, ZERO, "time"))
-                .addAction(PutVarAction.makeInt("apply", INT.compile(" get_nbt_int(" + DELAY_TAG + ", 'time') "), "time"))
                 .addAction(ActivateAction.make(ACTIVE, "apply"))
                 .addAction(ActivateAction.make("apply", "remove"))
                 .addAction(BooleanActivationAction.make("apply", "renew", BOOLEAN.compile(" time < duration "), BOOLEAN.immediate(true), BOOLEAN.immediate(false)))
@@ -564,7 +559,7 @@ public class SpellsGen
                 .addAction(PlaySoundAction.make("remove", "player", SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
                 .addParameter(INT, "duration", duration);
 
-        addWalkerSpellCore(spell, from, to, tick, ACTIVE, TAG.compile(" put_nbt_int(new_tag(), 'time', time + refresh_rate) "));
+        addWalkerSpellCore(spell, from, to, tick, ACTIVE, true);
 
         spell.addEventHook(ACTIVE)
                 .addTooltip(Component.translatable(descKey));
@@ -592,7 +587,7 @@ public class SpellsGen
                 .addAction(TryBurnManaAction.make("apply", "player", DOUBLE.compile(" (" + MANA_COST + " * refresh_rate) / 100 ")))
                 .addAction(ActivateAction.make("apply", "renew"));
 
-        addWalkerSpellCore(spell, from, to, tick, ACTIVE, EMPTY_TAG);
+        addWalkerSpellCore(spell, from, to, tick, ACTIVE, false);
 
         spell.addEventHook(ACTIVE)
                 .addEventHook(ON_UNEQUIP)
@@ -602,7 +597,7 @@ public class SpellsGen
     }
 
     // shared part of all walker spells: on "apply", turn fluid source blocks below the player into the target block, then schedule "renew"
-    private void addWalkerSpellCore(Spell spell, FluidType from, BlockState to, boolean tick, Object startActivation, DynamicCtxVar<CompoundTag> renewTag)
+    private void addWalkerSpellCore(Spell spell, FluidType from, BlockState to, boolean tick, Object startActivation, boolean countTime)
     {
         ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
         ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
@@ -634,8 +629,15 @@ public class SpellsGen
                 .addAction(ActivateAction.make("apply", "anti_sound"))
                 .addAction(DeactivateAction.make(startActivation, "anti_sound"))
                 .addAction(DeactivateAction.make("anti_sound", "sound"))
-                .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("refresh_rate"), STRING.reference("uuid"), renewTag, eventHookMap()))
+                .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D));
+
+        if(countTime)
+        {
+            // carried over to the next "apply" via captured variables
+            spell.addAction(PutVarAction.makeInt("renew", INT.compile(" time + refresh_rate "), "time"));
+        }
+
+        spell.addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("refresh_rate"), STRING.reference("uuid"), eventHookMap(), countTime ? List.of("time") : List.<String>of()))
                 .addParameter(INT, "refresh_rate", 2)
                 .addParameter(STRING, "fluid_from", fromRL.toString())
                 .addParameter(STRING, "block_to", toRL.toString())
@@ -654,7 +656,7 @@ public class SpellsGen
                 .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.CHECK_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(SpawnEntityAction.make(ACTIVE, "summoned", STRING.immediate(entityType), OWNER, ZERO_VEC3, ZERO_VEC3))
                 .addAction(PlaySoundAction.make(ACTIVE, "summoned", spawnSound, ONE_D, ONE_D))
-                .addAction(AddDelayedSpellAction.make(ACTIVE, "summoned", "on_remove", INT.immediate(duration), STRING.immediate(""), EMPTY_TAG, eventHookMap(LIVING_CHANGE_TARGET.event, LIVING_CHANGE_TARGET.event, OWNER_LEFT_DIMENSION.event, "on_remove")))
+                .addAction(AddDelayedSpellAction.make(ACTIVE, "summoned", "on_remove", INT.immediate(duration), STRING.immediate(""), eventHookMap(LIVING_CHANGE_TARGET.event, LIVING_CHANGE_TARGET.event, OWNER_LEFT_DIMENSION.event, "on_remove")))
                 .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.BURN_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(GetTargetGroupSizeAction.make(LIVING_CHANGE_TARGET, "new_target", "initial_size"))
                 .addAction(FilterPlayerTargetsAction.make(LIVING_CHANGE_TARGET, "", "new_target", TRUE))
@@ -742,7 +744,7 @@ public class SpellsGen
                 .addAction(ActivateAction.make("animation", "animation_offhand"))
                 .addAction(CheckHasDelayedSpellAction.make("animation_offhand", OWNER, STRING.reference("animation_uuid")))
                 .addAction(DeactivateAction.make("animation_offhand", "animation"))
-                .addAction(AddDelayedSpellAction.make("animation", OWNER, "", INT.immediate(20), STRING.reference("animation_uuid"), EMPTY_TAG, Map.of()))
+                .addAction(AddDelayedSpellAction.make("animation", OWNER, "", INT.immediate(20), STRING.reference("animation_uuid"), Map.of()))
                 .addAction(RemoveDelayedSpellAction.make("animation_offhand", OWNER, STRING.reference("animation_uuid"), BOOLEAN.immediate(false)))
                 .addAction(PlayAnimationAction.make("animation", OWNER, STRING.immediate(PlayerAnimations.STAB.toString()), STRING.immediate(PlayerAnimations.STAB_1P.toString())))
                 .addAction(PlayAnimationAction.make("animation_offhand", OWNER, STRING.immediate(PlayerAnimations.STAB_OFF.toString()), STRING.immediate(PlayerAnimations.STAB_1P_OFF.toString())))
@@ -1139,7 +1141,6 @@ public class SpellsGen
                 .addAction(BooleanActivationAction.make("success", "consume", BOOLEAN.compile(" item_costs() "), TRUE, FALSE))
                 .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.BLAZE_POWDER)))
                 .addAction(CopyTargetsAction.make("on_timeout", "player", HOLDER))
-                .addAction(PutVarAction.makeInt("on_timeout", INT.compile(" get_nbt_int(" + DELAY_TAG + ", 'repetitions') "), "repetitions"))
                 .addAction(ActivateAction.make("on_timeout", "shoot"))
                 .addAction(LabelAction.make("shoot", "loop"))
                 .addAction(BooleanActivationAction.make("shoot", "do_shoot", BOOLEAN.compile(" shots_per_repetition > 0 "), TRUE, TRUE))
@@ -1150,7 +1151,8 @@ public class SpellsGen
                 .addAction(JumpAction.make("do_shoot", "loop"))
                 .addAction(BooleanActivationAction.make("shoot", "repeat", BOOLEAN.compile(" repetitions > 1 "), TRUE, FALSE))
                 .addAction(PlaySoundAction.make("shoot", "player", SoundEvents.BLAZE_SHOOT, ONE_D, ONE_D))
-                .addAction(AddDelayedSpellAction.make("repeat", "player", "on_timeout", INT.reference("repetition_delay"), STRING.immediate(""), TAG.compile(" put_nbt_int(new_tag(), 'repetitions', repetitions - 1) "), eventHookMap()))
+                .addAction(PutVarAction.makeInt("repeat", INT.compile(" repetitions - 1 "), "repetitions"))
+                .addAction(AddDelayedSpellAction.make("repeat", "player", "on_timeout", INT.reference("repetition_delay"), STRING.immediate(""), eventHookMap(), List.of("repetitions")))
                 .addAction(BooleanActivationAction.make("on_entity_hit", "no_pvp", BOOLEAN.compile(" !pvp() "), TRUE, FALSE))
                 .addAction(FilterPlayerTargetsAction.make("no_pvp", "", ENTITY_HIT, TRUE))
                 .addAction(SetOnFireAction.make("on_entity_hit", ENTITY_HIT, INT.reference("fire_seconds")))
@@ -1429,8 +1431,8 @@ public class SpellsGen
                 .addAction(CallFunctionAction.make("success", getFunction(SpellFunctions.BURN_MANA_COST), Map.of(), Map.of(), Map.of()))
                 .addAction(BooleanActivationAction.make("success", "consume", BOOLEAN.compile(" item_costs() "), TRUE, FALSE))
                 .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.FIRE_CHARGE)))
-                .addAction(AddDelayedSpellAction.make("success", OWNER, "sound", INT.immediate(10), STRING.immediate(""), EMPTY_TAG, eventHookMap()))
-                .addAction(AddDelayedSpellAction.make("success", OWNER, "shoot", INT.immediate(20), STRING.immediate(""), EMPTY_TAG, eventHookMap()))
+                .addAction(AddDelayedSpellAction.make("success", OWNER, "sound", INT.immediate(10), STRING.immediate(""), eventHookMap()))
+                .addAction(AddDelayedSpellAction.make("success", OWNER, "shoot", INT.immediate(20), STRING.immediate(""), eventHookMap()))
                 .addAction(PlaySoundAction.make("sound", HOLDER, SoundEvents.GHAST_WARN, ONE_D, ONE_D))
                 .addAction(GetEntityUUIDAction.make("shoot", HOLDER, "uuid"))
                 .addAction(GetEntityPositionDirectionMotionAction.make("shoot", HOLDER, "", "direction", ""))
@@ -1558,7 +1560,7 @@ public class SpellsGen
                 .addAction(CallFunctionAction.make("consume", getFunction(SpellFunctions.CONSUME_ITEM_COST), Map.of(), Map.of(), Map.of(), itemCostOverride(Items.GUNPOWDER)))
                 .addAction(LabelAction.make("success", "loop"))
                 .addAction(PutVarAction.makeInt("success", INT.compile(" repetitions - 1 "), "repetitions"))
-                .addAction(AddDelayedSpellAction.make("success", OWNER, "fire", INT.compile(" repetitions * time_delay_ticks "), STRING.immediate(""), EMPTY_TAG, eventHookMap()))
+                .addAction(AddDelayedSpellAction.make("success", OWNER, "fire", INT.compile(" repetitions * time_delay_ticks "), STRING.immediate(""), eventHookMap()))
                 .addAction(BranchAction.make("success", "loop", BOOLEAN.compile(" repetitions > 1 ")))
                 .addAction(CopyTargetsAction.make("success", "player", OWNER))
                 .addAction(CopyTargetsAction.make("fire", "player", HOLDER))
@@ -1630,8 +1632,6 @@ public class SpellsGen
                 .addAction(ActivateAction.make("renew", "remove"))
                 .addAction(TryBurnManaAction.make("renew", "player", DOUBLE.compile(" (" + MANA_COST + " * duration) / 100 ")))
                 .addAction(DeactivateAction.make("renew", "remove"))
-                .addAction(PutVarAction.makeString("remove", STRING.compile(" get_nbt_string(" + DELAY_TAG + ", 'attribute_mod') "), "attribute_mod"))
-                .addAction(PutVarAction.makeString("remove", STRING.compile(" get_nbt_string(" + DELAY_TAG + ", 'attribute') "), "attribute"))
 
                 .addAction(PutVarAction.makeString(ACTIVE, STRING.compile(flightUuidCode), "uuid"))
                 .addAction(PutVarAction.makeString(ON_UNEQUIP, STRING.compile(flightUuidCode), "uuid"))
@@ -1656,8 +1656,7 @@ public class SpellsGen
                 .addAction(TryBurnManaAction.make("apply", "player", DOUBLE.compile(" (" + MANA_COST + " * duration) / 100 ")))
                 .addAction(ActivateAction.make("apply", "renew"))
                 .addAction(AddAttributeModifierAction.make("apply", "player", STRING.reference("attribute"), STRING.reference("attribute_mod"), DOUBLE.reference("value"), STRING.reference("operation")))
-                .addAction(PutVarAction.makeCompoundTag("apply", TAG.compile(" put_nbt_string(put_nbt_string(new_tag(), 'attribute', attribute), 'attribute_mod', attribute_mod) "), DELAY_TAG))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "renew", INT.reference("duration"), STRING.reference("uuid"), TAG.reference(DELAY_TAG), eventHookMap()))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "renew", INT.reference("duration"), STRING.reference("uuid"), eventHookMap(), List.of("attribute", "attribute_mod")))
 
                 .addAction(PlaySoundAction.make("apply", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
 
@@ -1746,7 +1745,7 @@ public class SpellsGen
                 .addAction(ActivateAction.make("apply", "renew"))
                 .addAction(ApplyMobEffectAction.make("apply", "player", SpellsUtil.objectToString(MobEffects.DAMAGE_RESISTANCE.value(), BuiltInRegistries.MOB_EFFECT), INT.compile(" duration + 1 "), ONE, FALSE, FALSE, TRUE))
                 .addAction(ApplyMobEffectAction.make("apply", "player", SpellsUtil.objectToString(MobEffects.MOVEMENT_SLOWDOWN.value(), BuiltInRegistries.MOB_EFFECT), INT.compile(" duration + 1 "), ZERO, FALSE, FALSE, TRUE))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("duration"), STRING.reference("uuid"), EMPTY_TAG, eventHookMap()))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("duration"), STRING.reference("uuid"), eventHookMap()))
                 .addParameter(INT, "duration", 400)
                 .addEventHook(ON_EQUIP)
                 .addEventHook(ON_UNEQUIP)
