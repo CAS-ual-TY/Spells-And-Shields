@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.action.ParamNames;
+import de.cas_ual_ty.spells.spell.compiler.Compiler;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -97,6 +98,11 @@ public class CtxVarType<T>
     public DynamicCtxVar<T> reference(Object name)
     {
         return new ReferencedCtxVar<>(this, name.toString(), (ctx) -> ctx.getCtxVar(this, name.toString()));
+    }
+
+    public ReferencedCtxVar<T> compile(String expression)
+    {
+        return Compiler.compileString(expression, this);
     }
     
     @Override

@@ -68,7 +68,8 @@ public class Compiler
             return DataResult.error(e::getMessage);
         }
     }
-    
+
+    /** Call TYPE.compile instead */
     public static <T> ReferencedCtxVar<T> compileString(String input, CtxVarType<T> type)
     {
         try

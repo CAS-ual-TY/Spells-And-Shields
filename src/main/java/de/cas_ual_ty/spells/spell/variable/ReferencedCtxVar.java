@@ -1,6 +1,5 @@
 package de.cas_ual_ty.spells.spell.variable;
 
-import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.context.SpellContext;
 
 import java.util.Optional;
@@ -40,6 +39,6 @@ public class ReferencedCtxVar<T> extends DynamicCtxVar<T>
     
     public static <T> ReferencedCtxVar<T> makeExpression(CtxVarType<T> type, String str)
     {
-        return Compiler.compileString(str, type);
+        return type.compile(str);
     }
 }

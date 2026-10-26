@@ -8,7 +8,6 @@ import de.cas_ual_ty.spells.client.particle.CustomParticleInstance;
 import de.cas_ual_ty.spells.client.particle.CustomParticleRenderer;
 import de.cas_ual_ty.spells.registers.CtxVarTypes;
 import de.cas_ual_ty.spells.spell.action.IClientAction;
-import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -190,12 +189,12 @@ public class CustomParticleEmitterClientAction implements IClientAction
             captureInto(emitter.context, var);
         }
 
-        emitter.motionExpr = motion.isEmpty() ? null : Compiler.compileString(motion, CtxVarTypes.VEC3.get());
-        emitter.positionExpr = position.isEmpty() ? null : Compiler.compileString(position, CtxVarTypes.VEC3.get());
-        emitter.colorExpr = Compiler.compileString(color, CtxVarTypes.VEC3.get());
-        emitter.alphaExpr = Compiler.compileString(alpha, CtxVarTypes.DOUBLE.get());
-        emitter.initialPositionExpr = initialPosition.isEmpty() ? null : Compiler.compileString(initialPosition, CtxVarTypes.VEC3.get());
-        emitter.particleLifetimeExpr = particleLifetime.isEmpty() ? null : Compiler.compileString(particleLifetime, CtxVarTypes.INT.get());
+        emitter.motionExpr = motion.isEmpty() ? null : CtxVarTypes.VEC3.get().compile(motion);
+        emitter.positionExpr = position.isEmpty() ? null : CtxVarTypes.VEC3.get().compile(position);
+        emitter.colorExpr = CtxVarTypes.VEC3.get().compile(color);
+        emitter.alphaExpr = CtxVarTypes.DOUBLE.get().compile(alpha);
+        emitter.initialPositionExpr = initialPosition.isEmpty() ? null : CtxVarTypes.VEC3.get().compile(initialPosition);
+        emitter.particleLifetimeExpr = particleLifetime.isEmpty() ? null : CtxVarTypes.INT.get().compile(particleLifetime);
 
         List<CustomParticleInitVar<?>> compiledInitVars = new LinkedList<>();
 
@@ -221,7 +220,7 @@ public class CustomParticleEmitterClientAction implements IClientAction
 
     private static <T> CustomParticleInitVar<T> compileInitVar(CtxVarType<T> type, String name, String formula)
     {
-        return new CustomParticleInitVar<>(type, name, Compiler.compileString(formula, type));
+        return new CustomParticleInitVar<>(type, name, type.compile(formula));
     }
 
     private static CustomParticleInitVar<?> compileInitVar(CustomParticleInitEntry entry)

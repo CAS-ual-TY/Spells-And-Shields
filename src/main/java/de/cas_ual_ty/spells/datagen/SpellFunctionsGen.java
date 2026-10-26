@@ -11,7 +11,6 @@ import de.cas_ual_ty.spells.spell.action.item.TryConsumePlayerItemsAction;
 import de.cas_ual_ty.spells.spell.action.mana.BurnManaAction;
 import de.cas_ual_ty.spells.spell.action.mana.HasManaAction;
 import de.cas_ual_ty.spells.spell.action.mana.TryBurnManaAction;
-import de.cas_ual_ty.spells.spell.compiler.Compiler;
 import de.cas_ual_ty.spells.spell.variable.CtxVar;
 import de.cas_ual_ty.spells.spell.variable.CtxVarType;
 import de.cas_ual_ty.spells.spell.variable.DynamicCtxVar;
@@ -352,7 +351,7 @@ public class SpellFunctionsGen
      */
     protected DynamicCtxVar<Integer> effectiveItemAmount()
     {
-        return Compiler.compileString(" item_costs() ? " + ITEM_AMOUNT + " : 0 ", INT);
+        return INT.compile(" item_costs() ? " + ITEM_AMOUNT + " : 0 ");
     }
 
     public String getName()
