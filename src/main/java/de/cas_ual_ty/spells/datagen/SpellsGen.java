@@ -520,8 +520,6 @@ public class SpellsGen
 
     public void addPermanentWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, boolean tick)
     {
-        ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
-        ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('permanent_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(PERMANENT_ICON_RL))), key, 0F)
                 .addAction(CopyTargetsAction.make(ON_EQUIP, "player", OWNER))
@@ -537,53 +535,19 @@ public class SpellsGen
                 .addAction(RemoveDelayedSpellAction.make("remove", "player", STRING.reference("uuid"), BOOLEAN.immediate(false)))
                 .addAction(DeactivateAction.make("remove", "apply"))
                 .addAction(PlaySoundAction.make("remove", "player", SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
-                .addAction(ActivateAction.make("apply", "renew"))
-                
-                .addAction(OffsetBlockAction.make("apply", "player", "above", ZERO_VEC3))
-                .addAction(GetBlockAction.make("apply", "above", "", "", "is_air"))
-                .addAction(BooleanActivationAction.make("apply", "apply", BOOLEAN.reference(" is_air "), BOOLEAN.immediate(false), BOOLEAN.immediate(true)))
-                
-                .addAction(OffsetBlockAction.make("apply", "player", "below", VEC3.immediate(new Vec3(0, -1, 0))))
-                .addAction(CubeBlockTargetsAction.make("apply", "below", "blocks", VEC3.compile(" vec3(-rect_radius, 0, -rect_radius) "), VEC3.compile(" vec3(rect_radius, 0, rect_radius) ")))
-                
-                .addAction(LabelAction.make("apply", "loop"))
-                .addAction(ClearTargetsAction.make("apply", "block"))
-                .addAction(PickTargetAction.make("apply", "block", "blocks", true, false))
-                
-                .addAction(GetFluidAction.make("apply", "block", "fluid_id", "", "", "is_source"))
-                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.reference(" is_source && fluid_id == '" + fromRL.toString() + "' "), BOOLEAN.immediate(true), BOOLEAN.immediate(true)))
-                .addAction(SetBlockAction.make("do_apply", "block", STRING.reference("block_to"), TAG.reference("block_state_to")));
-        
-        if(tick)
-        {
-            spell.addAction(TickBlockAction.make("do_apply", "block", INT.compile(" next_int(60) + 60 ")));
-        }
-        
-        spell.addAction(GetTargetGroupSizeAction.make("apply", "blocks", "size"))
-                .addAction(BranchAction.make("apply", "loop", BOOLEAN.compile(" size > 0 ")))
-                
-                .addAction(ActivateAction.make("apply", "sound"))
-                .addAction(ActivateAction.make("apply", "anti_sound"))
-                .addAction(DeactivateAction.make(ON_EQUIP, "anti_sound"))
-                .addAction(DeactivateAction.make("anti_sound", "sound"))
-                .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("refresh_rate"), STRING.reference("uuid"), TAG.compile(" put_nbt_int(new_tag(), 'time', time + refresh_rate) "), eventHookMap()))
-                .addParameter(INT, "refresh_rate", 2)
-                .addParameter(STRING, "block_from", fromRL.toString())
-                .addParameter(STRING, "block_to", toRL.toString())
-                .addParameter(TAG, "block_state_to", SpellsUtil.stateToTag(to))
-                .addParameter(INT, "rect_radius", 3)
-                .addEventHook(ON_EQUIP)
+                .addAction(ActivateAction.make("apply", "renew"));
+
+        addWalkerSpellCore(spell, from, to, tick, ON_EQUIP, TAG.compile(" put_nbt_int(new_tag(), 'time', time + refresh_rate) "));
+
+        spell.addEventHook(ON_EQUIP)
                 .addEventHook(ON_UNEQUIP)
                 .addTooltip(Component.translatable(descKey));
-        
+
         addSpell(rl, spell);
     }
-    
+
     public void addTemporaryWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, float manaCost, boolean tick, int duration)
     {
-        ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
-        ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('temporary_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TEMPORARY_ICON_RL))), key, manaCost)
                 .addAction(CallFunctionAction.make(ACTIVE, getFunction(SpellFunctions.CHECK_MANA_COST), Map.of(), Map.of(), Map.of()))
@@ -598,52 +562,18 @@ public class SpellsGen
                 .addAction(BooleanActivationAction.make("apply", "renew", BOOLEAN.compile(" time < duration "), BOOLEAN.immediate(true), BOOLEAN.immediate(false)))
                 .addAction(DeactivateAction.make("renew", "remove"))
                 .addAction(PlaySoundAction.make("remove", "player", SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
-                
-                .addAction(OffsetBlockAction.make("apply", "player", "above", ZERO_VEC3))
-                .addAction(GetBlockAction.make("apply", "above", "", "", "is_air"))
-                .addAction(BooleanActivationAction.make("apply", "apply", BOOLEAN.reference(" is_air "), BOOLEAN.immediate(false), BOOLEAN.immediate(true)))
-                
-                .addAction(OffsetBlockAction.make("apply", "player", "below", VEC3.immediate(new Vec3(0, -1, 0))))
-                .addAction(CubeBlockTargetsAction.make("apply", "below", "blocks", VEC3.compile(" vec3(-rect_radius, 0, -rect_radius) "), VEC3.compile(" vec3(rect_radius, 0, rect_radius) ")))
-                
-                .addAction(LabelAction.make("apply", "loop"))
-                .addAction(ClearTargetsAction.make("apply", "block"))
-                .addAction(PickTargetAction.make("apply", "block", "blocks", true, false))
-                
-                .addAction(GetFluidAction.make("apply", "block", "fluid_id", "", "", "is_source"))
-                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.reference(" is_source && fluid_id == '" + fromRL.toString() + "' "), BOOLEAN.immediate(true), BOOLEAN.immediate(true)))
-                .addAction(SetBlockAction.make("do_apply", "block", STRING.reference("block_to"), TAG.reference("block_state_to")));
-        
-        if(tick)
-        {
-            spell.addAction(TickBlockAction.make("do_apply", "block", INT.compile(" next_int(60) + 60 ")));
-        }
-        
-        spell.addAction(GetTargetGroupSizeAction.make("apply", "blocks", "size"))
-                .addAction(BranchAction.make("apply", "loop", BOOLEAN.compile(" size > 0 ")))
-                
-                .addAction(ActivateAction.make("apply", "sound"))
-                .addAction(ActivateAction.make("apply", "anti_sound"))
-                .addAction(DeactivateAction.make(ACTIVE, "anti_sound"))
-                .addAction(DeactivateAction.make("anti_sound", "sound"))
-                .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("refresh_rate"), STRING.reference("uuid"), TAG.compile(" put_nbt_int(new_tag(), 'time', time + refresh_rate) "), eventHookMap()))
-                .addParameter(INT, "duration", duration)
-                .addParameter(INT, "refresh_rate", 2)
-                .addParameter(STRING, "block_from", fromRL.toString())
-                .addParameter(STRING, "block_to", toRL.toString())
-                .addParameter(TAG, "block_state_to", SpellsUtil.stateToTag(to))
-                .addParameter(INT, "rect_radius", 3)
-                .addEventHook(ACTIVE)
+                .addParameter(INT, "duration", duration);
+
+        addWalkerSpellCore(spell, from, to, tick, ACTIVE, TAG.compile(" put_nbt_int(new_tag(), 'time', time + refresh_rate) "));
+
+        spell.addEventHook(ACTIVE)
                 .addTooltip(Component.translatable(descKey));
-        
+
         addSpell(rl, spell);
     }
-    
+
     public void addToggleWalkerSpell(ResourceLocation rl, String key, String descKey, String icon, FluidType from, BlockState to, float manaCost, boolean tick)
     {
-        ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
-        ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
         String uuidCode = " uuid_from_string('toggle_walker' + '%s' + %s) ".formatted(rl.toString(), SPELL_SLOT);
         Spell spell = new Spell(LayeredSpellIcon.make(List.of(DefaultSpellIcon.make(ResourceLocation.fromNamespaceAndPath(modId, "textures/spell/" + icon + ".png")), DefaultSpellIcon.make(TOGGLE_ICON_RL))), key, manaCost)
                 .addAction(CopyTargetsAction.make(ACTIVE, "player", OWNER))
@@ -660,46 +590,57 @@ public class SpellsGen
                 .addAction(DeactivateAction.make("remove", "apply"))
                 .addAction(PlaySoundAction.make("remove", "player", SoundEvents.SPLASH_POTION_BREAK, ONE_D, ONE_D))
                 .addAction(TryBurnManaAction.make("apply", "player", DOUBLE.compile(" (" + MANA_COST + " * refresh_rate) / 100 ")))
-                .addAction(ActivateAction.make("apply", "renew"))
-                
-                .addAction(OffsetBlockAction.make("apply", "player", "above", ZERO_VEC3))
+                .addAction(ActivateAction.make("apply", "renew"));
+
+        addWalkerSpellCore(spell, from, to, tick, ACTIVE, EMPTY_TAG);
+
+        spell.addEventHook(ACTIVE)
+                .addEventHook(ON_UNEQUIP)
+                .addTooltip(Component.translatable(descKey));
+
+        addSpell(rl, spell);
+    }
+
+    // shared part of all walker spells: on "apply", turn fluid source blocks below the player into the target block, then schedule "renew"
+    private void addWalkerSpellCore(Spell spell, FluidType from, BlockState to, boolean tick, Object startActivation, DynamicCtxVar<CompoundTag> renewTag)
+    {
+        ResourceLocation fromRL = NeoForgeRegistries.FLUID_TYPES.getKey(from);
+        ResourceLocation toRL = BuiltInRegistries.BLOCK.getKey(to.getBlock());
+
+        spell.addAction(OffsetBlockAction.make("apply", "player", "above", ZERO_VEC3))
                 .addAction(GetBlockAction.make("apply", "above", "", "", "is_air"))
                 .addAction(BooleanActivationAction.make("apply", "apply", BOOLEAN.reference(" is_air "), BOOLEAN.immediate(false), BOOLEAN.immediate(true)))
-                
+
                 .addAction(OffsetBlockAction.make("apply", "player", "below", VEC3.immediate(new Vec3(0, -1, 0))))
                 .addAction(CubeBlockTargetsAction.make("apply", "below", "blocks", VEC3.compile(" vec3(-rect_radius, 0, -rect_radius) "), VEC3.compile(" vec3(rect_radius, 0, rect_radius) ")))
-                
+
                 .addAction(LabelAction.make("apply", "loop"))
                 .addAction(ClearTargetsAction.make("apply", "block"))
                 .addAction(PickTargetAction.make("apply", "block", "blocks", true, false))
-                
+
                 .addAction(GetFluidAction.make("apply", "block", "fluid_id", "", "", "is_source"))
-                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.reference(" is_source && fluid_id == '" + fromRL.toString() + "' "), BOOLEAN.immediate(true), BOOLEAN.immediate(true)))
+                .addAction(BooleanActivationAction.make("apply", "do_apply", BOOLEAN.reference(" is_source && fluid_id == fluid_from "), BOOLEAN.immediate(true), BOOLEAN.immediate(true)))
                 .addAction(SetBlockAction.make("do_apply", "block", STRING.reference("block_to"), TAG.reference("block_state_to")));
-        
+
         if(tick)
         {
             spell.addAction(TickBlockAction.make("do_apply", "block", INT.compile(" next_int(60) + 60 ")));
         }
-        
+
         spell.addAction(GetTargetGroupSizeAction.make("apply", "blocks", "size"))
                 .addAction(BranchAction.make("apply", "loop", BOOLEAN.compile(" size > 0 ")))
+
                 .addAction(ActivateAction.make("apply", "sound"))
                 .addAction(ActivateAction.make("apply", "anti_sound"))
-                .addAction(DeactivateAction.make(ACTIVE, "anti_sound"))
+                .addAction(DeactivateAction.make(startActivation, "anti_sound"))
                 .addAction(DeactivateAction.make("anti_sound", "sound"))
                 .addAction(PlaySoundAction.make("sound", "player", SoundEvents.GENERIC_DRINK, ONE_D, ONE_D))
-                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("refresh_rate"), STRING.reference("uuid"), EMPTY_TAG, eventHookMap()))
+                .addAction(AddDelayedSpellAction.make("renew", "player", "apply", INT.reference("refresh_rate"), STRING.reference("uuid"), renewTag, eventHookMap()))
                 .addParameter(INT, "refresh_rate", 2)
-                .addParameter(STRING, "block_from", fromRL.toString())
+                .addParameter(STRING, "fluid_from", fromRL.toString())
                 .addParameter(STRING, "block_to", toRL.toString())
                 .addParameter(TAG, "block_state_to", SpellsUtil.stateToTag(to))
-                .addParameter(INT, "rect_radius", 3)
-                .addEventHook(ACTIVE)
-                .addEventHook(ON_UNEQUIP)
-                .addTooltip(Component.translatable(descKey));
-        
-        addSpell(rl, spell);
+                .addParameter(INT, "rect_radius", 3);
     }
 
     public void addSummonSpell(ResourceLocation rl, String key, String descKey, String entityType, SoundEvent spawnSound, float manaCost)
